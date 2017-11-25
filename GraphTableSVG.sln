@@ -5,6 +5,11 @@ VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphTableSVG", "GraphTableSVG\GraphTableSVG.csproj", "{3BFE6D82-E4AC-4BAF-B7B6-3375E28B02F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples", "Samples\Samples.csproj", "{2F62C75E-1488-4A0E-A8A4-016E69AB4121}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3BFE6D82-E4AC-4BAF-B7B6-3375E28B02F0} = {3BFE6D82-E4AC-4BAF-B7B6-3375E28B02F0}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +20,10 @@ Global
 		{3BFE6D82-E4AC-4BAF-B7B6-3375E28B02F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BFE6D82-E4AC-4BAF-B7B6-3375E28B02F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BFE6D82-E4AC-4BAF-B7B6-3375E28B02F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F62C75E-1488-4A0E-A8A4-016E69AB4121}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F62C75E-1488-4A0E-A8A4-016E69AB4121}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F62C75E-1488-4A0E-A8A4-016E69AB4121}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F62C75E-1488-4A0E-A8A4-016E69AB4121}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

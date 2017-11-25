@@ -3,7 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <ProjectGuid>{3BFE6D82-E4AC-4BAF-B7B6-3375E28B02F0}</ProjectGuid>
+    <ProjectGuid>{2F62C75E-1488-4A0E-A8A4-016E69AB4121}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <OutputPath>bin</OutputPath>
@@ -23,13 +23,14 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app.css" />
+    <Content Include="gui\canvg\canvg.js" />
+    <Content Include="gui\canvg\rgbcolor.js" />
+    <Content Include="gui\canvg\StackBlur.js" />
+    <Content Include="gui\jquery-3.1.1.js" />
+    <Content Include="gui\save.js" />
+    <Content Include="index.html" />
     <Content Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="table\cell.ts" />
-    <TypeScriptCompile Include="table\vba.ts" />
-    <TypeScriptCompile Include="table\table.ts" />
-    <TypeScriptCompile Include="table\table_functions.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="web.Debug.config">
@@ -39,14 +40,26 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="graph_table_svg.d.ts" />
+    <TypeScriptCompile Include="gui\footer_button.ts" />
+    <TypeScriptCompile Include="gui\modal.ts" />
+    <TypeScriptCompile Include="string_functions.ts" />
+    <TypeScriptCompile Include="typings\jqueryui\jqueryui.d.ts" />
+    <TypeScriptCompile Include="typings\jquery\jquery.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GraphTableSVG\GraphTableSVG.csproj">
+      <Project>{3bfe6d82-e4ac-4baf-b7b6-3375e28b02f0}</Project>
+      <Name>GraphTableSVG</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>GraphTableSVG</RootNamespace>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyName>GraphTableSVG</AssemblyName>
+    <RootNamespace>Samples</RootNamespace>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
@@ -56,9 +69,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>53298</DevelopmentServerPort>
+          <DevelopmentServerPort>65286</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:53298/</IISUrl>
+          <IISUrl>http://localhost:65286/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -76,9 +89,9 @@
     <TypeScriptModuleKind />
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptOutFile>graph_table_svg.js</TypeScriptOutFile>
+    <TypeScriptOutFile>sample.js</TypeScriptOutFile>
     <TypeScriptOutDir />
-    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
@@ -88,4 +101,8 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>copy "$(SolutionDir)\GraphTableSVG\graph_table_svg.js" "$(ProjectDir)graph_table_svg.js"
+copy "$(SolutionDir)\GraphTableSVG\graph_table_svg.d.ts" "$(ProjectDir)graph_table_svg.d.ts"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
