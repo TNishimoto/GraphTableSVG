@@ -1,4 +1,4 @@
-﻿module TableFunctions {
+﻿module GraphTableSVG {
 
     export function createLine(x: number, y: number, x2: number, y2: number): SVGLineElement {
         var line1 = <SVGLineElement>document.createElementNS('http://www.w3.org/2000/svg', 'line');

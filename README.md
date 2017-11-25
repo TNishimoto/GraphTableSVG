@@ -8,13 +8,16 @@
 
 ## なにができるの
 1. クラスを使っての表の描画
-2. 表をpngで保存
-3. 表をpowerpointのマクロに変換
+2. 表をpowerpointのマクロに変換
 
-2と3はおまけ
+2はおまけ
 
 ## 使い方がわからない
 がんばります。
 
 ## ライセンスは？
 MIT License
+
+## その他
+SVG -> png変換にcanvg(https://github.com/canvg/canvg)を利用しています。
+jquery(https://jquery.com/)も使っています。

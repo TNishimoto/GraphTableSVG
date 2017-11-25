@@ -1,4 +1,6 @@
 ﻿
+import SVGTable = GraphTableSVG.SVGTable;
+import SVGToVBA = GraphTableSVG.SVGToVBA;
 
 /*
 class VirtualCell {
