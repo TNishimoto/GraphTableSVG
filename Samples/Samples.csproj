@@ -24,10 +24,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.css" />
-    <Content Include="gui\canvg\canvg.js" />
-    <Content Include="gui\canvg\rgbcolor.js" />
-    <Content Include="gui\canvg\StackBlur.js" />
-    <Content Include="gui\jquery-3.1.1.js" />
     <Content Include="gui\save.js" />
     <Content Include="index.html" />
     <Content Include="web.config" />

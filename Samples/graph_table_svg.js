@@ -544,7 +544,6 @@ var GraphTableSVG;
                 var cell = this.table.cells[y][this.x];
                 if (width < cell.textBoxWidth)
                     width = cell.textBoxWidth;
-                console.log(cell.textBoxWidth);
                 if (width < cell.svgBackground.width.baseVal.value)
                     width = cell.svgBackground.width.baseVal.value;
             }

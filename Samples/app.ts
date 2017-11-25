@@ -14,13 +14,15 @@ var svgBox: HTMLElement;
 
 function getInputText(): string {
     var textbox: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById(`inputtext_itb`);
-    return textbox.textContent;
+    return textbox.value;
 }
+
+
 
 function createSuffixArrayTable() {
     var text: string = getInputText();
     var sa: number[] = StringModule.computeSuffixArray(text);
-    
+    console.log(text);
     svgBox.innerHTML = "";
     table = new SVGTable(svgBox, 2, sa.length + 1);
 

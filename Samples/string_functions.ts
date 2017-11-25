@@ -143,9 +143,8 @@ module StringModule{
         var i = 0;
         while (i < str.length) {
             var substr = str.substr(startPos, i - startPos + 1);
-            var reference = i == 0 ? "" : str.substring(0, i - 1);
+            var reference = i == 0 ? "" : str.substr(0, i);
             var refPos = reference.indexOf(substr);
-
             if (refPos == -1) {
                 if (lastRefPos == -1) {
                     r.push(substr);
