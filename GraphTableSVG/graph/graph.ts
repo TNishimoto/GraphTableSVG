@@ -161,6 +161,11 @@
             this.svgText.setX((this.x1 + this.x2) / 2);
             this.svgText.setY((this.y1 + this.y2) / 2);
 
+            var rad = Math.atan2(this.y2 - this.y1, this.x2 - this.x1);
+            var rar = rad * (180 / Math.PI);
+
+            this.svgText.setAttribute('transform', `rotate(${rar}, ${this.svgText.getX()}, ${this.svgText.getY()})`);
+
             /*
             this.svgText.setAttribute('x', "0");
             this.svgText.setAttribute('y', "0");

@@ -28,9 +28,7 @@ module GraphTableSVG {
         _svgText.style.fontWeight = "bold";
         _svgText.style.textAnchor = "middle";
 
-
-        _svgText.setAttribute('x', "0");
-        _svgText.setAttribute('y', "0");
+        
 
         return _svgText;
     }
