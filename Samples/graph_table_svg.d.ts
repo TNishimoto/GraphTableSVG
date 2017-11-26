@@ -46,6 +46,7 @@ declare module GraphTableSVG {
     }
     class LineEdge extends Edge {
         svgLine: SVGLineElement;
+        svgText: SVGTextElement;
         static create(_parent: Graph, _begin: Node, _end: Node): LineEdge;
         relocation(): void;
     }
@@ -96,6 +97,18 @@ declare module GraphTableSVG {
         height: number;
         constructor(parent: SVGTable, _px: number, _py: number, _rect: SVGRectElement, _text: SVGTextElement);
     }
+}
+interface SVGGElement {
+    getX(): number;
+    setX(value: number): void;
+    getY(): number;
+    setY(value: number): void;
+}
+interface SVGTextElement {
+    getX(): number;
+    setX(value: number): void;
+    getY(): number;
+    setY(value: number): void;
 }
 declare module GraphTableSVG {
     class SVGToVBA {
@@ -153,12 +166,6 @@ declare module GraphTableSVG {
         private splitCode(tableName, codes);
         private splitCode1(codes);
     }
-}
-interface SVGGElement {
-    getX(): number;
-    setX(value: number): void;
-    getY(): number;
-    setY(value: number): void;
 }
 declare module GraphTableSVG {
     function createLine(x: number, y: number, x2: number, y2: number): SVGLineElement;

@@ -107,11 +107,14 @@ function createTestGraph() {
     var graph = Graph.create(svgBox);
     var node1 = GraphTableSVG.CircleNode.create(graph);
     var node2 = GraphTableSVG.CircleNode.create(graph);
-    node2.svgGroup.setX(160);
+    node1.svgGroup.setX(100)
+    node1.svgGroup.setY(200)
+
+    node2.svgGroup.setX(260);
     node2.svgGroup.setY(100);
     var edge1 = GraphTableSVG.LineEdge.create(graph, node1, node2);
-    edge1.beginConnectType = GraphTableSVG.ConnecterPositionType.Bottom;
-    edge1.endConnectType = GraphTableSVG.ConnecterPositionType.Top;
+    edge1.beginConnectType = GraphTableSVG.ConnecterPositionType.RightUp;
+    edge1.endConnectType = GraphTableSVG.ConnecterPositionType.LeftUp;
 
     graph.edges.push(edge1);
 

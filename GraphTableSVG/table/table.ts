@@ -87,17 +87,10 @@ module GraphTableSVG {
     }
 
     export class SVGTable {
-        //verticalLines: CellLines[];
-        //horizontalLines: CellLines[];
         private _cells: Cell[][];
         get cells(): Cell[][] {
             return this._cells;
         }
-        /*
-        private set cells(value: Cell[][]) {
-            this._cells = value;
-        }
-        */
         private svg: HTMLElement;
         public group: SVGGElement;
         get width(): number {

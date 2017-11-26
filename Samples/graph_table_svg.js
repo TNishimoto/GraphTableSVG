@@ -83,6 +83,7 @@ var GraphTableSVG;
             p.svgCircle.cy.baseVal.value = 0;
             p.svgCircle.r.baseVal.value = 30;
             p.svgText = GraphTableSVG.createText();
+            p.svgText.textContent = "hogehoge";
             p.svgGroup = GraphTableSVG.createGroup();
             p.svgGroup.appendChild(p.svgCircle);
             p.svgGroup.appendChild(p.svgText);
@@ -98,23 +99,24 @@ var GraphTableSVG;
             configurable: true
         });
         CircleNode.prototype.getLocation = function (type) {
+            var r = (Math.sqrt(2) / 2) * this.radius;
             switch (type) {
                 case ConnecterPositionType.Top:
                     return [this.x, this.y - this.radius];
                 case ConnecterPositionType.RightUp:
-                    return [this.x, this.y];
+                    return [this.x + r, this.y - r];
                 case ConnecterPositionType.Right:
                     return [this.x + this.radius, this.y];
                 case ConnecterPositionType.RightDown:
-                    return [this.x, this.y];
+                    return [this.x + r, this.y + r];
                 case ConnecterPositionType.Bottom:
                     return [this.x, this.y + this.radius];
                 case ConnecterPositionType.LeftDown:
-                    return [this.x, this.y];
+                    return [this.x - r, this.y + r];
                 case ConnecterPositionType.Left:
                     return [this.x - this.radius, this.y];
                 case ConnecterPositionType.LeftUp:
-                    return [this.x, this.y];
+                    return [this.x - r, this.y - r];
                 default:
                     return [this.x, this.y];
             }
@@ -174,6 +176,9 @@ var GraphTableSVG;
             p.svgLine = GraphTableSVG.createLine(0, 0, 100, 100);
             p.parent = _parent;
             p.parent.svgGroup.appendChild(p.svgLine);
+            p.svgText = GraphTableSVG.createText();
+            p.svgText.textContent = "hogehoge";
+            p.parent.svgGroup.appendChild(p.svgText);
             return p;
         };
         LineEdge.prototype.relocation = function () {
@@ -181,6 +186,14 @@ var GraphTableSVG;
             this.svgLine.y1.baseVal.value = this.y1;
             this.svgLine.x2.baseVal.value = this.x2;
             this.svgLine.y2.baseVal.value = this.y2;
+            this.svgText.setX((this.x1 + this.x2) / 2);
+            this.svgText.setY((this.y1 + this.y2) / 2);
+            /*
+            this.svgText.setAttribute('x', "0");
+            this.svgText.setAttribute('y', "0");
+            console.log(this.svgText.x.baseVal.numberOfItems);
+            console.log(this.svgText.x.baseVal.getItem(0));
+            */
         };
         return LineEdge;
     }(Edge));
@@ -521,6 +534,62 @@ var GraphTableSVG;
     }());
     GraphTableSVG.Cell = Cell;
 })(GraphTableSVG || (GraphTableSVG = {}));
+SVGGElement.prototype.getX = function () {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttributeNS(null, 'transform', "translate(0,0)");
+    }
+    return p.transform.baseVal.getItem(0).matrix.e;
+};
+SVGGElement.prototype.setX = function (value) {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttributeNS(null, 'transform', "translate(0,0)");
+    }
+    return this.transform.baseVal.getItem(0).matrix.e = value;
+};
+SVGGElement.prototype.getY = function () {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttributeNS(null, 'transform', "translate(0,0)");
+    }
+    return this.transform.baseVal.getItem(0).matrix.f;
+};
+SVGGElement.prototype.setY = function (value) {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttributeNS(null, 'transform', "translate(0,0)");
+    }
+    return this.transform.baseVal.getItem(0).matrix.f = value;
+};
+SVGTextElement.prototype.getX = function () {
+    var p = this;
+    if (p.x.baseVal.numberOfItems == 0) {
+        p.setAttribute('x', "0");
+    }
+    return p.x.baseVal.getItem(0).value;
+};
+SVGTextElement.prototype.setX = function (value) {
+    var p = this;
+    if (p.x.baseVal.numberOfItems == 0) {
+        p.setAttribute('x', "0");
+    }
+    return p.x.baseVal.getItem(0).value = value;
+};
+SVGTextElement.prototype.getY = function () {
+    var p = this;
+    if (p.y.baseVal.numberOfItems == 0) {
+        p.setAttribute('y', "0");
+    }
+    return p.y.baseVal.getItem(0).value;
+};
+SVGTextElement.prototype.setY = function (value) {
+    var p = this;
+    if (p.y.baseVal.numberOfItems == 0) {
+        p.setAttribute('y', "0");
+    }
+    return p.y.baseVal.getItem(0).value = value;
+};
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var SVGToVBA = (function () {
@@ -961,30 +1030,6 @@ var GraphTableSVG;
     }());
     GraphTableSVG.SVGTable = SVGTable;
 })(GraphTableSVG || (GraphTableSVG = {}));
-SVGGElement.prototype.getX = function () {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
-    }
-    return p.transform.baseVal.getItem(0).matrix.e;
-};
-SVGGElement.prototype.setX = function (value) {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
-    }
-    return this.transform.baseVal.getItem(0).matrix.e = value;
-};
-SVGGElement.prototype.getY = function () {
-    return this.transform.baseVal.getItem(0).matrix.f;
-};
-SVGGElement.prototype.setY = function (value) {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
-    }
-    return this.transform.baseVal.getItem(0).matrix.f = value;
-};
 var GraphTableSVG;
 (function (GraphTableSVG) {
     function createLine(x, y, x2, y2) {
@@ -1007,6 +1052,8 @@ var GraphTableSVG;
         _svgText.style.fontSize = "14px";
         _svgText.style.fontWeight = "bold";
         _svgText.style.textAnchor = "middle";
+        _svgText.setAttribute('x', "0");
+        _svgText.setAttribute('y', "0");
         return _svgText;
     }
     GraphTableSVG.createText = createText;

@@ -65,6 +65,8 @@
             p.svgCircle.r.baseVal.value = 30;
 
             p.svgText = GraphTableSVG.createText();
+            p.svgText.textContent = "hogehoge";
+
             p.svgGroup = GraphTableSVG.createGroup();
             p.svgGroup.appendChild(p.svgCircle);
             p.svgGroup.appendChild(p.svgText);
@@ -76,23 +78,25 @@
             return this.svgCircle.r.baseVal.value;
         }
         public getLocation(type: ConnecterPositionType): [number, number] {
+            var r = (Math.sqrt(2) / 2) * this.radius;
+
             switch (type) {
                 case ConnecterPositionType.Top:
                     return [this.x, this.y - this.radius];
                 case ConnecterPositionType.RightUp:
-                    return [this.x, this.y];
+                    return [this.x + r, this.y - r];
                 case ConnecterPositionType.Right:
                     return [this.x + this.radius, this.y];
                 case ConnecterPositionType.RightDown:
-                    return [this.x, this.y];
+                    return [this.x + r, this.y + r];
                 case ConnecterPositionType.Bottom:
                     return [this.x, this.y + this.radius];
                 case ConnecterPositionType.LeftDown:
-                    return [this.x, this.y];
+                    return [this.x - r, this.y + r];
                 case ConnecterPositionType.Left:
                     return [this.x - this.radius, this.y];
                 case ConnecterPositionType.LeftUp:
-                    return [this.x, this.y];
+                    return [this.x - r, this.y - r];
                 default:
                     return [this.x, this.y];
             }
@@ -132,6 +136,7 @@
     }
     export class LineEdge extends Edge {
         svgLine: SVGLineElement;
+        svgText: SVGTextElement;
         public static create(_parent: Graph, _begin: Node, _end: Node): LineEdge {
             var p = new LineEdge();
             p.beginNode = _begin;
@@ -139,6 +144,11 @@
             p.svgLine = createLine(0, 0, 100, 100);
             p.parent = _parent;
             p.parent.svgGroup.appendChild(p.svgLine);
+
+            p.svgText = GraphTableSVG.createText();
+            p.svgText.textContent = "hogehoge";
+            p.parent.svgGroup.appendChild(p.svgText);
+
             return p;
         }
         public relocation() {
@@ -147,6 +157,16 @@
 
             this.svgLine.x2.baseVal.value = this.x2;
             this.svgLine.y2.baseVal.value = this.y2;
+
+            this.svgText.setX((this.x1 + this.x2) / 2);
+            this.svgText.setY((this.y1 + this.y2) / 2);
+
+            /*
+            this.svgText.setAttribute('x', "0");
+            this.svgText.setAttribute('y', "0");
+            console.log(this.svgText.x.baseVal.numberOfItems);
+            console.log(this.svgText.x.baseVal.getItem(0));
+            */
         }
 
     }

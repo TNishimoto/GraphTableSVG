@@ -1,38 +1,6 @@
 ﻿
 
-interface SVGGElement {    
-    getX(): number;
-    setX(value: number): void;
-    getY(): number;
-    setY(value: number): void;
 
-}
-SVGGElement.prototype.getX = function () {
-    var p: SVGGElement = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
-    }
-    return p.transform.baseVal.getItem(0).matrix.e;
-};
-SVGGElement.prototype.setX = function (value: number) {
-    var p: SVGGElement = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
-    }
-
-    return this.transform.baseVal.getItem(0).matrix.e = value;
-};
-SVGGElement.prototype.getY = function () {
-    return this.transform.baseVal.getItem(0).matrix.f;
-};
-SVGGElement.prototype.setY = function (value: number) {
-    var p: SVGGElement = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
-    }
-
-    return this.transform.baseVal.getItem(0).matrix.f = value;
-};
 
 
 
@@ -59,6 +27,11 @@ module GraphTableSVG {
         _svgText.style.fontSize = "14px";
         _svgText.style.fontWeight = "bold";
         _svgText.style.textAnchor = "middle";
+
+
+        _svgText.setAttribute('x', "0");
+        _svgText.setAttribute('y', "0");
+
         return _svgText;
     }
     export function createRectangle(): SVGRectElement {
