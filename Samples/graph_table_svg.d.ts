@@ -1,4 +1,14 @@
 declare module GraphTableSVG {
+    enum ConnecterPositionType {
+        Top = 1,
+        LeftUp = 2,
+        Left = 3,
+        LeftDown = 4,
+        Bottom = 5,
+        RightDown = 6,
+        Right = 7,
+        RightUp = 8,
+    }
     class Graph {
         nodes: Node[];
         edges: Edge[];
@@ -9,22 +19,34 @@ declare module GraphTableSVG {
         static create(svg: HTMLElement): Graph;
     }
     class Node {
-        svgFigure: SVGCircleElement;
-        svgText: SVGTextElement;
         svgGroup: SVGGElement;
         parent: Graph;
-        static createNode(_parent: Graph): Node;
         readonly x: number;
         readonly y: number;
+        getLocation(type: ConnecterPositionType): [number, number];
+    }
+    class CircleNode extends Node {
+        svgCircle: SVGCircleElement;
+        svgText: SVGTextElement;
+        static create(_parent: Graph): CircleNode;
+        readonly radius: number;
+        getLocation(type: ConnecterPositionType): [number, number];
     }
     class Edge {
         beginNode: Node;
-        beginConnectType: number;
+        beginConnectType: ConnecterPositionType;
         endNode: Node;
-        endConnectType: number;
-        svgLine: SVGLineElement;
+        endConnectType: ConnecterPositionType;
         parent: Graph;
-        static createEdge(_parent: Graph, _begin: Node, _end: Node): Edge;
+        readonly x1: number;
+        readonly y1: number;
+        readonly x2: number;
+        readonly y2: number;
+        relocation(): void;
+    }
+    class LineEdge extends Edge {
+        svgLine: SVGLineElement;
+        static create(_parent: Graph, _begin: Node, _end: Node): LineEdge;
         relocation(): void;
     }
 }
@@ -78,7 +100,17 @@ declare module GraphTableSVG {
 declare module GraphTableSVG {
     class SVGToVBA {
         static createTable(table: SVGTable): string;
-        private static cellFunctionCode;
+        static cellFunctionCode: string;
+    }
+    function parseInteger(value: string): number;
+    function visible(value: string): number;
+    class VBATranslateFunctions {
+        static createStringFunction(item: string): string;
+        static createArrayFunction(items: any[]): string;
+        static createStringArrayFunction(items: string[]): string;
+        static createJagArrayFunction(items: any[][]): string;
+        static joinLines(lines: string[]): string;
+        static colorToVBA(color: string): string;
     }
 }
 declare module GraphTableSVG {
@@ -103,7 +135,8 @@ declare module GraphTableSVG {
         width: number;
     }
     class SVGTable {
-        cells: Cell[][];
+        private _cells;
+        readonly cells: Cell[][];
         private svg;
         group: SVGGElement;
         readonly width: number;
@@ -116,6 +149,9 @@ declare module GraphTableSVG {
         getCellFromID(id: number): Cell;
         private setLine(cell);
         constructor(_svg: HTMLElement, width: number, height: number);
+        createVBAMainCode(slideName: string): [string, string];
+        private splitCode(tableName, codes);
+        private splitCode1(codes);
     }
 }
 interface SVGGElement {

@@ -1,5 +1,26 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    var ConnecterPositionType;
+    (function (ConnecterPositionType) {
+        ConnecterPositionType[ConnecterPositionType["Top"] = 1] = "Top";
+        ConnecterPositionType[ConnecterPositionType["LeftUp"] = 2] = "LeftUp";
+        ConnecterPositionType[ConnecterPositionType["Left"] = 3] = "Left";
+        ConnecterPositionType[ConnecterPositionType["LeftDown"] = 4] = "LeftDown";
+        ConnecterPositionType[ConnecterPositionType["Bottom"] = 5] = "Bottom";
+        ConnecterPositionType[ConnecterPositionType["RightDown"] = 6] = "RightDown";
+        ConnecterPositionType[ConnecterPositionType["Right"] = 7] = "Right";
+        ConnecterPositionType[ConnecterPositionType["RightUp"] = 8] = "RightUp";
+    })(ConnecterPositionType = GraphTableSVG.ConnecterPositionType || (GraphTableSVG.ConnecterPositionType = {}));
     var Graph = (function () {
         function Graph() {
             this.nodes = new Array(0);
@@ -28,22 +49,6 @@ var GraphTableSVG;
     var Node = (function () {
         function Node() {
         }
-        Node.createNode = function (_parent) {
-            var p = new Node();
-            p.svgFigure = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            p.svgFigure.style.stroke = "black";
-            p.svgFigure.style.strokeWidth = "5pt";
-            p.svgFigure.cx.baseVal.value = 30;
-            p.svgFigure.cy.baseVal.value = 30;
-            p.svgFigure.r.baseVal.value = 30;
-            p.svgText = GraphTableSVG.createText();
-            p.svgGroup = GraphTableSVG.createGroup();
-            p.svgGroup.appendChild(p.svgFigure);
-            p.svgGroup.appendChild(p.svgText);
-            p.parent = _parent;
-            p.parent.svgGroup.appendChild(p.svgGroup);
-            return p;
-        };
         Object.defineProperty(Node.prototype, "x", {
             get: function () {
                 return this.svgGroup.getX();
@@ -58,14 +63,112 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        Node.prototype.getLocation = function (type) {
+            return [this.x, this.y];
+        };
         return Node;
     }());
     GraphTableSVG.Node = Node;
+    var CircleNode = (function (_super) {
+        __extends(CircleNode, _super);
+        function CircleNode() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        CircleNode.create = function (_parent) {
+            var p = new CircleNode();
+            p.svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            p.svgCircle.style.stroke = "black";
+            p.svgCircle.style.strokeWidth = "5pt";
+            p.svgCircle.cx.baseVal.value = 0;
+            p.svgCircle.cy.baseVal.value = 0;
+            p.svgCircle.r.baseVal.value = 30;
+            p.svgText = GraphTableSVG.createText();
+            p.svgGroup = GraphTableSVG.createGroup();
+            p.svgGroup.appendChild(p.svgCircle);
+            p.svgGroup.appendChild(p.svgText);
+            p.parent = _parent;
+            p.parent.svgGroup.appendChild(p.svgGroup);
+            return p;
+        };
+        Object.defineProperty(CircleNode.prototype, "radius", {
+            get: function () {
+                return this.svgCircle.r.baseVal.value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        CircleNode.prototype.getLocation = function (type) {
+            switch (type) {
+                case ConnecterPositionType.Top:
+                    return [this.x, this.y - this.radius];
+                case ConnecterPositionType.RightUp:
+                    return [this.x, this.y];
+                case ConnecterPositionType.Right:
+                    return [this.x + this.radius, this.y];
+                case ConnecterPositionType.RightDown:
+                    return [this.x, this.y];
+                case ConnecterPositionType.Bottom:
+                    return [this.x, this.y + this.radius];
+                case ConnecterPositionType.LeftDown:
+                    return [this.x, this.y];
+                case ConnecterPositionType.Left:
+                    return [this.x - this.radius, this.y];
+                case ConnecterPositionType.LeftUp:
+                    return [this.x, this.y];
+                default:
+                    return [this.x, this.y];
+            }
+        };
+        return CircleNode;
+    }(Node));
+    GraphTableSVG.CircleNode = CircleNode;
     var Edge = (function () {
         function Edge() {
         }
-        Edge.createEdge = function (_parent, _begin, _end) {
-            var p = new Edge();
+        Object.defineProperty(Edge.prototype, "x1", {
+            get: function () {
+                var _a = this.beginNode.getLocation(this.beginConnectType), x1 = _a[0], y1 = _a[1];
+                return x1;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Edge.prototype, "y1", {
+            get: function () {
+                var _a = this.beginNode.getLocation(this.beginConnectType), x1 = _a[0], y1 = _a[1];
+                return y1;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Edge.prototype, "x2", {
+            get: function () {
+                var _a = this.endNode.getLocation(this.endConnectType), x2 = _a[0], y2 = _a[1];
+                return x2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Edge.prototype, "y2", {
+            get: function () {
+                var _a = this.endNode.getLocation(this.endConnectType), x2 = _a[0], y2 = _a[1];
+                return y2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Edge.prototype.relocation = function () {
+        };
+        return Edge;
+    }());
+    GraphTableSVG.Edge = Edge;
+    var LineEdge = (function (_super) {
+        __extends(LineEdge, _super);
+        function LineEdge() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        LineEdge.create = function (_parent, _begin, _end) {
+            var p = new LineEdge();
             p.beginNode = _begin;
             p.endNode = _end;
             p.svgLine = GraphTableSVG.createLine(0, 0, 100, 100);
@@ -73,15 +176,15 @@ var GraphTableSVG;
             p.parent.svgGroup.appendChild(p.svgLine);
             return p;
         };
-        Edge.prototype.relocation = function () {
-            this.svgLine.x1.baseVal.value = this.beginNode.x;
-            this.svgLine.y1.baseVal.value = this.beginNode.y;
-            this.svgLine.x2.baseVal.value = this.endNode.x;
-            this.svgLine.y2.baseVal.value = this.endNode.y;
+        LineEdge.prototype.relocation = function () {
+            this.svgLine.x1.baseVal.value = this.x1;
+            this.svgLine.y1.baseVal.value = this.y1;
+            this.svgLine.x2.baseVal.value = this.x2;
+            this.svgLine.y2.baseVal.value = this.y2;
         };
-        return Edge;
-    }());
-    GraphTableSVG.Edge = Edge;
+        return LineEdge;
+    }(Edge));
+    GraphTableSVG.LineEdge = LineEdge;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -428,87 +531,36 @@ var GraphTableSVG;
             lines.push("Sub createMyTable()");
             lines.push(" Dim createdSlide As slide");
             lines.push(" Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)");
-            lines.push(" Dim tableS As shape");
-            lines.push(" Dim table_ As table");
-            //lines.push(` Set tableS = CreateTable(createdSlide, ${table.height}, ${table.width})`);
-            lines.push(" Set tableS = createdSlide.Shapes.AddTable(" + table.height + ", " + table.width + ")");
-            //page.Shapes.AddTable(row_, column_)
-            lines.push(" Set table_ = tableS.table");
-            for (var y = 0; y < table.height; y++) {
-                lines.push(" Call EditRow(table_.Rows(" + (y + 1) + "), " + table.rows[y].height + ")");
-            }
-            for (var x = 0; x < table.width; x++) {
-                lines.push(" Call EditColumn(table_.Columns(" + (x + 1) + "), " + table.columns[x].width + ")");
-            }
-            for (var y = 0; y < table.height; y++) {
-                for (var x = 0; x < table.width; x++) {
-                    var cell = table.cells[y][x];
-                    lines.push(" Call EditCell(table_.cell(" + (y + 1) + "," + (x + 1) + "), \"" + cell.svgText.textContent + "\", " + VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) + ")");
-                }
-            }
-            lines.push("Call EditCellFonts(table_)");
-            lines.push("Call EditCellTextFrames(table_)");
-            lines.push("Call EditBorders(table_)");
+            var _a = table.createVBAMainCode("createdSlide"), main = _a[0], sub = _a[1];
+            lines.push(main);
+            lines.push("MsgBox \"created\"");
             lines.push("End Sub");
+            lines.push(sub);
             lines.push(SVGToVBA.cellFunctionCode);
-            lines.push("Sub EditCellFonts(table_ As Table)");
-            for (var y = 0; y < table.height; y++) {
-                for (var x = 0; x < table.width; x++) {
-                    var cell = table.cells[y][x];
-                    lines.push(" Call EditCellFont(table_.cell(" + (y + 1) + "," + (x + 1) + ").Shape.TextFrame, " + parseInt(cell.svgText.style.fontSize) + ", \"" + cell.svgText.style.fontFamily + "\", " + VBATranslateFunctions.colorToVBA(cell.svgText.style.fill) + ")");
-                }
-            }
-            lines.push("End Sub");
-            lines.push("Sub EditCellTextFrames(table_ As Table)");
-            for (var y = 0; y < table.height; y++) {
-                for (var x = 0; x < table.width; x++) {
-                    var cell = table.cells[y][x];
-                    lines.push(" Call EditCellTextFrame(table_.cell(" + (y + 1) + "," + (x + 1) + ").Shape.TextFrame, " + cell.padding.top + ", " + cell.padding.bottom + ", " + cell.padding.left + ", " + cell.padding.right + ")");
-                }
-            }
-            lines.push("End Sub");
-            lines.push("Sub EditBorders(table_ As Table)");
-            for (var y = 0; y < table.height; y++) {
-                for (var x = 0; x < table.width; x++) {
-                    var cell = table.cells[y][x];
-                    lines.push(" Call EditCellBorder(table_.cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderTop), " + VBATranslateFunctions.colorToVBA(cell.upLine.style.fill) + ", " + VBAFunctions.parseInteger(cell.upLine.style.strokeWidth) + ", " + VBAFunctions.visible(cell.upLine.style.visibility) + ")");
-                    lines.push(" Call EditCellBorder(table_.cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderLeft), " + VBATranslateFunctions.colorToVBA(cell.leftLine.style.fill) + ", " + VBAFunctions.parseInteger(cell.leftLine.style.strokeWidth) + ", " + VBAFunctions.visible(cell.leftLine.style.visibility) + ")");
-                    if (x + 1 == table.width) {
-                        lines.push(" Call EditCellBorder(table_.cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderRight), " + VBATranslateFunctions.colorToVBA(cell.rightLine.style.fill) + ", " + VBAFunctions.parseInteger(cell.rightLine.style.strokeWidth) + ", " + VBAFunctions.visible(cell.rightLine.style.visibility) + ")");
-                    }
-                    if (y + 1 == table.height) {
-                        lines.push(" Call EditCellBorder(table_.cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderBottom), " + VBATranslateFunctions.colorToVBA(cell.bottomLine.style.fill) + ", " + VBAFunctions.parseInteger(cell.bottomLine.style.strokeWidth) + ", " + VBAFunctions.visible(cell.bottomLine.style.visibility) + ")");
-                    }
-                }
-            }
-            lines.push("End Sub");
             return VBATranslateFunctions.joinLines(lines);
         };
         return SVGToVBA;
     }());
     SVGToVBA.cellFunctionCode = "\nSub EditTable(table_ As table, cellInfo_() As Variant)\n    Dim x As Integer\n    Dim y As Integer\n    \n    For x = 1 To UBound(cellInfo_, 1)\n        For y = 1 To UBound(cellInfo_, 2)\n         Call EditCell(table_.cell(x, y), CStr(cellInfo_(x, y)(0)))\n        Next\n    Next\nEnd Sub\n\nSub EditCell(cell_ As cell, text_ As String, backColor As Variant)\n    cell_.Shape.TextFrame.TextRange.text = text_\n    cell_.Shape.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant)\n    frame_.TextRange.Font.Size = fontSize\n    frame_.TextRange.Font.name = fontName\n    frame_.TextRange.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\nEnd Sub\n\n\n\n\nSub EditRow(row_ As Row, height As Integer)\n    row_.height = height\nEnd Sub\nSub EditColumn(column_ As Column, width As Integer)\n    column_.width = width\nEnd Sub\n\nSub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double)\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\nEnd Sub\n\nSub EditTextRange(range_ As TextRange, text As String, subBeg As Integer, subLen As Integer, color As Variant)\n    range_.text = text\n    range_.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    If subLen > 0 Then\n    range_.Characters(subBeg, subLen).Font.Subscript = True\n    End If\nEnd Sub\n\nSub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer, transparent As Double)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.weight = weight\n    line_.Transparency = transparent\nEnd Sub\n\n";
     GraphTableSVG.SVGToVBA = SVGToVBA;
-    var VBAFunctions;
-    (function (VBAFunctions) {
-        function parseInteger(value) {
-            if (value == "") {
-                return 1;
-            }
-            else {
-                return parseInt(value);
-            }
+    function parseInteger(value) {
+        if (value == "") {
+            return 1;
         }
-        VBAFunctions.parseInteger = parseInteger;
-        function visible(value) {
-            if (value == "hidden") {
-                return 1.0;
-            }
-            else {
-                return 0;
-            }
+        else {
+            return parseInt(value);
         }
-        VBAFunctions.visible = visible;
-    })(VBAFunctions || (VBAFunctions = {}));
+    }
+    GraphTableSVG.parseInteger = parseInteger;
+    function visible(value) {
+        if (value == "hidden") {
+            return 1.0;
+        }
+        else {
+            return 0;
+        }
+    }
+    GraphTableSVG.visible = visible;
     var VBATranslateFunctions = (function () {
         function VBATranslateFunctions() {
         }
@@ -568,6 +620,7 @@ var GraphTableSVG;
         };
         return VBATranslateFunctions;
     }());
+    GraphTableSVG.VBATranslateFunctions = VBATranslateFunctions;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -665,7 +718,7 @@ var GraphTableSVG;
     var SVGTable = (function () {
         function SVGTable(_svg, width, height) {
             this.svg = _svg;
-            this.cells = new Array(height);
+            this._cells = new Array(height);
             var svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this.group = svgGroup;
             svgGroup.setAttributeNS(null, 'transform', "translate(160,0)");
@@ -685,6 +738,13 @@ var GraphTableSVG;
             }
             this.resize();
         }
+        Object.defineProperty(SVGTable.prototype, "cells", {
+            get: function () {
+                return this._cells;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(SVGTable.prototype, "width", {
             get: function () {
                 return this.cells[0].length;
@@ -799,6 +859,103 @@ var GraphTableSVG;
             this.group.appendChild(cell.rightLine);
             cell.bottomLine = GraphTableSVG.createLine(cell.x, cell.y + cell.height, cell.x + cell.width, cell.y + cell.height);
             this.group.appendChild(cell.bottomLine);
+        };
+        SVGTable.prototype.createVBAMainCode = function (slideName) {
+            var fstLines = [];
+            var lines = new Array(0);
+            fstLines.push(" Dim tableS As shape");
+            fstLines.push(" Dim table_ As table");
+            //lines.push(` Set tableS = CreateTable(createdSlide, ${table.height}, ${table.width})`);
+            fstLines.push(" Set tableS = " + slideName + ".Shapes.AddTable(" + this.height + ", " + this.width + ")");
+            //page.Shapes.AddTable(row_, column_)
+            fstLines.push(" Set table_ = tableS.table");
+            var tableName = "table_";
+            for (var y = 0; y < this.height; y++) {
+                lines.push(" Call EditRow(" + tableName + ".Rows(" + (y + 1) + "), " + this.rows[y].height + ")");
+            }
+            for (var x = 0; x < this.width; x++) {
+                lines.push(" Call EditColumn(" + tableName + ".Columns(" + (x + 1) + "), " + this.columns[x].width + ")");
+            }
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    var cell = this.cells[y][x];
+                    lines.push(" Call EditCell(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + "), \"" + cell.svgText.textContent + "\", " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) + ")");
+                }
+            }
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    var cell = this.cells[y][x];
+                    lines.push(" Call EditCellFont(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Shape.TextFrame, " + parseInt(cell.svgText.style.fontSize) + ", \"" + cell.svgText.style.fontFamily + "\", " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgText.style.fill) + ")");
+                }
+            }
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    var cell = this.cells[y][x];
+                    lines.push(" Call EditCellTextFrame(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Shape.TextFrame, " + cell.padding.top + ", " + cell.padding.bottom + ", " + cell.padding.left + ", " + cell.padding.right + ")");
+                }
+            }
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    var cell = this.cells[y][x];
+                    lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderTop), " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.upLine.style.fill) + ", " + GraphTableSVG.parseInteger(cell.upLine.style.strokeWidth) + ", " + GraphTableSVG.visible(cell.upLine.style.visibility) + ")");
+                    lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderLeft), " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.leftLine.style.fill) + ", " + GraphTableSVG.parseInteger(cell.leftLine.style.strokeWidth) + ", " + GraphTableSVG.visible(cell.leftLine.style.visibility) + ")");
+                    if (x + 1 == this.width) {
+                        lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderRight), " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.rightLine.style.fill) + ", " + GraphTableSVG.parseInteger(cell.rightLine.style.strokeWidth) + ", " + GraphTableSVG.visible(cell.rightLine.style.visibility) + ")");
+                    }
+                    if (y + 1 == this.height) {
+                        lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderBottom), " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.bottomLine.style.fill) + ", " + GraphTableSVG.parseInteger(cell.bottomLine.style.strokeWidth) + ", " + GraphTableSVG.visible(cell.bottomLine.style.visibility) + ")");
+                    }
+                }
+            }
+            /*
+            lines.push(`Call EditCellFonts(table_)`);
+            lines.push(`Call EditCellTextFrames(table_)`);
+            lines.push(`Call EditBorders(table_)`);
+            */
+            //lines.push(`End Sub`);
+            /*
+            lines.push(`Sub EditCellFonts(table_ As Table)`);
+            
+            lines.push(`End Sub`);
+
+            lines.push(`Sub EditCellTextFrames(table_ As Table)`);
+            
+            lines.push(`End Sub`);
+
+
+            lines.push(`Sub EditBorders(table_ As Table)`);
+            */
+            //return [VBATranslateFunctions.joinLines(lines),""];
+            var x0 = GraphTableSVG.VBATranslateFunctions.joinLines(fstLines);
+            var _a = this.splitCode(tableName, lines), x1 = _a[0], y1 = _a[1];
+            return [GraphTableSVG.VBATranslateFunctions.joinLines([x0, x1]), y1];
+        };
+        SVGTable.prototype.splitCode = function (tableName, codes) {
+            var functions = [];
+            var p = this.splitCode1(codes);
+            p.forEach(function (x, i, arr) {
+                functions.push("Call SubFunction" + i + "(" + tableName + ")");
+                var begin = "Sub SubFunction" + i + "(" + tableName + " As Table)";
+                var end = "End Sub";
+                p[i] = GraphTableSVG.VBATranslateFunctions.joinLines([begin, x, end]);
+            });
+            return [GraphTableSVG.VBATranslateFunctions.joinLines(functions), GraphTableSVG.VBATranslateFunctions.joinLines(p)];
+        };
+        SVGTable.prototype.splitCode1 = function (codes) {
+            var r = [];
+            var r1 = [];
+            codes.forEach(function (x, i, arr) {
+                r.push(x);
+                if (r.length == 80) {
+                    r1.push(GraphTableSVG.VBATranslateFunctions.joinLines(r));
+                    r = [];
+                }
+            });
+            if (r.length > 0) {
+                r1.push(GraphTableSVG.VBATranslateFunctions.joinLines(r));
+                r = [];
+            }
+            return r1;
         };
         return SVGTable;
     }());

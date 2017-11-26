@@ -105,11 +105,14 @@ function createLZ77WSRTable() {
 function createTestGraph() {
     svgBox = document.getElementById('svgbox');
     var graph = Graph.create(svgBox);
-    var node1 = GraphTableSVG.Node.createNode(graph);
-    var node2 = GraphTableSVG.Node.createNode(graph);
+    var node1 = GraphTableSVG.CircleNode.create(graph);
+    var node2 = GraphTableSVG.CircleNode.create(graph);
     node2.svgGroup.setX(160);
     node2.svgGroup.setY(100);
-    var edge1 = GraphTableSVG.Edge.createEdge(graph, node1, node2);
+    var edge1 = GraphTableSVG.LineEdge.create(graph, node1, node2);
+    edge1.beginConnectType = GraphTableSVG.ConnecterPositionType.Bottom;
+    edge1.endConnectType = GraphTableSVG.ConnecterPositionType.Top;
+
     graph.edges.push(edge1);
 
     console.log(node2.svgGroup.transform.baseVal.getItem(0).matrix.f);

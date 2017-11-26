@@ -7,79 +7,21 @@ module GraphTableSVG {
             lines.push(`Sub createMyTable()`);
             lines.push(` Dim createdSlide As slide`);
             lines.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
-            lines.push(` Dim tableS As shape`);
-            lines.push(` Dim table_ As table`);
+            
+            var [main, sub] = table.createVBAMainCode("createdSlide");
 
-            //lines.push(` Set tableS = CreateTable(createdSlide, ${table.height}, ${table.width})`);
-            lines.push(` Set tableS = createdSlide.Shapes.AddTable(${table.height}, ${table.width})`)
-            //page.Shapes.AddTable(row_, column_)
-            lines.push(` Set table_ = tableS.table`);
-
-            for (var y = 0; y < table.height; y++) {
-                lines.push(` Call EditRow(table_.Rows(${y + 1}), ${table.rows[y].height})`);
-            }
-            for (var x = 0; x < table.width; x++) {
-                lines.push(` Call EditColumn(table_.Columns(${x + 1}), ${table.columns[x].width})`);
-            }
-
-            for (var y = 0; y < table.height; y++) {
-                for (var x = 0; x < table.width; x++) {
-                    var cell = table.cells[y][x];
-                    lines.push(` Call EditCell(table_.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill)})`);
-                }
-            }
-            lines.push(`Call EditCellFonts(table_)`);
-            lines.push(`Call EditCellTextFrames(table_)`);
-            lines.push(`Call EditBorders(table_)`);
-
-
+            lines.push(main);
+            lines.push(`MsgBox "created"`);
             lines.push(`End Sub`);
+            lines.push(sub);
             lines.push(SVGToVBA.cellFunctionCode);
-
-            lines.push(`Sub EditCellFonts(table_ As Table)`);
-            for (var y = 0; y < table.height; y++) {
-                for (var x = 0; x < table.width; x++) {
-                    var cell = table.cells[y][x];
-                    lines.push(` Call EditCellFont(table_.cell(${y + 1},${x + 1}).Shape.TextFrame, ${parseInt(cell.svgText.style.fontSize)}, "${cell.svgText.style.fontFamily}", ${VBATranslateFunctions.colorToVBA(cell.svgText.style.fill)})`);
-                }
-            }
-            lines.push(`End Sub`);
-
-            lines.push(`Sub EditCellTextFrames(table_ As Table)`);
-            for (var y = 0; y < table.height; y++) {
-                for (var x = 0; x < table.width; x++) {
-                    var cell = table.cells[y][x];
-                    lines.push(` Call EditCellTextFrame(table_.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.padding.top}, ${cell.padding.bottom}, ${cell.padding.left}, ${cell.padding.right})`);
-                }
-            }
-            lines.push(`End Sub`);
-
-
-            lines.push(`Sub EditBorders(table_ As Table)`);
-            for (var y = 0; y < table.height; y++) {
-                for (var x = 0; x < table.width; x++) {
-                    var cell = table.cells[y][x];
-                    lines.push(` Call EditCellBorder(table_.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${VBATranslateFunctions.colorToVBA(cell.upLine.style.fill)}, ${VBAFunctions.parseInteger(cell.upLine.style.strokeWidth)}, ${VBAFunctions.visible(cell.upLine.style.visibility)})`);
-
-                    lines.push(` Call EditCellBorder(table_.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${VBATranslateFunctions.colorToVBA(cell.leftLine.style.fill)}, ${VBAFunctions.parseInteger(cell.leftLine.style.strokeWidth)}, ${VBAFunctions.visible(cell.leftLine.style.visibility)})`);
-                    if (x + 1 == table.width) {
-                        lines.push(` Call EditCellBorder(table_.cell(${y + 1},${x + 1}).Borders(ppBorderRight), ${VBATranslateFunctions.colorToVBA(cell.rightLine.style.fill)}, ${VBAFunctions.parseInteger(cell.rightLine.style.strokeWidth)}, ${VBAFunctions.visible(cell.rightLine.style.visibility)})`);
-                    }
-
-                    if (y + 1 == table.height) {
-                        lines.push(` Call EditCellBorder(table_.cell(${y + 1},${x + 1}).Borders(ppBorderBottom), ${VBATranslateFunctions.colorToVBA(cell.bottomLine.style.fill)}, ${VBAFunctions.parseInteger(cell.bottomLine.style.strokeWidth)}, ${VBAFunctions.visible(cell.bottomLine.style.visibility)})`);
-                    }
-
-                }
-            }
-            lines.push(`End Sub`);
 
 
             return VBATranslateFunctions.joinLines(lines);
         }
 
 
-        private static cellFunctionCode: string = `
+        public static cellFunctionCode: string = `
 Sub EditTable(table_ As table, cellInfo_() As Variant)
     Dim x As Integer
     Dim y As Integer
@@ -140,24 +82,22 @@ End Sub
 `
     }
 
-    module VBAFunctions {
-        export function parseInteger(value: string): number {
-            if (value == "") {
-                return 1;
-            } else {
-                return parseInt(value);
-            }
+    export function parseInteger(value: string): number {
+        if (value == "") {
+            return 1;
+        } else {
+            return parseInt(value);
         }
-        export function visible(value: string): number {
-            if (value == "hidden") {
-                return 1.0;
-            } else {
-                return 0;
-            }
+    }
+    export function visible(value: string): number {
+        if (value == "hidden") {
+            return 1.0;
+        } else {
+            return 0;
         }
     }
 
-    class VBATranslateFunctions {
+    export class VBATranslateFunctions {
 
         static createStringFunction(item: string) {
             return item.length == 0 ? `""` : `"` + item + `"`;
