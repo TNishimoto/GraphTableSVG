@@ -1,4 +1,43 @@
-﻿module GraphTableSVG {
+﻿
+
+interface SVGGElement {    
+    getX(): number;
+    setX(value: number): void;
+    getY(): number;
+    setY(value: number): void;
+
+}
+SVGGElement.prototype.getX = function () {
+    var p: SVGGElement = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttributeNS(null, 'transform', "translate(0,0)");
+    }
+    return p.transform.baseVal.getItem(0).matrix.e;
+};
+SVGGElement.prototype.setX = function (value: number) {
+    var p: SVGGElement = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttributeNS(null, 'transform', "translate(0,0)");
+    }
+
+    return this.transform.baseVal.getItem(0).matrix.e = value;
+};
+SVGGElement.prototype.getY = function () {
+    return this.transform.baseVal.getItem(0).matrix.f;
+};
+SVGGElement.prototype.setY = function (value: number) {
+    var p: SVGGElement = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttributeNS(null, 'transform', "translate(0,0)");
+    }
+
+    return this.transform.baseVal.getItem(0).matrix.f = value;
+};
+
+
+
+module GraphTableSVG {
+    
 
     export function createLine(x: number, y: number, x2: number, y2: number): SVGLineElement {
         var line1 = <SVGLineElement>document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -28,5 +67,9 @@
         rect.height.baseVal.value = 30;
         rect.style.fill = "#ffffff";
         return rect;
+    }
+    export function createGroup(): SVGGElement {
+        var g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        return g;
     }
 }

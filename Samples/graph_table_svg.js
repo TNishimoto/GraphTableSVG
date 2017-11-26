@@ -1,5 +1,90 @@
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    var Graph = (function () {
+        function Graph() {
+            this.nodes = new Array(0);
+            this.edges = new Array(0);
+            this.svgGroup = null;
+        }
+        Graph.prototype.relocation = function () {
+            this.edges.forEach(function (x, i, arr) { x.relocation(); });
+        };
+        Graph.prototype.resize = function () {
+        };
+        Graph.prototype.update = function () {
+            this.resize();
+            this.relocation();
+        };
+        Graph.create = function (svg) {
+            var g = GraphTableSVG.createGroup();
+            var graph = new Graph();
+            graph.svgGroup = g;
+            svg.appendChild(graph.svgGroup);
+            return graph;
+        };
+        return Graph;
+    }());
+    GraphTableSVG.Graph = Graph;
+    var Node = (function () {
+        function Node() {
+        }
+        Node.createNode = function (_parent) {
+            var p = new Node();
+            p.svgFigure = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            p.svgFigure.style.stroke = "black";
+            p.svgFigure.style.strokeWidth = "5pt";
+            p.svgFigure.cx.baseVal.value = 30;
+            p.svgFigure.cy.baseVal.value = 30;
+            p.svgFigure.r.baseVal.value = 30;
+            p.svgText = GraphTableSVG.createText();
+            p.svgGroup = GraphTableSVG.createGroup();
+            p.svgGroup.appendChild(p.svgFigure);
+            p.svgGroup.appendChild(p.svgText);
+            p.parent = _parent;
+            p.parent.svgGroup.appendChild(p.svgGroup);
+            return p;
+        };
+        Object.defineProperty(Node.prototype, "x", {
+            get: function () {
+                return this.svgGroup.getX();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Node.prototype, "y", {
+            get: function () {
+                return this.svgGroup.getY();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Node;
+    }());
+    GraphTableSVG.Node = Node;
+    var Edge = (function () {
+        function Edge() {
+        }
+        Edge.createEdge = function (_parent, _begin, _end) {
+            var p = new Edge();
+            p.beginNode = _begin;
+            p.endNode = _end;
+            p.svgLine = GraphTableSVG.createLine(0, 0, 100, 100);
+            p.parent = _parent;
+            p.parent.svgGroup.appendChild(p.svgLine);
+            return p;
+        };
+        Edge.prototype.relocation = function () {
+            this.svgLine.x1.baseVal.value = this.beginNode.x;
+            this.svgLine.y1.baseVal.value = this.beginNode.y;
+            this.svgLine.x2.baseVal.value = this.endNode.x;
+            this.svgLine.y2.baseVal.value = this.endNode.y;
+        };
+        return Edge;
+    }());
+    GraphTableSVG.Edge = Edge;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     var Padding = (function () {
         function Padding() {
             this.top = 0;
@@ -719,6 +804,30 @@ var GraphTableSVG;
     }());
     GraphTableSVG.SVGTable = SVGTable;
 })(GraphTableSVG || (GraphTableSVG = {}));
+SVGGElement.prototype.getX = function () {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttributeNS(null, 'transform', "translate(0,0)");
+    }
+    return p.transform.baseVal.getItem(0).matrix.e;
+};
+SVGGElement.prototype.setX = function (value) {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttributeNS(null, 'transform', "translate(0,0)");
+    }
+    return this.transform.baseVal.getItem(0).matrix.e = value;
+};
+SVGGElement.prototype.getY = function () {
+    return this.transform.baseVal.getItem(0).matrix.f;
+};
+SVGGElement.prototype.setY = function (value) {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttributeNS(null, 'transform', "translate(0,0)");
+    }
+    return this.transform.baseVal.getItem(0).matrix.f = value;
+};
 var GraphTableSVG;
 (function (GraphTableSVG) {
     function createLine(x, y, x2, y2) {
@@ -752,5 +861,10 @@ var GraphTableSVG;
         return rect;
     }
     GraphTableSVG.createRectangle = createRectangle;
+    function createGroup() {
+        var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        return g;
+    }
+    GraphTableSVG.createGroup = createGroup;
 })(GraphTableSVG || (GraphTableSVG = {}));
 //# sourceMappingURL=graph_table_svg.js.map

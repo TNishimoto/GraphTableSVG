@@ -1,6 +1,7 @@
 ﻿
 import SVGTable = GraphTableSVG.SVGTable;
 import SVGToVBA = GraphTableSVG.SVGToVBA;
+import Graph = GraphTableSVG.Graph;
 
 /*
 class VirtualCell {
@@ -101,12 +102,30 @@ function createLZ77WSRTable() {
 
 }
 
-window.onload = () => {
-    
+function createTestGraph() {
     svgBox = document.getElementById('svgbox');
-    //svgBox.setAttribute('viewBox', '0 0 600 600');
+    var graph = Graph.create(svgBox);
+    var node1 = GraphTableSVG.Node.createNode(graph);
+    var node2 = GraphTableSVG.Node.createNode(graph);
+    node2.svgGroup.setX(160);
+    node2.svgGroup.setY(100);
+    var edge1 = GraphTableSVG.Edge.createEdge(graph, node1, node2);
+    graph.edges.push(edge1);
+
+    console.log(node2.svgGroup.transform.baseVal.getItem(0).matrix.f);
+
+    graph.nodes.push(node1);
+    graph.nodes.push(node2);
+    graph.update();
+}
+
+window.onload = () => {
+    createTestGraph();
+    /*
+    svgBox = document.getElementById('svgbox');
     var el = document.getElementById('content');
     table = new SVGTable(svgBox, 5, 5);
+    */
 
     //table.cells[0][0].svgText.textContent = "hogehgoehg<tbreak/>oheoghoeghoe";
     

@@ -26,6 +26,7 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="graph\graph.ts" />
     <TypeScriptCompile Include="table\cell.ts" />
     <TypeScriptCompile Include="table\vba.ts" />
     <TypeScriptCompile Include="table\table.ts" />

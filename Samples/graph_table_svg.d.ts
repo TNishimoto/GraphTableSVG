@@ -1,4 +1,34 @@
 declare module GraphTableSVG {
+    class Graph {
+        nodes: Node[];
+        edges: Edge[];
+        svgGroup: SVGGElement;
+        relocation(): void;
+        resize(): void;
+        update(): void;
+        static create(svg: HTMLElement): Graph;
+    }
+    class Node {
+        svgFigure: SVGCircleElement;
+        svgText: SVGTextElement;
+        svgGroup: SVGGElement;
+        parent: Graph;
+        static createNode(_parent: Graph): Node;
+        readonly x: number;
+        readonly y: number;
+    }
+    class Edge {
+        beginNode: Node;
+        beginConnectType: number;
+        endNode: Node;
+        endConnectType: number;
+        svgLine: SVGLineElement;
+        parent: Graph;
+        static createEdge(_parent: Graph, _begin: Node, _end: Node): Edge;
+        relocation(): void;
+    }
+}
+declare module GraphTableSVG {
     class Padding {
         top: number;
         left: number;
@@ -88,8 +118,15 @@ declare module GraphTableSVG {
         constructor(_svg: HTMLElement, width: number, height: number);
     }
 }
+interface SVGGElement {
+    getX(): number;
+    setX(value: number): void;
+    getY(): number;
+    setY(value: number): void;
+}
 declare module GraphTableSVG {
     function createLine(x: number, y: number, x2: number, y2: number): SVGLineElement;
     function createText(): SVGTextElement;
     function createRectangle(): SVGRectElement;
+    function createGroup(): SVGGElement;
 }
