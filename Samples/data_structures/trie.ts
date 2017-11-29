@@ -1,11 +1,15 @@
 ﻿module TreeFunctions {
-    
     class TreeNode {
+        private static counter: number = 0;
+
         children: TreeNode[] = [];
         edgeText: string = "";
         nodeText: string = "";
         parent: TreeNode | null = null;
-        id: number;
+        _id: number = TreeNode.counter++;
+        get id(): number {
+            return this._id;
+        }
 
         /*
         public locus(pattern: string): TreeNode {
@@ -59,10 +63,13 @@
                 return r;
             }
         }
+        public setID() {
+
+        }
         
     }
 
-    function createTrie(text: string): TreeNode {
+    export function createTrie(text: string): TreeNode {
         var root = new TreeNode();
         for (var i = 0; i < text.length; i++) {
             root.addString(text.substr(i));
@@ -91,9 +98,33 @@
         }
         return [texts.length, false];
     }
-    function translate(root: TreeNode, graph: GraphTableSVG.Graph) {
+    export function translate(root: TreeNode, graph: GraphTableSVG.OrderedOutcomingEdgesGraph) {
+        root.getNodes().forEach(function(x, i, arr) {
+            var node = translate2(x, graph);
+            graph.outcomingEdgesDic[node.id] = [];
+            x.children.forEach(function(y, j, arr2) {
+                var child = translate2(y, graph);
+                var edge = GraphTableSVG.LineEdge.create(graph, node, child);
+                graph.edges.push(edge);
+                graph.outcomingEdgesDic[node.id].push(edge);
+            });
+        });
 
     }
+    function translate2(treeNode: TreeNode, graph: GraphTableSVG.OrderedOutcomingEdgesGraph) {
+        var p = graph.nodes.filter(function(x) { x.id == treeNode.id });
+        if (p.length == 0) {
+            var node = GraphTableSVG.CircleVertex.create(graph);
+            node.svgText.textContent = treeNode.id.toString();
+            node.id = treeNode.id;
+            graph.nodes.push(node);
+            return node;
+        } else {
+            return p[0];
+        }
+    }
+
+    /*
     class TreeSVG {
         root: TreeNode;
         graph: GraphTableSVG.Graph;
@@ -119,9 +150,7 @@
             });
             return p;
         }
-        public locate(rootX: number, rootY: number, width: number, height: number) {
-
-        }
     }
+    */
 
 }

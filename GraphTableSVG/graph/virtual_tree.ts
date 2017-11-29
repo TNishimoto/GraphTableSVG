@@ -6,12 +6,16 @@
         constructor(_graph: OrderedOutcomingEdgesGraph, _root: Vertex) {
             this.graph = _graph;
             this.root = _root;
+            if (this.root == undefined) console.log("undefined!");
         }
         getChildren(): VirtualTree[] {
             var p = this;
             return this.graph.outcomingEdgesDic[this.root.id].map(function (x, i, arr) {
                 return new VirtualTree(p.graph, x.endNode);
             });
+        }
+        get parentEdge(): Edge | null {
+            return this.graph.getParentEdge(this.root);
         }
 
         public getSubtree(result: Vertex[] = []): Vertex[] {

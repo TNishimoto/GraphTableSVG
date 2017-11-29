@@ -146,6 +146,42 @@ var GraphTableSVG;
             _this.outcomingEdgesDic = [];
             return _this;
         }
+        //parentEdgeDic: { [key: number]: Edge; } = [];
+        OrderedOutcomingEdgesGraph.prototype.getRoot = function () {
+            console.log("getRoot" + this.nodes.length + "/" + this.edges.length);
+            console.log(this.nodes);
+            var p = this;
+            var r = this.nodes.filter(function (x) {
+                return p.getParentEdge(x) == null;
+            });
+            console.log(r.length);
+            return r[0];
+        };
+        OrderedOutcomingEdgesGraph.prototype.getParentEdge = function (node) {
+            for (var i = 0; i < this.edges.length; i++) {
+                if (this.edges[i].endNode.id == node.id) {
+                    return this.edges[i];
+                }
+            }
+            console.log(node.id);
+            return null;
+        };
+        OrderedOutcomingEdgesGraph.prototype.getTree = function (node) {
+            return new GraphTableSVG.VirtualTree(this, node);
+        };
+        OrderedOutcomingEdgesGraph.create = function (svg) {
+            var g = GraphTableSVG.createGroup();
+            var graph = new OrderedOutcomingEdgesGraph();
+            graph.svgGroup = g;
+            svg.appendChild(graph.svgGroup);
+            return graph;
+        };
+        OrderedOutcomingEdgesGraph.prototype.relocation = function () {
+            console.log("relocation");
+            var root = this.getRoot();
+            var tree = this.getTree(root);
+            GraphTableSVG.relocation.standardLocateSub(tree, 0, 50);
+        };
         return OrderedOutcomingEdgesGraph;
     }(Graph));
     GraphTableSVG.OrderedOutcomingEdgesGraph = OrderedOutcomingEdgesGraph;
@@ -207,7 +243,9 @@ var GraphTableSVG;
                 }
             }
             tree.root.x = Math.floor(leaves * edgeLength / 2);
+            console.log(tree.root.id + "/" + tree.root.x);
         }
+        relocation.standardLocateSub = standardLocateSub;
     })(relocation = GraphTableSVG.relocation || (GraphTableSVG.relocation = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
@@ -306,6 +344,8 @@ var GraphTableSVG;
         function VirtualTree(_graph, _root) {
             this.graph = _graph;
             this.root = _root;
+            if (this.root == undefined)
+                console.log("undefined!");
         }
         VirtualTree.prototype.getChildren = function () {
             var p = this;
@@ -313,6 +353,13 @@ var GraphTableSVG;
                 return new VirtualTree(p.graph, x.endNode);
             });
         };
+        Object.defineProperty(VirtualTree.prototype, "parentEdge", {
+            get: function () {
+                return this.graph.getParentEdge(this.root);
+            },
+            enumerable: true,
+            configurable: true
+        });
         VirtualTree.prototype.getSubtree = function (result) {
             if (result === void 0) { result = []; }
             var p = this;

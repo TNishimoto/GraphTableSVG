@@ -48,6 +48,11 @@ declare module GraphTableSVG {
         outcomingEdgesDic: {
             [key: number]: Edge[];
         };
+        getRoot(): Vertex;
+        getParentEdge(node: Vertex): Edge | null;
+        getTree(node: Vertex): VirtualTree;
+        static create(svg: HTMLElement): OrderedOutcomingEdgesGraph;
+        relocation(): void;
     }
     class TextPath {
         parent: Edge;
@@ -57,6 +62,7 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     module relocation {
+        function standardLocateSub(tree: VirtualTree, y: number, edgeLength: number): void;
     }
 }
 declare module GraphTableSVG {
@@ -83,6 +89,7 @@ declare module GraphTableSVG {
         root: Vertex;
         constructor(_graph: OrderedOutcomingEdgesGraph, _root: Vertex);
         getChildren(): VirtualTree[];
+        readonly parentEdge: Edge | null;
         getSubtree(result?: Vertex[]): Vertex[];
         getLeaves(): Vertex[];
         getHeight(): number;

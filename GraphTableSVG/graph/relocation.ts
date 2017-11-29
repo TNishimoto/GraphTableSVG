@@ -25,7 +25,7 @@
 
         }
         */
-        function standardLocateSub(tree: VirtualTree, y: number = 0, edgeLength: number): void {
+        export function standardLocateSub(tree: VirtualTree, y: number = 0, edgeLength: number): void {
             tree.root.x = 0;
             tree.root.y = y;
             var leaves = 0;
@@ -46,6 +46,8 @@
                 }
             }
             tree.root.x = Math.floor(leaves * edgeLength / 2);
+            console.log(tree.root.id + "/" + tree.root.x);
+
         }
         
     }

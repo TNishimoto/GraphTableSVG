@@ -101,6 +101,19 @@ function createLZ77WSRTable() {
     table.resize();
 
 }
+function createSuffixTrie() {
+    svgBox = document.getElementById('svgbox');
+    var text = getInputText();
+    var graph = GraphTableSVG.OrderedOutcomingEdgesGraph.create(svgBox);
+    var trie = TreeFunctions.createTrie(text);
+    TreeFunctions.translate(trie, graph);
+    /*
+    var root = graph.getRoot();
+    root.x = 50;
+    root.y = 50;
+    */
+    graph.update();
+}
 
 function createTestGraph() {
     svgBox = document.getElementById('svgbox');
