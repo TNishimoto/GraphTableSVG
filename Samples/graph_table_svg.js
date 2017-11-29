@@ -10,120 +10,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    var ConnecterPositionType;
-    (function (ConnecterPositionType) {
-        ConnecterPositionType[ConnecterPositionType["Top"] = 1] = "Top";
-        ConnecterPositionType[ConnecterPositionType["LeftUp"] = 2] = "LeftUp";
-        ConnecterPositionType[ConnecterPositionType["Left"] = 3] = "Left";
-        ConnecterPositionType[ConnecterPositionType["LeftDown"] = 4] = "LeftDown";
-        ConnecterPositionType[ConnecterPositionType["Bottom"] = 5] = "Bottom";
-        ConnecterPositionType[ConnecterPositionType["RightDown"] = 6] = "RightDown";
-        ConnecterPositionType[ConnecterPositionType["Right"] = 7] = "Right";
-        ConnecterPositionType[ConnecterPositionType["RightUp"] = 8] = "RightUp";
-    })(ConnecterPositionType = GraphTableSVG.ConnecterPositionType || (GraphTableSVG.ConnecterPositionType = {}));
-    var Graph = (function () {
-        function Graph() {
-            this.nodes = new Array(0);
-            this.edges = new Array(0);
-            this.svgGroup = null;
-        }
-        Graph.prototype.relocation = function () {
-            this.edges.forEach(function (x, i, arr) { x.relocation(); });
-        };
-        Graph.prototype.resize = function () {
-        };
-        Graph.prototype.update = function () {
-            this.resize();
-            this.relocation();
-        };
-        Graph.create = function (svg) {
-            var g = GraphTableSVG.createGroup();
-            var graph = new Graph();
-            graph.svgGroup = g;
-            svg.appendChild(graph.svgGroup);
-            return graph;
-        };
-        return Graph;
-    }());
-    GraphTableSVG.Graph = Graph;
-    var Node = (function () {
-        function Node() {
-        }
-        Object.defineProperty(Node.prototype, "x", {
-            get: function () {
-                return this.svgGroup.getX();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Node.prototype, "y", {
-            get: function () {
-                return this.svgGroup.getY();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Node.prototype.getLocation = function (type) {
-            return [this.x, this.y];
-        };
-        return Node;
-    }());
-    GraphTableSVG.Node = Node;
-    var CircleNode = (function (_super) {
-        __extends(CircleNode, _super);
-        function CircleNode() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        CircleNode.create = function (_parent) {
-            var p = new CircleNode();
-            p.svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            p.svgCircle.style.stroke = "black";
-            p.svgCircle.style.strokeWidth = "5pt";
-            p.svgCircle.cx.baseVal.value = 0;
-            p.svgCircle.cy.baseVal.value = 0;
-            p.svgCircle.r.baseVal.value = 30;
-            p.svgText = GraphTableSVG.createText();
-            p.svgText.textContent = "hogehoge";
-            p.svgGroup = GraphTableSVG.createGroup();
-            p.svgGroup.appendChild(p.svgCircle);
-            p.svgGroup.appendChild(p.svgText);
-            p.parent = _parent;
-            p.parent.svgGroup.appendChild(p.svgGroup);
-            return p;
-        };
-        Object.defineProperty(CircleNode.prototype, "radius", {
-            get: function () {
-                return this.svgCircle.r.baseVal.value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        CircleNode.prototype.getLocation = function (type) {
-            var r = (Math.sqrt(2) / 2) * this.radius;
-            switch (type) {
-                case ConnecterPositionType.Top:
-                    return [this.x, this.y - this.radius];
-                case ConnecterPositionType.RightUp:
-                    return [this.x + r, this.y - r];
-                case ConnecterPositionType.Right:
-                    return [this.x + this.radius, this.y];
-                case ConnecterPositionType.RightDown:
-                    return [this.x + r, this.y + r];
-                case ConnecterPositionType.Bottom:
-                    return [this.x, this.y + this.radius];
-                case ConnecterPositionType.LeftDown:
-                    return [this.x - r, this.y + r];
-                case ConnecterPositionType.Left:
-                    return [this.x - this.radius, this.y];
-                case ConnecterPositionType.LeftUp:
-                    return [this.x - r, this.y - r];
-                default:
-                    return [this.x, this.y];
-            }
-        };
-        return CircleNode;
-    }(Node));
-    GraphTableSVG.CircleNode = CircleNode;
     var Edge = (function () {
         function Edge() {
         }
@@ -159,7 +45,8 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        Edge.prototype.relocation = function () {
+        Edge.prototype.update = function () {
+            return false;
         };
         return Edge;
     }());
@@ -169,6 +56,7 @@ var GraphTableSVG;
         function LineEdge() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        //svgText: SVGTextElement;
         LineEdge.create = function (_parent, _begin, _end) {
             var p = new LineEdge();
             p.beginNode = _begin;
@@ -176,21 +64,26 @@ var GraphTableSVG;
             p.svgLine = GraphTableSVG.createLine(0, 0, 100, 100);
             p.parent = _parent;
             p.parent.svgGroup.appendChild(p.svgLine);
+            /*
             p.svgText = GraphTableSVG.createText();
             p.svgText.textContent = "hogehoge";
             p.parent.svgGroup.appendChild(p.svgText);
+            */
             return p;
         };
-        LineEdge.prototype.relocation = function () {
+        LineEdge.prototype.update = function () {
             this.svgLine.x1.baseVal.value = this.x1;
             this.svgLine.y1.baseVal.value = this.y1;
             this.svgLine.x2.baseVal.value = this.x2;
             this.svgLine.y2.baseVal.value = this.y2;
+            /*
             this.svgText.setX((this.x1 + this.x2) / 2);
             this.svgText.setY((this.y1 + this.y2) / 2);
             var rad = Math.atan2(this.y2 - this.y1, this.x2 - this.x1);
             var rar = rad * (180 / Math.PI);
-            this.svgText.setAttribute('transform', "rotate(" + rar + ", " + this.svgText.getX() + ", " + this.svgText.getY() + ")");
+            this.svgText.setAttribute('transform', `rotate(${rar}, ${this.svgText.getX()}, ${this.svgText.getY()})`);
+            */
+            return false;
             /*
             this.svgText.setAttribute('x', "0");
             this.svgText.setAttribute('y', "0");
@@ -201,6 +94,293 @@ var GraphTableSVG;
         return LineEdge;
     }(Edge));
     GraphTableSVG.LineEdge = LineEdge;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var Rectangle = (function () {
+        function Rectangle() {
+        }
+        return Rectangle;
+    }());
+    GraphTableSVG.Rectangle = Rectangle;
+    var ConnecterPositionType;
+    (function (ConnecterPositionType) {
+        ConnecterPositionType[ConnecterPositionType["Top"] = 1] = "Top";
+        ConnecterPositionType[ConnecterPositionType["LeftUp"] = 2] = "LeftUp";
+        ConnecterPositionType[ConnecterPositionType["Left"] = 3] = "Left";
+        ConnecterPositionType[ConnecterPositionType["LeftDown"] = 4] = "LeftDown";
+        ConnecterPositionType[ConnecterPositionType["Bottom"] = 5] = "Bottom";
+        ConnecterPositionType[ConnecterPositionType["RightDown"] = 6] = "RightDown";
+        ConnecterPositionType[ConnecterPositionType["Right"] = 7] = "Right";
+        ConnecterPositionType[ConnecterPositionType["RightUp"] = 8] = "RightUp";
+    })(ConnecterPositionType = GraphTableSVG.ConnecterPositionType || (GraphTableSVG.ConnecterPositionType = {}));
+    var Graph = (function () {
+        function Graph() {
+            this.nodes = new Array(0);
+            this.edges = new Array(0);
+            this.svgGroup = null;
+        }
+        Graph.prototype.relocation = function () {
+            this.edges.forEach(function (x, i, arr) { x.update(); });
+        };
+        Graph.prototype.resize = function () {
+        };
+        Graph.prototype.update = function () {
+            this.resize();
+            this.relocation();
+        };
+        Graph.create = function (svg) {
+            var g = GraphTableSVG.createGroup();
+            var graph = new Graph();
+            graph.svgGroup = g;
+            svg.appendChild(graph.svgGroup);
+            return graph;
+        };
+        return Graph;
+    }());
+    GraphTableSVG.Graph = Graph;
+    var OrderedOutcomingEdgesGraph = (function (_super) {
+        __extends(OrderedOutcomingEdgesGraph, _super);
+        function OrderedOutcomingEdgesGraph() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.outcomingEdgesDic = [];
+            return _this;
+        }
+        return OrderedOutcomingEdgesGraph;
+    }(Graph));
+    GraphTableSVG.OrderedOutcomingEdgesGraph = OrderedOutcomingEdgesGraph;
+    var TextPath = (function () {
+        function TextPath() {
+        }
+        TextPath.prototype.update = function () {
+            return false;
+        };
+        return TextPath;
+    }());
+    GraphTableSVG.TextPath = TextPath;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var relocation;
+    (function (relocation) {
+        /*
+        export function relocate(graph: OrderedOutcomingEdgesGraph, root: Vertex, width: number, height: number) {
+
+        }
+        function getSubtreeSize(graph: OrderedOutcomingEdgesGraph, subtreeRoot: Vertex): number {
+            var children = graph.outcomingEdgesDic[subtreeRoot.id];
+            if (children.length == 0) {
+                return 1;
+            } else {
+                var width = 0;
+                children.forEach(function (x, i, arr) {
+                    width += getSubtreeSize(graph, x.endNode);
+                });
+                return width;
+            }
+        }
+
+        
+
+        function locate(graph: OrderedOutcomingEdgesGraph, root: Vertex, width: number, height: number) {
+
+        }
+        */
+        function standardLocateSub(tree, y, edgeLength) {
+            if (y === void 0) { y = 0; }
+            tree.root.x = 0;
+            tree.root.y = y;
+            var leaves = 0;
+            var edges = tree.getChildren();
+            var centerIndex = Math.floor(edges.length / 2) - 1;
+            var IsEven = edges.length % 2 == 0;
+            for (var i = 0; i < edges.length; i++) {
+                var next = edges[i];
+                if (next != null) {
+                    standardLocateSub(next, tree.root.y + edgeLength, edgeLength);
+                    next.addOffset(leaves * edgeLength, 0);
+                    var rect = next.getTreeRegion();
+                    leaves += rect.width;
+                    if (IsEven && i == centerIndex) {
+                        leaves += 1;
+                    }
+                }
+            }
+            tree.root.x = Math.floor(leaves * edgeLength / 2);
+        }
+    })(relocation = GraphTableSVG.relocation || (GraphTableSVG.relocation = {}));
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var Vertex = (function () {
+        function Vertex() {
+        }
+        Object.defineProperty(Vertex.prototype, "x", {
+            get: function () {
+                return this.svgGroup.getX();
+            },
+            set: function (value) {
+                this.svgGroup.setX(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vertex.prototype, "y", {
+            get: function () {
+                return this.svgGroup.getY();
+            },
+            set: function (value) {
+                this.svgGroup.setY(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Vertex.prototype.getLocation = function (type) {
+            return [this.x, this.y];
+        };
+        Vertex.prototype.update = function () {
+            return false;
+        };
+        return Vertex;
+    }());
+    GraphTableSVG.Vertex = Vertex;
+    var CircleVertex = (function (_super) {
+        __extends(CircleVertex, _super);
+        function CircleVertex() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        CircleVertex.create = function (_parent) {
+            var p = new CircleVertex();
+            p.svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            p.svgCircle.style.stroke = "black";
+            p.svgCircle.style.strokeWidth = "5pt";
+            p.svgCircle.cx.baseVal.value = 0;
+            p.svgCircle.cy.baseVal.value = 0;
+            p.svgCircle.r.baseVal.value = 30;
+            p.svgText = GraphTableSVG.createText();
+            p.svgText.textContent = "hogehoge";
+            p.svgGroup = GraphTableSVG.createGroup();
+            p.svgGroup.appendChild(p.svgCircle);
+            p.svgGroup.appendChild(p.svgText);
+            p.parent = _parent;
+            p.parent.svgGroup.appendChild(p.svgGroup);
+            return p;
+        };
+        Object.defineProperty(CircleVertex.prototype, "radius", {
+            get: function () {
+                return this.svgCircle.r.baseVal.value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        CircleVertex.prototype.getLocation = function (type) {
+            var r = (Math.sqrt(2) / 2) * this.radius;
+            switch (type) {
+                case GraphTableSVG.ConnecterPositionType.Top:
+                    return [this.x, this.y - this.radius];
+                case GraphTableSVG.ConnecterPositionType.RightUp:
+                    return [this.x + r, this.y - r];
+                case GraphTableSVG.ConnecterPositionType.Right:
+                    return [this.x + this.radius, this.y];
+                case GraphTableSVG.ConnecterPositionType.RightDown:
+                    return [this.x + r, this.y + r];
+                case GraphTableSVG.ConnecterPositionType.Bottom:
+                    return [this.x, this.y + this.radius];
+                case GraphTableSVG.ConnecterPositionType.LeftDown:
+                    return [this.x - r, this.y + r];
+                case GraphTableSVG.ConnecterPositionType.Left:
+                    return [this.x - this.radius, this.y];
+                case GraphTableSVG.ConnecterPositionType.LeftUp:
+                    return [this.x - r, this.y - r];
+                default:
+                    return [this.x, this.y];
+            }
+        };
+        return CircleVertex;
+    }(Vertex));
+    GraphTableSVG.CircleVertex = CircleVertex;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var VirtualTree = (function () {
+        function VirtualTree(_graph, _root) {
+            this.graph = _graph;
+            this.root = _root;
+        }
+        VirtualTree.prototype.getChildren = function () {
+            var p = this;
+            return this.graph.outcomingEdgesDic[this.root.id].map(function (x, i, arr) {
+                return new VirtualTree(p.graph, x.endNode);
+            });
+        };
+        VirtualTree.prototype.getSubtree = function (result) {
+            if (result === void 0) { result = []; }
+            var p = this;
+            result.push(this.root);
+            var children = this.getChildren();
+            if (children.length == 0) {
+                return result;
+            }
+            else {
+                var width = 0;
+                children.forEach(function (x, i, arr) {
+                    x.getSubtree(result);
+                });
+                return result;
+            }
+        };
+        VirtualTree.prototype.getLeaves = function () {
+            var p = this;
+            return this.getSubtree().filter(function (x, i, arr) {
+                return p.graph.outcomingEdgesDic[x.id].length == 0;
+            });
+        };
+        VirtualTree.prototype.getHeight = function () {
+            var children = this.getChildren();
+            if (children.length == 0) {
+                return 1;
+            }
+            else {
+                var max = 0;
+                children.forEach(function (x, i, arr) {
+                    if (max < x.getHeight())
+                        max = x.getHeight();
+                });
+                return max + 1;
+            }
+        };
+        VirtualTree.prototype.getTreeRegion = function () {
+            var p = this.getSubtree();
+            var minX = this.root.x;
+            var maxX = this.root.x;
+            var minY = this.root.y;
+            var maxY = this.root.y;
+            p.forEach(function (x, i, arr) {
+                if (minX > x.x)
+                    minX = x.x;
+                if (maxX < x.x)
+                    maxX = x.x;
+                if (minY > x.y)
+                    minY = x.y;
+                if (maxY < x.y)
+                    maxY = x.y;
+            });
+            var result = new GraphTableSVG.Rectangle();
+            result.x = minX;
+            result.y = minY;
+            result.width = maxX - minX;
+            result.height = maxY - minY;
+            return result;
+        };
+        VirtualTree.prototype.addOffset = function (_x, _y) {
+            this.getSubtree().forEach(function (x, i, arr) {
+                x.x += _x;
+                x.y += _y;
+            });
+        };
+        return VirtualTree;
+    }());
+    GraphTableSVG.VirtualTree = VirtualTree;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {

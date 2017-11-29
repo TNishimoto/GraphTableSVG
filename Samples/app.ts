@@ -105,8 +105,8 @@ function createLZ77WSRTable() {
 function createTestGraph() {
     svgBox = document.getElementById('svgbox');
     var graph = Graph.create(svgBox);
-    var node1 = GraphTableSVG.CircleNode.create(graph);
-    var node2 = GraphTableSVG.CircleNode.create(graph);
+    var node1 = GraphTableSVG.CircleVertex.create(graph);
+    var node2 = GraphTableSVG.CircleVertex.create(graph);
     node1.svgGroup.setX(100)
     node1.svgGroup.setY(200)
 
@@ -126,7 +126,8 @@ function createTestGraph() {
 }
 
 window.onload = () => {
-    createTestGraph();
+    
+    //createTestGraph();
     /*
     svgBox = document.getElementById('svgbox');
     var el = document.getElementById('content');

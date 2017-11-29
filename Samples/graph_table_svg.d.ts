@@ -1,4 +1,30 @@
 declare module GraphTableSVG {
+    class Edge {
+        beginNode: Vertex;
+        beginConnectType: ConnecterPositionType;
+        endNode: Vertex;
+        endConnectType: ConnecterPositionType;
+        parent: Graph;
+        textElement: TextPath;
+        readonly x1: number;
+        readonly y1: number;
+        readonly x2: number;
+        readonly y2: number;
+        update(): boolean;
+    }
+    class LineEdge extends Edge {
+        svgLine: SVGLineElement;
+        static create(_parent: Graph, _begin: Vertex, _end: Vertex): LineEdge;
+        update(): boolean;
+    }
+}
+declare module GraphTableSVG {
+    class Rectangle {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    }
     enum ConnecterPositionType {
         Top = 1,
         LeftUp = 2,
@@ -10,7 +36,7 @@ declare module GraphTableSVG {
         RightUp = 8,
     }
     class Graph {
-        nodes: Node[];
+        nodes: Vertex[];
         edges: Edge[];
         svgGroup: SVGGElement;
         relocation(): void;
@@ -18,37 +44,50 @@ declare module GraphTableSVG {
         update(): void;
         static create(svg: HTMLElement): Graph;
     }
-    class Node {
+    class OrderedOutcomingEdgesGraph extends Graph {
+        outcomingEdgesDic: {
+            [key: number]: Edge[];
+        };
+    }
+    class TextPath {
+        parent: Edge;
+        svgText: SVGTextElement;
+        update(): boolean;
+    }
+}
+declare module GraphTableSVG {
+    module relocation {
+    }
+}
+declare module GraphTableSVG {
+    class Vertex {
         svgGroup: SVGGElement;
         parent: Graph;
-        readonly x: number;
-        readonly y: number;
+        id: number;
+        x: number;
+        y: number;
         getLocation(type: ConnecterPositionType): [number, number];
+        update(): boolean;
     }
-    class CircleNode extends Node {
+    class CircleVertex extends Vertex {
         svgCircle: SVGCircleElement;
         svgText: SVGTextElement;
-        static create(_parent: Graph): CircleNode;
+        static create(_parent: Graph): CircleVertex;
         readonly radius: number;
         getLocation(type: ConnecterPositionType): [number, number];
     }
-    class Edge {
-        beginNode: Node;
-        beginConnectType: ConnecterPositionType;
-        endNode: Node;
-        endConnectType: ConnecterPositionType;
-        parent: Graph;
-        readonly x1: number;
-        readonly y1: number;
-        readonly x2: number;
-        readonly y2: number;
-        relocation(): void;
-    }
-    class LineEdge extends Edge {
-        svgLine: SVGLineElement;
-        svgText: SVGTextElement;
-        static create(_parent: Graph, _begin: Node, _end: Node): LineEdge;
-        relocation(): void;
+}
+declare module GraphTableSVG {
+    class VirtualTree {
+        graph: OrderedOutcomingEdgesGraph;
+        root: Vertex;
+        constructor(_graph: OrderedOutcomingEdgesGraph, _root: Vertex);
+        getChildren(): VirtualTree[];
+        getSubtree(result?: Vertex[]): Vertex[];
+        getLeaves(): Vertex[];
+        getHeight(): number;
+        getTreeRegion(): Rectangle;
+        addOffset(_x: number, _y: number): void;
     }
 }
 declare module GraphTableSVG {

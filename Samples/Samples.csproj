@@ -38,10 +38,11 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="data_structures\trie.ts" />
     <TypeScriptCompile Include="graph_table_svg.d.ts" />
     <TypeScriptCompile Include="gui\footer_button.ts" />
     <TypeScriptCompile Include="gui\modal.ts" />
-    <TypeScriptCompile Include="string_functions.ts" />
+    <TypeScriptCompile Include="data_structures\string_functions.ts" />
     <TypeScriptCompile Include="typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="typings\jquery\jquery.d.ts" />
   </ItemGroup>
