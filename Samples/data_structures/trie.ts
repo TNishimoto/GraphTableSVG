@@ -106,6 +106,9 @@
             x.children.forEach(function(y, j, arr2) {
                 var child = createNode(y, graph, dic);
                 var edge = GraphTableSVG.LineEdge.create(graph, node, child);
+                edge.beginConnectType = GraphTableSVG.ConnecterPositionType.Bottom;
+                edge.endConnectType = GraphTableSVG.ConnecterPositionType.Top;
+
                 graph.edges.push(edge);
                 graph.outcomingEdgesDic[node.id].push(edge);
             });

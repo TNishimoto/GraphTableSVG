@@ -22,7 +22,7 @@
         svgGroup: SVGGElement = null;
 
         relocation(): void {
-            this.edges.forEach(function (x, i, arr) { x.update() });
+            this.edges.forEach(function (x, i, arr) { x.update() });            
         }
         resize() : void {
 
@@ -75,7 +75,9 @@
         public relocation() {
             var root = this.getRoot();
             var tree = this.getTree(root);
-            relocation.standardLocateSub2(tree, 300, 350, 50);
+            relocation.standardLocateSub2(tree, 100);
+
+            tree.setLocation(30, 30);
             super.relocation();
         }
     }

@@ -62,7 +62,7 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     module relocation {
-        function standardLocateSub2(tree: VirtualTree, px: number, py: number, edgeLength: number): void;
+        function standardLocateSub2(tree: VirtualTree, edgeLength: number): void;
     }
 }
 declare module GraphTableSVG {
@@ -99,6 +99,7 @@ declare module GraphTableSVG {
         getMostLeftLeave(): VirtualTree;
         addOffset(_x: number, _y: number): void;
         setLocation(_x: number, _y: number): void;
+        setLocation2(_x: number, _y: number): void;
     }
 }
 declare module GraphTableSVG {

@@ -52,21 +52,22 @@
         }
         */
 
-        export function standardLocateSub2(tree: VirtualTree, px: number, py: number, edgeLength: number): void {
-            console.log("relocationxxx" + tree.getLeaves().length);
-            tree.root.x = px;
-            tree.root.y = py;
+        export function standardLocateSub2(tree: VirtualTree, edgeLength: number): void {
+            tree.root.x = 0;
+            tree.root.y = 0;
 
             var leaves = 0;
             var edges = tree.getChildren();
 
             var leaveSize = tree.getLeaves().length;
             var leaveSizeWidthHalf = (leaveSize * edgeLength) / 2;
-            var __x = px - leaveSizeWidthHalf;
+            
+            var __x = -leaveSizeWidthHalf;
 
             for (var i = 0; i < edges.length; i++) {
-                standardLocateSub2(edges[i], 0, 0, edgeLength);
-                edges[i].setLocation(__x, py + edgeLength);
+                standardLocateSub2(edges[i], edgeLength);
+                var w = (edges[i].getLeaves().length * edgeLength) / 2;
+                edges[i].setLocation2(__x + w, edgeLength);
                 __x += edges[i].getLeaves().length * edgeLength;                
             }
         }

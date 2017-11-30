@@ -178,7 +178,8 @@ var GraphTableSVG;
         OrderedOutcomingEdgesGraph.prototype.relocation = function () {
             var root = this.getRoot();
             var tree = this.getTree(root);
-            GraphTableSVG.relocation.standardLocateSub2(tree, 300, 350, 50);
+            GraphTableSVG.relocation.standardLocateSub2(tree, 100);
+            tree.setLocation(30, 30);
             _super.prototype.relocation.call(this);
         };
         return OrderedOutcomingEdgesGraph;
@@ -247,18 +248,18 @@ var GraphTableSVG;
 
         }
         */
-        function standardLocateSub2(tree, px, py, edgeLength) {
-            console.log("relocationxxx" + tree.getLeaves().length);
-            tree.root.x = px;
-            tree.root.y = py;
+        function standardLocateSub2(tree, edgeLength) {
+            tree.root.x = 0;
+            tree.root.y = 0;
             var leaves = 0;
             var edges = tree.getChildren();
             var leaveSize = tree.getLeaves().length;
             var leaveSizeWidthHalf = (leaveSize * edgeLength) / 2;
-            var __x = px - leaveSizeWidthHalf;
+            var __x = -leaveSizeWidthHalf;
             for (var i = 0; i < edges.length; i++) {
-                standardLocateSub2(edges[i], 0, 0, edgeLength);
-                edges[i].setLocation(__x, py + edgeLength);
+                standardLocateSub2(edges[i], edgeLength);
+                var w = (edges[i].getLeaves().length * edgeLength) / 2;
+                edges[i].setLocation2(__x + w, edgeLength);
                 __x += edges[i].getLeaves().length * edgeLength;
             }
         }
@@ -460,6 +461,13 @@ var GraphTableSVG;
         };
         VirtualTree.prototype.setLocation = function (_x, _y) {
             var x = this.getMostLeftLeave().root.x;
+            var y = this.root.y;
+            var diffX = _x - x;
+            var diffY = _y - y;
+            this.addOffset(diffX, diffY);
+        };
+        VirtualTree.prototype.setLocation2 = function (_x, _y) {
+            var x = this.root.x;
             var y = this.root.y;
             var diffX = _x - x;
             var diffY = _y - y;

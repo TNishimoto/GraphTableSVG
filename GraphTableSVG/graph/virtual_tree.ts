@@ -90,6 +90,13 @@
             var diffY = _y - y;
             this.addOffset(diffX, diffY);
         }
+        public setLocation2(_x: number, _y: number) {
+            var x = this.root.x;
+            var y = this.root.y;
+            var diffX = _x - x;
+            var diffY = _y - y;
+            this.addOffset(diffX, diffY);
+        }
     }
 
 }
