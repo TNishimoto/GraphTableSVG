@@ -99,11 +99,12 @@
         return [texts.length, false];
     }
     export function translate(root: TreeNode, graph: GraphTableSVG.OrderedOutcomingEdgesGraph) {
+        var dic: { [key: number]: GraphTableSVG.Vertex; } = [];
         root.getNodes().forEach(function(x, i, arr) {
-            var node = translate2(x, graph);
+            var node = createNode(x, graph, dic);
             graph.outcomingEdgesDic[node.id] = [];
             x.children.forEach(function(y, j, arr2) {
-                var child = translate2(y, graph);
+                var child = createNode(y, graph, dic);
                 var edge = GraphTableSVG.LineEdge.create(graph, node, child);
                 graph.edges.push(edge);
                 graph.outcomingEdgesDic[node.id].push(edge);
@@ -111,17 +112,18 @@
         });
 
     }
-    function translate2(treeNode: TreeNode, graph: GraphTableSVG.OrderedOutcomingEdgesGraph) {
-        var p = graph.nodes.filter(function(x) { x.id == treeNode.id });
-        if (p.length == 0) {
+    function createNode(treeNode: TreeNode, graph: GraphTableSVG.OrderedOutcomingEdgesGraph, dic: { [key: number]: GraphTableSVG.Vertex; }): GraphTableSVG.Vertex {
+        if (treeNode.id in dic) {
+            return dic[treeNode.id];
+        } else {
             var node = GraphTableSVG.CircleVertex.create(graph);
             node.svgText.textContent = treeNode.id.toString();
-            node.id = treeNode.id;
             graph.nodes.push(node);
+            dic[treeNode.id] = node;
             return node;
-        } else {
-            return p[0];
+
         }
+        
     }
 
     /*

@@ -1,14 +1,15 @@
 ﻿module GraphTableSVG {
     export class Edge {
         beginNode: Vertex;
-        beginConnectType: ConnecterPositionType;
+        beginConnectType: ConnecterPositionType = ConnecterPositionType.Top;
         endNode: Vertex;
-        endConnectType: ConnecterPositionType;
+        endConnectType: ConnecterPositionType = ConnecterPositionType.Top;
         parent: Graph;
         textElement: TextPath;
 
         public get x1(): number {
             var [x1, y1] = this.beginNode.getLocation(this.beginConnectType);
+
             return x1;
         }
         public get y1(): number {
@@ -50,6 +51,7 @@
             return p;
         }
         public update(): boolean {
+            console.log("update/" + this.beginNode.id + "/" + this.endNode.id + "/" + this.x1 + "/" + this.y1 + "/" + this.x2 + "/" + this.y2);
             this.svgLine.x1.baseVal.value = this.x1;
             this.svgLine.y1.baseVal.value = this.y1;
 

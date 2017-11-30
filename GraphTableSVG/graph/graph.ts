@@ -49,7 +49,6 @@
             var r = this.nodes.filter(function(x) {
                 return p.getParentEdge(x) == null;
             });
-            console.log(r.length);
             return r[0];
         }
 
@@ -59,7 +58,6 @@
                     return this.edges[i];
                 }
             }
-            console.log(node.id);
             return null;
         }
         public getTree(node: Vertex): VirtualTree {
@@ -75,10 +73,10 @@
         }
 
         public relocation() {
-            console.log("relocation");
             var root = this.getRoot();
             var tree = this.getTree(root);
-            relocation.standardLocateSub(tree, 0, 50);
+            relocation.standardLocateSub2(tree, 300, 350, 50);
+            super.relocation();
         }
     }
 

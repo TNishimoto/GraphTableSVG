@@ -12,6 +12,8 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     var Edge = (function () {
         function Edge() {
+            this.beginConnectType = GraphTableSVG.ConnecterPositionType.Top;
+            this.endConnectType = GraphTableSVG.ConnecterPositionType.Top;
         }
         Object.defineProperty(Edge.prototype, "x1", {
             get: function () {
@@ -72,6 +74,7 @@ var GraphTableSVG;
             return p;
         };
         LineEdge.prototype.update = function () {
+            console.log("update/" + this.beginNode.id + "/" + this.endNode.id + "/" + this.x1 + "/" + this.y1 + "/" + this.x2 + "/" + this.y2);
             this.svgLine.x1.baseVal.value = this.x1;
             this.svgLine.y1.baseVal.value = this.y1;
             this.svgLine.x2.baseVal.value = this.x2;
@@ -148,13 +151,10 @@ var GraphTableSVG;
         }
         //parentEdgeDic: { [key: number]: Edge; } = [];
         OrderedOutcomingEdgesGraph.prototype.getRoot = function () {
-            console.log("getRoot" + this.nodes.length + "/" + this.edges.length);
-            console.log(this.nodes);
             var p = this;
             var r = this.nodes.filter(function (x) {
                 return p.getParentEdge(x) == null;
             });
-            console.log(r.length);
             return r[0];
         };
         OrderedOutcomingEdgesGraph.prototype.getParentEdge = function (node) {
@@ -163,7 +163,6 @@ var GraphTableSVG;
                     return this.edges[i];
                 }
             }
-            console.log(node.id);
             return null;
         };
         OrderedOutcomingEdgesGraph.prototype.getTree = function (node) {
@@ -177,10 +176,10 @@ var GraphTableSVG;
             return graph;
         };
         OrderedOutcomingEdgesGraph.prototype.relocation = function () {
-            console.log("relocation");
             var root = this.getRoot();
             var tree = this.getTree(root);
-            GraphTableSVG.relocation.standardLocateSub(tree, 0, 50);
+            GraphTableSVG.relocation.standardLocateSub2(tree, 300, 350, 50);
+            _super.prototype.relocation.call(this);
         };
         return OrderedOutcomingEdgesGraph;
     }(Graph));
@@ -222,12 +221,13 @@ var GraphTableSVG;
 
         }
         */
-        function standardLocateSub(tree, y, edgeLength) {
-            if (y === void 0) { y = 0; }
+        /*
+        export function standardLocateSub(tree: VirtualTree, y: number = 0, edgeLength: number): void {
             tree.root.x = 0;
             tree.root.y = y;
             var leaves = 0;
             var edges = tree.getChildren();
+
             var centerIndex = Math.floor(edges.length / 2) - 1;
             var IsEven = edges.length % 2 == 0;
             for (var i = 0; i < edges.length; i++) {
@@ -244,15 +244,40 @@ var GraphTableSVG;
             }
             tree.root.x = Math.floor(leaves * edgeLength / 2);
             console.log(tree.root.id + "/" + tree.root.x);
+
         }
-        relocation.standardLocateSub = standardLocateSub;
+        */
+        function standardLocateSub2(tree, px, py, edgeLength) {
+            console.log("relocationxxx" + tree.getLeaves().length);
+            tree.root.x = px;
+            tree.root.y = py;
+            var leaves = 0;
+            var edges = tree.getChildren();
+            var leaveSize = tree.getLeaves().length;
+            var leaveSizeWidthHalf = (leaveSize * edgeLength) / 2;
+            var __x = px - leaveSizeWidthHalf;
+            for (var i = 0; i < edges.length; i++) {
+                standardLocateSub2(edges[i], 0, 0, edgeLength);
+                edges[i].setLocation(__x, py + edgeLength);
+                __x += edges[i].getLeaves().length * edgeLength;
+            }
+        }
+        relocation.standardLocateSub2 = standardLocateSub2;
     })(relocation = GraphTableSVG.relocation || (GraphTableSVG.relocation = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var Vertex = (function () {
         function Vertex() {
+            this._id = Vertex.id_counter++;
         }
+        Object.defineProperty(Vertex.prototype, "id", {
+            get: function () {
+                return this._id;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Vertex.prototype, "x", {
             get: function () {
                 return this.svgGroup.getX();
@@ -281,6 +306,7 @@ var GraphTableSVG;
         };
         return Vertex;
     }());
+    Vertex.id_counter = 0;
     GraphTableSVG.Vertex = Vertex;
     var CircleVertex = (function (_super) {
         __extends(CircleVertex, _super);
@@ -294,7 +320,7 @@ var GraphTableSVG;
             p.svgCircle.style.strokeWidth = "5pt";
             p.svgCircle.cx.baseVal.value = 0;
             p.svgCircle.cy.baseVal.value = 0;
-            p.svgCircle.r.baseVal.value = 30;
+            p.svgCircle.r.baseVal.value = 20;
             p.svgText = GraphTableSVG.createText();
             p.svgText.textContent = "hogehoge";
             p.svgGroup = GraphTableSVG.createGroup();
@@ -344,8 +370,6 @@ var GraphTableSVG;
         function VirtualTree(_graph, _root) {
             this.graph = _graph;
             this.root = _root;
-            if (this.root == undefined)
-                console.log("undefined!");
         }
         VirtualTree.prototype.getChildren = function () {
             var p = this;
@@ -419,11 +443,27 @@ var GraphTableSVG;
             result.height = maxY - minY;
             return result;
         };
+        VirtualTree.prototype.getMostLeftLeave = function () {
+            var children = this.getChildren();
+            if (children.length == 0) {
+                return this;
+            }
+            else {
+                return children[0].getMostLeftLeave();
+            }
+        };
         VirtualTree.prototype.addOffset = function (_x, _y) {
             this.getSubtree().forEach(function (x, i, arr) {
                 x.x += _x;
                 x.y += _y;
             });
+        };
+        VirtualTree.prototype.setLocation = function (_x, _y) {
+            var x = this.getMostLeftLeave().root.x;
+            var y = this.root.y;
+            var diffX = _x - x;
+            var diffY = _y - y;
+            this.addOffset(diffX, diffY);
         };
         return VirtualTree;
     }());

@@ -6,7 +6,6 @@
         constructor(_graph: OrderedOutcomingEdgesGraph, _root: Vertex) {
             this.graph = _graph;
             this.root = _root;
-            if (this.root == undefined) console.log("undefined!");
         }
         getChildren(): VirtualTree[] {
             var p = this;
@@ -69,11 +68,27 @@
             result.height = maxY - minY;
             return result;
         }
+        public getMostLeftLeave(): VirtualTree {
+            var children = this.getChildren();
+            if (children.length == 0) {
+                return this;
+            } else {
+                return children[0].getMostLeftLeave();
+            }
+        }
+
         public addOffset(_x: number, _y: number) {
             this.getSubtree().forEach(function (x, i, arr) {
                 x.x += _x;
                 x.y += _y;
             });
+        }
+        public setLocation(_x: number, _y: number) {
+            var x = this.getMostLeftLeave().root.x;
+            var y = this.root.y;
+            var diffX = _x - x;
+            var diffY = _y - y;
+            this.addOffset(diffX, diffY);
         }
     }
 

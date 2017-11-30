@@ -1,8 +1,12 @@
 ﻿module GraphTableSVG {
     export class Vertex {
+        private static id_counter: number = 0;
         svgGroup: SVGGElement;
         parent: Graph;
-        id: number
+        private _id: number = Vertex.id_counter++;
+        public get id(): number {
+            return this._id;
+        }
 
         public get x(): number {
             return this.svgGroup.getX();
@@ -37,7 +41,7 @@
             p.svgCircle.style.strokeWidth = "5pt";
             p.svgCircle.cx.baseVal.value = 0;
             p.svgCircle.cy.baseVal.value = 0;
-            p.svgCircle.r.baseVal.value = 30;
+            p.svgCircle.r.baseVal.value = 20;
 
             p.svgText = GraphTableSVG.createText();
             p.svgText.textContent = "hogehoge";
@@ -54,6 +58,7 @@
         }
         public getLocation(type: ConnecterPositionType): [number, number] {
             var r = (Math.sqrt(2) / 2) * this.radius;
+
 
             switch (type) {
                 case ConnecterPositionType.Top:

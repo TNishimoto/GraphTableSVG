@@ -62,14 +62,16 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     module relocation {
-        function standardLocateSub(tree: VirtualTree, y: number, edgeLength: number): void;
+        function standardLocateSub2(tree: VirtualTree, px: number, py: number, edgeLength: number): void;
     }
 }
 declare module GraphTableSVG {
     class Vertex {
+        private static id_counter;
         svgGroup: SVGGElement;
         parent: Graph;
-        id: number;
+        private _id;
+        readonly id: number;
         x: number;
         y: number;
         getLocation(type: ConnecterPositionType): [number, number];
@@ -94,7 +96,9 @@ declare module GraphTableSVG {
         getLeaves(): Vertex[];
         getHeight(): number;
         getTreeRegion(): Rectangle;
+        getMostLeftLeave(): VirtualTree;
         addOffset(_x: number, _y: number): void;
+        setLocation(_x: number, _y: number): void;
     }
 }
 declare module GraphTableSVG {
