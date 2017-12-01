@@ -100,14 +100,17 @@
     }
     export function translate(root: TreeNode, graph: GraphTableSVG.OrderedOutcomingEdgesGraph) {
         var dic: { [key: number]: GraphTableSVG.Vertex; } = [];
-        root.getNodes().forEach(function(x, i, arr) {
+        root.getNodes().forEach(function(x) {
             var node = createNode(x, graph, dic);
             graph.outcomingEdgesDic[node.id] = [];
-            x.children.forEach(function(y, j, arr2) {
+            x.children.forEach(function(y) {
                 var child = createNode(y, graph, dic);
                 var edge = GraphTableSVG.LineEdge.create(graph, node, child);
                 edge.beginConnectType = GraphTableSVG.ConnecterPositionType.Bottom;
                 edge.endConnectType = GraphTableSVG.ConnecterPositionType.Top;
+
+                var edgeText = GraphTableSVG.EdgeText.create(edge, y.edgeText);
+                edge.text = edgeText;
 
                 graph.edges.push(edge);
                 graph.outcomingEdgesDic[node.id].push(edge);

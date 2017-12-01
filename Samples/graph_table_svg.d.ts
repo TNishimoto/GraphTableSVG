@@ -5,7 +5,7 @@ declare module GraphTableSVG {
         endNode: Vertex;
         endConnectType: ConnecterPositionType;
         parent: Graph;
-        textElement: TextPath;
+        text: EdgeText | null;
         readonly x1: number;
         readonly y1: number;
         readonly x2: number;
@@ -13,7 +13,7 @@ declare module GraphTableSVG {
         update(): boolean;
     }
     class LineEdge extends Edge {
-        svgLine: SVGLineElement;
+        svg: SVGLineElement;
         static create(_parent: Graph, _begin: Vertex, _end: Vertex): LineEdge;
         update(): boolean;
     }
@@ -54,15 +54,21 @@ declare module GraphTableSVG {
         static create(svg: HTMLElement): OrderedOutcomingEdgesGraph;
         relocation(): void;
     }
-    class TextPath {
-        parent: Edge;
-        svgText: SVGTextElement;
-        update(): boolean;
-    }
 }
 declare module GraphTableSVG {
     module relocation {
         function standardLocateSub2(tree: VirtualTree, edgeLength: number): void;
+    }
+}
+declare module GraphTableSVG {
+    class EdgeText {
+        svg: SVGTextElement;
+        parentEdge: Edge;
+        readonly x: number;
+        readonly y: number;
+        private getCenterPosition();
+        static create(edge: Edge, text: string): EdgeText;
+        update(): void;
     }
 }
 declare module GraphTableSVG {

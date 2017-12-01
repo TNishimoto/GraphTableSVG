@@ -29,6 +29,7 @@
     <TypeScriptCompile Include="graph\edge.ts" />
     <TypeScriptCompile Include="graph\graph.ts" />
     <TypeScriptCompile Include="graph\relocation.ts" />
+    <TypeScriptCompile Include="graph\text.ts" />
     <TypeScriptCompile Include="graph\vertex.ts" />
     <TypeScriptCompile Include="graph\virtual_tree.ts" />
     <TypeScriptCompile Include="table\cell.ts" />

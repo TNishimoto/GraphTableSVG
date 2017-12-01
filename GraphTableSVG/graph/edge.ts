@@ -5,7 +5,7 @@
         endNode: Vertex;
         endConnectType: ConnecterPositionType = ConnecterPositionType.Top;
         parent: Graph;
-        textElement: TextPath;
+        text: EdgeText | null = null;
 
         public get x1(): number {
             var [x1, y1] = this.beginNode.getLocation(this.beginConnectType);
@@ -32,15 +32,15 @@
     }
 
     export class LineEdge extends Edge {
-        svgLine: SVGLineElement;
+        svg: SVGLineElement;
         //svgText: SVGTextElement;
         public static create(_parent: Graph, _begin: Vertex, _end: Vertex): LineEdge {
             var p = new LineEdge();
             p.beginNode = _begin;
             p.endNode = _end;
-            p.svgLine = createLine(0, 0, 100, 100);
+            p.svg = createLine(0, 0, 100, 100);
             p.parent = _parent;
-            p.parent.svgGroup.appendChild(p.svgLine);
+            p.parent.svgGroup.appendChild(p.svg);
 
             /*
             p.svgText = GraphTableSVG.createText();
@@ -51,12 +51,15 @@
             return p;
         }
         public update(): boolean {
-            console.log("update/" + this.beginNode.id + "/" + this.endNode.id + "/" + this.x1 + "/" + this.y1 + "/" + this.x2 + "/" + this.y2);
-            this.svgLine.x1.baseVal.value = this.x1;
-            this.svgLine.y1.baseVal.value = this.y1;
+            this.svg.x1.baseVal.value = this.x1;
+            this.svg.y1.baseVal.value = this.y1;
 
-            this.svgLine.x2.baseVal.value = this.x2;
-            this.svgLine.y2.baseVal.value = this.y2;
+            this.svg.x2.baseVal.value = this.x2;
+            this.svg.y2.baseVal.value = this.y2;
+
+            if (this.text != null) {
+                this.text.update();
+            }
 
             /*
             this.svgText.setX((this.x1 + this.x2) / 2);
@@ -76,4 +79,5 @@
         }
 
     }
+    
 }

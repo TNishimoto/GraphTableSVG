@@ -14,6 +14,7 @@ var GraphTableSVG;
         function Edge() {
             this.beginConnectType = GraphTableSVG.ConnecterPositionType.Top;
             this.endConnectType = GraphTableSVG.ConnecterPositionType.Top;
+            this.text = null;
         }
         Object.defineProperty(Edge.prototype, "x1", {
             get: function () {
@@ -63,9 +64,9 @@ var GraphTableSVG;
             var p = new LineEdge();
             p.beginNode = _begin;
             p.endNode = _end;
-            p.svgLine = GraphTableSVG.createLine(0, 0, 100, 100);
+            p.svg = GraphTableSVG.createLine(0, 0, 100, 100);
             p.parent = _parent;
-            p.parent.svgGroup.appendChild(p.svgLine);
+            p.parent.svgGroup.appendChild(p.svg);
             /*
             p.svgText = GraphTableSVG.createText();
             p.svgText.textContent = "hogehoge";
@@ -74,11 +75,13 @@ var GraphTableSVG;
             return p;
         };
         LineEdge.prototype.update = function () {
-            console.log("update/" + this.beginNode.id + "/" + this.endNode.id + "/" + this.x1 + "/" + this.y1 + "/" + this.x2 + "/" + this.y2);
-            this.svgLine.x1.baseVal.value = this.x1;
-            this.svgLine.y1.baseVal.value = this.y1;
-            this.svgLine.x2.baseVal.value = this.x2;
-            this.svgLine.y2.baseVal.value = this.y2;
+            this.svg.x1.baseVal.value = this.x1;
+            this.svg.y1.baseVal.value = this.y1;
+            this.svg.x2.baseVal.value = this.x2;
+            this.svg.y2.baseVal.value = this.y2;
+            if (this.text != null) {
+                this.text.update();
+            }
             /*
             this.svgText.setX((this.x1 + this.x2) / 2);
             this.svgText.setY((this.y1 + this.y2) / 2);
@@ -185,15 +188,16 @@ var GraphTableSVG;
         return OrderedOutcomingEdgesGraph;
     }(Graph));
     GraphTableSVG.OrderedOutcomingEdgesGraph = OrderedOutcomingEdgesGraph;
-    var TextPath = (function () {
-        function TextPath() {
-        }
-        TextPath.prototype.update = function () {
+    /*
+    export class TextPath {
+        parent: Edge;
+        svgText: SVGTextElement;
+
+        public update(): boolean {
             return false;
-        };
-        return TextPath;
-    }());
-    GraphTableSVG.TextPath = TextPath;
+        }
+    }
+    */
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -265,6 +269,47 @@ var GraphTableSVG;
         }
         relocation.standardLocateSub2 = standardLocateSub2;
     })(relocation = GraphTableSVG.relocation || (GraphTableSVG.relocation = {}));
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var EdgeText = (function () {
+        function EdgeText() {
+        }
+        Object.defineProperty(EdgeText.prototype, "x", {
+            get: function () {
+                return this.svg.getX();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EdgeText.prototype, "y", {
+            get: function () {
+                return this.svg.getY();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        EdgeText.prototype.getCenterPosition = function () {
+            var x = (this.parentEdge.x1 + this.parentEdge.x2) / 2;
+            var y = (this.parentEdge.y1 + this.parentEdge.y2) / 2;
+            return [x, y];
+        };
+        EdgeText.create = function (edge, text) {
+            var p = new EdgeText();
+            p.svg = GraphTableSVG.createText();
+            p.svg.textContent = text;
+            edge.parent.svgGroup.appendChild(p.svg);
+            p.parentEdge = edge;
+            return p;
+        };
+        EdgeText.prototype.update = function () {
+            var _a = this.getCenterPosition(), x = _a[0], y = _a[1];
+            this.svg.setX(x);
+            this.svg.setY(y);
+        };
+        return EdgeText;
+    }());
+    GraphTableSVG.EdgeText = EdgeText;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {

@@ -85,7 +85,7 @@
 
 
 
-
+    /*
     export class TextPath {
         parent: Edge;
         svgText: SVGTextElement;
@@ -94,5 +94,7 @@
             return false;
         }
     }
+    */
+    
 
 }
