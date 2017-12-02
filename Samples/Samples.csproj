@@ -39,6 +39,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="data_structures\trie.ts" />
+    <TypeScriptCompile Include="data_structures\trie_algorithm.ts" />
     <TypeScriptCompile Include="graph_table_svg.d.ts" />
     <TypeScriptCompile Include="gui\footer_button.ts" />
     <TypeScriptCompile Include="gui\modal.ts" />

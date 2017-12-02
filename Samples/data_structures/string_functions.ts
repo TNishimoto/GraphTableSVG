@@ -30,19 +30,19 @@ module StringModule{
         }
         return r;
     }
-    export function compare(str1: string, str2: string): number {
+    export function compare(str1: string, str2: string): [number, number] {
         var min = Math.min(str1.length, str2.length);
         for (var i = 0; i <= min; i++) {
             if (str1.charAt(i) < str2.charAt(i)) {
-                return - 1;
+                return [i, - 1];
             } else if (str1.charAt(i) > str2.charAt(i)) {
-                return 1;
+                return [i, 1];
             }
         }
         if (str1 == str2) {
-            return 0;
+            return [str1.length, 0];
         } else {
-            return str1.length < str2.length ? 1 : -1;
+            return str1.length < str2.length ? [str1.length, 1] : [str2.length, -1];
         }
 
     }

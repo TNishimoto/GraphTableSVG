@@ -1,5 +1,5 @@
 ﻿module TreeFunctions {
-    class TreeNode {
+    export class TreeNode {
         private static counter: number = 0;
 
         children: TreeNode[] = [];
@@ -10,38 +10,13 @@
         get id(): number {
             return this._id;
         }
-
-        /*
-        public locus(pattern: string): TreeNode {
-            if (pattern.length == 0) return this;
-            var edges = this.children.map(function (x, i, arr) { return x.edgeText; });
-            var i = getFirstPrefixIndex(edges, pattern);
-            if (i == -1) {
-                return this;
-            } else {
-                return this.children[i].locus(pattern.substr(1));
-            }
-        }
-        */
+        
         get path(): string {
             if (this.parent == null) {
                 return this.edgeText;
             } else {
                 return this.parent.path + this.edgeText;
             }
-        }
-        public addString(pattern: string): TreeNode {
-            if (pattern.length == 0) return this;
-            var edges = this.children.map(function (x, i, arr) { return x.edgeText; });
-            var [i, isMatch] = getInsertIndex(edges, pattern[0]);
-            if (!isMatch) {
-                var newNode = new TreeNode();
-                newNode.parent = this;
-                newNode.edgeText = pattern[0];
-                this.children.splice(i, 0, newNode);
-            }
-
-            return this.children[i].addString(pattern.substr(1));
         }
 
         public get isRoot() {
@@ -63,19 +38,64 @@
                 return r;
             }
         }
-        public setID() {
 
+        public addLeaf(insertIndex: number, str: string): TreeNode {
+            var newNode = new TreeNode();
+            newNode.parent = this;
+            newNode.edgeText = str;
+            this.children.splice(insertIndex, 0, newNode);
+            return newNode;
+        }
+        public split(splitPosition: number): TreeNode {
+            var pref = this.edgeText.substr(0, splitPosition);
+            var suf = this.edgeText.substr(splitPosition);
+
+            if (this.parent != null) {
+
+                var newNode = new TreeNode();
+
+                var i = this.parent.children.indexOf(this);
+                this.parent.children[i] = newNode;
+                newNode.children.push(this);
+                this.parent = newNode;
+
+                newNode.edgeText = pref;
+                this.edgeText = suf;
+
+                return newNode;
+            } else {
+                return this;
+            }
+        }
+        public locus(pattern: string): [TreeNode, number] {
+            //var matchLen = 0;
+            if (pattern.length == 0) return [this, 0];
+
+            var [matchLen, comp] = StringModule.compare(this.edgeText, pattern);
+            if (matchLen == this.edgeText.length && this.edgeText.length < pattern.length) {
+                var edges = this.children.map(function (x, i, arr) { return x.edgeText.charCodeAt(0); });
+                var suf = pattern.substr(matchLen);
+                var [i, b] = getInsertIndex(edges, suf.charCodeAt(0));
+                if (b) {
+                    return this.children[i].locus(suf);
+                } else {
+                    return [this, matchLen];
+                }
+
+            } else {
+                return [this, matchLen];
+            }
         }
         
     }
+    /*
+    class LocusResult {
+        node: TreeNode;
+        matchLen: number;
 
-    export function createTrie(text: string): TreeNode {
-        var root = new TreeNode();
-        for (var i = 0; i < text.length; i++) {
-            root.addString(text.substr(i));
-        }
-        return root;
     }
+    */
+    /*
     function getFirstPrefixIndex(texts: string[], pattern: string): number {
         for (var i = 0; i < texts.length; i++) {
             if (texts[i].indexOf(pattern) == 0) {
@@ -84,9 +104,22 @@
         }
         return -1;
     }
+    */
+    export function addString(node: TreeNode, pattern: string): TreeNode {
+        if (pattern.length == 0) return node;
+        var edges = node.children.map(function (x, i, arr) { return x.edgeText.charCodeAt(0); });
+        var [i, isMatch] = getInsertIndex(edges, pattern.charCodeAt(0));
+        if (!isMatch) {
+            node.addLeaf(i, pattern[0]);
+        }
+
+        return addString(node.children[i], pattern.substr(1));
+    }
+
+    /*
     function getInsertIndex(texts: string[], pattern: string): [number, boolean] {
         for (var i = 0; i < texts.length; i++) {
-            var p = StringModule.compare(pattern, texts[i]);
+            var [matchLen, p] = StringModule.compare(pattern, texts[i]);
             if (p < 0) {
 
             } else if (p == 0) {
@@ -95,6 +128,20 @@
                 return [i, false];
             }
             
+        }
+        return [texts.length, false];
+    }
+    */
+    export function getInsertIndex(texts: number[], pattern: number): [number, boolean] {
+        for (var i = 0; i < texts.length; i++) {
+            if (pattern < texts[i]) {
+
+            } else if (pattern == texts[i]) {
+                return [i, true];
+            } else {
+                return [i, false];
+            }
+
         }
         return [texts.length, false];
     }
@@ -116,8 +163,27 @@
                 graph.outcomingEdgesDic[node.id].push(edge);
             });
         });
-
     }
+    export function shrink(root: TreeNode) {
+        if (root.parent != null) {
+            if (root.children.length == 1) {
+                var child = root.children[0];
+
+                var i = root.parent.children.indexOf(root);
+                
+                root.parent.children[i] = child;
+                child.parent = root.parent;
+                child.edgeText = root.edgeText + child.edgeText;
+                shrink(child);
+            } else {
+                root.children.forEach(function (x) { shrink(x) });
+            }
+        } else {
+            root.children.forEach(function (x) { shrink(x) });
+        }
+    }
+
+
     function createNode(treeNode: TreeNode, graph: GraphTableSVG.OrderedOutcomingEdgesGraph, dic: { [key: number]: GraphTableSVG.Vertex; }): GraphTableSVG.Vertex {
         if (treeNode.id in dic) {
             return dic[treeNode.id];
