@@ -36,22 +36,26 @@ declare module GraphTableSVG {
         RightUp = 8,
     }
     class Graph {
-        nodes: Vertex[];
-        edges: Edge[];
-        svgGroup: SVGGElement;
+        private _nodes;
+        private _edges;
+        protected _svgGroup: SVGGElement;
+        readonly svgGroup: SVGGElement;
+        readonly nodes: Vertex[];
+        readonly edges: Edge[];
+        constructor(svg: HTMLElement);
         relocation(): void;
         resize(): void;
         update(): void;
-        static create(svg: HTMLElement): Graph;
     }
     class OrderedOutcomingEdgesGraph extends Graph {
-        outcomingEdgesDic: {
+        private _outcomingEdgesDic;
+        readonly outcomingEdgesDic: {
             [key: number]: Edge[];
         };
+        constructor(svg: HTMLElement);
         getRoot(): Vertex;
         getParentEdge(node: Vertex): Edge | null;
         getTree(node: Vertex): VirtualTree;
-        static create(svg: HTMLElement): OrderedOutcomingEdgesGraph;
         relocation(): void;
     }
 }
@@ -69,6 +73,7 @@ declare module GraphTableSVG {
         private getCenterPosition();
         static create(edge: Edge, text: string): EdgeText;
         update(): void;
+        static reverse(str: string): string;
     }
 }
 declare module GraphTableSVG {
@@ -78,6 +83,7 @@ declare module GraphTableSVG {
         parent: Graph;
         private _id;
         readonly id: number;
+        constructor(parent: Graph, group: SVGGElement);
         x: number;
         y: number;
         getLocation(type: ConnecterPositionType): [number, number];
@@ -86,6 +92,7 @@ declare module GraphTableSVG {
     class CircleVertex extends Vertex {
         svgCircle: SVGCircleElement;
         svgText: SVGTextElement;
+        constructor(parent: Graph, group: SVGGElement, circle: SVGCircleElement, text: SVGTextElement);
         static create(_parent: Graph): CircleVertex;
         readonly radius: number;
         getLocation(type: ConnecterPositionType): [number, number];

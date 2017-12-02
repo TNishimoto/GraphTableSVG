@@ -17,12 +17,28 @@
         RightUp = 8
     }
     export class Graph {
-        nodes: Vertex[] = new Array(0);
-        edges: Edge[] = new Array(0);
-        svgGroup: SVGGElement = null;
+        private _nodes: Vertex[] = new Array(0);
+        private _edges: Edge[] = new Array(0);
+        protected _svgGroup: SVGGElement;
+
+        get svgGroup(): SVGGElement {
+            return this._svgGroup;
+        }
+        get nodes(): Vertex[] {
+            return this._nodes;
+        }
+        get edges(): Edge[] {
+            return this._edges;
+        }
+
+        constructor(svg: HTMLElement) {
+            this._svgGroup = GraphTableSVG.createGroup();
+            svg.appendChild(this._svgGroup);
+        }
+
 
         relocation(): void {
-            this.edges.forEach(function (x, i, arr) { x.update() });            
+            this._edges.forEach(function (x, i, arr) { x.update() });            
         }
         resize() : void {
 
@@ -32,17 +48,25 @@
             this.relocation();
         }
 
+        /*
         public static create(svg: HTMLElement): Graph {
-            var g = GraphTableSVG.createGroup();
+            //var g = GraphTableSVG.createGroup();
             var graph = new Graph();
-            graph.svgGroup = g;
-            svg.appendChild(graph.svgGroup);
-            return graph;
+            //graph.svgGroup = g;
         }
+        */
     }
     export class OrderedOutcomingEdgesGraph extends Graph {
-        outcomingEdgesDic: { [key: number]: Edge[]; } = [];
+        private _outcomingEdgesDic: { [key: number]: Edge[]; } = [];
         //parentEdgeDic: { [key: number]: Edge; } = [];
+
+        get outcomingEdgesDic(): { [key: number]: Edge[]; } {
+            return this._outcomingEdgesDic;
+        }
+
+        constructor(svg: HTMLElement) {
+            super(svg);
+        }
 
         public getRoot(): Vertex {
             var p = this;
@@ -64,14 +88,16 @@
             return new VirtualTree(this, node);
         }
 
+        /*
         public static create(svg: HTMLElement): OrderedOutcomingEdgesGraph {
             var g = GraphTableSVG.createGroup();
             var graph = new OrderedOutcomingEdgesGraph();
-            graph.svgGroup = g;
-            svg.appendChild(graph.svgGroup);
+            graph.__svgGroup = g;
+            svg.appendChild(graph.__svgGroup);
             return graph;
         }
 
+        */
         public relocation() {
             var root = this.getRoot();
             var tree = this.getTree(root);

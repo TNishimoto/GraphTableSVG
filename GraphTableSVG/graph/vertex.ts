@@ -8,6 +8,14 @@
             return this._id;
         }
 
+        constructor(parent: Graph, group: SVGGElement) {
+            this.svgGroup = group;
+            this.parent = parent;
+
+            this.parent.svgGroup.appendChild(this.svgGroup);
+
+        }
+
         public get x(): number {
             return this.svgGroup.getX();
         }
@@ -34,23 +42,32 @@
         svgCircle: SVGCircleElement;
         svgText: SVGTextElement;
 
+        constructor(parent: Graph, group: SVGGElement, circle: SVGCircleElement, text: SVGTextElement) {
+            super(parent, group);
+            this.svgCircle = circle;
+            this.svgText = text;
+
+            this.svgGroup.appendChild(this.svgCircle);
+            this.svgGroup.appendChild(this.svgText);
+
+        }
+
         public static create(_parent: Graph): CircleVertex {
-            var p = new CircleVertex();
-            p.svgCircle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            p.svgCircle.style.stroke = "black";
-            p.svgCircle.style.strokeWidth = "5pt";
-            p.svgCircle.cx.baseVal.value = 0;
-            p.svgCircle.cy.baseVal.value = 0;
-            p.svgCircle.r.baseVal.value = 20;
+            var circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.style.stroke = "black";
+            circle.style.strokeWidth = "5pt";
+            circle.cx.baseVal.value = 0;
+            circle.cy.baseVal.value = 0;
+            circle.r.baseVal.value = 20;
 
-            p.svgText = GraphTableSVG.createText();
-            p.svgText.textContent = "hogehoge";
+            var text = GraphTableSVG.createText();
+            text.textContent = "hogehoge";
 
-            p.svgGroup = GraphTableSVG.createGroup();
-            p.svgGroup.appendChild(p.svgCircle);
-            p.svgGroup.appendChild(p.svgText);
-            p.parent = _parent;
-            p.parent.svgGroup.appendChild(p.svgGroup);
+            var group = GraphTableSVG.createGroup();
+
+            var p = new CircleVertex(_parent, group, circle, text);
+
+
             return p;
         }
         public get radius(): number {

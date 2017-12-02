@@ -104,7 +104,7 @@ function createLZ77WSRTable() {
 function createSuffixTrie() {
     svgBox = document.getElementById('svgbox');
     var text = getInputText();
-    var graph = GraphTableSVG.OrderedOutcomingEdgesGraph.create(svgBox);
+    var graph = new GraphTableSVG.OrderedOutcomingEdgesGraph(svgBox);
     var trie = TreeFunctions.createTrie(text);
     TreeFunctions.translate(trie, graph);
     /*
@@ -117,7 +117,7 @@ function createSuffixTrie() {
 function createSuffixTree() {
     svgBox = document.getElementById('svgbox');
     var text = getInputText();
-    var graph = GraphTableSVG.OrderedOutcomingEdgesGraph.create(svgBox);
+    var graph = new GraphTableSVG.OrderedOutcomingEdgesGraph(svgBox);
     var trie = TreeFunctions.createSuffixTree(text);
     TreeFunctions.translate(trie, graph);
     /*
@@ -130,7 +130,7 @@ function createSuffixTree() {
 
 function createTestGraph() {
     svgBox = document.getElementById('svgbox');
-    var graph = Graph.create(svgBox);
+    var graph = new Graph(svgBox);
     var node1 = GraphTableSVG.CircleVertex.create(graph);
     var node2 = GraphTableSVG.CircleVertex.create(graph);
     node1.svgGroup.setX(100)
