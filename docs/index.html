@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>TypeScript HTML App</title>
+    <link rel="stylesheet" href="app.css" type="text/css" />
+    <script src="graph_table_svg.js"></script>
+    <script src="gui/canvg/canvg.js"></script>
+    <script src="gui/canvg/rgbcolor.js"></script>
+    <script src="gui/canvg/StackBlur.js"></script>
+
+    <script src="gui/jquery-3.1.1.js"></script>
+    <script src="gui/save.js"></script>
+    <script src="sample.js"></script>
+
+</head>
+<body>
+    <h1>TableEditor</h1>
+
+    <div style="fill:aqua">
+    <svg viewBox="0 0 1000 800" width="1000px" height="800px" id="svgbox" xmlns="http://www.w3.org/2000/svg" style="border:#000000 solid 1px;background:#e9e9e9">
+    </svg>
+    </div>
+    <div id="macro-modal" style="width:700pt;height:300pt">
+        使い方（Powerpoint 2013）<br>
+        新規ファイル<br>
+        →表示→マクロ→作成<br>
+        →生成したコードをユーザーフォームに貼り付ける<br>
+        →F5 or ユーザーフォームを実行<br>
+        →木が貼られたスライドが１ページ目に挿入される<br>
+        ※サイズの大きすぎる木はマクロ実行時にエラーが出ます。
+        <br>
+        <textarea id="codeBox" rows="8" cols="100" style="overflow:auto;"></textarea>
+        <button class="btn" onClick="copyAndClose();">
+            クリップボードにコピー
+        </button>
+    </div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br>
+    test
+
+    <div id="footerArea">
+        <div id="Bar">
+
+        </div>        
+        <div class="ContentBox" style="clear:both">
+            <div class="FooterContent" id="fc0" style="display:none">
+                <textarea type="text" id="inputtext_itb" rows="3" cols="40">hogehoge$</textarea><br>
+                <button type="button" onclick="createSuffixArrayTable()">Suffix Array</button>
+                <button type="button" onclick="createLZ77WSRTable()">LZ77 Self Reference</button>
+                <button type="button" onclick="createSuffixTrie()">Suffix Trie</button>
+                <button type="button" onclick="createSuffixTree()">Suffix Tree</button>
+
+            </div>
+            <div class="FooterContent" id="fc1" style="display:none">
+                <button type="button" onclick="save()">画像にして保存</button>
+            </div>
+            <div class="FooterContent" id="fc2" style="display:none">
+                <button type="button" onclick="createCode()">Powerpoint用のマクロ生成</button>
+            </div>
+        </div>
+        <div class="ButtonBox clearfix" style="background-color:#808080">
+            <div class="button" id="fb0" onclick="FooterButton.call('fb', 'fc', 0)">作成</div>
+            <div class="button" id="fb1" onclick="FooterButton.call('fb', 'fc', 1)">test</div>
+            <div class="button" id="fb2" onclick="FooterButton.call('fb', 'fc', 2)">output</div>
+
+        </div>
+    </div>
+</body>
+</html>
