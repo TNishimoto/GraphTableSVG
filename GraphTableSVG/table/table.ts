@@ -332,6 +332,11 @@ module GraphTableSVG {
             }
             return r1;
         }
+        public removeTable(svg: HTMLElement) {
+            if (svg.contains(this.group)) {
+                svg.removeChild(this.group);
+            }
+        }
 
     }
 }

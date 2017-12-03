@@ -35,13 +35,11 @@
 
         public addVertex(vertex: Vertex) {
             this.svgGroup.appendChild(vertex.svgGroup);
+            vertex.setGraph(this);
             this._nodes.push(vertex);
         }
         public addEdge(edge: Edge) {
-            if (edge instanceof LineEdge) {
-                this.svgGroup.appendChild(edge.svg);
-            }
-
+            edge.setGraph(this);
             this._edges.push(edge);
         }
 
@@ -62,7 +60,19 @@
             this.resize();
             this.relocation();
         }
-
+        /*
+        clear(svg: HTMLElement) {
+            this._nodes.forEach(function (x) { x.setGraph(null) });
+            this._edges.forEach(function (x) { x.setGraph(null) });
+            this._nodes = [];
+            this._edges = [];
+        }
+        */
+        removeGraph(svg: HTMLElement) {
+            if (svg.contains(this.svgGroup)) {
+                svg.removeChild(this.svgGroup);
+            }
+        }
         /*
         public static create(svg: HTMLElement): Graph {
             //var g = GraphTableSVG.createGroup();

@@ -24,6 +24,7 @@
             p.svg.textContent = text;
             graph.svgGroup.appendChild(p.svg);
             p.parentEdge = edge;
+            edge.text = p;
             return p;
         }
 

@@ -10,8 +10,10 @@ class VirtualCell {
     parent: Table;
 }
 */
-var table: SVGTable = null;
+//var table: SVGTable = null;
 var svgBox: HTMLElement;
+
+var graphtable: SVGTable | Graph | null = null;
 
 function getInputText(): string {
     var textbox: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById(`inputtext_itb`);
@@ -21,11 +23,13 @@ function getInputText(): string {
 
 
 function createSuffixArrayTable() {
+    clear();
+
     var text: string = getInputText();
     var sa: number[] = StringModule.computeSuffixArray(text);
     console.log(text);
     svgBox.innerHTML = "";
-    table = new SVGTable(svgBox, 2, sa.length + 1);
+    var table = new SVGTable(svgBox, 2, sa.length + 1);
 
     table.cells[0][0].svgText.textContent = "SA";
     table.cells[0][1].svgText.textContent = "Text";
@@ -47,7 +51,8 @@ function createSuffixArrayTable() {
 
     }
     table.resize();
-    
+
+    graphtable = table;
 }
 function leftPadding(str: string, length: number, _leftPadding: string) : string {
     while (str.length - length < 0) {
@@ -56,11 +61,12 @@ function leftPadding(str: string, length: number, _leftPadding: string) : string
     return str;
 }
 function createLZ77WSRTable() {
+    clear();
     var text: string = getInputText();
     var result = StringModule.LZ77WithSelfReference(text);
 
     svgBox.innerHTML = "";
-    table = new SVGTable(svgBox, text.length, result.length + 2);
+    var table = new SVGTable(svgBox, text.length, result.length + 2);
 
     table.cellArray.forEach(function (x, i, arr) { x.width = 0; x.height = 0 });
     table.borders.forEach(function (x, i, arr) { x.style.visibility = "hidden"; });
@@ -100,8 +106,12 @@ function createLZ77WSRTable() {
     }
     table.resize();
 
+    graphtable = table;
+
 }
 function createSuffixTrie() {
+    clear();
+
     svgBox = document.getElementById('svgbox');
     var text = getInputText();
     var graph = new GraphTableSVG.OrderedOutcomingEdgesGraph(svgBox);
@@ -113,8 +123,12 @@ function createSuffixTrie() {
     root.y = 50;
     */
     graph.update();
+
+    graphtable = graph;
 }
 function createSuffixTree() {
+    clear();
+
     svgBox = document.getElementById('svgbox');
     var text = getInputText();
     var graph = new GraphTableSVG.OrderedOutcomingEdgesGraph(svgBox);
@@ -126,6 +140,19 @@ function createSuffixTree() {
     root.y = 50;
     */
     graph.update();
+
+    
+    graphtable = graph;
+}
+function clear() {
+    svgBox = document.getElementById('svgbox');
+    if (graphtable != null) {
+        if (graphtable instanceof Graph) {
+            graphtable.removeGraph(svgBox);
+        } else if (graphtable instanceof SVGTable) {
+            graphtable.removeTable(svgBox);
+        }
+    }
 }
 
 function createTestGraph() {
@@ -143,8 +170,7 @@ function createTestGraph() {
     edge1.endConnectType = GraphTableSVG.ConnecterPositionType.LeftUp;
 
     //graph.edges.push(edge1);
-
-    console.log(node2.svgGroup.transform.baseVal.getItem(0).matrix.f);
+    
 
     //graph.nodes.push(node1);
     //graph.nodes.push(node2);
@@ -167,8 +193,14 @@ window.onload = () => {
 
 function createCode() {
     var cnt = <HTMLInputElement>document.getElementById("codeBox");
-    cnt.value = SVGToVBA.createTable(table);
-    openModal("macro-modal");
+
+    if (graphtable instanceof SVGTable) {
+        cnt.value = SVGToVBA.createTable(graphtable);
+        openModal("macro-modal");
+    } else {
+        alert("error");
+    }
+
 }
 function copyAndClose() {
     var cnt = <HTMLInputElement>document.getElementById("codeBox");

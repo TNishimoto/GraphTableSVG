@@ -11,15 +11,10 @@ var __extends = (this && this.__extends) || (function () {
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var Edge = (function () {
-        /*
-        get graph(): Graph {
-            return this._parent;
-        }
-        */
         function Edge(_beginNode, _endNode) {
             this.beginConnectType = GraphTableSVG.ConnecterPositionType.Top;
             this.endConnectType = GraphTableSVG.ConnecterPositionType.Top;
-            //private _parent: Graph;
+            this._parent = null;
             this.text = null;
             //this._parent = graph;
             this._beginNode = _beginNode;
@@ -45,6 +40,16 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Edge.prototype, "graph", {
+            get: function () {
+                return this._parent;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Edge.prototype.setGraph = function (value) {
+            this._parent = value;
+        };
         Object.defineProperty(Edge.prototype, "x1", {
             get: function () {
                 var _a = this._beginNode.getLocation(this.beginConnectType), x1 = _a[0], y1 = _a[1];
@@ -99,6 +104,12 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        LineEdge.prototype.setGraph = function (value) {
+            _super.prototype.setGraph.call(this, value);
+            if (this.graph != null) {
+                this.graph.svgGroup.appendChild(this.svg);
+            }
+        };
         LineEdge.create = function (_parent, _begin, _end) {
             var svg = GraphTableSVG.createLine(0, 0, 100, 100);
             var line = new LineEdge(_begin, _end, svg);
@@ -173,12 +184,11 @@ var GraphTableSVG;
         */
         Graph.prototype.addVertex = function (vertex) {
             this.svgGroup.appendChild(vertex.svgGroup);
+            vertex.setGraph(this);
             this._nodes.push(vertex);
         };
         Graph.prototype.addEdge = function (edge) {
-            if (edge instanceof GraphTableSVG.LineEdge) {
-                this.svgGroup.appendChild(edge.svg);
-            }
+            edge.setGraph(this);
             this._edges.push(edge);
         };
         Graph.prototype.relocation = function () {
@@ -189,6 +199,19 @@ var GraphTableSVG;
         Graph.prototype.update = function () {
             this.resize();
             this.relocation();
+        };
+        /*
+        clear(svg: HTMLElement) {
+            this._nodes.forEach(function (x) { x.setGraph(null) });
+            this._edges.forEach(function (x) { x.setGraph(null) });
+            this._nodes = [];
+            this._edges = [];
+        }
+        */
+        Graph.prototype.removeGraph = function (svg) {
+            if (svg.contains(this.svgGroup)) {
+                svg.removeChild(this.svgGroup);
+            }
         };
         return Graph;
     }());
@@ -359,6 +382,7 @@ var GraphTableSVG;
             p.svg.textContent = text;
             graph.svgGroup.appendChild(p.svg);
             p.parentEdge = edge;
+            edge.text = p;
             return p;
         };
         EdgeText.prototype.update = function () {
@@ -390,7 +414,6 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     var Vertex = (function () {
         function Vertex(group) {
-            //parent: Graph;
             this._id = Vertex.id_counter++;
             this.svgGroup = group;
             /*
@@ -399,6 +422,19 @@ var GraphTableSVG;
             this.parent.svgGroup.appendChild(this.svgGroup);
             */
         }
+        Object.defineProperty(Vertex.prototype, "graph", {
+            get: function () {
+                return this._parent;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Vertex.prototype.setGraph = function (value) {
+            if (value == null) {
+                this._parent.svgGroup.removeChild(this.svgGroup);
+            }
+            this._parent = value;
+        };
         Object.defineProperty(Vertex.prototype, "id", {
             get: function () {
                 return this._id;
@@ -1432,6 +1468,11 @@ var GraphTableSVG;
                 r = [];
             }
             return r1;
+        };
+        SVGTable.prototype.removeTable = function (svg) {
+            if (svg.contains(this.group)) {
+                svg.removeChild(this.group);
+            }
         };
         return SVGTable;
     }());

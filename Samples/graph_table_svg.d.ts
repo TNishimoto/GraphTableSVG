@@ -4,9 +4,12 @@ declare module GraphTableSVG {
         beginConnectType: ConnecterPositionType;
         private _endNode;
         endConnectType: ConnecterPositionType;
+        private _parent;
         text: EdgeText | null;
         beginNode: Vertex;
         endNode: Vertex;
+        readonly graph: Graph;
+        setGraph(value: Graph): void;
         constructor(_beginNode: Vertex, _endNode: Vertex);
         readonly x1: number;
         readonly y1: number;
@@ -17,6 +20,7 @@ declare module GraphTableSVG {
     class LineEdge extends Edge {
         private _svg;
         readonly svg: SVGLineElement;
+        setGraph(value: Graph): void;
         constructor(_begin: Vertex, _end: Vertex, line: SVGLineElement);
         static create(_parent: Graph, _begin: Vertex, _end: Vertex): LineEdge;
         update(): boolean;
@@ -50,6 +54,7 @@ declare module GraphTableSVG {
         relocation(): void;
         resize(): void;
         update(): void;
+        removeGraph(svg: HTMLElement): void;
     }
     class OrderedOutcomingEdgesGraph extends Graph {
         private _outcomingEdgesDic;
@@ -84,6 +89,9 @@ declare module GraphTableSVG {
     class Vertex {
         private static id_counter;
         svgGroup: SVGGElement;
+        private _parent;
+        readonly graph: Graph;
+        setGraph(value: Graph): void;
         private _id;
         readonly id: number;
         constructor(group: SVGGElement);
@@ -232,6 +240,7 @@ declare module GraphTableSVG {
         createVBAMainCode(slideName: string): [string, string];
         private splitCode(tableName, codes);
         private splitCode1(codes);
+        removeTable(svg: HTMLElement): void;
     }
 }
 declare module GraphTableSVG {

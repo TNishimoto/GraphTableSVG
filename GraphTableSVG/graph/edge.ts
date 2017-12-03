@@ -4,7 +4,7 @@
         beginConnectType: ConnecterPositionType = ConnecterPositionType.Top;
         private _endNode: Vertex;
         endConnectType: ConnecterPositionType = ConnecterPositionType.Top;
-        //private _parent: Graph;
+        private _parent: Graph | null = null;
         text: EdgeText | null = null;
 
         get beginNode(): Vertex {
@@ -19,11 +19,13 @@
         set endNode(value: Vertex) {
             this._endNode = value;
         }
-        /*
+
         get graph(): Graph {
             return this._parent;
         }
-        */
+        public setGraph(value: Graph) {
+            this._parent = value;
+        }
 
 
         constructor(_beginNode: Vertex, _endNode: Vertex) {
@@ -62,6 +64,13 @@
 
         get svg(): SVGLineElement {
             return this._svg;
+        }
+        public setGraph(value: Graph)
+        {
+            super.setGraph(value);
+            if (this.graph != null) {
+                this.graph.svgGroup.appendChild(this.svg);
+            }
         }
 
 

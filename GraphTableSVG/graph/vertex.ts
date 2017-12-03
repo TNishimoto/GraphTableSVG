@@ -2,7 +2,19 @@
     export class Vertex {
         private static id_counter: number = 0;
         svgGroup: SVGGElement;
-        //parent: Graph;
+        private _parent: Graph;
+
+        get graph(): Graph {
+            return this._parent;
+        }
+        public setGraph(value: Graph) {
+            if (value == null) {
+                this._parent.svgGroup.removeChild(this.svgGroup);
+            }
+            this._parent = value;
+        }
+
+
         private _id: number = Vertex.id_counter++;
         public get id(): number {
             return this._id;
@@ -38,6 +50,7 @@
         public update(): boolean {
             return false;
         }
+
     }
     export class CircleVertex extends Vertex {
         svgCircle: SVGCircleElement;
