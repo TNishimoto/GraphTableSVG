@@ -156,10 +156,10 @@
                 edge.beginConnectType = GraphTableSVG.ConnecterPositionType.Bottom;
                 edge.endConnectType = GraphTableSVG.ConnecterPositionType.Top;
 
-                var edgeText = GraphTableSVG.EdgeText.create(edge, y.edgeText);
+                var edgeText = GraphTableSVG.EdgeText.create(graph,edge, y.edgeText);
                 edge.text = edgeText;
 
-                graph.edges.push(edge);
+                //graph.edges.push(edge);
                 graph.outcomingEdgesDic[node.id].push(edge);
             });
         });
@@ -190,7 +190,7 @@
         } else {
             var node = GraphTableSVG.CircleVertex.create(graph);
             node.svgText.textContent = treeNode.id.toString();
-            graph.nodes.push(node);
+            //graph.nodes.push(node);
             dic[treeNode.id] = node;
             return node;
 

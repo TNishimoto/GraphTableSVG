@@ -18,11 +18,11 @@
             return [x, y];
         }
 
-        public static create(edge: Edge, text: string): EdgeText {
+        public static create(graph: Graph, edge: Edge, text: string): EdgeText {
             var p = new EdgeText();
             p.svg = createText();
             p.svg.textContent = text;
-            edge.parent.svgGroup.appendChild(p.svg);
+            graph.svgGroup.appendChild(p.svg);
             p.parentEdge = edge;
             return p;
         }

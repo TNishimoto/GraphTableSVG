@@ -142,12 +142,12 @@ function createTestGraph() {
     edge1.beginConnectType = GraphTableSVG.ConnecterPositionType.RightUp;
     edge1.endConnectType = GraphTableSVG.ConnecterPositionType.LeftUp;
 
-    graph.edges.push(edge1);
+    //graph.edges.push(edge1);
 
     console.log(node2.svgGroup.transform.baseVal.getItem(0).matrix.f);
 
-    graph.nodes.push(node1);
-    graph.nodes.push(node2);
+    //graph.nodes.push(node1);
+    //graph.nodes.push(node2);
     graph.update();
 }
 

@@ -17,19 +17,34 @@
         RightUp = 8
     }
     export class Graph {
-        private _nodes: Vertex[] = new Array(0);
-        private _edges: Edge[] = new Array(0);
+        protected _nodes: Vertex[] = new Array(0);
+        protected _edges: Edge[] = new Array(0);
         protected _svgGroup: SVGGElement;
 
         get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
+        /*
         get nodes(): Vertex[] {
             return this._nodes;
         }
         get edges(): Edge[] {
             return this._edges;
         }
+        */
+
+        public addVertex(vertex: Vertex) {
+            this.svgGroup.appendChild(vertex.svgGroup);
+            this._nodes.push(vertex);
+        }
+        public addEdge(edge: Edge) {
+            if (edge instanceof LineEdge) {
+                this.svgGroup.appendChild(edge.svg);
+            }
+
+            this._edges.push(edge);
+        }
+
 
         constructor(svg: HTMLElement) {
             this._svgGroup = GraphTableSVG.createGroup();
@@ -70,16 +85,16 @@
 
         public getRoot(): Vertex {
             var p = this;
-            var r = this.nodes.filter(function(x) {
+            var r = this._nodes.filter(function(x) {
                 return p.getParentEdge(x) == null;
             });
             return r[0];
         }
 
         public getParentEdge(node: Vertex): Edge | null{
-            for (var i = 0; i < this.edges.length; i++) {
-                if (this.edges[i].endNode.id == node.id) {
-                    return this.edges[i];
+            for (var i = 0; i < this._edges.length; i++) {
+                if (this._edges[i].endNode.id == node.id) {
+                    return this._edges[i];
                 }
             }
             return null;

@@ -2,18 +2,19 @@
     export class Vertex {
         private static id_counter: number = 0;
         svgGroup: SVGGElement;
-        parent: Graph;
+        //parent: Graph;
         private _id: number = Vertex.id_counter++;
         public get id(): number {
             return this._id;
         }
 
-        constructor(parent: Graph, group: SVGGElement) {
+        constructor(group: SVGGElement) {
             this.svgGroup = group;
+            /*
             this.parent = parent;
 
             this.parent.svgGroup.appendChild(this.svgGroup);
-
+            */
         }
 
         public get x(): number {
@@ -42,8 +43,8 @@
         svgCircle: SVGCircleElement;
         svgText: SVGTextElement;
 
-        constructor(parent: Graph, group: SVGGElement, circle: SVGCircleElement, text: SVGTextElement) {
-            super(parent, group);
+        constructor(group: SVGGElement, circle: SVGCircleElement, text: SVGTextElement) {
+            super(group);
             this.svgCircle = circle;
             this.svgText = text;
 
@@ -65,8 +66,9 @@
 
             var group = GraphTableSVG.createGroup();
 
-            var p = new CircleVertex(_parent, group, circle, text);
+            var p = new CircleVertex(group, circle, text);
 
+            _parent.addVertex(p);
 
             return p;
         }
