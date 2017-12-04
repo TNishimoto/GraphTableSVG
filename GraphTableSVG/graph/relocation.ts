@@ -1,6 +1,6 @@
 ﻿module GraphTableSVG {
 
-    export module relocation {
+    export module GraphArrangement {
 
         /*
         export function relocate(graph: OrderedOutcomingEdgesGraph, root: Vertex, width: number, height: number) {
@@ -51,8 +51,19 @@
 
         }
         */
+        export function standardTreeArrangement(graph: OrderedTree, edgeLength: number): void {
+            if (graph.rootVertex != null) {
+                var rootTree = graph.tree;
+                var [x, y] = [rootTree.root.x, rootTree.root.y];
+                standardTreeArrangementSub(rootTree, edgeLength);
+                rootTree.setRootLocation(x, y);
 
-        export function standardLocateSub2(tree: VirtualTree, edgeLength: number): void {
+                graph.update();
+            }
+
+        }
+
+        function standardTreeArrangementSub(tree: VirtualTree, edgeLength: number): void {
             tree.root.x = 0;
             tree.root.y = 0;
 
@@ -65,9 +76,9 @@
             var __x = -leaveSizeWidthHalf;
 
             for (var i = 0; i < edges.length; i++) {
-                standardLocateSub2(edges[i], edgeLength);
+                standardTreeArrangementSub(edges[i], edgeLength);
                 var w = (edges[i].getLeaves().length * edgeLength) / 2;
-                edges[i].setLocation2(__x + w, edgeLength);
+                edges[i].setRootLocation(__x + w, edgeLength);
                 __x += edges[i].getLeaves().length * edgeLength;                
             }
         }

@@ -2,16 +2,16 @@
     export class Vertex {
         private static id_counter: number = 0;
         svgGroup: SVGGElement;
-        private _parent: Graph;
+        private _graph: Graph | null;
 
         get graph(): Graph {
-            return this._parent;
+            return this._graph;
         }
         public setGraph(value: Graph) {
             if (value == null) {
-                this._parent.svgGroup.removeChild(this.svgGroup);
+                this._graph.svgGroup.removeChild(this.svgGroup);
             }
-            this._parent = value;
+            this._graph = value;
         }
 
 
@@ -34,6 +34,10 @@
         }
         public set x(value: number) {
             this.svgGroup.setX(value);
+            if (this.graph != null) {
+                this.graph.update();
+            }
+
         }
 
         public get y(): number {
@@ -41,7 +45,19 @@
         }
         public set y(value: number) {
             this.svgGroup.setY(value);
+            if (this.graph != null) {
+                this.graph.update();
+            }
+
         }
+
+        get width(): number {
+            return 0;
+        }
+        get height(): number {
+            return 0;
+        }
+
 
         public getLocation(type: ConnecterPositionType): [number, number] {
             return [this.x, this.y];
@@ -49,6 +65,41 @@
 
         public update(): boolean {
             return false;
+        }
+
+        get region(): Rectangle {
+            var p = new Rectangle();
+            p.x = this.x - (this.width / 2);
+            p.y = this.y - (this.height / 2);
+            p.width = this.width;
+            p.height = this.height;
+            return p;
+        }
+
+        public static getRegion(vertexes: Vertex[]): Rectangle {
+            //var p = this.getSubtree();
+            if (vertexes.length > 0) {
+                var fstVertex = vertexes[0];
+                var minX = fstVertex.x;
+                var maxX = fstVertex.x;
+                var minY = fstVertex.y;
+                var maxY = fstVertex.y;
+                vertexes.forEach(function (x, i, arr) {
+                    var rect = x.region;
+                    if (minX > rect.x) minX = rect.x;
+                    if (maxX < rect.right) maxX = rect.right;
+                    if (minY > rect.y) minY = rect.y;
+                    if (maxY < rect.bottom) maxY = rect.bottom;
+                });
+                var result = new Rectangle();
+                result.x = minX;
+                result.y = minY;
+                result.width = maxX - minX;
+                result.height = maxY - minY;
+                return result;
+            } else {
+                return new Rectangle();
+            }
         }
 
     }
@@ -65,17 +116,22 @@
             this.svgGroup.appendChild(this.svgText);
 
         }
-
+        get width(): number {
+            return this.svgCircle.r.baseVal.value * 2;
+        }
+        get height(): number {
+            return this.svgCircle.r.baseVal.value * 2;
+        }
         public static create(_parent: Graph): CircleVertex {
             var circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             circle.style.stroke = "black";
             circle.style.strokeWidth = "5pt";
+            circle.style.fill = "#ffffff";
             circle.cx.baseVal.value = 0;
             circle.cy.baseVal.value = 0;
             circle.r.baseVal.value = 20;
 
             var text = GraphTableSVG.createText();
-            text.textContent = "hogehoge";
 
             var group = GraphTableSVG.createGroup();
 

@@ -114,7 +114,7 @@ function createSuffixTrie() {
 
     svgBox = document.getElementById('svgbox');
     var text = getInputText();
-    var graph = new GraphTableSVG.OrderedOutcomingEdgesGraph(svgBox);
+    var graph = new GraphTableSVG.OrderedTree(svgBox);
     var trie = TreeFunctions.createTrie(text);
     TreeFunctions.translate(trie, graph);
     /*
@@ -123,15 +123,21 @@ function createSuffixTrie() {
     root.y = 50;
     */
     graph.update();
+    GraphTableSVG.GraphArrangement.standardTreeArrangement(graph, 90);
+    graph.tree.setRectangleLocation(0, 0);
+
 
     graphtable = graph;
+
+    var rect = graph.getRegion();
+    setSVGBoxSize(rect.width, rect.height);
 }
 function createSuffixTree() {
     clear();
 
     svgBox = document.getElementById('svgbox');
     var text = getInputText();
-    var graph = new GraphTableSVG.OrderedOutcomingEdgesGraph(svgBox);
+    var graph = new GraphTableSVG.OrderedTree(svgBox);
     var trie = TreeFunctions.createSuffixTree(text);
     TreeFunctions.translate(trie, graph);
     /*
@@ -139,10 +145,23 @@ function createSuffixTree() {
     root.x = 50;
     root.y = 50;
     */
-    graph.update();
 
+    //graph.arrangementFunction = GraphTableSVG.GraphArrangement.createStandardTreeArrangementFunction(90);
+
+    GraphTableSVG.GraphArrangement.standardTreeArrangement(graph, 90);
+    graph.tree.setRectangleLocation(0, 0);
     
     graphtable = graph;
+    var rect = graph.getRegion();
+    setSVGBoxSize(rect.width, rect.height);
+
+}
+function setSVGBoxSize(w: number, h: number) {
+    svgBox = document.getElementById('svgbox');
+    svgBox.style.width = `${w}px`;
+    svgBox.style.height = `${h}px`;
+    svgBox.setAttribute(`viewBox`, `0 0 ${w} ${h}`);
+
 }
 function clear() {
     svgBox = document.getElementById('svgbox');
@@ -187,7 +206,7 @@ window.onload = () => {
     */
 
     //table.cells[0][0].svgText.textContent = "hogehgoehg<tbreak/>oheoghoeghoe";
-    
+    createSuffixTree();
 };
 
 

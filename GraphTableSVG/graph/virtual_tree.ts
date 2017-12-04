@@ -1,9 +1,9 @@
 ﻿module GraphTableSVG {
     export class VirtualTree {
-        graph: OrderedOutcomingEdgesGraph;
+        graph: OrderedTree;
         root: Vertex;
 
-        constructor(_graph: OrderedOutcomingEdgesGraph, _root: Vertex) {
+        constructor(_graph: OrderedTree, _root: Vertex) {
             this.graph = _graph;
             this.root = _root;
         }
@@ -49,17 +49,18 @@
                 return max + 1;
             }
         }
-        public getTreeRegion(): Rectangle {
+        public region(): Rectangle {
             var p = this.getSubtree();
             var minX = this.root.x;
             var maxX = this.root.x;
             var minY = this.root.y;
             var maxY = this.root.y;
             p.forEach(function (x, i, arr) {
-                if (minX > x.x) minX = x.x;
-                if (maxX < x.x) maxX = x.x;
-                if (minY > x.y) minY = x.y;
-                if (maxY < x.y) maxY = x.y;
+                var rect = x.region;
+                if (minX > rect.x) minX = rect.x;
+                if (maxX < rect.right) maxX = rect.right;
+                if (minY > rect.y) minY = rect.y;
+                if (maxY < rect.bottom) maxY = rect.bottom;
             });
             var result = new Rectangle();
             result.x = minX;
@@ -83,20 +84,25 @@
                 x.y += _y;
             });
         }
-        public setLocation(_x: number, _y: number) {
-            var x = this.getMostLeftLeave().root.x;
-            var y = this.root.y;
+        public setRectangleLocation(_x: number, _y: number) {
+            var x = this.getMostLeftLeave().root.region.x;
+            var y = this.root.region.y;
             var diffX = _x - x;
             var diffY = _y - y;
             this.addOffset(diffX, diffY);
+            this.graph.updateEdges();
         }
-        public setLocation2(_x: number, _y: number) {
+        public setRootLocation(_x: number, _y: number) {
             var x = this.root.x;
             var y = this.root.y;
             var diffX = _x - x;
             var diffY = _y - y;
             this.addOffset(diffX, diffY);
+            this.graph.updateEdges();
         }
+        
+
+        
     }
 
 }

@@ -145,7 +145,7 @@
         }
         return [texts.length, false];
     }
-    export function translate(root: TreeNode, graph: GraphTableSVG.OrderedOutcomingEdgesGraph) {
+    export function translate(root: TreeNode, graph: GraphTableSVG.OrderedTree) {
         var dic: { [key: number]: GraphTableSVG.Vertex; } = [];
         root.getNodes().forEach(function(x) {
             var node = createNode(x, graph, dic);
@@ -163,6 +163,7 @@
                 graph.outcomingEdgesDic[node.id].push(edge);
             });
         });
+        graph.rootVertex = graph.getFirstNoParentVertex();
     }
     export function shrink(root: TreeNode) {
         if (root.parent != null) {

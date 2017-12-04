@@ -4,6 +4,13 @@
         y: number;
         width: number;
         height: number;
+
+        get right(): number {
+            return this.x + this.width;
+        }
+        get bottom(): number {
+            return this.y + this.height;
+        }
     }
 
     export enum ConnecterPositionType {
@@ -20,6 +27,8 @@
         protected _nodes: Vertex[] = new Array(0);
         protected _edges: Edge[] = new Array(0);
         protected _svgGroup: SVGGElement;
+
+        //public arrangementFunction: (Graph) => void | null = null;
 
         get svgGroup(): SVGGElement {
             return this._svgGroup;
@@ -49,16 +58,25 @@
             svg.appendChild(this._svgGroup);
         }
 
-
+        /*
         relocation(): void {
-            this._edges.forEach(function (x, i, arr) { x.update() });            
+            this.arrangementFunction(this);
         }
         resize() : void {
 
         }
+        */
+
+        updateNodes(): void {
+            this._nodes.forEach(function (x) { x.update() });
+        }
+        updateEdges() : void {
+            this._edges.forEach(function (x) { x.update() });
+        }
+
         update(): void {
-            this.resize();
-            this.relocation();
+            this.updateNodes();
+            this.updateEdges();
         }
         /*
         clear(svg: HTMLElement) {
@@ -80,72 +98,17 @@
             //graph.svgGroup = g;
         }
         */
-    }
-    export class OrderedOutcomingEdgesGraph extends Graph {
-        private _outcomingEdgesDic: { [key: number]: Edge[]; } = [];
-        //parentEdgeDic: { [key: number]: Edge; } = [];
 
-        get outcomingEdgesDic(): { [key: number]: Edge[]; } {
-            return this._outcomingEdgesDic;
-        }
-
-        constructor(svg: HTMLElement) {
-            super(svg);
-        }
-
-        public getRoot(): Vertex {
-            var p = this;
-            var r = this._nodes.filter(function(x) {
-                return p.getParentEdge(x) == null;
-            });
-            return r[0];
-        }
-
-        public getParentEdge(node: Vertex): Edge | null{
-            for (var i = 0; i < this._edges.length; i++) {
-                if (this._edges[i].endNode.id == node.id) {
-                    return this._edges[i];
-                }
-            }
-            return null;
-        }
-        public getTree(node: Vertex): VirtualTree {
-            return new VirtualTree(this, node);
-        }
-
-        /*
-        public static create(svg: HTMLElement): OrderedOutcomingEdgesGraph {
-            var g = GraphTableSVG.createGroup();
-            var graph = new OrderedOutcomingEdgesGraph();
-            graph.__svgGroup = g;
-            svg.appendChild(graph.__svgGroup);
-            return graph;
-        }
-
-        */
-        public relocation() {
-            var root = this.getRoot();
-            var tree = this.getTree(root);
-            relocation.standardLocateSub2(tree, 100);
-
-            tree.setLocation(30, 30);
-            super.relocation();
+        public getRegion(): Rectangle {
+            var rect = Vertex.getRegion(this._nodes);
+            rect.x += this.svgGroup.getX();
+            rect.y += this.svgGroup.getY();
+            return rect;
         }
     }
+    
 
-
-
-
-    /*
-    export class TextPath {
-        parent: Edge;
-        svgText: SVGTextElement;
-
-        public update(): boolean {
-            return false;
-        }
-    }
-    */
+    
     
 
 }

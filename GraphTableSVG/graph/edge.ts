@@ -4,7 +4,7 @@
         beginConnectType: ConnecterPositionType = ConnecterPositionType.Top;
         private _endNode: Vertex;
         endConnectType: ConnecterPositionType = ConnecterPositionType.Top;
-        private _parent: Graph | null = null;
+        private _graph: Graph | null = null;
         text: EdgeText | null = null;
 
         get beginNode(): Vertex {
@@ -12,19 +12,26 @@
         }
         set beginNode(value: Vertex) {
             this._beginNode = value;
+
+            if (this.graph != null) {
+                this.graph.update();
+            }
         }
         get endNode(): Vertex {
             return this._endNode;
         }
         set endNode(value: Vertex) {
             this._endNode = value;
+            if (this.graph != null) {
+                this.graph.update();
+            }
         }
 
-        get graph(): Graph {
-            return this._parent;
+        get graph(): Graph | null {
+            return this._graph;
         }
         public setGraph(value: Graph) {
-            this._parent = value;
+            this._graph = value;
         }
 
 
