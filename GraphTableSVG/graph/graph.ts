@@ -13,7 +13,7 @@
         }
     }
 
-    export enum ConnecterPositionType {
+    export enum ConnecterPosition {
         Top = 1,
         LeftUp = 2,
         Left = 3,

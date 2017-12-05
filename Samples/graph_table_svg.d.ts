@@ -1,9 +1,9 @@
 declare module GraphTableSVG {
     class Edge {
         private _beginNode;
-        beginConnectType: ConnecterPositionType;
+        beginConnecterType: ConnecterPosition;
         private _endNode;
-        endConnectType: ConnecterPositionType;
+        endConnecterType: ConnecterPosition;
         private _graph;
         text: EdgeText | null;
         beginNode: Vertex;
@@ -22,7 +22,7 @@ declare module GraphTableSVG {
         readonly svg: SVGLineElement;
         setGraph(value: Graph): void;
         constructor(_begin: Vertex, _end: Vertex, line: SVGLineElement);
-        static create(_parent: Graph, _begin: Vertex, _end: Vertex): LineEdge;
+        static create(_parent: Graph, _begin: Vertex, _end: Vertex, _beginConnectType?: ConnecterPosition, _endConnectType?: ConnecterPosition): LineEdge;
         update(): boolean;
     }
 }
@@ -35,7 +35,7 @@ declare module GraphTableSVG {
         readonly right: number;
         readonly bottom: number;
     }
-    enum ConnecterPositionType {
+    enum ConnecterPosition {
         Top = 1,
         LeftUp = 2,
         Left = 3,
@@ -99,6 +99,8 @@ declare module GraphTableSVG {
         private static id_counter;
         svgGroup: SVGGElement;
         private _graph;
+        private _observer;
+        private createObserveFunction();
         readonly graph: Graph;
         setGraph(value: Graph): void;
         private _id;
@@ -108,7 +110,7 @@ declare module GraphTableSVG {
         y: number;
         readonly width: number;
         readonly height: number;
-        getLocation(type: ConnecterPositionType): [number, number];
+        getLocation(type: ConnecterPosition): [number, number];
         update(): boolean;
         readonly region: Rectangle;
         static getRegion(vertexes: Vertex[]): Rectangle;
@@ -119,9 +121,9 @@ declare module GraphTableSVG {
         constructor(group: SVGGElement, circle: SVGCircleElement, text: SVGTextElement);
         readonly width: number;
         readonly height: number;
-        static create(_parent: Graph): CircleVertex;
+        static create(_parent: Graph, x?: number, y?: number): CircleVertex;
         readonly radius: number;
-        getLocation(type: ConnecterPositionType): [number, number];
+        getLocation(type: ConnecterPosition): [number, number];
     }
 }
 declare module GraphTableSVG {

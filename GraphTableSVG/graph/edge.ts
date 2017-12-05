@@ -1,9 +1,9 @@
 ﻿module GraphTableSVG {
     export class Edge {
         private _beginNode: Vertex;
-        beginConnectType: ConnecterPositionType = ConnecterPositionType.Top;
+        beginConnecterType: ConnecterPosition = ConnecterPosition.Top;
         private _endNode: Vertex;
-        endConnectType: ConnecterPositionType = ConnecterPositionType.Top;
+        endConnecterType: ConnecterPosition = ConnecterPosition.Bottom;
         private _graph: Graph | null = null;
         text: EdgeText | null = null;
 
@@ -42,20 +42,20 @@
         }
 
         public get x1(): number {
-            var [x1, y1] = this._beginNode.getLocation(this.beginConnectType);
+            var [x1, y1] = this._beginNode.getLocation(this.beginConnecterType);
 
             return x1;
         }
         public get y1(): number {
-            var [x1, y1] = this._beginNode.getLocation(this.beginConnectType);
+            var [x1, y1] = this._beginNode.getLocation(this.beginConnecterType);
             return y1;
         }
         public get x2(): number {
-            var [x2, y2] = this._endNode.getLocation(this.endConnectType);
+            var [x2, y2] = this._endNode.getLocation(this.endConnecterType);
             return x2;
         }
         public get y2(): number {
-            var [x2, y2] = this._endNode.getLocation(this.endConnectType);
+            var [x2, y2] = this._endNode.getLocation(this.endConnecterType);
             return y2;
         }
 
@@ -88,9 +88,13 @@
 
         }
 
-        public static create(_parent: Graph,_begin: Vertex, _end: Vertex): LineEdge {
+        public static create(_parent: Graph, _begin: Vertex, _end: Vertex,
+            _beginConnectType: ConnecterPosition = ConnecterPosition.Top,
+            _endConnectType: ConnecterPosition = ConnecterPosition.Bottom): LineEdge {
             var svg = createLine(0, 0, 100, 100);
             var line = new LineEdge(_begin, _end, svg);
+            line.beginConnecterType = _beginConnectType;
+            line.endConnecterType = _endConnectType;
             _parent.addEdge(line);
 
             /*

@@ -3,6 +3,22 @@
         private static id_counter: number = 0;
         svgGroup: SVGGElement;
         private _graph: Graph | null;
+        private _observer: MutationObserver;
+        private createObserveFunction(): MutationCallback {
+            var th = this;
+            var ret = function (x: MutationRecord[]) {
+                for (var i = 0; i < x.length; i++) {
+                    var p = x[i];
+                    if (p.attributeName == "transform") {
+
+                        if (th.graph != null) {
+                            th.graph.update();
+                        }
+                    }
+                }
+            }
+            return ret;
+        };
 
         get graph(): Graph {
             return this._graph;
@@ -12,6 +28,7 @@
                 this._graph.svgGroup.removeChild(this.svgGroup);
             }
             this._graph = value;
+            
         }
 
 
@@ -23,6 +40,10 @@
         constructor(group: SVGGElement) {
             this.svgGroup = group;
 
+            
+            this._observer = new MutationObserver(this.createObserveFunction());
+            var option: MutationObserverInit = { attributes: true };
+            this._observer.observe(this.svgGroup, option);
             /*
             this.parent = parent;
 
@@ -34,21 +55,28 @@
             return this.svgGroup.getX();
         }
         public set x(value: number) {
-            this.svgGroup.setX(value);
+            if (this.svgGroup.getX() != value) {
+                this.svgGroup.setX(value);
+            }
+            /*
             if (this.graph != null) {
                 this.graph.update();
             }
-
+            */
         }
 
         public get y(): number {
             return this.svgGroup.getY();
         }
         public set y(value: number) {
-            this.svgGroup.setY(value);
+            if (this.svgGroup.getY() != value) {
+                this.svgGroup.setY(value);
+            }
+            /*
             if (this.graph != null) {
                 this.graph.update();
             }
+            */
 
         }
 
@@ -60,7 +88,7 @@
         }
 
 
-        public getLocation(type: ConnecterPositionType): [number, number] {
+        public getLocation(type: ConnecterPosition): [number, number] {
             return [this.x, this.y];
         }
 
@@ -123,7 +151,7 @@
         get height(): number {
             return this.svgCircle.r.baseVal.value * 2;
         }
-        public static create(_parent: Graph): CircleVertex {
+        public static create(_parent: Graph, x: number = 0, y: number = 0): CircleVertex {
             var circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             circle.style.stroke = "black";
             circle.style.strokeWidth = "5pt";
@@ -137,7 +165,8 @@
             var group = GraphTableSVG.createGroup();
 
             var p = new CircleVertex(group, circle, text);
-
+            p.x = x;
+            p.y = y;
             _parent.addVertex(p);
 
             return p;
@@ -145,26 +174,26 @@
         public get radius(): number {
             return this.svgCircle.r.baseVal.value;
         }
-        public getLocation(type: ConnecterPositionType): [number, number] {
+        public getLocation(type: ConnecterPosition): [number, number] {
             var r = (Math.sqrt(2) / 2) * this.radius;
 
 
             switch (type) {
-                case ConnecterPositionType.Top:
+                case ConnecterPosition.Top:
                     return [this.x, this.y - this.radius];
-                case ConnecterPositionType.RightUp:
+                case ConnecterPosition.RightUp:
                     return [this.x + r, this.y - r];
-                case ConnecterPositionType.Right:
+                case ConnecterPosition.Right:
                     return [this.x + this.radius, this.y];
-                case ConnecterPositionType.RightDown:
+                case ConnecterPosition.RightDown:
                     return [this.x + r, this.y + r];
-                case ConnecterPositionType.Bottom:
+                case ConnecterPosition.Bottom:
                     return [this.x, this.y + this.radius];
-                case ConnecterPositionType.LeftDown:
+                case ConnecterPosition.LeftDown:
                     return [this.x - r, this.y + r];
-                case ConnecterPositionType.Left:
+                case ConnecterPosition.Left:
                     return [this.x - this.radius, this.y];
-                case ConnecterPositionType.LeftUp:
+                case ConnecterPosition.LeftUp:
                     return [this.x - r, this.y - r];
                 default:
                     return [this.x, this.y];

@@ -185,8 +185,8 @@ function createTestGraph() {
     node2.svgGroup.setX(260);
     node2.svgGroup.setY(100);
     var edge1 = GraphTableSVG.LineEdge.create(graph, node1, node2);
-    edge1.beginConnectType = GraphTableSVG.ConnecterPositionType.RightUp;
-    edge1.endConnectType = GraphTableSVG.ConnecterPositionType.LeftUp;
+    edge1.beginConnecterType = GraphTableSVG.ConnecterPosition.RightUp;
+    edge1.endConnecterType = GraphTableSVG.ConnecterPosition.LeftUp;
 
     //graph.edges.push(edge1);
     
@@ -197,25 +197,43 @@ function createTestGraph() {
 }
 
 window.onload = () => {
-    /*
+    
     var box = document.getElementById('svgbox');
     var graph = new GraphTableSVG.OrderedTree(box);
 
-    var node1 = GraphTableSVG.CircleVertex.create(graph);
-    var node2 = GraphTableSVG.CircleVertex.create(graph);
-    var node3 = GraphTableSVG.CircleVertex.create(graph);
+    var node1 = GraphTableSVG.CircleVertex.create(graph, 100,100);
+    var node2 = GraphTableSVG.CircleVertex.create(graph, 150, 200);
+    var node3 = GraphTableSVG.CircleVertex.create(graph, 50, 200);
 
-    var edge1 = GraphTableSVG.LineEdge.create(graph, node1, node2);
-    [edge1.beginConnectType, edge1.endConnectType] = [GraphTableSVG.ConnecterPositionType.Bottom, GraphTableSVG.ConnecterPositionType.Top];
-    var edge2 = GraphTableSVG.LineEdge.create(graph, node1, node3);
-    [edge2.beginConnectType, edge2.endConnectType] = [GraphTableSVG.ConnecterPositionType.Bottom, GraphTableSVG.ConnecterPositionType.Top];
+    
+    var edge1 = GraphTableSVG.LineEdge.create(graph, node1, node2, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
+    //[edge1.beginConnectType, edge1.endConnectType] = [GraphTableSVG.ConnecterPositionType.Bottom, GraphTableSVG.ConnecterPositionType.Top];
+    var edge2 = GraphTableSVG.LineEdge.create(graph, node1, node3, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
 
+    /*
+    var observar = new MutationObserver(function (x) { console.log(x) });
+    var option: MutationObserverInit = { attributes: true };
+    observar.observe(node1.svgGroup, option);
+    */
+
+    /*
+    var func = function (x) { console.log(x) };
+    edge1.svg.addEventListener("DOMAttrModified", func);
+    */
+    console.log("x");
+    node1.x = 10;
+    console.log("update");
+
+    //[edge2.beginConnectType, edge2.endConnectType] = [GraphTableSVG.ConnecterPositionType.Bottom, GraphTableSVG.ConnecterPositionType.Top];
+
+    /*
     [node1.x, node1.y] = [100, 100];
     [node2.x, node2.y] = [150, 150];
     [node3.x, node3.y] = [50, 200];
-    graph.update();
     */
-    createSuffixTree();
+    //graph.update();
+    
+    //createSuffixTree();
 };
 
 

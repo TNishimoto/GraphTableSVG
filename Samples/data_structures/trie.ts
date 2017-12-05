@@ -153,8 +153,8 @@
             x.children.forEach(function(y) {
                 var child = createNode(y, graph, dic);
                 var edge = GraphTableSVG.LineEdge.create(graph, node, child);
-                edge.beginConnectType = GraphTableSVG.ConnecterPositionType.Bottom;
-                edge.endConnectType = GraphTableSVG.ConnecterPositionType.Top;
+                edge.beginConnecterType = GraphTableSVG.ConnecterPosition.Bottom;
+                edge.endConnecterType = GraphTableSVG.ConnecterPosition.Top;
 
                 var edgeText = GraphTableSVG.EdgeText.create(graph,edge, y.edgeText);
                 edge.text = edgeText;
