@@ -100,7 +100,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>copy "$(SolutionDir)\GraphTableSVG\graph_table_svg.js" "$(ProjectDir)graph_table_svg.js"
-copy "$(SolutionDir)\GraphTableSVG\graph_table_svg.d.ts" "$(ProjectDir)graph_table_svg.d.ts"</PreBuildEvent>
+    <PreBuildEvent>copy "$(SolutionDir)\GraphTableSVG\out\graph_table_svg.js" "$(ProjectDir)graph_table_svg.js"
+copy "$(SolutionDir)\GraphTableSVG\out\graph_table_svg.d.ts" "$(ProjectDir)graph_table_svg.d.ts"</PreBuildEvent>
   </PropertyGroup>
 </Project>

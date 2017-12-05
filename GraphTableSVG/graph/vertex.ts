@@ -22,6 +22,7 @@
 
         constructor(group: SVGGElement) {
             this.svgGroup = group;
+
             /*
             this.parent = parent;
 

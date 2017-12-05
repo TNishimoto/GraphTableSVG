@@ -197,15 +197,24 @@ function createTestGraph() {
 }
 
 window.onload = () => {
-    
-    //createTestGraph();
     /*
-    svgBox = document.getElementById('svgbox');
-    var el = document.getElementById('content');
-    table = new SVGTable(svgBox, 5, 5);
-    */
+    var box = document.getElementById('svgbox');
+    var graph = new GraphTableSVG.OrderedTree(box);
 
-    //table.cells[0][0].svgText.textContent = "hogehgoehg<tbreak/>oheoghoeghoe";
+    var node1 = GraphTableSVG.CircleVertex.create(graph);
+    var node2 = GraphTableSVG.CircleVertex.create(graph);
+    var node3 = GraphTableSVG.CircleVertex.create(graph);
+
+    var edge1 = GraphTableSVG.LineEdge.create(graph, node1, node2);
+    [edge1.beginConnectType, edge1.endConnectType] = [GraphTableSVG.ConnecterPositionType.Bottom, GraphTableSVG.ConnecterPositionType.Top];
+    var edge2 = GraphTableSVG.LineEdge.create(graph, node1, node3);
+    [edge2.beginConnectType, edge2.endConnectType] = [GraphTableSVG.ConnecterPositionType.Bottom, GraphTableSVG.ConnecterPositionType.Top];
+
+    [node1.x, node1.y] = [100, 100];
+    [node2.x, node2.y] = [150, 150];
+    [node3.x, node3.y] = [50, 200];
+    graph.update();
+    */
     createSuffixTree();
 };
 
