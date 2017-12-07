@@ -12,7 +12,9 @@
             return this.y + this.height;
         }
     }
-
+    export enum NodeOrder {
+        Preorder, Inorder, Postorder
+    }
     export enum ConnecterPosition {
         Top = 1,
         LeftUp = 2,
@@ -24,23 +26,26 @@
         RightUp = 8
     }
     export class Graph {
+        private static id: number = 0;
+
         protected _nodes: Vertex[] = new Array(0);
         protected _edges: Edge[] = new Array(0);
         protected _svgGroup: SVGGElement;
+        public name: string = (Graph.id++).toString();
 
         //public arrangementFunction: (Graph) => void | null = null;
 
         get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
-        /*
+        
         get nodes(): Vertex[] {
             return this._nodes;
         }
         get edges(): Edge[] {
             return this._edges;
         }
-        */
+        
 
         public addVertex(vertex: Vertex) {
             this.svgGroup.appendChild(vertex.svgGroup);
@@ -105,6 +110,18 @@
             rect.y += this.svgGroup.getY();
             return rect;
         }
+
+        public getObjectBySVGID(id: string): Vertex | Edge | null {
+            for (var i = 0; i < this.nodes.length; i++) {
+                if (this.nodes[i].containsSVGID(id)) {
+                    return this.nodes[i];
+                }
+            }
+            return null;
+        }
+
+
+        
     }
     
 

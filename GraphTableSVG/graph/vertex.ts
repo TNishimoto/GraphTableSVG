@@ -28,7 +28,8 @@
                 this._graph.svgGroup.removeChild(this.svgGroup);
             }
             this._graph = value;
-            
+            this.svgGroup.id = `${this.graph.name}_${this.id}_group`;
+
         }
 
 
@@ -40,6 +41,7 @@
         constructor(group: SVGGElement) {
             this.svgGroup = group;
 
+            
             
             this._observer = new MutationObserver(this.createObserveFunction());
             var option: MutationObserverInit = { attributes: true };
@@ -130,16 +132,77 @@
                 return new Rectangle();
             }
         }
+        public containsSVGID(id: string): boolean {
+            return this.svgGroup.id == id;
+        }
+        public get surface(): SVGElement | null {
+            return null;
+        }
+        public getParents(): Vertex[] {
+            return this.graph.edges.filter((v) => v.endNode == this).map((v) => v.beginNode);
+        }
+        getParent(): Vertex | null {
+            var r = this.getParents();
+            if (r.length == 0) {
+                return null;
+            } else {
+                return r[0];
+            }
+        }
+        get isRoot(): boolean {
+            return this.getParent() == null;
+        }
+        getChildren(): Edge[] {
+            if (this.graph instanceof OrderedOutcomingEdgesGraph) {
+                return this.graph.outcomingEdgesDic[this.id];
+            } else {
+                return [];
+            }
+        }
+        /*
+        successor(order: NodeOrder): Vertex | null {
+            if (order == NodeOrder.Preorder) {
 
+            } else {
+                return null;
+            }
+        }
+        */
+        get root(): Vertex {
+            var p: Vertex = this;
+            while (p.getParent() != null) {
+                p = p.getParent();
+            }
+            return p;
+        }
+        get index(): number {
+            if (this.graph instanceof OrderedForest) {
+                if (this.isRoot) {
+                    return this.graph.roots.indexOf(this);
+                } else {
+                    return -1;
+                }
+            }
+            return -1;
+        }
     }
     export class CircleVertex extends Vertex {
         svgCircle: SVGCircleElement;
         svgText: SVGTextElement;
+        public setGraph(value: Graph) {
+            super.setGraph(value);
 
+            if (this.graph != null) {
+                this.svgCircle.id = `${this.graph.name}_${this.id}_circle`;
+                this.svgText.id = `${this.graph.name}_${this.id}_text`;
+
+            }
+        }
         constructor(group: SVGGElement, circle: SVGCircleElement, text: SVGTextElement) {
             super(group);
             this.svgCircle = circle;
             this.svgText = text;
+
 
             this.svgGroup.appendChild(this.svgCircle);
             this.svgGroup.appendChild(this.svgText);
@@ -151,14 +214,8 @@
         get height(): number {
             return this.svgCircle.r.baseVal.value * 2;
         }
-        public static create(_parent: Graph, x: number = 0, y: number = 0): CircleVertex {
-            var circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.style.stroke = "black";
-            circle.style.strokeWidth = "5pt";
-            circle.style.fill = "#ffffff";
-            circle.cx.baseVal.value = 0;
-            circle.cy.baseVal.value = 0;
-            circle.r.baseVal.value = 20;
+        public static create(_parent: Graph, x: number = 0, y: number = 0, r: number = 20, circleClassName: string | null = null): CircleVertex {
+            var circle = createCircle(r, circleClassName);
 
             var text = GraphTableSVG.createText();
 
@@ -199,6 +256,14 @@
                     return [this.x, this.y];
             }
         }
+        public get surface(): SVGElement | null {
+            return this.svgCircle;
+        }
 
+        public containsSVGID(id: string): boolean {
+            var b = this.svgCircle.id == id || this.svgText.id == id;
+            return super.containsSVGID(id) || b;
+        }
+        
     }
 }

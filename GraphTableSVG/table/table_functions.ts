@@ -43,4 +43,22 @@ module GraphTableSVG {
         var g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
         return g;
     }
+    export function createCircle(r: number = 20, className : string | null = null): SVGCircleElement {
+        var circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        if (className == null) {
+            circle.style.stroke = "black";
+            circle.style.strokeWidth = "1pt";
+        } else {
+            circle.setAttribute("class", className);
+            //circle.className = className
+            //console.log("d : " + circle.setAttribute("class", className));
+        }
+        //circle.style.fill = "#ffffff";
+        circle.cx.baseVal.value = 0;
+        circle.cy.baseVal.value = 0;
+        circle.r.baseVal.value = r;
+        
+
+        return circle;
+    }
 }

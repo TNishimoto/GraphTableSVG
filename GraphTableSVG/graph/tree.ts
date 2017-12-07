@@ -13,7 +13,15 @@
 
 
     }
+    export class OrderedForest extends OrderedOutcomingEdgesGraph {
+        roots: Vertex[] = [];
+        constructor(svg: HTMLElement) {
+            super(svg);
+            //this.arrangementFunction = GraphArrangement.createStandardTreeArrangementFunction(50);
+        }
 
+        
+    }
     export class OrderedTree extends OrderedOutcomingEdgesGraph {
         rootVertex: Vertex | null = null;
 
@@ -27,16 +35,16 @@
 
         public getFirstNoParentVertex(): Vertex {
             var p = this;
-            var r = this._nodes.filter(function (x) {
+            var r = this.nodes.filter(function (x) {
                 return p.getParentEdge(x) == null;
             });
             return r[0];
         }
 
         public getParentEdge(node: Vertex): Edge | null {
-            for (var i = 0; i < this._edges.length; i++) {
-                if (this._edges[i].endNode.id == node.id) {
-                    return this._edges[i];
+            for (var i = 0; i < this.edges.length; i++) {
+                if (this.edges[i].endNode.id == node.id) {
+                    return this.edges[i];
                 }
             }
             return null;

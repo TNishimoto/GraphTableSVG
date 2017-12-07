@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="data_structures\slp.ts" />
     <TypeScriptCompile Include="data_structures\trie.ts" />
     <TypeScriptCompile Include="data_structures\trie_algorithm.ts" />
     <TypeScriptCompile Include="graph_table_svg.d.ts" />

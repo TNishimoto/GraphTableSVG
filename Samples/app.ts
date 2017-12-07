@@ -195,9 +195,23 @@ function createTestGraph() {
     //graph.nodes.push(node2);
     graph.update();
 }
+function createSLP() {
+    clear();
 
-window.onload = () => {
+    svgBox = document.getElementById('svgbox');
+    var text = getInputText();
+    var graph = new GraphTableSVG.OrderedForest(svgBox);
+
     
+    SLP.translate(text, graph);
+    
+    graphtable = graph;
+    var rect = graph.getRegion();
+    console.log(rect);
+    setSVGBoxSize(rect.right, rect.bottom);
+}
+window.onload = () => {
+    /*
     var box = document.getElementById('svgbox');
     var graph = new GraphTableSVG.OrderedTree(box);
 
@@ -207,8 +221,9 @@ window.onload = () => {
 
     
     var edge1 = GraphTableSVG.LineEdge.create(graph, node1, node2, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
-    //[edge1.beginConnectType, edge1.endConnectType] = [GraphTableSVG.ConnecterPositionType.Bottom, GraphTableSVG.ConnecterPositionType.Top];
     var edge2 = GraphTableSVG.LineEdge.create(graph, node1, node3, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
+
+    */
 
     /*
     var observar = new MutationObserver(function (x) { console.log(x) });
@@ -220,9 +235,6 @@ window.onload = () => {
     var func = function (x) { console.log(x) };
     edge1.svg.addEventListener("DOMAttrModified", func);
     */
-    console.log("x");
-    node1.x = 10;
-    console.log("update");
 
     //[edge2.beginConnectType, edge2.endConnectType] = [GraphTableSVG.ConnecterPositionType.Bottom, GraphTableSVG.ConnecterPositionType.Top];
 

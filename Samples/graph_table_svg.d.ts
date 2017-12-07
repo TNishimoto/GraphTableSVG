@@ -35,6 +35,11 @@ declare module GraphTableSVG {
         readonly right: number;
         readonly bottom: number;
     }
+    enum NodeOrder {
+        Preorder = 0,
+        Inorder = 1,
+        Postorder = 2,
+    }
     enum ConnecterPosition {
         Top = 1,
         LeftUp = 2,
@@ -46,10 +51,14 @@ declare module GraphTableSVG {
         RightUp = 8,
     }
     class Graph {
+        private static id;
         protected _nodes: Vertex[];
         protected _edges: Edge[];
         protected _svgGroup: SVGGElement;
+        name: string;
         readonly svgGroup: SVGGElement;
+        readonly nodes: Vertex[];
+        readonly edges: Edge[];
         addVertex(vertex: Vertex): void;
         addEdge(edge: Edge): void;
         constructor(svg: HTMLElement);
@@ -58,6 +67,7 @@ declare module GraphTableSVG {
         update(): void;
         removeGraph(svg: HTMLElement): void;
         getRegion(): Rectangle;
+        getObjectBySVGID(id: string): Vertex | Edge | null;
     }
 }
 declare module GraphTableSVG {
@@ -83,6 +93,10 @@ declare module GraphTableSVG {
         readonly outcomingEdgesDic: {
             [key: number]: Edge[];
         };
+        constructor(svg: HTMLElement);
+    }
+    class OrderedForest extends OrderedOutcomingEdgesGraph {
+        roots: Vertex[];
         constructor(svg: HTMLElement);
     }
     class OrderedTree extends OrderedOutcomingEdgesGraph {
@@ -114,16 +128,27 @@ declare module GraphTableSVG {
         update(): boolean;
         readonly region: Rectangle;
         static getRegion(vertexes: Vertex[]): Rectangle;
+        containsSVGID(id: string): boolean;
+        readonly surface: SVGElement | null;
+        getParents(): Vertex[];
+        getParent(): Vertex | null;
+        readonly isRoot: boolean;
+        getChildren(): Edge[];
+        readonly root: Vertex;
+        readonly index: number;
     }
     class CircleVertex extends Vertex {
         svgCircle: SVGCircleElement;
         svgText: SVGTextElement;
+        setGraph(value: Graph): void;
         constructor(group: SVGGElement, circle: SVGCircleElement, text: SVGTextElement);
         readonly width: number;
         readonly height: number;
-        static create(_parent: Graph, x?: number, y?: number): CircleVertex;
+        static create(_parent: Graph, x?: number, y?: number, r?: number, circleClassName?: string | null): CircleVertex;
         readonly radius: number;
         getLocation(type: ConnecterPosition): [number, number];
+        readonly surface: SVGElement | null;
+        containsSVGID(id: string): boolean;
     }
 }
 declare module GraphTableSVG {
@@ -265,4 +290,5 @@ declare module GraphTableSVG {
     function createText(): SVGTextElement;
     function createRectangle(): SVGRectElement;
     function createGroup(): SVGGElement;
+    function createCircle(r?: number, className?: string | null): SVGCircleElement;
 }

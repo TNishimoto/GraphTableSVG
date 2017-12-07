@@ -119,12 +119,28 @@ div#Bar {
     border: 2px solid black;
 }
 
-.xbutton_checked {
-    color: #eeeeee;
-    background-color: #555588; /* 背景色 */
-    border: inset 4px #9999cc; /* 枠の色 */
+.slpnode {
+    stroke : green;
+    fill : white;
 }
 
-.xbutton_nochecked {
-    border: outset 4px #9999cc; /* 枠の色 */
+    .slpnode:hover {
+        fill: #31c8aa;
+        box-shadow: 0 3px 0 #23a188;
+    }
+
+    .slpnode:active {
+        top: 3px;
+        box-shadow: none;
+    }
+
+.slpnode_choice {
+    stroke: green;
+    stroke-width : 5px;
+    fill: blue;
+}
+
+.slpnode_noroot {
+    stroke: black;
+    fill: orange;
 }
