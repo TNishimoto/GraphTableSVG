@@ -2,55 +2,27 @@
 
     export module GraphArrangement {
 
-        /*
-        export function relocate(graph: OrderedOutcomingEdgesGraph, root: Vertex, width: number, height: number) {
-
-        }
-        function getSubtreeSize(graph: OrderedOutcomingEdgesGraph, subtreeRoot: Vertex): number {
-            var children = graph.outcomingEdgesDic[subtreeRoot.id];
-            if (children.length == 0) {
-                return 1;
-            } else {
-                var width = 0;
-                children.forEach(function (x, i, arr) {
-                    width += getSubtreeSize(graph, x.endNode);
-                });
-                return width;
-            }
-        }
-
-        
-
-        function locate(graph: OrderedOutcomingEdgesGraph, root: Vertex, width: number, height: number) {
-
-        }
-        */
-        /*
-        export function standardLocateSub(tree: VirtualTree, y: number = 0, edgeLength: number): void {
-            tree.root.x = 0;
-            tree.root.y = y;
-            var leaves = 0;
-            var edges = tree.getChildren();
-
-            var centerIndex = Math.floor(edges.length / 2) - 1;
-            var IsEven = edges.length % 2 == 0;
-            for (var i = 0; i < edges.length; i++) {
-                var next = edges[i];
-                if (next != null) {
-                    standardLocateSub(next, tree.root.y + edgeLength, edgeLength);
-                    next.addOffset(leaves * edgeLength, 0);
-                    var rect = next.getTreeRegion();
-                    leaves += rect.width;
-                    if (IsEven && i == centerIndex) {
-                        leaves += 1;
-                    }
+        export function leaveBasedArrangement(forest: OrderedForest, edgeLength: number): void {
+            var leafCounter = 0;
+            forest.getOrderedNodes(NodeOrder.Postorder).forEach((v) => {
+                var x = 0;
+                var y = 0;
+                if (v.isLeaf) {
+                    x = leafCounter * edgeLength;
+                    leafCounter++;
+                } else {
+                    v.children.forEach((w) => {
+                        x += w.endNode.x;
+                        if (y < w.endNode.y) y = w.endNode.y;
+                    });
+                    x = x / v.children.length;
+                    y += edgeLength;
                 }
-            }
-            tree.root.x = Math.floor(leaves * edgeLength / 2);
-            console.log(tree.root.id + "/" + tree.root.x);
-
+                v.x = x;
+                v.y = y;
+            });
         }
-        */
+
         export function standardTreeArrangement(graph: OrderedTree, edgeLength: number): void {
             if (graph.rootVertex != null) {
                 var rootTree = graph.tree;

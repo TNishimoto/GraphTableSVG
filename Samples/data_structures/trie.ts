@@ -152,7 +152,9 @@
             graph.outcomingEdgesDic[node.id] = [];
             x.children.forEach(function(y) {
                 var child = createNode(y, graph, dic);
-                var edge = GraphTableSVG.LineEdge.create(graph, node, child);
+                var edge = GraphTableSVG.LineEdge.create();
+                graph.connect(node, edge, child);
+
                 edge.beginConnecterType = GraphTableSVG.ConnecterPosition.Bottom;
                 edge.endConnecterType = GraphTableSVG.ConnecterPosition.Top;
 

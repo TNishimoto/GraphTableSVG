@@ -13,7 +13,7 @@
         }
     }
     export enum NodeOrder {
-        Preorder, Inorder, Postorder
+        Preorder, Postorder
     }
     export enum ConnecterPosition {
         Top = 1,
@@ -23,7 +23,8 @@
         Bottom = 5,
         RightDown = 6,
         Right = 7,
-        RightUp = 8
+        RightUp = 8,
+        Auto = 9
     }
     export class Graph {
         private static id: number = 0;
@@ -52,11 +53,15 @@
             vertex.setGraph(this);
             this._nodes.push(vertex);
         }
-        public addEdge(edge: Edge) {
-            edge.setGraph(this);
-            this._edges.push(edge);
-        }
 
+        private addEdge(edge: Edge) {
+            edge.setGraph(this);
+            var i = this._edges.indexOf(edge);
+            if (i == -1) {
+                this._edges.push(edge);
+            }
+        }
+        
 
         constructor(svg: HTMLElement) {
             this._svgGroup = GraphTableSVG.createGroup();
@@ -118,6 +123,15 @@
                 }
             }
             return null;
+        }
+
+        public connect(node1: Vertex, edge: Edge, node2: Vertex,
+            _beginConnectType: ConnecterPosition = ConnecterPosition.Bottom, _endConnectType: ConnecterPosition = ConnecterPosition.Top) {
+            edge.beginNode = node1;
+            edge.endNode = node2;
+            edge.beginConnecterType = _beginConnectType;
+            edge.endConnecterType = _endConnectType;
+            this.addEdge(edge);
         }
 
 

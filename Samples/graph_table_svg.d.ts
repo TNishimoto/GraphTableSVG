@@ -10,7 +10,7 @@ declare module GraphTableSVG {
         endNode: Vertex;
         readonly graph: Graph | null;
         setGraph(value: Graph): void;
-        constructor(_beginNode: Vertex, _endNode: Vertex);
+        constructor();
         readonly x1: number;
         readonly y1: number;
         readonly x2: number;
@@ -21,8 +21,8 @@ declare module GraphTableSVG {
         private _svg;
         readonly svg: SVGLineElement;
         setGraph(value: Graph): void;
-        constructor(_begin: Vertex, _end: Vertex, line: SVGLineElement);
-        static create(_parent: Graph, _begin: Vertex, _end: Vertex, _beginConnectType?: ConnecterPosition, _endConnectType?: ConnecterPosition): LineEdge;
+        constructor(line: SVGLineElement);
+        static create(): LineEdge;
         update(): boolean;
     }
 }
@@ -37,8 +37,7 @@ declare module GraphTableSVG {
     }
     enum NodeOrder {
         Preorder = 0,
-        Inorder = 1,
-        Postorder = 2,
+        Postorder = 1,
     }
     enum ConnecterPosition {
         Top = 1,
@@ -49,6 +48,7 @@ declare module GraphTableSVG {
         RightDown = 6,
         Right = 7,
         RightUp = 8,
+        Auto = 9,
     }
     class Graph {
         private static id;
@@ -60,7 +60,7 @@ declare module GraphTableSVG {
         readonly nodes: Vertex[];
         readonly edges: Edge[];
         addVertex(vertex: Vertex): void;
-        addEdge(edge: Edge): void;
+        private addEdge(edge);
         constructor(svg: HTMLElement);
         updateNodes(): void;
         updateEdges(): void;
@@ -68,10 +68,12 @@ declare module GraphTableSVG {
         removeGraph(svg: HTMLElement): void;
         getRegion(): Rectangle;
         getObjectBySVGID(id: string): Vertex | Edge | null;
+        connect(node1: Vertex, edge: Edge, node2: Vertex, _beginConnectType?: ConnecterPosition, _endConnectType?: ConnecterPosition): void;
     }
 }
 declare module GraphTableSVG {
     module GraphArrangement {
+        function leaveBasedArrangement(forest: OrderedForest, edgeLength: number): void;
         function standardTreeArrangement(graph: OrderedTree, edgeLength: number): void;
     }
 }
@@ -96,10 +98,15 @@ declare module GraphTableSVG {
         constructor(svg: HTMLElement);
     }
     class OrderedForest extends OrderedOutcomingEdgesGraph {
-        roots: Vertex[];
+        protected _roots: Vertex[];
+        readonly roots: Vertex[];
+        addVertex(vertex: Vertex): void;
         constructor(svg: HTMLElement);
+        connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex?: number, _beginConnectType?: ConnecterPosition, _endConnectType?: ConnecterPosition): void;
+        getOrderedNodes(order: NodeOrder, node?: Vertex | null): Vertex[];
     }
-    class OrderedTree extends OrderedOutcomingEdgesGraph {
+    class OrderedTree extends OrderedForest {
+        _rootVertex: Vertex | null;
         rootVertex: Vertex | null;
         constructor(svg: HTMLElement);
         readonly tree: VirtualTree;
@@ -114,7 +121,7 @@ declare module GraphTableSVG {
         svgGroup: SVGGElement;
         private _graph;
         private _observer;
-        private createObserveFunction();
+        private createObserveFunction;
         readonly graph: Graph;
         setGraph(value: Graph): void;
         private _id;
@@ -133,7 +140,8 @@ declare module GraphTableSVG {
         getParents(): Vertex[];
         getParent(): Vertex | null;
         readonly isRoot: boolean;
-        getChildren(): Edge[];
+        readonly children: Edge[];
+        readonly isLeaf: boolean;
         readonly root: Vertex;
         readonly index: number;
     }
@@ -228,22 +236,6 @@ interface SVGTextElement {
     setY(value: number): void;
 }
 declare module GraphTableSVG {
-    class SVGToVBA {
-        static createTable(table: SVGTable): string;
-        static cellFunctionCode: string;
-    }
-    function parseInteger(value: string): number;
-    function visible(value: string): number;
-    class VBATranslateFunctions {
-        static createStringFunction(item: string): string;
-        static createArrayFunction(items: any[]): string;
-        static createStringArrayFunction(items: string[]): string;
-        static createJagArrayFunction(items: any[][]): string;
-        static joinLines(lines: string[]): string;
-        static colorToVBA(color: string): string;
-    }
-}
-declare module GraphTableSVG {
     class Row {
         table: SVGTable;
         y: number;
@@ -264,6 +256,24 @@ declare module GraphTableSVG {
         setX(posX: number): void;
         width: number;
     }
+}
+declare module GraphTableSVG {
+    class SVGToVBA {
+        static createTable(table: SVGTable): string;
+        static cellFunctionCode: string;
+    }
+    function parseInteger(value: string): number;
+    function visible(value: string): number;
+    class VBATranslateFunctions {
+        static createStringFunction(item: string): string;
+        static createArrayFunction(items: any[]): string;
+        static createStringArrayFunction(items: string[]): string;
+        static createJagArrayFunction(items: any[][]): string;
+        static joinLines(lines: string[]): string;
+        static colorToVBA(color: string): string;
+    }
+}
+declare module GraphTableSVG {
     class SVGTable {
         private _cells;
         readonly cells: Cell[][];

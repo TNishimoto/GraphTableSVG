@@ -1,22 +1,30 @@
 ﻿
 module SLP {
-    export function translate(text: string, graph: GraphTableSVG.OrderedForest) {
+    /*
+    export function translate(text: string, graph: GraphTableSVG.OrderedForest, table: GraphTableSVG.SVGTable) {
         console.log(text);
         
-        var test = new Clicker(text, graph);
+        var test = new Clicker(text, graph, table);
 
         graph.update();
     }
+    */
 
+    interface NoncharVariable { type : "nonchar", value: number, left: number, right: number };
+    /*
     class NoncharVariable {
         constructor(public value: number, public left: number, public right: number) {
         }
     }
+    */
+    interface CharVariable { type: "char", value: number, child: string };
+    /*
     class CharVariable {
         constructor(public value: number, public child: string) {
         }
 
     }
+    */
     
     class SLPManager {
         slpNodes: (NoncharVariable | CharVariable)[] = [];
@@ -25,9 +33,8 @@ module SLP {
             var result = this.getVariable(left, right);
             if (result == null) {
                 var newNumber = this.slpNodes.length + 1;
-                var node = new NoncharVariable(newNumber, left, right);
+                var node: NoncharVariable = { type: "nonchar", value: newNumber, left: left, right: right };
                 this.slpNodes.push(node);
-                console.log(`${newNumber}/${left}/${right}`);
                 return node.value;
             } else {
                 return result.value;
@@ -38,7 +45,7 @@ module SLP {
             var result = this.getChar(char);
             if (result == null) {
                 var newNumber = this.slpNodes.length + 1;
-                var node = new CharVariable(newNumber, char);
+                var node: CharVariable = { type: "char", value: newNumber, child: char };
                 this.slpNodes.push(node);
                 return node.value;
             } else {
@@ -49,7 +56,7 @@ module SLP {
         public getVariable(left: number, right: number): NoncharVariable | null {
             for (var i = 0; i < this.slpNodes.length; i++) {
                 var p = this.slpNodes[i];
-                if (p instanceof NoncharVariable) {
+                if (p.type == "nonchar") {
                     if (p.left == left && p.right == right) {
                         return p;
                     }
@@ -60,7 +67,7 @@ module SLP {
         public getChar(child : string): CharVariable | null {
             for (var i = 0; i < this.slpNodes.length; i++) {
                 var p = this.slpNodes[i];
-                if (p instanceof CharVariable) {
+                if (p.type == "char") {
                     if (p.child == child) {
                         return p;
                     }
@@ -71,39 +78,43 @@ module SLP {
     }
     
 
-    class Clicker {
+    export class Clicker {
         text: string;
         graph: GraphTableSVG.OrderedForest;
+        table: GraphTableSVG.SVGTable;
         slp: SLPManager;
         private _idVariableDic: { [key: number]: number; } = [];
 
-        constructor(text : string, _graph: GraphTableSVG.OrderedForest) {
+        constructor(text: string, _graph: GraphTableSVG.OrderedForest, table: GraphTableSVG.SVGTable) {
             this.graph = _graph;
             this.text = text;
             this.slp = new SLPManager();
             this.create();
-            
+
+            this.graph.update();
         }
         private create() {
             for (var i = 0; i < this.text.length; i++) {
                 var c = this.text[i];
-                var charNode = GraphTableSVG.CircleVertex.create(this.graph, i * 100, 300, 30, "slpnode");
+                var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, 30, "slpnode");
                 charNode.svgText.textContent = c;
 
                 var variable = this.slp.addChar(c);
-                var variableNode = GraphTableSVG.CircleVertex.create(this.graph, i * 100, 250, 30, "slpnode");
+                var variableNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, 30, "slpnode");
                 variableNode.svgText.textContent = `X${variable}`;
                 this._idVariableDic[variableNode.id] = variable;
 
                 variableNode.svgGroup.onclick = this.Click;
                 this.graph.roots.push(variableNode);
 
-                var newEdge = GraphTableSVG.LineEdge.create(this.graph, variableNode, charNode, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
+                var newEdge = GraphTableSVG.LineEdge.create();
+                this.graph.connect(variableNode, newEdge, charNode);
 
 
                 this.graph.outcomingEdgesDic[variableNode.id] = [];
                 this.graph.outcomingEdgesDic[variableNode.id].push(newEdge);
             }
+            GraphTableSVG.GraphArrangement.leaveBasedArrangement(this.graph, 50);
         }
 
         private _firstSelectedNode: GraphTableSVG.Vertex | null = null;
@@ -127,8 +138,6 @@ module SLP {
         }
         private isNeighbor(node1: GraphTableSVG.Vertex, node2: GraphTableSVG.Vertex): boolean {
             if (node1.isRoot && node2.isRoot) {
-                console.log(`${node1.index}/${node2.index}`);
-                console.log(this.graph.roots);
                 var rank1 = node1.index;
                 var rank2 = node2.index;
                 return rank2 - rank1 == 1;
@@ -141,30 +150,31 @@ module SLP {
                 var insertIndex = node1.index;
                 this.firstSelectedNode = null;
 
-
-                var x = (node1.x + node2.x) / 2;
-                var y = Math.min(node1.y, node2.y) - 50;
-                var newNode = GraphTableSVG.CircleVertex.create(this.graph, x, y, 30, "slpnode");
-
                 var variable1 = this._idVariableDic[node1.id];
                 var variable2 = this._idVariableDic[node2.id];
                 var variable3 = this.slp.addVariable(variable1, variable2);
+
+                //var x = (node1.x + node2.x) / 2;
+                //var y = Math.min(node1.y, node2.y) - 50;
+                var newNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, 30, "slpnode");
+
+                newNode.svgGroup.onclick = this.Click;
                 newNode.svgText.textContent = `X${variable3}`;
                 this._idVariableDic[newNode.id] = variable3;
 
-                var newEdge1 = GraphTableSVG.LineEdge.create(this.graph, newNode, node1, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
-                var newEdge2 = GraphTableSVG.LineEdge.create(this.graph, newNode, node2, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
-                newNode.surface.onclick = this.Click;
+                var newEdge1 = GraphTableSVG.LineEdge.create();
+                var newEdge2 = GraphTableSVG.LineEdge.create();
 
-                this.graph.outcomingEdgesDic[newNode.id] = [];
-                this.graph.outcomingEdgesDic[newNode.id].push(newEdge1);
-                this.graph.outcomingEdgesDic[newNode.id].push(newEdge2);
+                this.graph.connect(newNode, newEdge1, node1, 0);
+                this.graph.connect(newNode, newEdge2, node2, 1);
+                
 
                 node1.surface.setAttribute("class", "slpnode_noroot");
                 node2.surface.setAttribute("class", "slpnode_noroot");
                 
-                this.graph.roots.splice(insertIndex, 2);
-                this.graph.roots.splice(insertIndex, 0, newNode);
+                //this.graph.roots.splice(insertIndex, 2);
+                //this.graph.roots.splice(insertIndex, 0, newNode);
+                GraphTableSVG.GraphArrangement.leaveBasedArrangement(this.graph, 50);
                 this.graph.update();
 
             }

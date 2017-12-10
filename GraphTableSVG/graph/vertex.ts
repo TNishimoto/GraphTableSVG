@@ -4,7 +4,17 @@
         svgGroup: SVGGElement;
         private _graph: Graph | null;
         private _observer: MutationObserver;
-        private createObserveFunction(): MutationCallback {
+        private createObserveFunction: MutationCallback = (x: MutationRecord[]) => {
+            for (var i = 0; i < x.length; i++) {
+                var p = x[i];
+                if (p.attributeName == "transform") {
+
+                    if (this.graph != null) {
+                        this.graph.update();
+                    }
+                }
+            }
+            /*
             var th = this;
             var ret = function (x: MutationRecord[]) {
                 for (var i = 0; i < x.length; i++) {
@@ -18,6 +28,7 @@
                 }
             }
             return ret;
+            */
         };
 
         get graph(): Graph {
@@ -43,7 +54,7 @@
 
             
             
-            this._observer = new MutationObserver(this.createObserveFunction());
+            this._observer = new MutationObserver(this.createObserveFunction);
             var option: MutationObserverInit = { attributes: true };
             this._observer.observe(this.svgGroup, option);
             /*
@@ -152,11 +163,18 @@
         get isRoot(): boolean {
             return this.getParent() == null;
         }
-        getChildren(): Edge[] {
+        get children(): Edge[] {
             if (this.graph instanceof OrderedOutcomingEdgesGraph) {
                 return this.graph.outcomingEdgesDic[this.id];
             } else {
                 return [];
+            }
+        }
+        get isLeaf(): boolean {
+            if (this.graph instanceof OrderedOutcomingEdgesGraph) {
+                return this.graph.outcomingEdgesDic[this.id].length == 0;
+            } else {
+                return false;
             }
         }
         /*

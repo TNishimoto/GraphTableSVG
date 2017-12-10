@@ -35,10 +35,12 @@
         }
 
 
-        constructor(_beginNode: Vertex, _endNode: Vertex) {
+        constructor() {
             //this._parent = graph;
+            /*
             this._beginNode = _beginNode;
             this._endNode = _endNode;
+            */
         }
 
         public get x1(): number {
@@ -81,21 +83,22 @@
         }
 
 
-        constructor(_begin: Vertex, _end: Vertex, line: SVGLineElement) {
-            super(_begin, _end);
+        constructor(line: SVGLineElement) {
+            super();
             this._svg = line;
             //this.graph.svgGroup.appendChild(this._svg);
 
         }
 
-        public static create(_parent: Graph, _begin: Vertex, _end: Vertex,
-            _beginConnectType: ConnecterPosition = ConnecterPosition.Top,
-            _endConnectType: ConnecterPosition = ConnecterPosition.Bottom): LineEdge {
+        public static create(): LineEdge {
             var svg = createLine(0, 0, 100, 100);
+            var line = new LineEdge(svg);
+            /*
             var line = new LineEdge(_begin, _end, svg);
             line.beginConnecterType = _beginConnectType;
             line.endConnecterType = _endConnectType;
             _parent.addEdge(line);
+            */
 
             /*
             p.svgText = GraphTableSVG.createText();

@@ -184,7 +184,9 @@ function createTestGraph() {
 
     node2.svgGroup.setX(260);
     node2.svgGroup.setY(100);
-    var edge1 = GraphTableSVG.LineEdge.create(graph, node1, node2);
+    var edge1 = GraphTableSVG.LineEdge.create();
+    graph.connect(node1, edge1, node2);
+
     edge1.beginConnecterType = GraphTableSVG.ConnecterPosition.RightUp;
     edge1.endConnecterType = GraphTableSVG.ConnecterPosition.LeftUp;
 
@@ -202,15 +204,26 @@ function createSLP() {
     var text = getInputText();
     var graph = new GraphTableSVG.OrderedForest(svgBox);
 
-    
-    SLP.translate(text, graph);
+    var table = new GraphTableSVG.SVGTable(svgBox, 2, 10);
+
+
+    var clicker = new SLP.Clicker(text, graph, table);
     
     graphtable = graph;
     var rect = graph.getRegion();
-    console.log(rect);
-    setSVGBoxSize(rect.right, rect.bottom);
+    //setSVGBoxSize(rect.right, rect.bottom);
 }
 window.onload = () => {
+
+    svgBox = document.getElementById('svgbox');
+
+    /*
+    _observer = new MutationObserver(observeFunction);
+    var option: MutationObserverInit = { attributes: false };
+    _observer.observe(svgBox, option);
+
+    svgBox.onclick = (v) => { console.log("click") };
+    */
     /*
     var box = document.getElementById('svgbox');
     var graph = new GraphTableSVG.OrderedTree(box);
@@ -246,9 +259,12 @@ window.onload = () => {
     //graph.update();
     
     //createSuffixTree();
+
 };
-
-
+var _observer: MutationObserver;
+var observeFunction: MutationCallback = (x: MutationRecord[]) => {
+    console.log(x.length);
+}
 function createCode() {
     var cnt = <HTMLInputElement>document.getElementById("codeBox");
 

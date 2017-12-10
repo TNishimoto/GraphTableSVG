@@ -35,6 +35,7 @@
     <TypeScriptCompile Include="graph\virtual_tree.ts" />
     <TypeScriptCompile Include="table\cell.ts" />
     <TypeScriptCompile Include="table\interface.ts" />
+    <TypeScriptCompile Include="table\row.ts" />
     <TypeScriptCompile Include="table\vba.ts" />
     <TypeScriptCompile Include="table\table.ts" />
     <TypeScriptCompile Include="table\table_functions.ts" />
