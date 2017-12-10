@@ -90,7 +90,7 @@ module SLP {
             this.text = text;
             this.slp = new SLPManager();
             this.create();
-
+            this.locate();
             this.graph.update();
         }
         private create() {
@@ -114,7 +114,13 @@ module SLP {
                 this.graph.outcomingEdgesDic[variableNode.id] = [];
                 this.graph.outcomingEdgesDic[variableNode.id].push(newEdge);
             }
+
+        }
+        private locate() {
+
             GraphTableSVG.GraphArrangement.leaveBasedArrangement(this.graph, 50);
+            GraphTableSVG.GraphArrangement.reverse(this.graph, false, true);
+            this.graph.svgGroup.setY(180);
         }
 
         private _firstSelectedNode: GraphTableSVG.Vertex | null = null;
@@ -174,7 +180,7 @@ module SLP {
                 
                 //this.graph.roots.splice(insertIndex, 2);
                 //this.graph.roots.splice(insertIndex, 0, newNode);
-                GraphTableSVG.GraphArrangement.leaveBasedArrangement(this.graph, 50);
+                this.locate();
                 this.graph.update();
 
             }

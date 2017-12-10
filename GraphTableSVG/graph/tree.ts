@@ -7,8 +7,8 @@
             return this._outcomingEdgesDic;
         }
 
-        constructor(svg: HTMLElement) {
-            super(svg);
+        constructor() {
+            super();
         }
 
 
@@ -23,8 +23,8 @@
             super.addVertex(vertex);
             this.outcomingEdgesDic[vertex.id] = [];
         }
-        constructor(svg: HTMLElement) {
-            super(svg);
+        constructor() {
+            super();
             //this.arrangementFunction = GraphArrangement.createStandardTreeArrangementFunction(50);
         }
 
@@ -97,8 +97,8 @@
             }
         }
 
-        constructor(svg: HTMLElement) {
-            super(svg);
+        constructor() {
+            super();
             //this.arrangementFunction = GraphArrangement.createStandardTreeArrangementFunction(50);
         }
         get tree(): VirtualTree {

@@ -2,6 +2,9 @@
 import SVGTable = GraphTableSVG.SVGTable;
 import SVGToVBA = GraphTableSVG.SVGToVBA;
 import Graph = GraphTableSVG.Graph;
+var svgBox: HTMLElement;
+//var mainGroup: SVGGElement;
+var graphtable: SVGTable | Graph | null = null;
 
 /*
 class VirtualCell {
@@ -11,9 +14,6 @@ class VirtualCell {
 }
 */
 //var table: SVGTable = null;
-var svgBox: HTMLElement;
-
-var graphtable: SVGTable | Graph | null = null;
 
 function getInputText(): string {
     var textbox: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById(`inputtext_itb`);
@@ -114,7 +114,9 @@ function createSuffixTrie() {
 
     svgBox = document.getElementById('svgbox');
     var text = getInputText();
-    var graph = new GraphTableSVG.OrderedTree(svgBox);
+    var graph = new GraphTableSVG.OrderedTree();
+    svgBox.appendChild(graph.svgGroup);
+
     var trie = TreeFunctions.createTrie(text);
     TreeFunctions.translate(trie, graph);
     /*
@@ -137,7 +139,10 @@ function createSuffixTree() {
 
     svgBox = document.getElementById('svgbox');
     var text = getInputText();
-    var graph = new GraphTableSVG.OrderedTree(svgBox);
+    var graph = new GraphTableSVG.OrderedTree();
+    svgBox.appendChild(graph.svgGroup);
+
+
     var trie = TreeFunctions.createSuffixTree(text);
     TreeFunctions.translate(trie, graph);
     /*
@@ -152,15 +157,18 @@ function createSuffixTree() {
     graph.tree.setRectangleLocation(0, 0);
     
     graphtable = graph;
-    var rect = graph.getRegion();
-    setSVGBoxSize(rect.width, rect.height);
 
 }
 function setSVGBoxSize(w: number, h: number) {
     svgBox = document.getElementById('svgbox');
-    svgBox.style.width = `${w}px`;
-    svgBox.style.height = `${h}px`;
-    svgBox.setAttribute(`viewBox`, `0 0 ${w} ${h}`);
+    var width = `${w}px`;
+    var height = `${h}px`;
+
+    if (svgBox.style.width != width || svgBox.style.height != height) {
+        svgBox.style.width = width;
+        svgBox.style.height = height;
+        svgBox.setAttribute(`viewBox`, `0 0 ${w} ${h}`);
+    }
 
 }
 function clear() {
@@ -176,7 +184,9 @@ function clear() {
 
 function createTestGraph() {
     svgBox = document.getElementById('svgbox');
-    var graph = new Graph(svgBox);
+    var graph = new Graph();
+    svgBox.appendChild(graph.svgGroup);
+
     var node1 = GraphTableSVG.CircleVertex.create(graph);
     var node2 = GraphTableSVG.CircleVertex.create(graph);
     node1.svgGroup.setX(100)
@@ -202,7 +212,9 @@ function createSLP() {
 
     svgBox = document.getElementById('svgbox');
     var text = getInputText();
-    var graph = new GraphTableSVG.OrderedForest(svgBox);
+    var graph = new GraphTableSVG.OrderedForest();
+    svgBox.appendChild(graph.svgGroup);
+
 
     var table = new GraphTableSVG.SVGTable(svgBox, 2, 10);
 
@@ -216,14 +228,18 @@ function createSLP() {
 window.onload = () => {
 
     svgBox = document.getElementById('svgbox');
-
-    /*
+    //mainGroup = <SVGGElement><any>document.getElementById('main_group');
+    //mainGroup = GraphTableSVG.createGroup();
+    //svgBox.appendChild(mainGroup);
+    
     _observer = new MutationObserver(observeFunction);
-    var option: MutationObserverInit = { attributes: false };
+    var option: MutationObserverInit = {
+        subtree : true, attributes: true
+    };
     _observer.observe(svgBox, option);
 
-    svgBox.onclick = (v) => { console.log("click") };
-    */
+    //svgBox.onclick = (v) => { console.log("click") };
+    
     /*
     var box = document.getElementById('svgbox');
     var graph = new GraphTableSVG.OrderedTree(box);
@@ -263,6 +279,11 @@ window.onload = () => {
 };
 var _observer: MutationObserver;
 var observeFunction: MutationCallback = (x: MutationRecord[]) => {
+    if (graphtable instanceof Graph) {
+        var rect = graphtable.getRegion();
+        setSVGBoxSize(rect.right, rect.bottom);
+    }
+
     console.log(x.length);
 }
 function createCode() {

@@ -22,6 +22,60 @@
                 v.y = y;
             });
         }
+        export function reverse(graph: Graph, isX: boolean, isY: boolean) {
+            if (graph.nodes.length > 0) {
+                if (isY) {
+                    var midY = middle(graph.nodes.map((v) => v.y));
+                    graph.nodes.forEach((v) => {
+                        console.log(`${v.y}/${midY}`);
+                        if (v.y < midY) {
+                            v.y += 2 * (midY - v.y);
+                        } else {
+                            v.y -= 2 * (v.y - midY);
+                        }
+                    });
+                }
+
+                if (isX) {
+                    var midX = middle(graph.nodes.map((v) => v.x));
+                    graph.nodes.forEach((v) => {
+                        if (v.x < midX) {
+                            v.x += 2 * (midX - v.x);
+                        } else {
+                            v.x -= 2 * (v.x - midX);
+                        }
+                    });
+
+                }
+            }
+        }
+        
+
+        export function average(items: number[]): number | null {
+            if (items.length > 0) {
+                var y = 0;
+                items.forEach((v) => {
+                    y += v;
+                });
+                return y / items.length;
+            } else {
+                return null;
+            }            
+        }
+        export function middle(items: number[]): number | null {
+            if (items.length > 0) {
+                var min = items[0];
+                var max = items[0];
+                items.forEach((w) => {
+                    if (min > w) min = w;
+                    if (max < w) max = w;
+                });
+                return (min + max)/2;
+            } else {
+                return null;
+            }
+        }
+
 
         export function standardTreeArrangement(graph: OrderedTree, edgeLength: number): void {
             if (graph.rootVertex != null) {

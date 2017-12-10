@@ -194,12 +194,12 @@ var GraphTableSVG;
         ConnecterPosition[ConnecterPosition["Auto"] = 9] = "Auto";
     })(ConnecterPosition = GraphTableSVG.ConnecterPosition || (GraphTableSVG.ConnecterPosition = {}));
     var Graph = (function () {
-        function Graph(svg) {
+        function Graph() {
             this._nodes = new Array(0);
             this._edges = new Array(0);
             this.name = (Graph.id++).toString();
             this._svgGroup = GraphTableSVG.createGroup();
-            svg.appendChild(this._svgGroup);
+            //svg.appendChild(this._svgGroup);
         }
         Object.defineProperty(Graph.prototype, "svgGroup", {
             //public arrangementFunction: (Graph) => void | null = null;
@@ -328,6 +328,64 @@ var GraphTableSVG;
             });
         }
         GraphArrangement.leaveBasedArrangement = leaveBasedArrangement;
+        function reverse(graph, isX, isY) {
+            if (graph.nodes.length > 0) {
+                if (isY) {
+                    var midY = middle(graph.nodes.map(function (v) { return v.y; }));
+                    graph.nodes.forEach(function (v) {
+                        console.log(v.y + "/" + midY);
+                        if (v.y < midY) {
+                            v.y += 2 * (midY - v.y);
+                        }
+                        else {
+                            v.y -= 2 * (v.y - midY);
+                        }
+                    });
+                }
+                if (isX) {
+                    var midX = middle(graph.nodes.map(function (v) { return v.x; }));
+                    graph.nodes.forEach(function (v) {
+                        if (v.x < midX) {
+                            v.x += 2 * (midX - v.x);
+                        }
+                        else {
+                            v.x -= 2 * (v.x - midX);
+                        }
+                    });
+                }
+            }
+        }
+        GraphArrangement.reverse = reverse;
+        function average(items) {
+            if (items.length > 0) {
+                var y = 0;
+                items.forEach(function (v) {
+                    y += v;
+                });
+                return y / items.length;
+            }
+            else {
+                return null;
+            }
+        }
+        GraphArrangement.average = average;
+        function middle(items) {
+            if (items.length > 0) {
+                var min = items[0];
+                var max = items[0];
+                items.forEach(function (w) {
+                    if (min > w)
+                        min = w;
+                    if (max < w)
+                        max = w;
+                });
+                return (min + max) / 2;
+            }
+            else {
+                return null;
+            }
+        }
+        GraphArrangement.middle = middle;
         function standardTreeArrangement(graph, edgeLength) {
             if (graph.rootVertex != null) {
                 var rootTree = graph.tree;
@@ -418,8 +476,8 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     var OrderedOutcomingEdgesGraph = (function (_super) {
         __extends(OrderedOutcomingEdgesGraph, _super);
-        function OrderedOutcomingEdgesGraph(svg) {
-            var _this = _super.call(this, svg) || this;
+        function OrderedOutcomingEdgesGraph() {
+            var _this = _super.call(this) || this;
             _this._outcomingEdgesDic = [];
             return _this;
         }
@@ -436,8 +494,8 @@ var GraphTableSVG;
     GraphTableSVG.OrderedOutcomingEdgesGraph = OrderedOutcomingEdgesGraph;
     var OrderedForest = (function (_super) {
         __extends(OrderedForest, _super);
-        function OrderedForest(svg) {
-            var _this = _super.call(this, svg) || this;
+        function OrderedForest() {
+            var _this = _super.call(this) || this;
             _this._roots = [];
             return _this;
             //this.arrangementFunction = GraphArrangement.createStandardTreeArrangementFunction(50);
@@ -510,8 +568,8 @@ var GraphTableSVG;
     GraphTableSVG.OrderedForest = OrderedForest;
     var OrderedTree = (function (_super) {
         __extends(OrderedTree, _super);
-        function OrderedTree(svg) {
-            var _this = _super.call(this, svg) || this;
+        function OrderedTree() {
+            var _this = _super.call(this) || this;
             _this._rootVertex = null;
             return _this;
             //this.arrangementFunction = GraphArrangement.createStandardTreeArrangementFunction(50);

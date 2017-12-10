@@ -63,9 +63,9 @@
         }
         
 
-        constructor(svg: HTMLElement) {
+        constructor() {
             this._svgGroup = GraphTableSVG.createGroup();
-            svg.appendChild(this._svgGroup);
+            //svg.appendChild(this._svgGroup);
         }
 
         /*

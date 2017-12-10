@@ -61,7 +61,7 @@ declare module GraphTableSVG {
         readonly edges: Edge[];
         addVertex(vertex: Vertex): void;
         private addEdge(edge);
-        constructor(svg: HTMLElement);
+        constructor();
         updateNodes(): void;
         updateEdges(): void;
         update(): void;
@@ -74,6 +74,9 @@ declare module GraphTableSVG {
 declare module GraphTableSVG {
     module GraphArrangement {
         function leaveBasedArrangement(forest: OrderedForest, edgeLength: number): void;
+        function reverse(graph: Graph, isX: boolean, isY: boolean): void;
+        function average(items: number[]): number | null;
+        function middle(items: number[]): number | null;
         function standardTreeArrangement(graph: OrderedTree, edgeLength: number): void;
     }
 }
@@ -95,20 +98,20 @@ declare module GraphTableSVG {
         readonly outcomingEdgesDic: {
             [key: number]: Edge[];
         };
-        constructor(svg: HTMLElement);
+        constructor();
     }
     class OrderedForest extends OrderedOutcomingEdgesGraph {
         protected _roots: Vertex[];
         readonly roots: Vertex[];
         addVertex(vertex: Vertex): void;
-        constructor(svg: HTMLElement);
+        constructor();
         connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex?: number, _beginConnectType?: ConnecterPosition, _endConnectType?: ConnecterPosition): void;
         getOrderedNodes(order: NodeOrder, node?: Vertex | null): Vertex[];
     }
     class OrderedTree extends OrderedForest {
         _rootVertex: Vertex | null;
         rootVertex: Vertex | null;
-        constructor(svg: HTMLElement);
+        constructor();
         readonly tree: VirtualTree;
         getFirstNoParentVertex(): Vertex;
         getParentEdge(node: Vertex): Edge | null;
