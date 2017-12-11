@@ -7,7 +7,7 @@ module GraphTableSVG {
         get cells(): Cell[][] {
             return this._cells;
         }
-        private svg: HTMLElement;
+        //private svg: HTMLElement;
         public group: SVGGElement;
         get width(): number {
             return this.cells[0].length;
@@ -59,6 +59,13 @@ module GraphTableSVG {
             }
             return arr;
         }
+        private _observer: MutationObserver;
+        private observerFunc: MutationCallback = (x: MutationRecord[]) => {
+            for (var i = 0; i < x.length; i++) {
+                var p = x[i];
+                //console.log(p.attributeName);
+            }
+        };
 
         public resize() {
             var rows = this.rows;
@@ -111,7 +118,6 @@ module GraphTableSVG {
         }
 
         constructor(_svg: HTMLElement, width: number, height: number) {
-            this.svg = _svg;
             this._cells = new Array(height);
 
 
@@ -119,7 +125,7 @@ module GraphTableSVG {
             this.group = svgGroup;
             //svgGroup.setAttributeNS(null, 'transform', "translate(160,0)");
 
-            this.svg.appendChild(this.group);
+            _svg.appendChild(this.group);
 
             //this.verticalLines = new Array(width + 1);
             //this.horizontalLines = new Array(height + 1);
@@ -135,6 +141,11 @@ module GraphTableSVG {
                     this.setLine(this.cells[y][x]);
                 }
             }
+
+            this._observer = new MutationObserver(this.observerFunc);
+            var option: MutationObserverInit = { characterData : true, attributes: true, subtree: true };
+            this._observer.observe(this.group, option);
+
 
             this.resize();
 

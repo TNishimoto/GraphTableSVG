@@ -38,9 +38,20 @@ module GraphTableSVG {
         bottomLine: SVGLineElement;
         svgBackground: SVGRectElement;
         svgText: SVGTextElement;
-        svgGroup: SVGGElement;
+        //svgGroup: SVGGElement;
         //verticalAnchor: VerticalAnchor = VerticalAnchor.msoAnchorTop;
-
+        private _observer: MutationObserver;
+        private observerFunc: MutationCallback = (x: MutationRecord[]) => {
+            for (var i = 0; i < x.length; i++) {
+                var p = x[i];
+                for (var i = 0; i < p.addedNodes.length; i++) {
+                    var item = p.addedNodes.item(i);
+                    if (item.nodeName == "#text") {
+                        this.parent.resize();
+                    }
+                }
+            }
+        };
 
         get logicalWidth(): number {
             if (this.isMaster) {
@@ -270,6 +281,13 @@ module GraphTableSVG {
 
             this.svgText = _text;
             this.parent.group.appendChild(this.svgText);
+
+            
+            this._observer = new MutationObserver(this.observerFunc);
+            var option: MutationObserverInit = { childList : true };
+            this._observer.observe(this.svgText, option);
+
+
         }
         /*
         get fill(): string {

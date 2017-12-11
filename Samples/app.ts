@@ -27,7 +27,6 @@ function createSuffixArrayTable() {
 
     var text: string = getInputText();
     var sa: number[] = StringModule.computeSuffixArray(text);
-    console.log(text);
     svgBox.innerHTML = "";
     var table = new SVGTable(svgBox, 2, sa.length + 1);
 
@@ -212,17 +211,17 @@ function createSLP() {
 
     svgBox = document.getElementById('svgbox');
     var text = getInputText();
-    var graph = new GraphTableSVG.OrderedForest();
-    svgBox.appendChild(graph.svgGroup);
+    //var graph = new GraphTableSVG.OrderedForest();
+    //svgBox.appendChild(graph.svgGroup);
 
 
-    var table = new GraphTableSVG.SVGTable(svgBox, 2, 10);
+    //var table = new GraphTableSVG.SVGTable(svgBox, 2, 10);
 
 
-    var clicker = new SLP.Clicker(text, graph, table);
-    
-    graphtable = graph;
-    var rect = graph.getRegion();
+    var clicker = new SLP.Clicker(text, svgBox);
+
+    graphtable = clicker.graph;
+    //var rect = graph.getRegion();
     //setSVGBoxSize(rect.right, rect.bottom);
 }
 window.onload = () => {
@@ -283,8 +282,6 @@ var observeFunction: MutationCallback = (x: MutationRecord[]) => {
         var rect = graphtable.getRegion();
         setSVGBoxSize(rect.right, rect.bottom);
     }
-
-    console.log(x.length);
 }
 function createCode() {
     var cnt = <HTMLInputElement>document.getElementById("codeBox");

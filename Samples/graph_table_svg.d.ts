@@ -124,7 +124,7 @@ declare module GraphTableSVG {
         svgGroup: SVGGElement;
         private _graph;
         private _observer;
-        private createObserveFunction;
+        private observerFunc;
         readonly graph: Graph | null;
         setGraph(value: Graph): void;
         private _id;
@@ -198,7 +198,8 @@ declare module GraphTableSVG {
         bottomLine: SVGLineElement;
         svgBackground: SVGRectElement;
         svgText: SVGTextElement;
-        svgGroup: SVGGElement;
+        private _observer;
+        private observerFunc;
         readonly logicalWidth: number;
         readonly logicalHeight: number;
         readonly textBoxWidth: number;
@@ -279,7 +280,6 @@ declare module GraphTableSVG {
     class SVGTable {
         private _cells;
         readonly cells: Cell[][];
-        private svg;
         group: SVGGElement;
         readonly width: number;
         readonly height: number;
@@ -287,6 +287,8 @@ declare module GraphTableSVG {
         readonly columns: Column[];
         readonly cellArray: Cell[];
         readonly borders: SVGLineElement[];
+        private _observer;
+        private observerFunc;
         resize(): void;
         getCellFromID(id: number): Cell;
         private setLine(cell);

@@ -85,8 +85,11 @@ module SLP {
         slp: SLPManager;
         private _idVariableDic: { [key: number]: number; } = [];
 
-        constructor(text: string, _graph: GraphTableSVG.OrderedForest, table: GraphTableSVG.SVGTable) {
-            this.graph = _graph;
+        constructor(text: string, svg: HTMLElement) {
+            this.graph = new GraphTableSVG.OrderedForest();
+            svg.appendChild(this.graph.svgGroup);
+            this.table = new GraphTableSVG.SVGTable(svg, 1, 8);
+
             this.text = text;
             this.slp = new SLPManager();
             this.create();
@@ -99,7 +102,13 @@ module SLP {
                 var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, 30, "slpnode");
                 charNode.svgText.textContent = c;
 
+                var b = this.slp.getChar(c) == null;
                 var variable = this.slp.addChar(c);
+
+                if (b) {
+                    this.table.cells[this.slp.slpNodes.length - 1][0].svgText.textContent = `X${variable}->${c}`;
+                }
+
                 var variableNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, 30, "slpnode");
                 variableNode.svgText.textContent = `X${variable}`;
                 this._idVariableDic[variableNode.id] = variable;
@@ -110,10 +119,12 @@ module SLP {
                 var newEdge = GraphTableSVG.LineEdge.create();
                 this.graph.connect(variableNode, newEdge, charNode);
 
-
+                /*
                 this.graph.outcomingEdgesDic[variableNode.id] = [];
                 this.graph.outcomingEdgesDic[variableNode.id].push(newEdge);
+                */
             }
+            this.graph.svgGroup.setX(100);
 
         }
         private locate() {
@@ -158,7 +169,12 @@ module SLP {
 
                 var variable1 = this._idVariableDic[node1.id];
                 var variable2 = this._idVariableDic[node2.id];
+                var b = this.slp.getVariable(variable1, variable2) == null;
                 var variable3 = this.slp.addVariable(variable1, variable2);
+
+                if (b) {
+                    this.table.cells[this.slp.slpNodes.length - 1][0].svgText.textContent = `X${variable3} -> X${variable1}X${variable2}`;
+                }
 
                 //var x = (node1.x + node2.x) / 2;
                 //var y = Math.min(node1.y, node2.y) - 50;

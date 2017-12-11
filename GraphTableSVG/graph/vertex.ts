@@ -4,7 +4,7 @@
         svgGroup: SVGGElement;
         private _graph: Graph | null;
         private _observer: MutationObserver;
-        private createObserveFunction: MutationCallback = (x: MutationRecord[]) => {
+        private observerFunc: MutationCallback = (x: MutationRecord[]) => {
             for (var i = 0; i < x.length; i++) {
                 var p = x[i];
                 if (p.attributeName == "transform") {
@@ -14,21 +14,6 @@
                     }
                 }
             }
-            /*
-            var th = this;
-            var ret = function (x: MutationRecord[]) {
-                for (var i = 0; i < x.length; i++) {
-                    var p = x[i];
-                    if (p.attributeName == "transform") {
-
-                        if (th.graph != null) {
-                            th.graph.update();
-                        }
-                    }
-                }
-            }
-            return ret;
-            */
         };
 
         get graph(): Graph | null {
@@ -55,7 +40,7 @@
 
             
             
-            this._observer = new MutationObserver(this.createObserveFunction);
+            this._observer = new MutationObserver(this.observerFunc);
             var option: MutationObserverInit = { attributes: true };
             this._observer.observe(this.svgGroup, option);
             /*

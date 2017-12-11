@@ -632,7 +632,7 @@ var GraphTableSVG;
     var Vertex = (function () {
         function Vertex(group) {
             var _this = this;
-            this.createObserveFunction = function (x) {
+            this.observerFunc = function (x) {
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
                     if (p.attributeName == "transform") {
@@ -641,25 +641,10 @@ var GraphTableSVG;
                         }
                     }
                 }
-                /*
-                var th = this;
-                var ret = function (x: MutationRecord[]) {
-                    for (var i = 0; i < x.length; i++) {
-                        var p = x[i];
-                        if (p.attributeName == "transform") {
-    
-                            if (th.graph != null) {
-                                th.graph.update();
-                            }
-                        }
-                    }
-                }
-                return ret;
-                */
             };
             this._id = Vertex.id_counter++;
             this.svgGroup = group;
-            this._observer = new MutationObserver(this.createObserveFunction);
+            this._observer = new MutationObserver(this.observerFunc);
             var option = { attributes: true };
             this._observer.observe(this.svgGroup, option);
             /*
@@ -1117,6 +1102,18 @@ var GraphTableSVG;
     */
     var Cell = (function () {
         function Cell(parent, _px, _py, _rect, _text) {
+            var _this = this;
+            this.observerFunc = function (x) {
+                for (var i = 0; i < x.length; i++) {
+                    var p = x[i];
+                    for (var i = 0; i < p.addedNodes.length; i++) {
+                        var item = p.addedNodes.item(i);
+                        if (item.nodeName == "#text") {
+                            _this.parent.resize();
+                        }
+                    }
+                }
+            };
             this.padding = new Padding();
             this.cellX = _px;
             this.cellY = _py;
@@ -1126,9 +1123,11 @@ var GraphTableSVG;
             this.parent.group.appendChild(this.svgBackground);
             this.svgText = _text;
             this.parent.group.appendChild(this.svgText);
+            this._observer = new MutationObserver(this.observerFunc);
+            var option = { childList: true };
+            this._observer.observe(this.svgText, option);
         }
         Object.defineProperty(Cell.prototype, "logicalWidth", {
-            //verticalAnchor: VerticalAnchor = VerticalAnchor.msoAnchorTop;
             get: function () {
                 if (this.isMaster) {
                     var w = 0;
@@ -1679,12 +1678,17 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     var SVGTable = (function () {
         function SVGTable(_svg, width, height) {
-            this.svg = _svg;
+            this.observerFunc = function (x) {
+                for (var i = 0; i < x.length; i++) {
+                    var p = x[i];
+                    //console.log(p.attributeName);
+                }
+            };
             this._cells = new Array(height);
             var svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this.group = svgGroup;
             //svgGroup.setAttributeNS(null, 'transform', "translate(160,0)");
-            this.svg.appendChild(this.group);
+            _svg.appendChild(this.group);
             //this.verticalLines = new Array(width + 1);
             //this.horizontalLines = new Array(height + 1);
             for (var y = 0; y < height; y++) {
@@ -1698,6 +1702,9 @@ var GraphTableSVG;
                     this.setLine(this.cells[y][x]);
                 }
             }
+            this._observer = new MutationObserver(this.observerFunc);
+            var option = { characterData: true, attributes: true, subtree: true };
+            this._observer.observe(this.group, option);
             this.resize();
         }
         Object.defineProperty(SVGTable.prototype, "cells", {
