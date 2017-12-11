@@ -163,14 +163,17 @@ module GraphTableSVG {
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill)})`);
+                    var style = cell.svgBackground.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
+                    lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${style})`);
                 }
             }
 
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    lines.push(` Call EditCellFont(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${parseInt(cell.svgText.style.fontSize)}, "${cell.svgText.style.fontFamily}", ${VBATranslateFunctions.colorToVBA(cell.svgText.style.fill)})`);
+                    var fontSize = cell.svgText.style.fontSize != null ? parseInt(cell.svgText.style.fontSize) : "";
+                    var color = cell.svgText.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgText.style.fill) : "";
+                    lines.push(` Call EditCellFont(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${fontSize}, "${cell.svgText.style.fontFamily}", ${color})`);
                 }
             }
             for (var y = 0; y < this.height; y++) {
@@ -182,15 +185,31 @@ module GraphTableSVG {
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${VBATranslateFunctions.colorToVBA(cell.upLine.style.fill)}, ${GraphTableSVG.parseInteger(cell.upLine.style.strokeWidth)}, ${GraphTableSVG.visible(cell.upLine.style.visibility)})`);
+                    var upLineStyle = cell.upLine.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.upLine.style.fill) : "";
+                    var upLineStrokeWidth = cell.upLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.upLine.style.strokeWidth) : "";
+                    var upLineVisibility = cell.upLine.style.visibility != null ? GraphTableSVG.visible(cell.upLine.style.visibility) : ""; 
 
-                    lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${VBATranslateFunctions.colorToVBA(cell.leftLine.style.fill)}, ${GraphTableSVG.parseInteger(cell.leftLine.style.strokeWidth)}, ${GraphTableSVG.visible(cell.leftLine.style.visibility)})`);
+                    lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${upLineStyle}, ${upLineStrokeWidth}, ${upLineVisibility})`);
+                    var leftLineStyle = cell.leftLine.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.leftLine.style.fill) : "";
+                    var leftLineStrokeWidth = cell.leftLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.leftLine.style.strokeWidth) : "";
+                    var leftLineVisibility = cell.leftLine.style.visibility != null ? GraphTableSVG.visible(cell.leftLine.style.visibility) : ""; 
+
+                    lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${leftLineStyle}, ${leftLineStrokeWidth}, ${leftLineVisibility})`);
                     if (x + 1 == this.width) {
-                        lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderRight), ${VBATranslateFunctions.colorToVBA(cell.rightLine.style.fill)}, ${GraphTableSVG.parseInteger(cell.rightLine.style.strokeWidth)}, ${GraphTableSVG.visible(cell.rightLine.style.visibility)})`);
+                        
+                        var rightLineStyle = cell.rightLine.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.rightLine.style.fill) : "";
+                        var rightLineStrokeWidth = cell.rightLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.rightLine.style.strokeWidth) : "";
+                        var rightLineVisibility = cell.rightLine.style.visibility != null ? GraphTableSVG.visible(cell.rightLine.style.visibility) : ""; 
+
+                        lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderRight), ${rightLineStyle}, ${rightLineStrokeWidth}, ${rightLineVisibility})`);
                     }
 
                     if (y + 1 == this.height) {
-                        lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderBottom), ${VBATranslateFunctions.colorToVBA(cell.bottomLine.style.fill)}, ${GraphTableSVG.parseInteger(cell.bottomLine.style.strokeWidth)}, ${GraphTableSVG.visible(cell.bottomLine.style.visibility)})`);
+                        var bottomLineStyle = cell.bottomLine.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.bottomLine.style.fill) : "";
+                        var bottomLineStrokeWidth = cell.bottomLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.bottomLine.style.strokeWidth) : "";
+                        var bottomLineVisibility = cell.bottomLine.style.visibility != null ? GraphTableSVG.visible(cell.bottomLine.style.visibility) : ""; 
+
+                        lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderBottom), ${bottomLineStyle}, ${bottomLineStrokeWidth}, ${bottomLineVisibility})`);
                     }
 
                 }

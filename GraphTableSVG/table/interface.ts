@@ -7,14 +7,14 @@
 SVGGElement.prototype.getX = function () {
     var p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
+        p.setAttribute('transform', "translate(0,0)");
     }
     return p.transform.baseVal.getItem(0).matrix.e;
 };
 SVGGElement.prototype.setX = function (value: number) {
     var p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
+        p.setAttribute('transform', "translate(0,0)");
     }
 
     return this.transform.baseVal.getItem(0).matrix.e = value;
@@ -22,7 +22,7 @@ SVGGElement.prototype.setX = function (value: number) {
 SVGGElement.prototype.getY = function () {
     var p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
+        p.setAttribute('transform', "translate(0,0)");
     }
 
     return this.transform.baseVal.getItem(0).matrix.f;
@@ -30,7 +30,7 @@ SVGGElement.prototype.getY = function () {
 SVGGElement.prototype.setY = function (value: number) {
     var p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
+        p.setAttribute('transform', "translate(0,0)");
     }
 
     return this.transform.baseVal.getItem(0).matrix.f = value;

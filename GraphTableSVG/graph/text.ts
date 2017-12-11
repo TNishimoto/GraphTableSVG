@@ -41,7 +41,9 @@
             
             if (rar > 90) {
                 rar = rar - 180;
-                this.svg.textContent = EdgeText.reverse(this.svg.textContent);
+                if (this.svg.textContent != null) {
+                    this.svg.textContent = EdgeText.reverse(this.svg.textContent);
+                }
             }
             this.svg.setAttribute('transform', `rotate(${rar}, ${this.svg.getX()}, ${this.svg.getY()})`);
             

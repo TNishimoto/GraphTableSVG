@@ -27,7 +27,6 @@
                 if (isY) {
                     var midY = middle(graph.nodes.map((v) => v.y));
                     graph.nodes.forEach((v) => {
-                        console.log(`${v.y}/${midY}`);
                         if (v.y < midY) {
                             v.y += 2 * (midY - v.y);
                         } else {
@@ -51,7 +50,7 @@
         }
         
 
-        export function average(items: number[]): number | null {
+        export function average(items: number[]): number {
             if (items.length > 0) {
                 var y = 0;
                 items.forEach((v) => {
@@ -59,10 +58,10 @@
                 });
                 return y / items.length;
             } else {
-                return null;
+                throw new Error();
             }            
         }
-        export function middle(items: number[]): number | null {
+        export function middle(items: number[]): number {
             if (items.length > 0) {
                 var min = items[0];
                 var max = items[0];
@@ -72,7 +71,7 @@
                 });
                 return (min + max)/2;
             } else {
-                return null;
+                throw new Error();
             }
         }
 

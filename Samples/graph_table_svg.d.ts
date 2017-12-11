@@ -75,8 +75,8 @@ declare module GraphTableSVG {
     module GraphArrangement {
         function leaveBasedArrangement(forest: OrderedForest, edgeLength: number): void;
         function reverse(graph: Graph, isX: boolean, isY: boolean): void;
-        function average(items: number[]): number | null;
-        function middle(items: number[]): number | null;
+        function average(items: number[]): number;
+        function middle(items: number[]): number;
         function standardTreeArrangement(graph: OrderedTree, edgeLength: number): void;
     }
 }
@@ -125,7 +125,7 @@ declare module GraphTableSVG {
         private _graph;
         private _observer;
         private createObserveFunction;
-        readonly graph: Graph;
+        readonly graph: Graph | null;
         setGraph(value: Graph): void;
         private _id;
         readonly id: number;
@@ -214,11 +214,10 @@ declare module GraphTableSVG {
         readonly bottomCell: Cell | null;
         readonly upperGroupCells: Cell[];
         readonly leftGroupCells: Cell[];
-        readonly leftBottomGroupCell: Cell;
-        readonly rightUpGroupCell: Cell;
+        readonly leftBottomGroupCell: Cell | null;
+        readonly rightUpGroupCell: Cell | null;
         readonly bottomGroupCells: Cell[];
         readonly rightGroupCells: Cell[];
-        readonly upVirtualCells: Cell[];
         x: number;
         y: number;
         width: number;

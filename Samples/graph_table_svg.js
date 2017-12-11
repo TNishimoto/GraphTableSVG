@@ -333,7 +333,6 @@ var GraphTableSVG;
                 if (isY) {
                     var midY = middle(graph.nodes.map(function (v) { return v.y; }));
                     graph.nodes.forEach(function (v) {
-                        console.log(v.y + "/" + midY);
                         if (v.y < midY) {
                             v.y += 2 * (midY - v.y);
                         }
@@ -365,7 +364,7 @@ var GraphTableSVG;
                 return y / items.length;
             }
             else {
-                return null;
+                throw new Error();
             }
         }
         GraphArrangement.average = average;
@@ -382,7 +381,7 @@ var GraphTableSVG;
                 return (min + max) / 2;
             }
             else {
-                return null;
+                throw new Error();
             }
         }
         GraphArrangement.middle = middle;
@@ -457,7 +456,9 @@ var GraphTableSVG;
             var rar = rad * (180 / Math.PI);
             if (rar > 90) {
                 rar = rar - 180;
-                this.svg.textContent = EdgeText.reverse(this.svg.textContent);
+                if (this.svg.textContent != null) {
+                    this.svg.textContent = EdgeText.reverse(this.svg.textContent);
+                }
             }
             this.svg.setAttribute('transform', "rotate(" + rar + ", " + this.svg.getX() + ", " + this.svg.getY() + ")");
         };
@@ -594,7 +595,12 @@ var GraphTableSVG;
         });
         Object.defineProperty(OrderedTree.prototype, "tree", {
             get: function () {
-                return new GraphTableSVG.VirtualTree(this, this.rootVertex);
+                if (this.rootVertex == null) {
+                    throw new Error();
+                }
+                else {
+                    return new GraphTableSVG.VirtualTree(this, this.rootVertex);
+                }
             },
             enumerable: true,
             configurable: true
@@ -670,11 +676,13 @@ var GraphTableSVG;
             configurable: true
         });
         Vertex.prototype.setGraph = function (value) {
-            if (value == null) {
+            if (value == null && this._graph != null) {
                 this._graph.svgGroup.removeChild(this.svgGroup);
             }
             this._graph = value;
-            this.svgGroup.id = this.graph.name + "_" + this.id + "_group";
+            if (this.graph != null) {
+                this.svgGroup.id = this.graph.name + "_" + this.id + "_group";
+            }
         };
         Object.defineProperty(Vertex.prototype, "id", {
             get: function () {
@@ -791,7 +799,12 @@ var GraphTableSVG;
         });
         Vertex.prototype.getParents = function () {
             var _this = this;
-            return this.graph.edges.filter(function (v) { return v.endNode == _this; }).map(function (v) { return v.beginNode; });
+            if (this.graph == null) {
+                throw new Error();
+            }
+            else {
+                return this.graph.edges.filter(function (v) { return v.endNode == _this; }).map(function (v) { return v.beginNode; });
+            }
         };
         Vertex.prototype.getParent = function () {
             var r = this.getParents();
@@ -845,8 +858,10 @@ var GraphTableSVG;
             */
             get: function () {
                 var p = this;
-                while (p.getParent() != null) {
-                    p = p.getParent();
+                var parent = p.getParent();
+                while (parent != null) {
+                    p = parent;
+                    parent = p.getParent();
                 }
                 return p;
             },
@@ -1260,7 +1275,7 @@ var GraphTableSVG;
                     var now = this;
                     while (now != null && this.ID == now.masterID) {
                         w.push(now);
-                        now = this.rightCell;
+                        now = this.upCell;
                     }
                     return w;
                 }
@@ -1278,7 +1293,7 @@ var GraphTableSVG;
                     var now = this;
                     while (now != null && this.ID == now.masterID) {
                         w.push(now);
-                        now = this.bottomCell;
+                        now = this.leftCell;
                     }
                     return w;
                 }
@@ -1320,12 +1335,12 @@ var GraphTableSVG;
                     var now = this.leftBottomGroupCell;
                     while (now != null && this.ID == now.masterID) {
                         w.push(now);
-                        now = this.rightCell;
+                        now = this.bottomCell;
                     }
                     return w;
                 }
                 else {
-                    return null;
+                    return [];
                 }
             },
             enumerable: true,
@@ -1338,28 +1353,9 @@ var GraphTableSVG;
                     var now = this.rightUpGroupCell;
                     while (now != null && this.ID == now.masterID) {
                         w.push(now);
-                        now = this.bottomCell;
+                        now = this.rightCell;
                     }
                     return w;
-                }
-                else {
-                    return null;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Cell.prototype, "upVirtualCells", {
-            get: function () {
-                if (this.isMaster && this.cellY != 0) {
-                    var upperGroupCells = this.upperGroupCells;
-                    var r1 = upperGroupCells.map(function (x, i, self) {
-                        return upperGroupCells[i].upCell;
-                    });
-                    var r2 = r1.filter(function (x, i, self) {
-                        return r1.indexOf(x) === i;
-                    });
-                    return r2;
                 }
                 else {
                     return [];
@@ -1369,6 +1365,22 @@ var GraphTableSVG;
             configurable: true
         });
         Object.defineProperty(Cell.prototype, "x", {
+            /*
+            get upVirtualCells(): Cell[] {
+                if (this.isMaster && this.cellY != 0) {
+                    var upperGroupCells = this.upperGroupCells;
+                    var r1 = upperGroupCells.map(function (x, i, self) {
+                        return upperGroupCells[i].upCell;
+                    });
+                    var r2 = r1.filter(function (x, i, self) {
+                        return r1.indexOf(x) === i;
+                    });
+                    return r2;
+                } else {
+                    return [];
+                }
+            }
+            */
             get: function () {
                 return this.svgBackground.x.baseVal.value;
             },
@@ -1415,28 +1427,28 @@ var GraphTableSVG;
 SVGGElement.prototype.getX = function () {
     var p = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
+        p.setAttribute('transform', "translate(0,0)");
     }
     return p.transform.baseVal.getItem(0).matrix.e;
 };
 SVGGElement.prototype.setX = function (value) {
     var p = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
+        p.setAttribute('transform', "translate(0,0)");
     }
     return this.transform.baseVal.getItem(0).matrix.e = value;
 };
 SVGGElement.prototype.getY = function () {
     var p = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
+        p.setAttribute('transform', "translate(0,0)");
     }
     return this.transform.baseVal.getItem(0).matrix.f;
 };
 SVGGElement.prototype.setY = function (value) {
     var p = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttributeNS(null, 'transform', "translate(0,0)");
+        p.setAttribute('transform', "translate(0,0)");
     }
     return this.transform.baseVal.getItem(0).matrix.f = value;
 };
@@ -1829,13 +1841,16 @@ var GraphTableSVG;
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    lines.push(" Call EditCell(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + "), \"" + cell.svgText.textContent + "\", " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) + ")");
+                    var style = cell.svgBackground.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
+                    lines.push(" Call EditCell(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + "), \"" + cell.svgText.textContent + "\", " + style + ")");
                 }
             }
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    lines.push(" Call EditCellFont(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Shape.TextFrame, " + parseInt(cell.svgText.style.fontSize) + ", \"" + cell.svgText.style.fontFamily + "\", " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgText.style.fill) + ")");
+                    var fontSize = cell.svgText.style.fontSize != null ? parseInt(cell.svgText.style.fontSize) : "";
+                    var color = cell.svgText.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgText.style.fill) : "";
+                    lines.push(" Call EditCellFont(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Shape.TextFrame, " + fontSize + ", \"" + cell.svgText.style.fontFamily + "\", " + color + ")");
                 }
             }
             for (var y = 0; y < this.height; y++) {
@@ -1847,13 +1862,25 @@ var GraphTableSVG;
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderTop), " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.upLine.style.fill) + ", " + GraphTableSVG.parseInteger(cell.upLine.style.strokeWidth) + ", " + GraphTableSVG.visible(cell.upLine.style.visibility) + ")");
-                    lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderLeft), " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.leftLine.style.fill) + ", " + GraphTableSVG.parseInteger(cell.leftLine.style.strokeWidth) + ", " + GraphTableSVG.visible(cell.leftLine.style.visibility) + ")");
+                    var upLineStyle = cell.upLine.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.upLine.style.fill) : "";
+                    var upLineStrokeWidth = cell.upLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.upLine.style.strokeWidth) : "";
+                    var upLineVisibility = cell.upLine.style.visibility != null ? GraphTableSVG.visible(cell.upLine.style.visibility) : "";
+                    lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderTop), " + upLineStyle + ", " + upLineStrokeWidth + ", " + upLineVisibility + ")");
+                    var leftLineStyle = cell.leftLine.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.leftLine.style.fill) : "";
+                    var leftLineStrokeWidth = cell.leftLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.leftLine.style.strokeWidth) : "";
+                    var leftLineVisibility = cell.leftLine.style.visibility != null ? GraphTableSVG.visible(cell.leftLine.style.visibility) : "";
+                    lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderLeft), " + leftLineStyle + ", " + leftLineStrokeWidth + ", " + leftLineVisibility + ")");
                     if (x + 1 == this.width) {
-                        lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderRight), " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.rightLine.style.fill) + ", " + GraphTableSVG.parseInteger(cell.rightLine.style.strokeWidth) + ", " + GraphTableSVG.visible(cell.rightLine.style.visibility) + ")");
+                        var rightLineStyle = cell.rightLine.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.rightLine.style.fill) : "";
+                        var rightLineStrokeWidth = cell.rightLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.rightLine.style.strokeWidth) : "";
+                        var rightLineVisibility = cell.rightLine.style.visibility != null ? GraphTableSVG.visible(cell.rightLine.style.visibility) : "";
+                        lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderRight), " + rightLineStyle + ", " + rightLineStrokeWidth + ", " + rightLineVisibility + ")");
                     }
                     if (y + 1 == this.height) {
-                        lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderBottom), " + GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.bottomLine.style.fill) + ", " + GraphTableSVG.parseInteger(cell.bottomLine.style.strokeWidth) + ", " + GraphTableSVG.visible(cell.bottomLine.style.visibility) + ")");
+                        var bottomLineStyle = cell.bottomLine.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.bottomLine.style.fill) : "";
+                        var bottomLineStrokeWidth = cell.bottomLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.bottomLine.style.strokeWidth) : "";
+                        var bottomLineVisibility = cell.bottomLine.style.visibility != null ? GraphTableSVG.visible(cell.bottomLine.style.visibility) : "";
+                        lines.push(" Call EditCellBorder(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Borders(ppBorderBottom), " + bottomLineStyle + ", " + bottomLineStrokeWidth + ", " + bottomLineVisibility + ")");
                     }
                 }
             }

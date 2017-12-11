@@ -31,16 +31,17 @@
             */
         };
 
-        get graph(): Graph {
+        get graph(): Graph | null {
             return this._graph;
         }
         public setGraph(value: Graph) {
-            if (value == null) {
+            if (value == null && this._graph != null) {
                 this._graph.svgGroup.removeChild(this.svgGroup);
             }
             this._graph = value;
-            this.svgGroup.id = `${this.graph.name}_${this.id}_group`;
-
+            if (this.graph != null) {
+                this.svgGroup.id = `${this.graph.name}_${this.id}_group`;
+            }
         }
 
 
@@ -150,7 +151,11 @@
             return null;
         }
         public getParents(): Vertex[] {
-            return this.graph.edges.filter((v) => v.endNode == this).map((v) => v.beginNode);
+            if (this.graph == null) {
+                throw new Error();
+            } else {
+                return this.graph.edges.filter((v) => v.endNode == this).map((v) => v.beginNode);
+            }
         }
         getParent(): Vertex | null {
             var r = this.getParents();
@@ -188,8 +193,10 @@
         */
         get root(): Vertex {
             var p: Vertex = this;
-            while (p.getParent() != null) {
-                p = p.getParent();
+            var parent = p.getParent();
+            while (parent != null) {
+                p = parent;
+                parent = p.getParent();
             }
             return p;
         }

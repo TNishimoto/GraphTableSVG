@@ -89,6 +89,8 @@
     <TypeScriptOutDir />
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+	<TypeScriptStrictNullChecks>True</TypeScriptStrictNullChecks>
+
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
   </PropertyGroup>

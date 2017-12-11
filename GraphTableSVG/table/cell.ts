@@ -45,7 +45,7 @@ module GraphTableSVG {
         get logicalWidth(): number {
             if (this.isMaster) {
                 var w = 0;
-                var now: Cell = this;
+                var now: Cell | null = this;
                 while (now != null && this.ID == now.masterID) {
                     now = this.rightCell;
                     w++;
@@ -58,7 +58,7 @@ module GraphTableSVG {
         get logicalHeight(): number {
             if (this.isMaster) {
                 var h = 0;
-                var now: Cell = this;
+                var now: Cell | null = this;
                 while (now != null && this.ID == now.masterID) {
                     now = this.bottomCell;
                     h++;
@@ -148,11 +148,11 @@ module GraphTableSVG {
 
         get upperGroupCells(): Cell[] {
             if (this.isMaster) {
-                var w = [];
-                var now: Cell = this;
+                var w: Cell[] = [];
+                var now: Cell | null = this;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
-                    now = this.rightCell;
+                    now = this.upCell;
                 }
                 return w;
             } else {
@@ -161,25 +161,25 @@ module GraphTableSVG {
         }
         get leftGroupCells(): Cell[] {
             if (this.isMaster) {
-                var w = [];
-                var now: Cell = this;
+                var w: Cell[] = [];
+                var now: Cell | null = this;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
-                    now = this.bottomCell;
+                    now = this.leftCell;
                 }
                 return w;
             } else {
                 return [];
             }
         }
-        get leftBottomGroupCell(): Cell {
+        get leftBottomGroupCell(): Cell | null {
             if (this.isMaster) {
                 return this.parent.cells[this.cellY + this.logicalHeight - 1][this.cellX];
             } else {
                 return null;
             }
         }
-        get rightUpGroupCell(): Cell {
+        get rightUpGroupCell(): Cell | null {
             if (this.isMaster) {
                 return this.parent.cells[this.cellY][this.cellX + this.logicalWidth - 1];
             } else {
@@ -188,22 +188,8 @@ module GraphTableSVG {
         }
         get bottomGroupCells(): Cell[] {
             if (this.isMaster) {
-                var w = [];
-                var now: Cell = this.leftBottomGroupCell;
-                while (now != null && this.ID == now.masterID) {
-                    w.push(now);
-                    now = this.rightCell;
-                }
-                return w;
-
-            } else {
-                return null;
-            }
-        }
-        get rightGroupCells(): Cell[] {
-            if (this.isMaster) {
-                var w = [];
-                var now: Cell = this.rightUpGroupCell;
+                var w: Cell[] = [];
+                var now: Cell | null = this.leftBottomGroupCell;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = this.bottomCell;
@@ -211,9 +197,24 @@ module GraphTableSVG {
                 return w;
 
             } else {
-                return null;
+                return [];
             }
         }
+        get rightGroupCells(): Cell[] {
+            if (this.isMaster) {
+                var w: Cell[] = [];
+                var now: Cell | null = this.rightUpGroupCell;
+                while (now != null && this.ID == now.masterID) {
+                    w.push(now);
+                    now = this.rightCell;
+                }
+                return w;
+
+            } else {
+                return [];
+            }
+        }
+        /*
         get upVirtualCells(): Cell[] {
             if (this.isMaster && this.cellY != 0) {
                 var upperGroupCells = this.upperGroupCells;
@@ -228,6 +229,7 @@ module GraphTableSVG {
                 return [];
             }
         }
+        */
 
         get x(): number {
             return this.svgBackground.x.baseVal.value;

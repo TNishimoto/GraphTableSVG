@@ -102,7 +102,11 @@
             //this.arrangementFunction = GraphArrangement.createStandardTreeArrangementFunction(50);
         }
         get tree(): VirtualTree {
-            return new VirtualTree(this, this.rootVertex);
+            if (this.rootVertex == null) {
+                throw new Error();
+            } else {
+                return new VirtualTree(this, this.rootVertex);
+            }
         }
 
         public getFirstNoParentVertex(): Vertex {
