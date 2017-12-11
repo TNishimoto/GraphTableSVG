@@ -144,3 +144,9 @@ div#Bar {
     stroke: black;
     fill: orange;
 }
+
+.table_text{
+    fill : blue;
+    font-size : 14px;
+    font-weight : bold;
+}

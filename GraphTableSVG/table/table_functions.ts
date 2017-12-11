@@ -20,14 +20,18 @@ module GraphTableSVG {
         //line1.setAttribute('stroke', 'black');
         return line1;
     }
-    export function createText(): SVGTextElement {
+    export function createText(className : string | null = null): SVGTextElement {
         var _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-        _svgText.style.fill = "black";
-        _svgText.style.fontSize = "14px";
-        _svgText.style.fontWeight = "bold";
         _svgText.style.textAnchor = "middle";
-
+        if (className == null) {
+            _svgText.style.fill = "black";
+            _svgText.style.fontSize = "14px";
+            _svgText.style.fontWeight = "bold";
+        } else {
+            _svgText.setAttribute("class", className);
+            //_svgText.className = className;
+        }
         
 
         return _svgText;

@@ -283,6 +283,7 @@ declare module GraphTableSVG {
 declare module GraphTableSVG {
     class SVGTable {
         private _cells;
+        private textClassName;
         readonly cells: Cell[][];
         group: SVGGElement;
         readonly width: number;
@@ -311,7 +312,7 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     function createLine(x: number, y: number, x2: number, y2: number): SVGLineElement;
-    function createText(): SVGTextElement;
+    function createText(className?: string | null): SVGTextElement;
     function createRectangle(): SVGRectElement;
     function createGroup(): SVGGElement;
     function createCircle(r?: number, className?: string | null): SVGCircleElement;

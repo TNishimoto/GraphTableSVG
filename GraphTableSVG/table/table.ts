@@ -4,6 +4,7 @@ module GraphTableSVG {
 
     export class SVGTable {
         private _cells: Cell[][] = [];
+        private textClassName: string | null = "table_text";
         get cells(): Cell[][] {
             return this._cells;
         }
@@ -74,7 +75,7 @@ module GraphTableSVG {
         private insertRowFunction(i: number, width: number = this.width) {
             var cell: Cell[] = [];
             for (var x = 0; x < width; x++) {
-                cell[x] = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
+                cell[x] = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText(this.textClassName));
             }
             if (i < this.height) {
                 for (var x = 0; x < width; x++) {
@@ -96,7 +97,7 @@ module GraphTableSVG {
         }
         public insertColumn(i: number) {
             for (var y = 0; y < this.height; y++) {
-                var cell = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
+                var cell = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText(this.textClassName));
                 this.cells[y].splice(i, 0, cell);
             }
             if (i < this.height) {

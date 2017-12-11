@@ -1253,6 +1253,9 @@ var GraphTableSVG;
             //this.textSVG.x.baseVal.getItem(0).value = 0;
             var text_x = this.svgBackground.x.baseVal.value;
             var text_y = this.svgBackground.y.baseVal.value;
+            var style = getComputedStyle(this.svgText, "");
+            var anchor = style.textAnchor;
+            console.log(style.textAnchor);
             if (this.svgText.style.textAnchor == "middle") {
                 text_x += (this.textBoxWidth / 2);
                 text_y += (this.textBoxHeight / 2);
@@ -1751,6 +1754,7 @@ var GraphTableSVG;
         function SVGTable(_svg, width, height) {
             //this._cells = new Array(height);
             this._cells = [];
+            this.textClassName = "table_text";
             this.observerFunc = function (x) {
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
@@ -1875,7 +1879,7 @@ var GraphTableSVG;
             if (width === void 0) { width = this.width; }
             var cell = [];
             for (var x = 0; x < width; x++) {
-                cell[x] = new GraphTableSVG.Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
+                cell[x] = new GraphTableSVG.Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText(this.textClassName));
             }
             if (i < this.height) {
                 for (var x = 0; x < width; x++) {
@@ -1897,7 +1901,7 @@ var GraphTableSVG;
         };
         SVGTable.prototype.insertColumn = function (i) {
             for (var y = 0; y < this.height; y++) {
-                var cell = new GraphTableSVG.Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
+                var cell = new GraphTableSVG.Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText(this.textClassName));
                 this.cells[y].splice(i, 0, cell);
             }
             if (i < this.height) {
@@ -2106,12 +2110,19 @@ var GraphTableSVG;
         return line1;
     }
     GraphTableSVG.createLine = createLine;
-    function createText() {
+    function createText(className) {
+        if (className === void 0) { className = null; }
         var _svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        _svgText.style.fill = "black";
-        _svgText.style.fontSize = "14px";
-        _svgText.style.fontWeight = "bold";
         _svgText.style.textAnchor = "middle";
+        if (className == null) {
+            _svgText.style.fill = "black";
+            _svgText.style.fontSize = "14px";
+            _svgText.style.fontWeight = "bold";
+        }
+        else {
+            _svgText.setAttribute("class", className);
+            //_svgText.className = className;
+        }
         return _svgText;
     }
     GraphTableSVG.createText = createText;

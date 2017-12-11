@@ -149,6 +149,11 @@ module GraphTableSVG {
             //this.textSVG.x.baseVal.getItem(0).value = 0;
             var text_x = this.svgBackground.x.baseVal.value;
             var text_y = this.svgBackground.y.baseVal.value;
+            var style = getComputedStyle(this.svgText, "");
+            
+            var anchor = style.textAnchor;
+            console.log(style.textAnchor);
+
             if (this.svgText.style.textAnchor == "middle") {
                 text_x += (this.textBoxWidth / 2);
                 text_y += (this.textBoxHeight / 2);
