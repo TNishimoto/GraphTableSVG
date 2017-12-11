@@ -1123,10 +1123,58 @@ var GraphTableSVG;
             this.parent.group.appendChild(this.svgBackground);
             this.svgText = _text;
             this.parent.group.appendChild(this.svgText);
+            this.upLine = GraphTableSVG.createLine(0, 0, 0, 0);
+            this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
+            this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0);
+            this.bottomLine = GraphTableSVG.createLine(0, 0, 0, 0);
+            this.parent.group.appendChild(this.upLine);
+            this.parent.group.appendChild(this.leftLine);
+            this.parent.group.appendChild(this.rightLine);
+            this.parent.group.appendChild(this.bottomLine);
             this._observer = new MutationObserver(this.observerFunc);
             var option = { childList: true };
             this._observer.observe(this.svgText, option);
         }
+        Object.defineProperty(Cell.prototype, "upLine", {
+            get: function () {
+                return this._upLine;
+            },
+            set: function (line) {
+                this._upLine = line;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Cell.prototype, "leftLine", {
+            get: function () {
+                return this._leftLine;
+            },
+            set: function (line) {
+                this._leftLine = line;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Cell.prototype, "rightLine", {
+            get: function () {
+                return this._rightLine;
+            },
+            set: function (line) {
+                this._rightLine = line;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Cell.prototype, "bottomLine", {
+            get: function () {
+                return this._bottomLine;
+            },
+            set: function (line) {
+                this._bottomLine = line;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Cell.prototype, "logicalWidth", {
             get: function () {
                 if (this.isMaster) {
@@ -1677,14 +1725,38 @@ var GraphTableSVG;
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var SVGTable = (function () {
+        /*
+        private setLine(cell: Cell) {
+            if (cell.leftCell != null) {
+                cell.leftLine = cell.leftCell.rightLine;
+            } else {
+                cell.leftLine = GraphTableSVG.createLine(cell.x, cell.y, cell.x, cell.y + cell.height);
+                this.group.appendChild(cell.leftLine);
+            }
+
+            if (cell.upCell != null) {
+                cell.upLine = cell.upCell.bottomLine;
+            } else {
+                cell.upLine = GraphTableSVG.createLine(cell.x, cell.y, cell.x + cell.width, cell.y);
+                this.group.appendChild(cell.upLine);
+
+            }
+
+            cell.rightLine = GraphTableSVG.createLine(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height);
+            this.group.appendChild(cell.rightLine);
+            cell.bottomLine = GraphTableSVG.createLine(cell.x, cell.y + cell.height, cell.x + cell.width, cell.y + cell.height);
+            this.group.appendChild(cell.bottomLine);
+        }
+        */
         function SVGTable(_svg, width, height) {
+            //this._cells = new Array(height);
+            this._cells = [];
             this.observerFunc = function (x) {
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
                     //console.log(p.attributeName);
                 }
             };
-            this._cells = new Array(height);
             var svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this.group = svgGroup;
             //svgGroup.setAttributeNS(null, 'transform', "translate(160,0)");
@@ -1692,16 +1764,23 @@ var GraphTableSVG;
             //this.verticalLines = new Array(width + 1);
             //this.horizontalLines = new Array(height + 1);
             for (var y = 0; y < height; y++) {
+                this.insertRowFunction(y, width);
+            }
+            /*
+            for (var y = 0; y < height; y++) {
                 this.cells[y] = new Array(width);
                 for (var x = 0; x < width; x++) {
-                    this.cells[y][x] = new GraphTableSVG.Cell(this, x, y, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
+                    this.cells[y][x] = new Cell(this, x, y, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
                 }
             }
+            */
+            /*
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     this.setLine(this.cells[y][x]);
                 }
             }
+            */
             this._observer = new MutationObserver(this.observerFunc);
             var option = { characterData: true, attributes: true, subtree: true };
             this._observer.observe(this.group, option);
@@ -1716,7 +1795,12 @@ var GraphTableSVG;
         });
         Object.defineProperty(SVGTable.prototype, "width", {
             get: function () {
-                return this.cells[0].length;
+                if (this.cells.length == 0) {
+                    return 0;
+                }
+                else {
+                    return this.cells[0].length;
+                }
             },
             enumerable: true,
             configurable: true
@@ -1787,6 +1871,82 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        SVGTable.prototype.insertRowFunction = function (i, width) {
+            if (width === void 0) { width = this.width; }
+            var cell = [];
+            for (var x = 0; x < width; x++) {
+                cell[x] = new GraphTableSVG.Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
+            }
+            if (i < this.height) {
+                for (var x = 0; x < width; x++) {
+                    this.cells[i][x].upLine = GraphTableSVG.createLine(0, 0, 0, 0);
+                    this.group.appendChild(this.cells[i][x].upLine);
+                }
+            }
+            this.cells.splice(i, 0, cell);
+            this.renumbering();
+            for (var x = 0; x < width; x++) {
+                this.updateBorder(this.cells[i][x]);
+            }
+        };
+        SVGTable.prototype.insertRow = function (i) {
+            this.insertRowFunction(i, this.width);
+        };
+        SVGTable.prototype.appendRow = function () {
+            this.insertRow(this.height);
+        };
+        SVGTable.prototype.insertColumn = function (i) {
+            for (var y = 0; y < this.height; y++) {
+                var cell = new GraphTableSVG.Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
+                this.cells[y].splice(i, 0, cell);
+            }
+            if (i < this.height) {
+                for (var y = 0; y < this.height; y++) {
+                    this.cells[y][i].leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
+                    this.group.appendChild(this.cells[y][i].leftLine);
+                }
+            }
+            this.renumbering();
+            for (var y = 0; y < this.height; y++) {
+                this.updateBorder(this.cells[y][i]);
+            }
+        };
+        SVGTable.prototype.appendColumn = function () {
+            this.insertColumn(this.width);
+        };
+        SVGTable.prototype.updateBorder = function (cell) {
+            if (cell.leftCell != null && cell.leftCell.rightLine != cell.leftLine) {
+                this.group.removeChild(cell.leftLine);
+                cell.leftLine = cell.leftCell.rightLine;
+            }
+            if (cell.upCell != null && cell.upCell.bottomLine != cell.upLine) {
+                this.group.removeChild(cell.upLine);
+                cell.upLine = cell.upCell.bottomLine;
+            }
+            if (cell.rightCell != null && cell.rightCell.leftLine != cell.rightLine) {
+                this.group.removeChild(cell.rightCell.leftLine);
+                cell.rightCell.leftLine = cell.rightLine;
+            }
+            if (cell.bottomCell != null && cell.bottomCell.upLine != cell.bottomLine) {
+                this.group.removeChild(cell.bottomCell.upLine);
+                cell.bottomCell.upLine = cell.bottomLine;
+            }
+        };
+        SVGTable.prototype.renumbering = function () {
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    this.cells[y][x].x = x;
+                    this.cells[y][x].y = y;
+                }
+            }
+            /*
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    this.setLine(this.cells[y][x]);
+                }
+            }
+            */
+        };
         SVGTable.prototype.resize = function () {
             var rows = this.rows;
             var columns = this.columns;
@@ -1808,26 +1968,6 @@ var GraphTableSVG;
             var y = Math.floor(id / this.height);
             var x = id % this.width;
             return this.cells[y][x];
-        };
-        SVGTable.prototype.setLine = function (cell) {
-            if (cell.leftCell != null) {
-                cell.leftLine = cell.leftCell.rightLine;
-            }
-            else {
-                cell.leftLine = GraphTableSVG.createLine(cell.x, cell.y, cell.x, cell.y + cell.height);
-                this.group.appendChild(cell.leftLine);
-            }
-            if (cell.upCell != null) {
-                cell.upLine = cell.upCell.bottomLine;
-            }
-            else {
-                cell.upLine = GraphTableSVG.createLine(cell.x, cell.y, cell.x + cell.width, cell.y);
-                this.group.appendChild(cell.upLine);
-            }
-            cell.rightLine = GraphTableSVG.createLine(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height);
-            this.group.appendChild(cell.rightLine);
-            cell.bottomLine = GraphTableSVG.createLine(cell.x, cell.y + cell.height, cell.x + cell.width, cell.y + cell.height);
-            this.group.appendChild(cell.bottomLine);
         };
         SVGTable.prototype.createVBAMainCode = function (slideName) {
             var fstLines = [];

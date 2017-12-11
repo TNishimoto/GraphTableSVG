@@ -3,14 +3,18 @@ module GraphTableSVG {
     
 
     export class SVGTable {
-        private _cells: Cell[][];
+        private _cells: Cell[][] = [];
         get cells(): Cell[][] {
             return this._cells;
         }
         //private svg: HTMLElement;
         public group: SVGGElement;
         get width(): number {
-            return this.cells[0].length;
+            if (this.cells.length == 0) {
+                return 0;
+            } else {
+                return this.cells[0].length;
+            }
         }
         get height(): number {
             return this.cells.length;
@@ -67,6 +71,87 @@ module GraphTableSVG {
             }
         };
 
+        private insertRowFunction(i: number, width: number = this.width) {
+            var cell: Cell[] = [];
+            for (var x = 0; x < width; x++) {
+                cell[x] = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
+            }
+            if (i < this.height) {
+                for (var x = 0; x < width; x++) {
+                    this.cells[i][x].upLine = createLine(0, 0, 0, 0);
+                    this.group.appendChild(this.cells[i][x].upLine);
+                }
+            }
+            this.cells.splice(i, 0, cell);
+            this.renumbering();
+            for (var x = 0; x < width; x++) {
+                this.updateBorder(this.cells[i][x]);
+            }
+        }
+        public insertRow(i: number) {
+            this.insertRowFunction(i, this.width);
+        }
+        public appendRow() {
+            this.insertRow(this.height);
+        }
+        public insertColumn(i: number) {
+            for (var y = 0; y < this.height; y++) {
+                var cell = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
+                this.cells[y].splice(i, 0, cell);
+            }
+            if (i < this.height) {
+                for (var y = 0; y < this.height; y++) {
+                    this.cells[y][i].leftLine = createLine(0, 0, 0, 0);
+                    this.group.appendChild(this.cells[y][i].leftLine);
+                }
+            }
+            this.renumbering();
+            for (var y = 0; y < this.height; y++) {
+                this.updateBorder(this.cells[y][i]);
+            }
+        }
+        public appendColumn() {
+            this.insertColumn(this.width);
+        }
+        private updateBorder(cell: Cell) {
+            if (cell.leftCell != null && cell.leftCell.rightLine != cell.leftLine) {
+                this.group.removeChild(cell.leftLine);
+                cell.leftLine = cell.leftCell.rightLine;
+            }
+
+            if (cell.upCell != null && cell.upCell.bottomLine != cell.upLine) {
+                this.group.removeChild(cell.upLine);
+                cell.upLine = cell.upCell.bottomLine;
+            }
+
+            if (cell.rightCell != null && cell.rightCell.leftLine != cell.rightLine) {
+                this.group.removeChild(cell.rightCell.leftLine);
+                cell.rightCell.leftLine = cell.rightLine;
+            }
+
+            if (cell.bottomCell != null && cell.bottomCell.upLine != cell.bottomLine) {
+                this.group.removeChild(cell.bottomCell.upLine);
+                cell.bottomCell.upLine = cell.bottomLine;
+            }            
+        }
+        private renumbering() {
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    this.cells[y][x].x = x;
+                    this.cells[y][x].y = y;
+
+                }
+            }
+
+            /*
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    this.setLine(this.cells[y][x]);
+                }
+            }
+            */
+        }
+
         public resize() {
             var rows = this.rows;
             var columns = this.columns;
@@ -92,7 +177,7 @@ module GraphTableSVG {
             var x = id % this.width;
             return this.cells[y][x];
         }
-
+        /*
         private setLine(cell: Cell) {
             if (cell.leftCell != null) {
                 cell.leftLine = cell.leftCell.rightLine;
@@ -113,12 +198,11 @@ module GraphTableSVG {
             this.group.appendChild(cell.rightLine);
             cell.bottomLine = GraphTableSVG.createLine(cell.x, cell.y + cell.height, cell.x + cell.width, cell.y + cell.height);
             this.group.appendChild(cell.bottomLine);
-
-
         }
+        */
 
         constructor(_svg: HTMLElement, width: number, height: number) {
-            this._cells = new Array(height);
+            //this._cells = new Array(height);
 
 
             var svgGroup: SVGGElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -130,17 +214,26 @@ module GraphTableSVG {
             //this.verticalLines = new Array(width + 1);
             //this.horizontalLines = new Array(height + 1);
             for (var y = 0; y < height; y++) {
+                this.insertRowFunction(y, width);
+            }
+
+
+            /*
+            for (var y = 0; y < height; y++) {
                 this.cells[y] = new Array(width);
                 for (var x = 0; x < width; x++) {
                     this.cells[y][x] = new Cell(this, x, y, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
                 }
             }
+            */
 
+            /*
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     this.setLine(this.cells[y][x]);
                 }
             }
+            */
 
             this._observer = new MutationObserver(this.observerFunc);
             var option: MutationObserverInit = { characterData : true, attributes: true, subtree: true };

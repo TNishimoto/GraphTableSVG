@@ -32,10 +32,39 @@ module GraphTableSVG {
         masterID: number;
         parent: SVGTable;
         padding: Padding;
-        upLine: SVGLineElement;
-        leftLine: SVGLineElement;
-        rightLine: SVGLineElement;
-        bottomLine: SVGLineElement;
+        private _upLine: SVGLineElement;
+        get upLine(): SVGLineElement {
+            return this._upLine;
+        }
+        set upLine(line: SVGLineElement) {
+            this._upLine = line;
+        } 
+        private _leftLine: SVGLineElement;
+        get leftLine(): SVGLineElement {
+            return this._leftLine;
+        }
+        set leftLine(line: SVGLineElement) {
+            this._leftLine = line;
+        } 
+
+        private _rightLine: SVGLineElement;
+        get rightLine(): SVGLineElement {
+            return this._rightLine;
+        }
+        set rightLine(line: SVGLineElement) {
+            this._rightLine = line;
+        } 
+
+
+        private _bottomLine: SVGLineElement;
+        get bottomLine(): SVGLineElement {
+            return this._bottomLine;
+        }
+        set bottomLine(line: SVGLineElement) {
+            this._bottomLine = line;
+        } 
+
+
         svgBackground: SVGRectElement;
         svgText: SVGTextElement;
         //svgGroup: SVGGElement;
@@ -281,6 +310,16 @@ module GraphTableSVG {
 
             this.svgText = _text;
             this.parent.group.appendChild(this.svgText);
+
+            this.upLine = GraphTableSVG.createLine(0, 0, 0, 0);
+            this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
+            this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0);
+            this.bottomLine = GraphTableSVG.createLine(0, 0, 0, 0);
+            this.parent.group.appendChild(this.upLine);
+            this.parent.group.appendChild(this.leftLine);
+            this.parent.group.appendChild(this.rightLine);
+            this.parent.group.appendChild(this.bottomLine);
+
 
             
             this._observer = new MutationObserver(this.observerFunc);

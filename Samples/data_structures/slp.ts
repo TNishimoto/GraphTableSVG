@@ -88,7 +88,7 @@ module SLP {
         constructor(text: string, svg: HTMLElement) {
             this.graph = new GraphTableSVG.OrderedForest();
             svg.appendChild(this.graph.svgGroup);
-            this.table = new GraphTableSVG.SVGTable(svg, 1, 8);
+            this.table = new GraphTableSVG.SVGTable(svg, 1, 1);
 
             this.text = text;
             this.slp = new SLPManager();
@@ -106,6 +106,9 @@ module SLP {
                 var variable = this.slp.addChar(c);
 
                 if (b) {
+                    if (this.table.height < this.slp.slpNodes.length) {
+                        this.table.appendRow();
+                    }
                     this.table.cells[this.slp.slpNodes.length - 1][0].svgText.textContent = `X${variable}->${c}`;
                 }
 
@@ -173,6 +176,9 @@ module SLP {
                 var variable3 = this.slp.addVariable(variable1, variable2);
 
                 if (b) {
+                    if (this.table.height < this.slp.slpNodes.length) {
+                        this.table.appendRow();
+                    }
                     this.table.cells[this.slp.slpNodes.length - 1][0].svgText.textContent = `X${variable3} -> X${variable1}X${variable2}`;
                 }
 
