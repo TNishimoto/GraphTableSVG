@@ -13,6 +13,7 @@ function createSLP() {
     var clicker = new SLP.Clicker(text, svgBox, 20);
     clicker.nodeXInterval = 60;
     clicker.nodeYInterval = 60;
+    clicker.table.textClassName = "table_text";
     
     graphtable = clicker.graph;
     

@@ -32,10 +32,14 @@ module GraphTableSVG {
             _svgText.setAttribute("class", className);
             //_svgText.className = className;
         }
-        
-
         return _svgText;
     }
+    export function resetStyle(item: SVGTextElement) {
+        item.style.fill = null;
+        item.style.fontSize = null;
+        item.style.fontWeight = null;
+    }
+
     export function createRectangle(): SVGRectElement {
         var rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.width.baseVal.value = 30;

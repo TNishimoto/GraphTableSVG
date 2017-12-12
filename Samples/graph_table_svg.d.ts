@@ -186,12 +186,19 @@ declare module GraphTableSVG {
         right: number;
         bottom: number;
     }
+    enum VerticalAnchor {
+        Bottom = 0,
+        Middle = 1,
+        Top = 2,
+    }
     class Cell {
         cellX: number;
         cellY: number;
         masterID: number;
         parent: SVGTable;
         padding: Padding;
+        private _verticalAnchor;
+        verticalAnchor: VerticalAnchor;
         private _upLine;
         upLine: SVGLineElement;
         private _leftLine;
@@ -223,8 +230,6 @@ declare module GraphTableSVG {
         readonly rightUpGroupCell: Cell | null;
         readonly bottomGroupCells: Cell[];
         readonly rightGroupCells: Cell[];
-        x: number;
-        y: number;
         width: number;
         height: number;
         constructor(parent: SVGTable, _px: number, _py: number, _rect: SVGRectElement, _text: SVGTextElement);
@@ -283,7 +288,8 @@ declare module GraphTableSVG {
 declare module GraphTableSVG {
     class SVGTable {
         private _cells;
-        private textClassName;
+        private _textClassName;
+        textClassName: string | null;
         private borderClassName;
         private backgroundClassName;
         readonly cells: Cell[][];
@@ -315,6 +321,7 @@ declare module GraphTableSVG {
 declare module GraphTableSVG {
     function createLine(x: number, y: number, x2: number, y2: number): SVGLineElement;
     function createText(className?: string | null): SVGTextElement;
+    function resetStyle(item: SVGTextElement): void;
     function createRectangle(): SVGRectElement;
     function createGroup(): SVGGElement;
     function createCircle(r?: number, className?: string | null): SVGCircleElement;

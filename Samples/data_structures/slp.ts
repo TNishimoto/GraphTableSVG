@@ -101,7 +101,25 @@ module SLP {
             this._nodeYInterval = value;
             this.locate();
         }
+        private _firstSelectedNode: GraphTableSVG.Vertex | null = null;
 
+        get firstSelectedNode(): GraphTableSVG.Vertex | null {
+            return this._firstSelectedNode;
+        }
+        set firstSelectedNode(value: GraphTableSVG.Vertex | null) {
+            if (this.firstSelectedNode != null) {
+                if (this.firstSelectedNode.surface != null) {
+                    this.firstSelectedNode.surface.setAttribute("class", "slpnode");
+                }
+            }
+            this._firstSelectedNode = value;
+            if (this._firstSelectedNode != null) {
+                var surface = this._firstSelectedNode.surface;
+                if (this._firstSelectedNode.surface != null) {
+                    this.firstSelectedNode.surface.setAttribute("class", "slpnode_choice");
+                }
+            }
+        }
 
         private _idVariableDic: { [key: number]: number; } = [];
 
@@ -121,7 +139,7 @@ module SLP {
         private create() {
             for (var i = 0; i < this.text.length; i++) {
                 var c = this.text[i];
-                var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, "slpnode_noroot");
+                var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, "slpnode");
                 charNode.svgText.textContent = c;
 
                 var b = this.slp.getChar(c) == null;
@@ -159,25 +177,7 @@ module SLP {
             this.graph.svgGroup.setY(180);
         }
 
-        private _firstSelectedNode: GraphTableSVG.Vertex | null = null;
-
-        get firstSelectedNode(): GraphTableSVG.Vertex | null {
-            return this._firstSelectedNode;
-        }
-        set firstSelectedNode(value: GraphTableSVG.Vertex | null) {
-            if (this.firstSelectedNode != null) {
-                if (this.firstSelectedNode.surface != null) {
-                    this.firstSelectedNode.surface.setAttribute("class", "slpnode");
-                }
-            }
-            this._firstSelectedNode = value;
-            if (this._firstSelectedNode != null) {
-                var surface = this._firstSelectedNode.surface;
-                if (this._firstSelectedNode.surface != null) {
-                    this.firstSelectedNode.surface.setAttribute("class", "slpnode_choice");
-                }
-            }
-        }
+        
         private isNeighbor(node1: GraphTableSVG.Vertex, node2: GraphTableSVG.Vertex): boolean {
             if (node1.isRoot && node2.isRoot) {
                 var rank1 = node1.index;

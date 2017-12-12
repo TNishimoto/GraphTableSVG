@@ -6,6 +6,9 @@ module GraphTableSVG {
         right: number = 0;
         bottom: number = 0;
     }
+    export enum VerticalAnchor {
+        Bottom, Middle, Top
+    }
     /*
     class Rectangle {
         x: number;
@@ -32,6 +35,16 @@ module GraphTableSVG {
         masterID: number;
         parent: SVGTable;
         padding: Padding;
+
+        private _verticalAnchor: VerticalAnchor = VerticalAnchor.Middle;
+        get verticalAnchor(): VerticalAnchor {
+            return this._verticalAnchor;
+        }
+        set verticalAnchor(value: VerticalAnchor) {
+            this._verticalAnchor = value;
+        }
+
+
         private _upLine: SVGLineElement;
         get upLine(): SVGLineElement {
             return this._upLine;
@@ -152,14 +165,23 @@ module GraphTableSVG {
             var style = getComputedStyle(this.svgText, "");
             
             var anchor = style.textAnchor;
-            console.log(style.textAnchor);
+
+            var innerHeight = this.height - this.padding.top - this.padding.bottom;
+            var innerWidth = this.width - this.padding.left - this.padding.right;
+            if (this.verticalAnchor == VerticalAnchor.Top) {
+                text_y = this.padding.top;
+            } else if (this.verticalAnchor == VerticalAnchor.Middle) {
+                text_y = innerHeight + this.padding.top;
+            } else if (this.verticalAnchor == VerticalAnchor.Bottom) {
+                text_y = this.padding.top + innerHeight;
+            }
 
             if (this.svgText.style.textAnchor == "middle") {
                 text_x += (this.textBoxWidth / 2);
-                text_y += (this.textBoxHeight / 2);
+                //text_y += (this.textBoxHeight / 2);
             } else if (this.svgText.style.textAnchor == "left") {
                 text_x += this.padding.left;
-                text_y += this.padding.top;
+                //text_y += this.padding.top;
             } else {
 
             }
@@ -275,7 +297,7 @@ module GraphTableSVG {
             }
         }
         */
-
+        /*
         get x(): number {
             return this.svgBackground.x.baseVal.value;
         }
@@ -289,6 +311,7 @@ module GraphTableSVG {
         set y(value: number) {
             this.svgBackground.y.baseVal.value = value;
         }
+        */
 
         get width(): number {
             return this.svgBackground.width.baseVal.value;
@@ -325,6 +348,7 @@ module GraphTableSVG {
             this.parent.group.appendChild(this.rightLine);
             this.parent.group.appendChild(this.bottomLine);
 
+            console.log(this.svgText.style.fontSize);
 
             
             this._observer = new MutationObserver(this.observerFunc);

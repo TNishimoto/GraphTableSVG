@@ -4,7 +4,22 @@ module GraphTableSVG {
 
     export class SVGTable {
         private _cells: Cell[][] = [];
-        private textClassName: string | null = "table_text";
+        private _textClassName: string | null = "table_text";
+        get textClassName(): string | null {
+            return this._textClassName;
+        }
+        set textClassName(value: string | null) {
+            this._textClassName = value;            
+            if (value != null) {
+                this.cellArray.forEach((v) => {
+                    GraphTableSVG.resetStyle(v.svgText);
+                    v.svgText.setAttribute("class", value);
+                });
+            } else {
+                //this.cellArray.forEach((v) => { GraphTableSVG.resetStyle(v.svgText) });                
+            }
+        }
+
         private borderClassName: string | null = null;
         private backgroundClassName: string | null = null;
         get cells(): Cell[][] {
@@ -77,7 +92,7 @@ module GraphTableSVG {
         private insertRowFunction(i: number, width: number = this.width) {
             var cell: Cell[] = [];
             for (var x = 0; x < width; x++) {
-                cell[x] = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText(this.textClassName));
+                cell[x] = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText(this._textClassName));
             }
             if (i < this.height) {
                 for (var x = 0; x < width; x++) {
@@ -99,7 +114,7 @@ module GraphTableSVG {
         }
         public insertColumn(i: number) {
             for (var y = 0; y < this.height; y++) {
-                var cell = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText(this.textClassName));
+                var cell = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText(this._textClassName));
                 this.cells[y].splice(i, 0, cell);
             }
             if (i < this.height) {
@@ -140,8 +155,8 @@ module GraphTableSVG {
         private renumbering() {
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
-                    this.cells[y][x].x = x;
-                    this.cells[y][x].y = y;
+                    this.cells[y][x].cellX = x;
+                    this.cells[y][x].cellY = y;
 
                 }
             }
@@ -183,9 +198,11 @@ module GraphTableSVG {
         
 
         constructor(width: number, height: number, _textClassName: string | null = null, _borderClassName: string | null = null, _backgroundClassName: string | null = null) {
-            this.textClassName = _textClassName;
+            
+            this._textClassName = _textClassName;
             this.borderClassName = _borderClassName;
             this.backgroundClassName = _backgroundClassName;
+            
 
             //this._cells = new Array(height);
 
