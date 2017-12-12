@@ -15,44 +15,12 @@ class VirtualCell {
 */
 //var table: SVGTable = null;
 
+/*
 function getInputText(): string {
     var textbox: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById(`inputtext_itb`);
     return textbox.value;
 }
-
-
-
-function createSuffixArrayTable() {
-    clear();
-
-    var text: string = getInputText();
-    var sa: number[] = StringModule.computeSuffixArray(text);
-    svgBox.innerHTML = "";
-    var table = new SVGTable(svgBox, 2, sa.length + 1);
-
-    table.cells[0][0].svgText.textContent = "SA";
-    table.cells[0][1].svgText.textContent = "Text";
-    table.cells[0][1].svgText.style.textAnchor = "left";
-    table.cells[0][0].width = 0;
-    table.cells[0][0].height = 0;
-    table.cells[0][1].width = 0;
-    table.cells[0][1].height = 0;
-
-    for (var i = 0; i < sa.length; i++) {
-        var suffix = text.substr(sa[i]);
-        table.cells[i+1][0].svgText.textContent = sa[i].toString();
-        table.cells[i + 1][1].svgText.textContent = suffix;
-        table.cells[i + 1][1].svgText.style.textAnchor = "left";
-        table.cells[i + 1][0].width = 0;
-        table.cells[i + 1][0].height = 0;
-        table.cells[i + 1][1].width = 0;
-        table.cells[i + 1][1].height = 0;
-
-    }
-    table.resize();
-
-    graphtable = table;
-}
+*/
 function leftPadding(str: string, length: number, _leftPadding: string) : string {
     while (str.length - length < 0) {
         str = _leftPadding + str;
@@ -60,12 +28,15 @@ function leftPadding(str: string, length: number, _leftPadding: string) : string
     return str;
 }
 function createLZ77WSRTable() {
-    clear();
-    var text: string = getInputText();
+    if (graphtable != null) {
+        clear(svgBox, [graphtable]);
+    }
+    var text: string = getInputText(`inputtext_itb`);
     var result = StringModule.LZ77WithSelfReference(text);
 
     svgBox.innerHTML = "";
-    var table = new SVGTable(svgBox, text.length, result.length + 2);
+    var table = new SVGTable(text.length, result.length + 2);
+    svgBox.appendChild(table.group);
 
     table.cellArray.forEach(function (x, i, arr) { x.width = 0; x.height = 0 });
     table.borders.forEach(function (x, i, arr) { x.style.visibility = "hidden"; });
@@ -109,10 +80,12 @@ function createLZ77WSRTable() {
 
 }
 function createSuffixTrie() {
-    clear();
+    if (graphtable != null) {
+        clear(svgBox, [graphtable]);
+    }
 
     svgBox = document.getElementById('svgbox');
-    var text = getInputText();
+    var text = getInputText(`inputtext_itb`);
     var graph = new GraphTableSVG.OrderedTree();
     svgBox.appendChild(graph.svgGroup);
 
@@ -124,20 +97,22 @@ function createSuffixTrie() {
     root.y = 50;
     */
     graph.update();
-    GraphTableSVG.GraphArrangement.standardTreeArrangement(graph, 90);
+    GraphTableSVG.GraphArrangement.standardTreeArrangement(graph, 90, 90);
     graph.tree.setRectangleLocation(0, 0);
 
 
     graphtable = graph;
 
     var rect = graph.getRegion();
-    setSVGBoxSize(rect.width, rect.height);
+    setSVGBoxSize(svgBox, rect.width, rect.height);
 }
 function createSuffixTree() {
-    clear();
+    if (graphtable != null) {
+        clear(svgBox, [graphtable]);
+    }
 
     svgBox = document.getElementById('svgbox');
-    var text = getInputText();
+    var text = getInputText(`inputtext_itb`);
     var graph = new GraphTableSVG.OrderedTree();
     svgBox.appendChild(graph.svgGroup);
 
@@ -152,34 +127,14 @@ function createSuffixTree() {
 
     //graph.arrangementFunction = GraphTableSVG.GraphArrangement.createStandardTreeArrangementFunction(90);
 
-    GraphTableSVG.GraphArrangement.standardTreeArrangement(graph, 90);
+    GraphTableSVG.GraphArrangement.standardTreeArrangement(graph, 90, 90);
     graph.tree.setRectangleLocation(0, 0);
     
     graphtable = graph;
 
 }
-function setSVGBoxSize(w: number, h: number) {
-    svgBox = document.getElementById('svgbox');
-    var width = `${w}px`;
-    var height = `${h}px`;
 
-    if (svgBox.style.width != width || svgBox.style.height != height) {
-        svgBox.style.width = width;
-        svgBox.style.height = height;
-        svgBox.setAttribute(`viewBox`, `0 0 ${w} ${h}`);
-    }
 
-}
-function clear() {
-    svgBox = document.getElementById('svgbox');
-    if (graphtable != null) {
-        if (graphtable instanceof Graph) {
-            graphtable.removeGraph(svgBox);
-        } else if (graphtable instanceof SVGTable) {
-            graphtable.removeTable(svgBox);
-        }
-    }
-}
 
 function createTestGraph() {
     svgBox = document.getElementById('svgbox');
@@ -206,24 +161,6 @@ function createTestGraph() {
     //graph.nodes.push(node2);
     graph.update();
 }
-function createSLP() {
-    clear();
-
-    svgBox = document.getElementById('svgbox');
-    var text = getInputText();
-    //var graph = new GraphTableSVG.OrderedForest();
-    //svgBox.appendChild(graph.svgGroup);
-
-
-    //var table = new GraphTableSVG.SVGTable(svgBox, 2, 10);
-
-
-    var clicker = new SLP.Clicker(text, svgBox);
-
-    graphtable = clicker.graph;
-    //var rect = graph.getRegion();
-    //setSVGBoxSize(rect.right, rect.bottom);
-}
 window.onload = () => {
 
     svgBox = document.getElementById('svgbox');
@@ -236,42 +173,7 @@ window.onload = () => {
         subtree : true, attributes: true
     };
     _observer.observe(svgBox, option);
-
-    //svgBox.onclick = (v) => { console.log("click") };
     
-    /*
-    var box = document.getElementById('svgbox');
-    var graph = new GraphTableSVG.OrderedTree(box);
-
-    var node1 = GraphTableSVG.CircleVertex.create(graph, 100,100);
-    var node2 = GraphTableSVG.CircleVertex.create(graph, 150, 200);
-    var node3 = GraphTableSVG.CircleVertex.create(graph, 50, 200);
-
-    
-    var edge1 = GraphTableSVG.LineEdge.create(graph, node1, node2, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
-    var edge2 = GraphTableSVG.LineEdge.create(graph, node1, node3, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
-
-    */
-
-    /*
-    var observar = new MutationObserver(function (x) { console.log(x) });
-    var option: MutationObserverInit = { attributes: true };
-    observar.observe(node1.svgGroup, option);
-    */
-
-    /*
-    var func = function (x) { console.log(x) };
-    edge1.svg.addEventListener("DOMAttrModified", func);
-    */
-
-    //[edge2.beginConnectType, edge2.endConnectType] = [GraphTableSVG.ConnecterPositionType.Bottom, GraphTableSVG.ConnecterPositionType.Top];
-
-    /*
-    [node1.x, node1.y] = [100, 100];
-    [node2.x, node2.y] = [150, 150];
-    [node3.x, node3.y] = [50, 200];
-    */
-    //graph.update();
     
     //createSuffixTree();
 
@@ -280,9 +182,11 @@ var _observer: MutationObserver;
 var observeFunction: MutationCallback = (x: MutationRecord[]) => {
     if (graphtable instanceof Graph) {
         var rect = graphtable.getRegion();
-        setSVGBoxSize(rect.right, rect.bottom);
+        setSVGBoxSize(svgBox, rect.right, rect.bottom);
     }
 }
+
+
 function createCode() {
     var cnt = <HTMLInputElement>document.getElementById("codeBox");
 
@@ -301,4 +205,3 @@ function copyAndClose() {
     alert('クリップボードにコピーしました。');
     closeModal("macro-modal");
 }
-

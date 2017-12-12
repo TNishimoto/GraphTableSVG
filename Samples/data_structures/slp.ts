@@ -83,12 +83,34 @@ module SLP {
         graph: GraphTableSVG.OrderedForest;
         table: GraphTableSVG.SVGTable;
         slp: SLPManager;
+        r: number;
+        private _nodeXInterval: number = 50;
+        private _nodeYInterval: number = 50;
+
+        get nodeXInterval(): number {
+            return this._nodeXInterval;
+        }
+        set nodeXInterval(value: number) {
+            this._nodeXInterval = value;
+            this.locate();
+        }
+        get nodeYInterval(): number {
+            return this._nodeYInterval;
+        }
+        set nodeYInterval(value: number) {
+            this._nodeYInterval = value;
+            this.locate();
+        }
+
+
         private _idVariableDic: { [key: number]: number; } = [];
 
-        constructor(text: string, svg: HTMLElement) {
+        constructor(text: string, svg: HTMLElement, r: number = 30) {
+            this.r = r;
             this.graph = new GraphTableSVG.OrderedForest();
             svg.appendChild(this.graph.svgGroup);
-            this.table = new GraphTableSVG.SVGTable(svg, 1, 1);
+            this.table = new GraphTableSVG.SVGTable(1, 1);
+            svg.appendChild(this.table.group);
 
             this.text = text;
             this.slp = new SLPManager();
@@ -99,7 +121,7 @@ module SLP {
         private create() {
             for (var i = 0; i < this.text.length; i++) {
                 var c = this.text[i];
-                var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, 30, "slpnode");
+                var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, "slpnode_noroot");
                 charNode.svgText.textContent = c;
 
                 var b = this.slp.getChar(c) == null;
@@ -112,7 +134,7 @@ module SLP {
                     this.table.cells[this.slp.slpNodes.length - 1][0].svgText.textContent = `X${variable}->${c}`;
                 }
 
-                var variableNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, 30, "slpnode");
+                var variableNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, "slpnode");
                 variableNode.svgText.textContent = `X${variable}`;
                 this._idVariableDic[variableNode.id] = variable;
 
@@ -132,7 +154,7 @@ module SLP {
         }
         private locate() {
 
-            GraphTableSVG.GraphArrangement.leaveBasedArrangement(this.graph, 50);
+            GraphTableSVG.GraphArrangement.leaveBasedArrangement(this.graph, this.nodeXInterval, this.nodeYInterval);
             GraphTableSVG.GraphArrangement.reverse(this.graph, false, true);
             this.graph.svgGroup.setY(180);
         }
@@ -184,7 +206,7 @@ module SLP {
 
                 //var x = (node1.x + node2.x) / 2;
                 //var y = Math.min(node1.y, node2.y) - 50;
-                var newNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, 30, "slpnode");
+                var newNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, "slpnode");
 
                 newNode.svgGroup.onclick = this.Click;
                 newNode.svgText.textContent = `X${variable3}`;

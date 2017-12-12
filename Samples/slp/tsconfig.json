@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+    "target": "ES5",
+    "sourceMap": true,
+    "outFile": "./slp_index.js"     
+    },
+    "files": [
+        "../graph_table_svg.d.ts",
+        "../data_structures/slp.ts",
+        "../gui/svgbox.ts",
+        "slp_index.ts"
+    ]
+}

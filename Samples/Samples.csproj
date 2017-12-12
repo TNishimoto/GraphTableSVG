@@ -45,6 +45,7 @@
     <TypeScriptCompile Include="gui\footer_button.ts" />
     <TypeScriptCompile Include="gui\modal.ts" />
     <TypeScriptCompile Include="data_structures\string_functions.ts" />
+    <TypeScriptCompile Include="gui\svgbox.ts" />
     <TypeScriptCompile Include="typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="typings\jquery\jquery.d.ts" />
   </ItemGroup>
@@ -88,7 +89,8 @@
     <TypeScriptModuleKind />
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptOutFile>sample.js</TypeScriptOutFile>
+    <TypeScriptOutFile>
+    </TypeScriptOutFile>
     <TypeScriptOutDir />
     <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>

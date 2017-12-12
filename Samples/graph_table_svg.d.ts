@@ -73,11 +73,11 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     module GraphArrangement {
-        function leaveBasedArrangement(forest: OrderedForest, edgeLength: number): void;
+        function leaveBasedArrangement(forest: OrderedForest, xInterval: number, yInterval: number): void;
         function reverse(graph: Graph, isX: boolean, isY: boolean): void;
         function average(items: number[]): number;
         function middle(items: number[]): number;
-        function standardTreeArrangement(graph: OrderedTree, edgeLength: number): void;
+        function standardTreeArrangement(graph: OrderedTree, xInterval: number, yInterval: number): void;
     }
 }
 declare module GraphTableSVG {
@@ -284,6 +284,8 @@ declare module GraphTableSVG {
     class SVGTable {
         private _cells;
         private textClassName;
+        private borderClassName;
+        private backgroundClassName;
         readonly cells: Cell[][];
         group: SVGGElement;
         readonly width: number;
@@ -303,7 +305,7 @@ declare module GraphTableSVG {
         private renumbering();
         resize(): void;
         getCellFromID(id: number): Cell;
-        constructor(_svg: HTMLElement, width: number, height: number);
+        constructor(width: number, height: number, _textClassName?: string | null, _borderClassName?: string | null, _backgroundClassName?: string | null);
         createVBAMainCode(slideName: string): [string, string];
         private splitCode(tableName, codes);
         private splitCode1(codes);

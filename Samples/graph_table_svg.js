@@ -305,13 +305,13 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     var GraphArrangement;
     (function (GraphArrangement) {
-        function leaveBasedArrangement(forest, edgeLength) {
+        function leaveBasedArrangement(forest, xInterval, yInterval) {
             var leafCounter = 0;
             forest.getOrderedNodes(GraphTableSVG.NodeOrder.Postorder).forEach(function (v) {
                 var x = 0;
                 var y = 0;
                 if (v.isLeaf) {
-                    x = leafCounter * edgeLength;
+                    x = leafCounter * xInterval;
                     leafCounter++;
                 }
                 else {
@@ -321,7 +321,7 @@ var GraphTableSVG;
                             y = w.endNode.y;
                     });
                     x = x / v.children.length;
-                    y += edgeLength;
+                    y += yInterval;
                 }
                 v.x = x;
                 v.y = y;
@@ -385,29 +385,29 @@ var GraphTableSVG;
             }
         }
         GraphArrangement.middle = middle;
-        function standardTreeArrangement(graph, edgeLength) {
+        function standardTreeArrangement(graph, xInterval, yInterval) {
             if (graph.rootVertex != null) {
                 var rootTree = graph.tree;
                 var _a = [rootTree.root.x, rootTree.root.y], x = _a[0], y = _a[1];
-                standardTreeArrangementSub(rootTree, edgeLength);
+                standardTreeArrangementSub(rootTree, xInterval, yInterval);
                 rootTree.setRootLocation(x, y);
                 graph.update();
             }
         }
         GraphArrangement.standardTreeArrangement = standardTreeArrangement;
-        function standardTreeArrangementSub(tree, edgeLength) {
+        function standardTreeArrangementSub(tree, xInterval, yInterval) {
             tree.root.x = 0;
             tree.root.y = 0;
             var leaves = 0;
             var edges = tree.getChildren();
             var leaveSize = tree.getLeaves().length;
-            var leaveSizeWidthHalf = (leaveSize * edgeLength) / 2;
+            var leaveSizeWidthHalf = (leaveSize * xInterval) / 2;
             var __x = -leaveSizeWidthHalf;
             for (var i = 0; i < edges.length; i++) {
-                standardTreeArrangementSub(edges[i], edgeLength);
-                var w = (edges[i].getLeaves().length * edgeLength) / 2;
-                edges[i].setRootLocation(__x + w, edgeLength);
-                __x += edges[i].getLeaves().length * edgeLength;
+                standardTreeArrangementSub(edges[i], xInterval, yInterval);
+                var w = (edges[i].getLeaves().length * xInterval) / 2;
+                edges[i].setRootLocation(__x + w, yInterval);
+                __x += edges[i].getLeaves().length * xInterval;
             }
         }
     })(GraphArrangement = GraphTableSVG.GraphArrangement || (GraphTableSVG.GraphArrangement = {}));
@@ -1728,63 +1728,33 @@ var GraphTableSVG;
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var SVGTable = (function () {
-        /*
-        private setLine(cell: Cell) {
-            if (cell.leftCell != null) {
-                cell.leftLine = cell.leftCell.rightLine;
-            } else {
-                cell.leftLine = GraphTableSVG.createLine(cell.x, cell.y, cell.x, cell.y + cell.height);
-                this.group.appendChild(cell.leftLine);
-            }
-
-            if (cell.upCell != null) {
-                cell.upLine = cell.upCell.bottomLine;
-            } else {
-                cell.upLine = GraphTableSVG.createLine(cell.x, cell.y, cell.x + cell.width, cell.y);
-                this.group.appendChild(cell.upLine);
-
-            }
-
-            cell.rightLine = GraphTableSVG.createLine(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height);
-            this.group.appendChild(cell.rightLine);
-            cell.bottomLine = GraphTableSVG.createLine(cell.x, cell.y + cell.height, cell.x + cell.width, cell.y + cell.height);
-            this.group.appendChild(cell.bottomLine);
-        }
-        */
-        function SVGTable(_svg, width, height) {
-            //this._cells = new Array(height);
+        function SVGTable(width, height, _textClassName, _borderClassName, _backgroundClassName) {
+            if (_textClassName === void 0) { _textClassName = null; }
+            if (_borderClassName === void 0) { _borderClassName = null; }
+            if (_backgroundClassName === void 0) { _backgroundClassName = null; }
             this._cells = [];
             this.textClassName = "table_text";
+            this.borderClassName = null;
+            this.backgroundClassName = null;
             this.observerFunc = function (x) {
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
                     //console.log(p.attributeName);
                 }
             };
+            this.textClassName = _textClassName;
+            this.borderClassName = _borderClassName;
+            this.backgroundClassName = _backgroundClassName;
+            //this._cells = new Array(height);
             var svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this.group = svgGroup;
             //svgGroup.setAttributeNS(null, 'transform', "translate(160,0)");
-            _svg.appendChild(this.group);
+            //_svg.appendChild(this.group);
             //this.verticalLines = new Array(width + 1);
             //this.horizontalLines = new Array(height + 1);
             for (var y = 0; y < height; y++) {
                 this.insertRowFunction(y, width);
             }
-            /*
-            for (var y = 0; y < height; y++) {
-                this.cells[y] = new Array(width);
-                for (var x = 0; x < width; x++) {
-                    this.cells[y][x] = new Cell(this, x, y, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
-                }
-            }
-            */
-            /*
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    this.setLine(this.cells[y][x]);
-                }
-            }
-            */
             this._observer = new MutationObserver(this.observerFunc);
             var option = { characterData: true, attributes: true, subtree: true };
             this._observer.observe(this.group, option);

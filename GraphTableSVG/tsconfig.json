@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outFile": "out/graph_table_svg.js",
+        "sourceMap": true,
+		"target" : "ES5"
+    },
+    "include": [
+        "graph", "table"
+    ],
+    "exclude": [
+        "out"
+    ]
+}

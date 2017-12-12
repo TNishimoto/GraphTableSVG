@@ -5,6 +5,8 @@ module GraphTableSVG {
     export class SVGTable {
         private _cells: Cell[][] = [];
         private textClassName: string | null = "table_text";
+        private borderClassName: string | null = null;
+        private backgroundClassName: string | null = null;
         get cells(): Cell[][] {
             return this._cells;
         }
@@ -178,31 +180,13 @@ module GraphTableSVG {
             var x = id % this.width;
             return this.cells[y][x];
         }
-        /*
-        private setLine(cell: Cell) {
-            if (cell.leftCell != null) {
-                cell.leftLine = cell.leftCell.rightLine;
-            } else {
-                cell.leftLine = GraphTableSVG.createLine(cell.x, cell.y, cell.x, cell.y + cell.height);
-                this.group.appendChild(cell.leftLine);
-            }
+        
 
-            if (cell.upCell != null) {
-                cell.upLine = cell.upCell.bottomLine;
-            } else {
-                cell.upLine = GraphTableSVG.createLine(cell.x, cell.y, cell.x + cell.width, cell.y);
-                this.group.appendChild(cell.upLine);
+        constructor(width: number, height: number, _textClassName: string | null = null, _borderClassName: string | null = null, _backgroundClassName: string | null = null) {
+            this.textClassName = _textClassName;
+            this.borderClassName = _borderClassName;
+            this.backgroundClassName = _backgroundClassName;
 
-            }
-
-            cell.rightLine = GraphTableSVG.createLine(cell.x + cell.width, cell.y, cell.x + cell.width, cell.y + cell.height);
-            this.group.appendChild(cell.rightLine);
-            cell.bottomLine = GraphTableSVG.createLine(cell.x, cell.y + cell.height, cell.x + cell.width, cell.y + cell.height);
-            this.group.appendChild(cell.bottomLine);
-        }
-        */
-
-        constructor(_svg: HTMLElement, width: number, height: number) {
             //this._cells = new Array(height);
 
 
@@ -210,7 +194,7 @@ module GraphTableSVG {
             this.group = svgGroup;
             //svgGroup.setAttributeNS(null, 'transform', "translate(160,0)");
 
-            _svg.appendChild(this.group);
+            //_svg.appendChild(this.group);
 
             //this.verticalLines = new Array(width + 1);
             //this.horizontalLines = new Array(height + 1);
@@ -218,23 +202,7 @@ module GraphTableSVG {
                 this.insertRowFunction(y, width);
             }
 
-
-            /*
-            for (var y = 0; y < height; y++) {
-                this.cells[y] = new Array(width);
-                for (var x = 0; x < width; x++) {
-                    this.cells[y][x] = new Cell(this, x, y, GraphTableSVG.createRectangle(), GraphTableSVG.createText());
-                }
-            }
-            */
-
-            /*
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    this.setLine(this.cells[y][x]);
-                }
-            }
-            */
+            
 
             this._observer = new MutationObserver(this.observerFunc);
             var option: MutationObserverInit = { characterData : true, attributes: true, subtree: true };

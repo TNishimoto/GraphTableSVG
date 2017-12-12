@@ -29,16 +29,16 @@
     <TypeScriptCompile Include="graph\edge.ts" />
     <TypeScriptCompile Include="graph\graph.ts" />
     <TypeScriptCompile Include="graph\relocation.ts" />
-    <TypeScriptCompile Include="graph\text.ts" />
+    <TypeScriptCompile Include="graph\edge_text.ts" />
     <TypeScriptCompile Include="graph\tree.ts" />
     <TypeScriptCompile Include="graph\vertex.ts" />
     <TypeScriptCompile Include="graph\virtual_tree.ts" />
     <TypeScriptCompile Include="table\cell.ts" />
-    <TypeScriptCompile Include="table\interface.ts" />
+    <TypeScriptCompile Include="interface.ts" />
     <TypeScriptCompile Include="table\row.ts" />
     <TypeScriptCompile Include="table\vba.ts" />
     <TypeScriptCompile Include="table\table.ts" />
-    <TypeScriptCompile Include="table\table_functions.ts" />
+    <TypeScriptCompile Include="table_functions.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="web.Debug.config">
@@ -89,8 +89,7 @@
     <TypeScriptOutDir />
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
-	<TypeScriptStrictNullChecks>True</TypeScriptStrictNullChecks>
-
+    <TypeScriptStrictNullChecks>True</TypeScriptStrictNullChecks>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
   </PropertyGroup>

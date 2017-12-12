@@ -15,6 +15,7 @@ span.title {
     color: #000000;
     position: fixed;
     z-index:16;
+    
 }
 /* モーダル 背景エリア */
 #modal-bg {
@@ -119,34 +120,3 @@ div#Bar {
     border: 2px solid black;
 }
 
-.slpnode {
-    stroke : green;
-    fill : white;
-}
-
-    .slpnode:hover {
-        fill: #31c8aa;
-        box-shadow: 0 3px 0 #23a188;
-    }
-
-    .slpnode:active {
-        top: 3px;
-        box-shadow: none;
-    }
-
-.slpnode_choice {
-    stroke: green;
-    stroke-width : 5px;
-    fill: blue;
-}
-
-.slpnode_noroot {
-    stroke: black;
-    fill: orange;
-}
-
-.table_text{
-    fill : blue;
-    font-size : 14px;
-    font-weight : bold;
-}

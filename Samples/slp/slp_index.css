@@ -1,0 +1,32 @@
+﻿
+.slpnode {
+    stroke: green;
+    fill: white;
+}
+
+    .slpnode:hover {
+        fill: #31c8aa;
+        box-shadow: 0 3px 0 #23a188;
+    }
+
+    .slpnode:active {
+        top: 3px;
+        box-shadow: none;
+    }
+
+.slpnode_choice {
+    stroke: green;
+    stroke-width: 5px;
+    fill: blue;
+}
+
+.slpnode_noroot {
+    stroke: black;
+    fill: orange;
+}
+
+.table_text {
+    fill: blue;
+    font-size: 14px;
+    font-weight: bold;
+}

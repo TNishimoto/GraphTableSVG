@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+    "target": "ES5",
+    "sourceMap": true,
+    "outFile": "./sa_index.js"    
+    },
+    "files": [
+        "../graph_table_svg.d.ts",
+        "../data_structures/string_functions.ts",
+        "sa_index.ts"
+    ]
+}
