@@ -197,6 +197,9 @@ declare module GraphTableSVG {
         masterID: number;
         parent: SVGTable;
         padding: Padding;
+        svgBackground: SVGRectElement;
+        svgText: SVGTextElement;
+        svgGroup: SVGGElement;
         private _verticalAnchor;
         verticalAnchor: VerticalAnchor;
         private _upLine;
@@ -207,8 +210,6 @@ declare module GraphTableSVG {
         rightLine: SVGLineElement;
         private _bottomLine;
         bottomLine: SVGLineElement;
-        svgBackground: SVGRectElement;
-        svgText: SVGTextElement;
         private _observer;
         private observerFunc;
         readonly logicalWidth: number;
@@ -230,6 +231,8 @@ declare module GraphTableSVG {
         readonly rightUpGroupCell: Cell | null;
         readonly bottomGroupCells: Cell[];
         readonly rightGroupCells: Cell[];
+        x: number;
+        y: number;
         width: number;
         height: number;
         constructor(parent: SVGTable, _px: number, _py: number, _rect: SVGRectElement, _text: SVGTextElement);

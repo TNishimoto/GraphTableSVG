@@ -11,14 +11,14 @@
             for (var x = 0; x < this.table.width; x++) {
                 var cell = this.table.cells[this.y][x];
                 if (height < cell.textBoxHeight) height = cell.textBoxHeight;
-                if (height < cell.svgBackground.height.baseVal.value) height = cell.svgBackground.height.baseVal.value;
+                if (height < cell.height) height = cell.height;
             }
             return height;
         }
         private setHeight(height: number) {
             for (var x = 0; x < this.table.width; x++) {
                 var cell = this.table.cells[this.y][x];
-                cell.svgBackground.height.baseVal.value = height;
+                cell.height = height;
             }
         }
         resize() {
@@ -27,7 +27,7 @@
         setY(posY: number) {
             for (var x = 0; x < this.table.width; x++) {
                 var cell = this.table.cells[this.y][x];
-                cell.svgBackground.y.baseVal.value = posY;
+                cell.y = posY;
             }
         }
         get height(): number {
@@ -36,7 +36,7 @@
         set height(value: number) {
             for (var x = 0; x < this.table.width; x++) {
                 var cell = this.table.cells[this.y][x];
-                cell.svgBackground.height.baseVal.value = value;
+                cell.height = value;
             }
 
         }
@@ -55,14 +55,14 @@
             for (var y = 0; y < this.table.height; y++) {
                 var cell = this.table.cells[y][this.x];
                 if (width < cell.textBoxWidth) width = cell.textBoxWidth;
-                if (width < cell.svgBackground.width.baseVal.value) width = cell.svgBackground.width.baseVal.value;
+                if (width < cell.width) width = cell.width;
             }
             return width;
         }
         private setWidth(width: number) {
             for (var y = 0; y < this.table.height; y++) {
                 var cell = this.table.cells[y][this.x];
-                cell.svgBackground.width.baseVal.value = width;
+                cell.width = width;
             }
 
         }
@@ -72,7 +72,7 @@
         setX(posX: number) {
             for (var y = 0; y < this.table.height; y++) {
                 var cell = this.table.cells[y][this.x];
-                cell.svgBackground.x.baseVal.value = posX;
+                cell.x = posX;
             }
 
         }

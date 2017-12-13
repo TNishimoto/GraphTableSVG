@@ -1109,7 +1109,6 @@ var GraphTableSVG;
     var Cell = (function () {
         function Cell(parent, _px, _py, _rect, _text) {
             var _this = this;
-            this._verticalAnchor = VerticalAnchor.Middle;
             this.observerFunc = function (x) {
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
@@ -1126,10 +1125,13 @@ var GraphTableSVG;
             this.cellY = _py;
             this.parent = parent;
             this.masterID = this.ID;
+            this.svgGroup = GraphTableSVG.createGroup();
             this.svgBackground = _rect;
-            this.parent.group.appendChild(this.svgBackground);
             this.svgText = _text;
-            this.parent.group.appendChild(this.svgText);
+            this.verticalAnchor = VerticalAnchor.Middle;
+            this.svgGroup.appendChild(this.svgBackground);
+            this.svgGroup.appendChild(this.svgText);
+            this.parent.group.appendChild(this.svgGroup);
             this.upLine = GraphTableSVG.createLine(0, 0, 0, 0);
             this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
             this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0);
@@ -1138,7 +1140,6 @@ var GraphTableSVG;
             this.parent.group.appendChild(this.leftLine);
             this.parent.group.appendChild(this.rightLine);
             this.parent.group.appendChild(this.bottomLine);
-            console.log(this.svgText.style.fontSize);
             this._observer = new MutationObserver(this.observerFunc);
             var option = { childList: true };
             this._observer.observe(this.svgText, option);
@@ -1149,6 +1150,15 @@ var GraphTableSVG;
             },
             set: function (value) {
                 this._verticalAnchor = value;
+                if (value == VerticalAnchor.Top) {
+                    this.svgText.style.dominantBaseline = "text-before-edge";
+                }
+                else if (value == VerticalAnchor.Middle) {
+                    this.svgText.style.dominantBaseline = "middle";
+                }
+                else if (value == VerticalAnchor.Bottom) {
+                    this.svgText.style.dominantBaseline = "text-after-edge";
+                }
             },
             enumerable: true,
             configurable: true
@@ -1244,33 +1254,33 @@ var GraphTableSVG;
             configurable: true
         });
         Cell.prototype.resize = function () {
-            if (this.svgBackground.width.baseVal.value < this.textBoxWidth) {
-                this.svgBackground.width.baseVal.value = this.textBoxWidth;
+            if (this.width < this.textBoxWidth) {
+                this.width = this.textBoxWidth;
             }
-            if (this.svgBackground.height.baseVal.value < this.textBoxHeight) {
-                this.svgBackground.height.baseVal.value = this.textBoxHeight;
+            if (this.height < this.textBoxHeight) {
+                this.height = this.textBoxHeight;
             }
         };
         Cell.prototype.relocation = function () {
-            this.upLine.x1.baseVal.value = this.svgBackground.x.baseVal.value;
-            this.upLine.x2.baseVal.value = this.svgBackground.x.baseVal.value + this.svgBackground.width.baseVal.value;
-            this.upLine.y1.baseVal.value = this.svgBackground.y.baseVal.value;
+            this.upLine.x1.baseVal.value = this.x;
+            this.upLine.x2.baseVal.value = this.x + this.width;
+            this.upLine.y1.baseVal.value = this.y;
             this.upLine.y2.baseVal.value = this.upLine.y1.baseVal.value;
-            this.leftLine.x1.baseVal.value = this.svgBackground.x.baseVal.value;
+            this.leftLine.x1.baseVal.value = this.x;
             this.leftLine.x2.baseVal.value = this.leftLine.x1.baseVal.value;
-            this.leftLine.y1.baseVal.value = this.svgBackground.y.baseVal.value;
-            this.leftLine.y2.baseVal.value = this.svgBackground.y.baseVal.value + this.svgBackground.height.baseVal.value;
-            this.rightLine.x1.baseVal.value = this.svgBackground.x.baseVal.value + this.svgBackground.width.baseVal.value;
+            this.leftLine.y1.baseVal.value = this.y;
+            this.leftLine.y2.baseVal.value = this.y + this.height;
+            this.rightLine.x1.baseVal.value = this.x + this.width;
             this.rightLine.x2.baseVal.value = this.rightLine.x1.baseVal.value;
-            this.rightLine.y1.baseVal.value = this.svgBackground.y.baseVal.value;
-            this.rightLine.y2.baseVal.value = this.svgBackground.y.baseVal.value + this.svgBackground.height.baseVal.value;
-            this.bottomLine.x1.baseVal.value = this.svgBackground.x.baseVal.value;
-            this.bottomLine.x2.baseVal.value = this.svgBackground.x.baseVal.value + this.svgBackground.width.baseVal.value;
-            this.bottomLine.y1.baseVal.value = this.svgBackground.y.baseVal.value + this.svgBackground.height.baseVal.value;
+            this.rightLine.y1.baseVal.value = this.y;
+            this.rightLine.y2.baseVal.value = this.y + this.height;
+            this.bottomLine.x1.baseVal.value = this.x;
+            this.bottomLine.x2.baseVal.value = this.x + this.width;
+            this.bottomLine.y1.baseVal.value = this.y + this.height;
             this.bottomLine.y2.baseVal.value = this.bottomLine.y1.baseVal.value;
             //this.textSVG.x.baseVal.getItem(0).value = 0;
-            var text_x = this.svgBackground.x.baseVal.value;
-            var text_y = this.svgBackground.y.baseVal.value;
+            var text_x = 0;
+            var text_y = 0;
             var style = getComputedStyle(this.svgText, "");
             var anchor = style.textAnchor;
             var innerHeight = this.height - this.padding.top - this.padding.bottom;
@@ -1279,11 +1289,12 @@ var GraphTableSVG;
                 text_y = this.padding.top;
             }
             else if (this.verticalAnchor == VerticalAnchor.Middle) {
-                text_y = innerHeight + this.padding.top;
+                text_y = (innerHeight / 2) + this.padding.top;
             }
             else if (this.verticalAnchor == VerticalAnchor.Bottom) {
                 text_y = this.padding.top + innerHeight;
             }
+            //this.svgText.style.alignmentBaseline = "middle";
             if (this.svgText.style.textAnchor == "middle") {
                 text_x += (this.textBoxWidth / 2);
                 //text_y += (this.textBoxHeight / 2);
@@ -1296,6 +1307,8 @@ var GraphTableSVG;
             }
             this.svgText.setAttribute('x', text_x.toString());
             this.svgText.setAttribute('y', text_y.toString());
+            //this.svgText.setAttribute('x', '20');
+            //this.svgText.setAttribute('y', this.svgText.getBoundingClientRect().height.toString());
         };
         Object.defineProperty(Cell.prototype, "isMaster", {
             get: function () {
@@ -1442,7 +1455,7 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Cell.prototype, "width", {
+        Object.defineProperty(Cell.prototype, "x", {
             /*
             get upVirtualCells(): Cell[] {
                 if (this.isMaster && this.cellY != 0) {
@@ -1459,21 +1472,26 @@ var GraphTableSVG;
                 }
             }
             */
-            /*
-            get x(): number {
-                return this.svgBackground.x.baseVal.value;
-            }
-            set x(value: number) {
-                this.svgBackground.x.baseVal.value = value;
-            }
-    
-            get y(): number {
-                return this.svgBackground.y.baseVal.value;
-            }
-            set y(value: number) {
-                this.svgBackground.y.baseVal.value = value;
-            }
-            */
+            get: function () {
+                return this.svgGroup.getX();
+            },
+            set: function (value) {
+                this.svgGroup.setX(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Cell.prototype, "y", {
+            get: function () {
+                return this.svgGroup.getY();
+            },
+            set: function (value) {
+                this.svgGroup.setY(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Cell.prototype, "width", {
             get: function () {
                 return this.svgBackground.width.baseVal.value;
             },
@@ -1566,15 +1584,15 @@ var GraphTableSVG;
                 var cell = this.table.cells[this.y][x];
                 if (height < cell.textBoxHeight)
                     height = cell.textBoxHeight;
-                if (height < cell.svgBackground.height.baseVal.value)
-                    height = cell.svgBackground.height.baseVal.value;
+                if (height < cell.height)
+                    height = cell.height;
             }
             return height;
         };
         Row.prototype.setHeight = function (height) {
             for (var x = 0; x < this.table.width; x++) {
                 var cell = this.table.cells[this.y][x];
-                cell.svgBackground.height.baseVal.value = height;
+                cell.height = height;
             }
         };
         Row.prototype.resize = function () {
@@ -1583,7 +1601,7 @@ var GraphTableSVG;
         Row.prototype.setY = function (posY) {
             for (var x = 0; x < this.table.width; x++) {
                 var cell = this.table.cells[this.y][x];
-                cell.svgBackground.y.baseVal.value = posY;
+                cell.y = posY;
             }
         };
         Object.defineProperty(Row.prototype, "height", {
@@ -1593,7 +1611,7 @@ var GraphTableSVG;
             set: function (value) {
                 for (var x = 0; x < this.table.width; x++) {
                     var cell = this.table.cells[this.y][x];
-                    cell.svgBackground.height.baseVal.value = value;
+                    cell.height = value;
                 }
             },
             enumerable: true,
@@ -1613,15 +1631,15 @@ var GraphTableSVG;
                 var cell = this.table.cells[y][this.x];
                 if (width < cell.textBoxWidth)
                     width = cell.textBoxWidth;
-                if (width < cell.svgBackground.width.baseVal.value)
-                    width = cell.svgBackground.width.baseVal.value;
+                if (width < cell.width)
+                    width = cell.width;
             }
             return width;
         };
         Column.prototype.setWidth = function (width) {
             for (var y = 0; y < this.table.height; y++) {
                 var cell = this.table.cells[y][this.x];
-                cell.svgBackground.width.baseVal.value = width;
+                cell.width = width;
             }
         };
         Column.prototype.resize = function () {
@@ -1630,7 +1648,7 @@ var GraphTableSVG;
         Column.prototype.setX = function (posX) {
             for (var y = 0; y < this.table.height; y++) {
                 var cell = this.table.cells[y][this.x];
-                cell.svgBackground.x.baseVal.value = posX;
+                cell.x = posX;
             }
         };
         Object.defineProperty(Column.prototype, "width", {

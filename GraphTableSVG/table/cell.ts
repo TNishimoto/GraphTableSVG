@@ -35,13 +35,26 @@ module GraphTableSVG {
         masterID: number;
         parent: SVGTable;
         padding: Padding;
+        svgBackground: SVGRectElement;
+        svgText: SVGTextElement;
+        svgGroup: SVGGElement;
 
-        private _verticalAnchor: VerticalAnchor = VerticalAnchor.Middle;
+        private _verticalAnchor: VerticalAnchor;
         get verticalAnchor(): VerticalAnchor {
             return this._verticalAnchor;
         }
         set verticalAnchor(value: VerticalAnchor) {
             this._verticalAnchor = value;
+            if (value == VerticalAnchor.Top) {
+                this.svgText.style.dominantBaseline = "text-before-edge";
+
+            } else if (value == VerticalAnchor.Middle) {
+                this.svgText.style.dominantBaseline = "middle";
+
+            } else if (value == VerticalAnchor.Bottom) {
+
+                this.svgText.style.dominantBaseline = "text-after-edge";
+            }
         }
 
 
@@ -78,8 +91,6 @@ module GraphTableSVG {
         } 
 
 
-        svgBackground: SVGRectElement;
-        svgText: SVGTextElement;
         //svgGroup: SVGGElement;
         //verticalAnchor: VerticalAnchor = VerticalAnchor.msoAnchorTop;
         private _observer: MutationObserver;
@@ -130,38 +141,38 @@ module GraphTableSVG {
         }
 
         resize() {
-            if (this.svgBackground.width.baseVal.value < this.textBoxWidth) {
-                this.svgBackground.width.baseVal.value = this.textBoxWidth;
+            if (this.width < this.textBoxWidth) {
+                this.width = this.textBoxWidth;
             }
-            if (this.svgBackground.height.baseVal.value < this.textBoxHeight) {
-                this.svgBackground.height.baseVal.value = this.textBoxHeight;
+            if (this.height < this.textBoxHeight) {
+                this.height = this.textBoxHeight;
             }
         }
         relocation() {
 
-            this.upLine.x1.baseVal.value = this.svgBackground.x.baseVal.value;
-            this.upLine.x2.baseVal.value = this.svgBackground.x.baseVal.value + this.svgBackground.width.baseVal.value;
-            this.upLine.y1.baseVal.value = this.svgBackground.y.baseVal.value;
+            this.upLine.x1.baseVal.value = this.x;
+            this.upLine.x2.baseVal.value = this.x + this.width;
+            this.upLine.y1.baseVal.value = this.y;
             this.upLine.y2.baseVal.value = this.upLine.y1.baseVal.value;
 
-            this.leftLine.x1.baseVal.value = this.svgBackground.x.baseVal.value;
+            this.leftLine.x1.baseVal.value = this.x;
             this.leftLine.x2.baseVal.value = this.leftLine.x1.baseVal.value;
-            this.leftLine.y1.baseVal.value = this.svgBackground.y.baseVal.value;
-            this.leftLine.y2.baseVal.value = this.svgBackground.y.baseVal.value + this.svgBackground.height.baseVal.value;
+            this.leftLine.y1.baseVal.value = this.y;
+            this.leftLine.y2.baseVal.value = this.y + this.height;
 
-            this.rightLine.x1.baseVal.value = this.svgBackground.x.baseVal.value + this.svgBackground.width.baseVal.value;
+            this.rightLine.x1.baseVal.value = this.x + this.width;
             this.rightLine.x2.baseVal.value = this.rightLine.x1.baseVal.value;
-            this.rightLine.y1.baseVal.value = this.svgBackground.y.baseVal.value;
-            this.rightLine.y2.baseVal.value = this.svgBackground.y.baseVal.value + this.svgBackground.height.baseVal.value;
+            this.rightLine.y1.baseVal.value = this.y;
+            this.rightLine.y2.baseVal.value = this.y + this.height;
 
-            this.bottomLine.x1.baseVal.value = this.svgBackground.x.baseVal.value;
-            this.bottomLine.x2.baseVal.value = this.svgBackground.x.baseVal.value + this.svgBackground.width.baseVal.value;
-            this.bottomLine.y1.baseVal.value = this.svgBackground.y.baseVal.value + this.svgBackground.height.baseVal.value;
+            this.bottomLine.x1.baseVal.value = this.x;
+            this.bottomLine.x2.baseVal.value = this.x + this.width;
+            this.bottomLine.y1.baseVal.value = this.y + this.height;
             this.bottomLine.y2.baseVal.value = this.bottomLine.y1.baseVal.value;
 
             //this.textSVG.x.baseVal.getItem(0).value = 0;
-            var text_x = this.svgBackground.x.baseVal.value;
-            var text_y = this.svgBackground.y.baseVal.value;
+            var text_x = 0;
+            var text_y = 0;
             var style = getComputedStyle(this.svgText, "");
             
             var anchor = style.textAnchor;
@@ -171,10 +182,12 @@ module GraphTableSVG {
             if (this.verticalAnchor == VerticalAnchor.Top) {
                 text_y = this.padding.top;
             } else if (this.verticalAnchor == VerticalAnchor.Middle) {
-                text_y = innerHeight + this.padding.top;
+                text_y = (innerHeight / 2) + this.padding.top;
             } else if (this.verticalAnchor == VerticalAnchor.Bottom) {
                 text_y = this.padding.top + innerHeight;
             }
+
+            //this.svgText.style.alignmentBaseline = "middle";
 
             if (this.svgText.style.textAnchor == "middle") {
                 text_x += (this.textBoxWidth / 2);
@@ -185,8 +198,13 @@ module GraphTableSVG {
             } else {
 
             }
+            
+
             this.svgText.setAttribute('x', text_x.toString());
             this.svgText.setAttribute('y', text_y.toString());
+
+            //this.svgText.setAttribute('x', '20');
+            //this.svgText.setAttribute('y', this.svgText.getBoundingClientRect().height.toString());
 
         }
 
@@ -297,21 +315,21 @@ module GraphTableSVG {
             }
         }
         */
-        /*
+        
         get x(): number {
-            return this.svgBackground.x.baseVal.value;
+            return this.svgGroup.getX();
         }
         set x(value: number) {
-            this.svgBackground.x.baseVal.value = value;
+            this.svgGroup.setX(value);
         }
 
         get y(): number {
-            return this.svgBackground.y.baseVal.value;
+            return this.svgGroup.getY();
         }
         set y(value: number) {
-            this.svgBackground.y.baseVal.value = value;
+            this.svgGroup.setY(value);
         }
-        */
+        
 
         get width(): number {
             return this.svgBackground.width.baseVal.value;
@@ -327,17 +345,21 @@ module GraphTableSVG {
             this.svgBackground.height.baseVal.value = value;
         }
         constructor(parent: SVGTable, _px: number, _py: number, _rect: SVGRectElement, _text: SVGTextElement) {
+
+
             this.padding = new Padding();
             this.cellX = _px;
             this.cellY = _py;
             this.parent = parent;
             this.masterID = this.ID;
 
-            this.svgBackground = _rect;
-            this.parent.group.appendChild(this.svgBackground);
-
+            this.svgGroup = createGroup();
+            this.svgBackground = _rect;            
             this.svgText = _text;
-            this.parent.group.appendChild(this.svgText);
+            this.verticalAnchor = VerticalAnchor.Middle;
+            this.svgGroup.appendChild(this.svgBackground);
+            this.svgGroup.appendChild(this.svgText);
+            this.parent.group.appendChild(this.svgGroup);
 
             this.upLine = GraphTableSVG.createLine(0, 0, 0, 0);
             this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
@@ -348,8 +370,7 @@ module GraphTableSVG {
             this.parent.group.appendChild(this.rightLine);
             this.parent.group.appendChild(this.bottomLine);
 
-            console.log(this.svgText.style.fontSize);
-
+            
             
             this._observer = new MutationObserver(this.observerFunc);
             var option: MutationObserverInit = { childList : true };
