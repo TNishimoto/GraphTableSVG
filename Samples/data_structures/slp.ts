@@ -139,7 +139,7 @@ module SLP {
         private create() {
             for (var i = 0; i < this.text.length; i++) {
                 var c = this.text[i];
-                var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, "slpnode");
+                var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, "slpnode_noroot");
                 charNode.svgText.textContent = c;
 
                 var b = this.slp.getChar(c) == null;

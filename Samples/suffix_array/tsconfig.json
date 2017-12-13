@@ -7,6 +7,7 @@
     "files": [
         "../graph_table_svg.d.ts",
         "../data_structures/string_functions.ts",
+        "../gui/svgbox.ts",
         "sa_index.ts"
     ]
 }

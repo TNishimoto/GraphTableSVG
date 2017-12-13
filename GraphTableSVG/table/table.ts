@@ -189,6 +189,22 @@ module GraphTableSVG {
             this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
 
         }
+        public getRegion(): Rectangle {
+            var [minX, minY] = [0, 0];
+            var [maxX, maxY] = [0, 0];
+            this.cellArray.forEach((v) => {
+                if (minX > v.x) minX = v.x;
+                if (minY > v.y) minY = v.y;
+                if (maxX < v.x + v.width) maxX = v.x + v.width;
+                if (maxY < v.y + v.height) maxY = v.y + v.height;
+            });
+            var p = new Rectangle();
+            p.width = maxX - minX;
+            p.height = maxY - minY;
+            p.x = this.group.getX();
+            p.y = this.group.getY();
+            return p;
+        }
 
         getCellFromID(id: number): Cell {
             var y = Math.floor(id / this.height);

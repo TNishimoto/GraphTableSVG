@@ -9,6 +9,9 @@ module GraphTableSVG {
     export enum VerticalAnchor {
         Bottom, Middle, Top
     }
+    export enum HorizontalAnchor {
+        Left, Center, Right
+    }
     /*
     class Rectangle {
         x: number;
@@ -39,6 +42,25 @@ module GraphTableSVG {
         svgText: SVGTextElement;
         svgGroup: SVGGElement;
 
+        private _horizontalAnchor: HorizontalAnchor;
+        get horizontalAnchor(): HorizontalAnchor {
+            return this._horizontalAnchor;
+        }
+        set horizontalAnchor(value: HorizontalAnchor) {
+            this._horizontalAnchor = value;
+            if (value == HorizontalAnchor.Left) {
+                this.svgText.style.textAnchor = "start"
+
+            } else if (value == HorizontalAnchor.Center) {
+                this.svgText.style.textAnchor = "middle"
+
+            } else if (value == HorizontalAnchor.Right) {
+
+                this.svgText.style.textAnchor = "end"
+            }
+            this.relocation();
+        }
+
         private _verticalAnchor: VerticalAnchor;
         get verticalAnchor(): VerticalAnchor {
             return this._verticalAnchor;
@@ -55,6 +77,7 @@ module GraphTableSVG {
 
                 this.svgText.style.dominantBaseline = "text-after-edge";
             }
+            this.relocation();
         }
 
 
@@ -173,9 +196,9 @@ module GraphTableSVG {
             //this.textSVG.x.baseVal.getItem(0).value = 0;
             var text_x = 0;
             var text_y = 0;
-            var style = getComputedStyle(this.svgText, "");
+            //var style = getComputedStyle(this.svgText, "");
             
-            var anchor = style.textAnchor;
+            //var anchor = style.textAnchor;
 
             var innerHeight = this.height - this.padding.top - this.padding.bottom;
             var innerWidth = this.width - this.padding.left - this.padding.right;
@@ -189,14 +212,12 @@ module GraphTableSVG {
 
             //this.svgText.style.alignmentBaseline = "middle";
 
-            if (this.svgText.style.textAnchor == "middle") {
-                text_x += (this.textBoxWidth / 2);
-                //text_y += (this.textBoxHeight / 2);
-            } else if (this.svgText.style.textAnchor == "left") {
-                text_x += this.padding.left;
-                //text_y += this.padding.top;
-            } else {
-
+            if (this.horizontalAnchor == HorizontalAnchor.Center) {
+                text_x = this.padding.left + (innerWidth / 2);
+            } else if (this.horizontalAnchor == HorizontalAnchor.Left) {
+                text_x = this.padding.left;
+            } else if (this.horizontalAnchor == HorizontalAnchor.Right) {
+                text_x = this.padding.left + innerWidth;
             }
             
 
@@ -356,7 +377,6 @@ module GraphTableSVG {
             this.svgGroup = createGroup();
             this.svgBackground = _rect;            
             this.svgText = _text;
-            this.verticalAnchor = VerticalAnchor.Middle;
             this.svgGroup.appendChild(this.svgBackground);
             this.svgGroup.appendChild(this.svgText);
             this.parent.group.appendChild(this.svgGroup);
@@ -376,6 +396,8 @@ module GraphTableSVG {
             var option: MutationObserverInit = { childList : true };
             this._observer.observe(this.svgText, option);
 
+            this.verticalAnchor = VerticalAnchor.Middle;
+            this.horizontalAnchor = HorizontalAnchor.Left;
 
         }
         /*

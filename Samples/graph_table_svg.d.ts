@@ -191,6 +191,11 @@ declare module GraphTableSVG {
         Middle = 1,
         Top = 2,
     }
+    enum HorizontalAnchor {
+        Left = 0,
+        Center = 1,
+        Right = 2,
+    }
     class Cell {
         cellX: number;
         cellY: number;
@@ -200,6 +205,8 @@ declare module GraphTableSVG {
         svgBackground: SVGRectElement;
         svgText: SVGTextElement;
         svgGroup: SVGGElement;
+        private _horizontalAnchor;
+        horizontalAnchor: HorizontalAnchor;
         private _verticalAnchor;
         verticalAnchor: VerticalAnchor;
         private _upLine;
@@ -313,6 +320,7 @@ declare module GraphTableSVG {
         private updateBorder(cell);
         private renumbering();
         resize(): void;
+        getRegion(): Rectangle;
         getCellFromID(id: number): Cell;
         constructor(width: number, height: number, _textClassName?: string | null, _borderClassName?: string | null, _backgroundClassName?: string | null);
         createVBAMainCode(slideName: string): [string, string];
