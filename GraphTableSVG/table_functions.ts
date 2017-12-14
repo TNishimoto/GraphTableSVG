@@ -40,11 +40,15 @@ module GraphTableSVG {
         item.style.fontWeight = null;
     }
 
-    export function createRectangle(): SVGRectElement {
+    export function createRectangle(width: number = 0, height: number = 0, className: string | null = null): SVGRectElement {
         var rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.width.baseVal.value = 30;
-        rect.height.baseVal.value = 30;
-        rect.style.fill = "#ffffff";
+        rect.width.baseVal.value = width;
+        rect.height.baseVal.value = height;
+        if (className == null) {
+            rect.style.fill = "#ffffff";
+        } else {
+            rect.setAttribute("class", className);
+        }
         return rect;
     }
     export function createGroup(): SVGGElement {

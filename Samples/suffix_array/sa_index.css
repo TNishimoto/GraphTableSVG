@@ -1,32 +1,19 @@
 ﻿
-.slpnode {
-    stroke: green;
+.table-text {
+    fill: black;
+    font-size: 24px;
+}
+.background {
     fill: white;
+    --horizontal-anchor: center;
+    --vertical-anchor: middle;
 }
-
-    .slpnode:hover {
-        fill: #31c8aa;
-        box-shadow: 0 3px 0 #23a188;
-    }
-
-    .slpnode:active {
-        top: 3px;
-        box-shadow: none;
-    }
-
-.slpnode_choice {
-    stroke: green;
-    stroke-width: 5px;
-    fill: blue;
+.textarea-background {
+    fill: white;
+    --horizontal-anchor: left;
+    --vertical-anchor: middle;
 }
-
-.slpnode_noroot {
-    stroke: black;
-    fill: orange;
-}
-
-.table_text {
-    fill: blue;
-    font-size: 14px;
-    font-weight: bold;
+.sa-table{
+    --default-text-class : table-text;
+    --default-background-class : background;
 }

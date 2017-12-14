@@ -4,10 +4,24 @@ module GraphTableSVG {
 
     export class SVGTable {
         private _cells: Cell[][] = [];
-        private _textClassName: string | null = "table_text";
-        get textClassName(): string | null {
-            return this._textClassName;
+        //private _textClassName: string | null = "table_text";
+        get defaultTextClass(): string | null {
+            var r = this.group.getActiveStyle().getPropertyValue("--default-text-class").trim();
+            if (r.length == 0) {
+                return null;
+            } else {
+                return r;
+            }
         }
+        get defaultBackgroundClass(): string | null {
+            var r = this.group.getActiveStyle().getPropertyValue("--default-background-class").trim();
+            if (r.length == 0) {
+                return null;
+            } else {
+                return r;
+            }
+        }
+        /*
         set textClassName(value: string | null) {
             this._textClassName = value;            
             if (value != null) {
@@ -19,9 +33,10 @@ module GraphTableSVG {
                 //this.cellArray.forEach((v) => { GraphTableSVG.resetStyle(v.svgText) });                
             }
         }
+        */
 
-        private borderClassName: string | null = null;
-        private backgroundClassName: string | null = null;
+        //private borderClassName: string | null = null;
+        //private backgroundClassName: string | null = null;
         get cells(): Cell[][] {
             return this._cells;
         }
@@ -92,7 +107,7 @@ module GraphTableSVG {
         private insertRowFunction(i: number, width: number = this.width) {
             var cell: Cell[] = [];
             for (var x = 0; x < width; x++) {
-                cell[x] = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText(this._textClassName));
+                cell[x] = this.createCell();
             }
             if (i < this.height) {
                 for (var x = 0; x < width; x++) {
@@ -112,9 +127,12 @@ module GraphTableSVG {
         public appendRow() {
             this.insertRow(this.height);
         }
+        private createCell(): Cell {
+            return new Cell(this, 0, 0, GraphTableSVG.createRectangle(0, 0, this.defaultBackgroundClass), GraphTableSVG.createText(this.defaultTextClass));
+        }
         public insertColumn(i: number) {
             for (var y = 0; y < this.height; y++) {
-                var cell = new Cell(this, 0, 0, GraphTableSVG.createRectangle(), GraphTableSVG.createText(this._textClassName));
+                var cell = this.createCell();
                 this.cells[y].splice(i, 0, cell);
             }
             if (i < this.height) {
@@ -160,6 +178,7 @@ module GraphTableSVG {
 
                 }
             }
+            this.borders.forEach((v, i) => { v.setAttribute("borderID", i.toString()) });
 
             /*
             for (var y = 0; y < this.height; y++) {
@@ -213,18 +232,22 @@ module GraphTableSVG {
         }
         
 
-        constructor(width: number, height: number, _textClassName: string | null = null, _borderClassName: string | null = null, _backgroundClassName: string | null = null) {
-            
+        constructor(width: number, height: number, _tableClassName : string | null = null) {
+
+            /*
             this._textClassName = _textClassName;
             this.borderClassName = _borderClassName;
             this.backgroundClassName = _backgroundClassName;
-            
+            */
 
             //this._cells = new Array(height);
+            
 
 
             var svgGroup: SVGGElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this.group = svgGroup;
+            if (_tableClassName != null) this.group.setAttribute("class", _tableClassName);
+            
             //svgGroup.setAttributeNS(null, 'transform', "translate(160,0)");
 
             //_svg.appendChild(this.group);

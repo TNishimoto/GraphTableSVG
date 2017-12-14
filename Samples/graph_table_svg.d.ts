@@ -197,18 +197,16 @@ declare module GraphTableSVG {
         Right = 2,
     }
     class Cell {
-        cellX: number;
-        cellY: number;
         masterID: number;
         parent: SVGTable;
         padding: Padding;
         svgBackground: SVGRectElement;
         svgText: SVGTextElement;
         svgGroup: SVGGElement;
-        private _horizontalAnchor;
-        horizontalAnchor: HorizontalAnchor;
-        private _verticalAnchor;
-        verticalAnchor: VerticalAnchor;
+        horizontalAnchor: HorizontalAnchor | null;
+        cellX: number;
+        cellY: number;
+        verticalAnchor: VerticalAnchor | null;
         private _upLine;
         upLine: SVGLineElement;
         private _leftLine;
@@ -250,6 +248,15 @@ interface SVGGElement {
     setX(value: number): void;
     getY(): number;
     setY(value: number): void;
+}
+interface CSSStyleDeclaration {
+    getHorizontalAnchor(): GraphTableSVG.HorizontalAnchor | null;
+    setHorizontalAnchor(value: GraphTableSVG.HorizontalAnchor | null): void;
+    getVerticalAnchor(): GraphTableSVG.VerticalAnchor | null;
+    setVerticalAnchor(value: GraphTableSVG.VerticalAnchor | null): void;
+}
+interface SVGElement {
+    getActiveStyle(): CSSStyleDeclaration;
 }
 interface SVGTextElement {
     getX(): number;
@@ -298,10 +305,8 @@ declare module GraphTableSVG {
 declare module GraphTableSVG {
     class SVGTable {
         private _cells;
-        private _textClassName;
-        textClassName: string | null;
-        private borderClassName;
-        private backgroundClassName;
+        readonly defaultTextClass: string | null;
+        readonly defaultBackgroundClass: string | null;
         readonly cells: Cell[][];
         group: SVGGElement;
         readonly width: number;
@@ -315,6 +320,7 @@ declare module GraphTableSVG {
         private insertRowFunction(i, width?);
         insertRow(i: number): void;
         appendRow(): void;
+        private createCell();
         insertColumn(i: number): void;
         appendColumn(): void;
         private updateBorder(cell);
@@ -322,7 +328,7 @@ declare module GraphTableSVG {
         resize(): void;
         getRegion(): Rectangle;
         getCellFromID(id: number): Cell;
-        constructor(width: number, height: number, _textClassName?: string | null, _borderClassName?: string | null, _backgroundClassName?: string | null);
+        constructor(width: number, height: number, _tableClassName?: string | null);
         createVBAMainCode(slideName: string): [string, string];
         private splitCode(tableName, codes);
         private splitCode1(codes);
@@ -333,7 +339,7 @@ declare module GraphTableSVG {
     function createLine(x: number, y: number, x2: number, y2: number): SVGLineElement;
     function createText(className?: string | null): SVGTextElement;
     function resetStyle(item: SVGTextElement): void;
-    function createRectangle(): SVGRectElement;
+    function createRectangle(width?: number, height?: number, className?: string | null): SVGRectElement;
     function createGroup(): SVGGElement;
     function createCircle(r?: number, className?: string | null): SVGCircleElement;
 }
