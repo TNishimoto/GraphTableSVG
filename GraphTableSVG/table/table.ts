@@ -5,22 +5,16 @@ module GraphTableSVG {
     export class SVGTable {
         private _cells: Cell[][] = [];
         //private _textClassName: string | null = "table_text";
-        get defaultTextClass(): string | null {
-            var r = this.group.getActiveStyle().getPropertyValue("--default-text-class").trim();
+        get defaultCellClass(): string | null {
+            var r = this.group.getActiveStyle().getPropertyValue("--default-cell-class").trim();
             if (r.length == 0) {
                 return null;
             } else {
                 return r;
             }
         }
-        get defaultBackgroundClass(): string | null {
-            var r = this.group.getActiveStyle().getPropertyValue("--default-background-class").trim();
-            if (r.length == 0) {
-                return null;
-            } else {
-                return r;
-            }
-        }
+
+        
         /*
         set textClassName(value: string | null) {
             this._textClassName = value;            
@@ -128,7 +122,7 @@ module GraphTableSVG {
             this.insertRow(this.height);
         }
         private createCell(): Cell {
-            return new Cell(this, 0, 0, GraphTableSVG.createRectangle(0, 0, this.defaultBackgroundClass), GraphTableSVG.createText(this.defaultTextClass));
+            return new Cell(this, 0, 0, this.defaultCellClass);
         }
         public insertColumn(i: number) {
             for (var y = 0; y < this.height; y++) {

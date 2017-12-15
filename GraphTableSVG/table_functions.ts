@@ -51,8 +51,11 @@ module GraphTableSVG {
         }
         return rect;
     }
-    export function createGroup(): SVGGElement {
+    export function createGroup(className : string | null = null): SVGGElement {
         var g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        if (className != null) {
+            g.setAttribute("class", className);
+        }
         return g;
     }
     export function createCircle(r: number = 20, className : string | null = null): SVGCircleElement {

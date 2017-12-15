@@ -110,6 +110,22 @@ module GraphTableSVG {
             this._bottomLine = line;
         } 
 
+        get defaultTextClass(): string | null {
+            var r = this.svgGroup.getActiveStyle().getPropertyValue("--default-text-class").trim();
+            if (r.length == 0) {
+                return null;
+            } else {
+                return r;
+            }
+        }
+        get defaultBackgroundClass(): string | null {
+            var r = this.svgGroup.getActiveStyle().getPropertyValue("--default-background-class").trim();
+            if (r.length == 0) {
+                return null;
+            } else {
+                return r;
+            }
+        }
 
         //svgGroup: SVGGElement;
         //verticalAnchor: VerticalAnchor = VerticalAnchor.msoAnchorTop;
@@ -437,11 +453,12 @@ module GraphTableSVG {
         set height(value: number) {
             this.svgBackground.height.baseVal.value = value;
         }
-        constructor(parent: SVGTable, _px: number, _py: number, _rect: SVGRectElement, _text: SVGTextElement) {
+        constructor(parent: SVGTable, _px: number, _py: number, cellClass : string | null = null) {
 
 
 
             this.svgGroup = createGroup();
+            if (cellClass != null) this.svgGroup.setAttribute("class", cellClass);
             this.padding = new Padding();
             this.cellX = _px;
             this.cellY = _py;
@@ -450,8 +467,8 @@ module GraphTableSVG {
 
 
 
-            this.svgBackground = _rect;            
-            this.svgText = _text;
+            this.svgBackground = createRectangle(0, 0, this.defaultBackgroundClass);
+            this.svgText = createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
 
             /*

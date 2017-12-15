@@ -8,14 +8,15 @@
             for (var i = 0; i < x.length; i++) {
                 var p = x[i];
                 if (p.attributeName == "transform") {
-
                     if (this.graph != null) {
                         this.graph.update();
                     }
                 }
             }
         };
-
+        get isLocated(): boolean {
+            return IsDescendantOfBody(this.svgGroup);
+        }
         get graph(): Graph | null {
             return this._graph;
         }
@@ -35,8 +36,8 @@
             return this._id;
         }
 
-        constructor(group: SVGGElement) {
-            this.svgGroup = group;
+        constructor(className: string | null = null) {
+            this.svgGroup = GraphTableSVG.createGroup(className);
 
             
             
@@ -199,6 +200,22 @@
     export class CircleVertex extends Vertex {
         svgCircle: SVGCircleElement;
         svgText: SVGTextElement;
+
+        private _textObserver: MutationObserver;
+        protected textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
+            for (var i = 0; i < x.length; i++) {
+                var p = x[i];
+                if (this.isLocated) {
+                    var vAnchor = this.svgGroup.getActiveStyle().getVerticalAnchor();
+                    if (vAnchor == null) vAnchor = VerticalAnchor.Middle;
+                    var hAnchor = this.svgGroup.getActiveStyle().getHorizontalAnchor();
+                    if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
+                    setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
+                }
+            }
+        };
+        
+
         public setGraph(value: Graph) {
             super.setGraph(value);
 
@@ -208,14 +225,19 @@
 
             }
         }
-        constructor(group: SVGGElement, circle: SVGCircleElement, text: SVGTextElement) {
-            super(group);
-            this.svgCircle = circle;
-            this.svgText = text;
-
+        constructor(className: string | null = null, r: number = 10, text : string = "") {
+            super(className);
+            this.svgCircle = createCircle(r, this.svgGroup.getActiveStyle().tryGetPropertyValue("--default-surface-class"));
+            this.svgText = createText(this.svgGroup.getActiveStyle().tryGetPropertyValue("--default-text-class"));
+            this.svgText.textContent = text;
 
             this.svgGroup.appendChild(this.svgCircle);
             this.svgGroup.appendChild(this.svgText);
+
+
+            this._textObserver = new MutationObserver(this.textObserverFunc);
+            var option: MutationObserverInit = { childList : true };
+            this._textObserver.observe(this.svgText, option);
 
         }
         get width(): number {
@@ -224,14 +246,28 @@
         get height(): number {
             return this.svgCircle.r.baseVal.value * 2;
         }
-        public static create(_parent: Graph, x: number = 0, y: number = 0, r: number = 20, circleClassName: string | null = null): CircleVertex {
-            var circle = createCircle(r, circleClassName);
+        
 
+        get innerRectangle(): Rectangle {
+            var r = this.svgCircle.r.baseVal.value;
+            var rect = new Rectangle();
+            rect.width = r * 2;
+            rect.height = r * 2;
+            rect.x = -r;
+            rect.y = -r;
+            return rect;
+            //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
+        }
+
+        public static create(_parent: Graph, x: number = 0, y: number = 0, r: number = 20, nodeClassName: string | null = null): CircleVertex {
+            //var circle = createCircle(r, circleClassName);
+
+            /*
             var text = GraphTableSVG.createText();
-
             var group = GraphTableSVG.createGroup();
+            */
 
-            var p = new CircleVertex(group, circle, text);
+            var p = new CircleVertex(nodeClassName, r, "");
             p.x = x;
             p.y = y;
             _parent.addVertex(p);

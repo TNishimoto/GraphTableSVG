@@ -41,7 +41,18 @@ interface CSSStyleDeclaration {
     setHorizontalAnchor(value: GraphTableSVG.HorizontalAnchor | null): void;
     getVerticalAnchor(): GraphTableSVG.VerticalAnchor | null;
     setVerticalAnchor(value: GraphTableSVG.VerticalAnchor | null): void;
+    tryGetPropertyValue(name: string): string | null;
 }
+CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name: string) {
+    var p: CSSStyleDeclaration = this;
+    var r = p.getPropertyValue(name).trim();
+    if (r.length == 0) {
+        return null;
+    } else {
+        return r;
+    }
+}
+
 CSSStyleDeclaration.prototype.getHorizontalAnchor = function () {
     var p: CSSStyleDeclaration = this;
     var r = p.getPropertyValue("--horizontal-anchor").trim();

@@ -125,11 +125,12 @@ declare module GraphTableSVG {
         private _graph;
         private _observer;
         private observerFunc;
+        readonly isLocated: boolean;
         readonly graph: Graph | null;
         setGraph(value: Graph): void;
         private _id;
         readonly id: number;
-        constructor(group: SVGGElement);
+        constructor(className?: string | null);
         x: number;
         y: number;
         readonly width: number;
@@ -151,11 +152,14 @@ declare module GraphTableSVG {
     class CircleVertex extends Vertex {
         svgCircle: SVGCircleElement;
         svgText: SVGTextElement;
+        private _textObserver;
+        protected textObserverFunc: MutationCallback;
         setGraph(value: Graph): void;
-        constructor(group: SVGGElement, circle: SVGCircleElement, text: SVGTextElement);
+        constructor(className?: string | null, r?: number, text?: string);
         readonly width: number;
         readonly height: number;
-        static create(_parent: Graph, x?: number, y?: number, r?: number, circleClassName?: string | null): CircleVertex;
+        readonly innerRectangle: Rectangle;
+        static create(_parent: Graph, x?: number, y?: number, r?: number, nodeClassName?: string | null): CircleVertex;
         readonly radius: number;
         getLocation(type: ConnecterPosition): [number, number];
         readonly surface: SVGElement | null;
@@ -215,6 +219,8 @@ declare module GraphTableSVG {
         rightLine: SVGLineElement;
         private _bottomLine;
         bottomLine: SVGLineElement;
+        readonly defaultTextClass: string | null;
+        readonly defaultBackgroundClass: string | null;
         private _observer;
         private observerFunc;
         readonly logicalWidth: number;
@@ -241,7 +247,7 @@ declare module GraphTableSVG {
         y: number;
         width: number;
         height: number;
-        constructor(parent: SVGTable, _px: number, _py: number, _rect: SVGRectElement, _text: SVGTextElement);
+        constructor(parent: SVGTable, _px: number, _py: number, cellClass?: string | null);
     }
 }
 interface SVGGElement {
@@ -255,6 +261,7 @@ interface CSSStyleDeclaration {
     setHorizontalAnchor(value: GraphTableSVG.HorizontalAnchor | null): void;
     getVerticalAnchor(): GraphTableSVG.VerticalAnchor | null;
     setVerticalAnchor(value: GraphTableSVG.VerticalAnchor | null): void;
+    tryGetPropertyValue(name: string): string | null;
 }
 interface SVGElement {
     getActiveStyle(): CSSStyleDeclaration;
@@ -308,8 +315,7 @@ declare module GraphTableSVG {
 declare module GraphTableSVG {
     class SVGTable {
         private _cells;
-        readonly defaultTextClass: string | null;
-        readonly defaultBackgroundClass: string | null;
+        readonly defaultCellClass: string | null;
         readonly cells: Cell[][];
         group: SVGGElement;
         readonly width: number;
@@ -343,6 +349,6 @@ declare module GraphTableSVG {
     function createText(className?: string | null): SVGTextElement;
     function resetStyle(item: SVGTextElement): void;
     function createRectangle(width?: number, height?: number, className?: string | null): SVGRectElement;
-    function createGroup(): SVGGElement;
+    function createGroup(className?: string | null): SVGGElement;
     function createCircle(r?: number, className?: string | null): SVGCircleElement;
 }

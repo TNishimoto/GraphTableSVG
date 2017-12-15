@@ -1,7 +1,7 @@
 ﻿
 .table-text {
     fill: black;
-    font-size: 14px;
+    font-size: 32px;
 }
 .background {
     fill: white;
@@ -14,6 +14,9 @@
     --vertical-anchor: bottom;
 }
 .sa-table{
+    --default-cell-class : cell;
+}
+.cell{
     --default-text-class : table-text;
-    --default-background-class : background;
+    --default-background-class : background;    
 }
