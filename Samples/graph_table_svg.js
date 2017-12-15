@@ -1135,6 +1135,12 @@ var GraphTableSVG;
             this.svgBackground = _rect;
             this.svgText = _text;
             this.svgGroup.appendChild(this.svgBackground);
+            /*
+            var circle = createRectangle();
+            circle.style.fill = "blue";
+            this.rect = circle;
+            this.svgGroup.appendChild(circle);
+            */
             this.svgGroup.appendChild(this.svgText);
             this.parent.group.appendChild(this.svgGroup);
             this.upLine = GraphTableSVG.createLine(0, 0, 0, 0);
@@ -1145,6 +1151,7 @@ var GraphTableSVG;
             this.parent.group.appendChild(this.leftLine);
             this.parent.group.appendChild(this.rightLine);
             this.parent.group.appendChild(this.bottomLine);
+            this.svgGroup.parentNode;
             this._observer = new MutationObserver(this.observerFunc);
             var option = { childList: true };
             this._observer.observe(this.svgText, option);
@@ -1154,6 +1161,7 @@ var GraphTableSVG;
             */
         }
         Object.defineProperty(Cell.prototype, "horizontalAnchor", {
+            //rect: SVGRectElement;
             //private _horizontalAnchor: HorizontalAnchor;
             get: function () {
                 return this.svgBackground.getActiveStyle().getHorizontalAnchor();
@@ -1272,16 +1280,33 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Cell.prototype, "isLocated", {
+            get: function () {
+                return IsDescendantOfBody(this.svgGroup);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Cell.prototype, "textBoxWidth", {
             get: function () {
-                return this.svgText.getBoundingClientRect().width + this.padding.left + this.padding.right;
+                if (this.isLocated) {
+                    return this.svgText.getBBox().width + this.padding.left + this.padding.right;
+                }
+                else {
+                    return 0;
+                }
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Cell.prototype, "textBoxHeight", {
             get: function () {
-                return this.svgText.getBoundingClientRect().height + this.padding.top + this.padding.bottom;
+                if (this.isLocated) {
+                    return this.svgText.getBBox().height + this.padding.top + this.padding.bottom;
+                }
+                else {
+                    return 0;
+                }
             },
             enumerable: true,
             configurable: true
@@ -1295,6 +1320,8 @@ var GraphTableSVG;
             }
         };
         Cell.prototype.relocation = function () {
+            if (!IsDescendantOfBody(this.svgGroup))
+                return;
             this.upLine.x1.baseVal.value = this.x;
             this.upLine.x2.baseVal.value = this.x + this.width;
             this.upLine.y1.baseVal.value = this.y;
@@ -1314,45 +1341,88 @@ var GraphTableSVG;
             //this.textSVG.x.baseVal.getItem(0).value = 0;
             var text_x = 0;
             var text_y = 0;
+            var innerRect = new GraphTableSVG.Rectangle();
+            innerRect.x = this.padding.left;
+            innerRect.y = this.padding.top;
+            innerRect.height = this.height - this.padding.top - this.padding.bottom;
+            innerRect.width = this.width - this.padding.left - this.padding.right;
+            setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
             //var style = getComputedStyle(this.svgText, "");
             //var anchor = style.textAnchor;
+            /*
             var innerHeight = this.height - this.padding.top - this.padding.bottom;
             var innerWidth = this.width - this.padding.left - this.padding.right;
+
+            var box = this.svgText.getBBox();
+            //console.log(box);
+
+            //this.svgText.style.dominantBaseline = "middle";
+
+            text_y = this.padding.top;
+            */
+            /*
             if (this.verticalAnchor == VerticalAnchor.Top) {
-                this.svgText.style.dominantBaseline = "text-before-edge";
-                text_y = this.padding.top;
+                //this.svgText.style.dominantBaseline = "text-before-edge";
+                text_y = this.padding.top + (box.height / 2);
+            } else if (this.verticalAnchor == VerticalAnchor.Middle) {
+                //this.svgText.style.dominantBaseline = "middle";
+                text_y = innerHeight / 2 + this.padding.top;
+            } else if (this.verticalAnchor == VerticalAnchor.Bottom) {
+                //this.svgText.style.dominantBaseline = "text-after-edge";
+                text_y = this.padding.top + innerHeight - (box.height / 2);
+            } else {
+                //this.svgText.style.dominantBaseline = "text-before-edge";
+                text_y = this.padding.top + (box.height / 2);
             }
-            else if (this.verticalAnchor == VerticalAnchor.Middle) {
-                this.svgText.style.dominantBaseline = "middle";
-                text_y = (innerHeight / 2) + this.padding.top;
-            }
-            else if (this.verticalAnchor == VerticalAnchor.Bottom) {
-                this.svgText.style.dominantBaseline = "text-after-edge";
-                text_y = this.padding.top + innerHeight;
-            }
-            else {
-                this.svgText.style.dominantBaseline = "text-before-edge";
-                text_y = this.padding.top;
-            }
+            */
             //this.svgText.style.alignmentBaseline = "middle";
+            //this.svgText.style.textAnchor = "start";
+            /*
             if (this.horizontalAnchor == HorizontalAnchor.Center) {
-                this.svgText.style.textAnchor = "middle";
-                text_x = this.padding.left + (innerWidth / 2);
-            }
-            else if (this.horizontalAnchor == HorizontalAnchor.Left) {
-                this.svgText.style.textAnchor = "start";
+                //this.svgText.style.textAnchor = "middle";
+                text_x = this.padding.left + ((innerWidth - box.width) / 2);
+            } else if (this.horizontalAnchor == HorizontalAnchor.Left) {
+                //this.svgText.style.textAnchor = "start";
+                text_x = this.padding.left;
+            } else if (this.horizontalAnchor == HorizontalAnchor.Right) {
+                //this.svgText.style.textAnchor = "end";
+                text_x = this.padding.left + innerWidth - box.width;
+            } else {
+                //this.svgText.style.textAnchor = "middle";
                 text_x = this.padding.left;
             }
-            else if (this.horizontalAnchor == HorizontalAnchor.Right) {
-                this.svgText.style.textAnchor = "end";
-                text_x = this.padding.left + innerWidth;
-            }
-            else {
-                this.svgText.style.textAnchor = "middle";
-                text_x = this.padding.left + (innerWidth / 2);
-            }
+            */
+            /*
             this.svgText.setAttribute('x', text_x.toString());
             this.svgText.setAttribute('y', text_y.toString());
+
+            
+            var b2 = this.svgText.getBBox();
+
+            var dy = b2.y - this.padding.top;
+
+            
+            if (this.verticalAnchor == VerticalAnchor.Top) {
+                text_y -= dy;
+            } else if (this.verticalAnchor == VerticalAnchor.Middle) {
+                text_y -= dy;
+                text_y += (innerHeight - box.height)/2
+            } else if (this.verticalAnchor == VerticalAnchor.Bottom) {
+                text_y -= dy;
+                text_y += innerHeight - box.height;
+            } else {
+                text_y -= dy;
+            }
+            this.svgText.setAttribute('y', text_y.toString());
+            */
+            /*
+            var b3 = this.svgText.getBBox();
+
+            this.rect.x.baseVal.value = b3.x;
+            this.rect.y.baseVal.value = b3.y;
+            this.rect.width.baseVal.value = b3.width;
+            this.rect.height.baseVal.value = b3.height;
+            */
             //this.svgText.setAttribute('x', '20');
             //this.svgText.setAttribute('y', this.svgText.getBoundingClientRect().height.toString());
         };
@@ -1689,6 +1759,43 @@ SVGTextElement.prototype.setY = function (value) {
     }
     return p.y.baseVal.getItem(0).value = value;
 };
+function IsDescendantOfBody(node) {
+    var parent = node.parentNode;
+    if (parent == null) {
+        return false;
+    }
+    else if (parent == document.body) {
+        return true;
+    }
+    else {
+        return IsDescendantOfBody(parent);
+    }
+}
+function setXY(text, rect, vAnchor, hAnchor) {
+    var x = rect.x;
+    var y = rect.y;
+    text.setAttribute('x', x.toString());
+    text.setAttribute('y', y.toString());
+    var b2 = text.getBBox();
+    var dy = b2.y - y;
+    var dx = b2.x - x;
+    y -= dy;
+    if (vAnchor == GraphTableSVG.VerticalAnchor.Middle) {
+        y += (rect.height - b2.height) / 2;
+    }
+    else if (vAnchor == GraphTableSVG.VerticalAnchor.Bottom) {
+        y += rect.height - b2.height;
+    }
+    x -= dx;
+    if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
+        x += (rect.width - b2.width) / 2;
+    }
+    else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
+        x += rect.width - b2.width;
+    }
+    text.setAttribute('y', y.toString());
+    text.setAttribute('x', x.toString());
+}
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var Row = (function () {
@@ -2307,7 +2414,7 @@ var GraphTableSVG;
     function createText(className) {
         if (className === void 0) { className = null; }
         var _svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        _svgText.style.textAnchor = "middle";
+        //_svgText.style.textAnchor = "middle";
         if (className == null) {
             _svgText.style.fill = "black";
             _svgText.style.fontSize = "14px";

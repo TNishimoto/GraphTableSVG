@@ -42,6 +42,7 @@ module GraphTableSVG {
         svgBackground: SVGRectElement;
         svgText: SVGTextElement;
         svgGroup: SVGGElement;
+        //rect: SVGRectElement;
         
         
         //private _horizontalAnchor: HorizontalAnchor;
@@ -152,11 +153,23 @@ module GraphTableSVG {
             }
         }
 
+        get isLocated(): boolean {
+            return IsDescendantOfBody(this.svgGroup);
+        }
+
         get textBoxWidth(): number {
-            return this.svgText.getBoundingClientRect().width + this.padding.left + this.padding.right;
+            if (this.isLocated) {
+                return this.svgText.getBBox().width + this.padding.left + this.padding.right;
+            } else {
+                return 0;
+            }
         }
         get textBoxHeight(): number {
-            return this.svgText.getBoundingClientRect().height + this.padding.top + this.padding.bottom;
+            if (this.isLocated) {
+                return this.svgText.getBBox().height + this.padding.top + this.padding.bottom;
+            } else {
+                return 0;
+            }
         }
 
         resize() {
@@ -168,7 +181,7 @@ module GraphTableSVG {
             }
         }
         relocation() {
-
+            if (!IsDescendantOfBody(this.svgGroup)) return;
             this.upLine.x1.baseVal.value = this.x;
             this.upLine.x2.baseVal.value = this.x + this.width;
             this.upLine.y1.baseVal.value = this.y;
@@ -192,49 +205,97 @@ module GraphTableSVG {
             //this.textSVG.x.baseVal.getItem(0).value = 0;
             var text_x = 0;
             var text_y = 0;
+
+            var innerRect = new Rectangle();
+            innerRect.x = this.padding.left;
+            innerRect.y = this.padding.top;
+            innerRect.height = this.height - this.padding.top - this.padding.bottom;
+            innerRect.width = this.width - this.padding.left - this.padding.right;
+            setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+
             //var style = getComputedStyle(this.svgText, "");
             
             //var anchor = style.textAnchor;
 
+            /*
             var innerHeight = this.height - this.padding.top - this.padding.bottom;
             var innerWidth = this.width - this.padding.left - this.padding.right;
 
+            var box = this.svgText.getBBox();
+            //console.log(box);
 
+            //this.svgText.style.dominantBaseline = "middle";
+
+            text_y = this.padding.top;
+            */
+            /*
             if (this.verticalAnchor == VerticalAnchor.Top) {
-                this.svgText.style.dominantBaseline = "text-before-edge";
-                text_y = this.padding.top;
+                //this.svgText.style.dominantBaseline = "text-before-edge";
+                text_y = this.padding.top + (box.height / 2);
             } else if (this.verticalAnchor == VerticalAnchor.Middle) {
-                this.svgText.style.dominantBaseline = "middle";
-                text_y = (innerHeight / 2) + this.padding.top;
+                //this.svgText.style.dominantBaseline = "middle";
+                text_y = innerHeight / 2 + this.padding.top;
             } else if (this.verticalAnchor == VerticalAnchor.Bottom) {
-                this.svgText.style.dominantBaseline = "text-after-edge";
-                text_y = this.padding.top + innerHeight;
+                //this.svgText.style.dominantBaseline = "text-after-edge";
+                text_y = this.padding.top + innerHeight - (box.height / 2);
             } else {
-                this.svgText.style.dominantBaseline = "text-before-edge";
-                text_y = this.padding.top;
+                //this.svgText.style.dominantBaseline = "text-before-edge";
+                text_y = this.padding.top + (box.height / 2);
             }
+            */
 
             //this.svgText.style.alignmentBaseline = "middle";
 
-            
+            //this.svgText.style.textAnchor = "start";
+
+            /*
             if (this.horizontalAnchor == HorizontalAnchor.Center) {
-                this.svgText.style.textAnchor = "middle";
-                text_x = this.padding.left + (innerWidth / 2);
+                //this.svgText.style.textAnchor = "middle";
+                text_x = this.padding.left + ((innerWidth - box.width) / 2);
             } else if (this.horizontalAnchor == HorizontalAnchor.Left) {
-                this.svgText.style.textAnchor = "start";
+                //this.svgText.style.textAnchor = "start";
                 text_x = this.padding.left;
             } else if (this.horizontalAnchor == HorizontalAnchor.Right) {
-                this.svgText.style.textAnchor = "end";
-                text_x = this.padding.left + innerWidth;
+                //this.svgText.style.textAnchor = "end";
+                text_x = this.padding.left + innerWidth - box.width;
             } else {
-                this.svgText.style.textAnchor = "middle";
-                text_x = this.padding.left + (innerWidth / 2);
+                //this.svgText.style.textAnchor = "middle";
+                text_x = this.padding.left;
             }
-            
+            */
 
+            /*
             this.svgText.setAttribute('x', text_x.toString());
             this.svgText.setAttribute('y', text_y.toString());
 
+            
+            var b2 = this.svgText.getBBox();
+
+            var dy = b2.y - this.padding.top;
+
+            
+            if (this.verticalAnchor == VerticalAnchor.Top) {
+                text_y -= dy;
+            } else if (this.verticalAnchor == VerticalAnchor.Middle) {
+                text_y -= dy;
+                text_y += (innerHeight - box.height)/2
+            } else if (this.verticalAnchor == VerticalAnchor.Bottom) {
+                text_y -= dy;
+                text_y += innerHeight - box.height;
+            } else {
+                text_y -= dy;
+            }
+            this.svgText.setAttribute('y', text_y.toString());
+            */
+            /*
+            var b3 = this.svgText.getBBox();
+
+            this.rect.x.baseVal.value = b3.x;
+            this.rect.y.baseVal.value = b3.y;
+            this.rect.width.baseVal.value = b3.width;
+            this.rect.height.baseVal.value = b3.height;
+            */
+            
             //this.svgText.setAttribute('x', '20');
             //this.svgText.setAttribute('y', this.svgText.getBoundingClientRect().height.toString());
 
@@ -378,6 +439,8 @@ module GraphTableSVG {
         }
         constructor(parent: SVGTable, _px: number, _py: number, _rect: SVGRectElement, _text: SVGTextElement) {
 
+
+
             this.svgGroup = createGroup();
             this.padding = new Padding();
             this.cellX = _px;
@@ -385,11 +448,23 @@ module GraphTableSVG {
             this.parent = parent;
             this.masterID = this.ID;
 
+
+
             this.svgBackground = _rect;            
             this.svgText = _text;
             this.svgGroup.appendChild(this.svgBackground);
+
+            /*
+            var circle = createRectangle();
+            circle.style.fill = "blue";
+            this.rect = circle;
+            this.svgGroup.appendChild(circle);
+            */
+
             this.svgGroup.appendChild(this.svgText);
             this.parent.group.appendChild(this.svgGroup);
+
+
 
             this.upLine = GraphTableSVG.createLine(0, 0, 0, 0);
             this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
@@ -399,6 +474,8 @@ module GraphTableSVG {
             this.parent.group.appendChild(this.leftLine);
             this.parent.group.appendChild(this.rightLine);
             this.parent.group.appendChild(this.bottomLine);
+
+            this.svgGroup.parentNode
 
             
             

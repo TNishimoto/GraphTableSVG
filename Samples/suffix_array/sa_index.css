@@ -1,7 +1,7 @@
 ﻿
 .table-text {
     fill: black;
-    font-size: 24px;
+    font-size: 14px;
 }
 .background {
     fill: white;
@@ -11,7 +11,7 @@
 .textarea-background {
     fill: white;
     --horizontal-anchor: left;
-    --vertical-anchor: middle;
+    --vertical-anchor: bottom;
 }
 .sa-table{
     --default-text-class : table-text;

@@ -219,6 +219,7 @@ declare module GraphTableSVG {
         private observerFunc;
         readonly logicalWidth: number;
         readonly logicalHeight: number;
+        readonly isLocated: boolean;
         readonly textBoxWidth: number;
         readonly textBoxHeight: number;
         resize(): void;
@@ -264,6 +265,8 @@ interface SVGTextElement {
     getY(): number;
     setY(value: number): void;
 }
+declare function IsDescendantOfBody(node: Node): boolean;
+declare function setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: GraphTableSVG.VerticalAnchor | null, hAnchor: GraphTableSVG.HorizontalAnchor | null): void;
 declare module GraphTableSVG {
     class Row {
         table: SVGTable;
