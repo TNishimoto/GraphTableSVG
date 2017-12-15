@@ -33,9 +33,12 @@
         protected _edges: Edge[] = new Array(0);
         protected _svgGroup: SVGGElement;
         public name: string = (Graph.id++).toString();
+        protected _roots: Vertex[] = [];
 
         //public arrangementFunction: (Graph) => void | null = null;
-
+        get roots(): Vertex[] {
+            return this._roots;
+        }
         get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
@@ -125,7 +128,7 @@
             return null;
         }
 
-        public connect(node1: Vertex, edge: Edge, node2: Vertex,
+        private _connect(node1: Vertex, edge: Edge, node2: Vertex,
             _beginConnectType: ConnecterPosition = ConnecterPosition.Bottom, _endConnectType: ConnecterPosition = ConnecterPosition.Top) {
             edge.beginNode = node1;
             edge.endNode = node2;
@@ -133,9 +136,73 @@
             edge.endConnecterType = _endConnectType;
             this.addEdge(edge);
         }
+        public connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex: number = 0,
+            _beginConnectType: ConnecterPosition = ConnecterPosition.Bottom, _endConnectType: ConnecterPosition = ConnecterPosition.Top) {
+            this._connect(node1, edge, node2, _beginConnectType, _endConnectType);
+            var i = this.roots.indexOf(node1);
+            var j = this.roots.indexOf(node2);
+            if (j != -1) {
+                if (i == -1) {
+                    this.roots[j] = node1;
+                } else {
+                    this.roots.splice(j, 1);
+                }
+            }
+            /*
+            if (!(node1.id in this.outcomingEdgesDic)) {
+                this.outcomingEdgesDic[node1.id] = [];
+            }
+            */
+            node1.outcomingEdges.splice(insertIndex, 0, edge);
+            node2.incomingEdges.push(edge);
+        }
+        public getOrderedNodes(order: NodeOrder, node: Vertex | null = null): Vertex[] {
+            var r: Vertex[] = [];
+            if (node == null) {
+                this.roots.forEach((v) => {
+                    this.getOrderedNodes(order, v).forEach((w) => {
+                        r.push(w);
+                    });
+                });
+            } else {
+                var edges = node.outcomingEdges;
+                if (order == NodeOrder.Preorder) {
+                    r.push(node);
+                    edges.forEach((v) => {
+                        this.getOrderedNodes(order, v.endNode).forEach((w) => {
+                            r.push(w);
+                        });
+                    });
 
-
-        
+                } else if (order == NodeOrder.Postorder) {
+                    edges.forEach((v) => {
+                        this.getOrderedNodes(order, v.endNode).forEach((w) => {
+                            r.push(w);
+                        });
+                    });
+                    r.push(node);
+                }
+            }
+            return r;
+        }
+        get rootVertex(): Vertex | null {
+            if (this.roots.length == 0) {
+                return null;
+            } else {
+                return this.roots[0];
+            }
+        }
+        set rootVertex(value: Vertex | null) {
+            this._roots = [];
+            if (value != null) {
+                this.roots.push(value);
+            }
+        }
+        public save() {
+            this.nodes.forEach((v) => v.save());
+            var ids = this.nodes.map((v) => v.id);
+            this.svgGroup.setAttribute("node", JSON.stringify(ids));
+        }
     }
     
 

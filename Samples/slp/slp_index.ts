@@ -16,6 +16,7 @@ function createSLP() {
     clicker.nodeYInterval = 60;
     //clicker.table.textClassName = "table_text";
     
+    clicker.graph.save();
     graphtable = clicker.graph;
     
 }

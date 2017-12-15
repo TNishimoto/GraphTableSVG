@@ -16,6 +16,7 @@ var GraphTableSVG;
             this.endConnecterType = GraphTableSVG.ConnecterPosition.Bottom;
             this._graph = null;
             this.text = null;
+            this.group = GraphTableSVG.createGroup();
             //this._parent = graph;
             /*
             this._beginNode = _beginNode;
@@ -101,6 +102,7 @@ var GraphTableSVG;
         function LineEdge(line) {
             var _this = _super.call(this) || this;
             _this._svg = line;
+            _this.group.appendChild(line);
             return _this;
             //this.graph.svgGroup.appendChild(this._svg);
         }
@@ -115,7 +117,7 @@ var GraphTableSVG;
         LineEdge.prototype.setGraph = function (value) {
             _super.prototype.setGraph.call(this, value);
             if (this.graph != null) {
-                this.graph.svgGroup.appendChild(this.svg);
+                this.graph.svgGroup.appendChild(this.group);
             }
         };
         LineEdge.create = function () {
@@ -198,11 +200,19 @@ var GraphTableSVG;
             this._nodes = new Array(0);
             this._edges = new Array(0);
             this.name = (Graph.id++).toString();
+            this._roots = [];
             this._svgGroup = GraphTableSVG.createGroup();
             //svg.appendChild(this._svgGroup);
         }
-        Object.defineProperty(Graph.prototype, "svgGroup", {
+        Object.defineProperty(Graph.prototype, "roots", {
             //public arrangementFunction: (Graph) => void | null = null;
+            get: function () {
+                return this._roots;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Graph.prototype, "svgGroup", {
             get: function () {
                 return this._svgGroup;
             },
@@ -287,7 +297,7 @@ var GraphTableSVG;
             }
             return null;
         };
-        Graph.prototype.connect = function (node1, edge, node2, _beginConnectType, _endConnectType) {
+        Graph.prototype._connect = function (node1, edge, node2, _beginConnectType, _endConnectType) {
             if (_beginConnectType === void 0) { _beginConnectType = ConnecterPosition.Bottom; }
             if (_endConnectType === void 0) { _endConnectType = ConnecterPosition.Top; }
             edge.beginNode = node1;
@@ -295,6 +305,84 @@ var GraphTableSVG;
             edge.beginConnecterType = _beginConnectType;
             edge.endConnecterType = _endConnectType;
             this.addEdge(edge);
+        };
+        Graph.prototype.connect = function (node1, edge, node2, insertIndex, _beginConnectType, _endConnectType) {
+            if (insertIndex === void 0) { insertIndex = 0; }
+            if (_beginConnectType === void 0) { _beginConnectType = ConnecterPosition.Bottom; }
+            if (_endConnectType === void 0) { _endConnectType = ConnecterPosition.Top; }
+            this._connect(node1, edge, node2, _beginConnectType, _endConnectType);
+            var i = this.roots.indexOf(node1);
+            var j = this.roots.indexOf(node2);
+            if (j != -1) {
+                if (i == -1) {
+                    this.roots[j] = node1;
+                }
+                else {
+                    this.roots.splice(j, 1);
+                }
+            }
+            /*
+            if (!(node1.id in this.outcomingEdgesDic)) {
+                this.outcomingEdgesDic[node1.id] = [];
+            }
+            */
+            node1.outcomingEdges.splice(insertIndex, 0, edge);
+            node2.incomingEdges.push(edge);
+        };
+        Graph.prototype.getOrderedNodes = function (order, node) {
+            var _this = this;
+            if (node === void 0) { node = null; }
+            var r = [];
+            if (node == null) {
+                this.roots.forEach(function (v) {
+                    _this.getOrderedNodes(order, v).forEach(function (w) {
+                        r.push(w);
+                    });
+                });
+            }
+            else {
+                var edges = node.outcomingEdges;
+                if (order == NodeOrder.Preorder) {
+                    r.push(node);
+                    edges.forEach(function (v) {
+                        _this.getOrderedNodes(order, v.endNode).forEach(function (w) {
+                            r.push(w);
+                        });
+                    });
+                }
+                else if (order == NodeOrder.Postorder) {
+                    edges.forEach(function (v) {
+                        _this.getOrderedNodes(order, v.endNode).forEach(function (w) {
+                            r.push(w);
+                        });
+                    });
+                    r.push(node);
+                }
+            }
+            return r;
+        };
+        Object.defineProperty(Graph.prototype, "rootVertex", {
+            get: function () {
+                if (this.roots.length == 0) {
+                    return null;
+                }
+                else {
+                    return this.roots[0];
+                }
+            },
+            set: function (value) {
+                this._roots = [];
+                if (value != null) {
+                    this.roots.push(value);
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Graph.prototype.save = function () {
+            this.nodes.forEach(function (v) { return v.save(); });
+            var ids = this.nodes.map(function (v) { return v.id; });
+            this.svgGroup.setAttribute("node", JSON.stringify(ids));
         };
         return Graph;
     }());
@@ -387,7 +475,7 @@ var GraphTableSVG;
         GraphArrangement.middle = middle;
         function standardTreeArrangement(graph, xInterval, yInterval) {
             if (graph.rootVertex != null) {
-                var rootTree = graph.tree;
+                var rootTree = new GraphTableSVG.VirtualTree(graph, graph.rootVertex);
                 var _a = [rootTree.root.x, rootTree.root.y], x = _a[0], y = _a[1];
                 standardTreeArrangementSub(rootTree, xInterval, yInterval);
                 rootTree.setRootLocation(x, y);
@@ -441,7 +529,7 @@ var GraphTableSVG;
             var p = new EdgeText();
             p.svg = GraphTableSVG.createText();
             p.svg.textContent = text;
-            graph.svgGroup.appendChild(p.svg);
+            edge.group.appendChild(p.svg);
             p.parentEdge = edge;
             edge.text = p;
             return p;
@@ -473,166 +561,64 @@ var GraphTableSVG;
     }());
     GraphTableSVG.EdgeText = EdgeText;
 })(GraphTableSVG || (GraphTableSVG = {}));
-var GraphTableSVG;
-(function (GraphTableSVG) {
-    var OrderedOutcomingEdgesGraph = (function (_super) {
-        __extends(OrderedOutcomingEdgesGraph, _super);
-        function OrderedOutcomingEdgesGraph() {
-            var _this = _super.call(this) || this;
-            _this._outcomingEdgesDic = [];
-            return _this;
+/*
+module GraphTableSVG {
+    export class OrderedOutcomingEdgesGraph extends Graph {
+
+        constructor() {
+            super();
         }
-        Object.defineProperty(OrderedOutcomingEdgesGraph.prototype, "outcomingEdgesDic", {
-            //parentEdgeDic: { [key: number]: Edge; } = [];
-            get: function () {
-                return this._outcomingEdgesDic;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return OrderedOutcomingEdgesGraph;
-    }(GraphTableSVG.Graph));
-    GraphTableSVG.OrderedOutcomingEdgesGraph = OrderedOutcomingEdgesGraph;
-    var OrderedForest = (function (_super) {
-        __extends(OrderedForest, _super);
-        function OrderedForest() {
-            var _this = _super.call(this) || this;
-            _this._roots = [];
-            return _this;
+
+
+    }
+    export class OrderedForest extends OrderedOutcomingEdgesGraph {
+        
+        
+        public addVertex(vertex: Vertex) {
+            super.addVertex(vertex);
+            //this.outcomingEdgesDic[vertex.id] = [];
+        }
+        constructor() {
+            super();
             //this.arrangementFunction = GraphArrangement.createStandardTreeArrangementFunction(50);
         }
-        Object.defineProperty(OrderedForest.prototype, "roots", {
-            get: function () {
-                return this._roots;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        OrderedForest.prototype.addVertex = function (vertex) {
-            _super.prototype.addVertex.call(this, vertex);
-            this.outcomingEdgesDic[vertex.id] = [];
-        };
-        OrderedForest.prototype.connect = function (node1, edge, node2, insertIndex, _beginConnectType, _endConnectType) {
-            if (insertIndex === void 0) { insertIndex = 0; }
-            if (_beginConnectType === void 0) { _beginConnectType = GraphTableSVG.ConnecterPosition.Bottom; }
-            if (_endConnectType === void 0) { _endConnectType = GraphTableSVG.ConnecterPosition.Top; }
-            _super.prototype.connect.call(this, node1, edge, node2, _beginConnectType, _endConnectType);
-            var i = this.roots.indexOf(node1);
-            var j = this.roots.indexOf(node2);
-            if (j != -1) {
-                if (i == -1) {
-                    this.roots[j] = node1;
-                }
-                else {
-                    this.roots.splice(j, 1);
-                }
-            }
-            if (!(node1.id in this.outcomingEdgesDic)) {
-                this.outcomingEdgesDic[node1.id] = [];
-            }
-            this.outcomingEdgesDic[node1.id].splice(insertIndex, 0, edge);
-        };
-        OrderedForest.prototype.getOrderedNodes = function (order, node) {
-            var _this = this;
-            if (node === void 0) { node = null; }
-            var r = [];
-            if (node == null) {
-                this.roots.forEach(function (v) {
-                    _this.getOrderedNodes(order, v).forEach(function (w) {
-                        r.push(w);
-                    });
-                });
-            }
-            else {
-                var edges = this.outcomingEdgesDic[node.id];
-                if (order == GraphTableSVG.NodeOrder.Preorder) {
-                    r.push(node);
-                    edges.forEach(function (v) {
-                        _this.getOrderedNodes(order, v.endNode).forEach(function (w) {
-                            r.push(w);
-                        });
-                    });
-                }
-                else if (order == GraphTableSVG.NodeOrder.Postorder) {
-                    edges.forEach(function (v) {
-                        _this.getOrderedNodes(order, v.endNode).forEach(function (w) {
-                            r.push(w);
-                        });
-                    });
-                    r.push(node);
-                }
-            }
-            return r;
-        };
-        return OrderedForest;
-    }(OrderedOutcomingEdgesGraph));
-    GraphTableSVG.OrderedForest = OrderedForest;
-    var OrderedTree = (function (_super) {
-        __extends(OrderedTree, _super);
-        function OrderedTree() {
-            var _this = _super.call(this) || this;
-            _this._rootVertex = null;
-            return _this;
+
+        
+
+        
+        
+        
+    }
+    export class OrderedTree extends OrderedForest {
+        //_rootVertex: Vertex | null = null;
+
+        
+
+        constructor() {
+            super();
             //this.arrangementFunction = GraphArrangement.createStandardTreeArrangementFunction(50);
         }
-        Object.defineProperty(OrderedTree.prototype, "rootVertex", {
-            get: function () {
-                if (this.roots.length == 0) {
-                    return null;
-                }
-                else {
-                    return this.roots[0];
-                }
-            },
-            set: function (value) {
-                this._roots = [];
-                if (value != null) {
-                    this.roots.push(value);
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(OrderedTree.prototype, "tree", {
-            get: function () {
-                if (this.rootVertex == null) {
-                    throw new Error();
-                }
-                else {
-                    return new GraphTableSVG.VirtualTree(this, this.rootVertex);
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        OrderedTree.prototype.getFirstNoParentVertex = function () {
-            var p = this;
-            var r = this.nodes.filter(function (x) {
-                return p.getParentEdge(x) == null;
-            });
-            return r[0];
-        };
-        OrderedTree.prototype.getParentEdge = function (node) {
-            for (var i = 0; i < this.edges.length; i++) {
-                if (this.edges[i].endNode.id == node.id) {
-                    return this.edges[i];
-                }
+        get tree(): VirtualTree {
+            if (this.rootVertex == null) {
+                throw new Error();
+            } else {
+                return new VirtualTree(this, this.rootVertex);
             }
-            return null;
-        };
-        OrderedTree.prototype.getSubTree = function (node) {
-            return new GraphTableSVG.VirtualTree(this, node);
-        };
-        return OrderedTree;
-    }(OrderedForest));
-    GraphTableSVG.OrderedTree = OrderedTree;
-})(GraphTableSVG || (GraphTableSVG = {}));
+        }
+        public getSubTree(node: Vertex): VirtualTree {
+            return new VirtualTree(this, node);
+        }
+    }
+}
+*/ 
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var Vertex = (function () {
         function Vertex(className) {
             if (className === void 0) { className = null; }
             var _this = this;
+            this._outcomingEdges = [];
+            this._incomingEdges = [];
             this.observerFunc = function (x) {
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
@@ -654,6 +640,20 @@ var GraphTableSVG;
             this.parent.svgGroup.appendChild(this.svgGroup);
             */
         }
+        Object.defineProperty(Vertex.prototype, "outcomingEdges", {
+            get: function () {
+                return this._outcomingEdges;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vertex.prototype, "incomingEdges", {
+            get: function () {
+                return this._incomingEdges;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Vertex.prototype, "isLocated", {
             get: function () {
                 return IsDescendantOfBody(this.svgGroup);
@@ -799,42 +799,47 @@ var GraphTableSVG;
                 return this.graph.edges.filter(function (v) { return v.endNode == _this; }).map(function (v) { return v.beginNode; });
             }
         };
-        Vertex.prototype.getParent = function () {
-            var r = this.getParents();
-            if (r.length == 0) {
-                return null;
-            }
-            else {
-                return r[0];
-            }
-        };
+        Object.defineProperty(Vertex.prototype, "parentEdge", {
+            get: function () {
+                if (this.incomingEdges.length == 0) {
+                    return null;
+                }
+                else {
+                    return this.incomingEdges[0];
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Vertex.prototype, "parent", {
+            get: function () {
+                if (this.parentEdge == null) {
+                    return null;
+                }
+                else {
+                    return this.parentEdge.beginNode;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Vertex.prototype, "isRoot", {
             get: function () {
-                return this.getParent() == null;
+                return this.parent == null;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Vertex.prototype, "children", {
             get: function () {
-                if (this.graph instanceof GraphTableSVG.OrderedOutcomingEdgesGraph) {
-                    return this.graph.outcomingEdgesDic[this.id];
-                }
-                else {
-                    return [];
-                }
+                return this.outcomingEdges;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Vertex.prototype, "isLeaf", {
             get: function () {
-                if (this.graph instanceof GraphTableSVG.OrderedOutcomingEdgesGraph) {
-                    return this.graph.outcomingEdgesDic[this.id].length == 0;
-                }
-                else {
-                    return false;
-                }
+                return this.outcomingEdges.length == 0;
             },
             enumerable: true,
             configurable: true
@@ -851,10 +856,10 @@ var GraphTableSVG;
             */
             get: function () {
                 var p = this;
-                var parent = p.getParent();
+                var parent = p.parent;
                 while (parent != null) {
                     p = parent;
-                    parent = p.getParent();
+                    parent = p.parent;
                 }
                 return p;
             },
@@ -863,19 +868,21 @@ var GraphTableSVG;
         });
         Object.defineProperty(Vertex.prototype, "index", {
             get: function () {
-                if (this.graph instanceof GraphTableSVG.OrderedForest) {
-                    if (this.isRoot) {
-                        return this.graph.roots.indexOf(this);
-                    }
-                    else {
-                        return -1;
-                    }
+                if (this.isRoot && this.graph != null) {
+                    return this.graph.roots.indexOf(this);
                 }
-                return -1;
+                else {
+                    return -1;
+                }
             },
             enumerable: true,
             configurable: true
         });
+        Vertex.prototype.save = function () {
+            var p = this.outcomingEdges.map(function (v) { return v.x1; });
+            var out = JSON.stringify(p);
+            this.svgGroup.setAttribute("outcomingEdges", out);
+        };
         return Vertex;
     }());
     Vertex.id_counter = 0;
@@ -1016,13 +1023,13 @@ var GraphTableSVG;
         }
         VirtualTree.prototype.getChildren = function () {
             var p = this;
-            return this.graph.outcomingEdgesDic[this.root.id].map(function (x, i, arr) {
+            return this.root.outcomingEdges.map(function (x, i, arr) {
                 return new VirtualTree(p.graph, x.endNode);
             });
         };
         Object.defineProperty(VirtualTree.prototype, "parentEdge", {
             get: function () {
-                return this.graph.getParentEdge(this.root);
+                return this.root.parentEdge;
             },
             enumerable: true,
             configurable: true
@@ -1046,7 +1053,7 @@ var GraphTableSVG;
         VirtualTree.prototype.getLeaves = function () {
             var p = this;
             return this.getSubtree().filter(function (x, i, arr) {
-                return p.graph.outcomingEdgesDic[x.id].length == 0;
+                return x.outcomingEdges.length == 0;
             });
         };
         VirtualTree.prototype.getHeight = function () {

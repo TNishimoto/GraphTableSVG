@@ -5,6 +5,7 @@ declare module GraphTableSVG {
         private _endNode;
         endConnecterType: ConnecterPosition;
         private _graph;
+        group: SVGGElement;
         text: EdgeText | null;
         beginNode: Vertex;
         endNode: Vertex;
@@ -56,6 +57,8 @@ declare module GraphTableSVG {
         protected _edges: Edge[];
         protected _svgGroup: SVGGElement;
         name: string;
+        protected _roots: Vertex[];
+        readonly roots: Vertex[];
         readonly svgGroup: SVGGElement;
         readonly nodes: Vertex[];
         readonly edges: Edge[];
@@ -68,16 +71,20 @@ declare module GraphTableSVG {
         removeGraph(svg: HTMLElement): void;
         getRegion(): Rectangle;
         getObjectBySVGID(id: string): Vertex | Edge | null;
-        connect(node1: Vertex, edge: Edge, node2: Vertex, _beginConnectType?: ConnecterPosition, _endConnectType?: ConnecterPosition): void;
+        private _connect(node1, edge, node2, _beginConnectType?, _endConnectType?);
+        connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex?: number, _beginConnectType?: ConnecterPosition, _endConnectType?: ConnecterPosition): void;
+        getOrderedNodes(order: NodeOrder, node?: Vertex | null): Vertex[];
+        rootVertex: Vertex | null;
+        save(): void;
     }
 }
 declare module GraphTableSVG {
     module GraphArrangement {
-        function leaveBasedArrangement(forest: OrderedForest, xInterval: number, yInterval: number): void;
+        function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void;
         function reverse(graph: Graph, isX: boolean, isY: boolean): void;
         function average(items: number[]): number;
         function middle(items: number[]): number;
-        function standardTreeArrangement(graph: OrderedTree, xInterval: number, yInterval: number): void;
+        function standardTreeArrangement(graph: GraphTableSVG.Graph, xInterval: number, yInterval: number): void;
     }
 }
 declare module GraphTableSVG {
@@ -93,36 +100,14 @@ declare module GraphTableSVG {
     }
 }
 declare module GraphTableSVG {
-    class OrderedOutcomingEdgesGraph extends Graph {
-        private _outcomingEdgesDic;
-        readonly outcomingEdgesDic: {
-            [key: number]: Edge[];
-        };
-        constructor();
-    }
-    class OrderedForest extends OrderedOutcomingEdgesGraph {
-        protected _roots: Vertex[];
-        readonly roots: Vertex[];
-        addVertex(vertex: Vertex): void;
-        constructor();
-        connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex?: number, _beginConnectType?: ConnecterPosition, _endConnectType?: ConnecterPosition): void;
-        getOrderedNodes(order: NodeOrder, node?: Vertex | null): Vertex[];
-    }
-    class OrderedTree extends OrderedForest {
-        _rootVertex: Vertex | null;
-        rootVertex: Vertex | null;
-        constructor();
-        readonly tree: VirtualTree;
-        getFirstNoParentVertex(): Vertex;
-        getParentEdge(node: Vertex): Edge | null;
-        getSubTree(node: Vertex): VirtualTree;
-    }
-}
-declare module GraphTableSVG {
     class Vertex {
         private static id_counter;
         svgGroup: SVGGElement;
         private _graph;
+        protected _outcomingEdges: Edge[];
+        readonly outcomingEdges: Edge[];
+        protected _incomingEdges: Edge[];
+        readonly incomingEdges: Edge[];
         private _observer;
         private observerFunc;
         readonly isLocated: boolean;
@@ -142,12 +127,14 @@ declare module GraphTableSVG {
         containsSVGID(id: string): boolean;
         readonly surface: SVGElement | null;
         getParents(): Vertex[];
-        getParent(): Vertex | null;
+        readonly parentEdge: Edge | null;
+        readonly parent: Vertex | null;
         readonly isRoot: boolean;
         readonly children: Edge[];
         readonly isLeaf: boolean;
         readonly root: Vertex;
         readonly index: number;
+        save(): void;
     }
     class CircleVertex extends Vertex {
         svgCircle: SVGCircleElement;
@@ -168,9 +155,9 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     class VirtualTree {
-        graph: OrderedTree;
+        graph: Graph;
         root: Vertex;
-        constructor(_graph: OrderedTree, _root: Vertex);
+        constructor(_graph: Graph, _root: Vertex);
         getChildren(): VirtualTree[];
         readonly parentEdge: Edge | null;
         getSubtree(result?: Vertex[]): Vertex[];

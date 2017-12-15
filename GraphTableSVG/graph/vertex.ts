@@ -3,6 +3,16 @@
         private static id_counter: number = 0;
         svgGroup: SVGGElement;
         private _graph: Graph | null;
+
+        protected _outcomingEdges: Edge[] = [];
+        get outcomingEdges(): Edge[] {
+            return this._outcomingEdges;
+        }
+        protected _incomingEdges: Edge[] = [];
+        get incomingEdges(): Edge[] {
+            return this._incomingEdges;
+        }
+
         private _observer: MutationObserver;
         private observerFunc: MutationCallback = (x: MutationRecord[]) => {
             for (var i = 0; i < x.length; i++) {
@@ -143,30 +153,28 @@
                 return this.graph.edges.filter((v) => v.endNode == this).map((v) => v.beginNode);
             }
         }
-        getParent(): Vertex | null {
-            var r = this.getParents();
-            if (r.length == 0) {
+        get parentEdge(): Edge | null {
+            if (this.incomingEdges.length == 0) {
                 return null;
             } else {
-                return r[0];
+                return this.incomingEdges[0];
+            }
+        }
+        get parent(): Vertex | null {
+            if (this.parentEdge == null) {
+                return null;
+            } else {
+                return this.parentEdge.beginNode;
             }
         }
         get isRoot(): boolean {
-            return this.getParent() == null;
+            return this.parent == null;
         }
         get children(): Edge[] {
-            if (this.graph instanceof OrderedOutcomingEdgesGraph) {
-                return this.graph.outcomingEdgesDic[this.id];
-            } else {
-                return [];
-            }
+            return this.outcomingEdges;
         }
         get isLeaf(): boolean {
-            if (this.graph instanceof OrderedOutcomingEdgesGraph) {
-                return this.graph.outcomingEdgesDic[this.id].length == 0;
-            } else {
-                return false;
-            }
+            return this.outcomingEdges.length == 0;
         }
         /*
         successor(order: NodeOrder): Vertex | null {
@@ -179,22 +187,24 @@
         */
         get root(): Vertex {
             var p: Vertex = this;
-            var parent = p.getParent();
+            var parent = p.parent;
             while (parent != null) {
                 p = parent;
-                parent = p.getParent();
+                parent = p.parent;
             }
             return p;
         }
         get index(): number {
-            if (this.graph instanceof OrderedForest) {
-                if (this.isRoot) {
-                    return this.graph.roots.indexOf(this);
-                } else {
-                    return -1;
-                }
+            if (this.isRoot && this.graph != null) {
+                return this.graph.roots.indexOf(this);
+            } else {
+                return -1;
             }
-            return -1;
+        }
+        public save() {
+            var p = this.outcomingEdges.map((v) => v.x1);
+            var out = JSON.stringify(p);
+            this.svgGroup.setAttribute("outcomingEdges", out);
         }
     }
     export class CircleVertex extends Vertex {

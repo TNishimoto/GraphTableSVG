@@ -87,7 +87,7 @@ function createSuffixTrie() {
 
     svgBox = document.getElementById('svgbox');
     var text = getInputText(`inputtext_itb`);
-    var graph = new GraphTableSVG.OrderedTree();
+    var graph = new GraphTableSVG.Graph();
     svgBox.appendChild(graph.svgGroup);
 
     var trie = TreeFunctions.createTrie(text);
@@ -99,7 +99,9 @@ function createSuffixTrie() {
     */
     graph.update();
     GraphTableSVG.GraphArrangement.standardTreeArrangement(graph, 90, 90);
-    graph.tree.setRectangleLocation(0, 0);
+    var tree = new GraphTableSVG.VirtualTree(graph, graph.rootVertex);
+    tree.setRectangleLocation(0, 0);
+    //graph.tree.setRectangleLocation(0, 0);
 
 
     graphtable = graph;
@@ -114,7 +116,7 @@ function createSuffixTree() {
 
     svgBox = document.getElementById('svgbox');
     var text = getInputText(`inputtext_itb`);
-    var graph = new GraphTableSVG.OrderedTree();
+    var graph = new GraphTableSVG.Graph();
     svgBox.appendChild(graph.svgGroup);
 
 
@@ -129,7 +131,8 @@ function createSuffixTree() {
     //graph.arrangementFunction = GraphTableSVG.GraphArrangement.createStandardTreeArrangementFunction(90);
 
     GraphTableSVG.GraphArrangement.standardTreeArrangement(graph, 90, 90);
-    graph.tree.setRectangleLocation(0, 0);
+    var tree = new GraphTableSVG.VirtualTree(graph, graph.rootVertex);
+    tree.setRectangleLocation(0, 0);
     
     graphtable = graph;
 

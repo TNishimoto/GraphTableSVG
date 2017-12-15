@@ -2,7 +2,7 @@
 
     export module GraphArrangement {
 
-        export function leaveBasedArrangement(forest: OrderedForest, xInterval: number, yInterval: number): void {
+        export function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void {
             var leafCounter = 0;
             forest.getOrderedNodes(NodeOrder.Postorder).forEach((v) => {
                 var x = 0;
@@ -75,10 +75,10 @@
             }
         }
 
-
-        export function standardTreeArrangement(graph: OrderedTree, xInterval: number, yInterval: number): void {
+        
+        export function standardTreeArrangement(graph: GraphTableSVG.Graph, xInterval: number, yInterval: number): void {
             if (graph.rootVertex != null) {
-                var rootTree = graph.tree;
+                var rootTree = new VirtualTree(graph, graph.rootVertex);
                 var [x, y] = [rootTree.root.x, rootTree.root.y];
                 standardTreeArrangementSub(rootTree, xInterval, yInterval);
                 rootTree.setRootLocation(x, y);
@@ -107,7 +107,7 @@
                 __x += edges[i].getLeaves().length * xInterval;                
             }
         }
-
+        
         
     }
 }

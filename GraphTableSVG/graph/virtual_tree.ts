@@ -1,21 +1,23 @@
 ﻿module GraphTableSVG {
     export class VirtualTree {
-        graph: OrderedTree;
+        graph: Graph;
         root: Vertex;
 
-        constructor(_graph: OrderedTree, _root: Vertex) {
+        constructor(_graph: Graph, _root: Vertex) {
             this.graph = _graph;
             this.root = _root;
         }
         getChildren(): VirtualTree[] {
             var p = this;
-            return this.graph.outcomingEdgesDic[this.root.id].map(function (x, i, arr) {
+            return this.root.outcomingEdges.map(function (x, i, arr) {
                 return new VirtualTree(p.graph, x.endNode);
             });
         }
+        
         get parentEdge(): Edge | null {
-            return this.graph.getParentEdge(this.root);
+            return this.root.parentEdge;
         }
+        
 
         public getSubtree(result: Vertex[] = []): Vertex[] {
             var p = this;
@@ -34,7 +36,7 @@
         public getLeaves(): Vertex[] {
             var p = this;
             return this.getSubtree().filter(function (x, i, arr) {
-                return p.graph.outcomingEdgesDic[x.id].length == 0;
+                return x.outcomingEdges.length == 0;
             });
         }
         public getHeight(): number {

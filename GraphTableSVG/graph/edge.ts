@@ -5,6 +5,7 @@
         private _endNode: Vertex;
         endConnecterType: ConnecterPosition = ConnecterPosition.Bottom;
         private _graph: Graph | null = null;
+        public group: SVGGElement;
         text: EdgeText | null = null;
 
         get beginNode(): Vertex {
@@ -36,6 +37,7 @@
 
 
         constructor() {
+            this.group = createGroup();
             //this._parent = graph;
             /*
             this._beginNode = _beginNode;
@@ -78,7 +80,7 @@
         {
             super.setGraph(value);
             if (this.graph != null) {
-                this.graph.svgGroup.appendChild(this.svg);
+                this.graph.svgGroup.appendChild(this.group);
             }
         }
 
@@ -86,6 +88,7 @@
         constructor(line: SVGLineElement) {
             super();
             this._svg = line;
+            this.group.appendChild(line);
             //this.graph.svgGroup.appendChild(this._svg);
 
         }

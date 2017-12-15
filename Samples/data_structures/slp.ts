@@ -80,7 +80,7 @@ module SLP {
 
     export class Clicker {
         text: string;
-        graph: GraphTableSVG.OrderedForest;
+        graph: GraphTableSVG.Graph;
         table: GraphTableSVG.SVGTable;
         slp: SLPManager;
         nodeClass: string | null = null;
@@ -126,7 +126,7 @@ module SLP {
 
         constructor(text: string, svg: HTMLElement, r: number = 30, tableClass : string | null = null, nodeClass : string | null = null) {
             this.r = r;
-            this.graph = new GraphTableSVG.OrderedForest();
+            this.graph = new GraphTableSVG.Graph();
             svg.appendChild(this.graph.svgGroup);
             this.table = new GraphTableSVG.SVGTable(1, 1, tableClass);
             svg.appendChild(this.table.group);

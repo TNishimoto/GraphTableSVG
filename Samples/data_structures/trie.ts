@@ -145,11 +145,12 @@
         }
         return [texts.length, false];
     }
-    export function translate(root: TreeNode, graph: GraphTableSVG.OrderedTree) {
+    export function translate(root: TreeNode, graph: GraphTableSVG.Graph) {
         var dic: { [key: number]: GraphTableSVG.Vertex; } = [];
+        var lastNode: GraphTableSVG.Vertex;
         root.getNodes().forEach(function(x) {
             var node = createNode(x, graph, dic);
-            graph.outcomingEdgesDic[node.id] = [];
+            //node.outcomingEdgesDic = [];
             x.children.forEach(function(y) {
                 var child = createNode(y, graph, dic);
                 var edge = GraphTableSVG.LineEdge.create();
@@ -162,10 +163,11 @@
                 edge.text = edgeText;
 
                 //graph.edges.push(edge);
-                graph.outcomingEdgesDic[node.id].push(edge);
+                node.outcomingEdges.push(edge);
+                lastNode = child;
             });
         });
-        graph.rootVertex = graph.getFirstNoParentVertex();
+        graph.rootVertex = lastNode.root;
     }
     export function shrink(root: TreeNode) {
         if (root.parent != null) {
@@ -187,7 +189,7 @@
     }
 
 
-    function createNode(treeNode: TreeNode, graph: GraphTableSVG.OrderedOutcomingEdgesGraph, dic: { [key: number]: GraphTableSVG.Vertex; }): GraphTableSVG.Vertex {
+    function createNode(treeNode: TreeNode, graph: GraphTableSVG.Graph, dic: { [key: number]: GraphTableSVG.Vertex; }): GraphTableSVG.Vertex {
         if (treeNode.id in dic) {
             return dic[treeNode.id];
         } else {
