@@ -1,9 +1,33 @@
 ﻿module GraphTableSVG {
     export class Edge {
         private _beginNode: Vertex;
-        beginConnecterType: ConnecterPosition = ConnecterPosition.Top;
+        //_beginConnecterType: ConnectorPosition = ConnectorPosition.Top;
         private _endNode: Vertex;
-        endConnecterType: ConnecterPosition = ConnecterPosition.Bottom;
+        //_endConnecterType: ConnectorPosition = ConnectorPosition.Bottom;
+
+        get beginConnectorType(): ConnectorPosition {
+            var p = this.group.getAttribute("beginConnectorType");
+            if (p == null) {
+                return ConnectorPosition.Auto;
+            } else {
+                return GraphTableSVG.ToConnectorPosition(p);
+            }
+        }
+        set beginConnectorType(value: ConnectorPosition) {
+            this.group.setAttribute("beginConnectorType", GraphTableSVG.ToStrFromConnectorPosition(value));
+        }
+        get endConnectorType(): ConnectorPosition {
+            var p = this.group.getAttribute("endConnectorType");
+            if (p == null) {
+                return ConnectorPosition.Auto;
+            } else {
+                return GraphTableSVG.ToConnectorPosition(p);
+            }
+        }
+        set endConnectorType(value: ConnectorPosition) {
+            this.group.setAttribute("endConnectorType", GraphTableSVG.ToStrFromConnectorPosition(value));
+        }
+
         private _graph: Graph | null = null;
         public group: SVGGElement;
         text: EdgeText | null = null;
@@ -13,6 +37,7 @@
         }
         set beginNode(value: Vertex) {
             this._beginNode = value;
+            this.group.setAttribute("beginNode", value.objectID);
 
             if (this.graph != null) {
                 this.graph.update();
@@ -23,6 +48,8 @@
         }
         set endNode(value: Vertex) {
             this._endNode = value;
+            this.group.setAttribute("endNode", value.objectID);
+
             if (this.graph != null) {
                 this.graph.update();
             }
@@ -48,20 +75,20 @@
         }
 
         public get x1(): number {
-            var [x1, y1] = this._beginNode.getLocation(this.beginConnecterType);
+            var [x1, y1] = this._beginNode.getLocation(this.beginConnectorType);
 
             return x1;
         }
         public get y1(): number {
-            var [x1, y1] = this._beginNode.getLocation(this.beginConnecterType);
+            var [x1, y1] = this._beginNode.getLocation(this.beginConnectorType);
             return y1;
         }
         public get x2(): number {
-            var [x2, y2] = this._endNode.getLocation(this.endConnecterType);
+            var [x2, y2] = this._endNode.getLocation(this.endConnectorType);
             return x2;
         }
         public get y2(): number {
-            var [x2, y2] = this._endNode.getLocation(this.endConnecterType);
+            var [x2, y2] = this._endNode.getLocation(this.endConnectorType);
             return y2;
         }
 

@@ -155,8 +155,8 @@ function createTestGraph() {
     var edge1 = GraphTableSVG.LineEdge.create();
     graph.connect(node1, edge1, node2);
 
-    edge1.beginConnecterType = GraphTableSVG.ConnecterPosition.RightUp;
-    edge1.endConnecterType = GraphTableSVG.ConnecterPosition.LeftUp;
+    edge1.beginConnectorType = GraphTableSVG.ConnectorPosition.RightUp;
+    edge1.endConnectorType = GraphTableSVG.ConnectorPosition.LeftUp;
 
     //graph.edges.push(edge1);
     

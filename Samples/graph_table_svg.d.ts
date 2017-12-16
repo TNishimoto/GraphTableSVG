@@ -1,9 +1,9 @@
 declare module GraphTableSVG {
     class Edge {
         private _beginNode;
-        beginConnecterType: ConnecterPosition;
         private _endNode;
-        endConnecterType: ConnecterPosition;
+        beginConnectorType: ConnectorPosition;
+        endConnectorType: ConnectorPosition;
         private _graph;
         group: SVGGElement;
         text: EdgeText | null;
@@ -30,29 +30,6 @@ declare module GraphTableSVG {
     }
 }
 declare module GraphTableSVG {
-    class Rectangle {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        readonly right: number;
-        readonly bottom: number;
-    }
-    enum NodeOrder {
-        Preorder = 0,
-        Postorder = 1,
-    }
-    enum ConnecterPosition {
-        Top = 1,
-        LeftUp = 2,
-        Left = 3,
-        LeftDown = 4,
-        Bottom = 5,
-        RightDown = 6,
-        Right = 7,
-        RightUp = 8,
-        Auto = 9,
-    }
     class Graph {
         static id: number;
         protected _nodes: Vertex[];
@@ -76,7 +53,7 @@ declare module GraphTableSVG {
         getRegion(): Rectangle;
         getObjectBySVGID(id: string): Vertex | Edge | null;
         private _connect(node1, edge, node2, _beginConnectType?, _endConnectType?);
-        connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex?: number, _beginConnectType?: ConnecterPosition, _endConnectType?: ConnecterPosition): void;
+        connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex?: number, _beginConnectType?: ConnectorPosition, _endConnectType?: ConnectorPosition): void;
         getOrderedNodes(order: NodeOrder, node?: Vertex | null): Vertex[];
         rootVertex: Vertex | null;
         save(): void;
@@ -124,7 +101,7 @@ declare module GraphTableSVG {
         y: number;
         readonly width: number;
         readonly height: number;
-        getLocation(type: ConnecterPosition): [number, number];
+        getLocation(type: ConnectorPosition): [number, number];
         update(): boolean;
         readonly region: Rectangle;
         static getRegion(vertexes: Vertex[]): Rectangle;
@@ -152,7 +129,7 @@ declare module GraphTableSVG {
         readonly innerRectangle: Rectangle;
         static create(_parent: Graph, x?: number, y?: number, r?: number, nodeClassName?: string | null): CircleVertex;
         readonly radius: number;
-        getLocation(type: ConnecterPosition): [number, number];
+        getLocation(type: ConnectorPosition): [number, number];
         readonly surface: SVGElement | null;
     }
 }
@@ -335,6 +312,31 @@ declare module GraphTableSVG {
     }
 }
 declare module GraphTableSVG {
+    class Rectangle {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        readonly right: number;
+        readonly bottom: number;
+    }
+    enum NodeOrder {
+        Preorder = 0,
+        Postorder = 1,
+    }
+    enum ConnectorPosition {
+        Top = 1,
+        LeftUp = 2,
+        Left = 3,
+        LeftDown = 4,
+        Bottom = 5,
+        RightDown = 6,
+        Right = 7,
+        RightUp = 8,
+        Auto = 9,
+    }
+    function ToConnectorPosition(str: string): ConnectorPosition;
+    function ToStrFromConnectorPosition(position: ConnectorPosition): string;
     function createLine(x: number, y: number, x2: number, y2: number): SVGLineElement;
     function createText(className?: string | null): SVGTextElement;
     function resetStyle(item: SVGTextElement): void;

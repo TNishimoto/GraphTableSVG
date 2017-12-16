@@ -2,8 +2,6 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     class Edge {
         constructor() {
-            this.beginConnecterType = GraphTableSVG.ConnecterPosition.Top;
-            this.endConnecterType = GraphTableSVG.ConnecterPosition.Bottom;
             this._graph = null;
             this.text = null;
             this.group = GraphTableSVG.createGroup();
@@ -14,11 +12,37 @@ var GraphTableSVG;
             this._endNode = _endNode;
             */
         }
+        //_endConnecterType: ConnectorPosition = ConnectorPosition.Bottom;
+        get beginConnectorType() {
+            var p = this.group.getAttribute("beginConnectorType");
+            if (p == null) {
+                return GraphTableSVG.ConnectorPosition.Auto;
+            }
+            else {
+                return GraphTableSVG.ToConnectorPosition(p);
+            }
+        }
+        set beginConnectorType(value) {
+            this.group.setAttribute("beginConnectorType", GraphTableSVG.ToStrFromConnectorPosition(value));
+        }
+        get endConnectorType() {
+            var p = this.group.getAttribute("endConnectorType");
+            if (p == null) {
+                return GraphTableSVG.ConnectorPosition.Auto;
+            }
+            else {
+                return GraphTableSVG.ToConnectorPosition(p);
+            }
+        }
+        set endConnectorType(value) {
+            this.group.setAttribute("endConnectorType", GraphTableSVG.ToStrFromConnectorPosition(value));
+        }
         get beginNode() {
             return this._beginNode;
         }
         set beginNode(value) {
             this._beginNode = value;
+            this.group.setAttribute("beginNode", value.objectID);
             if (this.graph != null) {
                 this.graph.update();
             }
@@ -28,6 +52,7 @@ var GraphTableSVG;
         }
         set endNode(value) {
             this._endNode = value;
+            this.group.setAttribute("endNode", value.objectID);
             if (this.graph != null) {
                 this.graph.update();
             }
@@ -39,19 +64,19 @@ var GraphTableSVG;
             this._graph = value;
         }
         get x1() {
-            var [x1, y1] = this._beginNode.getLocation(this.beginConnecterType);
+            var [x1, y1] = this._beginNode.getLocation(this.beginConnectorType);
             return x1;
         }
         get y1() {
-            var [x1, y1] = this._beginNode.getLocation(this.beginConnecterType);
+            var [x1, y1] = this._beginNode.getLocation(this.beginConnectorType);
             return y1;
         }
         get x2() {
-            var [x2, y2] = this._endNode.getLocation(this.endConnecterType);
+            var [x2, y2] = this._endNode.getLocation(this.endConnectorType);
             return x2;
         }
         get y2() {
-            var [x2, y2] = this._endNode.getLocation(this.endConnecterType);
+            var [x2, y2] = this._endNode.getLocation(this.endConnectorType);
             return y2;
         }
         update() {
@@ -133,32 +158,6 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    class Rectangle {
-        get right() {
-            return this.x + this.width;
-        }
-        get bottom() {
-            return this.y + this.height;
-        }
-    }
-    GraphTableSVG.Rectangle = Rectangle;
-    var NodeOrder;
-    (function (NodeOrder) {
-        NodeOrder[NodeOrder["Preorder"] = 0] = "Preorder";
-        NodeOrder[NodeOrder["Postorder"] = 1] = "Postorder";
-    })(NodeOrder = GraphTableSVG.NodeOrder || (GraphTableSVG.NodeOrder = {}));
-    var ConnecterPosition;
-    (function (ConnecterPosition) {
-        ConnecterPosition[ConnecterPosition["Top"] = 1] = "Top";
-        ConnecterPosition[ConnecterPosition["LeftUp"] = 2] = "LeftUp";
-        ConnecterPosition[ConnecterPosition["Left"] = 3] = "Left";
-        ConnecterPosition[ConnecterPosition["LeftDown"] = 4] = "LeftDown";
-        ConnecterPosition[ConnecterPosition["Bottom"] = 5] = "Bottom";
-        ConnecterPosition[ConnecterPosition["RightDown"] = 6] = "RightDown";
-        ConnecterPosition[ConnecterPosition["Right"] = 7] = "Right";
-        ConnecterPosition[ConnecterPosition["RightUp"] = 8] = "RightUp";
-        ConnecterPosition[ConnecterPosition["Auto"] = 9] = "Auto";
-    })(ConnecterPosition = GraphTableSVG.ConnecterPosition || (GraphTableSVG.ConnecterPosition = {}));
     class Graph {
         constructor(className = null) {
             this._nodes = new Array(0);
@@ -279,14 +278,14 @@ var GraphTableSVG;
             }
             return null;
         }
-        _connect(node1, edge, node2, _beginConnectType = ConnecterPosition.Bottom, _endConnectType = ConnecterPosition.Top) {
+        _connect(node1, edge, node2, _beginConnectType = GraphTableSVG.ConnectorPosition.Bottom, _endConnectType = GraphTableSVG.ConnectorPosition.Top) {
             edge.beginNode = node1;
             edge.endNode = node2;
-            edge.beginConnecterType = _beginConnectType;
-            edge.endConnecterType = _endConnectType;
+            edge.beginConnectorType = _beginConnectType;
+            edge.endConnectorType = _endConnectType;
             this.addEdge(edge);
         }
-        connect(node1, edge, node2, insertIndex = 0, _beginConnectType = ConnecterPosition.Bottom, _endConnectType = ConnecterPosition.Top) {
+        connect(node1, edge, node2, insertIndex = 0, _beginConnectType = GraphTableSVG.ConnectorPosition.Bottom, _endConnectType = GraphTableSVG.ConnectorPosition.Top) {
             this._connect(node1, edge, node2, _beginConnectType, _endConnectType);
             var i = this.roots.indexOf(node1);
             var j = this.roots.indexOf(node2);
@@ -317,7 +316,7 @@ var GraphTableSVG;
             }
             else {
                 var edges = node.outcomingEdges;
-                if (order == NodeOrder.Preorder) {
+                if (order == GraphTableSVG.NodeOrder.Preorder) {
                     r.push(node);
                     edges.forEach((v) => {
                         this.getOrderedNodes(order, v.endNode).forEach((w) => {
@@ -325,7 +324,7 @@ var GraphTableSVG;
                         });
                     });
                 }
-                else if (order == NodeOrder.Postorder) {
+                else if (order == GraphTableSVG.NodeOrder.Postorder) {
                     edges.forEach((v) => {
                         this.getOrderedNodes(order, v.endNode).forEach((w) => {
                             r.push(w);
@@ -860,21 +859,21 @@ var GraphTableSVG;
         getLocation(type) {
             var r = (Math.sqrt(2) / 2) * this.radius;
             switch (type) {
-                case GraphTableSVG.ConnecterPosition.Top:
+                case GraphTableSVG.ConnectorPosition.Top:
                     return [this.x, this.y - this.radius];
-                case GraphTableSVG.ConnecterPosition.RightUp:
+                case GraphTableSVG.ConnectorPosition.RightUp:
                     return [this.x + r, this.y - r];
-                case GraphTableSVG.ConnecterPosition.Right:
+                case GraphTableSVG.ConnectorPosition.Right:
                     return [this.x + this.radius, this.y];
-                case GraphTableSVG.ConnecterPosition.RightDown:
+                case GraphTableSVG.ConnectorPosition.RightDown:
                     return [this.x + r, this.y + r];
-                case GraphTableSVG.ConnecterPosition.Bottom:
+                case GraphTableSVG.ConnectorPosition.Bottom:
                     return [this.x, this.y + this.radius];
-                case GraphTableSVG.ConnecterPosition.LeftDown:
+                case GraphTableSVG.ConnectorPosition.LeftDown:
                     return [this.x - r, this.y + r];
-                case GraphTableSVG.ConnecterPosition.Left:
+                case GraphTableSVG.ConnectorPosition.Left:
                     return [this.x - this.radius, this.y];
-                case GraphTableSVG.ConnecterPosition.LeftUp:
+                case GraphTableSVG.ConnectorPosition.LeftUp:
                     return [this.x - r, this.y - r];
                 default:
                     return [this.x, this.y];
@@ -2216,6 +2215,62 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    class Rectangle {
+        get right() {
+            return this.x + this.width;
+        }
+        get bottom() {
+            return this.y + this.height;
+        }
+    }
+    GraphTableSVG.Rectangle = Rectangle;
+    var NodeOrder;
+    (function (NodeOrder) {
+        NodeOrder[NodeOrder["Preorder"] = 0] = "Preorder";
+        NodeOrder[NodeOrder["Postorder"] = 1] = "Postorder";
+    })(NodeOrder = GraphTableSVG.NodeOrder || (GraphTableSVG.NodeOrder = {}));
+    var ConnectorPosition;
+    (function (ConnectorPosition) {
+        ConnectorPosition[ConnectorPosition["Top"] = 1] = "Top";
+        ConnectorPosition[ConnectorPosition["LeftUp"] = 2] = "LeftUp";
+        ConnectorPosition[ConnectorPosition["Left"] = 3] = "Left";
+        ConnectorPosition[ConnectorPosition["LeftDown"] = 4] = "LeftDown";
+        ConnectorPosition[ConnectorPosition["Bottom"] = 5] = "Bottom";
+        ConnectorPosition[ConnectorPosition["RightDown"] = 6] = "RightDown";
+        ConnectorPosition[ConnectorPosition["Right"] = 7] = "Right";
+        ConnectorPosition[ConnectorPosition["RightUp"] = 8] = "RightUp";
+        ConnectorPosition[ConnectorPosition["Auto"] = 9] = "Auto";
+    })(ConnectorPosition = GraphTableSVG.ConnectorPosition || (GraphTableSVG.ConnectorPosition = {}));
+    function ToConnectorPosition(str) {
+        switch (str) {
+            case "top": return ConnectorPosition.Top;
+            case "leftup": return ConnectorPosition.LeftUp;
+            case "left": return ConnectorPosition.Left;
+            case "leftdown": return ConnectorPosition.LeftDown;
+            case "bottom": return ConnectorPosition.Bottom;
+            case "rightdown": return ConnectorPosition.RightDown;
+            case "right": return ConnectorPosition.Right;
+            case "rightup": return ConnectorPosition.RightUp;
+            case "auto": return ConnectorPosition.Auto;
+            default: return ConnectorPosition.Auto;
+        }
+    }
+    GraphTableSVG.ToConnectorPosition = ToConnectorPosition;
+    function ToStrFromConnectorPosition(position) {
+        switch (position) {
+            case ConnectorPosition.Top: return "top";
+            case ConnectorPosition.LeftUp: return "leftup";
+            case ConnectorPosition.Left: return "left";
+            case ConnectorPosition.LeftDown: return "leftdown";
+            case ConnectorPosition.Bottom: return "bottom";
+            case ConnectorPosition.RightUp: return "rightup";
+            case ConnectorPosition.Right: return "right";
+            case ConnectorPosition.RightDown: return "rightdown";
+            case ConnectorPosition.Auto: return "auto";
+            default: return "auto";
+        }
+    }
+    GraphTableSVG.ToStrFromConnectorPosition = ToStrFromConnectorPosition;
     function createLine(x, y, x2, y2) {
         var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line1.x1.baseVal.value = x;

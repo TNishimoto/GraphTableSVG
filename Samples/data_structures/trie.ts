@@ -156,8 +156,8 @@
                 var edge = GraphTableSVG.LineEdge.create();
                 graph.connect(node, edge, child);
 
-                edge.beginConnecterType = GraphTableSVG.ConnecterPosition.Bottom;
-                edge.endConnecterType = GraphTableSVG.ConnecterPosition.Top;
+                edge.beginConnectorType = GraphTableSVG.ConnectorPosition.Bottom;
+                edge.endConnectorType = GraphTableSVG.ConnectorPosition.Top;
 
                 var edgeText = GraphTableSVG.EdgeText.create(graph,edge, y.edgeText);
                 edge.text = edgeText;

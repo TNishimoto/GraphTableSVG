@@ -114,7 +114,7 @@
         }
 
 
-        public getLocation(type: ConnecterPosition): [number, number] {
+        public getLocation(type: ConnectorPosition): [number, number] {
             return [this.x, this.y];
         }
 
@@ -308,26 +308,26 @@
         public get radius(): number {
             return this.svgCircle.r.baseVal.value;
         }
-        public getLocation(type: ConnecterPosition): [number, number] {
+        public getLocation(type: ConnectorPosition): [number, number] {
             var r = (Math.sqrt(2) / 2) * this.radius;
 
 
             switch (type) {
-                case ConnecterPosition.Top:
+                case ConnectorPosition.Top:
                     return [this.x, this.y - this.radius];
-                case ConnecterPosition.RightUp:
+                case ConnectorPosition.RightUp:
                     return [this.x + r, this.y - r];
-                case ConnecterPosition.Right:
+                case ConnectorPosition.Right:
                     return [this.x + this.radius, this.y];
-                case ConnecterPosition.RightDown:
+                case ConnectorPosition.RightDown:
                     return [this.x + r, this.y + r];
-                case ConnecterPosition.Bottom:
+                case ConnectorPosition.Bottom:
                     return [this.x, this.y + this.radius];
-                case ConnecterPosition.LeftDown:
+                case ConnectorPosition.LeftDown:
                     return [this.x - r, this.y + r];
-                case ConnecterPosition.Left:
+                case ConnectorPosition.Left:
                     return [this.x - this.radius, this.y];
-                case ConnecterPosition.LeftUp:
+                case ConnectorPosition.LeftUp:
                     return [this.x - r, this.y - r];
                 default:
                     return [this.x, this.y];

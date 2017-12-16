@@ -1,31 +1,7 @@
 ﻿module GraphTableSVG {
-    export class Rectangle {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
+    
 
-        get right(): number {
-            return this.x + this.width;
-        }
-        get bottom(): number {
-            return this.y + this.height;
-        }
-    }
-    export enum NodeOrder {
-        Preorder, Postorder
-    }
-    export enum ConnecterPosition {
-        Top = 1,
-        LeftUp = 2,
-        Left = 3,
-        LeftDown = 4,
-        Bottom = 5,
-        RightDown = 6,
-        Right = 7,
-        RightUp = 8,
-        Auto = 9
-    }
+
     export class Graph {
         public static id: number = 0;
 
@@ -163,15 +139,15 @@
         }
 
         private _connect(node1: Vertex, edge: Edge, node2: Vertex,
-            _beginConnectType: ConnecterPosition = ConnecterPosition.Bottom, _endConnectType: ConnecterPosition = ConnecterPosition.Top) {
+            _beginConnectType: ConnectorPosition = ConnectorPosition.Bottom, _endConnectType: ConnectorPosition = ConnectorPosition.Top) {
             edge.beginNode = node1;
             edge.endNode = node2;
-            edge.beginConnecterType = _beginConnectType;
-            edge.endConnecterType = _endConnectType;
+            edge.beginConnectorType = _beginConnectType;
+            edge.endConnectorType = _endConnectType;
             this.addEdge(edge);
         }
         public connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex: number = 0,
-            _beginConnectType: ConnecterPosition = ConnecterPosition.Bottom, _endConnectType: ConnecterPosition = ConnecterPosition.Top) {
+            _beginConnectType: ConnectorPosition = ConnectorPosition.Bottom, _endConnectType: ConnectorPosition = ConnectorPosition.Top) {
             this._connect(node1, edge, node2, _beginConnectType, _endConnectType);
             var i = this.roots.indexOf(node1);
             var j = this.roots.indexOf(node2);

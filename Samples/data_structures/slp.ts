@@ -167,7 +167,7 @@ module Grammar {
             var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, this.nodeClass);
             charNode.svgText.textContent = `${variable.child}`;
             var edge2 = GraphTableSVG.LineEdge.create();
-            this.graph.connect(variableNode, edge2, charNode, 0, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
+            this.graph.connect(variableNode, edge2, charNode, 0, GraphTableSVG.ConnectorPosition.Bottom, GraphTableSVG.ConnectorPosition.Top);
 
             this.graph.roots.push(variableNode);
         }
@@ -188,7 +188,7 @@ module Grammar {
             var variableNode = this.createNode(variable);
             if (parent != null) {
                 var edge = GraphTableSVG.LineEdge.create();
-                this.graph.connect(parent, edge, variableNode, insertIndex, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
+                this.graph.connect(parent, edge, variableNode, insertIndex, GraphTableSVG.ConnectorPosition.Bottom, GraphTableSVG.ConnectorPosition.Top);
             } else {
                 this.graph.roots.push(variableNode);
             }
@@ -200,7 +200,7 @@ module Grammar {
                 var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, this.graph.defaultNodeClass);
                 charNode.svgText.textContent = `${v.child}`;
                 var edge2 = GraphTableSVG.LineEdge.create();
-                this.graph.connect(variableNode, edge2, charNode, 0, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);
+                this.graph.connect(variableNode, edge2, charNode, 0, GraphTableSVG.ConnectorPosition.Bottom, GraphTableSVG.ConnectorPosition.Top);
 
             }
         }
