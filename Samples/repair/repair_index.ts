@@ -3,19 +3,40 @@ import SVGToVBA = GraphTableSVG.SVGToVBA;
 import Graph = GraphTableSVG.Graph;
 //var svgBox: HTMLElement;
 var graphtable: SVGTable | Graph | null = null;
-
+var repairGrammars : Grammar.SLPDictionary[] = [];
+var grammarIndex = 0;
 function createRepair() {
     //clear();
 
     var svgBox = document.getElementById('svgbox');
-    svgBox.innerHTML = "";
     var text = getInputText("inputtext_itb");    
     var r = new Grammar.RepairCompressor(text);
-    r.compress();
 
-    var p = new Grammar.SLPViewer(r.slp, svgBox, 30,"", "slp-graph");
+    repairGrammars.push(r.slp.copy());
 
-    console.log(r.slp);
+    while(r.slp.startVariables.length > 1){
+        r.repair();
+        repairGrammars.push(r.slp.copy());
+    }
+    view(repairGrammars.length-1);
+}
+function view(i : number){
+    var svgBox = document.getElementById('svgbox');
+    svgBox.innerHTML = "";
+    var p = new Grammar.SLPViewer(repairGrammars[i], svgBox, 30,"", "slp-graph");
+    
+    var nb = <HTMLButtonElement>document.getElementById('next_button');
+    var pb = <HTMLButtonElement>document.getElementById('prev_button');
+    nb.disabled = i == repairGrammars.length-1;
+    pb.disabled = i == 0;
+    
+    grammarIndex = i;
+}
+function prev(){
+    view(grammarIndex-1);
+}
+function next(){
+    view(grammarIndex+1);    
 }
 
 window.onload = () => {

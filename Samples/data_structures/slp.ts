@@ -80,6 +80,13 @@ module Grammar {
             this.getTextCharvariables().forEach((v) => { r += v.child });
             return r;
         }
+        public copy(): SLPDictionary {
+            var r = new SLPDictionary();
+            this.slpNodes.forEach((v) => { r.slpNodes.push(v) });
+            this.startVariables.forEach((v) => { r.startVariables.push(v) });
+            return r;
+            
+        }
     }
     
 

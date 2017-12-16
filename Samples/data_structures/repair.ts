@@ -34,21 +34,25 @@ module Grammar {
         }
         public compress() {
             while (this.slp.startVariables.length > 1) {
-                this.collect();
-                var i = 0;
-                var max = 0;
-                for (var key in this.occurrenceDic) {
-                    var size = this.occurrenceDic[key].length;
-                    if (size > max) {
-                        max = size;
-                        i = this.occurrenceDic[key][0];
-                    }
-                }
-                var pair = new VariablePair(this.slp.startVariables[i], this.slp.startVariables[i + 1]);
-                this.repair(pair);
+                this.repair();
             }
         }
-        private repair(pair: VariablePair) {
+        public repair() {
+            this.collect();
+            var i = 0;
+            var max = 0;
+            for (var key in this.occurrenceDic) {
+                var size = this.occurrenceDic[key].length;
+                if (size > max) {
+                    max = size;
+                    i = this.occurrenceDic[key][0];
+                }
+            }
+            var pair = new VariablePair(this.slp.startVariables[i], this.slp.startVariables[i + 1]);
+            this.replace(pair);
+        }
+        private replace(pair: VariablePair) {
+
             var arr = this.occurrenceDic[pair.toHash()];
             var newNumber = this.slp.addVariable(pair.left, pair.right);
             for (var i = arr.length-1; i >= 0; i--) {
