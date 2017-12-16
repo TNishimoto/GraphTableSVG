@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="data_structures\clicker.ts" />
     <TypeScriptCompile Include="data_structures\repair.ts" />
     <TypeScriptCompile Include="data_structures\slp.ts" />
     <TypeScriptCompile Include="data_structures\trie.ts" />

@@ -7,6 +7,7 @@
     "files": [
         "../graph_table_svg.d.ts",
         "../data_structures/slp.ts",
+        "../data_structures/clicker.ts",
         "../gui/svgbox.ts",
         "slp_index.ts"
     ]
