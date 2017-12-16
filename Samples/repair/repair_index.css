@@ -56,8 +56,3 @@
     --vertical-anchor: middle;
     */
 }
-.slp-graph{
-    --default-node-class : slp-node;
-    --default-node-x-interval : 50;
-    --default-node-y-interval : 50;    
-}

@@ -27,7 +27,7 @@
         Auto = 9
     }
     export class Graph {
-        private static id: number = 0;
+        public static id: number = 0;
 
         protected _nodes: Vertex[] = new Array(0);
         protected _edges: Edge[] = new Array(0);
@@ -199,8 +199,10 @@
             }
         }
         public save() {
-            this.nodes.forEach((v) => v.save());
-            var ids = this.nodes.map((v) => v.id);
+            var id = 0;
+            //this.nodes.forEach((v) => v.objectID = id++);
+            //this.edges.forEach((v) => v.objectID = id++);
+            var ids = this.nodes.map((v) => v.objectID);
             this.svgGroup.setAttribute("node", JSON.stringify(ids));
         }
     }

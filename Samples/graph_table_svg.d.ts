@@ -17,6 +17,8 @@ declare module GraphTableSVG {
         readonly x2: number;
         readonly y2: number;
         update(): boolean;
+        readonly objectID: number | null;
+        save(): void;
     }
     class LineEdge extends Edge {
         private _svg;
@@ -52,7 +54,7 @@ declare module GraphTableSVG {
         Auto = 9,
     }
     class Graph {
-        private static id;
+        static id: number;
         protected _nodes: Vertex[];
         protected _edges: Edge[];
         protected _svgGroup: SVGGElement;
@@ -101,6 +103,7 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     class Vertex {
+        symbol: symbol;
         private static id_counter;
         svgGroup: SVGGElement;
         private _graph;
@@ -113,8 +116,7 @@ declare module GraphTableSVG {
         readonly isLocated: boolean;
         readonly graph: Graph | null;
         setGraph(value: Graph): void;
-        private _id;
-        readonly id: number;
+        readonly objectID: string;
         constructor(className?: string | null);
         x: number;
         y: number;
@@ -150,7 +152,6 @@ declare module GraphTableSVG {
         readonly radius: number;
         getLocation(type: ConnecterPosition): [number, number];
         readonly surface: SVGElement | null;
-        containsSVGID(id: string): boolean;
     }
 }
 declare module GraphTableSVG {

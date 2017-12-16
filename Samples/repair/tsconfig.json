@@ -2,12 +2,14 @@
     "compilerOptions": {
     "target": "ES2015",
     "sourceMap": true,
-    "outFile": "./slp_index.js"     
+    "outFile": "./repair_index.js"     
     },
     "files": [
         "../graph_table_svg.d.ts",
         "../data_structures/slp.ts",
+        "../data_structures/repair.ts",
+        
         "../gui/svgbox.ts",
-        "slp_index.ts"
+        "repair_index.ts"
     ]
 }

@@ -1,5 +1,7 @@
 ﻿module GraphTableSVG {
     export class Vertex {
+        public symbol: symbol = Symbol();
+
         private static id_counter: number = 0;
         svgGroup: SVGGElement;
         private _graph: Graph | null;
@@ -36,19 +38,33 @@
             }
             this._graph = value;
             if (this.graph != null) {
-                this.svgGroup.id = `${this.graph.name}_${this.id}_group`;
+                //this.svgGroup.id = `${this.graph.name}_${this.id}_group`;
             }
         }
 
-
-        private _id: number = Vertex.id_counter++;
-        public get id(): number {
-            return this._id;
+        
+        public get objectID(): string {
+            var r = this.svgGroup.getAttribute("objectID");
+            if (r == null) {
+                throw new Error();
+            } else {
+                return r;
+            }
         }
+        /*
+        public set objectID(value: number | null) {
+            if (value == null) {
+                this.svgGroup.setAttribute("objectID", "");
+            } else {
+                this.svgGroup.setAttribute("objectID", value.toString());
+            }
+        }
+        */
+        
 
         constructor(className: string | null = null) {
             this.svgGroup = GraphTableSVG.createGroup(className);
-
+            this.svgGroup.setAttribute("objectID", (Graph.id++).toString());
             
             
             this._observer = new MutationObserver(this.observerFunc);
@@ -141,7 +157,7 @@
             }
         }
         public containsSVGID(id: string): boolean {
-            return this.svgGroup.id == id;
+            return this.svgGroup.getAttribute("objectID") == id;
         }
         public get surface(): SVGElement | null {
             return null;
@@ -229,11 +245,13 @@
         public setGraph(value: Graph) {
             super.setGraph(value);
 
+            /*
             if (this.graph != null) {
                 this.svgCircle.id = `${this.graph.name}_${this.id}_circle`;
                 this.svgText.id = `${this.graph.name}_${this.id}_text`;
 
             }
+            */
         }
         constructor(className: string | null = null, r: number = 10, text : string = "") {
             super(className);
@@ -243,6 +261,9 @@
 
             this.svgGroup.appendChild(this.svgCircle);
             this.svgGroup.appendChild(this.svgText);
+
+            //this.svgCircle.setAttribute("objectID", this.objectID);
+            //this.svgText.setAttribute("objectID", this.objectID);
 
 
             this._textObserver = new MutationObserver(this.textObserverFunc);
@@ -315,11 +336,12 @@
         public get surface(): SVGElement | null {
             return this.svgCircle;
         }
-
+        /*
         public containsSVGID(id: string): boolean {
             var b = this.svgCircle.id == id || this.svgText.id == id;
             return super.containsSVGID(id) || b;
         }
+        */
         
     }
 }

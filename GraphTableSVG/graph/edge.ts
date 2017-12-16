@@ -38,6 +38,8 @@
 
         constructor() {
             this.group = createGroup();
+            this.group.setAttribute("objectID", (Graph.id++).toString());
+
             //this._parent = graph;
             /*
             this._beginNode = _beginNode;
@@ -66,6 +68,26 @@
 
         public update(): boolean {
             return false;
+        }
+
+        public get objectID(): number | null {
+            var r = this.group.getAttribute("objectID");
+            if (r == null) {
+                return null;
+            } else {
+                return Number(r);
+            }
+        }
+        /*
+        public set objectID(value: number | null) {
+            if (value == null) {
+                this.group.setAttribute("objectID", "");
+            } else {
+                this.group.setAttribute("objectID", value.toString());
+            }
+        }
+        */
+        public save() {
         }
     }
 
@@ -132,7 +154,7 @@
             console.log(this.svgText.x.baseVal.getItem(0));
             */
         }
-
+        
     }
     
 }
