@@ -10,10 +10,10 @@ function createRepair() {
     var svgBox = document.getElementById('svgbox');
     svgBox.innerHTML = "";
     var text = getInputText("inputtext_itb");    
-    var r = new SLP.RepairCompressor(text);
+    var r = new Grammar.RepairCompressor(text);
     r.compress();
 
-    var p = new SLP.SLPViewer(r.slp, svgBox, 30,"", "slpnode");
+    var p = new Grammar.SLPViewer(r.slp, svgBox, 30,"", "slp-graph");
 
     console.log(r.slp);
 }

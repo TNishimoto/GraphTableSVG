@@ -1,4 +1,4 @@
-﻿module SLP {
+﻿module Grammar {
 
     export class Clicker extends SLPViewer {
         
@@ -30,8 +30,8 @@
                 v.surface.setAttribute("class", v.isRoot ? "slpnode" : "slpnode_noroot");
             })
         }
-        private static createSLP(text: string): SLPManager {
-            var slp = new SLPManager();
+        private static createSLP(text: string): SLPDictionary {
+            var slp = new SLPDictionary();
             for (var i = 0; i < text.length; i++) {
                 var c = slp.addChar(text[i]);
                 slp.startVariables.push(c);

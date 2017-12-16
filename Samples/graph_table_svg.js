@@ -160,13 +160,47 @@ var GraphTableSVG;
         ConnecterPosition[ConnecterPosition["Auto"] = 9] = "Auto";
     })(ConnecterPosition = GraphTableSVG.ConnecterPosition || (GraphTableSVG.ConnecterPosition = {}));
     class Graph {
-        constructor() {
+        constructor(className = null) {
             this._nodes = new Array(0);
             this._edges = new Array(0);
             this.name = (Graph.id++).toString();
             this._roots = [];
             this._svgGroup = GraphTableSVG.createGroup();
+            if (className != null) {
+                this._svgGroup.setAttribute("class", className);
+                var nodeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-node-class").trim();
+                console.log("NodeClass :" + nodeClass);
+                if (nodeClass.length > 0) {
+                    this.defaultNodeClass = nodeClass;
+                }
+                var edgeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-edge-class").trim();
+                if (edgeClass.length > 0) {
+                    this.defaultEdgeClass = nodeClass;
+                }
+            }
             //svg.appendChild(this._svgGroup);
+        }
+        get defaultNodeClass() {
+            return this.svgGroup.getAttribute("default-node-class");
+        }
+        set defaultNodeClass(value) {
+            if (value == null) {
+                this.svgGroup.removeAttribute("default-node-class");
+            }
+            else {
+                this.svgGroup.setAttribute("default-node-class", value);
+            }
+        }
+        get defaultEdgeClass() {
+            return this.svgGroup.getAttribute("default-edge-class");
+        }
+        set defaultEdgeClass(value) {
+            if (value == null) {
+                this.svgGroup.removeAttribute("default-edge-class");
+            }
+            else {
+                this.svgGroup.setAttribute("default-edge-class", value);
+            }
         }
         //public arrangementFunction: (Graph) => void | null = null;
         get roots() {
@@ -2243,6 +2277,7 @@ var GraphTableSVG;
         if (className == null) {
             circle.style.stroke = "black";
             circle.style.strokeWidth = "1pt";
+            circle.style.fill = "#ffffff";
         }
         else {
             circle.setAttribute("class", className);

@@ -35,6 +35,27 @@
         public name: string = (Graph.id++).toString();
         protected _roots: Vertex[] = [];
 
+        get defaultNodeClass(): string | null {
+            return this.svgGroup.getAttribute("default-node-class");            
+        }
+        set defaultNodeClass(value: string | null) {
+            if (value == null) {
+                this.svgGroup.removeAttribute("default-node-class");
+            } else {
+                this.svgGroup.setAttribute("default-node-class", value);
+            }
+        }
+        get defaultEdgeClass(): string | null {
+            return this.svgGroup.getAttribute("default-edge-class");
+        }
+        set defaultEdgeClass(value: string | null) {
+            if (value == null) {
+                this.svgGroup.removeAttribute("default-edge-class");
+            } else {
+                this.svgGroup.setAttribute("default-edge-class", value);
+            }
+        }
+
         //public arrangementFunction: (Graph) => void | null = null;
         get roots(): Vertex[] {
             return this._roots;
@@ -66,8 +87,21 @@
         }
         
 
-        constructor() {
+        constructor(className : string | null = null) {
             this._svgGroup = GraphTableSVG.createGroup();
+            if(className != null){
+                this._svgGroup.setAttribute("class", className);
+                var nodeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-node-class").trim();
+                console.log("NodeClass :" + nodeClass);
+                if (nodeClass.length > 0) {
+                    this.defaultNodeClass = nodeClass;
+                }
+
+                var edgeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-edge-class").trim();
+                if (edgeClass.length > 0) {
+                    this.defaultEdgeClass = nodeClass;
+                }
+            }
             //svg.appendChild(this._svgGroup);
         }
 

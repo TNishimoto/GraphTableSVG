@@ -1,32 +1,10 @@
 ﻿
-module SLP {
-    /*
-    export function translate(text: string, graph: GraphTableSVG.OrderedForest, table: GraphTableSVG.SVGTable) {
-        console.log(text);
-        
-        var test = new Clicker(text, graph, table);
-
-        graph.update();
-    }
-    */
+module Grammar {
 
     interface NoncharVariable { type : "nonchar", value: number, left: number, right: number };
-    /*
-    class NoncharVariable {
-        constructor(public value: number, public left: number, public right: number) {
-        }
-    }
-    */
     interface CharVariable { type: "char", value: number, child: string };
-    /*
-    class CharVariable {
-        constructor(public value: number, public child: string) {
-        }
-
-    }
-    */
     
-    export class SLPManager {
+    export class SLPDictionary {
         slpNodes: (NoncharVariable | CharVariable)[] = [];
         startVariables: number[] = [];
         //private _outcomingEdgesDic: { [key: number]: Edge[]; } = [];
@@ -109,8 +87,8 @@ module SLP {
     export class SLPViewer {
         graph: GraphTableSVG.Graph;
         table: GraphTableSVG.SVGTable;
-        slp: SLPManager;
-        nodeClass: string | null = null;
+        slp: SLPDictionary;
+        //nodeClass: string | null = null;
         r: number;
         private _nodeXInterval: number = 50;
         private _nodeYInterval: number = 50;
@@ -132,13 +110,13 @@ module SLP {
         
         //private _idVariableDic: { [key: number]: number; } = [];
 
-        constructor(slp: SLPManager, svg: HTMLElement, r: number = 30, tableClass: string | null = null, nodeClass: string | null = null) {
+        constructor(slp: SLPDictionary, svg: HTMLElement, r: number = 30, tableClass: string | null = null, graphClass: string | null = null) {
             this.r = r;
-            this.graph = new GraphTableSVG.Graph();
+            this.graph = new GraphTableSVG.Graph(graphClass);
             svg.appendChild(this.graph.svgGroup);
             this.table = new GraphTableSVG.SVGTable(1, 1, tableClass);
             svg.appendChild(this.table.group);
-            this.nodeClass = nodeClass;
+            //this.nodeClass = nodeClass;
             this.slp = slp;
             this.create();
             this.locate();
@@ -187,8 +165,8 @@ module SLP {
             this.graph.roots.push(variableNode);
         }
         */
-        private createNode(variable : number | string) : GraphTableSVG.Vertex{
-            var variableNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, this.nodeClass);
+        private createNode(variable: number | string): GraphTableSVG.Vertex{
+            var variableNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, this.graph.defaultNodeClass);
             if(typeof(variable) == "string"){
                 variableNode.svgGroup.setAttribute("variable", variable);            
             }else{
@@ -212,7 +190,7 @@ module SLP {
                 this.createVariable(v.left, variableNode, 0);
                 this.createVariable(v.right, variableNode, 1);
             } else {
-                var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, this.nodeClass);
+                var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, this.graph.defaultNodeClass);
                 charNode.svgText.textContent = `${v.child}`;
                 var edge2 = GraphTableSVG.LineEdge.create();
                 this.graph.connect(variableNode, edge2, charNode, 0, GraphTableSVG.ConnecterPosition.Bottom, GraphTableSVG.ConnecterPosition.Top);

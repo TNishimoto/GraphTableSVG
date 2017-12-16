@@ -1,5 +1,5 @@
 ﻿
-module SLP {
+module Grammar {
     class VariablePair {
         constructor(public left: number, public right: number) {
 
@@ -9,11 +9,11 @@ module SLP {
         }
     };
     export class RepairCompressor {
-        slp: SLPManager;
+        slp: SLPDictionary;
         private occurrenceDic: { [key: string]: number[]; } = {};
 
         constructor(text: string) {
-            this.slp = new SLPManager();
+            this.slp = new SLPDictionary();
             for (var i = 0; i < text.length; i++) {
                 var v = this.slp.addChar(text[i]);
                 this.slp.startVariables.push(v);
@@ -34,7 +34,6 @@ module SLP {
         }
         public compress() {
             while (this.slp.startVariables.length > 1) {
-                console.log(this.slp.text);
                 this.collect();
                 var i = 0;
                 var max = 0;
@@ -46,7 +45,6 @@ module SLP {
                     }
                 }
                 var pair = new VariablePair(this.slp.startVariables[i], this.slp.startVariables[i + 1]);
-                console.log(pair);
                 this.repair(pair);
             }
         }

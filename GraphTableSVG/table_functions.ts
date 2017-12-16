@@ -63,6 +63,8 @@ module GraphTableSVG {
         if (className == null) {
             circle.style.stroke = "black";
             circle.style.strokeWidth = "1pt";
+            circle.style.fill = "#ffffff";
+
         } else {
             circle.setAttribute("class", className);
             //circle.className = className

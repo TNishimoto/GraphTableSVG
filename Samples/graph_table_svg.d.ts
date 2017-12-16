@@ -60,13 +60,15 @@ declare module GraphTableSVG {
         protected _svgGroup: SVGGElement;
         name: string;
         protected _roots: Vertex[];
+        defaultNodeClass: string | null;
+        defaultEdgeClass: string | null;
         readonly roots: Vertex[];
         readonly svgGroup: SVGGElement;
         readonly nodes: Vertex[];
         readonly edges: Edge[];
         addVertex(vertex: Vertex): void;
         private addEdge(edge);
-        constructor();
+        constructor(className?: string | null);
         updateNodes(): void;
         updateEdges(): void;
         update(): void;

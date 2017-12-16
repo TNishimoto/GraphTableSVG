@@ -1,31 +1,9 @@
 ﻿
-.slpnode {
+.surface {
     stroke: green;
     fill: white;
+    --default-radius : 30;    
 }
-
-    .slpnode:hover {
-        fill: #31c8aa;
-        box-shadow: 0 3px 0 #23a188;
-    }
-
-    .slpnode:active {
-        top: 3px;
-        box-shadow: none;
-    }
-
-.slpnode_choice {
-    stroke: green;
-    stroke-width: 5px;
-    fill: blue;
-}
-
-.slpnode_noroot {
-    stroke: black;
-    fill: orange;
-}
-
-
 
 .table-text {
     fill: black;
@@ -51,8 +29,12 @@
 .slp-node{
     --default-surface-class : surface;
     --default-text-class : table-text;
+    --default-surface-type : circle;
     /*
     --horizontal-anchor: center;
     --vertical-anchor: middle;
     */
+}
+.slp-graph{
+     --default-node-class : slp-node; 
 }
