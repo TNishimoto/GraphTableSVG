@@ -25,7 +25,7 @@
         constructor(text: string, svg: HTMLElement, r: number = 30, tableClass: string | null = null, nodeClass: string | null = null) {
             super(Clicker.createSLP(text), svg, r, tableClass, nodeClass);
 
-            this.graph.nodes.forEach((v) => {
+            this.graph.vertices.forEach((v) => {
                 v.svgGroup.onclick = this.Click;
                 v.surface.setAttribute("class", v.isRoot ? "slpnode" : "slpnode_noroot");
             })

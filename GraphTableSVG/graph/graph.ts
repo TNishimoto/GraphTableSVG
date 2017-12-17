@@ -5,20 +5,20 @@
     export class Graph {
         public static id: number = 0;
 
-        protected _nodes: Vertex[] = new Array(0);
+        protected _vertices: Vertex[] = new Array(0);
         protected _edges: Edge[] = new Array(0);
         protected _svgGroup: SVGGElement;
         public name: string = (Graph.id++).toString();
         protected _roots: Vertex[] = [];
 
-        get defaultNodeClass(): string | null {
-            return this.svgGroup.getAttribute("default-node-class");            
+        get defaultVertexClass(): string | null {
+            return this.svgGroup.getAttribute("default-vertex-class");            
         }
-        set defaultNodeClass(value: string | null) {
+        set defaultVertexClass(value: string | null) {
             if (value == null) {
-                this.svgGroup.removeAttribute("default-node-class");
+                this.svgGroup.removeAttribute("default-vertex-class");
             } else {
-                this.svgGroup.setAttribute("default-node-class", value);
+                this.svgGroup.setAttribute("default-vertex-class", value);
             }
         }
         get defaultEdgeClass(): string | null {
@@ -40,8 +40,8 @@
             return this._svgGroup;
         }
         
-        get nodes(): Vertex[] {
-            return this._nodes;
+        get vertices(): Vertex[] {
+            return this._vertices;
         }
         get edges(): Edge[] {
             return this._edges;
@@ -51,10 +51,10 @@
         public addVertex(vertex: Vertex) {
             this.svgGroup.appendChild(vertex.svgGroup);
             vertex.setGraph(this);
-            this._nodes.push(vertex);
+            this._vertices.push(vertex);
         }
 
-        private addEdge(edge: Edge) {
+        public addEdge(edge: Edge) {
             edge.setGraph(this);
             var i = this._edges.indexOf(edge);
             if (i == -1) {
@@ -67,15 +67,14 @@
             this._svgGroup = GraphTableSVG.createGroup();
             if(className != null){
                 this._svgGroup.setAttribute("class", className);
-                var nodeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-node-class").trim();
-                console.log("NodeClass :" + nodeClass);
+                var nodeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-vertex-class").trim();
                 if (nodeClass.length > 0) {
-                    this.defaultNodeClass = nodeClass;
+                    this.defaultVertexClass = nodeClass;
                 }
 
                 var edgeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-edge-class").trim();
                 if (edgeClass.length > 0) {
-                    this.defaultEdgeClass = nodeClass;
+                    this.defaultEdgeClass = edgeClass;
                 }
             }
             //svg.appendChild(this._svgGroup);
@@ -90,15 +89,15 @@
         }
         */
 
-        updateNodes(): void {
-            this._nodes.forEach(function (x) { x.update() });
+        updateVertices(): void {
+            this._vertices.forEach(function (x) { x.update() });
         }
         updateEdges() : void {
             this._edges.forEach(function (x) { x.update() });
         }
 
         update(): void {
-            this.updateNodes();
+            this.updateVertices();
             this.updateEdges();
         }
         /*
@@ -123,32 +122,30 @@
         */
 
         public getRegion(): Rectangle {
-            var rect = Vertex.getRegion(this._nodes);
+            var rect = Vertex.getRegion(this._vertices);
             rect.x += this.svgGroup.getX();
             rect.y += this.svgGroup.getY();
             return rect;
         }
 
         public getObjectBySVGID(id: string): Vertex | Edge | null {
-            for (var i = 0; i < this.nodes.length; i++) {
-                if (this.nodes[i].containsSVGID(id)) {
-                    return this.nodes[i];
+            for (var i = 0; i < this.vertices.length; i++) {
+                if (this.vertices[i].containsSVGID(id)) {
+                    return this.vertices[i];
                 }
             }
             return null;
         }
 
-        private _connect(node1: Vertex, edge: Edge, node2: Vertex,
-            _beginConnectType: ConnectorPosition = ConnectorPosition.Bottom, _endConnectType: ConnectorPosition = ConnectorPosition.Top) {
+        private _connect(node1: Vertex, edge: Edge, node2: Vertex) {
             edge.beginNode = node1;
             edge.endNode = node2;
-            edge.beginConnectorType = _beginConnectType;
-            edge.endConnectorType = _endConnectType;
+            //edge.beginConnectorType = _beginConnectType;
+            //edge.endConnectorType = _endConnectType;
             this.addEdge(edge);
         }
-        public connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex: number = 0,
-            _beginConnectType: ConnectorPosition = ConnectorPosition.Bottom, _endConnectType: ConnectorPosition = ConnectorPosition.Top) {
-            this._connect(node1, edge, node2, _beginConnectType, _endConnectType);
+        public connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex: number = 0) {
+            this._connect(node1, edge, node2);
             var i = this.roots.indexOf(node1);
             var j = this.roots.indexOf(node2);
             if (j != -1) {
@@ -166,11 +163,11 @@
             node1.outcomingEdges.splice(insertIndex, 0, edge);
             node2.incomingEdges.push(edge);
         }
-        public getOrderedNodes(order: NodeOrder, node: Vertex | null = null): Vertex[] {
+        public getOrderedVertices(order: NodeOrder, node: Vertex | null = null): Vertex[] {
             var r: Vertex[] = [];
             if (node == null) {
                 this.roots.forEach((v) => {
-                    this.getOrderedNodes(order, v).forEach((w) => {
+                    this.getOrderedVertices(order, v).forEach((w) => {
                         r.push(w);
                     });
                 });
@@ -179,14 +176,14 @@
                 if (order == NodeOrder.Preorder) {
                     r.push(node);
                     edges.forEach((v) => {
-                        this.getOrderedNodes(order, v.endNode).forEach((w) => {
+                        this.getOrderedVertices(order, v.endNode).forEach((w) => {
                             r.push(w);
                         });
                     });
 
                 } else if (order == NodeOrder.Postorder) {
                     edges.forEach((v) => {
-                        this.getOrderedNodes(order, v.endNode).forEach((w) => {
+                        this.getOrderedVertices(order, v.endNode).forEach((w) => {
                             r.push(w);
                         });
                     });
@@ -212,13 +209,13 @@
             var id = 0;
             //this.nodes.forEach((v) => v.objectID = id++);
             //this.edges.forEach((v) => v.objectID = id++);
-            var ids = this.nodes.map((v) => v.objectID);
+            var ids = this.vertices.map((v) => v.objectID);
             this.svgGroup.setAttribute("node", JSON.stringify(ids));
         }
     }
     
 
-    
+
     
 
 }

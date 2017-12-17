@@ -1,11 +1,16 @@
 var GraphTableSVG;
 (function (GraphTableSVG) {
     class Edge {
-        constructor() {
+        constructor(className = null) {
             this._graph = null;
             this.text = null;
-            this.group = GraphTableSVG.createGroup();
+            this.group = GraphTableSVG.createGroup(className);
             this.group.setAttribute("objectID", (GraphTableSVG.Graph.id++).toString());
+            var left = this.group.getActiveStyle().getPropertyValue("--default-begin-connector-position").trim();
+            var right = this.group.getActiveStyle().getPropertyValue("--default-end-connector-position").trim();
+            console.log(left + "/" + right);
+            this.beginConnectorType = GraphTableSVG.ToConnectorPosition(this.group.getActiveStyle().getPropertyValue("--default-begin-connector-position").trim());
+            this.endConnectorType = GraphTableSVG.ToConnectorPosition(this.group.getActiveStyle().getPropertyValue("--default-end-connector-position").trim());
             //this._parent = graph;
             /*
             this._beginNode = _beginNode;
@@ -105,10 +110,11 @@ var GraphTableSVG;
     }
     GraphTableSVG.Edge = Edge;
     class LineEdge extends Edge {
-        constructor(line) {
-            super();
-            this._svg = line;
-            this.group.appendChild(line);
+        constructor(className = null) {
+            super(className);
+            var p = this.group.getActiveStyle().getPropertyValue("--default-line-class").trim();
+            this._svg = GraphTableSVG.createLine(0, 0, 0, 0, p.length > 0 ? p : null);
+            this.group.appendChild(this._svg);
             //this.graph.svgGroup.appendChild(this._svg);
         }
         //svgText: SVGTextElement;
@@ -121,9 +127,8 @@ var GraphTableSVG;
                 this.graph.svgGroup.appendChild(this.group);
             }
         }
-        static create() {
-            var svg = GraphTableSVG.createLine(0, 0, 100, 100);
-            var line = new LineEdge(svg);
+        static create(className = null) {
+            var line = new LineEdge(className);
             /*
             var line = new LineEdge(_begin, _end, svg);
             line.beginConnecterType = _beginConnectType;
@@ -160,34 +165,33 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     class Graph {
         constructor(className = null) {
-            this._nodes = new Array(0);
+            this._vertices = new Array(0);
             this._edges = new Array(0);
             this.name = (Graph.id++).toString();
             this._roots = [];
             this._svgGroup = GraphTableSVG.createGroup();
             if (className != null) {
                 this._svgGroup.setAttribute("class", className);
-                var nodeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-node-class").trim();
-                console.log("NodeClass :" + nodeClass);
+                var nodeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-vertex-class").trim();
                 if (nodeClass.length > 0) {
-                    this.defaultNodeClass = nodeClass;
+                    this.defaultVertexClass = nodeClass;
                 }
                 var edgeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-edge-class").trim();
                 if (edgeClass.length > 0) {
-                    this.defaultEdgeClass = nodeClass;
+                    this.defaultEdgeClass = edgeClass;
                 }
             }
             //svg.appendChild(this._svgGroup);
         }
-        get defaultNodeClass() {
-            return this.svgGroup.getAttribute("default-node-class");
+        get defaultVertexClass() {
+            return this.svgGroup.getAttribute("default-vertex-class");
         }
-        set defaultNodeClass(value) {
+        set defaultVertexClass(value) {
             if (value == null) {
-                this.svgGroup.removeAttribute("default-node-class");
+                this.svgGroup.removeAttribute("default-vertex-class");
             }
             else {
-                this.svgGroup.setAttribute("default-node-class", value);
+                this.svgGroup.setAttribute("default-vertex-class", value);
             }
         }
         get defaultEdgeClass() {
@@ -208,8 +212,8 @@ var GraphTableSVG;
         get svgGroup() {
             return this._svgGroup;
         }
-        get nodes() {
-            return this._nodes;
+        get vertices() {
+            return this._vertices;
         }
         get edges() {
             return this._edges;
@@ -217,7 +221,7 @@ var GraphTableSVG;
         addVertex(vertex) {
             this.svgGroup.appendChild(vertex.svgGroup);
             vertex.setGraph(this);
-            this._nodes.push(vertex);
+            this._vertices.push(vertex);
         }
         addEdge(edge) {
             edge.setGraph(this);
@@ -234,14 +238,14 @@ var GraphTableSVG;
 
         }
         */
-        updateNodes() {
-            this._nodes.forEach(function (x) { x.update(); });
+        updateVertices() {
+            this._vertices.forEach(function (x) { x.update(); });
         }
         updateEdges() {
             this._edges.forEach(function (x) { x.update(); });
         }
         update() {
-            this.updateNodes();
+            this.updateVertices();
             this.updateEdges();
         }
         /*
@@ -265,28 +269,28 @@ var GraphTableSVG;
         }
         */
         getRegion() {
-            var rect = GraphTableSVG.Vertex.getRegion(this._nodes);
+            var rect = GraphTableSVG.Vertex.getRegion(this._vertices);
             rect.x += this.svgGroup.getX();
             rect.y += this.svgGroup.getY();
             return rect;
         }
         getObjectBySVGID(id) {
-            for (var i = 0; i < this.nodes.length; i++) {
-                if (this.nodes[i].containsSVGID(id)) {
-                    return this.nodes[i];
+            for (var i = 0; i < this.vertices.length; i++) {
+                if (this.vertices[i].containsSVGID(id)) {
+                    return this.vertices[i];
                 }
             }
             return null;
         }
-        _connect(node1, edge, node2, _beginConnectType = GraphTableSVG.ConnectorPosition.Bottom, _endConnectType = GraphTableSVG.ConnectorPosition.Top) {
+        _connect(node1, edge, node2) {
             edge.beginNode = node1;
             edge.endNode = node2;
-            edge.beginConnectorType = _beginConnectType;
-            edge.endConnectorType = _endConnectType;
+            //edge.beginConnectorType = _beginConnectType;
+            //edge.endConnectorType = _endConnectType;
             this.addEdge(edge);
         }
-        connect(node1, edge, node2, insertIndex = 0, _beginConnectType = GraphTableSVG.ConnectorPosition.Bottom, _endConnectType = GraphTableSVG.ConnectorPosition.Top) {
-            this._connect(node1, edge, node2, _beginConnectType, _endConnectType);
+        connect(node1, edge, node2, insertIndex = 0) {
+            this._connect(node1, edge, node2);
             var i = this.roots.indexOf(node1);
             var j = this.roots.indexOf(node2);
             if (j != -1) {
@@ -305,11 +309,11 @@ var GraphTableSVG;
             node1.outcomingEdges.splice(insertIndex, 0, edge);
             node2.incomingEdges.push(edge);
         }
-        getOrderedNodes(order, node = null) {
+        getOrderedVertices(order, node = null) {
             var r = [];
             if (node == null) {
                 this.roots.forEach((v) => {
-                    this.getOrderedNodes(order, v).forEach((w) => {
+                    this.getOrderedVertices(order, v).forEach((w) => {
                         r.push(w);
                     });
                 });
@@ -319,14 +323,14 @@ var GraphTableSVG;
                 if (order == GraphTableSVG.NodeOrder.Preorder) {
                     r.push(node);
                     edges.forEach((v) => {
-                        this.getOrderedNodes(order, v.endNode).forEach((w) => {
+                        this.getOrderedVertices(order, v.endNode).forEach((w) => {
                             r.push(w);
                         });
                     });
                 }
                 else if (order == GraphTableSVG.NodeOrder.Postorder) {
                     edges.forEach((v) => {
-                        this.getOrderedNodes(order, v.endNode).forEach((w) => {
+                        this.getOrderedVertices(order, v.endNode).forEach((w) => {
                             r.push(w);
                         });
                     });
@@ -353,7 +357,7 @@ var GraphTableSVG;
             var id = 0;
             //this.nodes.forEach((v) => v.objectID = id++);
             //this.edges.forEach((v) => v.objectID = id++);
-            var ids = this.nodes.map((v) => v.objectID);
+            var ids = this.vertices.map((v) => v.objectID);
             this.svgGroup.setAttribute("node", JSON.stringify(ids));
         }
     }
@@ -366,7 +370,7 @@ var GraphTableSVG;
     (function (GraphArrangement) {
         function leaveBasedArrangement(forest, xInterval, yInterval) {
             var leafCounter = 0;
-            forest.getOrderedNodes(GraphTableSVG.NodeOrder.Postorder).forEach((v) => {
+            forest.getOrderedVertices(GraphTableSVG.NodeOrder.Postorder).forEach((v) => {
                 var x = 0;
                 var y = 0;
                 if (v.isLeaf) {
@@ -388,10 +392,10 @@ var GraphTableSVG;
         }
         GraphArrangement.leaveBasedArrangement = leaveBasedArrangement;
         function reverse(graph, isX, isY) {
-            if (graph.nodes.length > 0) {
+            if (graph.vertices.length > 0) {
                 if (isY) {
-                    var midY = middle(graph.nodes.map((v) => v.y));
-                    graph.nodes.forEach((v) => {
+                    var midY = middle(graph.vertices.map((v) => v.y));
+                    graph.vertices.forEach((v) => {
                         if (v.y < midY) {
                             v.y += 2 * (midY - v.y);
                         }
@@ -401,8 +405,8 @@ var GraphTableSVG;
                     });
                 }
                 if (isX) {
-                    var midX = middle(graph.nodes.map((v) => v.x));
-                    graph.nodes.forEach((v) => {
+                    var midX = middle(graph.vertices.map((v) => v.x));
+                    graph.vertices.forEach((v) => {
                         if (v.x < midX) {
                             v.x += 2 * (midX - v.x);
                         }
@@ -583,7 +587,7 @@ var GraphTableSVG;
             }
         }
         */
-        constructor(className = null) {
+        constructor(className = null, text) {
             this.symbol = Symbol();
             this._outcomingEdges = [];
             this._incomingEdges = [];
@@ -597,11 +601,31 @@ var GraphTableSVG;
                     }
                 }
             };
+            this.textObserverFunc = (x) => {
+                for (var i = 0; i < x.length; i++) {
+                    var p = x[i];
+                    if (this.isLocated) {
+                        var vAnchor = this.svgGroup.getActiveStyle().getVerticalAnchor();
+                        if (vAnchor == null)
+                            vAnchor = GraphTableSVG.VerticalAnchor.Middle;
+                        var hAnchor = this.svgGroup.getActiveStyle().getHorizontalAnchor();
+                        if (hAnchor == null)
+                            hAnchor = GraphTableSVG.HorizontalAnchor.Center;
+                        setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
+                    }
+                }
+            };
             this.svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute("objectID", (GraphTableSVG.Graph.id++).toString());
+            this.svgText = GraphTableSVG.createText(this.svgGroup.getActiveStyle().tryGetPropertyValue("--default-text-class"));
+            this.svgText.textContent = text;
+            this.svgGroup.appendChild(this.svgText);
             this._observer = new MutationObserver(this.observerFunc);
             var option = { attributes: true };
             this._observer.observe(this.svgGroup, option);
+            this._textObserver = new MutationObserver(this.textObserverFunc);
+            var option = { childList: true };
+            this._textObserver.observe(this.svgText, option);
             /*
             this.parent = parent;
 
@@ -613,6 +637,15 @@ var GraphTableSVG;
         }
         get incomingEdges() {
             return this._incomingEdges;
+        }
+        get innerRectangle() {
+            var rect = new GraphTableSVG.Rectangle();
+            rect.width = 0;
+            rect.height = 0;
+            rect.x = 0;
+            rect.y = 0;
+            return rect;
+            //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
         get isLocated() {
             return IsDescendantOfBody(this.svgGroup);
@@ -787,43 +820,17 @@ var GraphTableSVG;
     }
     Vertex.id_counter = 0;
     GraphTableSVG.Vertex = Vertex;
-    class CircleVertex extends Vertex {
-        constructor(className = null, r = 10, text = "") {
-            super(className);
-            this.textObserverFunc = (x) => {
-                for (var i = 0; i < x.length; i++) {
-                    var p = x[i];
-                    if (this.isLocated) {
-                        var vAnchor = this.svgGroup.getActiveStyle().getVerticalAnchor();
-                        if (vAnchor == null)
-                            vAnchor = GraphTableSVG.VerticalAnchor.Middle;
-                        var hAnchor = this.svgGroup.getActiveStyle().getHorizontalAnchor();
-                        if (hAnchor == null)
-                            hAnchor = GraphTableSVG.HorizontalAnchor.Center;
-                        setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
-                    }
-                }
-            };
-            this.svgCircle = GraphTableSVG.createCircle(r, this.svgGroup.getActiveStyle().tryGetPropertyValue("--default-surface-class"));
-            this.svgText = GraphTableSVG.createText(this.svgGroup.getActiveStyle().tryGetPropertyValue("--default-text-class"));
-            this.svgText.textContent = text;
-            this.svgGroup.appendChild(this.svgCircle);
-            this.svgGroup.appendChild(this.svgText);
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    class CircleVertex extends GraphTableSVG.Vertex {
+        constructor(className = null, text = "") {
+            super(className, text);
+            this.svgCircle = GraphTableSVG.createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue("--default-surface-class"));
+            //this.svgGroup.appendChild(this.svgCircle);
+            this.svgGroup.insertBefore(this.svgCircle, this.svgText);
             //this.svgCircle.setAttribute("objectID", this.objectID);
             //this.svgText.setAttribute("objectID", this.objectID);
-            this._textObserver = new MutationObserver(this.textObserverFunc);
-            var option = { childList: true };
-            this._textObserver.observe(this.svgText, option);
-        }
-        setGraph(value) {
-            super.setGraph(value);
-            /*
-            if (this.graph != null) {
-                this.svgCircle.id = `${this.graph.name}_${this.id}_circle`;
-                this.svgText.id = `${this.graph.name}_${this.id}_text`;
-
-            }
-            */
         }
         get width() {
             return this.svgCircle.r.baseVal.value * 2;
@@ -841,15 +848,10 @@ var GraphTableSVG;
             return rect;
             //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
-        static create(_parent, x = 0, y = 0, r = 20, nodeClassName = null) {
-            //var circle = createCircle(r, circleClassName);
-            /*
-            var text = GraphTableSVG.createText();
-            var group = GraphTableSVG.createGroup();
-            */
-            var p = new CircleVertex(nodeClassName, r, "");
-            p.x = x;
-            p.y = y;
+        static create(_parent, nodeClassName = null) {
+            var p = new CircleVertex(nodeClassName, "");
+            p.x = 0;
+            p.y = 0;
             _parent.addVertex(p);
             return p;
         }
@@ -884,6 +886,32 @@ var GraphTableSVG;
         }
     }
     GraphTableSVG.CircleVertex = CircleVertex;
+    class RectangleVertex extends GraphTableSVG.Vertex {
+        constructor(className = null, text = "") {
+            super(className, text);
+            this.svgRectangle = GraphTableSVG.createRectangle(this.svgGroup.getActiveStyle().tryGetPropertyValue("--default-surface-class"));
+            this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
+            this.svgRectangle.x.baseVal.value = -this.width / 2;
+            this.svgRectangle.y.baseVal.value = -this.height / 2;
+        }
+        get width() {
+            return this.svgRectangle.width.baseVal.value;
+        }
+        get height() {
+            return this.svgRectangle.height.baseVal.value;
+        }
+        get innerRectangle() {
+            var rect = new GraphTableSVG.Rectangle();
+            rect.width = this.width;
+            rect.height = this.height;
+            rect.x = -this.width / 2;
+            rect.y = -this.height / 2;
+            ;
+            return rect;
+            //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
+        }
+    }
+    GraphTableSVG.RectangleVertex = RectangleVertex;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -1049,7 +1077,7 @@ var GraphTableSVG;
             this.cellY = _py;
             this.parent = parent;
             this.masterID = this.ID;
-            this.svgBackground = GraphTableSVG.createRectangle(0, 0, this.defaultBackgroundClass);
+            this.svgBackground = GraphTableSVG.createRectangle(this.defaultBackgroundClass);
             this.svgText = GraphTableSVG.createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
             /*
@@ -2271,14 +2299,19 @@ var GraphTableSVG;
         }
     }
     GraphTableSVG.ToStrFromConnectorPosition = ToStrFromConnectorPosition;
-    function createLine(x, y, x2, y2) {
+    function createLine(x, y, x2, y2, className = null) {
         var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line1.x1.baseVal.value = x;
         line1.x2.baseVal.value = x2;
         line1.y1.baseVal.value = y;
         line1.y2.baseVal.value = y2;
         //line1.style.color = "black";
-        line1.style.stroke = "black";
+        if (className != null) {
+            line1.setAttribute("class", className);
+        }
+        else {
+            line1.style.stroke = "black";
+        }
         //line1.style.visibility = "hidden";
         //line1.style.strokeWidth = `${5}`
         //line1.setAttribute('stroke', 'black');
@@ -2306,15 +2339,23 @@ var GraphTableSVG;
         item.style.fontWeight = null;
     }
     GraphTableSVG.resetStyle = resetStyle;
-    function createRectangle(width = 0, height = 0, className = null) {
+    function createRectangle(className = null) {
         var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.width.baseVal.value = width;
-        rect.height.baseVal.value = height;
+        rect.width.baseVal.value = 30;
+        rect.height.baseVal.value = 30;
         if (className == null) {
             rect.style.fill = "#ffffff";
         }
         else {
             rect.setAttribute("class", className);
+            var s1 = rect.getActiveStyle().getPropertyValue("--default-width").trim();
+            if (s1.length > 0) {
+                rect.width.baseVal.value = Number(s1);
+            }
+            var s2 = rect.getActiveStyle().getPropertyValue("--default-height").trim();
+            if (s2.length > 0) {
+                rect.height.baseVal.value = Number(s2);
+            }
         }
         return rect;
     }
@@ -2327,8 +2368,9 @@ var GraphTableSVG;
         return g;
     }
     GraphTableSVG.createGroup = createGroup;
-    function createCircle(r = 20, className = null) {
+    function createCircle(className = null) {
         var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.r.baseVal.value = 30;
         if (className == null) {
             circle.style.stroke = "black";
             circle.style.strokeWidth = "1pt";
@@ -2336,15 +2378,55 @@ var GraphTableSVG;
         }
         else {
             circle.setAttribute("class", className);
+            var s = circle.getActiveStyle().getPropertyValue("--default-radius").trim();
+            circle.r.baseVal.value = Number(s);
             //circle.className = className
             //console.log("d : " + circle.setAttribute("class", className));
         }
         //circle.style.fill = "#ffffff";
         circle.cx.baseVal.value = 0;
         circle.cy.baseVal.value = 0;
-        circle.r.baseVal.value = r;
+        //circle.r.baseVal.value = r;
         return circle;
     }
     GraphTableSVG.createCircle = createCircle;
+    function createVertex(_parent, className = null, text = "") {
+        var g = createGroup(className);
+        var type = g.getActiveStyle().getPropertyValue("--default-surface-type").trim();
+        var p;
+        if (type == "circle") {
+            p = new GraphTableSVG.CircleVertex(className, text);
+        }
+        else if (type == "rectangle") {
+            p = new GraphTableSVG.RectangleVertex(className, text);
+        }
+        else {
+            p = new GraphTableSVG.Vertex(className, text);
+        }
+        _parent.addVertex(p);
+        return p;
+    }
+    GraphTableSVG.createVertex = createVertex;
+    function createEdge(_parent, className = null, text = "") {
+        var g = createGroup(className);
+        var textClass = g.getActiveStyle().getPropertyValue("--default-text-class").trim();
+        var line = GraphTableSVG.LineEdge.create(className);
+        //_parent.addEdge(line);
+        return line;
+        //var text = GraphTableSVG.li
+        /*
+        var p: Vertex;
+        if (type == "circle") {
+            p = new CircleVertex(className, text);
+        } else if (type == "rectangle") {
+            p = new RectangleVertex(className, text);
+        } else {
+            p = new Vertex(className, text);
+        }
+        */
+        //_parent.addVertex(p);
+        //return p;
+    }
+    GraphTableSVG.createEdge = createEdge;
 })(GraphTableSVG || (GraphTableSVG = {}));
 //# sourceMappingURL=graph_table_svg.js.map

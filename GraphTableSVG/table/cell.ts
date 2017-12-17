@@ -467,7 +467,7 @@ module GraphTableSVG {
 
 
 
-            this.svgBackground = createRectangle(0, 0, this.defaultBackgroundClass);
+            this.svgBackground = createRectangle(this.defaultBackgroundClass);
             this.svgText = createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
 

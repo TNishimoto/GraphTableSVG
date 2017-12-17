@@ -63,9 +63,16 @@
         }
 
 
-        constructor() {
-            this.group = createGroup();
+        constructor(className: string | null = null) {
+            this.group = createGroup(className);
             this.group.setAttribute("objectID", (Graph.id++).toString());
+
+            var left = this.group.getActiveStyle().getPropertyValue("--default-begin-connector-position").trim();
+            var right = this.group.getActiveStyle().getPropertyValue("--default-end-connector-position").trim();
+            console.log(left + "/" + right);
+            this.beginConnectorType = ToConnectorPosition(this.group.getActiveStyle().getPropertyValue("--default-begin-connector-position").trim());
+            this.endConnectorType = ToConnectorPosition(this.group.getActiveStyle().getPropertyValue("--default-end-connector-position").trim());
+
 
             //this._parent = graph;
             /*
@@ -134,17 +141,17 @@
         }
 
 
-        constructor(line: SVGLineElement) {
-            super();
-            this._svg = line;
-            this.group.appendChild(line);
+        constructor(className: string | null = null) {
+            super(className);
+            var p = this.group.getActiveStyle().getPropertyValue("--default-line-class").trim();
+            this._svg = createLine(0, 0, 0, 0, p.length > 0 ? p : null);
+            this.group.appendChild(this._svg);
             //this.graph.svgGroup.appendChild(this._svg);
 
         }
 
-        public static create(): LineEdge {
-            var svg = createLine(0, 0, 100, 100);
-            var line = new LineEdge(svg);
+        public static create(className: string | null = null): LineEdge {
+            var line = new LineEdge(className);
             /*
             var line = new LineEdge(_begin, _end, svg);
             line.beginConnecterType = _beginConnectType;

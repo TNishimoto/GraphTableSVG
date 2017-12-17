@@ -173,10 +173,13 @@ module Grammar {
         }
         */
         private createNode(variable: number | string): GraphTableSVG.Vertex{
-            var variableNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, this.graph.defaultNodeClass);
-            if(typeof(variable) == "string"){
-                variableNode.svgGroup.setAttribute("variable", variable);            
-            }else{
+            //var variableNode = GraphTableSVG.CircleVertex.create(this.graph, this.graph.defaultVertexClass);
+            var variableNode = GraphTableSVG.createVertex(this.graph, this.graph.defaultVertexClass);
+
+            if (typeof (variable) == "string") {
+                variableNode.svgGroup.setAttribute("str", variable);            
+                variableNode.svgText.textContent = `${variable}`;
+            } else {
                 variableNode.svgGroup.setAttribute("variable", variable.toString());
                 variableNode.svgText.textContent = `X${variable + 1}`;
             }
@@ -187,8 +190,8 @@ module Grammar {
 
             var variableNode = this.createNode(variable);
             if (parent != null) {
-                var edge = GraphTableSVG.LineEdge.create();
-                this.graph.connect(parent, edge, variableNode, insertIndex, GraphTableSVG.ConnectorPosition.Bottom, GraphTableSVG.ConnectorPosition.Top);
+                var edge = GraphTableSVG.createEdge(this.graph, this.graph.defaultEdgeClass, "");
+                this.graph.connect(parent, edge, variableNode, insertIndex);
             } else {
                 this.graph.roots.push(variableNode);
             }
@@ -197,10 +200,10 @@ module Grammar {
                 this.createVariable(v.left, variableNode, 0);
                 this.createVariable(v.right, variableNode, 1);
             } else {
-                var charNode = GraphTableSVG.CircleVertex.create(this.graph, 0, 0, this.r, this.graph.defaultNodeClass);
-                charNode.svgText.textContent = `${v.child}`;
-                var edge2 = GraphTableSVG.LineEdge.create();
-                this.graph.connect(variableNode, edge2, charNode, 0, GraphTableSVG.ConnectorPosition.Bottom, GraphTableSVG.ConnectorPosition.Top);
+                var charNode = this.createNode(v.child);
+                //charNode.svgText.textContent = `${v.child}`;
+                var edge2 = GraphTableSVG.createEdge(this.graph, this.graph.defaultEdgeClass, "");
+                this.graph.connect(variableNode, edge2, charNode, 0);
 
             }
         }
@@ -224,8 +227,8 @@ module Grammar {
             var newNode = this.createNode(variable3);
             //this._idVariableDic[newNode.symbol] = variable3;
 
-            var newEdge1 = GraphTableSVG.LineEdge.create();
-            var newEdge2 = GraphTableSVG.LineEdge.create();
+            var newEdge1 = GraphTableSVG.createEdge(this.graph, this.graph.defaultEdgeClass, "");
+            var newEdge2 = GraphTableSVG.createEdge(this.graph, this.graph.defaultEdgeClass, "");
 
             this.graph.connect(newNode, newEdge1, node1, 0);
             this.graph.connect(newNode, newEdge2, node2, 1);

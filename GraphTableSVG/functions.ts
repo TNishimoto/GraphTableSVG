@@ -61,14 +61,19 @@ module GraphTableSVG {
         }
     }
 
-    export function createLine(x: number, y: number, x2: number, y2: number): SVGLineElement {
+    export function createLine(x: number, y: number, x2: number, y2: number, className: string | null = null): SVGLineElement {
         var line1 = <SVGLineElement>document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line1.x1.baseVal.value = x;
         line1.x2.baseVal.value = x2;
         line1.y1.baseVal.value = y;
         line1.y2.baseVal.value = y2;
         //line1.style.color = "black";
-        line1.style.stroke = "black";
+        if (className != null) {
+            line1.setAttribute("class", className)
+        } else {
+            line1.style.stroke = "black";
+        }
+
         //line1.style.visibility = "hidden";
         //line1.style.strokeWidth = `${5}`
         //line1.setAttribute('stroke', 'black');
@@ -94,14 +99,26 @@ module GraphTableSVG {
         item.style.fontWeight = null;
     }
 
-    export function createRectangle(width: number = 0, height: number = 0, className: string | null = null): SVGRectElement {
+    export function createRectangle(className: string | null = null): SVGRectElement {
         var rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.width.baseVal.value = width;
-        rect.height.baseVal.value = height;
+        rect.width.baseVal.value = 30;
+        rect.height.baseVal.value = 30;
         if (className == null) {
             rect.style.fill = "#ffffff";
         } else {
             rect.setAttribute("class", className);
+
+            var s1 = rect.getActiveStyle().getPropertyValue("--default-width").trim();
+            if (s1.length > 0) {
+                rect.width.baseVal.value = Number(s1);
+            }
+
+            var s2 = rect.getActiveStyle().getPropertyValue("--default-height").trim();
+            if (s2.length > 0) {
+                rect.height.baseVal.value = Number(s2);
+            }
+
+
         }
         return rect;
     }
@@ -112,24 +129,62 @@ module GraphTableSVG {
         }
         return g;
     }
-    export function createCircle(r: number = 20, className : string | null = null): SVGCircleElement {
+    export function createCircle(className : string | null = null): SVGCircleElement {
         var circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.r.baseVal.value = 30;
         if (className == null) {
             circle.style.stroke = "black";
             circle.style.strokeWidth = "1pt";
             circle.style.fill = "#ffffff";
-
         } else {
             circle.setAttribute("class", className);
+            var s = circle.getActiveStyle().getPropertyValue("--default-radius").trim();
+            circle.r.baseVal.value = Number(s);
             //circle.className = className
             //console.log("d : " + circle.setAttribute("class", className));
         }
         //circle.style.fill = "#ffffff";
         circle.cx.baseVal.value = 0;
         circle.cy.baseVal.value = 0;
-        circle.r.baseVal.value = r;
+        //circle.r.baseVal.value = r;
         
 
         return circle;
+    }
+
+    export function createVertex(_parent: Graph, className: string | null = null, text: string = ""): GraphTableSVG.Vertex {
+        var g = createGroup(className);
+        var type = g.getActiveStyle().getPropertyValue("--default-surface-type").trim();
+        var p: Vertex;
+        if (type == "circle") {
+            p = new CircleVertex(className, text);
+        } else if (type == "rectangle") {
+            p = new RectangleVertex(className, text);
+        } else {
+            p = new Vertex(className, text);
+        }
+        _parent.addVertex(p);
+        return p;
+    }
+    export function createEdge(_parent: Graph, className: string | null = null, text: string = ""): GraphTableSVG.Edge {
+        var g = createGroup(className);
+        var textClass = g.getActiveStyle().getPropertyValue("--default-text-class").trim();
+        var line = GraphTableSVG.LineEdge.create(className);
+        //_parent.addEdge(line);
+        return line;
+
+        //var text = GraphTableSVG.li
+        /*
+        var p: Vertex;
+        if (type == "circle") {
+            p = new CircleVertex(className, text);
+        } else if (type == "rectangle") {
+            p = new RectangleVertex(className, text);
+        } else {
+            p = new Vertex(className, text);
+        }
+        */
+        //_parent.addVertex(p);
+        //return p;
     }
 }

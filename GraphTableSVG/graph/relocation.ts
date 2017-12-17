@@ -4,7 +4,7 @@
 
         export function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void {
             var leafCounter = 0;
-            forest.getOrderedNodes(NodeOrder.Postorder).forEach((v) => {
+            forest.getOrderedVertices(NodeOrder.Postorder).forEach((v) => {
                 var x = 0;
                 var y = 0;
                 if (v.isLeaf) {
@@ -23,10 +23,10 @@
             });
         }
         export function reverse(graph: Graph, isX: boolean, isY: boolean) {
-            if (graph.nodes.length > 0) {
+            if (graph.vertices.length > 0) {
                 if (isY) {
-                    var midY = middle(graph.nodes.map((v) => v.y));
-                    graph.nodes.forEach((v) => {
+                    var midY = middle(graph.vertices.map((v) => v.y));
+                    graph.vertices.forEach((v) => {
                         if (v.y < midY) {
                             v.y += 2 * (midY - v.y);
                         } else {
@@ -36,8 +36,8 @@
                 }
 
                 if (isX) {
-                    var midX = middle(graph.nodes.map((v) => v.x));
-                    graph.nodes.forEach((v) => {
+                    var midX = middle(graph.vertices.map((v) => v.x));
+                    graph.vertices.forEach((v) => {
                         if (v.x < midX) {
                             v.x += 2 * (midX - v.x);
                         } else {
