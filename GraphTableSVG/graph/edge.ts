@@ -69,7 +69,6 @@
 
             var left = this.group.getActiveStyle().getPropertyValue("--default-begin-connector-position").trim();
             var right = this.group.getActiveStyle().getPropertyValue("--default-end-connector-position").trim();
-            console.log(left + "/" + right);
             this.beginConnectorType = ToConnectorPosition(this.group.getActiveStyle().getPropertyValue("--default-begin-connector-position").trim());
             this.endConnectorType = ToConnectorPosition(this.group.getActiveStyle().getPropertyValue("--default-end-connector-position").trim());
 
@@ -82,20 +81,19 @@
         }
 
         public get x1(): number {
-            var [x1, y1] = this._beginNode.getLocation(this.beginConnectorType);
-
+            var [x1, y1] = this._beginNode.getLocation(this.beginConnectorType, this.endNode.x, this.endNode.y);
             return x1;
         }
         public get y1(): number {
-            var [x1, y1] = this._beginNode.getLocation(this.beginConnectorType);
+            var [x1, y1] = this._beginNode.getLocation(this.beginConnectorType, this.endNode.x, this.endNode.y);
             return y1;
         }
         public get x2(): number {
-            var [x2, y2] = this._endNode.getLocation(this.endConnectorType);
+            var [x2, y2] = this._endNode.getLocation(this.endConnectorType, this.beginNode.x, this.beginNode.y);
             return x2;
         }
         public get y2(): number {
-            var [x2, y2] = this._endNode.getLocation(this.endConnectorType);
+            var [x2, y2] = this._endNode.getLocation(this.endConnectorType, this.beginNode.x, this.beginNode.y);
             return y2;
         }
 
@@ -181,12 +179,6 @@
             
 
             return false;
-            /*
-            this.svgText.setAttribute('x', "0");
-            this.svgText.setAttribute('y', "0");
-            console.log(this.svgText.x.baseVal.numberOfItems);
-            console.log(this.svgText.x.baseVal.getItem(0));
-            */
         }
         
     }

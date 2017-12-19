@@ -15,7 +15,6 @@
             }
             this._firstSelectedNode = value;
             if (this._firstSelectedNode != null) {
-                var surface = this._firstSelectedNode.surface;
                 if (this._firstSelectedNode.surface != null) {
                     this.firstSelectedNode.surface.setAttribute("class", "slpnode_choice");
                 }
@@ -27,7 +26,9 @@
 
             this.graph.vertices.forEach((v) => {
                 v.svgGroup.onclick = this.Click;
-                v.surface.setAttribute("class", v.isRoot ? "slpnode" : "slpnode_noroot");
+                if (v.surface != null) {
+                    v.surface.setAttribute("class", v.isRoot ? "slpnode" : "slpnode_noroot");
+                }
             })
         }
         private static createSLP(text: string): SLPDictionary {
@@ -76,12 +77,12 @@
 
                             if (newNode != null) {
                                 this.firstSelectedNode = null;
-                                newNode.surface.setAttribute("class", "slpnode");
+                                if (newNode.surface != null) newNode.surface.setAttribute("class", "slpnode");
                                 var node1 = newNode.outcomingEdges[0].endNode;
                                 var node2 = newNode.outcomingEdges[1].endNode;
 
-                                node1.surface.setAttribute("class", "slpnode_noroot");
-                                node2.surface.setAttribute("class", "slpnode_noroot");
+                                if(node1.surface != null)node1.surface.setAttribute("class", "slpnode_noroot");
+                                if (node2.surface != null)node2.surface.setAttribute("class", "slpnode_noroot");
                                 newNode.svgGroup.onclick = this.Click;
                             }
 

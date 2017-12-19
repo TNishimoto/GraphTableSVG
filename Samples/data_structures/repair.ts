@@ -23,13 +23,17 @@ module Grammar {
             this.occurrenceDic = {};
             for (var i = 0; i < this.slp.startVariables.length - 1; i++) {
                 var pair = new VariablePair(this.slp.startVariables[i], this.slp.startVariables[i + 1]);
-                if (i > 0 && this.slp.startVariables[i - 1] == this.slp.startVariables[i] && this.slp.startVariables[i] == this.slp.startVariables[i + 1]) {
-
-                } else {
-                    var str = pair.toHash();
-                    if (!(str in this.occurrenceDic)) this.occurrenceDic[str] = [];
-                    this.occurrenceDic[str].push(i);
+                var b = pair.left == pair.right;
+                var str = pair.toHash();
+                if (!(str in this.occurrenceDic)) this.occurrenceDic[str] = [];
+                this.occurrenceDic[str].push(i);
+                if (b && i + 1 < this.slp.startVariables.length - 1) {
+                    var nextpair = new VariablePair(this.slp.startVariables[i + 1], this.slp.startVariables[i + 2]);
+                    if (nextpair.left == nextpair.right) {
+                        i++;
+                    }
                 }
+                
             }
         }
         public compress() {

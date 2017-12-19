@@ -23,7 +23,8 @@ function createRepair() {
 function view(i : number){
     var svgBox = document.getElementById('svgbox');
     svgBox.innerHTML = "";
-    var p = new Grammar.SLPViewer(repairGrammars[i], svgBox, 30,"", "slp-graph");
+    var p = new Grammar.SLPViewer(repairGrammars[i], svgBox, 30,"slp-table", "slp-graph");
+    p.table.resize();
     
     var nb = <HTMLButtonElement>document.getElementById('next_button');
     var pb = <HTMLButtonElement>document.getElementById('prev_button');
@@ -31,6 +32,12 @@ function view(i : number){
     pb.disabled = i == 0;
     
     grammarIndex = i;
+
+    var rect = GraphTableSVG.Rectangle.merge([p.graph.getRegion(), p.table.getRegion()]);
+
+    
+    setSVGBoxSize(svgBox, rect.right, rect.bottom)
+
 }
 function prev(){
     view(grammarIndex-1);

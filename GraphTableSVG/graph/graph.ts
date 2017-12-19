@@ -122,9 +122,11 @@
         */
 
         public getRegion(): Rectangle {
-            var rect = Vertex.getRegion(this._vertices);
-            rect.x += this.svgGroup.getX();
-            rect.y += this.svgGroup.getY();
+            var rects = this.vertices.map((v) => v.region);
+            var rect = GraphTableSVG.Rectangle.merge(rects);
+            rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
+            //rect.x += this.svgGroup.getX();
+            //rect.y += this.svgGroup.getY();
             return rect;
         }
 

@@ -36,7 +36,7 @@ function createLZ77WSRTable() {
 
     svgBox.innerHTML = "";
     var table = new SVGTable(text.length, result.length + 2);
-    svgBox.appendChild(table.group);
+    svgBox.appendChild(table.svgGroup);
     
 
     table.cellArray.forEach(function (x, i, arr) { x.width = 0; x.height = 0 });

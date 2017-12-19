@@ -148,9 +148,9 @@
         get height(): number {
             return 0;
         }
+        
 
-
-        public getLocation(type: ConnectorPosition): [number, number] {
+        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
             return [this.x, this.y];
         }
 
@@ -166,7 +166,7 @@
             p.height = this.height;
             return p;
         }
-
+        /*
         public static getRegion(vertexes: Vertex[]): Rectangle {
             //var p = this.getSubtree();
             if (vertexes.length > 0) {
@@ -192,6 +192,7 @@
                 return new Rectangle();
             }
         }
+        */
         public containsSVGID(id: string): boolean {
             return this.svgGroup.getAttribute("objectID") == id;
         }

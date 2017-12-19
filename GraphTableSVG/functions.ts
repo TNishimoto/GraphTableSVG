@@ -1,21 +1,50 @@
 ﻿
-
-
-
-
-
 module GraphTableSVG {
+
+    export function getSlope() {
+
+    }
+
     export class Rectangle {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
+        /*
+        x: number = 0;
+        y: number = 0;
+        width: number = 0;
+        height: number = 0;
+        */
+        constructor(public x: number = 0, public y: number = 0, public width: number = 0, public height: number = 0) {
+
+        }
 
         get right(): number {
             return this.x + this.width;
         }
         get bottom(): number {
             return this.y + this.height;
+        }
+        public addOffset(x: number, y: number) {
+            this.x += x;
+            this.y += y;
+        }
+        public static merge(rects: Rectangle[]) {
+            var x1 = rects[0].x;
+            var y1 = rects[0].y;
+
+            var x2 = rects[0].right;
+            var y2 = rects[0].bottom;
+
+            rects.forEach((v) => {
+                if (x1 > v.x) x1 = v.x;
+                if (y1 > v.y) y1 = v.y;
+                if (x2 < v.right) x2 = v.right;
+                if (y2 < v.bottom) y2 = v.bottom;
+            })
+            var rect = new Rectangle();
+            rect.x = x1;
+            rect.y = y1;
+            rect.width = x2 - x1;
+            rect.height = y2 - y1;
+            return rect;
         }
     }
     export enum NodeOrder {
@@ -32,6 +61,7 @@ module GraphTableSVG {
         RightUp = 8,
         Auto = 9
     }
+    
     export function ToConnectorPosition(str: string): ConnectorPosition {
         switch (str) {
             case "top": return ConnectorPosition.Top;
@@ -152,21 +182,22 @@ module GraphTableSVG {
         return circle;
     }
 
-    export function createVertex(_parent: Graph, className: string | null = null, text: string = ""): GraphTableSVG.Vertex {
+    export function createVertex(graph: Graph, className: string | null = null, defaultSurfaceType : string = "circle"): GraphTableSVG.Vertex {
         var g = createGroup(className);
-        var type = g.getActiveStyle().getPropertyValue("--default-surface-type").trim();
+        var type1 = g.getActiveStyle().getPropertyValue("--default-surface-type").trim();
+        var type = type1.length > 0 ? type1 : defaultSurfaceType;
         var p: Vertex;
         if (type == "circle") {
-            p = new CircleVertex(className, text);
+            p = new CircleVertex(className, "");
         } else if (type == "rectangle") {
-            p = new RectangleVertex(className, text);
+            p = new RectangleVertex(className, "");
         } else {
-            p = new Vertex(className, text);
+            p = new Vertex(className, "");
         }
-        _parent.addVertex(p);
+        graph.addVertex(p);
         return p;
     }
-    export function createEdge(_parent: Graph, className: string | null = null, text: string = ""): GraphTableSVG.Edge {
+    export function createEdge(graph: Graph, className: string | null = null, lineType: string | null = null): GraphTableSVG.Edge {
         var g = createGroup(className);
         var textClass = g.getActiveStyle().getPropertyValue("--default-text-class").trim();
         var line = GraphTableSVG.LineEdge.create(className);

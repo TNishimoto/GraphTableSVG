@@ -105,10 +105,9 @@ declare module GraphTableSVG {
         y: number;
         readonly width: number;
         readonly height: number;
-        getLocation(type: ConnectorPosition): [number, number];
+        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         update(): boolean;
         readonly region: Rectangle;
-        static getRegion(vertexes: Vertex[]): Rectangle;
         containsSVGID(id: string): boolean;
         readonly surface: SVGElement | null;
         getParents(): Vertex[];
@@ -131,8 +130,10 @@ declare module GraphTableSVG {
         readonly innerRectangle: Rectangle;
         static create(_parent: Graph, nodeClassName?: string | null): CircleVertex;
         readonly radius: number;
-        getLocation(type: ConnectorPosition): [number, number];
+        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         readonly surface: SVGElement | null;
+        getRadian(x: number, y: number): ConnectorPosition;
+        getAutoPosition(x: number, y: number): ConnectorPosition;
     }
     class RectangleVertex extends GraphTableSVG.Vertex {
         svgRectangle: SVGRectElement;
@@ -223,6 +224,7 @@ declare module GraphTableSVG {
         y: number;
         width: number;
         height: number;
+        readonly region: Rectangle;
         constructor(parent: SVGTable, _px: number, _py: number, cellClass?: string | null);
     }
 }
@@ -293,7 +295,7 @@ declare module GraphTableSVG {
         private _cells;
         readonly defaultCellClass: string | null;
         readonly cells: Cell[][];
-        group: SVGGElement;
+        svgGroup: SVGGElement;
         readonly width: number;
         readonly height: number;
         readonly rows: Row[];
@@ -321,13 +323,17 @@ declare module GraphTableSVG {
     }
 }
 declare module GraphTableSVG {
+    function getSlope(): void;
     class Rectangle {
         x: number;
         y: number;
         width: number;
         height: number;
+        constructor(x?: number, y?: number, width?: number, height?: number);
         readonly right: number;
         readonly bottom: number;
+        addOffset(x: number, y: number): void;
+        static merge(rects: Rectangle[]): Rectangle;
     }
     enum NodeOrder {
         Preorder = 0,
@@ -352,6 +358,23 @@ declare module GraphTableSVG {
     function createRectangle(className?: string | null): SVGRectElement;
     function createGroup(className?: string | null): SVGGElement;
     function createCircle(className?: string | null): SVGCircleElement;
-    function createVertex(_parent: Graph, className?: string | null, text?: string): GraphTableSVG.Vertex;
-    function createEdge(_parent: Graph, className?: string | null, text?: string): GraphTableSVG.Edge;
+    function createVertex(graph: Graph, className?: string | null, defaultSurfaceType?: string): GraphTableSVG.Vertex;
+    function createEdge(graph: Graph, className?: string | null, lineType?: string | null): GraphTableSVG.Edge;
+}
+declare module GraphTableSVG {
+    class VLine {
+        x1: number;
+        y1: number;
+        x2: number;
+        y2: number;
+        readonly smallPoint: [number, number];
+        readonly largePoint: [number, number];
+        constructor(x1: number, y1: number, x2: number, y2: number);
+        contains(x: number, y: number): boolean;
+        getY(x: number): number | null;
+        readonly slope: number | null;
+        readonly intercept: number | null;
+        readonly inverseSlope: number | null;
+        inverseIntercept(x: number, y: number): number | null;
+    }
 }

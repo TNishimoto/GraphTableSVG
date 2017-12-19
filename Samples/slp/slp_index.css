@@ -48,16 +48,33 @@
 .slp-table{
     --default-cell-class : cell;
 }
+.surface {
+    stroke: green;
+    fill: white;
+    --default-radius : 15;    
+}
 .slp-node{
     --default-surface-class : surface;
     --default-text-class : table-text;
+    --default-surface-type : circle;
     /*
     --horizontal-anchor: center;
     --vertical-anchor: middle;
     */
 }
+.slp-line{
+    stroke: black;
+    stroke-width: 3pt;
+}
+.slp-edge{
+    --default-line-class : slp-line;
+    --default-text-class : table-text;
+    --default-begin-connector-position : bottom;
+    --default-end-connector-position : top;    
+}
 .slp-graph{
-    --default-node-class : slp-node;
-    --default-node-x-interval : 50;
-    --default-node-y-interval : 50;    
+    --default-vertex-class : slp-node;
+    --default-edge-class : slp-edge;
+    --default-vertex-x-interval : 50;
+    --default-vertex-y-interval : 50;    
 }

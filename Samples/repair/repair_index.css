@@ -1,30 +1,35 @@
 ﻿
-.surface {
-    stroke: green;
-    fill: white;
-    --default-radius : 15;    
-}
-
 .table-text {
     fill: black;
     font-size: 18px;
 }
 .background {
     fill: white;
-    --horizontal-anchor: center;
-    --vertical-anchor: middle;
-}
-.textarea-background {
-    fill: white;
-    --horizontal-anchor: left;
-    --vertical-anchor: bottom;
 }
 .cell{
     --default-text-class : table-text;
     --default-background-class : background;
+    --horizontal-anchor: left;
+    --vertical-anchor: middle;
 }
 .slp-table{
     --default-cell-class : cell;
+}
+
+
+
+/* graph */
+.slp-graph{
+    --default-vertex-class : slp-node; 
+    --default-edge-class : slp-edge; 
+}
+.textarea-background {
+    fill: white;
+}
+.surface {
+    stroke: green;
+    fill: white;
+    --default-radius : 15;    
 }
 .slp-node{
     --default-surface-class : surface;
@@ -35,17 +40,14 @@
     --vertical-anchor: middle;
     */
 }
-.slp-line{
-    stroke: black;
-    /* stroke-width: 1pt; */
-}
 .slp-edge{
     --default-line-class : slp-line;
     --default-text-class : table-text;
     --default-begin-connector-position : bottom;
     --default-end-connector-position : top;    
 }
-.slp-graph{
-     --default-vertex-class : slp-node; 
-     --default-edge-class : slp-edge; 
+
+.slp-line{
+    stroke: black;
+    stroke-width: 3pt;
 }

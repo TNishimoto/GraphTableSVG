@@ -3,7 +3,7 @@ import SVGToVBA = GraphTableSVG.SVGToVBA;
 import Graph = GraphTableSVG.Graph;
 //var svgBox: HTMLElement;
 var graphtable: SVGTable | Graph | null = null;
-var clicker : SLP.Clicker; 
+var clicker : Grammar.Clicker; 
 
 function createSLP() {
     //clear();
@@ -11,7 +11,7 @@ function createSLP() {
     var svgBox = document.getElementById('svgbox');
     svgBox.innerHTML = "";
     var text = getInputText("inputtext_itb");    
-    clicker = new SLP.Clicker(text, svgBox, 20, "slp-table", "slp-node");
+    clicker = new Grammar.Clicker(text, svgBox, 20, "slp-table", "slp-graph");
     clicker.nodeXInterval = 60;
     clicker.nodeYInterval = 60;
     //clicker.table.textClassName = "table_text";
@@ -38,9 +38,8 @@ var observeFunction: MutationCallback = (x: MutationRecord[]) => {
     for(var i = 0;i<x.length;i++){
         if(x[i].target != svgBox){
         if (graphtable instanceof Graph) {
-            var rect1 = clicker.graph.getRegion();
-            var rect2 = clicker.table.getRegion();
-            setSVGBoxSize(svgBox, Math.max(rect1.right, rect2.right), Math.max(rect1.bottom, rect2.bottom));
+            var rect = GraphTableSVG.Rectangle.merge([clicker.graph.getRegion(), clicker.table.getRegion()]);
+            setSVGBoxSize(svgBox, rect.right + 30, rect.bottom + 30);
         }
         }
     }

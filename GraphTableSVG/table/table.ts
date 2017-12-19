@@ -6,7 +6,7 @@ module GraphTableSVG {
         private _cells: Cell[][] = [];
         //private _textClassName: string | null = "table_text";
         get defaultCellClass(): string | null {
-            var r = this.group.getActiveStyle().getPropertyValue("--default-cell-class").trim();
+            var r = this.svgGroup.getActiveStyle().getPropertyValue("--default-cell-class").trim();
             if (r.length == 0) {
                 return null;
             } else {
@@ -35,7 +35,7 @@ module GraphTableSVG {
             return this._cells;
         }
         //private svg: HTMLElement;
-        public group: SVGGElement;
+        public svgGroup: SVGGElement;
         get width(): number {
             if (this.cells.length == 0) {
                 return 0;
@@ -106,7 +106,7 @@ module GraphTableSVG {
             if (i < this.height) {
                 for (var x = 0; x < width; x++) {
                     this.cells[i][x].upLine = createLine(0, 0, 0, 0);
-                    this.group.appendChild(this.cells[i][x].upLine);
+                    this.svgGroup.appendChild(this.cells[i][x].upLine);
                 }
             }
             this.cells.splice(i, 0, cell);
@@ -116,7 +116,7 @@ module GraphTableSVG {
             }
         }
         public insertRow(i: number) {
-            this.insertRowFunction(i, this.width);
+            this.insertRowFunction(i, this.width == 0 ? 1 : this.width);
         }
         public appendRow() {
             this.insertRow(this.height);
@@ -124,20 +124,25 @@ module GraphTableSVG {
         private createCell(): Cell {
             return new Cell(this, 0, 0, this.defaultCellClass);
         }
+
         public insertColumn(i: number) {
-            for (var y = 0; y < this.height; y++) {
-                var cell = this.createCell();
-                this.cells[y].splice(i, 0, cell);
-            }
-            if (i < this.height) {
+            if (this.height > 0) {
                 for (var y = 0; y < this.height; y++) {
-                    this.cells[y][i].leftLine = createLine(0, 0, 0, 0);
-                    this.group.appendChild(this.cells[y][i].leftLine);
+                    var cell = this.createCell();
+                    this.cells[y].splice(i, 0, cell);
                 }
-            }
-            this.renumbering();
-            for (var y = 0; y < this.height; y++) {
-                this.updateBorder(this.cells[y][i]);
+                if (i < this.height) {
+                    for (var y = 0; y < this.height; y++) {
+                        this.cells[y][i].leftLine = createLine(0, 0, 0, 0);
+                        this.svgGroup.appendChild(this.cells[y][i].leftLine);
+                    }
+                }
+                this.renumbering();
+                for (var y = 0; y < this.height; y++) {
+                    this.updateBorder(this.cells[y][i]);
+                }
+            } else {
+                this.insertRow(0);
             }
         }
         public appendColumn() {
@@ -145,22 +150,22 @@ module GraphTableSVG {
         }
         private updateBorder(cell: Cell) {
             if (cell.leftCell != null && cell.leftCell.rightLine != cell.leftLine) {
-                this.group.removeChild(cell.leftLine);
+                this.svgGroup.removeChild(cell.leftLine);
                 cell.leftLine = cell.leftCell.rightLine;
             }
 
             if (cell.upCell != null && cell.upCell.bottomLine != cell.upLine) {
-                this.group.removeChild(cell.upLine);
+                this.svgGroup.removeChild(cell.upLine);
                 cell.upLine = cell.upCell.bottomLine;
             }
 
             if (cell.rightCell != null && cell.rightCell.leftLine != cell.rightLine) {
-                this.group.removeChild(cell.rightCell.leftLine);
+                this.svgGroup.removeChild(cell.rightCell.leftLine);
                 cell.rightCell.leftLine = cell.rightLine;
             }
 
             if (cell.bottomCell != null && cell.bottomCell.upLine != cell.bottomLine) {
-                this.group.removeChild(cell.bottomCell.upLine);
+                this.svgGroup.removeChild(cell.bottomCell.upLine);
                 cell.bottomCell.upLine = cell.bottomLine;
             }            
         }
@@ -203,6 +208,11 @@ module GraphTableSVG {
 
         }
         public getRegion(): Rectangle {
+            var regions = this.cellArray.map((v) => v.region);
+            var rect = Rectangle.merge(regions);
+            rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
+            return rect;
+            /*
             var [minX, minY] = [0, 0];
             var [maxX, maxY] = [0, 0];
             this.cellArray.forEach((v) => {
@@ -217,6 +227,7 @@ module GraphTableSVG {
             p.x = this.group.getX();
             p.y = this.group.getY();
             return p;
+            */
         }
 
         getCellFromID(id: number): Cell {
@@ -239,8 +250,8 @@ module GraphTableSVG {
 
 
             var svgGroup: SVGGElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            this.group = svgGroup;
-            if (_tableClassName != null) this.group.setAttribute("class", _tableClassName);
+            this.svgGroup = svgGroup;
+            if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);
             
             //svgGroup.setAttributeNS(null, 'transform', "translate(160,0)");
 
@@ -256,7 +267,7 @@ module GraphTableSVG {
 
             this._observer = new MutationObserver(this.observerFunc);
             var option: MutationObserverInit = { characterData : true, attributes: true, subtree: true };
-            this._observer.observe(this.group, option);
+            this._observer.observe(this.svgGroup, option);
 
 
             this.resize();
@@ -391,8 +402,8 @@ module GraphTableSVG {
             return r1;
         }
         public removeTable(svg: HTMLElement) {
-            if (svg.contains(this.group)) {
-                svg.removeChild(this.group);
+            if (svg.contains(this.svgGroup)) {
+                svg.removeChild(this.svgGroup);
             }
         }
 

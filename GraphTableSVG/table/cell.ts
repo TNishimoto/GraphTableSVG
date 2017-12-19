@@ -48,10 +48,10 @@ module GraphTableSVG {
         //private _horizontalAnchor: HorizontalAnchor;
         
         get horizontalAnchor(): HorizontalAnchor | null {
-            return this.svgBackground.getActiveStyle().getHorizontalAnchor();
+            return this.svgGroup.getActiveStyle().getHorizontalAnchor();
         }
         set horizontalAnchor(value: HorizontalAnchor | null) {
-            this.svgBackground.getActiveStyle().setHorizontalAnchor(value)
+            this.svgGroup.getActiveStyle().setHorizontalAnchor(value)
             this.relocation();
         }
         get cellX(): number {
@@ -69,10 +69,10 @@ module GraphTableSVG {
 
         
         get verticalAnchor(): VerticalAnchor | null {
-            return this.svgBackground.getActiveStyle().getVerticalAnchor();
+            return this.svgGroup.getActiveStyle().getVerticalAnchor();
         }
         set verticalAnchor(value: VerticalAnchor | null) {
-            this.svgBackground.getActiveStyle().setVerticalAnchor(value);
+            this.svgGroup.getActiveStyle().setVerticalAnchor(value);
             this.relocation();
         }
         
@@ -453,6 +453,11 @@ module GraphTableSVG {
         set height(value: number) {
             this.svgBackground.height.baseVal.value = value;
         }
+        get region(): Rectangle {
+            var p = new Rectangle(this.x, this.y, this.width, this.height);
+            return p;
+        }
+
         constructor(parent: SVGTable, _px: number, _py: number, cellClass : string | null = null) {
 
 
@@ -479,7 +484,7 @@ module GraphTableSVG {
             */
 
             this.svgGroup.appendChild(this.svgText);
-            this.parent.group.appendChild(this.svgGroup);
+            this.parent.svgGroup.appendChild(this.svgGroup);
 
 
 
@@ -487,10 +492,10 @@ module GraphTableSVG {
             this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
             this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0);
             this.bottomLine = GraphTableSVG.createLine(0, 0, 0, 0);
-            this.parent.group.appendChild(this.upLine);
-            this.parent.group.appendChild(this.leftLine);
-            this.parent.group.appendChild(this.rightLine);
-            this.parent.group.appendChild(this.bottomLine);
+            this.parent.svgGroup.appendChild(this.upLine);
+            this.parent.svgGroup.appendChild(this.leftLine);
+            this.parent.svgGroup.appendChild(this.rightLine);
+            this.parent.svgGroup.appendChild(this.bottomLine);
 
             this.svgGroup.parentNode
 
