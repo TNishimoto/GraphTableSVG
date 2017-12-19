@@ -8,7 +8,6 @@
         protected _vertices: Vertex[] = new Array(0);
         protected _edges: Edge[] = new Array(0);
         protected _svgGroup: SVGGElement;
-        public name: string = (Graph.id++).toString();
         protected _roots: Vertex[] = [];
 
         get defaultVertexClass(): string | null {
@@ -65,6 +64,8 @@
 
         constructor(className : string | null = null) {
             this._svgGroup = GraphTableSVG.createGroup();
+            this._svgGroup.setAttribute("type", "graph");
+
             if(className != null){
                 this._svgGroup.setAttribute("class", className);
                 var nodeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-vertex-class").trim();
@@ -140,8 +141,8 @@
         }
 
         private _connect(node1: Vertex, edge: Edge, node2: Vertex) {
-            edge.beginNode = node1;
-            edge.endNode = node2;
+            edge.beginVertex = node1;
+            edge.endVertex = node2;
             //edge.beginConnectorType = _beginConnectType;
             //edge.endConnectorType = _endConnectType;
             this.addEdge(edge);
@@ -178,14 +179,14 @@
                 if (order == NodeOrder.Preorder) {
                     r.push(node);
                     edges.forEach((v) => {
-                        this.getOrderedVertices(order, v.endNode).forEach((w) => {
+                        this.getOrderedVertices(order, v.endVertex).forEach((w) => {
                             r.push(w);
                         });
                     });
 
                 } else if (order == NodeOrder.Postorder) {
                     edges.forEach((v) => {
-                        this.getOrderedVertices(order, v.endNode).forEach((w) => {
+                        this.getOrderedVertices(order, v.endVertex).forEach((w) => {
                             r.push(w);
                         });
                     });

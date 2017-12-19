@@ -92,6 +92,9 @@
         constructor(className: string | null = null, text : string) {
             this.svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute("objectID", (Graph.id++).toString());
+            this.svgGroup.setAttribute("type", "vertex");
+
+
             this.svgText = createText(this.svgGroup.getActiveStyle().tryGetPropertyValue("--default-text-class"));
             this.svgText.textContent = text;
             this.svgGroup.appendChild(this.svgText);
@@ -203,7 +206,7 @@
             if (this.graph == null) {
                 throw new Error();
             } else {
-                return this.graph.edges.filter((v) => v.endNode == this).map((v) => v.beginNode);
+                return this.graph.edges.filter((v) => v.endVertex == this).map((v) => v.beginVertex);
             }
         }
         get parentEdge(): Edge | null {
@@ -217,7 +220,7 @@
             if (this.parentEdge == null) {
                 return null;
             } else {
-                return this.parentEdge.beginNode;
+                return this.parentEdge.beginVertex;
             }
         }
         get isRoot(): boolean {

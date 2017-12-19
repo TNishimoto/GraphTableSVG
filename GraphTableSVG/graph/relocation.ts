@@ -12,8 +12,8 @@
                     leafCounter++;
                 } else {
                     v.children.forEach((w) => {
-                        x += w.endNode.x;
-                        if (y < w.endNode.y) y = w.endNode.y;
+                        x += w.endVertex.x;
+                        if (y < w.endVertex.y) y = w.endVertex.y;
                     });
                     x = x / v.children.length;
                     y += yInterval;

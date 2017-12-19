@@ -1,14 +1,14 @@
 declare module GraphTableSVG {
     class Edge {
-        private _beginNode;
-        private _endNode;
+        private _beginVertex;
+        private _endVertex;
         beginConnectorType: ConnectorPosition;
         endConnectorType: ConnectorPosition;
         private _graph;
-        group: SVGGElement;
+        svgGroup: SVGGElement;
         text: EdgeText | null;
-        beginNode: Vertex;
-        endNode: Vertex;
+        beginVertex: Vertex;
+        endVertex: Vertex;
         readonly graph: Graph | null;
         setGraph(value: Graph): void;
         constructor(className?: string | null);
@@ -21,7 +21,7 @@ declare module GraphTableSVG {
         save(): void;
     }
     class LineEdge extends Edge {
-        private _svg;
+        private _svgLine;
         readonly svg: SVGLineElement;
         setGraph(value: Graph): void;
         constructor(className?: string | null);
@@ -35,7 +35,6 @@ declare module GraphTableSVG {
         protected _vertices: Vertex[];
         protected _edges: Edge[];
         protected _svgGroup: SVGGElement;
-        name: string;
         protected _roots: Vertex[];
         defaultVertexClass: string | null;
         defaultEdgeClass: string | null;

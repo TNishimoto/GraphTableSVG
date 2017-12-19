@@ -10,7 +10,7 @@
         getChildren(): VirtualTree[] {
             var p = this;
             return this.root.outcomingEdges.map(function (x, i, arr) {
-                return new VirtualTree(p.graph, x.endNode);
+                return new VirtualTree(p.graph, x.endVertex);
             });
         }
         

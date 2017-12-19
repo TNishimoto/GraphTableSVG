@@ -78,8 +78,8 @@
                             if (newNode != null) {
                                 this.firstSelectedNode = null;
                                 if (newNode.surface != null) newNode.surface.setAttribute("class", "slpnode");
-                                var node1 = newNode.outcomingEdges[0].endNode;
-                                var node2 = newNode.outcomingEdges[1].endNode;
+                                var node1 = newNode.outcomingEdges[0].endVertex;
+                                var node2 = newNode.outcomingEdges[1].endVertex;
 
                                 if(node1.surface != null)node1.surface.setAttribute("class", "slpnode_noroot");
                                 if (node2.surface != null)node2.surface.setAttribute("class", "slpnode_noroot");
