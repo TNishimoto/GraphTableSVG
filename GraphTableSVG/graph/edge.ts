@@ -1,12 +1,19 @@
 ﻿module GraphTableSVG {
     export class Edge {
+        //public static defaultBeginConnectorPosition: string = "--default-begin-connector-position";
+        //public static defaultEndConnectorPosition: string = "--default-end-connector-position";
+        public static beginConnectorTypeName: string = "--begin-connector-type";
+        public static endConnectorTypeName: string = "--end-connector-type";
+        public static defaultLineClass: string = "--default-line-class";
+        public static beginNodeName: string = "data-begin-node";
+        public static endNodeName: string = "data-end-node";
+        public static defaultTextClass: string = "--default-text-class";
+
         private _beginVertex: Vertex;
-        //_beginConnecterType: ConnectorPosition = ConnectorPosition.Top;
         private _endVertex: Vertex;
-        //_endConnecterType: ConnectorPosition = ConnectorPosition.Bottom;
 
         get beginConnectorType(): ConnectorPosition {
-            var p = this.svgGroup.getAttribute("beginConnectorType");
+            var p = CSSFunctions.getPropertyValue(this.svgGroup, Edge.beginConnectorTypeName);
             if (p == null) {
                 return ConnectorPosition.Auto;
             } else {
@@ -14,10 +21,11 @@
             }
         }
         set beginConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setAttribute("beginConnectorType", GraphTableSVG.ToStrFromConnectorPosition(value));
+            CSSFunctions.setPropertyValue(this.svgGroup, Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
+            //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
         get endConnectorType(): ConnectorPosition {
-            var p = this.svgGroup.getAttribute("endConnectorType");
+            var p = CSSFunctions.getPropertyValue(this.svgGroup, Edge.endConnectorTypeName);
             if (p == null) {
                 return ConnectorPosition.Auto;
             } else {
@@ -25,7 +33,7 @@
             }
         }
         set endConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setAttribute("endConnectorType", GraphTableSVG.ToStrFromConnectorPosition(value));
+            CSSFunctions.setPropertyValue(this.svgGroup, Edge.endConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
         }
 
         private _graph: Graph | null = null;
@@ -37,7 +45,7 @@
         }
         set beginVertex(value: Vertex) {
             this._beginVertex = value;
-            this.svgGroup.setAttribute("beginNode", value.objectID);
+            this.svgGroup.setAttribute(Edge.beginNodeName, value.objectID);
 
             if (this.graph != null) {
                 this.graph.update();
@@ -48,7 +56,7 @@
         }
         set endVertex(value: Vertex) {
             this._endVertex = value;
-            this.svgGroup.setAttribute("endNode", value.objectID);
+            this.svgGroup.setAttribute(Edge.endNodeName, value.objectID);
 
             if (this.graph != null) {
                 this.graph.update();
@@ -65,14 +73,14 @@
 
         constructor(className: string | null = null) {
             this.svgGroup = createGroup(className);
-            this.svgGroup.setAttribute("objectID", (Graph.id++).toString());
-            this.svgGroup.setAttribute("type", "edge");
+            this.svgGroup.setAttribute(Graph.objectIDName, (Graph.id++).toString());
+            this.svgGroup.setAttribute(Graph.typeName, "edge");
 
+            var t1 = CSSFunctions.getPropertyValue(this.svgGroup, Edge.beginConnectorTypeName);
+            var t2 = CSSFunctions.getPropertyValue(this.svgGroup, Edge.endConnectorTypeName);
 
-            var left = this.svgGroup.getActiveStyle().getPropertyValue("--default-begin-connector-position").trim();
-            var right = this.svgGroup.getActiveStyle().getPropertyValue("--default-end-connector-position").trim();
-            this.beginConnectorType = ToConnectorPosition(this.svgGroup.getActiveStyle().getPropertyValue("--default-begin-connector-position").trim());
-            this.endConnectorType = ToConnectorPosition(this.svgGroup.getActiveStyle().getPropertyValue("--default-end-connector-position").trim());
+            this.beginConnectorType = ToConnectorPosition(t1);
+            this.endConnectorType = ToConnectorPosition(t2);
 
 
             //this._parent = graph;
@@ -105,7 +113,7 @@
         }
 
         public get objectID(): number | null {
-            var r = this.svgGroup.getAttribute("objectID");
+            var r = this.svgGroup.getAttribute(Graph.objectIDName);
             if (r == null) {
                 return null;
             } else {
@@ -122,6 +130,13 @@
         }
         */
         public save() {
+        }
+
+        public static create(graph: Graph, className: string | null = null, lineType: string | null = null): GraphTableSVG.Edge {
+            var g = createGroup(className);
+            var textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();
+            var line = new LineEdge(className);
+            return line;
         }
     }
 
@@ -143,30 +158,20 @@
 
         constructor(className: string | null = null) {
             super(className);
-            var p = this.svgGroup.getActiveStyle().getPropertyValue("--default-line-class").trim();
+            var p = this.svgGroup.getActiveStyle().getPropertyValue(Edge.defaultLineClass).trim();
             this._svgLine = createLine(0, 0, 0, 0, p.length > 0 ? p : null);
             this.svgGroup.appendChild(this._svgLine);
             //this.graph.svgGroup.appendChild(this._svg);
 
         }
-
+        /*
         public static create(className: string | null = null): LineEdge {
             var line = new LineEdge(className);
-            /*
-            var line = new LineEdge(_begin, _end, svg);
-            line.beginConnecterType = _beginConnectType;
-            line.endConnecterType = _endConnectType;
-            _parent.addEdge(line);
-            */
-
-            /*
-            p.svgText = GraphTableSVG.createText();
-            p.svgText.textContent = "hogehoge";
-            p.parent.svgGroup.appendChild(p.svgText);
-            */
-
+            
             return line;
         }
+        */
+
         public update(): boolean {
             this._svgLine.x1.baseVal.value = this.x1;
             this._svgLine.y1.baseVal.value = this.y1;

@@ -1,5 +1,11 @@
 declare module GraphTableSVG {
     class Edge {
+        static beginConnectorTypeName: string;
+        static endConnectorTypeName: string;
+        static defaultLineClass: string;
+        static beginNodeName: string;
+        static endNodeName: string;
+        static defaultTextClass: string;
         private _beginVertex;
         private _endVertex;
         beginConnectorType: ConnectorPosition;
@@ -19,19 +25,23 @@ declare module GraphTableSVG {
         update(): boolean;
         readonly objectID: number | null;
         save(): void;
+        static create(graph: Graph, className?: string | null, lineType?: string | null): GraphTableSVG.Edge;
     }
     class LineEdge extends Edge {
         private _svgLine;
         readonly svg: SVGLineElement;
         setGraph(value: Graph): void;
         constructor(className?: string | null);
-        static create(className?: string | null): LineEdge;
         update(): boolean;
     }
 }
 declare module GraphTableSVG {
     class Graph {
         static id: number;
+        static defaultVertexClass: string;
+        static defaultEdgeClass: string;
+        static objectIDName: string;
+        static typeName: string;
         protected _vertices: Vertex[];
         protected _edges: Edge[];
         protected _svgGroup: SVGGElement;
@@ -82,6 +92,9 @@ declare module GraphTableSVG {
 declare module GraphTableSVG {
     class Vertex {
         symbol: symbol;
+        static defaultSurfaceType: string;
+        static defaultTextClass: string;
+        static defaultSurfaceClass: string;
         private static id_counter;
         svgGroup: SVGGElement;
         svgText: SVGTextElement;
@@ -118,6 +131,7 @@ declare module GraphTableSVG {
         readonly root: Vertex;
         readonly index: number;
         save(): void;
+        static create(graph: Graph, className?: string | null, defaultSurfaceType?: string): GraphTableSVG.Vertex;
     }
 }
 declare module GraphTableSVG {
@@ -140,6 +154,8 @@ declare module GraphTableSVG {
         readonly width: number;
         readonly height: number;
         readonly innerRectangle: Rectangle;
+        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
+        getAutoPosition(x: number, y: number): ConnectorPosition;
     }
 }
 declare module GraphTableSVG {
@@ -242,6 +258,8 @@ interface CSSStyleDeclaration {
 }
 interface SVGElement {
     getActiveStyle(): CSSStyleDeclaration;
+    getPropertyValue(name: string): string | null;
+    setPropertyValue(name: string, value: string | null): any;
 }
 interface SVGTextElement {
     getX(): number;
@@ -322,7 +340,10 @@ declare module GraphTableSVG {
     }
 }
 declare module GraphTableSVG {
-    function getSlope(): void;
+    module CSSFunctions {
+        function getPropertyValue(item: SVGElement, name: string): string | null;
+        function setPropertyValue(item: SVGElement, name: string, value: string | null): void;
+    }
     class Rectangle {
         x: number;
         y: number;
@@ -349,16 +370,14 @@ declare module GraphTableSVG {
         RightUp = 8,
         Auto = 9,
     }
-    function ToConnectorPosition(str: string): ConnectorPosition;
+    function ToConnectorPosition(str: string | null): ConnectorPosition;
     function ToStrFromConnectorPosition(position: ConnectorPosition): string;
     function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
     function createText(className?: string | null): SVGTextElement;
-    function resetStyle(item: SVGTextElement): void;
     function createRectangle(className?: string | null): SVGRectElement;
     function createGroup(className?: string | null): SVGGElement;
+    function resetStyle(style: CSSStyleDeclaration): void;
     function createCircle(className?: string | null): SVGCircleElement;
-    function createVertex(graph: Graph, className?: string | null, defaultSurfaceType?: string): GraphTableSVG.Vertex;
-    function createEdge(graph: Graph, className?: string | null, lineType?: string | null): GraphTableSVG.Edge;
 }
 declare module GraphTableSVG {
     class VLine {

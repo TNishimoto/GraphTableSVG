@@ -1,10 +1,29 @@
 ﻿
 module GraphTableSVG {
-
-    export function getSlope() {
-
+    export module CSSFunctions {
+        export function getPropertyValue(item: SVGElement, name: string): string | null {
+            var p = item.style.getPropertyValue(name).trim();
+            if (p.length == 0) {
+                var r = item.getAttribute("class");
+                if (r == null) {
+                    return null;
+                } else {
+                    var p2 = getComputedStyle(item).getPropertyValue(name).trim();
+                    if (p2.length == 0) {
+                        return null;
+                    } else {
+                        return p2;
+                    }
+                }
+            } else {
+                return p;
+            }
+        }
+        export function setPropertyValue(item: SVGElement, name: string, value: string | null) {
+            item.style.setProperty(name, value);
+        }
     }
-
+    
     export class Rectangle {
         /*
         x: number = 0;
@@ -62,18 +81,22 @@ module GraphTableSVG {
         Auto = 9
     }
     
-    export function ToConnectorPosition(str: string): ConnectorPosition {
-        switch (str) {
-            case "top": return ConnectorPosition.Top;
-            case "leftup": return ConnectorPosition.LeftUp;
-            case "left": return ConnectorPosition.Left;
-            case "leftdown": return ConnectorPosition.LeftDown;
-            case "bottom": return ConnectorPosition.Bottom;
-            case "rightdown": return ConnectorPosition.RightDown;
-            case "right": return ConnectorPosition.Right;
-            case "rightup": return ConnectorPosition.RightUp;
-            case "auto": return ConnectorPosition.Auto;
-            default: return ConnectorPosition.Auto;
+    export function ToConnectorPosition(str: string | null): ConnectorPosition {
+        if (str == null) {
+            return ConnectorPosition.Auto;
+        } else {
+            switch (str) {
+                case "top": return ConnectorPosition.Top;
+                case "leftup": return ConnectorPosition.LeftUp;
+                case "left": return ConnectorPosition.Left;
+                case "leftdown": return ConnectorPosition.LeftDown;
+                case "bottom": return ConnectorPosition.Bottom;
+                case "rightdown": return ConnectorPosition.RightDown;
+                case "right": return ConnectorPosition.Right;
+                case "rightup": return ConnectorPosition.RightUp;
+                case "auto": return ConnectorPosition.Auto;
+                default: return ConnectorPosition.Auto;
+            }
         }
     }
     export function ToStrFromConnectorPosition(position: ConnectorPosition): string {
@@ -123,11 +146,7 @@ module GraphTableSVG {
         }
         return _svgText;
     }
-    export function resetStyle(item: SVGTextElement) {
-        item.style.fill = null;
-        item.style.fontSize = null;
-        item.style.fontWeight = null;
-    }
+    
 
     export function createRectangle(className: string | null = null): SVGRectElement {
         var rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -135,15 +154,16 @@ module GraphTableSVG {
         rect.height.baseVal.value = 30;
         if (className == null) {
             rect.style.fill = "#ffffff";
+            rect.style.stroke = "#000000";
         } else {
             rect.setAttribute("class", className);
 
-            var s1 = rect.getActiveStyle().getPropertyValue("--default-width").trim();
+            var s1 = rect.getActiveStyle().getPropertyValue(defaultWidthName).trim();
             if (s1.length > 0) {
                 rect.width.baseVal.value = Number(s1);
             }
 
-            var s2 = rect.getActiveStyle().getPropertyValue("--default-height").trim();
+            var s2 = rect.getActiveStyle().getPropertyValue(defaultHeightName).trim();
             if (s2.length > 0) {
                 rect.height.baseVal.value = Number(s2);
             }
@@ -159,6 +179,17 @@ module GraphTableSVG {
         }
         return g;
     }
+    export function resetStyle(style: CSSStyleDeclaration) {
+        style.stroke = null;
+        style.strokeWidth = null;
+        style.fill = null;
+        style.fontSize = null;
+        style.fontWeight = null;
+    }
+    var defaultRadiusName = "--default-radius";
+    var defaultWidthName = "--default-width";
+    var defaultHeightName = "--default-height";
+
     export function createCircle(className : string | null = null): SVGCircleElement {
         var circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.r.baseVal.value = 30;
@@ -168,7 +199,7 @@ module GraphTableSVG {
             circle.style.fill = "#ffffff";
         } else {
             circle.setAttribute("class", className);
-            var s = circle.getActiveStyle().getPropertyValue("--default-radius").trim();
+            var s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
             circle.r.baseVal.value = Number(s);
             //circle.className = className
             //console.log("d : " + circle.setAttribute("class", className));
@@ -182,40 +213,6 @@ module GraphTableSVG {
         return circle;
     }
 
-    export function createVertex(graph: Graph, className: string | null = null, defaultSurfaceType : string = "circle"): GraphTableSVG.Vertex {
-        var g = createGroup(className);
-        var type1 = g.getActiveStyle().getPropertyValue("--default-surface-type").trim();
-        var type = type1.length > 0 ? type1 : defaultSurfaceType;
-        var p: Vertex;
-        if (type == "circle") {
-            p = new CircleVertex(className, "");
-        } else if (type == "rectangle") {
-            p = new RectangleVertex(className, "");
-        } else {
-            p = new Vertex(className, "");
-        }
-        graph.addVertex(p);
-        return p;
-    }
-    export function createEdge(graph: Graph, className: string | null = null, lineType: string | null = null): GraphTableSVG.Edge {
-        var g = createGroup(className);
-        var textClass = g.getActiveStyle().getPropertyValue("--default-text-class").trim();
-        var line = GraphTableSVG.LineEdge.create(className);
-        //_parent.addEdge(line);
-        return line;
-
-        //var text = GraphTableSVG.li
-        /*
-        var p: Vertex;
-        if (type == "circle") {
-            p = new CircleVertex(className, text);
-        } else if (type == "rectangle") {
-            p = new RectangleVertex(className, text);
-        } else {
-            p = new Vertex(className, text);
-        }
-        */
-        //_parent.addVertex(p);
-        //return p;
-    }
+    
+    
 }

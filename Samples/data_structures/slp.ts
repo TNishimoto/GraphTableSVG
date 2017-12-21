@@ -178,7 +178,7 @@ module Grammar {
         */
         private createNode(variable: number | string): GraphTableSVG.Vertex{
             //var variableNode = GraphTableSVG.CircleVertex.create(this.graph, this.graph.defaultVertexClass);
-            var variableNode = GraphTableSVG.createVertex(this.graph, this.graph.defaultVertexClass);
+            var variableNode = GraphTableSVG.Vertex.create(this.graph, this.graph.defaultVertexClass);
 
             if (typeof (variable) == "string") {
                 variableNode.svgGroup.setAttribute("str", variable);            
@@ -194,11 +194,12 @@ module Grammar {
 
             var variableNode = this.createNode(variable);
             if (parent != null) {
-                var edge = GraphTableSVG.createEdge(this.graph, this.graph.defaultEdgeClass);
+                var edge = GraphTableSVG.Edge.create(this.graph, this.graph.defaultEdgeClass);
                 this.graph.connect(parent, edge, variableNode, insertIndex);
             } else {
                 this.graph.roots.push(variableNode);
             }
+            
 
             if (v.type == "nonchar") {
                 this.createVariable(v.left, variableNode, 0);
@@ -206,7 +207,7 @@ module Grammar {
             } else {
                 var charNode = this.createNode(v.child);
                 //charNode.svgText.textContent = `${v.child}`;
-                var edge2 = GraphTableSVG.createEdge(this.graph, this.graph.defaultEdgeClass);
+                var edge2 = GraphTableSVG.Edge.create(this.graph, this.graph.defaultEdgeClass);
                 this.graph.connect(variableNode, edge2, charNode, 0);
 
             }
@@ -231,8 +232,8 @@ module Grammar {
             var newNode = this.createNode(variable3);
             //this._idVariableDic[newNode.symbol] = variable3;
 
-            var newEdge1 = GraphTableSVG.createEdge(this.graph, this.graph.defaultEdgeClass);
-            var newEdge2 = GraphTableSVG.createEdge(this.graph, this.graph.defaultEdgeClass);
+            var newEdge1 = GraphTableSVG.Edge.create(this.graph, this.graph.defaultEdgeClass);
+            var newEdge2 = GraphTableSVG.Edge.create(this.graph, this.graph.defaultEdgeClass);
 
             this.graph.connect(newNode, newEdge1, node1, 0);
             this.graph.connect(newNode, newEdge2, node2, 1);

@@ -4,6 +4,13 @@
 
     export class Graph {
         public static id: number = 0;
+        public static defaultVertexClass: string = "--default-vertex-class";
+        public static defaultEdgeClass: string = "--default-edge-class";
+        //public static defaultVertexClassName: string = "data-default-vertex-class";
+        //public static defaultEdgeClassName: string = "data-default-edge-class";
+
+        public static objectIDName: string = "data-objectID";
+        public static typeName: string = "data-type";
 
         protected _vertices: Vertex[] = new Array(0);
         protected _edges: Edge[] = new Array(0);
@@ -11,24 +18,16 @@
         protected _roots: Vertex[] = [];
 
         get defaultVertexClass(): string | null {
-            return this.svgGroup.getAttribute("default-vertex-class");            
+            return this.svgGroup.getPropertyValue(Graph.defaultVertexClass);
         }
         set defaultVertexClass(value: string | null) {
-            if (value == null) {
-                this.svgGroup.removeAttribute("default-vertex-class");
-            } else {
-                this.svgGroup.setAttribute("default-vertex-class", value);
-            }
+            this.svgGroup.setPropertyValue(Graph.defaultVertexClass, value);
         }
         get defaultEdgeClass(): string | null {
-            return this.svgGroup.getAttribute("default-edge-class");
+            return this.svgGroup.getPropertyValue(Graph.defaultEdgeClass);
         }
         set defaultEdgeClass(value: string | null) {
-            if (value == null) {
-                this.svgGroup.removeAttribute("default-edge-class");
-            } else {
-                this.svgGroup.setAttribute("default-edge-class", value);
-            }
+            this.svgGroup.setPropertyValue(Graph.defaultEdgeClass, value);
         }
 
         //public arrangementFunction: (Graph) => void | null = null;
@@ -62,22 +61,24 @@
         }
         
 
-        constructor(className : string | null = null) {
-            this._svgGroup = GraphTableSVG.createGroup();
-            this._svgGroup.setAttribute("type", "graph");
+        constructor(className: string | null = null) {
+            this._svgGroup = GraphTableSVG.createGroup(className);
+            this._svgGroup.setAttribute(Graph.typeName, "graph");
 
+            /*
             if(className != null){
                 this._svgGroup.setAttribute("class", className);
-                var nodeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-vertex-class").trim();
+                var nodeClass = this._svgGroup.getActiveStyle().getPropertyValue(Graph.defaultVertexClass).trim();
                 if (nodeClass.length > 0) {
                     this.defaultVertexClass = nodeClass;
                 }
 
-                var edgeClass = this._svgGroup.getActiveStyle().getPropertyValue("--default-edge-class").trim();
+                var edgeClass = this._svgGroup.getActiveStyle().getPropertyValue(Graph.defaultEdgeClass).trim();
                 if (edgeClass.length > 0) {
                     this.defaultEdgeClass = edgeClass;
                 }
             }
+            */
             //svg.appendChild(this._svgGroup);
         }
 

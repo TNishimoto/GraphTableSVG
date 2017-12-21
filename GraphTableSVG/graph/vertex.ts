@@ -1,6 +1,9 @@
 ﻿module GraphTableSVG {
     export class Vertex {
         public symbol: symbol = Symbol();
+        public static defaultSurfaceType: string = "--default-surface-type";
+        public static defaultTextClass: string = "--default-text-class";
+        public static defaultSurfaceClass: string = "--default-surface-class";
 
         private static id_counter: number = 0;
         svgGroup: SVGGElement;
@@ -71,7 +74,7 @@
 
         
         public get objectID(): string {
-            var r = this.svgGroup.getAttribute("objectID");
+            var r = this.svgGroup.getAttribute(Graph.objectIDName);
             if (r == null) {
                 throw new Error();
             } else {
@@ -91,11 +94,11 @@
 
         constructor(className: string | null = null, text : string) {
             this.svgGroup = GraphTableSVG.createGroup(className);
-            this.svgGroup.setAttribute("objectID", (Graph.id++).toString());
-            this.svgGroup.setAttribute("type", "vertex");
+            this.svgGroup.setAttribute(Graph.objectIDName, (Graph.id++).toString());
+            this.svgGroup.setAttribute(Graph.typeName, "vertex");
 
 
-            this.svgText = createText(this.svgGroup.getActiveStyle().tryGetPropertyValue("--default-text-class"));
+            this.svgText = createText(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultTextClass));
             this.svgText.textContent = text;
             this.svgGroup.appendChild(this.svgText);
 
@@ -169,35 +172,9 @@
             p.height = this.height;
             return p;
         }
-        /*
-        public static getRegion(vertexes: Vertex[]): Rectangle {
-            //var p = this.getSubtree();
-            if (vertexes.length > 0) {
-                var fstVertex = vertexes[0];
-                var minX = fstVertex.x;
-                var maxX = fstVertex.x;
-                var minY = fstVertex.y;
-                var maxY = fstVertex.y;
-                vertexes.forEach(function (x, i, arr) {
-                    var rect = x.region;
-                    if (minX > rect.x) minX = rect.x;
-                    if (maxX < rect.right) maxX = rect.right;
-                    if (minY > rect.y) minY = rect.y;
-                    if (maxY < rect.bottom) maxY = rect.bottom;
-                });
-                var result = new Rectangle();
-                result.x = minX;
-                result.y = minY;
-                result.width = maxX - minX;
-                result.height = maxY - minY;
-                return result;
-            } else {
-                return new Rectangle();
-            }
-        }
-        */
+        
         public containsSVGID(id: string): boolean {
-            return this.svgGroup.getAttribute("objectID") == id;
+            return this.svgGroup.getAttribute(Graph.objectIDName) == id;
         }
         public get surface(): SVGElement | null {
             return null;
@@ -262,6 +239,25 @@
             var out = JSON.stringify(p);
             this.svgGroup.setAttribute("outcomingEdges", out);
         }
+
+        public static create(graph: Graph, className: string | null = null, defaultSurfaceType: string = "circle"): GraphTableSVG.Vertex {
+            var g = createGroup(className);
+            className = className != null ? className : graph.defaultVertexClass;
+            var type1 = g.getPropertyValue(Vertex.defaultSurfaceType);
+            var type = type1 != null ? type1 : defaultSurfaceType;
+            var p: Vertex;
+            if (type == "circle") {
+                p = new CircleVertex(className, "");
+            } else if (type == "rectangle") {
+                p = new RectangleVertex(className, "");
+            } else {
+                p = new Vertex(className, "");
+            }
+            graph.addVertex(p);
+            return p;
+        }
+        
+
     }
 
 }

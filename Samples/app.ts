@@ -152,7 +152,7 @@ function createTestGraph() {
 
     node2.svgGroup.setX(260);
     node2.svgGroup.setY(100);
-    var edge1 = GraphTableSVG.LineEdge.create();
+    var edge1 = GraphTableSVG.Edge.create(graph);
     graph.connect(node1, edge1, node2);
 
     edge1.beginConnectorType = GraphTableSVG.ConnectorPosition.RightUp;

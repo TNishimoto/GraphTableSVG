@@ -111,6 +111,8 @@ CSSStyleDeclaration.prototype.setVerticalAnchor = function (value: GraphTableSVG
 }
 interface SVGElement {
     getActiveStyle(): CSSStyleDeclaration;
+    getPropertyValue(name: string): string | null;
+    setPropertyValue(name: string, value: string | null);
 }
 SVGElement.prototype.getActiveStyle = function () {
     var p: SVGElement = this;
@@ -120,6 +122,31 @@ SVGElement.prototype.getActiveStyle = function () {
     } else {
         return getComputedStyle(p);
     }
+}
+SVGElement.prototype.getPropertyValue = function(name: string): string | null {
+    var item: SVGElement = this;
+
+    var p = item.style.getPropertyValue(name).trim();
+    if (p.length == 0) {
+        var r = item.getAttribute("class");
+        if (r == null) {
+            return null;
+        } else {
+            var p2 = getComputedStyle(item).getPropertyValue(name).trim();
+            if (p2.length == 0) {
+                return null;
+            } else {
+                return p2;
+            }
+        }
+    } else {
+        return p;
+    }
+}
+SVGElement.prototype.setPropertyValue = function (name: string, value: string | null) {
+    var item: SVGElement = this;
+
+    item.style.setProperty(name, value);
 }
 
 interface SVGTextElement {
