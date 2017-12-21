@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+    "target": "ES2015",
+    "sourceMap": true,
+    "outFile": "./intro.js"     
+    },
+    "files": [
+        "../GraphTableSVG/out/graph_table_svg.d.ts",        
+        "intro.ts"
+    ]
+}
