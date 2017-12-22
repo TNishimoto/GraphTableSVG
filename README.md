@@ -4,7 +4,10 @@
 ## なにこれ
 表とグラフ（頂点と枝のあれ）をSVGで描画するためのtypescriptライブラリ
 
-[サンプルページ](https://mklemma.github.io/GraphTableSVG/sample1/sample.html "サンプルページ")
+[intro](https://mklemma.github.io/GraphTableSVG/intro/intro.html "intro")
+
+[sample1](https://mklemma.github.io/GraphTableSVG/sample1/sample.html "sample1")
+
 
 いろいろと未完成
 

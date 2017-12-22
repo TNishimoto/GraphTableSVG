@@ -48,9 +48,12 @@ var GraphTableSVG;
         set beginVertex(value) {
             this._beginVertex = value;
             this.svgGroup.setAttribute(Edge.beginNodeName, value.objectID);
+            this.update();
+            /*
             if (this.graph != null) {
                 this.graph.update();
             }
+            */
         }
         get endVertex() {
             return this._endVertex;
@@ -58,9 +61,7 @@ var GraphTableSVG;
         set endVertex(value) {
             this._endVertex = value;
             this.svgGroup.setAttribute(Edge.endNodeName, value.objectID);
-            if (this.graph != null) {
-                this.graph.update();
-            }
+            this.update();
         }
         get graph() {
             return this._graph;
@@ -149,12 +150,14 @@ var GraphTableSVG;
         }
         */
         update() {
-            this._svgLine.x1.baseVal.value = this.x1;
-            this._svgLine.y1.baseVal.value = this.y1;
-            this._svgLine.x2.baseVal.value = this.x2;
-            this._svgLine.y2.baseVal.value = this.y2;
-            if (this.text != null) {
-                this.text.update();
+            if (this.beginVertex != undefined && this.endVertex != undefined) {
+                this._svgLine.x1.baseVal.value = this.x1;
+                this._svgLine.y1.baseVal.value = this.y1;
+                this._svgLine.x2.baseVal.value = this.x2;
+                this._svgLine.y2.baseVal.value = this.y2;
+                if (this.text != null) {
+                    this.text.update();
+                }
             }
             return false;
         }
@@ -455,7 +458,7 @@ var GraphTableSVG;
                 var [x, y] = [rootTree.root.x, rootTree.root.y];
                 standardTreeArrangementSub(rootTree, xInterval, yInterval);
                 rootTree.setRootLocation(x, y);
-                graph.update();
+                //graph.update();
             }
         }
         GraphArrangement.standardTreeArrangement = standardTreeArrangement;
@@ -596,9 +599,7 @@ var GraphTableSVG;
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
                     if (p.attributeName == "transform") {
-                        if (this.graph != null) {
-                            this.graph.update();
-                        }
+                        this.localUpdate();
                     }
                 }
             };
@@ -710,6 +711,10 @@ var GraphTableSVG;
         }
         update() {
             return false;
+        }
+        localUpdate() {
+            this.incomingEdges.forEach((v) => v.update());
+            this.outcomingEdges.forEach((v) => v.update());
         }
         get region() {
             var p = new GraphTableSVG.Rectangle();

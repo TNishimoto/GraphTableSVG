@@ -98,7 +98,7 @@
             this._edges.forEach(function (x) { x.update() });
         }
 
-        update(): void {
+        private update(): void {
             this.updateVertices();
             this.updateEdges();
         }

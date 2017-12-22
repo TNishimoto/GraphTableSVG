@@ -57,7 +57,7 @@ declare module GraphTableSVG {
         constructor(className?: string | null);
         updateVertices(): void;
         updateEdges(): void;
-        update(): void;
+        private update();
         removeGraph(svg: HTMLElement): void;
         getRegion(): Rectangle;
         getObjectBySVGID(id: string): Vertex | Edge | null;
@@ -119,6 +119,7 @@ declare module GraphTableSVG {
         readonly height: number;
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         update(): boolean;
+        private localUpdate();
         readonly region: Rectangle;
         containsSVGID(id: string): boolean;
         readonly surface: SVGElement | null;

@@ -47,9 +47,13 @@
             this._beginVertex = value;
             this.svgGroup.setAttribute(Edge.beginNodeName, value.objectID);
 
+            this.update();
+
+            /*
             if (this.graph != null) {
                 this.graph.update();
             }
+            */
         }
         get endVertex(): Vertex {
             return this._endVertex;
@@ -58,9 +62,8 @@
             this._endVertex = value;
             this.svgGroup.setAttribute(Edge.endNodeName, value.objectID);
 
-            if (this.graph != null) {
-                this.graph.update();
-            }
+            this.update();
+
         }
 
         get graph(): Graph | null {
@@ -173,14 +176,16 @@
         */
 
         public update(): boolean {
-            this._svgLine.x1.baseVal.value = this.x1;
-            this._svgLine.y1.baseVal.value = this.y1;
+            if (this.beginVertex != undefined && this.endVertex != undefined) {
+                this._svgLine.x1.baseVal.value = this.x1;
+                this._svgLine.y1.baseVal.value = this.y1;
 
-            this._svgLine.x2.baseVal.value = this.x2;
-            this._svgLine.y2.baseVal.value = this.y2;
+                this._svgLine.x2.baseVal.value = this.x2;
+                this._svgLine.y2.baseVal.value = this.y2;
 
-            if (this.text != null) {
-                this.text.update();
+                if (this.text != null) {
+                    this.text.update();
+                }
             }
 
             

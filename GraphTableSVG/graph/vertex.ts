@@ -35,9 +35,7 @@
             for (var i = 0; i < x.length; i++) {
                 var p = x[i];
                 if (p.attributeName == "transform") {
-                    if (this.graph != null) {
-                        this.graph.update();
-                    }
+                    this.localUpdate();
                 }
             }
         };
@@ -162,6 +160,11 @@
 
         public update(): boolean {
             return false;
+        }
+
+        private localUpdate() {
+            this.incomingEdges.forEach((v) => v.update());
+            this.outcomingEdges.forEach((v) => v.update());
         }
 
         get region(): Rectangle {

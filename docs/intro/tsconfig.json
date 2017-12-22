@@ -5,7 +5,7 @@
     "outFile": "./intro.js"     
     },
     "files": [
-        "../GraphTableSVG/out/graph_table_svg.d.ts",        
+        "../graph_table_svg.d.ts",        
         "intro.ts"
     ]
 }

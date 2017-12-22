@@ -127,7 +127,7 @@ module Grammar {
             this.slp = slp;
             this.create();
             this.locate();
-            this.graph.update();
+            //this.graph.update();
         }
         
         private locate() {
@@ -239,7 +239,7 @@ module Grammar {
             this.graph.connect(newNode, newEdge2, node2, 1);
 
             this.locate();
-            this.graph.update();
+            //this.graph.update();
             return newNode;
         }
 

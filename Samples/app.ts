@@ -97,7 +97,7 @@ function createSuffixTrie() {
     root.x = 50;
     root.y = 50;
     */
-    graph.update();
+    //graph.update();
     GraphTableSVG.GraphArrangement.standardTreeArrangement(graph, 90, 90);
     var tree = new GraphTableSVG.VirtualTree(graph, graph.rootVertex);
     tree.setRectangleLocation(0, 0);
@@ -163,7 +163,7 @@ function createTestGraph() {
 
     //graph.nodes.push(node1);
     //graph.nodes.push(node2);
-    graph.update();
+    //graph.update();
 }
 window.onload = () => {
 

@@ -83,7 +83,7 @@
                 standardTreeArrangementSub(rootTree, xInterval, yInterval);
                 rootTree.setRootLocation(x, y);
 
-                graph.update();
+                //graph.update();
             }
 
         }
