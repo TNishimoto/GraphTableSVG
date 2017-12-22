@@ -70,7 +70,7 @@
             }
         }
 
-        
+
         public get objectID(): string {
             var r = this.svgGroup.getAttribute(Graph.objectIDName);
             if (r == null) {
@@ -88,9 +88,9 @@
             }
         }
         */
-        
 
-        constructor(className: string | null = null, text : string) {
+
+        constructor(className: string | null = null, text: string) {
             this.svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.id++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "vertex");
@@ -100,7 +100,7 @@
             this.svgText.textContent = text;
             this.svgGroup.appendChild(this.svgText);
 
-            
+
             this._observer = new MutationObserver(this.observerFunc);
             var option: MutationObserverInit = { attributes: true };
             this._observer.observe(this.svgGroup, option);
@@ -152,7 +152,7 @@
         get height(): number {
             return 0;
         }
-        
+
 
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
             return [this.x, this.y];
@@ -175,7 +175,7 @@
             p.height = this.height;
             return p;
         }
-        
+
         public containsSVGID(id: string): boolean {
             return this.svgGroup.getAttribute(Graph.objectIDName) == id;
         }
@@ -259,7 +259,7 @@
             graph.addVertex(p);
             return p;
         }
-        
+
 
     }
 

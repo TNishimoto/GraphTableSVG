@@ -1,6 +1,5 @@
 ﻿module GraphTableSVG {
-
-    export class CircleVertex extends Vertex {
+    export class CircleVertex extends GraphTableSVG.Vertex {
         svgCircle: SVGCircleElement;
 
         constructor(className: string | null = null, text: string = "") {
@@ -130,7 +129,7 @@
     export class RectangleVertex extends GraphTableSVG.Vertex {
         svgRectangle: SVGRectElement;
 
-        
+
         constructor(className: string | null = null, text: string = "") {
             super(className, text);
             this.svgRectangle = createRectangle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
@@ -138,7 +137,7 @@
 
             this.svgRectangle.x.baseVal.value = -this.width / 2;
             this.svgRectangle.y.baseVal.value = -this.height / 2;
-            
+
         }
         get width(): number {
             return this.svgRectangle.width.baseVal.value;
@@ -158,7 +157,7 @@
         }
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
             var wr = this.width / 2;
-            var hr = this.height/2;
+            var hr = this.height / 2;
 
 
             switch (type) {
@@ -205,6 +204,5 @@
 
         }
     }
-    
-    
+
 }
