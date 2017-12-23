@@ -45,11 +45,13 @@
             for (var i = 0; i < x.length; i++) {
                 var p = x[i];
                 if (this.isLocated) {
-                    var vAnchor = this.svgGroup.getActiveStyle().getVerticalAnchor();
-                    if (vAnchor == null) vAnchor = VerticalAnchor.Middle;
-                    var hAnchor = this.svgGroup.getActiveStyle().getHorizontalAnchor();
-                    if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
+
+                    var vAnchor = this.svgGroup.getPropertyStyleValue(VerticalAnchorPropertyName);
+                    if (vAnchor == null) vAnchor = VerticalAnchorEnum.Middle;
+                    var hAnchor = this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
+                    if (hAnchor == null) hAnchor = HorizontalAnchorEnum.Center;
                     setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
+                    
                 }
             }
         };
@@ -246,7 +248,7 @@
         public static create(graph: Graph, className: string | null = null, defaultSurfaceType: string = "circle"): GraphTableSVG.Vertex {
             var g = createGroup(className);
             className = className != null ? className : graph.defaultVertexClass;
-            var type1 = g.getPropertyValue(Vertex.defaultSurfaceType);
+            var type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
             var type = type1 != null ? type1 : defaultSurfaceType;
             var p: Vertex;
             if (type == "circle") {

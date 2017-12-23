@@ -26,12 +26,12 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="enums.ts" />
     <TypeScriptCompile Include="graph\edge.ts" />
     <TypeScriptCompile Include="graph\graph.ts" />
     <TypeScriptCompile Include="graph\relocation.ts" />
     <TypeScriptCompile Include="graph\edge_text.ts" />
     <TypeScriptCompile Include="graph\vertex.ts" />
-    <TypeScriptCompile Include="graph\tree.ts" />
     <TypeScriptCompile Include="graph\vertex2.ts" />
     <TypeScriptCompile Include="graph\virtual_tree.ts" />
     <TypeScriptCompile Include="table\cell.ts" />
@@ -87,7 +87,7 @@
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptOutFile>out/graph_table_svg.js</TypeScriptOutFile>
+    <TypeScriptOutFile>../graph_table_svg.js</TypeScriptOutFile>
     <TypeScriptOutDir />
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>

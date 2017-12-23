@@ -6,38 +6,12 @@ module GraphTableSVG {
         right: number = 0;
         bottom: number = 0;
     }
-    export enum VerticalAnchor {
-        Bottom, Middle, Top
-    }
-    export enum HorizontalAnchor {
-        Left = 0, Center = 1, Right = 2
-    }
-    /*
-    class Rectangle {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-    }
-    enum VerticalAnchor {
-        msoAnchorBottom, msoAnchorMiddle, msoAnchorTop
-    }
-    */
+    
 
     export class Cell {
-        /*
-        upLine: HorizontalCellLine = null;
-        bottomLine: HorizontalCellLine = null;
-        leftLine: VerticalCellLine = null;
-        rightLine: VerticalCellLine = null;
-        */
-        //item: RectangleText;
-
-        //_cellX: number;
-        //_cellY: number;
-
+        
         masterID: number;
-        parent: SVGTable;
+        parent: Table;
         padding: Padding;
         svgBackground: SVGRectElement;
         svgText: SVGTextElement;
@@ -47,11 +21,13 @@ module GraphTableSVG {
         
         //private _horizontalAnchor: HorizontalAnchor;
         
-        get horizontalAnchor(): HorizontalAnchor | null {
-            return this.svgGroup.getActiveStyle().getHorizontalAnchor();
+        get horizontalAnchor(): string | null {
+            //return this.svgGroup.getActiveStyle().getHorizontalAnchor();
+            return this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
         }
-        set horizontalAnchor(value: HorizontalAnchor | null) {
-            this.svgGroup.getActiveStyle().setHorizontalAnchor(value)
+        set horizontalAnchor(value: string | null) {
+            this.svgGroup.setPropertyStyleValue(HorizontalAnchorPropertyName, value);
+            //this.svgGroup.getActiveStyle().setHorizontalAnchor(value)
             this.relocation();
         }
         get cellX(): number {
@@ -68,11 +44,11 @@ module GraphTableSVG {
         }
 
         
-        get verticalAnchor(): VerticalAnchor | null {
-            return this.svgGroup.getActiveStyle().getVerticalAnchor();
+        get verticalAnchor(): string | null {
+            return this.svgGroup.getPropertyStyleValue(VerticalAnchorPropertyName);
         }
-        set verticalAnchor(value: VerticalAnchor | null) {
-            this.svgGroup.getActiveStyle().setVerticalAnchor(value);
+        set verticalAnchor(value: string | null) {
+            this.svgGroup.setPropertyStyleValue(VerticalAnchorPropertyName, value);
             this.relocation();
         }
         
@@ -458,7 +434,7 @@ module GraphTableSVG {
             return p;
         }
 
-        constructor(parent: SVGTable, _px: number, _py: number, cellClass : string | null = null) {
+        constructor(parent: Table, _px: number, _py: number, cellClass : string | null = null) {
 
 
 

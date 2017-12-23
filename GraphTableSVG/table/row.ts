@@ -1,8 +1,8 @@
 ﻿module GraphTableSVG {
     export class Row {
-        table: SVGTable;
+        table: Table;
         y: number;
-        constructor(_table: SVGTable, _y: number) {
+        constructor(_table: Table, _y: number) {
             this.table = _table;
             this.y = _y;
         }
@@ -42,10 +42,10 @@
         }
     }
     export class Column {
-        table: SVGTable;
+        table: Table;
         x: number;
 
-        constructor(_table: SVGTable, _x: number) {
+        constructor(_table: Table, _x: number) {
             this.table = _table;
             this.x = _x;
         }

@@ -2,7 +2,7 @@
 module GraphTableSVG {
     
 
-    export class SVGTable {
+    export class Table {
         private _cells: Cell[][] = [];
         //private _textClassName: string | null = "table_text";
         get defaultCellClass(): string | null {
@@ -15,26 +15,9 @@ module GraphTableSVG {
         }
 
         
-        /*
-        set textClassName(value: string | null) {
-            this._textClassName = value;            
-            if (value != null) {
-                this.cellArray.forEach((v) => {
-                    GraphTableSVG.resetStyle(v.svgText);
-                    v.svgText.setAttribute("class", value);
-                });
-            } else {
-                //this.cellArray.forEach((v) => { GraphTableSVG.resetStyle(v.svgText) });                
-            }
-        }
-        */
-
-        //private borderClassName: string | null = null;
-        //private backgroundClassName: string | null = null;
         get cells(): Cell[][] {
             return this._cells;
         }
-        //private svg: HTMLElement;
         public svgGroup: SVGGElement;
         get width(): number {
             if (this.cells.length == 0) {
@@ -211,23 +194,7 @@ module GraphTableSVG {
             var regions = this.cellArray.map((v) => v.region);
             var rect = Rectangle.merge(regions);
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
-            return rect;
-            /*
-            var [minX, minY] = [0, 0];
-            var [maxX, maxY] = [0, 0];
-            this.cellArray.forEach((v) => {
-                if (minX > v.x) minX = v.x;
-                if (minY > v.y) minY = v.y;
-                if (maxX < v.x + v.width) maxX = v.x + v.width;
-                if (maxY < v.y + v.height) maxY = v.y + v.height;
-            });
-            var p = new Rectangle();
-            p.width = maxX - minX;
-            p.height = maxY - minY;
-            p.x = this.group.getX();
-            p.y = this.group.getY();
-            return p;
-            */
+            return rect;            
         }
 
         getCellFromID(id: number): Cell {
@@ -238,27 +205,9 @@ module GraphTableSVG {
         
 
         constructor(width: number, height: number, _tableClassName : string | null = null) {
-
-            /*
-            this._textClassName = _textClassName;
-            this.borderClassName = _borderClassName;
-            this.backgroundClassName = _backgroundClassName;
-            */
-
-            //this._cells = new Array(height);
-            
-
-
             var svgGroup: SVGGElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this.svgGroup = svgGroup;
-            if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);
-            
-            //svgGroup.setAttributeNS(null, 'transform', "translate(160,0)");
-
-            //_svg.appendChild(this.group);
-
-            //this.verticalLines = new Array(width + 1);
-            //this.horizontalLines = new Array(height + 1);
+            if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);            
             for (var y = 0; y < height; y++) {
                 this.insertRowFunction(y, width);
             }

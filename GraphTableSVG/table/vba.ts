@@ -2,7 +2,7 @@
 module GraphTableSVG {
     export class SVGToVBA {
 
-        public static createTable(table: SVGTable): string {
+        public static createTable(table: Table): string {
             var lines = new Array(0);
             lines.push(`Sub createMyTable()`);
             lines.push(` Dim createdSlide As slide`);

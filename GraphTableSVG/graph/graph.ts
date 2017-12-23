@@ -1,7 +1,8 @@
 ﻿module GraphTableSVG {
     
-
-
+    /**
+    グラフを表します。
+    */
     export class Graph {
         public static id: number = 0;
         public static defaultVertexClass: string = "--default-vertex-class";
@@ -18,16 +19,16 @@
         protected _roots: Vertex[] = [];
 
         get defaultVertexClass(): string | null {
-            return this.svgGroup.getPropertyValue(Graph.defaultVertexClass);
+            return this.svgGroup.getPropertyStyleValue(Graph.defaultVertexClass);
         }
         set defaultVertexClass(value: string | null) {
-            this.svgGroup.setPropertyValue(Graph.defaultVertexClass, value);
+            this.svgGroup.setPropertyStyleValue(Graph.defaultVertexClass, value);
         }
         get defaultEdgeClass(): string | null {
-            return this.svgGroup.getPropertyValue(Graph.defaultEdgeClass);
+            return this.svgGroup.getPropertyStyleValue(Graph.defaultEdgeClass);
         }
         set defaultEdgeClass(value: string | null) {
-            this.svgGroup.setPropertyValue(Graph.defaultEdgeClass, value);
+            this.svgGroup.setPropertyStyleValue(Graph.defaultEdgeClass, value);
         }
 
         //public arrangementFunction: (Graph) => void | null = null;

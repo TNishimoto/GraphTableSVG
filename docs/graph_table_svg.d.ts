@@ -1,4 +1,35 @@
 declare module GraphTableSVG {
+    enum NodeOrder {
+        Preorder = 0,
+        Postorder = 1,
+    }
+    enum ConnectorPosition {
+        Top = 1,
+        LeftUp = 2,
+        Left = 3,
+        LeftDown = 4,
+        Bottom = 5,
+        RightDown = 6,
+        Right = 7,
+        RightUp = 8,
+        Auto = 9,
+    }
+    var VerticalAnchorPropertyName: string;
+    type VerticalAnchorEnum = "top" | "middle" | "bottom";
+    namespace VerticalAnchorEnum {
+        const Top: VerticalAnchorEnum;
+        const Middle: VerticalAnchorEnum;
+        const Bottom: VerticalAnchorEnum;
+    }
+    var HorizontalAnchorPropertyName: string;
+    type HorizontalAnchorEnum = "left" | "center" | "right";
+    namespace HorizontalAnchorEnum {
+        const Left: HorizontalAnchorEnum;
+        const Center: HorizontalAnchorEnum;
+        const Right: HorizontalAnchorEnum;
+    }
+}
+declare module GraphTableSVG {
     class Edge {
         static beginConnectorTypeName: string;
         static endConnectorTypeName: string;
@@ -36,6 +67,9 @@ declare module GraphTableSVG {
     }
 }
 declare module GraphTableSVG {
+    /**
+    グラフを表します。
+    */
     class Graph {
         static id: number;
         static defaultVertexClass: string;
@@ -136,7 +170,7 @@ declare module GraphTableSVG {
     }
 }
 declare module GraphTableSVG {
-    class CircleVertex extends Vertex {
+    class CircleVertex extends GraphTableSVG.Vertex {
         svgCircle: SVGCircleElement;
         constructor(className?: string | null, text?: string);
         readonly width: number;
@@ -183,27 +217,17 @@ declare module GraphTableSVG {
         right: number;
         bottom: number;
     }
-    enum VerticalAnchor {
-        Bottom = 0,
-        Middle = 1,
-        Top = 2,
-    }
-    enum HorizontalAnchor {
-        Left = 0,
-        Center = 1,
-        Right = 2,
-    }
     class Cell {
         masterID: number;
-        parent: SVGTable;
+        parent: Table;
         padding: Padding;
         svgBackground: SVGRectElement;
         svgText: SVGTextElement;
         svgGroup: SVGGElement;
-        horizontalAnchor: HorizontalAnchor | null;
+        horizontalAnchor: string | null;
         cellX: number;
         cellY: number;
-        verticalAnchor: VerticalAnchor | null;
+        verticalAnchor: string | null;
         private _upLine;
         upLine: SVGLineElement;
         private _leftLine;
@@ -241,7 +265,7 @@ declare module GraphTableSVG {
         width: number;
         height: number;
         readonly region: Rectangle;
-        constructor(parent: SVGTable, _px: number, _py: number, cellClass?: string | null);
+        constructor(parent: Table, _px: number, _py: number, cellClass?: string | null);
     }
 }
 interface SVGGElement {
@@ -251,16 +275,12 @@ interface SVGGElement {
     setY(value: number): void;
 }
 interface CSSStyleDeclaration {
-    getHorizontalAnchor(): GraphTableSVG.HorizontalAnchor | null;
-    setHorizontalAnchor(value: GraphTableSVG.HorizontalAnchor | null): void;
-    getVerticalAnchor(): GraphTableSVG.VerticalAnchor | null;
-    setVerticalAnchor(value: GraphTableSVG.VerticalAnchor | null): void;
     tryGetPropertyValue(name: string): string | null;
 }
 interface SVGElement {
     getActiveStyle(): CSSStyleDeclaration;
-    getPropertyValue(name: string): string | null;
-    setPropertyValue(name: string, value: string | null): any;
+    getPropertyStyleValue(name: string): string | null;
+    setPropertyStyleValue(name: string, value: string | null): void;
 }
 interface SVGTextElement {
     getX(): number;
@@ -269,12 +289,12 @@ interface SVGTextElement {
     setY(value: number): void;
 }
 declare function IsDescendantOfBody(node: Node): boolean;
-declare function setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: GraphTableSVG.VerticalAnchor | null, hAnchor: GraphTableSVG.HorizontalAnchor | null): void;
+declare function setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null): void;
 declare module GraphTableSVG {
     class Row {
-        table: SVGTable;
+        table: Table;
         y: number;
-        constructor(_table: SVGTable, _y: number);
+        constructor(_table: Table, _y: number);
         getMaxHeight(): number;
         private setHeight(height);
         resize(): void;
@@ -282,9 +302,9 @@ declare module GraphTableSVG {
         height: number;
     }
     class Column {
-        table: SVGTable;
+        table: Table;
         x: number;
-        constructor(_table: SVGTable, _x: number);
+        constructor(_table: Table, _x: number);
         getMaxWidth(): number;
         private setWidth(width);
         resize(): void;
@@ -294,7 +314,7 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     class SVGToVBA {
-        static createTable(table: SVGTable): string;
+        static createTable(table: Table): string;
         static cellFunctionCode: string;
     }
     function parseInteger(value: string): number;
@@ -309,7 +329,7 @@ declare module GraphTableSVG {
     }
 }
 declare module GraphTableSVG {
-    class SVGTable {
+    class Table {
         private _cells;
         readonly defaultCellClass: string | null;
         readonly cells: Cell[][];
@@ -355,21 +375,6 @@ declare module GraphTableSVG {
         readonly bottom: number;
         addOffset(x: number, y: number): void;
         static merge(rects: Rectangle[]): Rectangle;
-    }
-    enum NodeOrder {
-        Preorder = 0,
-        Postorder = 1,
-    }
-    enum ConnectorPosition {
-        Top = 1,
-        LeftUp = 2,
-        Left = 3,
-        LeftDown = 4,
-        Bottom = 5,
-        RightDown = 6,
-        Right = 7,
-        RightUp = 8,
-        Auto = 9,
     }
     function ToConnectorPosition(str: string | null): ConnectorPosition;
     function ToStrFromConnectorPosition(position: ConnectorPosition): string;

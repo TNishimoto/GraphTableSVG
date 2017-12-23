@@ -80,56 +80,6 @@
                 }
             }
         }
-        /*
-        public intersectPoint(x: number, y: number): [number, number] {
-            var [x1, y1] = this.smallPoint;
-            var [x2, y2] = this.largePoint;
-            if (this.slope == undefined) {
-                return [x1, y];
-            } else if (this.slope == 0) {
-                return [x, y1];
-            }
-            else {
-                var res_x = (this.inverseIntercept(x, y) - this.intercept) / (this.slope - this.inverseSlope);
-                var res_y = this.slope * res_x + this.intercept;
-                return [res_x, res_y];
-            }
-        }
-        */
-        /*
-        public distance(x: number, y: number): number {
-            var [x1, y1] = this.smallPoint;
-            var [x2, y2] = this.largePoint;
-            var d1 = Math.sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
-            var d2 = Math.sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
-            if (this.slope != undefined) {
-                var [i_x, i_y] = this.intersectPoint(x, y);
-                if (i_x < x1) {
-                    return Math.min(d1, d2);
-                } else if (i_x > x2) {
-                    return Math.min(d1, d2);
-                } else {
-                    return Math.sqrt((x - i_x) * (x - i_x) + (y - i_y) * (y - i_y));
-                }
-            } else if (this.slope == 0) {
-                var [i_x, i_y] = this.intersectPoint(x, y);
-                if (i_x < x1) {
-                    return Math.min(d1, d2);
-                } else if (i_x > x2) {
-                    return Math.min(d1, d2);
-                } else {
-                    return Math.sqrt((x - i_x) * (x - i_x) + (y - i_y) * (y - i_y));
-                }
-            } else {
-                var d3 = Math.sqrt((x - x1) * (x - x1));
-                var [y3, y4] = y1 < y2 ? [y1, y2] : [y2, y1];
-                if (y3 <= y && y <= y4) {
-                    return d3;
-                } else {
-                    return Math.min(d1, d2);
-                }
-            }
-        }
-        */
+       
     }
 }

@@ -37,10 +37,10 @@ SVGGElement.prototype.setY = function (value: number) {
 };
 
 interface CSSStyleDeclaration {
-    getHorizontalAnchor(): GraphTableSVG.HorizontalAnchor | null;
-    setHorizontalAnchor(value: GraphTableSVG.HorizontalAnchor | null): void;
-    getVerticalAnchor(): GraphTableSVG.VerticalAnchor | null;
-    setVerticalAnchor(value: GraphTableSVG.VerticalAnchor | null): void;
+    //getHorizontalAnchor(): GraphTableSVG.HorizontalAnchor | null;
+    //setHorizontalAnchor(value: GraphTableSVG.HorizontalAnchor | null): void;
+    //getVerticalAnchor(): GraphTableSVG.VerticalAnchor | null;
+    //setVerticalAnchor(value: GraphTableSVG.VerticalAnchor | null): void;
     tryGetPropertyValue(name: string): string | null;
 }
 CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name: string) {
@@ -52,67 +52,10 @@ CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name: string) {
         return r;
     }
 }
-
-CSSStyleDeclaration.prototype.getHorizontalAnchor = function () {
-    var p: CSSStyleDeclaration = this;
-    var r = p.getPropertyValue("--horizontal-anchor").trim();
-    if (r == "left") {
-        return GraphTableSVG.HorizontalAnchor.Left;
-    } else if (r == "right") {
-        return GraphTableSVG.HorizontalAnchor.Right;
-
-    } else if (r == "center") {
-        return GraphTableSVG.HorizontalAnchor.Center;
-    } else {
-        return null;
-    }
-}
-CSSStyleDeclaration.prototype.setHorizontalAnchor = function (value: GraphTableSVG.HorizontalAnchor | null) {
-    var p: CSSStyleDeclaration = this;
-    if (value == GraphTableSVG.HorizontalAnchor.Left) {
-        p.setProperty("--horizontal-anchor", "left");
-    } else if (value == GraphTableSVG.HorizontalAnchor.Right) {
-
-        p.setProperty("--horizontal-anchor", "right");
-    } else if (value == GraphTableSVG.HorizontalAnchor.Center) {
-
-        p.setProperty("--horizontal-anchor", "center");
-    } else {
-        p.setProperty("--horizontal-anchor", null);
-    }
-}
-CSSStyleDeclaration.prototype.getVerticalAnchor = function () {
-    var p: CSSStyleDeclaration = this;
-    var r = p.getPropertyValue("--vertical-anchor").trim();
-    if (r == "bottom") {
-        return GraphTableSVG.VerticalAnchor.Bottom;
-    } else if (r == "middle") {
-        return GraphTableSVG.VerticalAnchor.Middle;
-
-    } else if (r == "top") {
-        return GraphTableSVG.VerticalAnchor.Top;
-    } else {
-        return null;
-    }
-}
-CSSStyleDeclaration.prototype.setVerticalAnchor = function (value: GraphTableSVG.VerticalAnchor | null) {
-    var p: CSSStyleDeclaration = this;
-    if (value == GraphTableSVG.VerticalAnchor.Bottom) {
-        p.setProperty("--vertical-anchor", "bottom");
-    } else if (value == GraphTableSVG.VerticalAnchor.Middle) {
-
-        p.setProperty("--vertical-anchor", "middle");
-    } else if (value == GraphTableSVG.VerticalAnchor.Top) {
-
-        p.setProperty("--vertical-anchor", "top");
-    } else {
-        p.setProperty("--vertical-anchor", null);
-    }
-}
 interface SVGElement {
     getActiveStyle(): CSSStyleDeclaration;
-    getPropertyValue(name: string): string | null;
-    setPropertyValue(name: string, value: string | null) : void;
+    getPropertyStyleValue(name: string): string | null;
+    setPropertyStyleValue(name: string, value: string | null) : void;
 }
 SVGElement.prototype.getActiveStyle = function () {
     var p: SVGElement = this;
@@ -123,7 +66,7 @@ SVGElement.prototype.getActiveStyle = function () {
         return getComputedStyle(p);
     }
 }
-SVGElement.prototype.getPropertyValue = function(name: string): string | null {
+SVGElement.prototype.getPropertyStyleValue = function(name: string): string | null {
     var item: SVGElement = this;
 
     var p = item.style.getPropertyValue(name).trim();
@@ -143,7 +86,7 @@ SVGElement.prototype.getPropertyValue = function(name: string): string | null {
         return p;
     }
 }
-SVGElement.prototype.setPropertyValue = function (name: string, value: string | null) {
+SVGElement.prototype.setPropertyStyleValue = function (name: string, value: string | null) {
     var item: SVGElement = this;
 
     item.style.setProperty(name, value);
@@ -196,7 +139,7 @@ function IsDescendantOfBody(node: Node): boolean {
     }
 }
 
-function setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: GraphTableSVG.VerticalAnchor | null, hAnchor: GraphTableSVG.HorizontalAnchor | null) {
+function setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null) {
 
     var x = rect.x;
     var y = rect.y;
@@ -210,16 +153,16 @@ function setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: Gra
 
     y -= dy;
 
-    if (vAnchor == GraphTableSVG.VerticalAnchor.Middle) {
+    if (vAnchor == GraphTableSVG.VerticalAnchorEnum.Middle) {
         y += (rect.height - b2.height) / 2
-    } else if (vAnchor == GraphTableSVG.VerticalAnchor.Bottom) {
+    } else if (vAnchor == GraphTableSVG.VerticalAnchorEnum.Bottom) {
         y += rect.height - b2.height;
     }
     
     x -= dx;
-    if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
+    if (hAnchor == GraphTableSVG.HorizontalAnchorEnum.Center) {
         x += (rect.width - b2.width) / 2;
-    } else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
+    } else if (hAnchor == GraphTableSVG.HorizontalAnchorEnum.Right) {
         x += rect.width - b2.width;
     }
     

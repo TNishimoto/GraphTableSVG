@@ -1,5 +1,8 @@
 
 <svg class="svgbox" viewBox="0 0 300 300" width="300px" height="300px" id="svgbox1" xmlns="http://www.w3.org/2000/svg">
+
+ノードをドラッグすると動きます。
+
 <div class="code">
 
 ```html
