@@ -8,6 +8,8 @@
 
 [sample1](https://mklemma.github.io/GraphTableSVG/sample1/sample.html "sample1")
 
+[reference](https://mklemma.github.io/GraphTableSVG/typedoc/index.html "reference")
+
 
 いろいろと未完成
 
