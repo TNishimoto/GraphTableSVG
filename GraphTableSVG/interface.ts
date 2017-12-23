@@ -112,7 +112,7 @@ CSSStyleDeclaration.prototype.setVerticalAnchor = function (value: GraphTableSVG
 interface SVGElement {
     getActiveStyle(): CSSStyleDeclaration;
     getPropertyValue(name: string): string | null;
-    setPropertyValue(name: string, value: string | null);
+    setPropertyValue(name: string, value: string | null) : void;
 }
 SVGElement.prototype.getActiveStyle = function () {
     var p: SVGElement = this;
