@@ -1,5 +1,13 @@
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    /*
+    export class Padding {
+        top: number = 0;
+        left: number = 0;
+        right: number = 0;
+        bottom: number = 0;
+    }
+    */
     var NodeOrder;
     (function (NodeOrder) {
         NodeOrder[NodeOrder["Preorder"] = 0] = "Preorder";
@@ -17,76 +25,69 @@ var GraphTableSVG;
         ConnectorPosition[ConnectorPosition["RightUp"] = 8] = "RightUp";
         ConnectorPosition[ConnectorPosition["Auto"] = 9] = "Auto";
     })(ConnectorPosition = GraphTableSVG.ConnectorPosition || (GraphTableSVG.ConnectorPosition = {}));
-    /*
-    export enum VerticalAnchor {
-        Bottom = 0, Middle = 1, Top = 2
+    function ToConnectorPosition(str) {
+        if (str == null) {
+            return ConnectorPosition.Auto;
+        }
+        else {
+            switch (str) {
+                case "top": return ConnectorPosition.Top;
+                case "leftup": return ConnectorPosition.LeftUp;
+                case "left": return ConnectorPosition.Left;
+                case "leftdown": return ConnectorPosition.LeftDown;
+                case "bottom": return ConnectorPosition.Bottom;
+                case "rightdown": return ConnectorPosition.RightDown;
+                case "right": return ConnectorPosition.Right;
+                case "rightup": return ConnectorPosition.RightUp;
+                case "auto": return ConnectorPosition.Auto;
+                default: return ConnectorPosition.Auto;
+            }
+        }
     }
-    */
-    /*
-    export enum HorizontalAnchor {
-        Left = 0, Center = 1, Right = 2
+    GraphTableSVG.ToConnectorPosition = ToConnectorPosition;
+    function ToStrFromConnectorPosition(position) {
+        switch (position) {
+            case ConnectorPosition.Top: return "top";
+            case ConnectorPosition.LeftUp: return "leftup";
+            case ConnectorPosition.Left: return "left";
+            case ConnectorPosition.LeftDown: return "leftdown";
+            case ConnectorPosition.Bottom: return "bottom";
+            case ConnectorPosition.RightUp: return "rightup";
+            case ConnectorPosition.Right: return "right";
+            case ConnectorPosition.RightDown: return "rightdown";
+            case ConnectorPosition.Auto: return "auto";
+            default: return "auto";
+        }
     }
-    */
+    GraphTableSVG.ToStrFromConnectorPosition = ToStrFromConnectorPosition;
     GraphTableSVG.VerticalAnchorPropertyName = "--vertical-anchor";
-    var VerticalAnchorEnum;
-    (function (VerticalAnchorEnum) {
-        VerticalAnchorEnum.Top = "top";
-        VerticalAnchorEnum.Middle = "middle";
-        VerticalAnchorEnum.Bottom = "bottom";
-    })(VerticalAnchorEnum = GraphTableSVG.VerticalAnchorEnum || (GraphTableSVG.VerticalAnchorEnum = {}));
+    var VerticalAnchor;
+    (function (VerticalAnchor) {
+        VerticalAnchor.Top = "top";
+        VerticalAnchor.Middle = "middle";
+        VerticalAnchor.Bottom = "bottom";
+    })(VerticalAnchor = GraphTableSVG.VerticalAnchor || (GraphTableSVG.VerticalAnchor = {}));
     GraphTableSVG.HorizontalAnchorPropertyName = "--horizontal-anchor";
-    var HorizontalAnchorEnum;
-    (function (HorizontalAnchorEnum) {
-        HorizontalAnchorEnum.Left = "left";
-        HorizontalAnchorEnum.Center = "center";
-        HorizontalAnchorEnum.Right = "right";
-    })(HorizontalAnchorEnum = GraphTableSVG.HorizontalAnchorEnum || (GraphTableSVG.HorizontalAnchorEnum = {}));
-    //var horizontalAnchorStrings: string[] = ["left", "center", "right"];
-    //var horizontalAnchorDic : { [key: string]: GraphTableSVG.Vertex; }
-    /*
-    export class EnumTranslator {
-        public static toHorizontalAnchorFromString(str: string | null): HorizontalAnchor | null {
-            if (str == "left") {
-                return GraphTableSVG.HorizontalAnchor.Left;
-            } else if (str == "right") {
-                return GraphTableSVG.HorizontalAnchor.Right;
-
-            } else if (str == "center") {
-                return GraphTableSVG.HorizontalAnchor.Center;
-            } else {
-                return null;
+    var HorizontalAnchor;
+    (function (HorizontalAnchor) {
+        HorizontalAnchor.Left = "left";
+        HorizontalAnchor.Center = "center";
+        HorizontalAnchor.Right = "right";
+    })(HorizontalAnchor = GraphTableSVG.HorizontalAnchor || (GraphTableSVG.HorizontalAnchor = {}));
+    function parsePXString(item) {
+        if (item == null) {
+            return 0;
+        }
+        else {
+            if (item.length == 0) {
+                return 0;
+            }
+            else {
+                return parseInt(item);
             }
         }
-        public static toStringFromHorizontalAnchor(item: HorizontalAnchor | null) : string | null  {
-            if (item == GraphTableSVG.HorizontalAnchor.Left) {
-                return "left";
-            } else if (item == GraphTableSVG.HorizontalAnchor.Right) {
-                return "right";
-            } else if (item == GraphTableSVG.HorizontalAnchor.Center) {
-                return "center";
-            } else {
-                return null;
-            }
-
-        }
     }
-    */
-    /*
-    CSSStyleDeclaration.prototype.setHorizontalAnchor = function (value: GraphTableSVG.HorizontalAnchor | null) {
-        var p: CSSStyleDeclaration = this;
-        if (value == GraphTableSVG.HorizontalAnchor.Left) {
-            p.setProperty("--horizontal-anchor", "left");
-        } else if (value == GraphTableSVG.HorizontalAnchor.Right) {
-
-            p.setProperty("--horizontal-anchor", "right");
-        } else if (value == GraphTableSVG.HorizontalAnchor.Center) {
-
-            p.setProperty("--horizontal-anchor", "center");
-        } else {
-            p.setProperty("--horizontal-anchor", null);
-        }
-    }
-    */
+    GraphTableSVG.parsePXString = parsePXString;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -97,8 +98,8 @@ var GraphTableSVG;
             this.svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.id++).toString());
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "edge");
-            var t1 = GraphTableSVG.CSSFunctions.getPropertyValue(this.svgGroup, Edge.beginConnectorTypeName);
-            var t2 = GraphTableSVG.CSSFunctions.getPropertyValue(this.svgGroup, Edge.endConnectorTypeName);
+            var t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
+            var t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
             this.beginConnectorType = GraphTableSVG.ToConnectorPosition(t1);
             this.endConnectorType = GraphTableSVG.ToConnectorPosition(t2);
             //this._parent = graph;
@@ -108,7 +109,7 @@ var GraphTableSVG;
             */
         }
         get beginConnectorType() {
-            var p = GraphTableSVG.CSSFunctions.getPropertyValue(this.svgGroup, Edge.beginConnectorTypeName);
+            var p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
             if (p == null) {
                 return GraphTableSVG.ConnectorPosition.Auto;
             }
@@ -117,11 +118,11 @@ var GraphTableSVG;
             }
         }
         set beginConnectorType(value) {
-            GraphTableSVG.CSSFunctions.setPropertyValue(this.svgGroup, Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
+            this.svgGroup.setPropertyStyleValue(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
             //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
         get endConnectorType() {
-            var p = GraphTableSVG.CSSFunctions.getPropertyValue(this.svgGroup, Edge.endConnectorTypeName);
+            var p = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
             if (p == null) {
                 return GraphTableSVG.ConnectorPosition.Auto;
             }
@@ -130,7 +131,7 @@ var GraphTableSVG;
             }
         }
         set endConnectorType(value) {
-            GraphTableSVG.CSSFunctions.setPropertyValue(this.svgGroup, Edge.endConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
+            this.svgGroup.setPropertyStyleValue(Edge.endConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
         get beginVertex() {
             return this._beginVertex;
@@ -652,10 +653,10 @@ var GraphTableSVG;
                     if (this.isLocated) {
                         var vAnchor = this.svgGroup.getPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName);
                         if (vAnchor == null)
-                            vAnchor = GraphTableSVG.VerticalAnchorEnum.Middle;
+                            vAnchor = GraphTableSVG.VerticalAnchor.Middle;
                         var hAnchor = this.svgGroup.getPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName);
                         if (hAnchor == null)
-                            hAnchor = GraphTableSVG.HorizontalAnchorEnum.Center;
+                            hAnchor = GraphTableSVG.HorizontalAnchor.Center;
                         setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
                     }
                 }
@@ -1170,17 +1171,8 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    class Padding {
-        constructor() {
-            this.top = 0;
-            this.left = 0;
-            this.right = 0;
-            this.bottom = 0;
-        }
-    }
-    GraphTableSVG.Padding = Padding;
     class Cell {
-        constructor(parent, _px, _py, cellClass = null) {
+        constructor(parent, _px, _py, cellClass = null, borderClass = null) {
             this.observerFunc = (x) => {
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
@@ -1195,7 +1187,7 @@ var GraphTableSVG;
             this.svgGroup = GraphTableSVG.createGroup();
             if (cellClass != null)
                 this.svgGroup.setAttribute("class", cellClass);
-            this.padding = new Padding();
+            //this.padding = new Padding();
             this.cellX = _px;
             this.cellY = _py;
             this.parent = parent;
@@ -1210,16 +1202,16 @@ var GraphTableSVG;
             this.svgGroup.appendChild(circle);
             */
             this.svgGroup.appendChild(this.svgText);
-            this.parent.svgGroup.appendChild(this.svgGroup);
-            this.upLine = GraphTableSVG.createLine(0, 0, 0, 0);
-            this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
-            this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0);
-            this.bottomLine = GraphTableSVG.createLine(0, 0, 0, 0);
+            //this.parent.svgGroup.appendChild(this.svgGroup);
+            this.parent.svgGroup.insertBefore(this.svgGroup, this.parent.svgGroup.firstChild);
+            this.upLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.bottomLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
             this.parent.svgGroup.appendChild(this.upLine);
             this.parent.svgGroup.appendChild(this.leftLine);
             this.parent.svgGroup.appendChild(this.rightLine);
             this.parent.svgGroup.appendChild(this.bottomLine);
-            this.svgGroup.parentNode;
             this._observer = new MutationObserver(this.observerFunc);
             var option = { childList: true };
             this._observer.observe(this.svgText, option);
@@ -1230,6 +1222,18 @@ var GraphTableSVG;
         }
         //rect: SVGRectElement;
         //private _horizontalAnchor: HorizontalAnchor;
+        get paddingLeft() {
+            return GraphTableSVG.parsePXString(this.svgGroup.getPropertyStyleValue("padding-left"));
+        }
+        get paddingRight() {
+            return GraphTableSVG.parsePXString(this.svgGroup.getPropertyStyleValue("padding-right"));
+        }
+        get paddingTop() {
+            return GraphTableSVG.parsePXString(this.svgGroup.getPropertyStyleValue("padding-top"));
+        }
+        get paddingBottom() {
+            return GraphTableSVG.parsePXString(this.svgGroup.getPropertyStyleValue("padding-bottom"));
+        }
         get horizontalAnchor() {
             //return this.svgGroup.getActiveStyle().getHorizontalAnchor();
             return this.svgGroup.getPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName);
@@ -1283,22 +1287,11 @@ var GraphTableSVG;
             this._bottomLine = line;
         }
         get defaultTextClass() {
-            var r = this.svgGroup.getActiveStyle().getPropertyValue("--default-text-class").trim();
-            if (r.length == 0) {
-                return null;
-            }
-            else {
-                return r;
-            }
+            var r = this.svgGroup.getPropertyStyleValue(Cell.defaultTextClass);
+            return r;
         }
         get defaultBackgroundClass() {
-            var r = this.svgGroup.getActiveStyle().getPropertyValue("--default-background-class").trim();
-            if (r.length == 0) {
-                return null;
-            }
-            else {
-                return r;
-            }
+            return this.svgGroup.getPropertyStyleValue(Cell.defaultBackgroundClassName);
         }
         get logicalWidth() {
             if (this.isMaster) {
@@ -1333,7 +1326,7 @@ var GraphTableSVG;
         }
         get textBoxWidth() {
             if (this.isLocated) {
-                return this.svgText.getBBox().width + this.padding.left + this.padding.right;
+                return this.svgText.getBBox().width + GraphTableSVG.parsePXString(this.svgGroup.style.paddingLeft) + GraphTableSVG.parsePXString(this.svgGroup.style.paddingRight);
             }
             else {
                 return 0;
@@ -1341,7 +1334,7 @@ var GraphTableSVG;
         }
         get textBoxHeight() {
             if (this.isLocated) {
-                return this.svgText.getBBox().height + this.padding.top + this.padding.bottom;
+                return this.svgText.getBBox().height + GraphTableSVG.parsePXString(this.svgGroup.style.paddingTop) + GraphTableSVG.parsePXString(this.svgGroup.style.paddingBottom);
             }
             else {
                 return 0;
@@ -1378,89 +1371,11 @@ var GraphTableSVG;
             var text_x = 0;
             var text_y = 0;
             var innerRect = new GraphTableSVG.Rectangle();
-            innerRect.x = this.padding.left;
-            innerRect.y = this.padding.top;
-            innerRect.height = this.height - this.padding.top - this.padding.bottom;
-            innerRect.width = this.width - this.padding.left - this.padding.right;
+            innerRect.x = this.paddingLeft;
+            innerRect.y = this.paddingTop;
+            innerRect.height = this.height - this.paddingTop - this.paddingBottom;
+            innerRect.width = this.width - this.paddingLeft - this.paddingRight;
             setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
-            //var style = getComputedStyle(this.svgText, "");
-            //var anchor = style.textAnchor;
-            /*
-            var innerHeight = this.height - this.padding.top - this.padding.bottom;
-            var innerWidth = this.width - this.padding.left - this.padding.right;
-
-            var box = this.svgText.getBBox();
-            //console.log(box);
-
-            //this.svgText.style.dominantBaseline = "middle";
-
-            text_y = this.padding.top;
-            */
-            /*
-            if (this.verticalAnchor == VerticalAnchor.Top) {
-                //this.svgText.style.dominantBaseline = "text-before-edge";
-                text_y = this.padding.top + (box.height / 2);
-            } else if (this.verticalAnchor == VerticalAnchor.Middle) {
-                //this.svgText.style.dominantBaseline = "middle";
-                text_y = innerHeight / 2 + this.padding.top;
-            } else if (this.verticalAnchor == VerticalAnchor.Bottom) {
-                //this.svgText.style.dominantBaseline = "text-after-edge";
-                text_y = this.padding.top + innerHeight - (box.height / 2);
-            } else {
-                //this.svgText.style.dominantBaseline = "text-before-edge";
-                text_y = this.padding.top + (box.height / 2);
-            }
-            */
-            //this.svgText.style.alignmentBaseline = "middle";
-            //this.svgText.style.textAnchor = "start";
-            /*
-            if (this.horizontalAnchor == HorizontalAnchor.Center) {
-                //this.svgText.style.textAnchor = "middle";
-                text_x = this.padding.left + ((innerWidth - box.width) / 2);
-            } else if (this.horizontalAnchor == HorizontalAnchor.Left) {
-                //this.svgText.style.textAnchor = "start";
-                text_x = this.padding.left;
-            } else if (this.horizontalAnchor == HorizontalAnchor.Right) {
-                //this.svgText.style.textAnchor = "end";
-                text_x = this.padding.left + innerWidth - box.width;
-            } else {
-                //this.svgText.style.textAnchor = "middle";
-                text_x = this.padding.left;
-            }
-            */
-            /*
-            this.svgText.setAttribute('x', text_x.toString());
-            this.svgText.setAttribute('y', text_y.toString());
-
-            
-            var b2 = this.svgText.getBBox();
-
-            var dy = b2.y - this.padding.top;
-
-            
-            if (this.verticalAnchor == VerticalAnchor.Top) {
-                text_y -= dy;
-            } else if (this.verticalAnchor == VerticalAnchor.Middle) {
-                text_y -= dy;
-                text_y += (innerHeight - box.height)/2
-            } else if (this.verticalAnchor == VerticalAnchor.Bottom) {
-                text_y -= dy;
-                text_y += innerHeight - box.height;
-            } else {
-                text_y -= dy;
-            }
-            this.svgText.setAttribute('y', text_y.toString());
-            */
-            /*
-            var b3 = this.svgText.getBBox();
-
-            this.rect.x.baseVal.value = b3.x;
-            this.rect.y.baseVal.value = b3.y;
-            this.rect.width.baseVal.value = b3.width;
-            this.rect.height.baseVal.value = b3.height;
-            */
-            //this.svgText.setAttribute('x', '20');
-            //this.svgText.setAttribute('y', this.svgText.getBoundingClientRect().height.toString());
         }
         get isMaster() {
             return this.ID == this.masterID;
@@ -1600,6 +1515,8 @@ var GraphTableSVG;
             return p;
         }
     }
+    Cell.defaultBackgroundClassName = "--default-background-class";
+    Cell.defaultTextClass = "--default-text-class";
     GraphTableSVG.Cell = Cell;
 })(GraphTableSVG || (GraphTableSVG = {}));
 SVGGElement.prototype.getX = function () {
@@ -1725,17 +1642,17 @@ function setXY(text, rect, vAnchor, hAnchor) {
     var dy = b2.y - y;
     var dx = b2.x - x;
     y -= dy;
-    if (vAnchor == GraphTableSVG.VerticalAnchorEnum.Middle) {
+    if (vAnchor == GraphTableSVG.VerticalAnchor.Middle) {
         y += (rect.height - b2.height) / 2;
     }
-    else if (vAnchor == GraphTableSVG.VerticalAnchorEnum.Bottom) {
+    else if (vAnchor == GraphTableSVG.VerticalAnchor.Bottom) {
         y += rect.height - b2.height;
     }
     x -= dx;
-    if (hAnchor == GraphTableSVG.HorizontalAnchorEnum.Center) {
+    if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
         x += (rect.width - b2.width) / 2;
     }
-    else if (hAnchor == GraphTableSVG.HorizontalAnchorEnum.Right) {
+    else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
         x += rect.width - b2.width;
     }
     text.setAttribute('y', y.toString());
@@ -1991,6 +1908,8 @@ var GraphTableSVG;
             };
             var svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this.svgGroup = svgGroup;
+            //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            //this.svgGroup.appendChild(this.svgLineGroup);
             if (_tableClassName != null)
                 this.svgGroup.setAttribute("class", _tableClassName);
             for (var y = 0; y < height; y++) {
@@ -2003,13 +1922,10 @@ var GraphTableSVG;
         }
         //private _textClassName: string | null = "table_text";
         get defaultCellClass() {
-            var r = this.svgGroup.getActiveStyle().getPropertyValue("--default-cell-class").trim();
-            if (r.length == 0) {
-                return null;
-            }
-            else {
-                return r;
-            }
+            return this.svgGroup.getPropertyStyleValue(Table.defaultCellClass);
+        }
+        get defaultBorderClass() {
+            return this.svgGroup.getPropertyStyleValue(Table.defaultBorderClass);
         }
         get cells() {
             return this._cells;
@@ -2092,7 +2008,7 @@ var GraphTableSVG;
             this.insertRow(this.height);
         }
         createCell() {
-            return new GraphTableSVG.Cell(this, 0, 0, this.defaultCellClass);
+            return new GraphTableSVG.Cell(this, 0, 0, this.defaultCellClass, this.defaultBorderClass);
         }
         insertColumn(i) {
             if (this.height > 0) {
@@ -2214,7 +2130,7 @@ var GraphTableSVG;
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    lines.push(` Call EditCellTextFrame(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.padding.top}, ${cell.padding.bottom}, ${cell.padding.left}, ${cell.padding.right})`);
+                    lines.push(` Call EditCellTextFrame(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.paddingTop}, ${cell.paddingBottom}, ${cell.paddingLeft}, ${cell.paddingRight})`);
                 }
             }
             for (var y = 0; y < this.height; y++) {
@@ -2298,121 +2214,12 @@ var GraphTableSVG;
             }
         }
     }
+    Table.defaultCellClass = "--default-cell-class";
+    Table.defaultBorderClass = "--default-border-class";
     GraphTableSVG.Table = Table;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    var CSSFunctions;
-    (function (CSSFunctions) {
-        function getPropertyValue(item, name) {
-            var p = item.style.getPropertyValue(name).trim();
-            if (p.length == 0) {
-                var r = item.getAttribute("class");
-                if (r == null) {
-                    return null;
-                }
-                else {
-                    var p2 = getComputedStyle(item).getPropertyValue(name).trim();
-                    if (p2.length == 0) {
-                        return null;
-                    }
-                    else {
-                        return p2;
-                    }
-                }
-            }
-            else {
-                return p;
-            }
-        }
-        CSSFunctions.getPropertyValue = getPropertyValue;
-        function setPropertyValue(item, name, value) {
-            item.style.setProperty(name, value);
-        }
-        CSSFunctions.setPropertyValue = setPropertyValue;
-    })(CSSFunctions = GraphTableSVG.CSSFunctions || (GraphTableSVG.CSSFunctions = {}));
-    class Rectangle {
-        /*
-        x: number = 0;
-        y: number = 0;
-        width: number = 0;
-        height: number = 0;
-        */
-        constructor(x = 0, y = 0, width = 0, height = 0) {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-        }
-        get right() {
-            return this.x + this.width;
-        }
-        get bottom() {
-            return this.y + this.height;
-        }
-        addOffset(x, y) {
-            this.x += x;
-            this.y += y;
-        }
-        static merge(rects) {
-            var x1 = rects[0].x;
-            var y1 = rects[0].y;
-            var x2 = rects[0].right;
-            var y2 = rects[0].bottom;
-            rects.forEach((v) => {
-                if (x1 > v.x)
-                    x1 = v.x;
-                if (y1 > v.y)
-                    y1 = v.y;
-                if (x2 < v.right)
-                    x2 = v.right;
-                if (y2 < v.bottom)
-                    y2 = v.bottom;
-            });
-            var rect = new Rectangle();
-            rect.x = x1;
-            rect.y = y1;
-            rect.width = x2 - x1;
-            rect.height = y2 - y1;
-            return rect;
-        }
-    }
-    GraphTableSVG.Rectangle = Rectangle;
-    function ToConnectorPosition(str) {
-        if (str == null) {
-            return GraphTableSVG.ConnectorPosition.Auto;
-        }
-        else {
-            switch (str) {
-                case "top": return GraphTableSVG.ConnectorPosition.Top;
-                case "leftup": return GraphTableSVG.ConnectorPosition.LeftUp;
-                case "left": return GraphTableSVG.ConnectorPosition.Left;
-                case "leftdown": return GraphTableSVG.ConnectorPosition.LeftDown;
-                case "bottom": return GraphTableSVG.ConnectorPosition.Bottom;
-                case "rightdown": return GraphTableSVG.ConnectorPosition.RightDown;
-                case "right": return GraphTableSVG.ConnectorPosition.Right;
-                case "rightup": return GraphTableSVG.ConnectorPosition.RightUp;
-                case "auto": return GraphTableSVG.ConnectorPosition.Auto;
-                default: return GraphTableSVG.ConnectorPosition.Auto;
-            }
-        }
-    }
-    GraphTableSVG.ToConnectorPosition = ToConnectorPosition;
-    function ToStrFromConnectorPosition(position) {
-        switch (position) {
-            case GraphTableSVG.ConnectorPosition.Top: return "top";
-            case GraphTableSVG.ConnectorPosition.LeftUp: return "leftup";
-            case GraphTableSVG.ConnectorPosition.Left: return "left";
-            case GraphTableSVG.ConnectorPosition.LeftDown: return "leftdown";
-            case GraphTableSVG.ConnectorPosition.Bottom: return "bottom";
-            case GraphTableSVG.ConnectorPosition.RightUp: return "rightup";
-            case GraphTableSVG.ConnectorPosition.Right: return "right";
-            case GraphTableSVG.ConnectorPosition.RightDown: return "rightdown";
-            case GraphTableSVG.ConnectorPosition.Auto: return "auto";
-            default: return "auto";
-        }
-    }
-    GraphTableSVG.ToStrFromConnectorPosition = ToStrFromConnectorPosition;
     function createLine(x, y, x2, y2, className = null) {
         var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line1.x1.baseVal.value = x;
@@ -2607,5 +2414,46 @@ var GraphTableSVG;
         }
     }
     GraphTableSVG.VLine = VLine;
+    class Rectangle {
+        constructor(x = 0, y = 0, width = 0, height = 0) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+        get right() {
+            return this.x + this.width;
+        }
+        get bottom() {
+            return this.y + this.height;
+        }
+        addOffset(x, y) {
+            this.x += x;
+            this.y += y;
+        }
+        static merge(rects) {
+            var x1 = rects[0].x;
+            var y1 = rects[0].y;
+            var x2 = rects[0].right;
+            var y2 = rects[0].bottom;
+            rects.forEach((v) => {
+                if (x1 > v.x)
+                    x1 = v.x;
+                if (y1 > v.y)
+                    y1 = v.y;
+                if (x2 < v.right)
+                    x2 = v.right;
+                if (y2 < v.bottom)
+                    y2 = v.bottom;
+            });
+            var rect = new Rectangle();
+            rect.x = x1;
+            rect.y = y1;
+            rect.width = x2 - x1;
+            rect.height = y2 - y1;
+            return rect;
+        }
+    }
+    GraphTableSVG.Rectangle = Rectangle;
 })(GraphTableSVG || (GraphTableSVG = {}));
 //# sourceMappingURL=graph_table_svg.js.map

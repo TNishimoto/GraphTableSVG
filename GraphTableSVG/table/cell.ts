@@ -1,18 +1,13 @@
 ﻿
 module GraphTableSVG {
-    export class Padding {
-        top: number = 0;
-        left: number = 0;
-        right: number = 0;
-        bottom: number = 0;
-    }
     
 
     export class Cell {
-        
+        private static defaultBackgroundClassName: string = "--default-background-class";
+        private static defaultTextClass: string = "--default-text-class";
         masterID: number;
         parent: Table;
-        padding: Padding;
+        //padding: Padding;
         svgBackground: SVGRectElement;
         svgText: SVGTextElement;
         svgGroup: SVGGElement;
@@ -21,6 +16,20 @@ module GraphTableSVG {
         
         //private _horizontalAnchor: HorizontalAnchor;
         
+        get paddingLeft(): number {
+            return parsePXString(this.svgGroup.getPropertyStyleValue("padding-left"));
+        }
+        get paddingRight(): number {
+            return parsePXString(this.svgGroup.getPropertyStyleValue("padding-right"));
+        }
+        get paddingTop(): number {
+            return parsePXString(this.svgGroup.getPropertyStyleValue("padding-top"));
+        }
+        get paddingBottom(): number {
+            return parsePXString(this.svgGroup.getPropertyStyleValue("padding-bottom"));
+
+        }
+
         get horizontalAnchor(): string | null {
             //return this.svgGroup.getActiveStyle().getHorizontalAnchor();
             return this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
@@ -87,20 +96,11 @@ module GraphTableSVG {
         } 
 
         get defaultTextClass(): string | null {
-            var r = this.svgGroup.getActiveStyle().getPropertyValue("--default-text-class").trim();
-            if (r.length == 0) {
-                return null;
-            } else {
-                return r;
-            }
+            var r = this.svgGroup.getPropertyStyleValue(Cell.defaultTextClass);
+            return r;
         }
         get defaultBackgroundClass(): string | null {
-            var r = this.svgGroup.getActiveStyle().getPropertyValue("--default-background-class").trim();
-            if (r.length == 0) {
-                return null;
-            } else {
-                return r;
-            }
+            return this.svgGroup.getPropertyStyleValue(Cell.defaultBackgroundClassName);
         }
 
         //svgGroup: SVGGElement;
@@ -151,14 +151,14 @@ module GraphTableSVG {
 
         get textBoxWidth(): number {
             if (this.isLocated) {
-                return this.svgText.getBBox().width + this.padding.left + this.padding.right;
+                return this.svgText.getBBox().width + parsePXString(this.svgGroup.style.paddingLeft) + parsePXString(this.svgGroup.style.paddingRight);
             } else {
                 return 0;
             }
         }
         get textBoxHeight(): number {
             if (this.isLocated) {
-                return this.svgText.getBBox().height + this.padding.top + this.padding.bottom;
+                return this.svgText.getBBox().height + parsePXString(this.svgGroup.style.paddingTop) + parsePXString(this.svgGroup.style.paddingBottom);
             } else {
                 return 0;
             }
@@ -199,97 +199,14 @@ module GraphTableSVG {
             var text_y = 0;
 
             var innerRect = new Rectangle();
-            innerRect.x = this.padding.left;
-            innerRect.y = this.padding.top;
-            innerRect.height = this.height - this.padding.top - this.padding.bottom;
-            innerRect.width = this.width - this.padding.left - this.padding.right;
+            innerRect.x = this.paddingLeft;
+            innerRect.y = this.paddingTop;
+            innerRect.height = this.height - this.paddingTop - this.paddingBottom;
+            innerRect.width = this.width - this.paddingLeft - this.paddingRight;
+            
             setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
 
-            //var style = getComputedStyle(this.svgText, "");
             
-            //var anchor = style.textAnchor;
-
-            /*
-            var innerHeight = this.height - this.padding.top - this.padding.bottom;
-            var innerWidth = this.width - this.padding.left - this.padding.right;
-
-            var box = this.svgText.getBBox();
-            //console.log(box);
-
-            //this.svgText.style.dominantBaseline = "middle";
-
-            text_y = this.padding.top;
-            */
-            /*
-            if (this.verticalAnchor == VerticalAnchor.Top) {
-                //this.svgText.style.dominantBaseline = "text-before-edge";
-                text_y = this.padding.top + (box.height / 2);
-            } else if (this.verticalAnchor == VerticalAnchor.Middle) {
-                //this.svgText.style.dominantBaseline = "middle";
-                text_y = innerHeight / 2 + this.padding.top;
-            } else if (this.verticalAnchor == VerticalAnchor.Bottom) {
-                //this.svgText.style.dominantBaseline = "text-after-edge";
-                text_y = this.padding.top + innerHeight - (box.height / 2);
-            } else {
-                //this.svgText.style.dominantBaseline = "text-before-edge";
-                text_y = this.padding.top + (box.height / 2);
-            }
-            */
-
-            //this.svgText.style.alignmentBaseline = "middle";
-
-            //this.svgText.style.textAnchor = "start";
-
-            /*
-            if (this.horizontalAnchor == HorizontalAnchor.Center) {
-                //this.svgText.style.textAnchor = "middle";
-                text_x = this.padding.left + ((innerWidth - box.width) / 2);
-            } else if (this.horizontalAnchor == HorizontalAnchor.Left) {
-                //this.svgText.style.textAnchor = "start";
-                text_x = this.padding.left;
-            } else if (this.horizontalAnchor == HorizontalAnchor.Right) {
-                //this.svgText.style.textAnchor = "end";
-                text_x = this.padding.left + innerWidth - box.width;
-            } else {
-                //this.svgText.style.textAnchor = "middle";
-                text_x = this.padding.left;
-            }
-            */
-
-            /*
-            this.svgText.setAttribute('x', text_x.toString());
-            this.svgText.setAttribute('y', text_y.toString());
-
-            
-            var b2 = this.svgText.getBBox();
-
-            var dy = b2.y - this.padding.top;
-
-            
-            if (this.verticalAnchor == VerticalAnchor.Top) {
-                text_y -= dy;
-            } else if (this.verticalAnchor == VerticalAnchor.Middle) {
-                text_y -= dy;
-                text_y += (innerHeight - box.height)/2
-            } else if (this.verticalAnchor == VerticalAnchor.Bottom) {
-                text_y -= dy;
-                text_y += innerHeight - box.height;
-            } else {
-                text_y -= dy;
-            }
-            this.svgText.setAttribute('y', text_y.toString());
-            */
-            /*
-            var b3 = this.svgText.getBBox();
-
-            this.rect.x.baseVal.value = b3.x;
-            this.rect.y.baseVal.value = b3.y;
-            this.rect.width.baseVal.value = b3.width;
-            this.rect.height.baseVal.value = b3.height;
-            */
-            
-            //this.svgText.setAttribute('x', '20');
-            //this.svgText.setAttribute('y', this.svgText.getBoundingClientRect().height.toString());
 
         }
 
@@ -434,13 +351,13 @@ module GraphTableSVG {
             return p;
         }
 
-        constructor(parent: Table, _px: number, _py: number, cellClass : string | null = null) {
+        constructor(parent: Table, _px: number, _py: number, cellClass : string | null = null, borderClass : string | null = null) {
 
 
 
             this.svgGroup = createGroup();
             if (cellClass != null) this.svgGroup.setAttribute("class", cellClass);
-            this.padding = new Padding();
+            //this.padding = new Padding();
             this.cellX = _px;
             this.cellY = _py;
             this.parent = parent;
@@ -460,20 +377,18 @@ module GraphTableSVG {
             */
 
             this.svgGroup.appendChild(this.svgText);
-            this.parent.svgGroup.appendChild(this.svgGroup);
+            //this.parent.svgGroup.appendChild(this.svgGroup);
+            this.parent.svgGroup.insertBefore(this.svgGroup, this.parent.svgGroup.firstChild);
 
 
-
-            this.upLine = GraphTableSVG.createLine(0, 0, 0, 0);
-            this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
-            this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0);
-            this.bottomLine = GraphTableSVG.createLine(0, 0, 0, 0);
+            this.upLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.bottomLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
             this.parent.svgGroup.appendChild(this.upLine);
             this.parent.svgGroup.appendChild(this.leftLine);
             this.parent.svgGroup.appendChild(this.rightLine);
             this.parent.svgGroup.appendChild(this.bottomLine);
-
-            this.svgGroup.parentNode
 
             
             

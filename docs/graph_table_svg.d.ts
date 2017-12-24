@@ -14,20 +14,23 @@ declare module GraphTableSVG {
         RightUp = 8,
         Auto = 9,
     }
+    function ToConnectorPosition(str: string | null): ConnectorPosition;
+    function ToStrFromConnectorPosition(position: ConnectorPosition): string;
     var VerticalAnchorPropertyName: string;
-    type VerticalAnchorEnum = "top" | "middle" | "bottom";
-    namespace VerticalAnchorEnum {
-        const Top: VerticalAnchorEnum;
-        const Middle: VerticalAnchorEnum;
-        const Bottom: VerticalAnchorEnum;
+    type VerticalAnchor = "top" | "middle" | "bottom";
+    namespace VerticalAnchor {
+        const Top: VerticalAnchor;
+        const Middle: VerticalAnchor;
+        const Bottom: VerticalAnchor;
     }
     var HorizontalAnchorPropertyName: string;
-    type HorizontalAnchorEnum = "left" | "center" | "right";
-    namespace HorizontalAnchorEnum {
-        const Left: HorizontalAnchorEnum;
-        const Center: HorizontalAnchorEnum;
-        const Right: HorizontalAnchorEnum;
+    type HorizontalAnchor = "left" | "center" | "right";
+    namespace HorizontalAnchor {
+        const Left: HorizontalAnchor;
+        const Center: HorizontalAnchor;
+        const Right: HorizontalAnchor;
     }
+    function parsePXString(item: string | null): number;
 }
 declare module GraphTableSVG {
     class Edge {
@@ -211,19 +214,18 @@ declare module GraphTableSVG {
     }
 }
 declare module GraphTableSVG {
-    class Padding {
-        top: number;
-        left: number;
-        right: number;
-        bottom: number;
-    }
     class Cell {
+        private static defaultBackgroundClassName;
+        private static defaultTextClass;
         masterID: number;
         parent: Table;
-        padding: Padding;
         svgBackground: SVGRectElement;
         svgText: SVGTextElement;
         svgGroup: SVGGElement;
+        readonly paddingLeft: number;
+        readonly paddingRight: number;
+        readonly paddingTop: number;
+        readonly paddingBottom: number;
         horizontalAnchor: string | null;
         cellX: number;
         cellY: number;
@@ -265,7 +267,7 @@ declare module GraphTableSVG {
         width: number;
         height: number;
         readonly region: Rectangle;
-        constructor(parent: Table, _px: number, _py: number, cellClass?: string | null);
+        constructor(parent: Table, _px: number, _py: number, cellClass?: string | null, borderClass?: string | null);
     }
 }
 interface SVGGElement {
@@ -330,8 +332,11 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     class Table {
+        private static defaultCellClass;
+        private static defaultBorderClass;
         private _cells;
         readonly defaultCellClass: string | null;
+        readonly defaultBorderClass: string | null;
         readonly cells: Cell[][];
         svgGroup: SVGGElement;
         readonly width: number;
@@ -361,23 +366,6 @@ declare module GraphTableSVG {
     }
 }
 declare module GraphTableSVG {
-    module CSSFunctions {
-        function getPropertyValue(item: SVGElement, name: string): string | null;
-        function setPropertyValue(item: SVGElement, name: string, value: string | null): void;
-    }
-    class Rectangle {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        constructor(x?: number, y?: number, width?: number, height?: number);
-        readonly right: number;
-        readonly bottom: number;
-        addOffset(x: number, y: number): void;
-        static merge(rects: Rectangle[]): Rectangle;
-    }
-    function ToConnectorPosition(str: string | null): ConnectorPosition;
-    function ToStrFromConnectorPosition(position: ConnectorPosition): string;
     function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
     function createText(className?: string | null): SVGTextElement;
     function createRectangle(className?: string | null): SVGRectElement;
@@ -400,5 +388,16 @@ declare module GraphTableSVG {
         readonly intercept: number | null;
         readonly inverseSlope: number | null;
         inverseIntercept(x: number, y: number): number | null;
+    }
+    class Rectangle {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        constructor(x?: number, y?: number, width?: number, height?: number);
+        readonly right: number;
+        readonly bottom: number;
+        addOffset(x: number, y: number): void;
+        static merge(rects: Rectangle[]): Rectangle;
     }
 }

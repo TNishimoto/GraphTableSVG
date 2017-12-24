@@ -1,4 +1,12 @@
 ﻿module GraphTableSVG {
+    /*
+    export class Padding {
+        top: number = 0;
+        left: number = 0;
+        right: number = 0;
+        bottom: number = 0;
+    }
+    */
     export enum NodeOrder {
         Preorder, Postorder
     }
@@ -47,20 +55,32 @@
     }
 
     export var VerticalAnchorPropertyName: string = "--vertical-anchor";
-    export type VerticalAnchorEnum = "top" | "middle" | "bottom"
-    export namespace VerticalAnchorEnum {
-        export const Top: VerticalAnchorEnum = "top"
-        export const Middle: VerticalAnchorEnum = "middle"
-        export const Bottom: VerticalAnchorEnum = "bottom"
+    export type VerticalAnchor = "top" | "middle" | "bottom"
+    export namespace VerticalAnchor {
+        export const Top: VerticalAnchor = "top"
+        export const Middle: VerticalAnchor = "middle"
+        export const Bottom: VerticalAnchor = "bottom"
     }
 
 
     export var HorizontalAnchorPropertyName: string = "--horizontal-anchor";
-    export type HorizontalAnchorEnum = "left" | "center" | "right"
-    export namespace HorizontalAnchorEnum {
-        export const Left: HorizontalAnchorEnum = "left"
-        export const Center: HorizontalAnchorEnum = "center"
-        export const Right: HorizontalAnchorEnum = "right"
+    export type HorizontalAnchor = "left" | "center" | "right"
+    export namespace HorizontalAnchor {
+        export const Left: HorizontalAnchor = "left"
+        export const Center: HorizontalAnchor = "center"
+        export const Right: HorizontalAnchor = "right"
     }
+    export function parsePXString(item: string | null): number {
+        if (item == null) {
+            return 0;
+        } else {
+            if (item.length == 0) {
+                return 0;
+            } else {
+                return parseInt(item);
+            }
+        }
+    }
+
     
 }

@@ -47,9 +47,9 @@
                 if (this.isLocated) {
 
                     var vAnchor = this.svgGroup.getPropertyStyleValue(VerticalAnchorPropertyName);
-                    if (vAnchor == null) vAnchor = VerticalAnchorEnum.Middle;
+                    if (vAnchor == null) vAnchor = VerticalAnchor.Middle;
                     var hAnchor = this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
-                    if (hAnchor == null) hAnchor = HorizontalAnchorEnum.Center;
+                    if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
                     setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
                     
                 }

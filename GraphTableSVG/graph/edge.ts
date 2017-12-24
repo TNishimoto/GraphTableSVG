@@ -13,7 +13,7 @@
         private _endVertex: Vertex;
 
         get beginConnectorType(): ConnectorPosition {
-            var p = CSSFunctions.getPropertyValue(this.svgGroup, Edge.beginConnectorTypeName);
+            var p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
             if (p == null) {
                 return ConnectorPosition.Auto;
             } else {
@@ -21,11 +21,11 @@
             }
         }
         set beginConnectorType(value: ConnectorPosition) {
-            CSSFunctions.setPropertyValue(this.svgGroup, Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
+            this.svgGroup.setPropertyStyleValue(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
             //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
         get endConnectorType(): ConnectorPosition {
-            var p = CSSFunctions.getPropertyValue(this.svgGroup, Edge.endConnectorTypeName);
+            var p = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
             if (p == null) {
                 return ConnectorPosition.Auto;
             } else {
@@ -33,7 +33,7 @@
             }
         }
         set endConnectorType(value: ConnectorPosition) {
-            CSSFunctions.setPropertyValue(this.svgGroup, Edge.endConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
+            this.svgGroup.setPropertyStyleValue(Edge.endConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
         }
 
         private _graph: Graph | null = null;
@@ -79,8 +79,8 @@
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.id++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "edge");
 
-            var t1 = CSSFunctions.getPropertyValue(this.svgGroup, Edge.beginConnectorTypeName);
-            var t2 = CSSFunctions.getPropertyValue(this.svgGroup, Edge.endConnectorTypeName);
+            var t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
+            var t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
 
             this.beginConnectorType = ToConnectorPosition(t1);
             this.endConnectorType = ToConnectorPosition(t2);

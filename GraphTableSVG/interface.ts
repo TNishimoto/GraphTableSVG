@@ -153,16 +153,16 @@ function setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: str
 
     y -= dy;
 
-    if (vAnchor == GraphTableSVG.VerticalAnchorEnum.Middle) {
+    if (vAnchor == GraphTableSVG.VerticalAnchor.Middle) {
         y += (rect.height - b2.height) / 2
-    } else if (vAnchor == GraphTableSVG.VerticalAnchorEnum.Bottom) {
+    } else if (vAnchor == GraphTableSVG.VerticalAnchor.Bottom) {
         y += rect.height - b2.height;
     }
     
     x -= dx;
-    if (hAnchor == GraphTableSVG.HorizontalAnchorEnum.Center) {
+    if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
         x += (rect.width - b2.width) / 2;
-    } else if (hAnchor == GraphTableSVG.HorizontalAnchorEnum.Right) {
+    } else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
         x += rect.width - b2.width;
     }
     

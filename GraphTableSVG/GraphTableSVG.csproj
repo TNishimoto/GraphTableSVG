@@ -39,7 +39,7 @@
     <TypeScriptCompile Include="table\row.ts" />
     <TypeScriptCompile Include="table\vba.ts" />
     <TypeScriptCompile Include="table\table.ts" />
-    <TypeScriptCompile Include="functions.ts" />
+    <TypeScriptCompile Include="svg.ts" />
     <TypeScriptCompile Include="vline.ts" />
   </ItemGroup>
   <ItemGroup>

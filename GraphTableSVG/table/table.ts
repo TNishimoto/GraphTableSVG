@@ -3,21 +3,23 @@ module GraphTableSVG {
     
 
     export class Table {
+        private static defaultCellClass: string = "--default-cell-class";
+        private static defaultBorderClass: string = "--default-border-class";
+
         private _cells: Cell[][] = [];
         //private _textClassName: string | null = "table_text";
         get defaultCellClass(): string | null {
-            var r = this.svgGroup.getActiveStyle().getPropertyValue("--default-cell-class").trim();
-            if (r.length == 0) {
-                return null;
-            } else {
-                return r;
-            }
+            return this.svgGroup.getPropertyStyleValue(Table.defaultCellClass);            
+        }
+        get defaultBorderClass(): string | null {
+            return this.svgGroup.getPropertyStyleValue(Table.defaultBorderClass);            
         }
 
         
         get cells(): Cell[][] {
             return this._cells;
         }
+        //public svgLineGroup: SVGGElement;
         public svgGroup: SVGGElement;
         get width(): number {
             if (this.cells.length == 0) {
@@ -105,7 +107,7 @@ module GraphTableSVG {
             this.insertRow(this.height);
         }
         private createCell(): Cell {
-            return new Cell(this, 0, 0, this.defaultCellClass);
+            return new Cell(this, 0, 0, this.defaultCellClass, this.defaultBorderClass);
         }
 
         public insertColumn(i: number) {
@@ -207,6 +209,9 @@ module GraphTableSVG {
         constructor(width: number, height: number, _tableClassName : string | null = null) {
             var svgGroup: SVGGElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this.svgGroup = svgGroup;
+            //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            //this.svgGroup.appendChild(this.svgLineGroup);
+
             if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);            
             for (var y = 0; y < height; y++) {
                 this.insertRowFunction(y, width);
@@ -262,7 +267,7 @@ module GraphTableSVG {
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    lines.push(` Call EditCellTextFrame(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.padding.top}, ${cell.padding.bottom}, ${cell.padding.left}, ${cell.padding.right})`);
+                    lines.push(` Call EditCellTextFrame(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.paddingTop}, ${cell.paddingBottom}, ${cell.paddingLeft}, ${cell.paddingRight})`);
                 }
             }
             for (var y = 0; y < this.height; y++) {
