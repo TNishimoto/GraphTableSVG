@@ -4,9 +4,16 @@
 ## なにこれ
 表とグラフ（頂点と枝のあれ）をSVGで描画するためのtypescriptライブラリ
 
-[intro](https://mklemma.github.io/GraphTableSVG/intro/intro.html "intro")
+[sample](https://mklemma.github.io/GraphTableSVG/graph_sample1/sample.html "graph_sample1")
 
-[sample1](https://mklemma.github.io/GraphTableSVG/sample1/sample.html "sample1")
+[sample](https://mklemma.github.io/GraphTableSVG/graph_sample2/sample.html "graph_sample2")
+
+[sample](https://mklemma.github.io/GraphTableSVG/graph_sample3/sample.html "graph_sample3")
+
+[sample](https://mklemma.github.io/GraphTableSVG/table_sample1/sample.html "table_sample1")
+
+[sample](https://mklemma.github.io/GraphTableSVG/table_sample2/sample.html "table_sample2")
+
 
 [reference](https://mklemma.github.io/GraphTableSVG/typedoc/index.html "reference")
 
