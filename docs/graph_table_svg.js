@@ -98,7 +98,7 @@ var GraphTableSVG;
             this._graph = null;
             this.text = null;
             this.svgGroup = GraphTableSVG.createGroup(className);
-            this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.id++).toString());
+            this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.idCounter++).toString());
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "edge");
             var t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
             var t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
@@ -313,7 +313,7 @@ var GraphTableSVG;
         }
         */
         update() {
-            if (this.beginVertex != undefined && this.endVertex != undefined) {
+            if (this.beginVertex != null && this.endVertex != null) {
                 this._svgLine.x1.baseVal.value = this.x1;
                 this._svgLine.y1.baseVal.value = this.y1;
                 this._svgLine.x2.baseVal.value = this.x2;
@@ -340,12 +340,18 @@ var GraphTableSVG;
             this._svgGroup = GraphTableSVG.createGroup(className);
             this._svgGroup.setAttribute(Graph.typeName, "graph");
         }
+        /**
+        Vertexインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
+        */
         get defaultVertexClass() {
             return this.svgGroup.getPropertyStyleValue(Graph.defaultVertexClass);
         }
         set defaultVertexClass(value) {
             this.svgGroup.setPropertyStyleValue(Graph.defaultVertexClass, value);
         }
+        /**
+        Edgeインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
+        */
         get defaultEdgeClass() {
             return this.svgGroup.getPropertyStyleValue(Graph.defaultEdgeClass);
         }
@@ -380,7 +386,7 @@ var GraphTableSVG;
                 var i = this._edges.indexOf(item);
                 if (i == -1 && item.graph == this) {
                     this._edges.push(item);
-                    this.svgGroup.appendChild(item.svgGroup);
+                    this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
                 }
                 else {
                     throw Error();
@@ -466,10 +472,10 @@ var GraphTableSVG;
             this.add(edge);
         }
         */
-        connect(node1, edge, node2, insertIndex = 0) {
+        connect(node1, edge, node2, outcomingInsertIndex = node1.outcomingEdges.length, incomingInsertIndex = node2.incomingEdges.length) {
             //this._connect(node1, edge, node2);
-            node1.insertOutcomingEdge(edge, insertIndex);
-            node2.insertIncomingEdge(edge, node2.incomingEdges.length);
+            node1.insertOutcomingEdge(edge, outcomingInsertIndex);
+            node2.insertIncomingEdge(edge, incomingInsertIndex);
             var i = this.roots.indexOf(node1);
             var j = this.roots.indexOf(node2);
             if (j != -1) {
@@ -540,7 +546,7 @@ var GraphTableSVG;
             this.svgGroup.setAttribute("node", JSON.stringify(ids));
         }
     }
-    Graph.id = 0;
+    Graph.idCounter = 0;
     Graph.defaultVertexClass = "--default-vertex-class";
     Graph.defaultEdgeClass = "--default-edge-class";
     //public static defaultVertexClassName: string = "data-default-vertex-class";
@@ -752,7 +758,7 @@ var GraphTableSVG;
                 }
             };
             this.svgGroup = GraphTableSVG.createGroup(className);
-            this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.id++).toString());
+            this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.idCounter++).toString());
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "vertex");
             this.svgText = GraphTableSVG.createText(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultTextClass));
             this.svgText.textContent = text;
@@ -1333,25 +1339,25 @@ var GraphTableSVG;
                 }
             };
             this.svgGroup = GraphTableSVG.createGroup();
+            this.parent = parent;
+            this.parent.svgGroup.insertBefore(this.svgGroup, this.parent.svgGroup.firstChild);
             if (cellClass != null)
                 this.svgGroup.setAttribute("class", cellClass);
             //this.padding = new Padding();
             this.cellX = _px;
             this.cellY = _py;
-            this.parent = parent;
             this.masterID = this.ID;
             this.svgBackground = GraphTableSVG.createRectangle(this.defaultBackgroundClass);
             this.svgText = GraphTableSVG.createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
+            this.svgGroup.appendChild(this.svgText);
             /*
             var circle = createRectangle();
             circle.style.fill = "blue";
             this.rect = circle;
             this.svgGroup.appendChild(circle);
             */
-            this.svgGroup.appendChild(this.svgText);
             //this.parent.svgGroup.appendChild(this.svgGroup);
-            this.parent.svgGroup.insertBefore(this.svgGroup, this.parent.svgGroup.firstChild);
             this.upLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
             this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
             this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
@@ -2046,7 +2052,7 @@ End Sub
 var GraphTableSVG;
 (function (GraphTableSVG) {
     class Table {
-        constructor(width, height, _tableClassName = null) {
+        constructor(svgbox, width, height, _tableClassName = null) {
             this._cells = [];
             this.observerFunc = (x) => {
                 for (var i = 0; i < x.length; i++) {
@@ -2054,8 +2060,8 @@ var GraphTableSVG;
                     //console.log(p.attributeName);
                 }
             };
-            var svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            this.svgGroup = svgGroup;
+            this.svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            svgbox.appendChild(this.svgGroup);
             //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             //this.svgGroup.appendChild(this.svgLineGroup);
             if (_tableClassName != null)

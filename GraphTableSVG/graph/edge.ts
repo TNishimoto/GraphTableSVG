@@ -122,7 +122,7 @@
 
         constructor(__graph: Graph, className: string | null = null) {
             this.svgGroup = createGroup(className);
-            this.svgGroup.setAttribute(Graph.objectIDName, (Graph.id++).toString());
+            this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "edge");
 
             var t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
@@ -243,7 +243,7 @@
         */
 
         public update(): boolean {
-            if (this.beginVertex != undefined && this.endVertex != undefined) {
+            if (this.beginVertex != null && this.endVertex != null) {
                 this._svgLine.x1.baseVal.value = this.x1;
                 this._svgLine.y1.baseVal.value = this.y1;
 

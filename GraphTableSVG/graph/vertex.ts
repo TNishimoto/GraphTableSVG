@@ -96,7 +96,7 @@
 
         constructor(__graph: Graph, className: string | null = null, text: string) {
             this.svgGroup = GraphTableSVG.createGroup(className);
-            this.svgGroup.setAttribute(Graph.objectIDName, (Graph.id++).toString());
+            this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "vertex");
 
 

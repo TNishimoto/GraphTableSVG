@@ -74,7 +74,7 @@ declare module GraphTableSVG {
     グラフを表します。
     */
     class Graph {
-        static id: number;
+        static idCounter: number;
         static defaultVertexClass: string;
         static defaultEdgeClass: string;
         static objectIDName: string;
@@ -83,7 +83,13 @@ declare module GraphTableSVG {
         protected _edges: Edge[];
         protected _svgGroup: SVGGElement;
         protected _roots: Vertex[];
+        /**
+        Vertexインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
+        */
         defaultVertexClass: string | null;
+        /**
+        Edgeインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
+        */
         defaultEdgeClass: string | null;
         readonly roots: Vertex[];
         readonly svgGroup: SVGGElement;
@@ -98,7 +104,7 @@ declare module GraphTableSVG {
         removeGraph(svg: HTMLElement): void;
         getRegion(): Rectangle;
         getObjectBySVGID(id: string): Vertex | Edge | null;
-        connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex?: number): void;
+        connect(node1: Vertex, edge: Edge, node2: Vertex, outcomingInsertIndex?: number, incomingInsertIndex?: number): void;
         getOrderedVertices(order: NodeOrder, node?: Vertex | null): Vertex[];
         rootVertex: Vertex | null;
         save(): void;
@@ -361,7 +367,7 @@ declare module GraphTableSVG {
         resize(): void;
         getRegion(): Rectangle;
         getCellFromID(id: number): Cell;
-        constructor(width: number, height: number, _tableClassName?: string | null);
+        constructor(svgbox: HTMLElement, width: number, height: number, _tableClassName?: string | null);
         createVBAMainCode(slideName: string): [string, string];
         private splitCode(tableName, codes);
         private splitCode1(codes);

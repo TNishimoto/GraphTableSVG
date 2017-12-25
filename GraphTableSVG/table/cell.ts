@@ -356,11 +356,14 @@ module GraphTableSVG {
 
 
             this.svgGroup = createGroup();
+            this.parent = parent;
+
+            this.parent.svgGroup.insertBefore(this.svgGroup, this.parent.svgGroup.firstChild);
+
             if (cellClass != null) this.svgGroup.setAttribute("class", cellClass);
             //this.padding = new Padding();
             this.cellX = _px;
             this.cellY = _py;
-            this.parent = parent;
             this.masterID = this.ID;
 
 
@@ -368,7 +371,8 @@ module GraphTableSVG {
             this.svgBackground = createRectangle(this.defaultBackgroundClass);
             this.svgText = createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
-
+            this.svgGroup.appendChild(this.svgText);
+            
             /*
             var circle = createRectangle();
             circle.style.fill = "blue";
@@ -376,9 +380,7 @@ module GraphTableSVG {
             this.svgGroup.appendChild(circle);
             */
 
-            this.svgGroup.appendChild(this.svgText);
             //this.parent.svgGroup.appendChild(this.svgGroup);
-            this.parent.svgGroup.insertBefore(this.svgGroup, this.parent.svgGroup.firstChild);
 
 
             this.upLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);

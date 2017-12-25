@@ -114,6 +114,7 @@
 								<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a href="graphtablesvg.lineedge.html#endconnectortype" class="tsd-kind-icon">end<wbr>Connector<wbr>Type</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a href="graphtablesvg.lineedge.html#endvertex" class="tsd-kind-icon">end<wbr>Vertex</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="graphtablesvg.lineedge.html#graph" class="tsd-kind-icon">graph</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="graphtablesvg.lineedge.html#isdisposed" class="tsd-kind-icon">is<wbr>Disposed</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="graphtablesvg.lineedge.html#objectid" class="tsd-kind-icon">objectID</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="graphtablesvg.lineedge.html#svg" class="tsd-kind-icon">svg</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="graphtablesvg.lineedge.html#x1" class="tsd-kind-icon">x1</a></li>
@@ -125,8 +126,8 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="graphtablesvg.lineedge.html#dispose" class="tsd-kind-icon">dispose</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="graphtablesvg.lineedge.html#save" class="tsd-kind-icon">save</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="graphtablesvg.lineedge.html#setgraph" class="tsd-kind-icon">set<wbr>Graph</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="graphtablesvg.lineedge.html#update" class="tsd-kind-icon">update</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="graphtablesvg.lineedge.html#create" class="tsd-kind-icon">create</a></li>
 							</ul>
@@ -140,18 +141,21 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Line<wbr>Edge<span class="tsd-signature-symbol">(</span>className<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.lineedge.html" class="tsd-signature-type">LineEdge</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Line<wbr>Edge<span class="tsd-signature-symbol">(</span>___graph<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.graph.html" class="tsd-signature-type">Graph</a>, className<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.lineedge.html" class="tsd-signature-type">LineEdge</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L159">graph/edge.ts:159</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L217">graph/edge.ts:217</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
+								<li>
+									<h5>___graph: <a href="graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
+								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> className: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 								</li>
@@ -169,7 +173,7 @@
 					<div class="tsd-signature tsd-kind-icon">_svg<wbr>Line<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SVGLineElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L147">graph/edge.ts:147</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L212">graph/edge.ts:212</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -180,7 +184,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#svggroup">svgGroup</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L40">graph/edge.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L40">graph/edge.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -191,7 +195,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#text">text</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L41">graph/edge.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L41">graph/edge.ts:41</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -202,7 +206,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#beginconnectortypename">beginConnectorTypeName</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L5">graph/edge.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L5">graph/edge.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -213,7 +217,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#beginnodename">beginNodeName</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L8">graph/edge.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L8">graph/edge.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -224,7 +228,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#defaultlineclass">defaultLineClass</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L7">graph/edge.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L7">graph/edge.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -235,7 +239,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#defaulttextclass">defaultTextClass</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L10">graph/edge.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L10">graph/edge.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -246,7 +250,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#endconnectortypename">endConnectorTypeName</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L6">graph/edge.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L6">graph/edge.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -257,7 +261,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#endnodename">endNodeName</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L9">graph/edge.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L9">graph/edge.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -276,7 +280,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#beginconnectortype">beginConnectorType</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L15">graph/edge.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L15">graph/edge.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../enums/graphtablesvg.connectorposition.html" class="tsd-signature-type">ConnectorPosition</a></h4>
@@ -285,7 +289,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#beginconnectortype">beginConnectorType</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L23">graph/edge.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L23">graph/edge.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -302,30 +306,33 @@
 					<a name="beginvertex" class="tsd-anchor"></a>
 					<h3>begin<wbr>Vertex</h3>
 					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> beginVertex<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a></li>
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> beginVertex<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> beginVertex<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> beginVertex<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#beginvertex">beginVertex</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L43">graph/edge.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L43">graph/edge.ts:43</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">null</span>
+							</h4>
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#beginvertex">beginVertex</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L46">graph/edge.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L46">graph/edge.ts:46</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>value: <a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a></h5>
+									<h5>value: <a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -344,7 +351,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#endconnectortype">endConnectorType</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L27">graph/edge.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L27">graph/edge.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../enums/graphtablesvg.connectorposition.html" class="tsd-signature-type">ConnectorPosition</a></h4>
@@ -353,7 +360,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#endconnectortype">endConnectorType</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L35">graph/edge.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L35">graph/edge.ts:35</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -370,30 +377,33 @@
 					<a name="endvertex" class="tsd-anchor"></a>
 					<h3>end<wbr>Vertex</h3>
 					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> endVertex<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a></li>
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> endVertex<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> endVertex<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> endVertex<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#endvertex">endVertex</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L58">graph/edge.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L67">graph/edge.ts:67</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">null</span>
+							</h4>
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#endvertex">endVertex</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L61">graph/edge.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L70">graph/edge.ts:70</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>value: <a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a></h5>
+									<h5>value: <a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -411,13 +421,31 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#graph">graph</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L69">graph/edge.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L88">graph/edge.ts:88</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.graph.html" class="tsd-signature-type">Graph</a>
 								<span class="tsd-signature-symbol"> | </span>
 								<span class="tsd-signature-type">null</span>
 							</h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+					<a name="isdisposed" class="tsd-anchor"></a>
+					<h3>is<wbr>Disposed</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> isDisposed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#isdisposed">isDisposed</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L119">graph/edge.ts:119</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -432,7 +460,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#objectid">objectID</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L118">graph/edge.ts:118</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L182">graph/edge.ts:182</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span>
@@ -452,7 +480,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L150">graph/edge.ts:150</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L215">graph/edge.ts:215</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">SVGLineElement</span></h4>
@@ -470,7 +498,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#x1">x1</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L96">graph/edge.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L144">graph/edge.ts:144</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -488,7 +516,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#x2">x2</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L104">graph/edge.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L160">graph/edge.ts:160</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -506,7 +534,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#y1">y1</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L100">graph/edge.ts:100</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L152">graph/edge.ts:152</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -524,7 +552,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#y2">y2</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L108">graph/edge.ts:108</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L168">graph/edge.ts:168</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -534,6 +562,24 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="dispose" class="tsd-anchor"></a>
+					<h3>dispose</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">dispose<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#dispose">dispose</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L109">graph/edge.ts:109</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="save" class="tsd-anchor"></a>
 					<h3>save</h3>
@@ -545,33 +591,9 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#save">save</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L135">graph/edge.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L199">graph/edge.ts:199</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-					<a name="setgraph" class="tsd-anchor"></a>
-					<h3>set<wbr>Graph</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Graph<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.graph.html" class="tsd-signature-type">Graph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Overrides <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#setgraph">setGraph</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L153">graph/edge.ts:153</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>value: <a href="graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
-								</li>
-							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -587,7 +609,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#update">update</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L178">graph/edge.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L245">graph/edge.ts:245</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -605,7 +627,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="graphtablesvg.edge.html">Edge</a>.<a href="graphtablesvg.edge.html#create">create</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/graph/edge.ts#L138">graph/edge.ts:138</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/graph/edge.ts#L202">graph/edge.ts:202</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -636,10 +658,13 @@
 						<a href="../modules/graphtablesvg.html">Graph<wbr>TableSVG</a>
 					</li>
 					<li class=" tsd-kind-module tsd-parent-kind-module">
-						<a href="../modules/graphtablesvg.cssfunctions.html">Graph<wbr>TableSVG.CSSFunctions</a>
+						<a href="../modules/graphtablesvg.grapharrangement.html">Graph<wbr>TableSVG.<wbr>Graph<wbr>Arrangement</a>
 					</li>
 					<li class=" tsd-kind-module tsd-parent-kind-module">
-						<a href="../modules/graphtablesvg.grapharrangement.html">Graph<wbr>TableSVG.<wbr>Graph<wbr>Arrangement</a>
+						<a href="../modules/graphtablesvg.horizontalanchor.html">Graph<wbr>TableSVG.<wbr>Horizontal<wbr>Anchor</a>
+					</li>
+					<li class=" tsd-kind-module tsd-parent-kind-module">
+						<a href="../modules/graphtablesvg.verticalanchor.html">Graph<wbr>TableSVG.<wbr>Vertical<wbr>Anchor</a>
 					</li>
 				</ul>
 			</nav>
@@ -649,13 +674,7 @@
 						<a href="../enums/graphtablesvg.connectorposition.html" class="tsd-kind-icon">Connector<wbr>Position</a>
 					</li>
 					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="../enums/graphtablesvg.horizontalanchor.html" class="tsd-kind-icon">Horizontal<wbr>Anchor</a>
-					</li>
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
 						<a href="../enums/graphtablesvg.nodeorder.html" class="tsd-kind-icon">Node<wbr>Order</a>
-					</li>
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="../enums/graphtablesvg.verticalanchor.html" class="tsd-kind-icon">Vertical<wbr>Anchor</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="graphtablesvg.cell.html" class="tsd-kind-icon">Cell</a>
@@ -726,6 +745,9 @@
 								<a href="graphtablesvg.lineedge.html#graph" class="tsd-kind-icon">graph</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="graphtablesvg.lineedge.html#isdisposed" class="tsd-kind-icon">is<wbr>Disposed</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="graphtablesvg.lineedge.html#objectid" class="tsd-kind-icon">objectID</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
@@ -744,10 +766,10 @@
 								<a href="graphtablesvg.lineedge.html#y2" class="tsd-kind-icon">y2</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="graphtablesvg.lineedge.html#save" class="tsd-kind-icon">save</a>
+								<a href="graphtablesvg.lineedge.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="graphtablesvg.lineedge.html#setgraph" class="tsd-kind-icon">set<wbr>Graph</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="graphtablesvg.lineedge.html#save" class="tsd-kind-icon">save</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 								<a href="graphtablesvg.lineedge.html#update" class="tsd-kind-icon">update</a>
@@ -760,9 +782,6 @@
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="graphtablesvg.padding.html" class="tsd-kind-icon">Padding</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="graphtablesvg.rectangle.html" class="tsd-kind-icon">Rectangle</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
@@ -772,10 +791,10 @@
 						<a href="graphtablesvg.row.html" class="tsd-kind-icon">Row</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="graphtablesvg.svgtable.html" class="tsd-kind-icon">SVGTable</a>
+						<a href="graphtablesvg.svgtovba.html" class="tsd-kind-icon">SVGToVBA</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="graphtablesvg.svgtovba.html" class="tsd-kind-icon">SVGToVBA</a>
+						<a href="graphtablesvg.table.html" class="tsd-kind-icon">Table</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="graphtablesvg.vbatranslatefunctions.html" class="tsd-kind-icon">VBATranslate<wbr>Functions</a>
@@ -788,6 +807,12 @@
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="graphtablesvg.virtualtree.html" class="tsd-kind-icon">Virtual<wbr>Tree</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-module">
+						<a href="../modules/graphtablesvg.html#horizontalanchorpropertyname" class="tsd-kind-icon">Horizontal<wbr>Anchor<wbr>Property<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-module">
+						<a href="../modules/graphtablesvg.html#verticalanchorpropertyname" class="tsd-kind-icon">Vertical<wbr>Anchor<wbr>Property<wbr>Name</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
 						<a href="../modules/graphtablesvg.html#defaultheightname" class="tsd-kind-icon">default<wbr>Height<wbr>Name</a>
@@ -821,6 +846,9 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="../modules/graphtablesvg.html#parseinteger" class="tsd-kind-icon">parse<wbr>Integer</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/graphtablesvg.html#parsepxstring" class="tsd-kind-icon">parsePXString</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="../modules/graphtablesvg.html#resetstyle" class="tsd-kind-icon">reset<wbr>Style</a>

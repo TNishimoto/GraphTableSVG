@@ -4,7 +4,7 @@
     グラフを表します。
     */
     export class Graph {
-        public static id: number = 0;
+        public static idCounter: number = 0;
         public static defaultVertexClass: string = "--default-vertex-class";
         public static defaultEdgeClass: string = "--default-edge-class";
         //public static defaultVertexClassName: string = "data-default-vertex-class";
@@ -18,12 +18,19 @@
         protected _svgGroup: SVGGElement;
         protected _roots: Vertex[] = [];
 
+        /**
+        Vertexインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
+        */
         get defaultVertexClass(): string | null {
             return this.svgGroup.getPropertyStyleValue(Graph.defaultVertexClass);
         }
         set defaultVertexClass(value: string | null) {
             this.svgGroup.setPropertyStyleValue(Graph.defaultVertexClass, value);
         }
+
+        /**
+        Edgeインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
+        */
         get defaultEdgeClass(): string | null {
             return this.svgGroup.getPropertyStyleValue(Graph.defaultEdgeClass);
         }
@@ -62,7 +69,7 @@
                 var i = this._edges.indexOf(item);
                 if (i == -1 && item.graph == this) {
                     this._edges.push(item);
-                    this.svgGroup.appendChild(item.svgGroup);
+                    this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
                 } else {
                     throw Error();
                 }
@@ -159,11 +166,12 @@
             this.add(edge);
         }
         */
-        public connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex: number = 0) {
+        public connect(node1: Vertex, edge: Edge, node2: Vertex,
+            outcomingInsertIndex: number = node1.outcomingEdges.length, incomingInsertIndex: number = node2.incomingEdges.length) {
             //this._connect(node1, edge, node2);
 
-            node1.insertOutcomingEdge(edge, insertIndex);
-            node2.insertIncomingEdge(edge, node2.incomingEdges.length);
+            node1.insertOutcomingEdge(edge, outcomingInsertIndex);
+            node2.insertIncomingEdge(edge, incomingInsertIndex);
 
             var i = this.roots.indexOf(node1);
             var j = this.roots.indexOf(node2);

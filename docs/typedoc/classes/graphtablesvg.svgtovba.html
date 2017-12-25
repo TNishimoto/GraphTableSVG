@@ -104,7 +104,7 @@
 					<div class="tsd-signature tsd-kind-icon">cell<wbr>Function<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&#x60;Sub EditTable(table_ As table, cellInfo_() As Variant)Dim x As IntegerDim y As IntegerFor x &#x3D; 1 To UBound(cellInfo_, 1)For y &#x3D; 1 To UBound(cellInfo_, 2)Call EditCell(table_.cell(x, y), CStr(cellInfo_(x, y)(0)))NextNextEnd SubSub EditCell(cell_ As cell, text_ As String, backColor As Variant)cell_.Shape.TextFrame.TextRange.text &#x3D; text_cell_.Shape.Fill.ForeColor.RGB &#x3D; RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))End SubSub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant)frame_.TextRange.Font.Size &#x3D; fontSizeframe_.TextRange.Font.name &#x3D; fontNameframe_.TextRange.Font.color.RGB &#x3D; RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))End SubSub EditRow(row_ As Row, height As Integer)row_.height &#x3D; heightEnd SubSub EditColumn(column_ As Column, width As Integer)column_.width &#x3D; widthEnd SubSub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double)frame_.marginLeft &#x3D; marginLeftframe_.marginRight &#x3D; marginRightframe_.marginTop &#x3D; marginTopframe_.marginBottom &#x3D; marginBottomEnd SubSub EditTextRange(range_ As TextRange, text As String, subBeg As Integer, subLen As Integer, color As Variant)range_.text &#x3D; textrange_.Font.color.RGB &#x3D; RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))If subLen &gt; 0 Thenrange_.Characters(subBeg, subLen).Font.Subscript &#x3D; TrueEnd IfEnd SubSub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)shape_.name &#x3D; nameshape_.Fill.visible &#x3D; visibleshape_.Fill.ForeColor.RGB &#x3D; RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))End SubSub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer, transparent As Double)line_.foreColor.RGB &#x3D; RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))line_.weight &#x3D; weightline_.Transparency &#x3D; transparentEnd Sub&#x60;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/table/vba.ts#L24">table/vba.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/table/vba.ts#L24">table/vba.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -115,19 +115,19 @@
 					<a name="createtable" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> create<wbr>Table</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Table<span class="tsd-signature-symbol">(</span>table<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.svgtable.html" class="tsd-signature-type">SVGTable</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Table<span class="tsd-signature-symbol">(</span>table<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.table.html" class="tsd-signature-type">Table</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/0f4749c/GraphTableSVG/table/vba.ts#L5">table/vba.ts:5</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3dfac5b/GraphTableSVG/table/vba.ts#L5">table/vba.ts:5</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>table: <a href="graphtablesvg.svgtable.html" class="tsd-signature-type">SVGTable</a></h5>
+									<h5>table: <a href="graphtablesvg.table.html" class="tsd-signature-type">Table</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -146,10 +146,13 @@
 						<a href="../modules/graphtablesvg.html">Graph<wbr>TableSVG</a>
 					</li>
 					<li class=" tsd-kind-module tsd-parent-kind-module">
-						<a href="../modules/graphtablesvg.cssfunctions.html">Graph<wbr>TableSVG.CSSFunctions</a>
+						<a href="../modules/graphtablesvg.grapharrangement.html">Graph<wbr>TableSVG.<wbr>Graph<wbr>Arrangement</a>
 					</li>
 					<li class=" tsd-kind-module tsd-parent-kind-module">
-						<a href="../modules/graphtablesvg.grapharrangement.html">Graph<wbr>TableSVG.<wbr>Graph<wbr>Arrangement</a>
+						<a href="../modules/graphtablesvg.horizontalanchor.html">Graph<wbr>TableSVG.<wbr>Horizontal<wbr>Anchor</a>
+					</li>
+					<li class=" tsd-kind-module tsd-parent-kind-module">
+						<a href="../modules/graphtablesvg.verticalanchor.html">Graph<wbr>TableSVG.<wbr>Vertical<wbr>Anchor</a>
 					</li>
 				</ul>
 			</nav>
@@ -159,13 +162,7 @@
 						<a href="../enums/graphtablesvg.connectorposition.html" class="tsd-kind-icon">Connector<wbr>Position</a>
 					</li>
 					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="../enums/graphtablesvg.horizontalanchor.html" class="tsd-kind-icon">Horizontal<wbr>Anchor</a>
-					</li>
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
 						<a href="../enums/graphtablesvg.nodeorder.html" class="tsd-kind-icon">Node<wbr>Order</a>
-					</li>
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="../enums/graphtablesvg.verticalanchor.html" class="tsd-kind-icon">Vertical<wbr>Anchor</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="graphtablesvg.cell.html" class="tsd-kind-icon">Cell</a>
@@ -189,9 +186,6 @@
 						<a href="graphtablesvg.lineedge.html" class="tsd-kind-icon">Line<wbr>Edge</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="graphtablesvg.padding.html" class="tsd-kind-icon">Padding</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="graphtablesvg.rectangle.html" class="tsd-kind-icon">Rectangle</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
@@ -199,9 +193,6 @@
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="graphtablesvg.row.html" class="tsd-kind-icon">Row</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="graphtablesvg.svgtable.html" class="tsd-kind-icon">SVGTable</a>
 					</li>
 				</ul>
 				<ul class="current">
@@ -219,6 +210,9 @@
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="graphtablesvg.table.html" class="tsd-kind-icon">Table</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="graphtablesvg.vbatranslatefunctions.html" class="tsd-kind-icon">VBATranslate<wbr>Functions</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
@@ -229,6 +223,12 @@
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="graphtablesvg.virtualtree.html" class="tsd-kind-icon">Virtual<wbr>Tree</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-module">
+						<a href="../modules/graphtablesvg.html#horizontalanchorpropertyname" class="tsd-kind-icon">Horizontal<wbr>Anchor<wbr>Property<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-module">
+						<a href="../modules/graphtablesvg.html#verticalanchorpropertyname" class="tsd-kind-icon">Vertical<wbr>Anchor<wbr>Property<wbr>Name</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
 						<a href="../modules/graphtablesvg.html#defaultheightname" class="tsd-kind-icon">default<wbr>Height<wbr>Name</a>
@@ -262,6 +262,9 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="../modules/graphtablesvg.html#parseinteger" class="tsd-kind-icon">parse<wbr>Integer</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/graphtablesvg.html#parsepxstring" class="tsd-kind-icon">parsePXString</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="../modules/graphtablesvg.html#resetstyle" class="tsd-kind-icon">reset<wbr>Style</a>

@@ -206,9 +206,10 @@ module GraphTableSVG {
         }
         
 
-        constructor(width: number, height: number, _tableClassName : string | null = null) {
-            var svgGroup: SVGGElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            this.svgGroup = svgGroup;
+        constructor(svgbox: HTMLElement, width: number, height: number, _tableClassName: string | null = null) {
+            
+            this.svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            svgbox.appendChild(this.svgGroup);
             //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             //this.svgGroup.appendChild(this.svgLineGroup);
 
