@@ -47,40 +47,51 @@
         }
         
 
-        public addVertex(vertex: Vertex) {
-            this.svgGroup.appendChild(vertex.svgGroup);
-            vertex.setGraph(this);
-            this._vertices.push(vertex);
-        }
+        public add(item: Vertex | Edge) : void {
+            if (item instanceof Vertex) {
+                var i = this._vertices.indexOf(item);
+                if (i == -1 && item.graph == this) {
+                    this._vertices.push(item);
+                    this.svgGroup.appendChild(item.svgGroup);
+                } else {
+                    throw Error();
+                }
 
-        public addEdge(edge: Edge) {
-            edge.setGraph(this);
-            var i = this._edges.indexOf(edge);
-            if (i == -1) {
-                this._edges.push(edge);
+            } else {
+                
+                var i = this._edges.indexOf(item);
+                if (i == -1 && item.graph == this) {
+                    this._edges.push(item);
+                    this.svgGroup.appendChild(item.svgGroup);
+                } else {
+                    throw Error();
+                }
             }
         }
+        public remove(item: Vertex | Edge): void {
+            if (item instanceof Vertex) {
+                var p = this.vertices.indexOf(item);
+                if (p != -1) {
+                    this._vertices.splice(p, 1);
+                    this.svgGroup.removeChild(item.svgGroup);
+                    item.dispose();
+                }
+            } else {
+                var p = this.edges.indexOf(item);
+                if (p != -1) {
+                    this._vertices.splice(p, 1);
+                    this.svgGroup.removeChild(item.svgGroup);
+                    item.dispose();
+                }
+            }
+        }
+        
         
 
         constructor(className: string | null = null) {
             this._svgGroup = GraphTableSVG.createGroup(className);
             this._svgGroup.setAttribute(Graph.typeName, "graph");
-
-            /*
-            if(className != null){
-                this._svgGroup.setAttribute("class", className);
-                var nodeClass = this._svgGroup.getActiveStyle().getPropertyValue(Graph.defaultVertexClass).trim();
-                if (nodeClass.length > 0) {
-                    this.defaultVertexClass = nodeClass;
-                }
-
-                var edgeClass = this._svgGroup.getActiveStyle().getPropertyValue(Graph.defaultEdgeClass).trim();
-                if (edgeClass.length > 0) {
-                    this.defaultEdgeClass = edgeClass;
-                }
-            }
-            */
-            //svg.appendChild(this._svgGroup);
+            
         }
 
         /*
@@ -141,16 +152,19 @@
             }
             return null;
         }
-
+        /*
         private _connect(node1: Vertex, edge: Edge, node2: Vertex) {
             edge.beginVertex = node1;
             edge.endVertex = node2;
-            //edge.beginConnectorType = _beginConnectType;
-            //edge.endConnectorType = _endConnectType;
-            this.addEdge(edge);
+            this.add(edge);
         }
+        */
         public connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex: number = 0) {
-            this._connect(node1, edge, node2);
+            //this._connect(node1, edge, node2);
+
+            node1.insertOutcomingEdge(edge, insertIndex);
+            node2.insertIncomingEdge(edge, node2.incomingEdges.length);
+
             var i = this.roots.indexOf(node1);
             var j = this.roots.indexOf(node2);
             if (j != -1) {
@@ -165,8 +179,8 @@
                 this.outcomingEdgesDic[node1.id] = [];
             }
             */
-            node1.outcomingEdges.splice(insertIndex, 0, edge);
-            node2.incomingEdges.push(edge);
+            //node1.outcomingEdges.splice(insertIndex, 0, edge);
+            //node2.incomingEdges.push(edge);
         }
         public getOrderedVertices(order: NodeOrder, node: Vertex | null = null): Vertex[] {
             var r: Vertex[] = [];

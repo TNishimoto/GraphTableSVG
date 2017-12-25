@@ -47,11 +47,12 @@ declare module GraphTableSVG {
         private _graph;
         svgGroup: SVGGElement;
         text: EdgeText | null;
-        beginVertex: Vertex;
-        endVertex: Vertex;
+        beginVertex: Vertex | null;
+        endVertex: Vertex | null;
         readonly graph: Graph | null;
-        setGraph(value: Graph): void;
-        constructor(className?: string | null);
+        dispose(): void;
+        readonly isDisposed: boolean;
+        constructor(__graph: Graph, className?: string | null);
         readonly x1: number;
         readonly y1: number;
         readonly x2: number;
@@ -64,8 +65,7 @@ declare module GraphTableSVG {
     class LineEdge extends Edge {
         private _svgLine;
         readonly svg: SVGLineElement;
-        setGraph(value: Graph): void;
-        constructor(className?: string | null);
+        constructor(__graph: Graph, className?: string | null);
         update(): boolean;
     }
 }
@@ -89,8 +89,8 @@ declare module GraphTableSVG {
         readonly svgGroup: SVGGElement;
         readonly vertices: Vertex[];
         readonly edges: Edge[];
-        addVertex(vertex: Vertex): void;
-        addEdge(edge: Edge): void;
+        add(item: Vertex | Edge): void;
+        remove(item: Vertex | Edge): void;
         constructor(className?: string | null);
         updateVertices(): void;
         updateEdges(): void;
@@ -98,7 +98,6 @@ declare module GraphTableSVG {
         removeGraph(svg: HTMLElement): void;
         getRegion(): Rectangle;
         getObjectBySVGID(id: string): Vertex | Edge | null;
-        private _connect(node1, edge, node2);
         connect(node1: Vertex, edge: Edge, node2: Vertex, insertIndex?: number): void;
         getOrderedVertices(order: NodeOrder, node?: Vertex | null): Vertex[];
         rootVertex: Vertex | null;
@@ -147,9 +146,8 @@ declare module GraphTableSVG {
         protected textObserverFunc: MutationCallback;
         readonly isLocated: boolean;
         readonly graph: Graph | null;
-        setGraph(value: Graph): void;
         readonly objectID: string;
-        constructor(className: string | null | undefined, text: string);
+        constructor(__graph: Graph, className: string | null | undefined, text: string);
         x: number;
         y: number;
         readonly width: number;
@@ -170,16 +168,21 @@ declare module GraphTableSVG {
         readonly index: number;
         save(): void;
         static create(graph: Graph, className?: string | null, defaultSurfaceType?: string): GraphTableSVG.Vertex;
+        insertOutcomingEdge(edge: Edge, insertIndex: number): void;
+        removeOutcomingEdge(edge: Edge): void;
+        insertIncomingEdge(edge: Edge, insertIndex: number): void;
+        removeIncomingEdge(edge: Edge): void;
+        dispose(): void;
+        readonly isDisposed: boolean;
     }
 }
 declare module GraphTableSVG {
     class CircleVertex extends GraphTableSVG.Vertex {
         svgCircle: SVGCircleElement;
-        constructor(className?: string | null, text?: string);
+        constructor(__graph: Graph, className?: string | null, text?: string);
         readonly width: number;
         readonly height: number;
         readonly innerRectangle: Rectangle;
-        static create(_parent: Graph, nodeClassName?: string | null): CircleVertex;
         readonly radius: number;
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         readonly surface: SVGElement | null;
@@ -188,7 +191,7 @@ declare module GraphTableSVG {
     }
     class RectangleVertex extends GraphTableSVG.Vertex {
         svgRectangle: SVGRectElement;
-        constructor(className?: string | null, text?: string);
+        constructor(__graph: Graph, className?: string | null, text?: string);
         readonly width: number;
         readonly height: number;
         readonly innerRectangle: Rectangle;

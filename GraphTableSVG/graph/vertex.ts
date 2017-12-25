@@ -9,7 +9,7 @@
         svgGroup: SVGGElement;
         svgText: SVGTextElement;
 
-        private _graph: Graph | null;
+        private _graph: Graph | null = null;
 
         protected _outcomingEdges: Edge[] = [];
         get outcomingEdges(): Edge[] {
@@ -62,6 +62,7 @@
         get graph(): Graph | null {
             return this._graph;
         }
+        /*
         public setGraph(value: Graph) {
             if (value == null && this._graph != null) {
                 this._graph.svgGroup.removeChild(this.svgGroup);
@@ -71,6 +72,7 @@
                 //this.svgGroup.id = `${this.graph.name}_${this.id}_group`;
             }
         }
+        */
 
 
         public get objectID(): string {
@@ -92,7 +94,7 @@
         */
 
 
-        constructor(className: string | null = null, text: string) {
+        constructor(__graph: Graph, className: string | null = null, text: string) {
             this.svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.id++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "vertex");
@@ -110,6 +112,12 @@
             this._textObserver = new MutationObserver(this.textObserverFunc);
             var option: MutationObserverInit = { childList: true };
             this._textObserver.observe(this.svgText, option);
+
+            this._graph = __graph;
+            __graph.add(this);
+
+            this.x = 0;
+            this.y = 0;
 
 
             /*
@@ -188,7 +196,10 @@
             if (this.graph == null) {
                 throw new Error();
             } else {
-                return this.graph.edges.filter((v) => v.endVertex == this).map((v) => v.beginVertex);
+                return this.graph.edges.filter((v) => {
+                    return v.endVertex == this;
+                }).map((v) => <Vertex>v.beginVertex);
+                
             }
         }
         get parentEdge(): Edge | null {
@@ -252,17 +263,68 @@
             var type = type1 != null ? type1 : defaultSurfaceType;
             var p: Vertex;
             if (type == "circle") {
-                p = new CircleVertex(className, "");
+                p = new CircleVertex(graph, className, "");
             } else if (type == "rectangle") {
-                p = new RectangleVertex(className, "");
+                p = new RectangleVertex(graph, className, "");
             } else {
-                p = new Vertex(className, "");
+                p = new Vertex(graph, className, "");
             }
-            graph.addVertex(p);
             return p;
         }
+        public insertOutcomingEdge(edge: Edge, insertIndex: number) {
+            var p = this.outcomingEdges.indexOf(edge);
+            if (p != -1) {
+                throw new Error();
+            } else {
+                this.outcomingEdges.splice(insertIndex, 0, edge);
+                edge.beginVertex = this;
+            }
+
+        }
+        public removeOutcomingEdge(edge: Edge) {
+            var p = this.outcomingEdges.indexOf(edge);
+            if (p != null) {
+                this.outcomingEdges.splice(p, 1);
+                edge.beginVertex = null;
+            }
+        }
+
+        public insertIncomingEdge(edge: Edge, insertIndex: number) {
+            var p = this.incomingEdges.indexOf(edge);
+            if (p != -1) {
+                throw new Error();
+            } else {
+                this.incomingEdges.splice(insertIndex, 0, edge);
+                edge.endVertex = this;
+            }
+        }
+        public removeIncomingEdge(edge: Edge) {
+            var p = this.incomingEdges.indexOf(edge);
+            if (p != null) {
+                this.incomingEdges.splice(p, 1);
+                edge.endVertex = null;
+            }
+        }
+        public dispose() {
+            while (this.incomingEdges.length > 0) {
+                this.removeIncomingEdge(this.incomingEdges[0]);
+            }
+
+            while (this.outcomingEdges.length > 0) {
+                this.removeOutcomingEdge(this.outcomingEdges[0]);
+            }
 
 
+            var prev = this.graph;
+            this._graph = null;
+            if (prev != null) {
+                prev.remove(this);
+            }
+        }
+
+        get isDisposed(): boolean {
+            return this.graph == null;
+        }
     }
 
 }

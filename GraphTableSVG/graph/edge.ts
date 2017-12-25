@@ -9,8 +9,8 @@
         public static endNodeName: string = "data-end-node";
         public static defaultTextClass: string = "--default-text-class";
 
-        private _beginVertex: Vertex;
-        private _endVertex: Vertex;
+        private _beginVertex: Vertex | null = null;
+        private _endVertex: Vertex | null = null;
 
         get beginConnectorType(): ConnectorPosition {
             var p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
@@ -40,12 +40,21 @@
         public svgGroup: SVGGElement;
         text: EdgeText | null = null;
 
-        get beginVertex(): Vertex {
+        get beginVertex(): Vertex | null {
             return this._beginVertex;
         }
-        set beginVertex(value: Vertex) {
+        set beginVertex(value: Vertex | null) {
+            var prev = this._beginVertex;
             this._beginVertex = value;
-            this.svgGroup.setAttribute(Edge.beginNodeName, value.objectID);
+            if (value != null) {
+                this.svgGroup.setAttribute(Edge.beginNodeName, value.objectID);
+            } else {
+                this.svgGroup.removeAttribute(Edge.beginNodeName);
+            }
+
+            if (prev != null) {
+                prev.removeOutcomingEdge(this);
+            }
 
             this.update();
 
@@ -55,26 +64,63 @@
             }
             */
         }
-        get endVertex(): Vertex {
+        get endVertex(): Vertex | null {
             return this._endVertex;
         }
-        set endVertex(value: Vertex) {
+        set endVertex(value: Vertex | null) {
+            var prev = this._endVertex;
+
             this._endVertex = value;
-            this.svgGroup.setAttribute(Edge.endNodeName, value.objectID);
+            if (value != null) {
+                this.svgGroup.setAttribute(Edge.endNodeName, value.objectID);
+            } else {
+                this.svgGroup.removeAttribute(Edge.endNodeName);
+            }
+
+            if (prev != null) {
+                prev.removeIncomingEdge(this);
+            }
 
             this.update();
 
         }
-
+        
         get graph(): Graph | null {
             return this._graph;
         }
+        /*
+        private set graph(value: Graph | null) {
+            var prev = this._graph;
+            this._graph = null;
+            if (prev != null) {
+                prev.remove(this);
+            }
+            this._graph = value;
+            if (this._graph != null) {
+                this._graph.add(this);
+            }
+        }
+        */
+        /*
         public setGraph(value: Graph) {
             this._graph = value;
         }
+        */
+        public dispose() {
+            this.beginVertex = null;
+            this.endVertex = null;
+            var prev = this.graph;
+            this._graph = null;
 
+            if (prev != null) {
+                prev.remove(this);
+            }
+        }
+        get isDisposed(): boolean {
+            return this.graph == null;
+        }
 
-        constructor(className: string | null = null) {
+        constructor(__graph: Graph, className: string | null = null) {
             this.svgGroup = createGroup(className);
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.id++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "edge");
@@ -85,6 +131,8 @@
             this.beginConnectorType = ToConnectorPosition(t1);
             this.endConnectorType = ToConnectorPosition(t2);
 
+            this._graph = __graph;
+            this._graph.add(this);
 
             //this._parent = graph;
             /*
@@ -94,20 +142,36 @@
         }
 
         public get x1(): number {
-            var [x1, y1] = this._beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
-            return x1;
+            if (this.beginVertex != null && this.endVertex != null) {
+                var [x1, y1] = this.beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
+                return x1;
+            } else {
+                return 0;
+            }
         }
         public get y1(): number {
-            var [x1, y1] = this._beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
-            return y1;
+            if (this.beginVertex != null && this.endVertex != null) {
+                var [x1, y1] = this.beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
+                return y1;
+            } else {
+                return 0;
+            }
         }
         public get x2(): number {
-            var [x2, y2] = this._endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
-            return x2;
+            if (this.beginVertex != null && this.endVertex != null) {
+                var [x2, y2] = this.endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
+                return x2;
+            } else {
+                return 0;
+            }
         }
         public get y2(): number {
-            var [x2, y2] = this._endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
-            return y2;
+            if (this.beginVertex != null && this.endVertex != null) {
+                var [x2, y2] = this.endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
+                return y2;
+            } else {
+                return 0;
+            }
         }
 
 
@@ -138,7 +202,8 @@
         public static create(graph: Graph, className: string | null = null, lineType: string | null = null): GraphTableSVG.Edge {
             var g = createGroup(className);
             var textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();
-            var line = new LineEdge(className);
+            
+            var line = new LineEdge(graph, className);
             return line;
         }
     }
@@ -150,6 +215,7 @@
         get svg(): SVGLineElement {
             return this._svgLine;
         }
+        /*
         public setGraph(value: Graph)
         {
             super.setGraph(value);
@@ -157,10 +223,11 @@
                 this.graph.svgGroup.appendChild(this.svgGroup);
             }
         }
+        */
 
 
-        constructor(className: string | null = null) {
-            super(className);
+        constructor(__graph: Graph, className: string | null = null) {
+            super(__graph, className);
             var p = this.svgGroup.getActiveStyle().getPropertyValue(Edge.defaultLineClass).trim();
             this._svgLine = createLine(0, 0, 0, 0, p.length > 0 ? p : null);
             this.svgGroup.appendChild(this._svgLine);

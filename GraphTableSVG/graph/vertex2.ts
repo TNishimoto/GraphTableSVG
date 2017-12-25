@@ -2,8 +2,8 @@
     export class CircleVertex extends GraphTableSVG.Vertex {
         svgCircle: SVGCircleElement;
 
-        constructor(className: string | null = null, text: string = "") {
-            super(className, text);
+        constructor(__graph: Graph, className: string | null = null, text: string = "") {
+            super(__graph, className, text);
             this.svgCircle = createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
             //this.svgGroup.appendChild(this.svgCircle);
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
@@ -33,14 +33,14 @@
             //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
 
+        /*
         public static create(_parent: Graph, nodeClassName: string | null = null): CircleVertex {
-            var p = new CircleVertex(nodeClassName, "");
-            p.x = 0;
-            p.y = 0;
-            _parent.addVertex(p);
+            var p = new CircleVertex(_parent, nodeClassName, "");
+            //_parent.add(p);
 
             return p;
         }
+        */
         public get radius(): number {
             return this.svgCircle.r.baseVal.value;
         }
@@ -130,8 +130,8 @@
         svgRectangle: SVGRectElement;
 
 
-        constructor(className: string | null = null, text: string = "") {
-            super(className, text);
+        constructor(__graph: Graph, className: string | null = null, text: string = "") {
+            super(__graph, className, text);
             this.svgRectangle = createRectangle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
 
