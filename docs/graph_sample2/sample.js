@@ -5,7 +5,7 @@ function createGraph(id, graphClass = null, vertexClass = null, edgeClass = null
     /* svgタグの取得 */
     var box = document.getElementById(id);
     /* graphの作成 */
-    var graph = new GraphTableSVG.Graph(graphClass);
+    var graph = new GraphTableSVG.Graph(box, graphClass);
     /* graphをsvgタグの子に入れる */
     box.appendChild(graph.svgGroup);
     /* vertexの作成 */

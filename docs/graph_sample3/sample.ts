@@ -9,7 +9,7 @@ function createGraph(id : string, graphClass : string | null = null,
     var box : HTMLElement = document.getElementById(id);
     
     /* graphの作成 */
-    var graph : GraphTableSVG.Graph = new GraphTableSVG.Graph(graphClass);
+    var graph : GraphTableSVG.Graph = new GraphTableSVG.Graph(box, graphClass);
     /* graphをsvgタグの子に入れる */
     box.appendChild(graph.svgGroup);
 

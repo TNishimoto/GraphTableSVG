@@ -1,88 +1,46 @@
 ﻿
 module GraphTableSVG {
     
-
+    /**
+    テーブルを表します。
+    */
     export class Table {
         private static defaultCellClass: string = "--default-cell-class";
         private static defaultBorderClass: string = "--default-border-class";
-
+        private _svgGroup: SVGGElement;
         private _cells: Cell[][] = [];
-        //private _textClassName: string | null = "table_text";
-        get defaultCellClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(Table.defaultCellClass);            
-        }
-        get defaultBorderClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(Table.defaultBorderClass);            
-        }
-
-        
-        get cells(): Cell[][] {
-            return this._cells;
-        }
-        //public svgLineGroup: SVGGElement;
-        public svgGroup: SVGGElement;
-        get width(): number {
-            if (this.cells.length == 0) {
-                return 0;
-            } else {
-                return this.cells[0].length;
-            }
-        }
-        get height(): number {
-            return this.cells.length;
-        }
-        get rows(): Row[] {
-            var arr = new Array(0);
-            for (var y = 0; y < this.height; y++) {
-                arr.push(new Row(this, y));
-            }
-            return arr;
-        }
-        get columns(): Column[] {
-            var arr = new Array(0);
-            for (var x = 0; x < this.width; x++) {
-                arr.push(new Column(this, x));
-            }
-            return arr;
-        }
-        get cellArray(): Cell[] {
-            var arr = new Array(0);
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    arr.push(this.cells[y][x]);
-                }
-            }
-            return arr;
-
-        }
-        get borders(): SVGLineElement[] {
-            var arr = new Array(0);
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    if (arr.indexOf(this.cells[y][x].upLine) == -1) {
-                        arr.push(this.cells[y][x].upLine);
-                    }
-                    if (arr.indexOf(this.cells[y][x].leftLine) == -1) {
-                        arr.push(this.cells[y][x].leftLine);
-                    }
-                    if (arr.indexOf(this.cells[y][x].rightLine) == -1) {
-                        arr.push(this.cells[y][x].rightLine);
-                    }
-                    if (arr.indexOf(this.cells[y][x].bottomLine) == -1) {
-                        arr.push(this.cells[y][x].bottomLine);
-                    }
-                }
-            }
-            return arr;
-        }
         private _observer: MutationObserver;
+
+        constructor(svgbox: HTMLElement, width: number, height: number, _tableClassName: string | null = null) {
+
+            this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            svgbox.appendChild(this.svgGroup);
+            //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            //this.svgGroup.appendChild(this.svgLineGroup);
+
+            if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);
+            for (var y = 0; y < height; y++) {
+                this.insertRowFunction(y, width);
+            }
+
+
+
+            this._observer = new MutationObserver(this.observerFunc);
+            var option: MutationObserverInit = { characterData: true, attributes: true, subtree: true };
+            this._observer.observe(this.svgGroup, option);
+
+
+            this.resize();
+
+        }
+
         private observerFunc: MutationCallback = (x: MutationRecord[]) => {
             for (var i = 0; i < x.length; i++) {
                 var p = x[i];
                 //console.log(p.attributeName);
             }
         };
-
+        
         private insertRowFunction(i: number, width: number = this.width) {
             var cell: Cell[] = [];
             for (var x = 0; x < width; x++) {
@@ -100,38 +58,8 @@ module GraphTableSVG {
                 this.updateBorder(this.cells[i][x]);
             }
         }
-        public insertRow(i: number) {
-            this.insertRowFunction(i, this.width == 0 ? 1 : this.width);
-        }
-        public appendRow() {
-            this.insertRow(this.height);
-        }
         private createCell(): Cell {
             return new Cell(this, 0, 0, this.defaultCellClass, this.defaultBorderClass);
-        }
-
-        public insertColumn(i: number) {
-            if (this.height > 0) {
-                for (var y = 0; y < this.height; y++) {
-                    var cell = this.createCell();
-                    this.cells[y].splice(i, 0, cell);
-                }
-                if (i < this.height) {
-                    for (var y = 0; y < this.height; y++) {
-                        this.cells[y][i].leftLine = createLine(0, 0, 0, 0);
-                        this.svgGroup.appendChild(this.cells[y][i].leftLine);
-                    }
-                }
-                this.renumbering();
-                for (var y = 0; y < this.height; y++) {
-                    this.updateBorder(this.cells[y][i]);
-                }
-            } else {
-                this.insertRow(0);
-            }
-        }
-        public appendColumn() {
-            this.insertColumn(this.width);
         }
         private updateBorder(cell: Cell) {
             if (cell.leftCell != null && cell.leftCell.rightLine != cell.leftLine) {
@@ -152,7 +80,7 @@ module GraphTableSVG {
             if (cell.bottomCell != null && cell.bottomCell.upLine != cell.bottomLine) {
                 this.svgGroup.removeChild(cell.bottomCell.upLine);
                 cell.bottomCell.upLine = cell.bottomLine;
-            }            
+            }
         }
         private renumbering() {
             for (var y = 0; y < this.height; y++) {
@@ -172,7 +100,153 @@ module GraphTableSVG {
             }
             */
         }
+        //private _textClassName: string | null = "table_text";
+        /**
+        セルのインスタント生成時にこの値がインスタントのクラス名にセットされます。
+        */
+        get defaultCellClass(): string | null {
+            return this.svgGroup.getPropertyStyleValue(Table.defaultCellClass);            
+        }
+        /**
+        ボーダーのインスタント生成時にこの値がインスタントのクラス名にセットされます。
+        */
+        get defaultBorderClass(): string | null {
+            return this.svgGroup.getPropertyStyleValue(Table.defaultBorderClass);            
+        }
 
+        /**
+        各セルを格納している二次元ジャグ配列を返します。
+        */
+        get cells(): Cell[][] {
+            return this._cells;
+        }
+
+        /**
+        テーブルを表現しているSVGGElementを返します。
+        */
+        public get svgGroup(): SVGGElement {
+            return this._svgGroup;
+        }
+        /**
+        テーブルの行方向の単位セルの数を返します。
+        */
+        get width(): number {
+            if (this.cells.length == 0) {
+                return 0;
+            } else {
+                return this.cells[0].length;
+            }
+        }
+        /**
+        テーブルの列方向の単位セルの数を返します。
+        */
+        get height(): number {
+            return this.cells.length;
+        }
+        /**
+        各行を表す配列を返します。読み取り専用です。
+        */
+        get rows(): Row[] {
+            var arr = new Array(0);
+            for (var y = 0; y < this.height; y++) {
+                arr.push(new Row(this, y));
+            }
+            return arr;
+        }
+        /**
+        各列を表す配列を返します。読み取り専用です。
+        */
+        get columns(): Column[] {
+            var arr = new Array(0);
+            for (var x = 0; x < this.width; x++) {
+                arr.push(new Column(this, x));
+            }
+            return arr;
+        }
+        /**
+        各セルを表す配列を返します。テーブルの左上のセルから右に向かってインデックスが割り当てられ、
+        テーブル右下のセルが配列の最後の値となります。読み取り専用です。
+        */
+        get cellArray(): Cell[] {
+            var arr = new Array(0);
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    arr.push(this.cells[y][x]);
+                }
+            }
+            return arr;
+
+        }
+        /**
+        各ボーダーを表す配列を返します。
+        ボーダーの順番は未定義です。
+        読み取り専用です。
+        */
+        get borders(): SVGLineElement[] {
+            var arr = new Array(0);
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    if (arr.indexOf(this.cells[y][x].upLine) == -1) {
+                        arr.push(this.cells[y][x].upLine);
+                    }
+                    if (arr.indexOf(this.cells[y][x].leftLine) == -1) {
+                        arr.push(this.cells[y][x].leftLine);
+                    }
+                    if (arr.indexOf(this.cells[y][x].rightLine) == -1) {
+                        arr.push(this.cells[y][x].rightLine);
+                    }
+                    if (arr.indexOf(this.cells[y][x].bottomLine) == -1) {
+                        arr.push(this.cells[y][x].bottomLine);
+                    }
+                }
+            }
+            return arr;
+        }
+        /**
+        新しい行をi番目の行に挿入します
+        */
+        public insertRow(i: number) {
+            this.insertRowFunction(i, this.width == 0 ? 1 : this.width);
+        }
+        /**
+        新しい行を行の最後に追加します。
+        */
+        public appendRow() {
+            this.insertRow(this.height);
+        }
+        /**
+        新しい列をi番目の列に挿入します。
+        */
+        public insertColumn(i: number) {
+            if (this.height > 0) {
+                for (var y = 0; y < this.height; y++) {
+                    var cell = this.createCell();
+                    this.cells[y].splice(i, 0, cell);
+                }
+                if (i < this.height) {
+                    for (var y = 0; y < this.height; y++) {
+                        this.cells[y][i].leftLine = createLine(0, 0, 0, 0);
+                        this.svgGroup.appendChild(this.cells[y][i].leftLine);
+                    }
+                }
+                this.renumbering();
+                for (var y = 0; y < this.height; y++) {
+                    this.updateBorder(this.cells[y][i]);
+                }
+            } else {
+                this.insertRow(0);
+            }
+        }
+        /**
+        新しい列を最後の列に追加します。
+        */
+        public appendColumn() {
+            this.insertColumn(this.width);
+        }
+        
+        /**
+        各セルのサイズを再計算します。
+        */
         public resize() {
             var rows = this.rows;
             var columns = this.columns;
@@ -192,43 +266,28 @@ module GraphTableSVG {
             this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
 
         }
+        /**
+        所属しているSVGタグ上でのテーブルの領域を表すRectangleクラスを返します。        
+        */
         public getRegion(): Rectangle {
             var regions = this.cellArray.map((v) => v.region);
             var rect = Rectangle.merge(regions);
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
             return rect;            
         }
-
-        getCellFromID(id: number): Cell {
+        /*
+        private getCellFromID(id: number): Cell {
             var y = Math.floor(id / this.height);
             var x = id % this.width;
             return this.cells[y][x];
         }
+        */
         
 
-        constructor(svgbox: HTMLElement, width: number, height: number, _tableClassName: string | null = null) {
-            
-            this.svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            svgbox.appendChild(this.svgGroup);
-            //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            //this.svgGroup.appendChild(this.svgLineGroup);
-
-            if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);            
-            for (var y = 0; y < height; y++) {
-                this.insertRowFunction(y, width);
-            }
-
-            
-
-            this._observer = new MutationObserver(this.observerFunc);
-            var option: MutationObserverInit = { characterData : true, attributes: true, subtree: true };
-            this._observer.observe(this.svgGroup, option);
-
-
-            this.resize();
-
-        }
-
+        
+        /**
+         * 現在のテーブルを表すVBAコードを返します。
+         */
         public createVBAMainCode(slideName: string): [string, string] {
             var fstLines: string[] = [];
             var lines = new Array(0);
