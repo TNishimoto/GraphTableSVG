@@ -95,8 +95,10 @@
         
         
 
-        constructor(className: string | null = null) {
+        constructor(box: HTMLElement, className: string | null = null) {
             this._svgGroup = GraphTableSVG.createGroup(className);
+            box.appendChild(this.svgGroup);
+
             this._svgGroup.setAttribute(Graph.typeName, "graph");
             
         }

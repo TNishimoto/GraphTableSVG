@@ -333,11 +333,12 @@ var GraphTableSVG;
     グラフを表します。
     */
     class Graph {
-        constructor(className = null) {
+        constructor(box, className = null) {
             this._vertices = new Array(0);
             this._edges = new Array(0);
             this._roots = [];
             this._svgGroup = GraphTableSVG.createGroup(className);
+            box.appendChild(this.svgGroup);
             this._svgGroup.setAttribute(Graph.typeName, "graph");
         }
         /**
@@ -731,7 +732,6 @@ var GraphTableSVG;
         }
         */
         constructor(__graph, className = null, text) {
-            this.symbol = Symbol();
             this._graph = null;
             this._outcomingEdges = [];
             this._incomingEdges = [];
@@ -760,6 +760,8 @@ var GraphTableSVG;
             this.svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.idCounter++).toString());
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "vertex");
+            this._graph = __graph;
+            __graph.add(this);
             this.svgText = GraphTableSVG.createText(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultTextClass));
             this.svgText.textContent = text;
             this.svgGroup.appendChild(this.svgText);
@@ -769,8 +771,6 @@ var GraphTableSVG;
             this._textObserver = new MutationObserver(this.textObserverFunc);
             var option = { childList: true };
             this._textObserver.observe(this.svgText, option);
-            this._graph = __graph;
-            __graph.add(this);
             this.x = 0;
             this.y = 0;
             /*
@@ -1010,6 +1010,7 @@ var GraphTableSVG;
             return this.graph == null;
         }
     }
+    //public symbol: symbol = Symbol();
     Vertex.defaultSurfaceType = "--default-surface-type";
     Vertex.defaultTextClass = "--default-text-class";
     Vertex.defaultSurfaceClass = "--default-surface-class";
@@ -1022,10 +1023,7 @@ var GraphTableSVG;
         constructor(__graph, className = null, text = "") {
             super(__graph, className, text);
             this.svgCircle = GraphTableSVG.createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue(GraphTableSVG.Vertex.defaultSurfaceClass));
-            //this.svgGroup.appendChild(this.svgCircle);
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
-            //this.svgCircle.setAttribute("objectID", this.objectID);
-            //this.svgText.setAttribute("objectID", this.objectID);
         }
         get width() {
             return this.svgCircle.r.baseVal.value * 2;
@@ -1043,14 +1041,6 @@ var GraphTableSVG;
             return rect;
             //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
-        /*
-        public static create(_parent: Graph, nodeClassName: string | null = null): CircleVertex {
-            var p = new CircleVertex(_parent, nodeClassName, "");
-            //_parent.add(p);
-
-            return p;
-        }
-        */
         get radius() {
             return this.svgCircle.r.baseVal.value;
         }
@@ -1685,7 +1675,14 @@ SVGGElement.prototype.setX = function (value) {
     if (p.transform.baseVal.numberOfItems == 0) {
         p.setAttribute('transform', "translate(0,0)");
     }
-    return this.transform.baseVal.getItem(0).matrix.e = value;
+    var a = this.transform.baseVal.getItem(0).matrix.a;
+    var b = this.transform.baseVal.getItem(0).matrix.b;
+    var c = this.transform.baseVal.getItem(0).matrix.c;
+    var d = this.transform.baseVal.getItem(0).matrix.d;
+    var e = value;
+    var f = this.transform.baseVal.getItem(0).matrix.f;
+    p.setAttribute('transform', `matrix(${a} ${b} ${c} ${d} ${e} ${f})`);
+    //p.transform.baseVal.getItem(0).matrix.e = value;
 };
 SVGGElement.prototype.getY = function () {
     var p = this;
@@ -1699,7 +1696,14 @@ SVGGElement.prototype.setY = function (value) {
     if (p.transform.baseVal.numberOfItems == 0) {
         p.setAttribute('transform', "translate(0,0)");
     }
-    return this.transform.baseVal.getItem(0).matrix.f = value;
+    var a = this.transform.baseVal.getItem(0).matrix.a;
+    var b = this.transform.baseVal.getItem(0).matrix.b;
+    var c = this.transform.baseVal.getItem(0).matrix.c;
+    var d = this.transform.baseVal.getItem(0).matrix.d;
+    var e = this.transform.baseVal.getItem(0).matrix.e;
+    var f = value;
+    p.setAttribute('transform', `matrix(${a} ${b} ${c} ${d} ${e} ${f})`);
+    //this.transform.baseVal.getItem(0).matrix.f = value;
 };
 CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name) {
     var p = this;
@@ -1759,7 +1763,8 @@ SVGTextElement.prototype.setX = function (value) {
     if (p.x.baseVal.numberOfItems == 0) {
         p.setAttribute('x', "0");
     }
-    return p.x.baseVal.getItem(0).value = value;
+    //p.setAttribute('x', value.toString());
+    p.x.baseVal.getItem(0).value = value;
 };
 SVGTextElement.prototype.getY = function () {
     var p = this;
@@ -1773,7 +1778,7 @@ SVGTextElement.prototype.setY = function (value) {
     if (p.y.baseVal.numberOfItems == 0) {
         p.setAttribute('y', "0");
     }
-    return p.y.baseVal.getItem(0).value = value;
+    p.y.baseVal.getItem(0).value = value;
 };
 function IsDescendantOfBody(node) {
     var parent = node.parentNode;

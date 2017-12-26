@@ -5,9 +5,9 @@ function createGraph(id, graphClass = null, vertexClass = null, edgeClass = null
     /* svgタグの取得 */
     var box = document.getElementById(id);
     /* graphの作成 */
-    var graph = new GraphTableSVG.Graph(graphClass);
+    var graph = new GraphTableSVG.Graph(box, graphClass);
     /* graphをsvgタグの子に入れる */
-    box.appendChild(graph.svgGroup);
+    //box.appendChild(graph.svgGroup);
     /* vertexの作成 */
     var node1 = GraphTableSVG.Vertex.create(graph, vertexClass);
     var node2 = GraphTableSVG.Vertex.create(graph, vertexClass);
@@ -48,10 +48,13 @@ var sample1_mousemove = (e) => {
     var box = document.getElementById('svgbox1');
     if (drag != null) {
         var item = drag.target;
-        item.setX(item.getX() + (e.clientX - drag.offsetx));
-        drag.offsetx = e.clientX;
-        item.setY(item.getY() + (e.clientY - drag.offsety));
-        drag.offsety = e.clientY;
+        if (item != null) {
+            var newX = item.getX() + (e.clientX - drag.offsetx);
+            item.setX(newX);
+            drag.offsetx = e.clientX;
+            item.setY(item.getY() + (e.clientY - drag.offsety));
+            drag.offsety = e.clientY;
+        }
     }
 };
 window.onload = () => {

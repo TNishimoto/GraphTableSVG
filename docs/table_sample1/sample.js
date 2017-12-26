@@ -4,8 +4,7 @@ var Vertex = GraphTableSVG.Vertex;
 var Table = GraphTableSVG.Table;
 function createTable(id, tableClass = null) {
     var box = document.getElementById(id);
-    var table = new GraphTableSVG.Table(3, 3, tableClass);
-    box.appendChild(table.svgGroup);
+    var table = new GraphTableSVG.Table(box, 3, 3, tableClass);
     for (var x = 0; x <= 2; x++) {
         for (var y = 0; y <= 2; y++) {
             table.cells[y][x].svgText.textContent = `Cell${y}${x}`;

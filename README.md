@@ -35,3 +35,5 @@ MIT License
 ## その他
 SVG -> png変換にcanvg(https://github.com/canvg/canvg)を利用しています。
 jquery(https://jquery.com/)も使っています。
+
+Firefox, Chrome, Edgeで動作を確認中。

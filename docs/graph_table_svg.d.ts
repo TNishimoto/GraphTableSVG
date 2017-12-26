@@ -97,7 +97,7 @@ declare module GraphTableSVG {
         readonly edges: Edge[];
         add(item: Vertex | Edge): void;
         remove(item: Vertex | Edge): void;
-        constructor(className?: string | null);
+        constructor(box: HTMLElement, className?: string | null);
         updateVertices(): void;
         updateEdges(): void;
         private update();
@@ -133,7 +133,6 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     class Vertex {
-        symbol: symbol;
         static defaultSurfaceType: string;
         static defaultTextClass: string;
         static defaultSurfaceClass: string;

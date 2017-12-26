@@ -1,6 +1,6 @@
 ﻿module GraphTableSVG {
     export class Vertex {
-        public symbol: symbol = Symbol();
+        //public symbol: symbol = Symbol();
         public static defaultSurfaceType: string = "--default-surface-type";
         public static defaultTextClass: string = "--default-text-class";
         public static defaultSurfaceClass: string = "--default-surface-class";
@@ -98,6 +98,8 @@
             this.svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "vertex");
+            this._graph = __graph;
+            __graph.add(this);
 
 
             this.svgText = createText(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultTextClass));
@@ -113,8 +115,6 @@
             var option: MutationObserverInit = { childList: true };
             this._textObserver.observe(this.svgText, option);
 
-            this._graph = __graph;
-            __graph.add(this);
 
             this.x = 0;
             this.y = 0;

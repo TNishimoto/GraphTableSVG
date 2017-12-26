@@ -7,8 +7,7 @@ function createTable(id : string, tableClass : string | null = null) : Table{
 
     var box : HTMLElement = document.getElementById(id);
     
-    var table : GraphTableSVG.Table = new GraphTableSVG.Table(3,3, tableClass);
-    box.appendChild(table.svgGroup);
+    var table : GraphTableSVG.Table = new GraphTableSVG.Table(box, 3,3, tableClass);
 
     for(var x=0;x<=2;x++){
         for(var y=0;y<=2;y++){

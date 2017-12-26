@@ -5,15 +5,7 @@
         constructor(__graph: Graph, className: string | null = null, text: string = "") {
             super(__graph, className, text);
             this.svgCircle = createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
-            //this.svgGroup.appendChild(this.svgCircle);
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
-
-
-            //this.svgCircle.setAttribute("objectID", this.objectID);
-            //this.svgText.setAttribute("objectID", this.objectID);
-
-
-
         }
         get width(): number {
             return this.svgCircle.r.baseVal.value * 2;
@@ -32,15 +24,7 @@
             return rect;
             //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
-
-        /*
-        public static create(_parent: Graph, nodeClassName: string | null = null): CircleVertex {
-            var p = new CircleVertex(_parent, nodeClassName, "");
-            //_parent.add(p);
-
-            return p;
-        }
-        */
+        
         public get radius(): number {
             return this.svgCircle.r.baseVal.value;
         }

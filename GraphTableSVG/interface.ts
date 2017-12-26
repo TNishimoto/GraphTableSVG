@@ -16,8 +16,16 @@ SVGGElement.prototype.setX = function (value: number) {
     if (p.transform.baseVal.numberOfItems == 0) {
         p.setAttribute('transform', "translate(0,0)");
     }
+    var a = this.transform.baseVal.getItem(0).matrix.a;
+    var b = this.transform.baseVal.getItem(0).matrix.b;
+    var c = this.transform.baseVal.getItem(0).matrix.c;
+    var d = this.transform.baseVal.getItem(0).matrix.d;
+    var e = value;
+    var f = this.transform.baseVal.getItem(0).matrix.f;
+    p.setAttribute('transform', `matrix(${a} ${b} ${c} ${d} ${e} ${f})`);
 
-    return this.transform.baseVal.getItem(0).matrix.e = value;
+
+    //p.transform.baseVal.getItem(0).matrix.e = value;
 };
 SVGGElement.prototype.getY = function () {
     var p: SVGGElement = this;
@@ -32,8 +40,17 @@ SVGGElement.prototype.setY = function (value: number) {
     if (p.transform.baseVal.numberOfItems == 0) {
         p.setAttribute('transform', "translate(0,0)");
     }
+    var a = this.transform.baseVal.getItem(0).matrix.a;
+    var b = this.transform.baseVal.getItem(0).matrix.b;
+    var c = this.transform.baseVal.getItem(0).matrix.c;
+    var d = this.transform.baseVal.getItem(0).matrix.d;
+    var e = this.transform.baseVal.getItem(0).matrix.e;
+    var f = value;
+    p.setAttribute('transform', `matrix(${a} ${b} ${c} ${d} ${e} ${f})`);
 
-    return this.transform.baseVal.getItem(0).matrix.f = value;
+
+
+    //this.transform.baseVal.getItem(0).matrix.f = value;
 };
 
 interface CSSStyleDeclaration {
@@ -68,7 +85,7 @@ SVGElement.prototype.getActiveStyle = function () {
 }
 SVGElement.prototype.getPropertyStyleValue = function(name: string): string | null {
     var item: SVGElement = this;
-
+    
     var p = item.style.getPropertyValue(name).trim();
     if (p.length == 0) {
         var r = item.getAttribute("class");
@@ -110,7 +127,10 @@ SVGTextElement.prototype.setX = function (value: number) {
     if (p.x.baseVal.numberOfItems == 0) {
         p.setAttribute('x', "0");
     }
-    return p.x.baseVal.getItem(0).value = value;
+    //p.setAttribute('x', value.toString());
+
+
+    p.x.baseVal.getItem(0).value = value;
 };
 SVGTextElement.prototype.getY = function () {
     var p: SVGTextElement = this;
@@ -124,7 +144,7 @@ SVGTextElement.prototype.setY = function (value: number) {
     if (p.y.baseVal.numberOfItems == 0) {
         p.setAttribute('y', "0");
     }
-    return p.y.baseVal.getItem(0).value = value;
+    p.y.baseVal.getItem(0).value = value;
 };
 
 function IsDescendantOfBody(node: Node): boolean {
