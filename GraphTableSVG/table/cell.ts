@@ -283,10 +283,16 @@ module GraphTableSVG {
             }
         }
 
+        /**
+        CellがDocumentのDOMに所属しているかどうかを返します。
+        */
         get isLocated(): boolean {
             return IsDescendantOfBody(this.svgGroup);
         }
 
+        /**
+        セルのテキストの領域が取るべき幅を返します。
+        */
         get textBoxWidth(): number {
             if (this.isLocated) {
                 return this.svgText.getBBox().width + parsePXString(this.svgGroup.style.paddingLeft) + parsePXString(this.svgGroup.style.paddingRight);
@@ -294,6 +300,9 @@ module GraphTableSVG {
                 return 0;
             }
         }
+        /**
+        セルのテキストの領域が取るべき高さを返します。
+        */
         get textBoxHeight(): number {
             if (this.isLocated) {
                 return this.svgText.getBBox().height + parsePXString(this.svgGroup.style.paddingTop) + parsePXString(this.svgGroup.style.paddingBottom);
@@ -302,7 +311,10 @@ module GraphTableSVG {
             }
         }
 
-        resize() {
+        /**
+         *セルのサイズを再計算します。
+         */
+        public resize() {
             if (this.width < this.textBoxWidth) {
                 this.width = this.textBoxWidth;
             }
@@ -310,7 +322,10 @@ module GraphTableSVG {
                 this.height = this.textBoxHeight;
             }
         }
-        relocation() {
+        /**
+         *セルの位置を再計算します。
+         */
+        public relocation() {
             if (!IsDescendantOfBody(this.svgGroup)) return;
             this.upLine.x1.baseVal.value = this.x;
             this.upLine.x2.baseVal.value = this.x + this.width;
@@ -355,18 +370,33 @@ module GraphTableSVG {
         get isSlave(): boolean {
             return !this.isMaster;
         }
+        /**
+        セルのIDを返します。
+        */
         get ID(): number {
             return this.cellX + (this.cellY * this.parent.width);
         }
+        /**
+        上にあるセルを返します。
+        */
         get upCell(): Cell | null {
             return this.cellY != 0 ? this.parent.cells[this.cellY - 1][this.cellX] : null;
         }
+        /**
+        左にあるセルを返します。
+        */
         get leftCell(): Cell | null {
             return this.cellX != 0 ? this.parent.cells[this.cellY][this.cellX - 1] : null;
         }
+        /**
+        右にあるセルを返します。
+        */
         get rightCell(): Cell | null {
             return this.cellX + 1 != this.parent.width ? this.parent.cells[this.cellY][this.cellX + 1] : null;
         }
+        /**
+        下にあるセルを返します。
+        */
         get bottomCell(): Cell | null {
             return this.cellY + 1 != this.parent.height ? this.parent.cells[this.cellY + 1][this.cellX] : null;
         }

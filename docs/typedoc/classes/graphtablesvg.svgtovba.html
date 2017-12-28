@@ -104,7 +104,7 @@
 					<div class="tsd-signature tsd-kind-icon">cell<wbr>Function<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&#x60;Sub EditTable(table_ As table, cellInfo_() As Variant)Dim x As IntegerDim y As IntegerFor x &#x3D; 1 To UBound(cellInfo_, 1)For y &#x3D; 1 To UBound(cellInfo_, 2)Call EditCell(table_.cell(x, y), CStr(cellInfo_(x, y)(0)))NextNextEnd SubSub EditCell(cell_ As cell, text_ As String, backColor As Variant)cell_.Shape.TextFrame.TextRange.text &#x3D; text_cell_.Shape.Fill.ForeColor.RGB &#x3D; RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))End SubSub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant)frame_.TextRange.Font.Size &#x3D; fontSizeframe_.TextRange.Font.name &#x3D; fontNameframe_.TextRange.Font.color.RGB &#x3D; RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))End SubSub EditRow(row_ As Row, height As Integer)row_.height &#x3D; heightEnd SubSub EditColumn(column_ As Column, width As Integer)column_.width &#x3D; widthEnd SubSub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double)frame_.marginLeft &#x3D; marginLeftframe_.marginRight &#x3D; marginRightframe_.marginTop &#x3D; marginTopframe_.marginBottom &#x3D; marginBottomEnd SubSub EditTextRange(range_ As TextRange, text As String, subBeg As Integer, subLen As Integer, color As Variant)range_.text &#x3D; textrange_.Font.color.RGB &#x3D; RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))If subLen &gt; 0 Thenrange_.Characters(subBeg, subLen).Font.Subscript &#x3D; TrueEnd IfEnd SubSub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)shape_.name &#x3D; nameshape_.Fill.visible &#x3D; visibleshape_.Fill.ForeColor.RGB &#x3D; RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))End SubSub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer, transparent As Double)line_.foreColor.RGB &#x3D; RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))line_.weight &#x3D; weightline_.Transparency &#x3D; transparentEnd Sub&#x60;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/f718eea/GraphTableSVG/table/vba.ts#L24">table/vba.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/22a6073/GraphTableSVG/table/vba.ts#L24">table/vba.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -121,7 +121,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/f718eea/GraphTableSVG/table/vba.ts#L5">table/vba.ts:5</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/22a6073/GraphTableSVG/table/vba.ts#L5">table/vba.ts:5</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>

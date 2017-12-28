@@ -255,13 +255,13 @@ module GraphTableSVG {
             var height = 0;
             rows.forEach(function (x, i, arr) {
                 x.setY(height);
-                height += x.getMaxHeight();
+                height += x.height;
             });
             var width = 0;
             columns.forEach(function (x, i, arr) {
                 x.setX(width);
 
-                width += x.getMaxWidth();
+                width += x.width;
             });
             this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
 
