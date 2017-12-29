@@ -5,8 +5,8 @@ module GraphTableSVG {
     テーブルを表します。
     */
     export class Table {
-        private static defaultCellClass: string = "--default-cell-class";
-        private static defaultBorderClass: string = "--default-border-class";
+        private static readonly defaultCellClass: string = "--default-cell-class";
+        private static readonly defaultBorderClass: string = "--default-border-class";
         private _svgGroup: SVGGElement;
         private _cells: Cell[][] = [];
         private _observer: MutationObserver;

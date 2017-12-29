@@ -5,18 +5,33 @@
     */
     export class Graph {
         public static idCounter: number = 0;
-        public static defaultVertexClass: string = "--default-vertex-class";
-        public static defaultEdgeClass: string = "--default-edge-class";
-        //public static defaultVertexClassName: string = "data-default-vertex-class";
-        //public static defaultEdgeClassName: string = "data-default-edge-class";
-
-        public static objectIDName: string = "data-objectID";
-        public static typeName: string = "data-type";
+        public static readonly defaultVertexClass: string = "--default-vertex-class";
+        public static readonly defaultEdgeClass: string = "--default-edge-class";        
+        public static readonly objectIDName: string = "data-objectID";
+        public static readonly typeName: string = "data-type";
 
         protected _vertices: Vertex[] = new Array(0);
         protected _edges: Edge[] = new Array(0);
         protected _svgGroup: SVGGElement;
         protected _roots: Vertex[] = [];
+        constructor(box: HTMLElement, className: string | null = null) {
+            this._svgGroup = GraphTableSVG.createGroup(className);
+            box.appendChild(this.svgGroup);
+
+            this._svgGroup.setAttribute(Graph.typeName, "graph");
+
+        }
+        private updateVertices(): void {
+            this._vertices.forEach(function (x) { x.update() });
+        }
+        private updateEdges(): void {
+            this._edges.forEach(function (x) { x.update() });
+        }
+
+        private update(): void {
+            this.updateVertices();
+            this.updateEdges();
+        }
 
         /**
         Vertexインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
@@ -24,6 +39,9 @@
         get defaultVertexClass(): string | null {
             return this.svgGroup.getPropertyStyleValue(Graph.defaultVertexClass);
         }
+        /**
+        Vertexインスタンスの生成時のクラス名を設定します。
+        */
         set defaultVertexClass(value: string | null) {
             this.svgGroup.setPropertyStyleValue(Graph.defaultVertexClass, value);
         }
@@ -34,26 +52,60 @@
         get defaultEdgeClass(): string | null {
             return this.svgGroup.getPropertyStyleValue(Graph.defaultEdgeClass);
         }
+        /**
+        Edgeインスタンスの生成時のクラス名を設定します。
+        */
         set defaultEdgeClass(value: string | null) {
             this.svgGroup.setPropertyStyleValue(Graph.defaultEdgeClass, value);
         }
-
-        //public arrangementFunction: (Graph) => void | null = null;
+        /**
+        根を返します。
+        */
+        get rootVertex(): Vertex | null {
+            if (this.roots.length == 0) {
+                return null;
+            } else {
+                return this.roots[0];
+            }
+        }
+        /**
+        根を設定します。
+        */
+        set rootVertex(value: Vertex | null) {
+            this._roots = [];
+            if (value != null) {
+                this.roots.push(value);
+            }
+        }
+        /**
+        根の配列を返します。
+        */
         get roots(): Vertex[] {
             return this._roots;
         }
+        /**
+        グラフを表すSVGGElementを返します。
+        */
         get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
-        
+        /**
+        グラフの頂点を全て返します。
+        */
         get vertices(): Vertex[] {
             return this._vertices;
         }
+        /**
+        グラフの辺を全て返します。
+        */
         get edges(): Edge[] {
             return this._edges;
         }
         
-
+        /**
+         * 頂点もしくは辺をグラフに追加します。
+         * @param item
+         */
         public add(item: Vertex | Edge) : void {
             if (item instanceof Vertex) {
                 var i = this._vertices.indexOf(item);
@@ -75,6 +127,10 @@
                 }
             }
         }
+        /**
+         * 頂点もしくは辺を削除します。
+         * @param item
+         */
         public remove(item: Vertex | Edge): void {
             if (item instanceof Vertex) {
                 var p = this.vertices.indexOf(item);
@@ -93,36 +149,6 @@
             }
         }
         
-        
-
-        constructor(box: HTMLElement, className: string | null = null) {
-            this._svgGroup = GraphTableSVG.createGroup(className);
-            box.appendChild(this.svgGroup);
-
-            this._svgGroup.setAttribute(Graph.typeName, "graph");
-            
-        }
-
-        /*
-        relocation(): void {
-            this.arrangementFunction(this);
-        }
-        resize() : void {
-
-        }
-        */
-
-        updateVertices(): void {
-            this._vertices.forEach(function (x) { x.update() });
-        }
-        updateEdges() : void {
-            this._edges.forEach(function (x) { x.update() });
-        }
-
-        private update(): void {
-            this.updateVertices();
-            this.updateEdges();
-        }
         /*
         clear(svg: HTMLElement) {
             this._nodes.forEach(function (x) { x.setGraph(null) });
@@ -136,38 +162,35 @@
                 svg.removeChild(this.svgGroup);
             }
         }
-        /*
-        public static create(svg: HTMLElement): Graph {
-            //var g = GraphTableSVG.createGroup();
-            var graph = new Graph();
-            //graph.svgGroup = g;
-        }
-        */
-
+        /**
+         * グラフの領域を表すRectangleを返します。位置の基準はグラフが追加されているNodeです。
+         */
         public getRegion(): Rectangle {
             var rects = this.vertices.map((v) => v.region);
             var rect = GraphTableSVG.Rectangle.merge(rects);
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
-            //rect.x += this.svgGroup.getX();
-            //rect.y += this.svgGroup.getY();
             return rect;
         }
-
-        public getObjectBySVGID(id: string): Vertex | Edge | null {
+        /**
+         * ObjectIDから頂点もしくは辺を返します。
+         * @param id
+         */
+        public getObjectByObjectID(id: string): Vertex | Edge | null {
             for (var i = 0; i < this.vertices.length; i++) {
-                if (this.vertices[i].containsSVGID(id)) {
+                if (this.vertices[i].containsObjectID(id)) {
                     return this.vertices[i];
                 }
             }
             return null;
         }
-        /*
-        private _connect(node1: Vertex, edge: Edge, node2: Vertex) {
-            edge.beginVertex = node1;
-            edge.endVertex = node2;
-            this.add(edge);
-        }
-        */
+        /**
+         * 与えられた二つの頂点と辺を接続します。
+         * @param node1
+         * @param edge
+         * @param node2
+         * @param outcomingInsertIndex
+         * @param incomingInsertIndex
+         */
         public connect(node1: Vertex, edge: Edge, node2: Vertex,
             outcomingInsertIndex: number = node1.outcomingEdges.length, incomingInsertIndex: number = node2.incomingEdges.length) {
             //this._connect(node1, edge, node2);
@@ -192,6 +215,11 @@
             //node1.outcomingEdges.splice(insertIndex, 0, edge);
             //node2.incomingEdges.push(edge);
         }
+        /**
+         * 与えられたNodeOrderに従って与えられた頂点を根とした部分木の整列された頂点配列を返します。
+         * @param order
+         * @param node
+         */
         public getOrderedVertices(order: NodeOrder, node: Vertex | null = null): Vertex[] {
             var r: Vertex[] = [];
             if (node == null) {
@@ -221,19 +249,7 @@
             }
             return r;
         }
-        get rootVertex(): Vertex | null {
-            if (this.roots.length == 0) {
-                return null;
-            } else {
-                return this.roots[0];
-            }
-        }
-        set rootVertex(value: Vertex | null) {
-            this._roots = [];
-            if (value != null) {
-                this.roots.push(value);
-            }
-        }
+
         public save() {
             var id = 0;
             //this.nodes.forEach((v) => v.objectID = id++);

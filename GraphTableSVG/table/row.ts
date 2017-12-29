@@ -1,7 +1,7 @@
 ﻿module GraphTableSVG {
     export class Row {
-        private table: Table;
-        private _cellY: number;
+        private readonly table: Table;
+        private readonly _cellY: number;
         /**
         列の単位セルのY座標を返します。
         */
@@ -56,8 +56,8 @@
         }
     }
     export class Column {
-        private table: Table;
-        private _cellX: number;
+        private readonly table: Table;
+        private readonly _cellX: number;
         /**
         列の単位セルのX座標を返します。
         */

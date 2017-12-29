@@ -1,19 +1,38 @@
 ﻿module GraphTableSVG {
+    /**
+     * 輪郭が円の頂点です。
+     */
     export class CircleVertex extends GraphTableSVG.Vertex {
-        svgCircle: SVGCircleElement;
-
+        private _svgCircle: SVGCircleElement;
+        public get svgCircle(): SVGCircleElement {
+            return this._svgCircle;
+        }
+        /**
+         * 
+         * @param ___graph
+         * @param className
+         * @param text
+         */
         constructor(__graph: Graph, className: string | null = null, text: string = "") {
             super(__graph, className, text);
-            this.svgCircle = createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
+            this._svgCircle = createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
         }
+        /**
+        頂点の幅を返します。
+        */
         get width(): number {
             return this.svgCircle.r.baseVal.value * 2;
         }
+        /**
+        頂点の高さを返します。
+        */
         get height(): number {
             return this.svgCircle.r.baseVal.value * 2;
         }
-
+        /**
+        テキストの領域を返します。
+        */
         get innerRectangle(): Rectangle {
             var r = this.svgCircle.r.baseVal.value;
             var rect = new Rectangle();
@@ -24,10 +43,18 @@
             return rect;
             //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
-        
+        /**
+        頂点の半径を返します。
+        */
         public get radius(): number {
             return this.svgCircle.r.baseVal.value;
         }
+        /**
+         * 接続部分の座標を返します。
+         * @param type
+         * @param x
+         * @param y
+         */
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
             var r = (Math.sqrt(2) / 2) * this.radius;
 
@@ -54,10 +81,14 @@
                     return this.getLocation(autoType, x, y);
             }
         }
+        /**
+        頂点の輪郭を返します。
+        */
         public get surface(): SVGElement | null {
             return this.svgCircle;
         }
-        public getRadian(x: number, y: number): ConnectorPosition {
+
+        private getRadian(x: number, y: number): ConnectorPosition {
             var [x2, y2] = [x - this.x, y - this.y];
 
             if (x2 < 0) {
@@ -86,7 +117,7 @@
                 }
             }
         }
-        public getAutoPosition(x: number, y: number): ConnectorPosition {
+        private getAutoPosition(x: number, y: number): ConnectorPosition {
             var r = (Math.sqrt(2) / 2) * this.radius;
             var line1 = new VLine(this.x, this.y, this.x + r, this.y + r);
             var line2 = new VLine(this.x, this.y, this.x + r, this.y - r);
@@ -110,26 +141,40 @@
 
         }
     }
+    /**
+     * 輪郭が四角形の頂点です。
+     */
     export class RectangleVertex extends GraphTableSVG.Vertex {
-        svgRectangle: SVGRectElement;
+        private _svgRectangle: SVGRectElement;
+        public get svgRectangle(): SVGRectElement {
+            return this._svgRectangle;
+        }
 
 
         constructor(__graph: Graph, className: string | null = null, text: string = "") {
             super(__graph, className, text);
-            this.svgRectangle = createRectangle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
+            this._svgRectangle = createRectangle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
 
             this.svgRectangle.x.baseVal.value = -this.width / 2;
             this.svgRectangle.y.baseVal.value = -this.height / 2;
 
         }
+        /**
+        頂点の幅を返します。
+        */
         get width(): number {
             return this.svgRectangle.width.baseVal.value;
         }
+        /**
+        頂点の高さを返します。
+        */
         get height(): number {
             return this.svgRectangle.height.baseVal.value;
         }
-
+        /**
+        テキストの領域を返します。
+        */
         get innerRectangle(): Rectangle {
             var rect = new Rectangle();
             rect.width = this.width;
@@ -139,6 +184,12 @@
             return rect;
             //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
+        /**
+         * 接続部分の座標を返します。
+         * @param type
+         * @param x
+         * @param y
+         */
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
             var wr = this.width / 2;
             var hr = this.height / 2;
@@ -162,7 +213,7 @@
                     return this.getLocation(autoType, x, y);
             }
         }
-        public getAutoPosition(x: number, y: number): ConnectorPosition {
+        private getAutoPosition(x: number, y: number): ConnectorPosition {
             var wr = this.width / 2;
             var hr = this.height / 2;
 

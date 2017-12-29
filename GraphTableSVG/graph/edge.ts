@@ -2,126 +2,29 @@
     export class Edge {
         //public static defaultBeginConnectorPosition: string = "--default-begin-connector-position";
         //public static defaultEndConnectorPosition: string = "--default-end-connector-position";
-        public static beginConnectorTypeName: string = "--begin-connector-type";
-        public static endConnectorTypeName: string = "--end-connector-type";
-        public static defaultLineClass: string = "--default-line-class";
-        public static beginNodeName: string = "data-begin-node";
-        public static endNodeName: string = "data-end-node";
-        public static defaultTextClass: string = "--default-text-class";
+        public static readonly beginConnectorTypeName: string = "--begin-connector-type";
+        public static readonly endConnectorTypeName: string = "--end-connector-type";
+        public static readonly defaultLineClass: string = "--default-line-class";
+        public static readonly beginNodeName: string = "data-begin-node";
+        public static readonly endNodeName: string = "data-end-node";
+        public static readonly defaultTextClass: string = "--default-text-class";
 
         private _beginVertex: Vertex | null = null;
         private _endVertex: Vertex | null = null;
-
-        get beginConnectorType(): ConnectorPosition {
-            var p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
-            if (p == null) {
-                return ConnectorPosition.Auto;
-            } else {
-                return GraphTableSVG.ToConnectorPosition(p);
-            }
-        }
-        set beginConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
-            //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
-        }
-        get endConnectorType(): ConnectorPosition {
-            var p = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
-            if (p == null) {
-                return ConnectorPosition.Auto;
-            } else {
-                return GraphTableSVG.ToConnectorPosition(p);
-            }
-        }
-        set endConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(Edge.endConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
-        }
-
         private _graph: Graph | null = null;
-        public svgGroup: SVGGElement;
-        text: EdgeText | null = null;
-
-        get beginVertex(): Vertex | null {
-            return this._beginVertex;
+        private _svgGroup: SVGGElement;
+        public get svgGroup(): SVGGElement {
+            return this._svgGroup;
         }
-        set beginVertex(value: Vertex | null) {
-            var prev = this._beginVertex;
-            this._beginVertex = value;
-            if (value != null) {
-                this.svgGroup.setAttribute(Edge.beginNodeName, value.objectID);
-            } else {
-                this.svgGroup.removeAttribute(Edge.beginNodeName);
-            }
-
-            if (prev != null) {
-                prev.removeOutcomingEdge(this);
-            }
-
-            this.update();
-
-            /*
-            if (this.graph != null) {
-                this.graph.update();
-            }
-            */
+        protected _text: EdgeText | null = null;
+        public get text(): EdgeText | null {
+            return this._text;
         }
-        get endVertex(): Vertex | null {
-            return this._endVertex;
+        public set text(value: EdgeText | null) {
+            this._text = value;
         }
-        set endVertex(value: Vertex | null) {
-            var prev = this._endVertex;
-
-            this._endVertex = value;
-            if (value != null) {
-                this.svgGroup.setAttribute(Edge.endNodeName, value.objectID);
-            } else {
-                this.svgGroup.removeAttribute(Edge.endNodeName);
-            }
-
-            if (prev != null) {
-                prev.removeIncomingEdge(this);
-            }
-
-            this.update();
-
-        }
-        
-        get graph(): Graph | null {
-            return this._graph;
-        }
-        /*
-        private set graph(value: Graph | null) {
-            var prev = this._graph;
-            this._graph = null;
-            if (prev != null) {
-                prev.remove(this);
-            }
-            this._graph = value;
-            if (this._graph != null) {
-                this._graph.add(this);
-            }
-        }
-        */
-        /*
-        public setGraph(value: Graph) {
-            this._graph = value;
-        }
-        */
-        public dispose() {
-            this.beginVertex = null;
-            this.endVertex = null;
-            var prev = this.graph;
-            this._graph = null;
-
-            if (prev != null) {
-                prev.remove(this);
-            }
-        }
-        get isDisposed(): boolean {
-            return this.graph == null;
-        }
-
         constructor(__graph: Graph, className: string | null = null) {
-            this.svgGroup = createGroup(className);
+            this._svgGroup = createGroup(className);
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "edge");
 
@@ -140,7 +43,123 @@
             this._endNode = _endNode;
             */
         }
+        /**
+        開始接点の接続位置を返します。
+        */
+        get beginConnectorType(): ConnectorPosition {
+            var p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
+            if (p == null) {
+                return ConnectorPosition.Auto;
+            } else {
+                return GraphTableSVG.ToConnectorPosition(p);
+            }
+        }
+        /**
+        開始接点の接続位置を設定します。
+        */
+        set beginConnectorType(value: ConnectorPosition) {
+            this.svgGroup.setPropertyStyleValue(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
+            //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
+        }
+        /**
+        終了接点の接続位置を返します。
+        */
+        get endConnectorType(): ConnectorPosition {
+            var p = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
+            if (p == null) {
+                return ConnectorPosition.Auto;
+            } else {
+                return GraphTableSVG.ToConnectorPosition(p);
+            }
+        }
+        /**
+        終了接点の接続位置を設定します。
+        */
+        set endConnectorType(value: ConnectorPosition) {
+            this.svgGroup.setPropertyStyleValue(Edge.endConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
+        }
 
+        /**
+        開始接点を返します。
+        */
+        get beginVertex(): Vertex | null {
+            return this._beginVertex;
+        }
+        /**
+        開始接点を設定します。
+        */
+        set beginVertex(value: Vertex | null) {
+            var prev = this._beginVertex;
+            this._beginVertex = value;
+            if (value != null) {
+                this.svgGroup.setAttribute(Edge.beginNodeName, value.objectID);
+            } else {
+                this.svgGroup.removeAttribute(Edge.beginNodeName);
+            }
+
+            if (prev != null) {
+                prev.removeOutcomingEdge(this);
+            }
+
+            this.update();
+            
+        }
+        /**
+        終了接点を返します。
+        */
+        get endVertex(): Vertex | null {
+            return this._endVertex;
+        }
+        /**
+        終了接点を設定します。
+        */
+        set endVertex(value: Vertex | null) {
+            var prev = this._endVertex;
+
+            this._endVertex = value;
+            if (value != null) {
+                this.svgGroup.setAttribute(Edge.endNodeName, value.objectID);
+            } else {
+                this.svgGroup.removeAttribute(Edge.endNodeName);
+            }
+
+            if (prev != null) {
+                prev.removeIncomingEdge(this);
+            }
+
+            this.update();
+
+        }
+        /**
+        所属しているグラフを返します。
+        */
+        get graph(): Graph | null {
+            return this._graph;
+        }
+        /**
+         * この辺を廃棄します。廃棄した辺はグラフから取り除かれます。
+         */
+        public dispose() {
+            this.beginVertex = null;
+            this.endVertex = null;
+            var prev = this.graph;
+            this._graph = null;
+
+            if (prev != null) {
+                prev.remove(this);
+            }
+        }
+        /**
+        この辺が廃棄されているときTrueを返します。
+        */
+        get isDisposed(): boolean {
+            return this.graph == null;
+        }
+
+        
+        /**
+        開始位置のX座標を返します。
+        */
         public get x1(): number {
             if (this.beginVertex != null && this.endVertex != null) {
                 var [x1, y1] = this.beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
@@ -149,6 +168,9 @@
                 return 0;
             }
         }
+        /**
+        開始位置のY座標を返します。
+        */
         public get y1(): number {
             if (this.beginVertex != null && this.endVertex != null) {
                 var [x1, y1] = this.beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
@@ -157,6 +179,9 @@
                 return 0;
             }
         }
+        /**
+        終了位置のX座標を返します。
+        */
         public get x2(): number {
             if (this.beginVertex != null && this.endVertex != null) {
                 var [x2, y2] = this.endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
@@ -165,6 +190,9 @@
                 return 0;
             }
         }
+        /**
+        終了位置のY座標を返します。
+        */
         public get y2(): number {
             if (this.beginVertex != null && this.endVertex != null) {
                 var [x2, y2] = this.endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
@@ -174,11 +202,15 @@
             }
         }
 
-
+        /**
+         * 再描画します。
+         */
         public update(): boolean {
             return false;
         }
-
+        /**
+        ObjectIDを返します。
+        */
         public get objectID(): number | null {
             var r = this.svgGroup.getAttribute(Graph.objectIDName);
             if (r == null) {
@@ -198,7 +230,12 @@
         */
         public save() {
         }
-
+        /**
+         * Edgeを作成します。
+         * @param graph
+         * @param className
+         * @param lineType
+         */
         public static create(graph: Graph, className: string | null = null, lineType: string | null = null): GraphTableSVG.Edge {
             var g = createGroup(className);
             var textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();

@@ -3,8 +3,8 @@ module GraphTableSVG {
     
 
     export class Cell {
-        private static defaultBackgroundClassName: string = "--default-background-class";
-        private static defaultTextClass: string = "--default-text-class";
+        private static readonly defaultBackgroundClassName: string = "--default-background-class";
+        private static readonly defaultTextClass: string = "--default-text-class";
         private _observer: MutationObserver;
         private observerFunc: MutationCallback = (x: MutationRecord[]) => {
             for (var i = 0; i < x.length; i++) {

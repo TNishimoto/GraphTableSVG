@@ -92,7 +92,7 @@
             var diffX = _x - x;
             var diffY = _y - y;
             this.addOffset(diffX, diffY);
-            this.graph.updateEdges();
+            //this.graph.updateEdges();
         }
         public setRootLocation(_x: number, _y: number) {
             var x = this.root.x;
@@ -100,7 +100,7 @@
             var diffX = _x - x;
             var diffY = _y - y;
             this.addOffset(diffX, diffY);
-            this.graph.updateEdges();
+            //this.graph.updateEdges();
         }
         
 
