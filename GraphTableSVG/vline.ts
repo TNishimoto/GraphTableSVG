@@ -1,4 +1,7 @@
 ﻿module GraphTableSVG {
+    /**
+     * 傾きや切片を計算できる線です。
+     */
     export class VLine {
         public get smallPoint(): [number, number] {
             if (this.x1 < this.x2) {
@@ -82,23 +85,39 @@
         }
        
     }
-
+    /**
+     * 四角形を表します。
+     */
     export class Rectangle {
         constructor(public x: number = 0, public y: number = 0, public width: number = 0, public height: number = 0) {
 
         }
-
+        /**
+        右端のX座標を返します。
+        */
         get right(): number {
             return this.x + this.width;
         }
+        /**
+        底のY座標を返します。
+        */
         get bottom(): number {
             return this.y + this.height;
         }
+        /**
+         * X座標とY座標に値を加えます。
+         * @param x
+         * @param y
+         */
         public addOffset(x: number, y: number) {
             this.x += x;
             this.y += y;
         }
-        public static merge(rects: Rectangle[]) {
+        /**
+         * 引数の四角形を内包する最小の四角形を返します。
+         * @param rects
+         */
+        public static merge(rects: Rectangle[]): Rectangle {
             var x1 = rects[0].x;
             var y1 = rects[0].y;
 

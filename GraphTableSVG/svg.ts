@@ -1,6 +1,14 @@
 ﻿
 module GraphTableSVG {
-    
+
+    /**
+     * SVGLineElementを生成します。
+     * @param x
+     * @param y
+     * @param x2
+     * @param y2
+     * @param className
+     */
     export function createLine(x: number, y: number, x2: number, y2: number, className: string | null = null): SVGLineElement {
         var line1 = <SVGLineElement>document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line1.x1.baseVal.value = x;
@@ -19,6 +27,10 @@ module GraphTableSVG {
         //line1.setAttribute('stroke', 'black');
         return line1;
     }
+    /**
+     * SVGTextElementを生成します。
+     * @param className
+     */
     export function createText(className : string | null = null): SVGTextElement {
         var _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
@@ -34,7 +46,10 @@ module GraphTableSVG {
         return _svgText;
     }
     
-
+    /**
+     * SVGRectElementを生成します。
+     * @param className
+     */
     export function createRectangle(className: string | null = null): SVGRectElement {
         var rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.width.baseVal.value = 30;
@@ -59,6 +74,10 @@ module GraphTableSVG {
         }
         return rect;
     }
+    /**
+     * SVGGElementを生成します。
+     * @param className
+     */
     export function createGroup(className : string | null = null): SVGGElement {
         var g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
         if (className != null) {
@@ -66,6 +85,10 @@ module GraphTableSVG {
         }
         return g;
     }
+    /**
+     * Styleの設定を消去します。
+     * @param style
+     */
     export function resetStyle(style: CSSStyleDeclaration) {
         style.stroke = null;
         style.strokeWidth = null;
@@ -77,6 +100,10 @@ module GraphTableSVG {
     var defaultWidthName = "--default-width";
     var defaultHeightName = "--default-height";
 
+    /**
+     * SVGCircleElementを生成します。
+     * @param className
+     */
     export function createCircle(className : string | null = null): SVGCircleElement {
         var circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.r.baseVal.value = 30;

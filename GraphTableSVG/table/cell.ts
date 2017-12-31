@@ -287,7 +287,7 @@ module GraphTableSVG {
         CellがDocumentのDOMに所属しているかどうかを返します。
         */
         get isLocated(): boolean {
-            return IsDescendantOfBody(this.svgGroup);
+            return Graph.IsDescendantOfBody(this.svgGroup);
         }
 
         /**
@@ -326,7 +326,7 @@ module GraphTableSVG {
          *セルの位置を再計算します。
          */
         public relocation() {
-            if (!IsDescendantOfBody(this.svgGroup)) return;
+            if (!Graph.IsDescendantOfBody(this.svgGroup)) return;
             this.upLine.x1.baseVal.value = this.x;
             this.upLine.x2.baseVal.value = this.x + this.width;
             this.upLine.y1.baseVal.value = this.y;
@@ -357,7 +357,7 @@ module GraphTableSVG {
             innerRect.height = this.height - this.paddingTop - this.paddingBottom;
             innerRect.width = this.width - this.paddingLeft - this.paddingRight;
             
-            setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+            Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
 
             
 

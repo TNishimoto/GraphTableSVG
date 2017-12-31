@@ -257,6 +257,49 @@
             var ids = this.vertices.map((v) => v.objectID);
             this.svgGroup.setAttribute("node", JSON.stringify(ids));
         }
+
+        public static setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null) {
+
+            var x = rect.x;
+            var y = rect.y;
+            text.setAttribute('x', x.toString());
+            text.setAttribute('y', y.toString());
+
+            var b2 = text.getBBox();
+
+            var dy = b2.y - y;
+            var dx = b2.x - x;
+
+            y -= dy;
+
+            if (vAnchor == GraphTableSVG.VerticalAnchor.Middle) {
+                y += (rect.height - b2.height) / 2
+            } else if (vAnchor == GraphTableSVG.VerticalAnchor.Bottom) {
+                y += rect.height - b2.height;
+            }
+
+            x -= dx;
+            if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
+                x += (rect.width - b2.width) / 2;
+            } else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
+                x += rect.width - b2.width;
+            }
+
+
+            text.setAttribute('y', y.toString());
+            text.setAttribute('x', x.toString());
+        }
+        public static IsDescendantOfBody(node: Node): boolean {
+            var parent = node.parentNode;
+            if (parent == null) {
+                return false;
+            }
+            else if (parent == document.body) {
+                return true;
+            } else {
+                return Graph.IsDescendantOfBody(parent);
+            }
+        }
     }
     
 

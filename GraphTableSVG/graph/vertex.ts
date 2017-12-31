@@ -34,7 +34,7 @@
                     if (vAnchor == null) vAnchor = VerticalAnchor.Middle;
                     var hAnchor = this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
                     if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
-                    setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
+                    Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
 
                 }
             }
@@ -125,7 +125,7 @@
         このVertexがBodyの子孫であるとき、Trueを返します。
         */
         get isLocated(): boolean {
-            return IsDescendantOfBody(this.svgGroup);
+            return Graph.IsDescendantOfBody(this.svgGroup);
         }
         
         /**
@@ -305,6 +305,8 @@
          * @param graph
          * @param className
          * @param defaultSurfaceType
+         *   "circle"ならばSVGCircleElement <br>
+         *   "rectangle"ならばSVGRectangleElement
          */
         public static create(graph: Graph, className: string | null = null, defaultSurfaceType: string = "circle"): GraphTableSVG.Vertex {
             var g = createGroup(className);
