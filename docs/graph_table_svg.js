@@ -1,28 +1,53 @@
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    /*
-    export class Padding {
-        top: number = 0;
-        left: number = 0;
-        right: number = 0;
-        bottom: number = 0;
-    }
+    /**
+    ノードの並び順です。
     */
     var NodeOrder;
     (function (NodeOrder) {
         NodeOrder[NodeOrder["Preorder"] = 0] = "Preorder";
         NodeOrder[NodeOrder["Postorder"] = 1] = "Postorder";
     })(NodeOrder = GraphTableSVG.NodeOrder || (GraphTableSVG.NodeOrder = {}));
+    /**
+    Vertexの接続位置を表す値です。
+    */
     var ConnectorPosition;
     (function (ConnectorPosition) {
+        /**
+        上を表します。
+        */
         ConnectorPosition[ConnectorPosition["Top"] = 1] = "Top";
+        /**
+        左上を表します。
+        */
         ConnectorPosition[ConnectorPosition["LeftUp"] = 2] = "LeftUp";
+        /**
+        左を表します。
+        */
         ConnectorPosition[ConnectorPosition["Left"] = 3] = "Left";
+        /**
+        左下を表します。
+        */
         ConnectorPosition[ConnectorPosition["LeftDown"] = 4] = "LeftDown";
+        /**
+        下を表します。
+        */
         ConnectorPosition[ConnectorPosition["Bottom"] = 5] = "Bottom";
+        /**
+        右下を表します。
+        */
         ConnectorPosition[ConnectorPosition["RightDown"] = 6] = "RightDown";
+        /**
+        右を表します。
+        */
         ConnectorPosition[ConnectorPosition["Right"] = 7] = "Right";
+        /**
+        右上を表します。
+        */
         ConnectorPosition[ConnectorPosition["RightUp"] = 8] = "RightUp";
+        /**
+        ノードの位置によって自動判定
+        */
         ConnectorPosition[ConnectorPosition["Auto"] = 9] = "Auto";
     })(ConnectorPosition = GraphTableSVG.ConnectorPosition || (GraphTableSVG.ConnectorPosition = {}));
     function ToConnectorPosition(str) {
@@ -63,15 +88,33 @@ var GraphTableSVG;
     GraphTableSVG.VerticalAnchorPropertyName = "--vertical-anchor";
     var VerticalAnchor;
     (function (VerticalAnchor) {
+        /**
+         * 上を表します。
+         */
         VerticalAnchor.Top = "top";
+        /**
+         * 真ん中を表します。
+         */
         VerticalAnchor.Middle = "middle";
+        /**
+         * 底を表します。
+         */
         VerticalAnchor.Bottom = "bottom";
     })(VerticalAnchor = GraphTableSVG.VerticalAnchor || (GraphTableSVG.VerticalAnchor = {}));
     GraphTableSVG.HorizontalAnchorPropertyName = "--horizontal-anchor";
     var HorizontalAnchor;
     (function (HorizontalAnchor) {
+        /**
+         * 左を表します。
+         */
         HorizontalAnchor.Left = "left";
+        /**
+         * 中央を表します。
+         */
         HorizontalAnchor.Center = "center";
+        /**
+        * 右を表します。
+        */
         HorizontalAnchor.Right = "right";
     })(HorizontalAnchor = GraphTableSVG.HorizontalAnchor || (GraphTableSVG.HorizontalAnchor = {}));
     function parsePXString(item) {
@@ -96,8 +139,8 @@ var GraphTableSVG;
             this._beginVertex = null;
             this._endVertex = null;
             this._graph = null;
-            this.text = null;
-            this.svgGroup = GraphTableSVG.createGroup(className);
+            this._text = null;
+            this._svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.idCounter++).toString());
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "edge");
             var t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
@@ -112,6 +155,18 @@ var GraphTableSVG;
             this._endNode = _endNode;
             */
         }
+        get svgGroup() {
+            return this._svgGroup;
+        }
+        get text() {
+            return this._text;
+        }
+        set text(value) {
+            this._text = value;
+        }
+        /**
+        開始接点の接続位置を返します。
+        */
         get beginConnectorType() {
             var p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
             if (p == null) {
@@ -121,10 +176,16 @@ var GraphTableSVG;
                 return GraphTableSVG.ToConnectorPosition(p);
             }
         }
+        /**
+        開始接点の接続位置を設定します。
+        */
         set beginConnectorType(value) {
             this.svgGroup.setPropertyStyleValue(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
             //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
+        /**
+        終了接点の接続位置を返します。
+        */
         get endConnectorType() {
             var p = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
             if (p == null) {
@@ -134,12 +195,21 @@ var GraphTableSVG;
                 return GraphTableSVG.ToConnectorPosition(p);
             }
         }
+        /**
+        終了接点の接続位置を設定します。
+        */
         set endConnectorType(value) {
             this.svgGroup.setPropertyStyleValue(Edge.endConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
+        /**
+        開始接点を返します。
+        */
         get beginVertex() {
             return this._beginVertex;
         }
+        /**
+        開始接点を設定します。
+        */
         set beginVertex(value) {
             var prev = this._beginVertex;
             this._beginVertex = value;
@@ -153,15 +223,16 @@ var GraphTableSVG;
                 prev.removeOutcomingEdge(this);
             }
             this.update();
-            /*
-            if (this.graph != null) {
-                this.graph.update();
-            }
-            */
         }
+        /**
+        終了接点を返します。
+        */
         get endVertex() {
             return this._endVertex;
         }
+        /**
+        終了接点を設定します。
+        */
         set endVertex(value) {
             var prev = this._endVertex;
             this._endVertex = value;
@@ -176,27 +247,15 @@ var GraphTableSVG;
             }
             this.update();
         }
+        /**
+        所属しているグラフを返します。
+        */
         get graph() {
             return this._graph;
         }
-        /*
-        private set graph(value: Graph | null) {
-            var prev = this._graph;
-            this._graph = null;
-            if (prev != null) {
-                prev.remove(this);
-            }
-            this._graph = value;
-            if (this._graph != null) {
-                this._graph.add(this);
-            }
-        }
-        */
-        /*
-        public setGraph(value: Graph) {
-            this._graph = value;
-        }
-        */
+        /**
+         * この辺を廃棄します。廃棄した辺はグラフから取り除かれます。
+         */
         dispose() {
             this.beginVertex = null;
             this.endVertex = null;
@@ -206,9 +265,15 @@ var GraphTableSVG;
                 prev.remove(this);
             }
         }
+        /**
+        この辺が廃棄されているときTrueを返します。
+        */
         get isDisposed() {
             return this.graph == null;
         }
+        /**
+        開始位置のX座標を返します。
+        */
         get x1() {
             if (this.beginVertex != null && this.endVertex != null) {
                 var [x1, y1] = this.beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
@@ -218,6 +283,9 @@ var GraphTableSVG;
                 return 0;
             }
         }
+        /**
+        開始位置のY座標を返します。
+        */
         get y1() {
             if (this.beginVertex != null && this.endVertex != null) {
                 var [x1, y1] = this.beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
@@ -227,6 +295,9 @@ var GraphTableSVG;
                 return 0;
             }
         }
+        /**
+        終了位置のX座標を返します。
+        */
         get x2() {
             if (this.beginVertex != null && this.endVertex != null) {
                 var [x2, y2] = this.endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
@@ -236,6 +307,9 @@ var GraphTableSVG;
                 return 0;
             }
         }
+        /**
+        終了位置のY座標を返します。
+        */
         get y2() {
             if (this.beginVertex != null && this.endVertex != null) {
                 var [x2, y2] = this.endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
@@ -245,9 +319,15 @@ var GraphTableSVG;
                 return 0;
             }
         }
+        /**
+         * 再描画します。
+         */
         update() {
             return false;
         }
+        /**
+        ObjectIDを返します。
+        */
         get objectID() {
             var r = this.svgGroup.getAttribute(GraphTableSVG.Graph.objectIDName);
             if (r == null) {
@@ -268,6 +348,12 @@ var GraphTableSVG;
         */
         save() {
         }
+        /**
+         * Edgeを作成します。
+         * @param graph
+         * @param className
+         * @param lineType
+         */
         static create(graph, className = null, lineType = null) {
             var g = GraphTableSVG.createGroup(className);
             var textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();
@@ -341,12 +427,25 @@ var GraphTableSVG;
             box.appendChild(this.svgGroup);
             this._svgGroup.setAttribute(Graph.typeName, "graph");
         }
+        updateVertices() {
+            this._vertices.forEach(function (x) { x.update(); });
+        }
+        updateEdges() {
+            this._edges.forEach(function (x) { x.update(); });
+        }
+        update() {
+            this.updateVertices();
+            this.updateEdges();
+        }
         /**
         Vertexインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
         */
         get defaultVertexClass() {
             return this.svgGroup.getPropertyStyleValue(Graph.defaultVertexClass);
         }
+        /**
+        Vertexインスタンスの生成時のクラス名を設定します。
+        */
         set defaultVertexClass(value) {
             this.svgGroup.setPropertyStyleValue(Graph.defaultVertexClass, value);
         }
@@ -356,22 +455,60 @@ var GraphTableSVG;
         get defaultEdgeClass() {
             return this.svgGroup.getPropertyStyleValue(Graph.defaultEdgeClass);
         }
+        /**
+        Edgeインスタンスの生成時のクラス名を設定します。
+        */
         set defaultEdgeClass(value) {
             this.svgGroup.setPropertyStyleValue(Graph.defaultEdgeClass, value);
         }
-        //public arrangementFunction: (Graph) => void | null = null;
+        /**
+        根を返します。
+        */
+        get rootVertex() {
+            if (this.roots.length == 0) {
+                return null;
+            }
+            else {
+                return this.roots[0];
+            }
+        }
+        /**
+        根を設定します。
+        */
+        set rootVertex(value) {
+            this._roots = [];
+            if (value != null) {
+                this.roots.push(value);
+            }
+        }
+        /**
+        根の配列を返します。
+        */
         get roots() {
             return this._roots;
         }
+        /**
+        グラフを表すSVGGElementを返します。
+        */
         get svgGroup() {
             return this._svgGroup;
         }
+        /**
+        グラフの頂点を全て返します。
+        */
         get vertices() {
             return this._vertices;
         }
+        /**
+        グラフの辺を全て返します。
+        */
         get edges() {
             return this._edges;
         }
+        /**
+         * 頂点もしくは辺をグラフに追加します。
+         * @param item
+         */
         add(item) {
             if (item instanceof GraphTableSVG.Vertex) {
                 var i = this._vertices.indexOf(item);
@@ -394,6 +531,10 @@ var GraphTableSVG;
                 }
             }
         }
+        /**
+         * 頂点もしくは辺を削除します。
+         * @param item
+         */
         remove(item) {
             if (item instanceof GraphTableSVG.Vertex) {
                 var p = this.vertices.indexOf(item);
@@ -413,24 +554,6 @@ var GraphTableSVG;
             }
         }
         /*
-        relocation(): void {
-            this.arrangementFunction(this);
-        }
-        resize() : void {
-
-        }
-        */
-        updateVertices() {
-            this._vertices.forEach(function (x) { x.update(); });
-        }
-        updateEdges() {
-            this._edges.forEach(function (x) { x.update(); });
-        }
-        update() {
-            this.updateVertices();
-            this.updateEdges();
-        }
-        /*
         clear(svg: HTMLElement) {
             this._nodes.forEach(function (x) { x.setGraph(null) });
             this._edges.forEach(function (x) { x.setGraph(null) });
@@ -443,36 +566,35 @@ var GraphTableSVG;
                 svg.removeChild(this.svgGroup);
             }
         }
-        /*
-        public static create(svg: HTMLElement): Graph {
-            //var g = GraphTableSVG.createGroup();
-            var graph = new Graph();
-            //graph.svgGroup = g;
-        }
-        */
+        /**
+         * グラフの領域を表すRectangleを返します。位置の基準はグラフが追加されているNodeです。
+         */
         getRegion() {
             var rects = this.vertices.map((v) => v.region);
             var rect = GraphTableSVG.Rectangle.merge(rects);
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
-            //rect.x += this.svgGroup.getX();
-            //rect.y += this.svgGroup.getY();
             return rect;
         }
-        getObjectBySVGID(id) {
+        /**
+         * ObjectIDから頂点もしくは辺を返します。
+         * @param id
+         */
+        getObjectByObjectID(id) {
             for (var i = 0; i < this.vertices.length; i++) {
-                if (this.vertices[i].containsSVGID(id)) {
+                if (this.vertices[i].containsObjectID(id)) {
                     return this.vertices[i];
                 }
             }
             return null;
         }
-        /*
-        private _connect(node1: Vertex, edge: Edge, node2: Vertex) {
-            edge.beginVertex = node1;
-            edge.endVertex = node2;
-            this.add(edge);
-        }
-        */
+        /**
+         * 与えられた二つの頂点と辺を接続します。
+         * @param node1
+         * @param edge
+         * @param node2
+         * @param outcomingInsertIndex
+         * @param incomingInsertIndex
+         */
         connect(node1, edge, node2, outcomingInsertIndex = node1.outcomingEdges.length, incomingInsertIndex = node2.incomingEdges.length) {
             //this._connect(node1, edge, node2);
             node1.insertOutcomingEdge(edge, outcomingInsertIndex);
@@ -495,6 +617,11 @@ var GraphTableSVG;
             //node1.outcomingEdges.splice(insertIndex, 0, edge);
             //node2.incomingEdges.push(edge);
         }
+        /**
+         * 与えられたNodeOrderに従って与えられた頂点を根とした部分木の整列された頂点配列を返します。
+         * @param order
+         * @param node
+         */
         getOrderedVertices(order, node = null) {
             var r = [];
             if (node == null) {
@@ -525,20 +652,6 @@ var GraphTableSVG;
             }
             return r;
         }
-        get rootVertex() {
-            if (this.roots.length == 0) {
-                return null;
-            }
-            else {
-                return this.roots[0];
-            }
-        }
-        set rootVertex(value) {
-            this._roots = [];
-            if (value != null) {
-                this.roots.push(value);
-            }
-        }
         save() {
             var id = 0;
             //this.nodes.forEach((v) => v.objectID = id++);
@@ -546,12 +659,47 @@ var GraphTableSVG;
             var ids = this.vertices.map((v) => v.objectID);
             this.svgGroup.setAttribute("node", JSON.stringify(ids));
         }
+        static setXY(text, rect, vAnchor, hAnchor) {
+            var x = rect.x;
+            var y = rect.y;
+            text.setAttribute('x', x.toString());
+            text.setAttribute('y', y.toString());
+            var b2 = text.getBBox();
+            var dy = b2.y - y;
+            var dx = b2.x - x;
+            y -= dy;
+            if (vAnchor == GraphTableSVG.VerticalAnchor.Middle) {
+                y += (rect.height - b2.height) / 2;
+            }
+            else if (vAnchor == GraphTableSVG.VerticalAnchor.Bottom) {
+                y += rect.height - b2.height;
+            }
+            x -= dx;
+            if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
+                x += (rect.width - b2.width) / 2;
+            }
+            else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
+                x += rect.width - b2.width;
+            }
+            text.setAttribute('y', y.toString());
+            text.setAttribute('x', x.toString());
+        }
+        static IsDescendantOfBody(node) {
+            var parent = node.parentNode;
+            if (parent == null) {
+                return false;
+            }
+            else if (parent == document.body) {
+                return true;
+            }
+            else {
+                return Graph.IsDescendantOfBody(parent);
+            }
+        }
     }
     Graph.idCounter = 0;
     Graph.defaultVertexClass = "--default-vertex-class";
     Graph.defaultEdgeClass = "--default-edge-class";
-    //public static defaultVertexClassName: string = "data-default-vertex-class";
-    //public static defaultEdgeClassName: string = "data-default-edge-class";
     Graph.objectIDName = "data-objectID";
     Graph.typeName = "data-type";
     GraphTableSVG.Graph = Graph;
@@ -672,42 +820,72 @@ var GraphTableSVG;
 var GraphTableSVG;
 (function (GraphTableSVG) {
     class EdgeText {
-        //private isReverse: boolean = false;
-        get x() {
-            return this.svg.getX();
+        constructor(graph, edge, text) {
+            this._svgText = GraphTableSVG.createText();
+            this.svgText.textContent = text;
+            edge.svgGroup.appendChild(this.svgText);
+            this._edge = edge;
+            edge.text = this;
         }
+        /**
+        テキスト要素を返します。
+        */
+        get svgText() {
+            return this._svgText;
+        }
+        /**
+        所属している辺を返します。
+        */
+        get edge() {
+            return this._edge;
+        }
+        //private isReverse: boolean = false;
+        /**
+        テキストのX座標を返します。
+        */
+        get x() {
+            return this.svgText.getX();
+        }
+        /**
+        テキストのY座標を返します。
+        */
         get y() {
-            return this.svg.getY();
+            return this.svgText.getY();
         }
         getCenterPosition() {
-            var x = (this.parentEdge.x1 + this.parentEdge.x2) / 2;
-            var y = (this.parentEdge.y1 + this.parentEdge.y2) / 2;
+            var x = (this.edge.x1 + this.edge.x2) / 2;
+            var y = (this.edge.y1 + this.edge.y2) / 2;
             return [x, y];
         }
-        static create(graph, edge, text) {
+        /*
+        public static create(graph: Graph, edge: Edge, text: string): EdgeText {
             var p = new EdgeText();
-            p.svg = GraphTableSVG.createText();
-            p.svg.textContent = text;
-            edge.svgGroup.appendChild(p.svg);
+            p._svgText = createText();
+            p.svgText.textContent = text;
+            edge.svgGroup.appendChild(p.svgText);
             p.parentEdge = edge;
             edge.text = p;
             return p;
         }
+        */
+        /**
+         * 再描画します。
+         */
         update() {
             var [x, y] = this.getCenterPosition();
-            this.svg.setX(x);
-            this.svg.setY(y);
-            var [x1, y1] = [this.parentEdge.x1, this.parentEdge.y1];
-            var [x2, y2] = [this.parentEdge.x2, this.parentEdge.y2];
+            this.svgText.setX(x);
+            this.svgText.setY(y);
+            var [x1, y1] = [this.edge.x1, this.edge.y1];
+            var [x2, y2] = [this.edge.x2, this.edge.y2];
             var rad = Math.atan2(y2 - y1, x2 - x1);
             var rar = rad * (180 / Math.PI);
             if (rar > 90) {
                 rar = rar - 180;
-                if (this.svg.textContent != null) {
-                    this.svg.textContent = EdgeText.reverse(this.svg.textContent);
+                if (this.svgText.textContent != null) {
+                    this.svgText.textContent = EdgeText.reverse(this.svgText.textContent);
                 }
             }
-            this.svg.setAttribute('transform', `rotate(${rar}, ${this.svg.getX()}, ${this.svg.getY()})`);
+            this.svgText.setAttribute('transform', `rotate(${rar}, ${this.svgText.getX()}, ${this.svgText.getY()})`);
         }
         static reverse(str) {
             var rv = [];
@@ -722,15 +900,6 @@ var GraphTableSVG;
 var GraphTableSVG;
 (function (GraphTableSVG) {
     class Vertex {
-        /*
-        public set objectID(value: number | null) {
-            if (value == null) {
-                this.svgGroup.setAttribute("objectID", "");
-            } else {
-                this.svgGroup.setAttribute("objectID", value.toString());
-            }
-        }
-        */
         constructor(__graph, className = null, text) {
             this._graph = null;
             this._outcomingEdges = [];
@@ -753,16 +922,16 @@ var GraphTableSVG;
                         var hAnchor = this.svgGroup.getPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName);
                         if (hAnchor == null)
                             hAnchor = GraphTableSVG.HorizontalAnchor.Center;
-                        setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
+                        GraphTableSVG.Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
                     }
                 }
             };
-            this.svgGroup = GraphTableSVG.createGroup(className);
+            this._svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.idCounter++).toString());
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "vertex");
             this._graph = __graph;
             __graph.add(this);
-            this.svgText = GraphTableSVG.createText(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultTextClass));
+            this._svgText = GraphTableSVG.createText(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultTextClass));
             this.svgText.textContent = text;
             this.svgGroup.appendChild(this.svgText);
             this._observer = new MutationObserver(this.observerFunc);
@@ -779,12 +948,39 @@ var GraphTableSVG;
             this.parent.svgGroup.appendChild(this.svgGroup);
             */
         }
+        /**
+        所属しているグラフを返します。
+        */
+        get graph() {
+            return this._graph;
+        }
+        /**
+        このVertexのグループを返します。
+        */
+        get svgGroup() {
+            return this._svgGroup;
+        }
+        /**
+        このVertexのテキストを返します。
+        */
+        get svgText() {
+            return this._svgText;
+        }
+        /**
+        入辺配列を返します。
+        */
         get outcomingEdges() {
             return this._outcomingEdges;
         }
+        /**
+        出辺配列を返します。
+        */
         get incomingEdges() {
             return this._incomingEdges;
         }
+        /**
+        テキストの取るべき領域を返します。
+        */
         get innerRectangle() {
             var rect = new GraphTableSVG.Rectangle();
             rect.width = 0;
@@ -794,22 +990,14 @@ var GraphTableSVG;
             return rect;
             //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
+        /**
+        このVertexがBodyの子孫であるとき、Trueを返します。
+        */
         get isLocated() {
-            return IsDescendantOfBody(this.svgGroup);
+            return GraphTableSVG.Graph.IsDescendantOfBody(this.svgGroup);
         }
-        get graph() {
-            return this._graph;
-        }
-        /*
-        public setGraph(value: Graph) {
-            if (value == null && this._graph != null) {
-                this._graph.svgGroup.removeChild(this.svgGroup);
-            }
-            this._graph = value;
-            if (this.graph != null) {
-                //this.svgGroup.id = `${this.graph.name}_${this.id}_group`;
-            }
-        }
+        /**
+        このVertexのObjectIDを返します。
         */
         get objectID() {
             var r = this.svgGroup.getAttribute(GraphTableSVG.Graph.objectIDName);
@@ -820,6 +1008,9 @@ var GraphTableSVG;
                 return r;
             }
         }
+        /**
+        このVertexのX座標を返します。
+        */
         get x() {
             return this.svgGroup.getX();
         }
@@ -833,6 +1024,9 @@ var GraphTableSVG;
             }
             */
         }
+        /**
+        このVertexのY座標を返します。
+        */
         get y() {
             return this.svgGroup.getY();
         }
@@ -840,21 +1034,31 @@ var GraphTableSVG;
             if (this.svgGroup.getY() != value) {
                 this.svgGroup.setY(value);
             }
-            /*
-            if (this.graph != null) {
-                this.graph.update();
-            }
-            */
         }
+        /**
+        このVertexの幅を返します。
+        */
         get width() {
             return 0;
         }
+        /**
+        このVertexの高さを返します。
+        */
         get height() {
             return 0;
         }
+        /**
+         * 接続部分のXY座標を返します。
+         * @param type
+         * @param x
+         * @param y
+         */
         getLocation(type, x, y) {
             return [this.x, this.y];
         }
+        /**
+        再描画します。
+        */
         update() {
             return false;
         }
@@ -862,6 +1066,9 @@ var GraphTableSVG;
             this.incomingEdges.forEach((v) => v.update());
             this.outcomingEdges.forEach((v) => v.update());
         }
+        /**
+        このVertexの領域を返します。
+        */
         get region() {
             var p = new GraphTableSVG.Rectangle();
             p.x = this.x - (this.width / 2);
@@ -870,22 +1077,28 @@ var GraphTableSVG;
             p.height = this.height;
             return p;
         }
-        containsSVGID(id) {
+        /**
+         * 与えられたObjectIDがこのVertexの中に含まれているときTrueを返します。
+         * @param id
+         */
+        containsObjectID(id) {
             return this.svgGroup.getAttribute(GraphTableSVG.Graph.objectIDName) == id;
         }
+        /**
+        Vertexの輪郭を象っているインスタンスを返します。
+        */
         get surface() {
             return null;
         }
+        /**
+         * 親Vertex配列を返します。
+         */
         getParents() {
-            if (this.graph == null) {
-                throw new Error();
-            }
-            else {
-                return this.graph.edges.filter((v) => {
-                    return v.endVertex == this;
-                }).map((v) => v.beginVertex);
-            }
+            return this.incomingEdges.filter((v) => v.beginVertex != null).map((v) => v.beginVertex);
         }
+        /**
+        親との間の辺を返します。
+        */
         get parentEdge() {
             if (this.incomingEdges.length == 0) {
                 return null;
@@ -894,6 +1107,9 @@ var GraphTableSVG;
                 return this.incomingEdges[0];
             }
         }
+        /**
+        このVertexの親を返します。
+        */
         get parent() {
             if (this.parentEdge == null) {
                 return null;
@@ -902,25 +1118,28 @@ var GraphTableSVG;
                 return this.parentEdge.beginVertex;
             }
         }
-        get isRoot() {
+        /**
+        このVertexに親がいないときTrueを返します。
+        */
+        get isNoParent() {
             return this.parent == null;
         }
+        /**
+        出辺配列を返します。
+        */
         get children() {
             return this.outcomingEdges;
         }
+        /**
+        このVertexが葉のときTrueを返します。
+        */
         get isLeaf() {
             return this.outcomingEdges.length == 0;
         }
-        /*
-        successor(order: NodeOrder): Vertex | null {
-            if (order == NodeOrder.Preorder) {
-
-            } else {
-                return null;
-            }
-        }
+        /**
+        このVertexの根を返します。
         */
-        get root() {
+        get firstNoParent() {
             var p = this;
             var parent = p.parent;
             while (parent != null) {
@@ -929,19 +1148,28 @@ var GraphTableSVG;
             }
             return p;
         }
-        get index() {
-            if (this.isRoot && this.graph != null) {
+        /*
+        get index(): number {
+            if (this.isNoParent && this.graph != null) {
                 return this.graph.roots.indexOf(this);
-            }
-            else {
+            } else {
                 return -1;
             }
         }
+        */
         save() {
             var p = this.outcomingEdges.map((v) => v.x1);
             var out = JSON.stringify(p);
             this.svgGroup.setAttribute("outcomingEdges", out);
         }
+        /**
+         * Vertexインスタンスを生成します。
+         * @param graph
+         * @param className
+         * @param defaultSurfaceType
+         *   "circle"ならばSVGCircleElement <br>
+         *   "rectangle"ならばSVGRectangleElement
+         */
         static create(graph, className = null, defaultSurfaceType = "circle") {
             var g = GraphTableSVG.createGroup(className);
             className = className != null ? className : graph.defaultVertexClass;
@@ -959,6 +1187,11 @@ var GraphTableSVG;
             }
             return p;
         }
+        /**
+         * 出辺を挿入します。
+         * @param edge
+         * @param insertIndex
+         */
         insertOutcomingEdge(edge, insertIndex) {
             var p = this.outcomingEdges.indexOf(edge);
             if (p != -1) {
@@ -969,6 +1202,10 @@ var GraphTableSVG;
                 edge.beginVertex = this;
             }
         }
+        /**
+         * 出辺を削除します。
+         * @param edge
+         */
         removeOutcomingEdge(edge) {
             var p = this.outcomingEdges.indexOf(edge);
             if (p != null) {
@@ -976,6 +1213,11 @@ var GraphTableSVG;
                 edge.beginVertex = null;
             }
         }
+        /**
+         * 入辺を挿入します。
+         * @param edge
+         * @param insertIndex
+         */
         insertIncomingEdge(edge, insertIndex) {
             var p = this.incomingEdges.indexOf(edge);
             if (p != -1) {
@@ -986,6 +1228,10 @@ var GraphTableSVG;
                 edge.endVertex = this;
             }
         }
+        /**
+         * 入辺を削除します。
+         * @param edge
+         */
         removeIncomingEdge(edge) {
             var p = this.incomingEdges.indexOf(edge);
             if (p != null) {
@@ -993,6 +1239,9 @@ var GraphTableSVG;
                 edge.endVertex = null;
             }
         }
+        /**
+         * この頂点を廃棄します。廃棄された頂点はグラフから取り除かれます。
+         */
         dispose() {
             while (this.incomingEdges.length > 0) {
                 this.removeIncomingEdge(this.incomingEdges[0]);
@@ -1006,6 +1255,9 @@ var GraphTableSVG;
                 prev.remove(this);
             }
         }
+        /**
+        この頂点が廃棄されていたらTrueを返します。
+        */
         get isDisposed() {
             return this.graph == null;
         }
@@ -1019,18 +1271,39 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    /**
+     * 輪郭が円の頂点です。
+     */
     class CircleVertex extends GraphTableSVG.Vertex {
+        /**
+         *
+         * @param ___graph
+         * @param className
+         * @param text
+         */
         constructor(__graph, className = null, text = "") {
             super(__graph, className, text);
-            this.svgCircle = GraphTableSVG.createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue(GraphTableSVG.Vertex.defaultSurfaceClass));
+            this._svgCircle = GraphTableSVG.createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue(GraphTableSVG.Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
         }
+        get svgCircle() {
+            return this._svgCircle;
+        }
+        /**
+        頂点の幅を返します。
+        */
         get width() {
             return this.svgCircle.r.baseVal.value * 2;
         }
+        /**
+        頂点の高さを返します。
+        */
         get height() {
             return this.svgCircle.r.baseVal.value * 2;
         }
+        /**
+        テキストの領域を返します。
+        */
         get innerRectangle() {
             var r = this.svgCircle.r.baseVal.value;
             var rect = new GraphTableSVG.Rectangle();
@@ -1041,9 +1314,18 @@ var GraphTableSVG;
             return rect;
             //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
+        /**
+        頂点の半径を返します。
+        */
         get radius() {
             return this.svgCircle.r.baseVal.value;
         }
+        /**
+         * 接続部分の座標を返します。
+         * @param type
+         * @param x
+         * @param y
+         */
         getLocation(type, x, y) {
             var r = (Math.sqrt(2) / 2) * this.radius;
             switch (type) {
@@ -1068,6 +1350,9 @@ var GraphTableSVG;
                     return this.getLocation(autoType, x, y);
             }
         }
+        /**
+        頂点の輪郭を返します。
+        */
         get surface() {
             return this.svgCircle;
         }
@@ -1132,20 +1417,35 @@ var GraphTableSVG;
         }
     }
     GraphTableSVG.CircleVertex = CircleVertex;
+    /**
+     * 輪郭が四角形の頂点です。
+     */
     class RectangleVertex extends GraphTableSVG.Vertex {
         constructor(__graph, className = null, text = "") {
             super(__graph, className, text);
-            this.svgRectangle = GraphTableSVG.createRectangle(this.svgGroup.getActiveStyle().tryGetPropertyValue(GraphTableSVG.Vertex.defaultSurfaceClass));
+            this._svgRectangle = GraphTableSVG.createRectangle(this.svgGroup.getActiveStyle().tryGetPropertyValue(GraphTableSVG.Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
             this.svgRectangle.x.baseVal.value = -this.width / 2;
             this.svgRectangle.y.baseVal.value = -this.height / 2;
         }
+        get svgRectangle() {
+            return this._svgRectangle;
+        }
+        /**
+        頂点の幅を返します。
+        */
         get width() {
             return this.svgRectangle.width.baseVal.value;
         }
+        /**
+        頂点の高さを返します。
+        */
         get height() {
             return this.svgRectangle.height.baseVal.value;
         }
+        /**
+        テキストの領域を返します。
+        */
         get innerRectangle() {
             var rect = new GraphTableSVG.Rectangle();
             rect.width = this.width;
@@ -1156,6 +1456,12 @@ var GraphTableSVG;
             return rect;
             //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
+        /**
+         * 接続部分の座標を返します。
+         * @param type
+         * @param x
+         * @param y
+         */
         getLocation(type, x, y) {
             var wr = this.width / 2;
             var hr = this.height / 2;
@@ -1300,7 +1606,7 @@ var GraphTableSVG;
             var diffX = _x - x;
             var diffY = _y - y;
             this.addOffset(diffX, diffY);
-            this.graph.updateEdges();
+            //this.graph.updateEdges();
         }
         setRootLocation(_x, _y) {
             var x = this.root.x;
@@ -1308,7 +1614,7 @@ var GraphTableSVG;
             var diffX = _x - x;
             var diffY = _y - y;
             this.addOffset(diffX, diffY);
-            this.graph.updateEdges();
+            //this.graph.updateEdges();
         }
     }
     GraphTableSVG.VirtualTree = VirtualTree;
@@ -1320,6 +1626,12 @@ var GraphTableSVG;
             this.observerFunc = (x) => {
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
+                    console.log(p.attributeName);
+                }
+            };
+            this.textObserverFunc = (x) => {
+                for (var i = 0; i < x.length; i++) {
+                    var p = x[i];
                     for (var i = 0; i < p.addedNodes.length; i++) {
                         var item = p.addedNodes.item(i);
                         if (item.nodeName == "#text") {
@@ -1328,17 +1640,17 @@ var GraphTableSVG;
                     }
                 }
             };
-            this.svgGroup = GraphTableSVG.createGroup();
-            this.parent = parent;
+            this._svgGroup = GraphTableSVG.createGroup();
+            this._parent = parent;
             this.parent.svgGroup.insertBefore(this.svgGroup, this.parent.svgGroup.firstChild);
             if (cellClass != null)
                 this.svgGroup.setAttribute("class", cellClass);
             //this.padding = new Padding();
             this.cellX = _px;
             this.cellY = _py;
-            this.masterID = this.ID;
-            this.svgBackground = GraphTableSVG.createRectangle(this.defaultBackgroundClass);
-            this.svgText = GraphTableSVG.createText(this.defaultTextClass);
+            this._masterID = this.ID;
+            this._svgBackground = GraphTableSVG.createRectangle(this.defaultBackgroundClass);
+            this._svgText = GraphTableSVG.createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
             this.svgGroup.appendChild(this.svgText);
             /*
@@ -1356,87 +1668,183 @@ var GraphTableSVG;
             this.parent.svgGroup.appendChild(this.leftLine);
             this.parent.svgGroup.appendChild(this.rightLine);
             this.parent.svgGroup.appendChild(this.bottomLine);
-            this._observer = new MutationObserver(this.observerFunc);
+            this._textObservaer = new MutationObserver(this.textObserverFunc);
             var option = { childList: true };
-            this._observer.observe(this.svgText, option);
+            this._textObservaer.observe(this.svgText, option);
+            this._observaer = new MutationObserver(this.textObserverFunc);
+            var option = { attributes: true };
+            this._observaer.observe(this.svgGroup, option);
             /*
             this.verticalAnchor = VerticalAnchor.Middle;
             this.horizontalAnchor = HorizontalAnchor.Left;
             */
         }
-        //rect: SVGRectElement;
-        //private _horizontalAnchor: HorizontalAnchor;
+        get masterID() {
+            return this._masterID;
+        }
+        /**
+        セルの上にある枠を返します
+        */
+        get upLine() {
+            return this._upLine;
+        }
+        /**
+        セルの上にある枠を設定します
+        */
+        set upLine(line) {
+            this._upLine = line;
+        }
+        /**
+        セルの左にある枠を返します
+        */
+        get leftLine() {
+            return this._leftLine;
+        }
+        /**
+        セルの左にある枠を設定します
+        */
+        set leftLine(line) {
+            this._leftLine = line;
+        }
+        /**
+        セルの右にある枠を返します
+        */
+        get rightLine() {
+            return this._rightLine;
+        }
+        /**
+        セルの右にある枠を設定します
+        */
+        set rightLine(line) {
+            this._rightLine = line;
+        }
+        /**
+        セルの下にある枠を返します
+        */
+        get bottomLine() {
+            return this._bottomLine;
+        }
+        /**
+        セルの下にある枠を設定します
+        */
+        set bottomLine(line) {
+            this._bottomLine = line;
+        }
+        /**
+        所属しているTableを返します。
+        */
+        get parent() {
+            return this._parent;
+        }
+        /**
+        セルの背景を表現しているSVGRectElementを返します。
+        */
+        get svgBackground() {
+            return this._svgBackground;
+        }
+        /**
+        セルのテキストを表現しているSVGTextElementを返します。
+        */
+        get svgText() {
+            return this._svgText;
+        }
+        /**
+        セルを表しているSVGGElementを返します。
+        */
+        get svgGroup() {
+            return this._svgGroup;
+        }
+        /**
+        テキストとセル間の左のパディング値を返します。
+        */
         get paddingLeft() {
             return GraphTableSVG.parsePXString(this.svgGroup.getPropertyStyleValue("padding-left"));
         }
+        /**
+        テキストとセル間の右のパディング値を返します。
+        */
         get paddingRight() {
             return GraphTableSVG.parsePXString(this.svgGroup.getPropertyStyleValue("padding-right"));
         }
+        /**
+        テキストとセル間の上のパディング値を返します。
+        */
         get paddingTop() {
             return GraphTableSVG.parsePXString(this.svgGroup.getPropertyStyleValue("padding-top"));
         }
+        /**
+        テキストとセル間の下のパディング値を返します。
+        */
         get paddingBottom() {
             return GraphTableSVG.parsePXString(this.svgGroup.getPropertyStyleValue("padding-bottom"));
         }
+        /**
+        テキストの水平方向の配置設定を返します。
+        */
         get horizontalAnchor() {
-            //return this.svgGroup.getActiveStyle().getHorizontalAnchor();
             return this.svgGroup.getPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName);
         }
+        /**
+        テキストの水平方向の配置設定を設定します。
+        */
         set horizontalAnchor(value) {
             this.svgGroup.setPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName, value);
             //this.svgGroup.getActiveStyle().setHorizontalAnchor(value)
             this.relocation();
         }
-        get cellX() {
-            return Number(this.svgGroup.getAttribute("cellX"));
-        }
-        set cellX(value) {
-            this.svgGroup.setAttribute("cellX", value.toString());
-        }
-        get cellY() {
-            return Number(this.svgGroup.getAttribute("cellY"));
-        }
-        set cellY(value) {
-            this.svgGroup.setAttribute("cellY", value.toString());
-        }
+        /**
+        テキストの垂直方向の配置設定を返します。
+        */
         get verticalAnchor() {
             return this.svgGroup.getPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName);
         }
+        /**
+        テキストの垂直方向の配置設定を設定します。
+        */
         set verticalAnchor(value) {
             this.svgGroup.setPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName, value);
             this.relocation();
         }
-        get upLine() {
-            return this._upLine;
+        /**
+        単位セルを基準にした自身のX座標を返します。
+        */
+        get cellX() {
+            return Number(this.svgGroup.getAttribute("cellX"));
         }
-        set upLine(line) {
-            this._upLine = line;
+        /**
+        単位セルを基準にした自身のX座標を設定します。
+        */
+        set cellX(value) {
+            this.svgGroup.setAttribute("cellX", value.toString());
         }
-        get leftLine() {
-            return this._leftLine;
+        /**
+        単位セルを基準にした自身のY座標を返します。
+        */
+        get cellY() {
+            return Number(this.svgGroup.getAttribute("cellY"));
         }
-        set leftLine(line) {
-            this._leftLine = line;
+        /**
+        単位セルを基準にした自身のY座標を設定します。
+        */
+        set cellY(value) {
+            this.svgGroup.setAttribute("cellY", value.toString());
         }
-        get rightLine() {
-            return this._rightLine;
-        }
-        set rightLine(line) {
-            this._rightLine = line;
-        }
-        get bottomLine() {
-            return this._bottomLine;
-        }
-        set bottomLine(line) {
-            this._bottomLine = line;
-        }
+        /**
+        SVGTextElement生成時に設定するクラス名を返します。
+        */
         get defaultTextClass() {
             var r = this.svgGroup.getPropertyStyleValue(Cell.defaultTextClass);
             return r;
         }
+        /**
+        SVGBackElement生成時に設定するクラス名を返します。
+        */
         get defaultBackgroundClass() {
             return this.svgGroup.getPropertyStyleValue(Cell.defaultBackgroundClassName);
         }
+        /**
+        未定義
+        */
         get logicalWidth() {
             if (this.isMaster) {
                 var w = 0;
@@ -1451,6 +1859,9 @@ var GraphTableSVG;
                 return 0;
             }
         }
+        /**
+        未定義
+        */
         get logicalHeight() {
             if (this.isMaster) {
                 var h = 0;
@@ -1465,9 +1876,15 @@ var GraphTableSVG;
                 return 0;
             }
         }
+        /**
+        CellがDocumentのDOMに所属しているかどうかを返します。
+        */
         get isLocated() {
-            return IsDescendantOfBody(this.svgGroup);
+            return GraphTableSVG.Graph.IsDescendantOfBody(this.svgGroup);
         }
+        /**
+        セルのテキストの領域が取るべき幅を返します。
+        */
         get textBoxWidth() {
             if (this.isLocated) {
                 return this.svgText.getBBox().width + GraphTableSVG.parsePXString(this.svgGroup.style.paddingLeft) + GraphTableSVG.parsePXString(this.svgGroup.style.paddingRight);
@@ -1476,6 +1893,9 @@ var GraphTableSVG;
                 return 0;
             }
         }
+        /**
+        セルのテキストの領域が取るべき高さを返します。
+        */
         get textBoxHeight() {
             if (this.isLocated) {
                 return this.svgText.getBBox().height + GraphTableSVG.parsePXString(this.svgGroup.style.paddingTop) + GraphTableSVG.parsePXString(this.svgGroup.style.paddingBottom);
@@ -1484,6 +1904,9 @@ var GraphTableSVG;
                 return 0;
             }
         }
+        /**
+         *セルのサイズを再計算します。
+         */
         resize() {
             if (this.width < this.textBoxWidth) {
                 this.width = this.textBoxWidth;
@@ -1492,8 +1915,11 @@ var GraphTableSVG;
                 this.height = this.textBoxHeight;
             }
         }
+        /**
+         *セルの位置を再計算します。
+         */
         relocation() {
-            if (!IsDescendantOfBody(this.svgGroup))
+            if (!GraphTableSVG.Graph.IsDescendantOfBody(this.svgGroup))
                 return;
             this.upLine.x1.baseVal.value = this.x;
             this.upLine.x2.baseVal.value = this.x + this.width;
@@ -1519,7 +1945,7 @@ var GraphTableSVG;
             innerRect.y = this.paddingTop;
             innerRect.height = this.height - this.paddingTop - this.paddingBottom;
             innerRect.width = this.width - this.paddingLeft - this.paddingRight;
-            setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+            GraphTableSVG.Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
         }
         get isMaster() {
             return this.ID == this.masterID;
@@ -1527,21 +1953,39 @@ var GraphTableSVG;
         get isSlave() {
             return !this.isMaster;
         }
+        /**
+        セルのIDを返します。
+        */
         get ID() {
             return this.cellX + (this.cellY * this.parent.width);
         }
+        /**
+        上にあるセルを返します。
+        */
         get upCell() {
             return this.cellY != 0 ? this.parent.cells[this.cellY - 1][this.cellX] : null;
         }
+        /**
+        左にあるセルを返します。
+        */
         get leftCell() {
             return this.cellX != 0 ? this.parent.cells[this.cellY][this.cellX - 1] : null;
         }
+        /**
+        右にあるセルを返します。
+        */
         get rightCell() {
             return this.cellX + 1 != this.parent.width ? this.parent.cells[this.cellY][this.cellX + 1] : null;
         }
+        /**
+        下にあるセルを返します。
+        */
         get bottomCell() {
             return this.cellY + 1 != this.parent.height ? this.parent.cells[this.cellY + 1][this.cellX] : null;
         }
+        /**
+        未定義
+        */
         get upperGroupCells() {
             if (this.isMaster) {
                 var w = [];
@@ -1556,6 +2000,9 @@ var GraphTableSVG;
                 return [];
             }
         }
+        /**
+        未定義
+        */
         get leftGroupCells() {
             if (this.isMaster) {
                 var w = [];
@@ -1570,6 +2017,9 @@ var GraphTableSVG;
                 return [];
             }
         }
+        /**
+        未定義
+        */
         get leftBottomGroupCell() {
             if (this.isMaster) {
                 return this.parent.cells[this.cellY + this.logicalHeight - 1][this.cellX];
@@ -1578,6 +2028,9 @@ var GraphTableSVG;
                 return null;
             }
         }
+        /**
+        未定義
+        */
         get rightUpGroupCell() {
             if (this.isMaster) {
                 return this.parent.cells[this.cellY][this.cellX + this.logicalWidth - 1];
@@ -1586,6 +2039,9 @@ var GraphTableSVG;
                 return null;
             }
         }
+        /**
+        未定義
+        */
         get bottomGroupCells() {
             if (this.isMaster) {
                 var w = [];
@@ -1600,6 +2056,9 @@ var GraphTableSVG;
                 return [];
             }
         }
+        /**
+        未定義
+        */
         get rightGroupCells() {
             if (this.isMaster) {
                 var w = [];
@@ -1630,30 +2089,57 @@ var GraphTableSVG;
             }
         }
         */
+        /**
+        セルのX座標を返します。
+        */
         get x() {
             return this.svgGroup.getX();
         }
+        /**
+        セルのX座標を設定します。
+        */
         set x(value) {
             this.svgGroup.setX(value);
         }
+        /**
+        セルのY座標を返します。
+        */
         get y() {
             return this.svgGroup.getY();
         }
+        /**
+        セルのY座標を設定します。
+        */
         set y(value) {
             this.svgGroup.setY(value);
         }
+        /**
+        セルの幅を返します。
+        */
         get width() {
             return this.svgBackground.width.baseVal.value;
         }
+        /**
+        セルの幅を設定します。
+        */
         set width(value) {
             this.svgBackground.width.baseVal.value = value;
         }
+        /**
+        セルの高さを返します。
+        */
         get height() {
             return this.svgBackground.height.baseVal.value;
         }
+        /**
+        セルの高さを設定します。
+        */
         set height(value) {
             this.svgBackground.height.baseVal.value = value;
         }
+        /**
+        セルの領域を表すRectangleを返します。領域の基準は属しているテーブルのSVGGElementです。
+        */
         get region() {
             var p = new GraphTableSVG.Rectangle(this.x, this.y, this.width, this.height);
             return p;
@@ -1780,54 +2266,39 @@ SVGTextElement.prototype.setY = function (value) {
     }
     p.y.baseVal.getItem(0).value = value;
 };
-function IsDescendantOfBody(node) {
-    var parent = node.parentNode;
-    if (parent == null) {
-        return false;
-    }
-    else if (parent == document.body) {
-        return true;
-    }
-    else {
-        return IsDescendantOfBody(parent);
-    }
-}
-function setXY(text, rect, vAnchor, hAnchor) {
-    var x = rect.x;
-    var y = rect.y;
-    text.setAttribute('x', x.toString());
-    text.setAttribute('y', y.toString());
-    var b2 = text.getBBox();
-    var dy = b2.y - y;
-    var dx = b2.x - x;
-    y -= dy;
-    if (vAnchor == GraphTableSVG.VerticalAnchor.Middle) {
-        y += (rect.height - b2.height) / 2;
-    }
-    else if (vAnchor == GraphTableSVG.VerticalAnchor.Bottom) {
-        y += rect.height - b2.height;
-    }
-    x -= dx;
-    if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
-        x += (rect.width - b2.width) / 2;
-    }
-    else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
-        x += rect.width - b2.width;
-    }
-    text.setAttribute('y', y.toString());
-    text.setAttribute('x', x.toString());
-}
 var GraphTableSVG;
 (function (GraphTableSVG) {
     class Row {
         constructor(_table, _y) {
             this.table = _table;
-            this.y = _y;
+            this._cellY = _y;
+        }
+        /**
+        列の単位セルのY座標を返します。
+        */
+        get cellY() {
+            return this._cellY;
+        }
+        /**
+         * 行内のセルのサイズを再計算します。
+         */
+        resize() {
+            this.height = this.getMaxHeight();
+        }
+        /**
+         * 行内のセルのY座標を設定します。
+         *
+         */
+        setY(posY) {
+            for (var x = 0; x < this.table.width; x++) {
+                var cell = this.table.cells[this.cellY][x];
+                cell.y = posY;
+            }
         }
         getMaxHeight() {
             var height = 0;
             for (var x = 0; x < this.table.width; x++) {
-                var cell = this.table.cells[this.y][x];
+                var cell = this.table.cells[this.cellY][x];
                 if (height < cell.textBoxHeight)
                     height = cell.textBoxHeight;
                 if (height < cell.height)
@@ -1835,27 +2306,18 @@ var GraphTableSVG;
             }
             return height;
         }
-        setHeight(height) {
-            for (var x = 0; x < this.table.width; x++) {
-                var cell = this.table.cells[this.y][x];
-                cell.height = height;
-            }
-        }
-        resize() {
-            this.setHeight(this.getMaxHeight());
-        }
-        setY(posY) {
-            for (var x = 0; x < this.table.width; x++) {
-                var cell = this.table.cells[this.y][x];
-                cell.y = posY;
-            }
-        }
+        /**
+        行の高さを返します。
+        */
         get height() {
             return this.getMaxHeight();
         }
+        /**
+        行の高さを設定します。
+        */
         set height(value) {
             for (var x = 0; x < this.table.width; x++) {
-                var cell = this.table.cells[this.y][x];
+                var cell = this.table.cells[this.cellY][x];
                 cell.height = value;
             }
         }
@@ -1864,12 +2326,18 @@ var GraphTableSVG;
     class Column {
         constructor(_table, _x) {
             this.table = _table;
-            this.x = _x;
+            this._cellX = _x;
+        }
+        /**
+        列の単位セルのX座標を返します。
+        */
+        get cellX() {
+            return this._cellX;
         }
         getMaxWidth() {
             var width = 0;
             for (var y = 0; y < this.table.height; y++) {
-                var cell = this.table.cells[y][this.x];
+                var cell = this.table.cells[y][this.cellX];
                 if (width < cell.textBoxWidth)
                     width = cell.textBoxWidth;
                 if (width < cell.width)
@@ -1877,26 +2345,36 @@ var GraphTableSVG;
             }
             return width;
         }
-        setWidth(width) {
-            for (var y = 0; y < this.table.height; y++) {
-                var cell = this.table.cells[y][this.x];
-                cell.width = width;
-            }
-        }
+        /**
+         * 列内のセルのサイズを再計算します。
+         */
         resize() {
-            this.setWidth(this.getMaxWidth());
+            this.width = (this.getMaxWidth());
         }
+        /**
+         * 列のX座標を設定します。
+         * @param posX
+         */
         setX(posX) {
             for (var y = 0; y < this.table.height; y++) {
-                var cell = this.table.cells[y][this.x];
+                var cell = this.table.cells[y][this.cellX];
                 cell.x = posX;
             }
         }
+        /**
+        列の幅を返します。
+        */
         get width() {
             return this.getMaxWidth();
         }
+        /**
+        列の幅を設定します。
+        */
         set width(value) {
-            this.setWidth(value);
+            for (var y = 0; y < this.table.height; y++) {
+                var cell = this.table.cells[y][this.cellX];
+                cell.width = value;
+            }
         }
     }
     GraphTableSVG.Column = Column;
@@ -2056,6 +2534,9 @@ End Sub
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    /**
+    テーブルを表します。
+    */
     class Table {
         constructor(svgbox, width, height, _tableClassName = null) {
             this._cells = [];
@@ -2065,7 +2546,7 @@ var GraphTableSVG;
                     //console.log(p.attributeName);
                 }
             };
-            this.svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             svgbox.appendChild(this.svgGroup);
             //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             //this.svgGroup.appendChild(this.svgLineGroup);
@@ -2078,70 +2559,6 @@ var GraphTableSVG;
             var option = { characterData: true, attributes: true, subtree: true };
             this._observer.observe(this.svgGroup, option);
             this.resize();
-        }
-        //private _textClassName: string | null = "table_text";
-        get defaultCellClass() {
-            return this.svgGroup.getPropertyStyleValue(Table.defaultCellClass);
-        }
-        get defaultBorderClass() {
-            return this.svgGroup.getPropertyStyleValue(Table.defaultBorderClass);
-        }
-        get cells() {
-            return this._cells;
-        }
-        get width() {
-            if (this.cells.length == 0) {
-                return 0;
-            }
-            else {
-                return this.cells[0].length;
-            }
-        }
-        get height() {
-            return this.cells.length;
-        }
-        get rows() {
-            var arr = new Array(0);
-            for (var y = 0; y < this.height; y++) {
-                arr.push(new GraphTableSVG.Row(this, y));
-            }
-            return arr;
-        }
-        get columns() {
-            var arr = new Array(0);
-            for (var x = 0; x < this.width; x++) {
-                arr.push(new GraphTableSVG.Column(this, x));
-            }
-            return arr;
-        }
-        get cellArray() {
-            var arr = new Array(0);
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    arr.push(this.cells[y][x]);
-                }
-            }
-            return arr;
-        }
-        get borders() {
-            var arr = new Array(0);
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    if (arr.indexOf(this.cells[y][x].upLine) == -1) {
-                        arr.push(this.cells[y][x].upLine);
-                    }
-                    if (arr.indexOf(this.cells[y][x].leftLine) == -1) {
-                        arr.push(this.cells[y][x].leftLine);
-                    }
-                    if (arr.indexOf(this.cells[y][x].rightLine) == -1) {
-                        arr.push(this.cells[y][x].rightLine);
-                    }
-                    if (arr.indexOf(this.cells[y][x].bottomLine) == -1) {
-                        arr.push(this.cells[y][x].bottomLine);
-                    }
-                }
-            }
-            return arr;
         }
         insertRowFunction(i, width = this.width) {
             var cell = [];
@@ -2160,38 +2577,8 @@ var GraphTableSVG;
                 this.updateBorder(this.cells[i][x]);
             }
         }
-        insertRow(i) {
-            this.insertRowFunction(i, this.width == 0 ? 1 : this.width);
-        }
-        appendRow() {
-            this.insertRow(this.height);
-        }
         createCell() {
             return new GraphTableSVG.Cell(this, 0, 0, this.defaultCellClass, this.defaultBorderClass);
-        }
-        insertColumn(i) {
-            if (this.height > 0) {
-                for (var y = 0; y < this.height; y++) {
-                    var cell = this.createCell();
-                    this.cells[y].splice(i, 0, cell);
-                }
-                if (i < this.height) {
-                    for (var y = 0; y < this.height; y++) {
-                        this.cells[y][i].leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
-                        this.svgGroup.appendChild(this.cells[y][i].leftLine);
-                    }
-                }
-                this.renumbering();
-                for (var y = 0; y < this.height; y++) {
-                    this.updateBorder(this.cells[y][i]);
-                }
-            }
-            else {
-                this.insertRow(0);
-            }
-        }
-        appendColumn() {
-            this.insertColumn(this.width);
         }
         updateBorder(cell) {
             if (cell.leftCell != null && cell.leftCell.rightLine != cell.leftLine) {
@@ -2227,6 +2614,151 @@ var GraphTableSVG;
             }
             */
         }
+        //private _textClassName: string | null = "table_text";
+        /**
+        セルのインスタント生成時にこの値がインスタントのクラス名にセットされます。
+        */
+        get defaultCellClass() {
+            return this.svgGroup.getPropertyStyleValue(Table.defaultCellClass);
+        }
+        /**
+        ボーダーのインスタント生成時にこの値がインスタントのクラス名にセットされます。
+        */
+        get defaultBorderClass() {
+            return this.svgGroup.getPropertyStyleValue(Table.defaultBorderClass);
+        }
+        /**
+        各セルを格納している二次元ジャグ配列を返します。
+        */
+        get cells() {
+            return this._cells;
+        }
+        /**
+        テーブルを表現しているSVGGElementを返します。
+        */
+        get svgGroup() {
+            return this._svgGroup;
+        }
+        /**
+        テーブルの行方向の単位セルの数を返します。
+        */
+        get width() {
+            if (this.cells.length == 0) {
+                return 0;
+            }
+            else {
+                return this.cells[0].length;
+            }
+        }
+        /**
+        テーブルの列方向の単位セルの数を返します。
+        */
+        get height() {
+            return this.cells.length;
+        }
+        /**
+        各行を表す配列を返します。読み取り専用です。
+        */
+        get rows() {
+            var arr = new Array(0);
+            for (var y = 0; y < this.height; y++) {
+                arr.push(new GraphTableSVG.Row(this, y));
+            }
+            return arr;
+        }
+        /**
+        各列を表す配列を返します。読み取り専用です。
+        */
+        get columns() {
+            var arr = new Array(0);
+            for (var x = 0; x < this.width; x++) {
+                arr.push(new GraphTableSVG.Column(this, x));
+            }
+            return arr;
+        }
+        /**
+        各セルを表す配列を返します。テーブルの左上のセルから右に向かってインデックスが割り当てられ、
+        テーブル右下のセルが配列の最後の値となります。読み取り専用です。
+        */
+        get cellArray() {
+            var arr = new Array(0);
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    arr.push(this.cells[y][x]);
+                }
+            }
+            return arr;
+        }
+        /**
+        各ボーダーを表す配列を返します。
+        ボーダーの順番は未定義です。
+        読み取り専用です。
+        */
+        get borders() {
+            var arr = new Array(0);
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
+                    if (arr.indexOf(this.cells[y][x].upLine) == -1) {
+                        arr.push(this.cells[y][x].upLine);
+                    }
+                    if (arr.indexOf(this.cells[y][x].leftLine) == -1) {
+                        arr.push(this.cells[y][x].leftLine);
+                    }
+                    if (arr.indexOf(this.cells[y][x].rightLine) == -1) {
+                        arr.push(this.cells[y][x].rightLine);
+                    }
+                    if (arr.indexOf(this.cells[y][x].bottomLine) == -1) {
+                        arr.push(this.cells[y][x].bottomLine);
+                    }
+                }
+            }
+            return arr;
+        }
+        /**
+        新しい行をi番目の行に挿入します
+        */
+        insertRow(i) {
+            this.insertRowFunction(i, this.width == 0 ? 1 : this.width);
+        }
+        /**
+        新しい行を行の最後に追加します。
+        */
+        appendRow() {
+            this.insertRow(this.height);
+        }
+        /**
+        新しい列をi番目の列に挿入します。
+        */
+        insertColumn(i) {
+            if (this.height > 0) {
+                for (var y = 0; y < this.height; y++) {
+                    var cell = this.createCell();
+                    this.cells[y].splice(i, 0, cell);
+                }
+                if (i < this.height) {
+                    for (var y = 0; y < this.height; y++) {
+                        this.cells[y][i].leftLine = GraphTableSVG.createLine(0, 0, 0, 0);
+                        this.svgGroup.appendChild(this.cells[y][i].leftLine);
+                    }
+                }
+                this.renumbering();
+                for (var y = 0; y < this.height; y++) {
+                    this.updateBorder(this.cells[y][i]);
+                }
+            }
+            else {
+                this.insertRow(0);
+            }
+        }
+        /**
+        新しい列を最後の列に追加します。
+        */
+        appendColumn() {
+            this.insertColumn(this.width);
+        }
+        /**
+        各セルのサイズを再計算します。
+        */
         resize() {
             var rows = this.rows;
             var columns = this.columns;
@@ -2235,26 +2767,34 @@ var GraphTableSVG;
             var height = 0;
             rows.forEach(function (x, i, arr) {
                 x.setY(height);
-                height += x.getMaxHeight();
+                height += x.height;
             });
             var width = 0;
             columns.forEach(function (x, i, arr) {
                 x.setX(width);
-                width += x.getMaxWidth();
+                width += x.width;
             });
             this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
         }
+        /**
+        所属しているSVGタグ上でのテーブルの領域を表すRectangleクラスを返します。
+        */
         getRegion() {
             var regions = this.cellArray.map((v) => v.region);
             var rect = GraphTableSVG.Rectangle.merge(regions);
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
             return rect;
         }
-        getCellFromID(id) {
+        /*
+        private getCellFromID(id: number): Cell {
             var y = Math.floor(id / this.height);
             var x = id % this.width;
             return this.cells[y][x];
         }
+        */
+        /**
+         * 現在のテーブルを表すVBAコードを返します。
+         */
         createVBAMainCode(slideName) {
             var fstLines = [];
             var lines = new Array(0);
@@ -2379,6 +2919,14 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    /**
+     * SVGLineElementを生成します。
+     * @param x
+     * @param y
+     * @param x2
+     * @param y2
+     * @param className
+     */
     function createLine(x, y, x2, y2, className = null) {
         var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line1.x1.baseVal.value = x;
@@ -2398,6 +2946,10 @@ var GraphTableSVG;
         return line1;
     }
     GraphTableSVG.createLine = createLine;
+    /**
+     * SVGTextElementを生成します。
+     * @param className
+     */
     function createText(className = null) {
         var _svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         //_svgText.style.textAnchor = "middle";
@@ -2413,6 +2965,10 @@ var GraphTableSVG;
         return _svgText;
     }
     GraphTableSVG.createText = createText;
+    /**
+     * SVGRectElementを生成します。
+     * @param className
+     */
     function createRectangle(className = null) {
         var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.width.baseVal.value = 30;
@@ -2435,6 +2991,10 @@ var GraphTableSVG;
         return rect;
     }
     GraphTableSVG.createRectangle = createRectangle;
+    /**
+     * SVGGElementを生成します。
+     * @param className
+     */
     function createGroup(className = null) {
         var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         if (className != null) {
@@ -2443,6 +3003,10 @@ var GraphTableSVG;
         return g;
     }
     GraphTableSVG.createGroup = createGroup;
+    /**
+     * Styleの設定を消去します。
+     * @param style
+     */
     function resetStyle(style) {
         style.stroke = null;
         style.strokeWidth = null;
@@ -2454,6 +3018,10 @@ var GraphTableSVG;
     var defaultRadiusName = "--default-radius";
     var defaultWidthName = "--default-width";
     var defaultHeightName = "--default-height";
+    /**
+     * SVGCircleElementを生成します。
+     * @param className
+     */
     function createCircle(className = null) {
         var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.r.baseVal.value = 30;
@@ -2479,6 +3047,9 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    /**
+     * 傾きや切片を計算できる線です。
+     */
     class VLine {
         constructor(x1, y1, x2, y2) {
             this.x1 = x1;
@@ -2573,6 +3144,9 @@ var GraphTableSVG;
         }
     }
     GraphTableSVG.VLine = VLine;
+    /**
+     * 四角形を表します。
+     */
     class Rectangle {
         constructor(x = 0, y = 0, width = 0, height = 0) {
             this.x = x;
@@ -2580,16 +3154,31 @@ var GraphTableSVG;
             this.width = width;
             this.height = height;
         }
+        /**
+        右端のX座標を返します。
+        */
         get right() {
             return this.x + this.width;
         }
+        /**
+        底のY座標を返します。
+        */
         get bottom() {
             return this.y + this.height;
         }
+        /**
+         * X座標とY座標に値を加えます。
+         * @param x
+         * @param y
+         */
         addOffset(x, y) {
             this.x += x;
             this.y += y;
         }
+        /**
+         * 引数の四角形を内包する最小の四角形を返します。
+         * @param rects
+         */
         static merge(rects) {
             var x1 = rects[0].x;
             var y1 = rects[0].y;

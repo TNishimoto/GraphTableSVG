@@ -5,10 +5,32 @@ module GraphTableSVG {
     export class Cell {
         private static readonly defaultBackgroundClassName: string = "--default-background-class";
         private static readonly defaultTextClass: string = "--default-text-class";
+
         private _observer: MutationObserver;
-        private observerFunc: MutationCallback = (x: MutationRecord[]) => {
+        private _observerFunc: MutationCallback = (x: MutationRecord[]) => {
             for (var i = 0; i < x.length; i++) {
                 var p = x[i];
+                if (p.attributeName == "style" || p.attributeName == "class") {
+                    this.localUpdate();
+                }
+                
+            }
+        };
+        
+
+
+        private _textObserver: MutationObserver;
+        private _textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
+            for (var i = 0; i < x.length; i++) {
+                var p = x[i];
+                /*
+                if (p.attributeName == "class") {
+                    var name = this.svgText.getAttribute("class");
+                    if (name != null) {
+                        resetStyle(this.svgText.style);
+                    }
+                }
+                */
                 for (var i = 0; i < p.addedNodes.length; i++) {
                     var item = p.addedNodes.item(i);
                     if (item.nodeName == "#text") {
@@ -34,7 +56,7 @@ module GraphTableSVG {
 
 
 
-            this._svgBackground = createRectangle(this.defaultBackgroundClass);
+            this._svgBackground = Cell.createCellRectangle(this.defaultBackgroundClass);
             this._svgText = createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
             this.svgGroup.appendChild(this.svgText);
@@ -60,10 +82,17 @@ module GraphTableSVG {
 
 
 
-            this._observer = new MutationObserver(this.observerFunc);
-            var option: MutationObserverInit = { childList: true };
-            this._observer.observe(this.svgText, option);
+            this._textObserver = new MutationObserver(this._textObserverFunc);
+            var option1: MutationObserverInit = { childList: true };
+            this._textObserver.observe(this.svgText, option1);
 
+
+            this._observer = new MutationObserver(this._observerFunc);
+            var option2: MutationObserverInit = { attributes : true};
+            this._observer.observe(this.svgGroup, option2);
+            
+
+            
             /*
             this.verticalAnchor = VerticalAnchor.Middle;
             this.horizontalAnchor = HorizontalAnchor.Left;
@@ -195,7 +224,7 @@ module GraphTableSVG {
         set horizontalAnchor(value: string | null) {
             this.svgGroup.setPropertyStyleValue(HorizontalAnchorPropertyName, value);
             //this.svgGroup.getActiveStyle().setHorizontalAnchor(value)
-            this.relocation();
+            //this.relocation();
         }
         /**
         テキストの垂直方向の配置設定を返します。
@@ -208,7 +237,7 @@ module GraphTableSVG {
         */
         set verticalAnchor(value: string | null) {
             this.svgGroup.setPropertyStyleValue(VerticalAnchorPropertyName, value);
-            this.relocation();
+            //this.relocation();
         }
 
         /**
@@ -323,6 +352,19 @@ module GraphTableSVG {
             }
         }
         /**
+         * 再描画します。
+         */
+        private localUpdate() {
+            var innerRect = new Rectangle();
+            innerRect.x = this.paddingLeft;
+            innerRect.y = this.paddingTop;
+            innerRect.height = this.height - this.paddingTop - this.paddingBottom;
+            innerRect.width = this.width - this.paddingLeft - this.paddingRight;
+
+            Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+
+        }
+        /**
          *セルの位置を再計算します。
          */
         public relocation() {
@@ -351,13 +393,7 @@ module GraphTableSVG {
             var text_x = 0;
             var text_y = 0;
 
-            var innerRect = new Rectangle();
-            innerRect.x = this.paddingLeft;
-            innerRect.y = this.paddingTop;
-            innerRect.height = this.height - this.paddingTop - this.paddingBottom;
-            innerRect.width = this.width - this.paddingLeft - this.paddingRight;
-            
-            Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+            this.localUpdate();
 
             
 
@@ -569,6 +605,16 @@ module GraphTableSVG {
         }
         */
 
-
+        private static createCellRectangle(className: string | null = null): SVGRectElement {
+            var rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.width.baseVal.value = 30;
+            rect.height.baseVal.value = 30;
+            if (className == null) {
+                rect.style.fill = "#ffffff";
+            } else {
+                return GraphTableSVG.createRectangle(className);
+            }
+            return rect;
+        }
     }
 }

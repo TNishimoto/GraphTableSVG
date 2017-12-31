@@ -48,11 +48,15 @@
         行の高さを設定します。
         */
         set height(value: number) {
+            var b = false;
             for (var x = 0; x < this.table.width; x++) {
                 var cell = this.table.cells[this.cellY][x];
-                cell.height = value;
+                if (cell.height != value) {
+                    cell.height = value;
+                    b = true;
+                }
             }
-
+            if(b)this.table.resize();
         }
     }
     export class Column {
@@ -106,11 +110,16 @@
         列の幅を設定します。
         */
         set width(value: number) {
+            var b = false;
             for (var y = 0; y < this.table.height; y++) {
                 var cell = this.table.cells[y][this.cellX];
-                cell.width = value;
+                if (cell.width != value) {
+                    cell.width = value;
+                    b = true;
+                }
             }
 
+            if(b)this.table.resize();
         }
     }
 }

@@ -74,6 +74,8 @@ module GraphTableSVG {
         }
         return rect;
     }
+    
+
     /**
      * SVGGElementを生成します。
      * @param className
@@ -125,6 +127,15 @@ module GraphTableSVG {
         
 
         return circle;
+    }
+
+    export function setClass(svg: SVGElement, className: string | null = null) {
+        if (className == null) {
+            svg.removeAttribute("class");
+        } else {
+            resetStyle(svg.style);
+            svg.setAttribute("class", className);
+        }
     }
 
     
