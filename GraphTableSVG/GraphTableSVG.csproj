@@ -26,6 +26,7 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="color.ts" />
     <TypeScriptCompile Include="enums.ts" />
     <TypeScriptCompile Include="graph\edge.ts" />
     <TypeScriptCompile Include="graph\graph.ts" />

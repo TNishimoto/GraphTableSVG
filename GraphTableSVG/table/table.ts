@@ -311,17 +311,19 @@ module GraphTableSVG {
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    var style = cell.svgBackground.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
-                    lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${style})`);
+                    var color = VBATranslateFunctions.colorToVBA(cell.svgBackground.getPropertyStyleValueWithDefault("fill", "gray"));
+                    //var style = cell.svgBackground.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
+                    lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${color})`);
                 }
             }
 
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    var fontSize = cell.svgText.style.fontSize != null ? parseInt(cell.svgText.style.fontSize) : "";
-                    var color = cell.svgText.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgText.style.fill) : "";
-                    lines.push(` Call EditCellFont(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${fontSize}, "${cell.svgText.style.fontFamily}", ${color})`);
+                    var fontSize = parseInt(cell.svgText.getPropertyStyleValueWithDefault("font-size", "12pt"));
+                    var color = VBATranslateFunctions.colorToVBA(cell.svgText.getPropertyStyleValueWithDefault("fill", "gray"));
+                    var fontFamily = VBATranslateFunctions.ToVBAFont(cell.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+                    lines.push(` Call EditCellFont(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${fontSize}, "${fontFamily}", ${color})`);
                 }
             }
             for (var y = 0; y < this.height; y++) {
@@ -333,19 +335,20 @@ module GraphTableSVG {
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    var upLineStyle = cell.upLine.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.upLine.style.fill) : "";
+                    var upLineStyle = VBATranslateFunctions.colorToVBA(cell.upLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                     var upLineStrokeWidth = cell.upLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.upLine.style.strokeWidth) : "";
                     var upLineVisibility = cell.upLine.style.visibility != null ? GraphTableSVG.visible(cell.upLine.style.visibility) : ""; 
 
                     lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${upLineStyle}, ${upLineStrokeWidth}, ${upLineVisibility})`);
-                    var leftLineStyle = cell.leftLine.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.leftLine.style.fill) : "";
+
+                    var leftLineStyle = VBATranslateFunctions.colorToVBA(cell.leftLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                     var leftLineStrokeWidth = cell.leftLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.leftLine.style.strokeWidth) : "";
                     var leftLineVisibility = cell.leftLine.style.visibility != null ? GraphTableSVG.visible(cell.leftLine.style.visibility) : ""; 
 
                     lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${leftLineStyle}, ${leftLineStrokeWidth}, ${leftLineVisibility})`);
                     if (x + 1 == this.width) {
-                        
-                        var rightLineStyle = cell.rightLine.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.rightLine.style.fill) : "";
+
+                        var rightLineStyle = VBATranslateFunctions.colorToVBA(cell.rightLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                         var rightLineStrokeWidth = cell.rightLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.rightLine.style.strokeWidth) : "";
                         var rightLineVisibility = cell.rightLine.style.visibility != null ? GraphTableSVG.visible(cell.rightLine.style.visibility) : ""; 
 
@@ -353,7 +356,7 @@ module GraphTableSVG {
                     }
 
                     if (y + 1 == this.height) {
-                        var bottomLineStyle = cell.bottomLine.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.bottomLine.style.fill) : "";
+                        var bottomLineStyle = VBATranslateFunctions.colorToVBA(cell.bottomLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                         var bottomLineStrokeWidth = cell.bottomLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.bottomLine.style.strokeWidth) : "";
                         var bottomLineVisibility = cell.bottomLine.style.visibility != null ? GraphTableSVG.visible(cell.bottomLine.style.visibility) : ""; 
 

@@ -70,6 +70,7 @@
     interface SVGElement {
         getActiveStyle(): CSSStyleDeclaration;
         getPropertyStyleValue(name: string): string | null;
+        getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
         setPropertyStyleValue(name: string, value: string | null): void;
     }
     SVGElement.prototype.getActiveStyle = function () {
@@ -81,7 +82,17 @@
             return getComputedStyle(p);
         }
     }
-    SVGElement.prototype.getPropertyStyleValue = function (name: string): string | null {
+SVGElement.prototype.getPropertyStyleValueWithDefault = function (name: string, defaultValue : string): string {
+    var item: SVGElement = this;
+
+    var p = item.getPropertyStyleValue(name);
+    if (p == null) {
+        return defaultValue; 
+    } else {
+        return p;
+    }
+}
+SVGElement.prototype.getPropertyStyleValue = function (name: string): string | null {
         var item: SVGElement = this;
 
         var p = item.style.getPropertyValue(name).trim();

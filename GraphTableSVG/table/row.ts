@@ -33,7 +33,7 @@
             var height = 0;
             for (var x = 0; x < this.table.width; x++) {
                 var cell = this.table.cells[this.cellY][x];
-                if (height < cell.textBoxHeight) height = cell.textBoxHeight;
+                if (height < cell.calculatedHeight) height = cell.calculatedHeight;
                 if (height < cell.height) height = cell.height;
             }
             return height;
@@ -78,7 +78,7 @@
             var width = 0;
             for (var y = 0; y < this.table.height; y++) {
                 var cell = this.table.cells[y][this.cellX];
-                if (width < cell.textBoxWidth) width = cell.textBoxWidth;
+                if (width < cell.calculatedWidth) width = cell.calculatedWidth;
                 if (width < cell.width) width = cell.width;
             }
             return width;

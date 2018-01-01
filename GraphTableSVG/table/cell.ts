@@ -99,6 +99,14 @@ module GraphTableSVG {
             */
 
         }
+        private get innerExtraPaddingLeft(): number {
+            var p = this.fontSize;
+            return p / 16;
+        }
+        private get innerExtraPaddingRight(): number{
+            var p = this.fontSize;
+            return p / 16;            
+        }
         private _masterID: number;
         public get masterID(): number {
             return this._masterID;
@@ -185,6 +193,11 @@ module GraphTableSVG {
         */
         public get svgGroup(): SVGGElement {
             return this._svgGroup;
+        }
+        get fontSize(): number {
+            var p = this.svgText.getPropertyStyleValueWithDefault("font-size", "24");
+            var p2 = parseInt(p);
+            return p2;
         }
         /**
         テキストとセル間の左のパディング値を返します。
@@ -320,19 +333,20 @@ module GraphTableSVG {
         }
 
         /**
-        セルのテキストの領域が取るべき幅を返します。
+        セルが取るべき幅を返します。
         */
-        get textBoxWidth(): number {
+        get calculatedWidth(): number {
             if (this.isLocated) {
-                return this.svgText.getBBox().width + parsePXString(this.svgGroup.style.paddingLeft) + parsePXString(this.svgGroup.style.paddingRight);
+                return this.svgText.getBBox().width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
+                    + parsePXString(this.svgGroup.style.paddingLeft) + parsePXString(this.svgGroup.style.paddingRight);
             } else {
                 return 0;
             }
         }
         /**
-        セルのテキストの領域が取るべき高さを返します。
+        セルが取るべき高さを返します。
         */
-        get textBoxHeight(): number {
+        get calculatedHeight(): number {
             if (this.isLocated) {
                 return this.svgText.getBBox().height + parsePXString(this.svgGroup.style.paddingTop) + parsePXString(this.svgGroup.style.paddingBottom);
             } else {
@@ -344,11 +358,11 @@ module GraphTableSVG {
          *セルのサイズを再計算します。
          */
         public resize() {
-            if (this.width < this.textBoxWidth) {
-                this.width = this.textBoxWidth;
+            if (this.width < this.calculatedWidth) {
+                this.width = this.calculatedWidth;
             }
-            if (this.height < this.textBoxHeight) {
-                this.height = this.textBoxHeight;
+            if (this.height < this.calculatedHeight) {
+                this.height = this.calculatedHeight;
             }
         }
         /**
@@ -356,10 +370,10 @@ module GraphTableSVG {
          */
         private localUpdate() {
             var innerRect = new Rectangle();
-            innerRect.x = this.paddingLeft;
+            innerRect.x = this.innerExtraPaddingLeft + this.paddingLeft;
             innerRect.y = this.paddingTop;
-            innerRect.height = this.height - this.paddingTop - this.paddingBottom;
-            innerRect.width = this.width - this.paddingLeft - this.paddingRight;
+            innerRect.height = this.height  - this.paddingTop - this.paddingBottom;
+            innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
 
             Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
 

@@ -1,7 +1,16 @@
 ﻿
 module GraphTableSVG {
     export class SVGToVBA {
-
+        public static create(items: (Graph | Table)[]) : string {
+            var s = "";
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                if (item instanceof Table) {
+                    s += SVGToVBA.createTable(item);
+                }
+            }
+            return s;
+        }
         public static createTable(table: Table): string {
             var lines = new Array(0);
             lines.push(`Sub createMyTable()`);
@@ -142,16 +151,18 @@ End Sub
         }
 
         public static colorToVBA(color: string): string {
+            color = Color.translateRGBCodeFromColorName(color);
             if (color.indexOf("rgb") != -1) {
                 return color.replace("rgb", "Array");
             } else {
-                if (color == "black") {
-                    return VBATranslateFunctions.colorToVBA("rgb(0,0,0)");
-                } else {
-                    return VBATranslateFunctions.colorToVBA("rgb(0,255,0)");
-                }
+                return "Array(0, 0, 0)";
             }
 
+        }
+        public static ToVBAFont(font: string): string {
+            font = font.replace(/"/g, "");
+            font = font.replace(/'/g, "");
+            return font;
         }
         /*
         public static shapeToVBA(shape: ShapeStyle, item: string) {
