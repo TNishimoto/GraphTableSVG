@@ -73,12 +73,11 @@
             if (str.substr(0, 3) == "rgb") {
                 return str;
             } else {
-                console.log(str);
                 if (str.length == 6) {
                     var r = str.substr(0, 2);
                     var g = str.substr(2, 2);
                     var b = str.substr(4, 2);
-                    return `rgb(${parseInt(r)}, ${parseInt(g)}, ${parseInt(b)})`;
+                    return `rgb(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)})`;
                 } else {
                     return `rgb(${80}, ${80}, ${80})`;
                 }
