@@ -1,3 +1,49 @@
+var Color;
+(function (Color) {
+    var color_name = new Array("aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred", "darksalmon", "darkseagreen", "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsboro", "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indianred", "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgreen", "lightgrey", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream", "mistyrose", "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow", "springgreen", "steelblue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen");
+    var color_dic;
+    //redの16進数の配列
+    var r_value = new Array("F0", "FA", "00", "7F", "F0", "F5", "FF", "00", "FF", "00", "8A", "A5", "DE", "5F", "7F", "D2", "FF", "64", "FF", "DC", "00", "00", "00", "B8", "A9", "00", "BD", "8B", "55", "FF", "99", "8B", "E9", "8F", "48", "2F", "00", "94", "FF", "00", "69", "1E", "B2", "FF", "22", "FF", "DC", "F8", "FF", "DA", "80", "00", "AD", "F0", "FF", "CD", "4B", "FF", "F0", "E6", "FF", "7C", "FF", "AD", "F0", "E0", "FA", "90", "D3", "FF", "FF", "20", "87", "77", "B0", "FF", "00", "32", "FA", "FF", "80", "66", "00", "BA", "93", "3C", "7B", "00", "48", "C7", "19", "F5", "FF", "FF", "FF", "00", "FD", "80", "6B", "FF", "FF", "DA", "EE", "98", "AF", "DB", "FF", "FF", "CD", "FF", "DD", "B0", "80", "FF", "BC", "41", "8B", "FA", "F4", "2E", "FF", "A0", "C0", "87", "6A", "70", "FF", "00", "46", "D2", "00", "D8", "FF", "40", "EE", "F5", "FF", "F5", "FF", "9A");
+    //greenの16進数の配列
+    var g_value = new Array("F8", "EB", "FF", "FF", "FF", "F5", "E4", "00", "EB", "00", "2B", "2A", "B8", "9E", "FF", "69", "7F", "95", "F8", "14", "FF", "00", "8B", "86", "A9", "64", "B7", "00", "6B", "8C", "32", "00", "96", "BC", "3D", "4F", "CE", "00", "14", "BF", "69", "90", "22", "FA", "8B", "00", "DC", "F8", "D7", "A5", "80", "80", "FF", "FF", "69", "5C", "00", "FF", "E6", "E6", "F0", "FC", "FA", "D8", "80", "FF", "FA", "EE", "D3", "B6", "A0", "B2", "CE", "88", "C4", "FF", "FF", "CD", "F0", "00", "00", "CD", "00", "55", "70", "B3", "68", "FA", "D1", "15", "19", "FF", "E4", "E4", "DE", "00", "F5", "80", "8E", "A5", "45", "70", "E8", "FB", "EE", "70", "EF", "DA", "85", "C0", "A0", "E0", "00", "00", "8F", "69", "45", "80", "A4", "8B", "F5", "52", "C0", "CE", "5A", "80", "FA", "FF", "82", "B4", "80", "BF", "63", "E0", "82", "DE", "FF", "F5", "FF", "CD");
+    //blueの16進数の配列
+    var b_value = new Array("FF", "D7", "FF", "D4", "FF", "DC", "C4", "00", "CD", "FF", "E2", "2A", "87", "A0", "00", "1E", "50", "ED", "DC", "3C", "FF", "8B", "8B", "0B", "A9", "00", "6B", "8B", "2F", "00", "CC", "00", "7A", "8F", "8B", "4F", "D1", "D3", "93", "FF", "69", "FF", "22", "F0", "22", "FF", "DC", "FF", "00", "20", "80", "00", "2F", "F0", "B4", "5C", "82", "F0", "8C", "FA", "F5", "00", "CD", "E6", "80", "FF", "D2", "90", "D3", "C1", "7A", "AA", "FA", "99", "DE", "E0", "00", "32", "E6", "FF", "00", "AA", "CD", "D3", "DB", "71", "EE", "9A", "CC", "85", "70", "FA", "E1", "B5", "AD", "80", "E6", "00", "23", "00", "00", "D6", "AA", "98", "EE", "93", "D5", "B9", "3F", "CB", "DD", "E6", "80", "00", "8F", "E1", "13", "72", "60", "57", "EE", "2D", "C0", "EB", "CD", "90", "FA", "7F", "B4", "8C", "80", "D8", "47", "D0", "EE", "B3", "FF", "F5", "00", "32");
+    function translateHexCodeFromColorName(str) {
+        if (!color_dic) {
+            color_dic = {};
+            for (var i = 0; i < color_name.length; i++) {
+                color_dic[color_name[i]] = i;
+            }
+        }
+        if (str in color_dic) {
+            var i = color_dic[str];
+            return r_value[i] + g_value[i] + b_value[i];
+        }
+        else {
+            return str;
+        }
+    }
+    Color.translateHexCodeFromColorName = translateHexCodeFromColorName;
+    function translateRGBCodeFromColorName(str) {
+        str = translateHexCodeFromColorName(str);
+        if (str.substr(0, 3) == "rgb") {
+            return str;
+        }
+        else {
+            console.log(str);
+            if (str.length == 6) {
+                var r = str.substr(0, 2);
+                var g = str.substr(2, 2);
+                var b = str.substr(4, 2);
+                return `rgb(${parseInt(r)}, ${parseInt(g)}, ${parseInt(b)})`;
+            }
+            else {
+                return `rgb(${80}, ${80}, ${80})`;
+            }
+        }
+    }
+    Color.translateRGBCodeFromColorName = translateRGBCodeFromColorName;
+})(Color || (Color = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
     /**
@@ -1622,34 +1668,44 @@ var GraphTableSVG;
 var GraphTableSVG;
 (function (GraphTableSVG) {
     class Cell {
-        constructor(parent, _px, _py, cellClass = null, borderClass = null) {
-            this.observerFunc = (x) => {
-                for (var i = 0; i < x.length; i++) {
-                    var p = x[i];
-                    console.log(p.attributeName);
-                }
-            };
-            this.textObserverFunc = (x) => {
-                for (var i = 0; i < x.length; i++) {
-                    var p = x[i];
-                    for (var i = 0; i < p.addedNodes.length; i++) {
-                        var item = p.addedNodes.item(i);
-                        if (item.nodeName == "#text") {
-                            this.parent.resize();
+        /*
+        private _textObserver: MutationObserver;
+        private _textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
+            for (var i = 0; i < x.length; i++) {
+                var p = x[i];
+                for (var j = 0; j < p.addedNodes.length; j++) {
+                    var item = p.addedNodes.item(j);
+                    console.log(`${this.table.isDrawing} ${this.table.isAutoResized}`)
+                    console.log(this.svgText.textContent);
+
+                    if (item.nodeName == "#text") {
+                        if (!this.table.isDrawing && this.table.isAutoResized) {
+                            this.table.resize();
                         }
+                    }
+                }
+            }
+        };
+        */
+        constructor(parent, _px, _py, cellClass = null, borderClass = null) {
+            this._observerFunc = (x) => {
+                for (var i = 0; i < x.length; i++) {
+                    var p = x[i];
+                    if (p.attributeName == "style" || p.attributeName == "class") {
+                        this.localUpdate();
                     }
                 }
             };
             this._svgGroup = GraphTableSVG.createGroup();
-            this._parent = parent;
-            this.parent.svgGroup.insertBefore(this.svgGroup, this.parent.svgGroup.firstChild);
+            this._table = parent;
+            this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
             if (cellClass != null)
                 this.svgGroup.setAttribute("class", cellClass);
             //this.padding = new Padding();
             this.cellX = _px;
             this.cellY = _py;
             this._masterID = this.ID;
-            this._svgBackground = GraphTableSVG.createRectangle(this.defaultBackgroundClass);
+            this._svgBackground = Cell.createCellRectangle(this.defaultBackgroundClass);
             this._svgText = GraphTableSVG.createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
             this.svgGroup.appendChild(this.svgText);
@@ -1664,20 +1720,27 @@ var GraphTableSVG;
             this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
             this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
             this.bottomLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.parent.svgGroup.appendChild(this.upLine);
-            this.parent.svgGroup.appendChild(this.leftLine);
-            this.parent.svgGroup.appendChild(this.rightLine);
-            this.parent.svgGroup.appendChild(this.bottomLine);
-            this._textObservaer = new MutationObserver(this.textObserverFunc);
-            var option = { childList: true };
-            this._textObservaer.observe(this.svgText, option);
-            this._observaer = new MutationObserver(this.textObserverFunc);
-            var option = { attributes: true };
-            this._observaer.observe(this.svgGroup, option);
+            this.table.svgGroup.appendChild(this.upLine);
+            this.table.svgGroup.appendChild(this.leftLine);
+            this.table.svgGroup.appendChild(this.rightLine);
+            this.table.svgGroup.appendChild(this.bottomLine);
+            var option1 = { childList: true };
+            this.table.cellTextObserver.observe(this.svgText, option1);
+            this._observer = new MutationObserver(this._observerFunc);
+            var option2 = { attributes: true };
+            this._observer.observe(this.svgGroup, option2);
             /*
             this.verticalAnchor = VerticalAnchor.Middle;
             this.horizontalAnchor = HorizontalAnchor.Left;
             */
+        }
+        get innerExtraPaddingLeft() {
+            var p = this.fontSize;
+            return p / 16;
+        }
+        get innerExtraPaddingRight() {
+            var p = this.fontSize;
+            return p / 16;
         }
         get masterID() {
             return this._masterID;
@@ -1733,8 +1796,8 @@ var GraphTableSVG;
         /**
         所属しているTableを返します。
         */
-        get parent() {
-            return this._parent;
+        get table() {
+            return this._table;
         }
         /**
         セルの背景を表現しているSVGRectElementを返します。
@@ -1753,6 +1816,11 @@ var GraphTableSVG;
         */
         get svgGroup() {
             return this._svgGroup;
+        }
+        get fontSize() {
+            var p = this.svgText.getPropertyStyleValueWithDefault("font-size", "24");
+            var p2 = parseInt(p);
+            return p2;
         }
         /**
         テキストとセル間の左のパディング値を返します。
@@ -1788,9 +1856,8 @@ var GraphTableSVG;
         テキストの水平方向の配置設定を設定します。
         */
         set horizontalAnchor(value) {
-            this.svgGroup.setPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName, value);
-            //this.svgGroup.getActiveStyle().setHorizontalAnchor(value)
-            this.relocation();
+            if (this.horizontalAnchor != value)
+                this.svgGroup.setPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName, value);
         }
         /**
         テキストの垂直方向の配置設定を返します。
@@ -1802,8 +1869,8 @@ var GraphTableSVG;
         テキストの垂直方向の配置設定を設定します。
         */
         set verticalAnchor(value) {
-            this.svgGroup.setPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName, value);
-            this.relocation();
+            if (this.verticalAnchor != value)
+                this.svgGroup.setPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName, value);
         }
         /**
         単位セルを基準にした自身のX座標を返します。
@@ -1815,7 +1882,8 @@ var GraphTableSVG;
         単位セルを基準にした自身のX座標を設定します。
         */
         set cellX(value) {
-            this.svgGroup.setAttribute("cellX", value.toString());
+            if (this.cellX != value)
+                this.svgGroup.setAttribute("cellX", value.toString());
         }
         /**
         単位セルを基準にした自身のY座標を返します。
@@ -1827,7 +1895,8 @@ var GraphTableSVG;
         単位セルを基準にした自身のY座標を設定します。
         */
         set cellY(value) {
-            this.svgGroup.setAttribute("cellY", value.toString());
+            if (this.cellY != value)
+                this.svgGroup.setAttribute("cellY", value.toString());
         }
         /**
         SVGTextElement生成時に設定するクラス名を返します。
@@ -1883,20 +1952,21 @@ var GraphTableSVG;
             return GraphTableSVG.Graph.IsDescendantOfBody(this.svgGroup);
         }
         /**
-        セルのテキストの領域が取るべき幅を返します。
+        セルが取るべき幅を返します。
         */
-        get textBoxWidth() {
+        get calculatedWidth() {
             if (this.isLocated) {
-                return this.svgText.getBBox().width + GraphTableSVG.parsePXString(this.svgGroup.style.paddingLeft) + GraphTableSVG.parsePXString(this.svgGroup.style.paddingRight);
+                return this.svgText.getBBox().width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
+                    + GraphTableSVG.parsePXString(this.svgGroup.style.paddingLeft) + GraphTableSVG.parsePXString(this.svgGroup.style.paddingRight);
             }
             else {
                 return 0;
             }
         }
         /**
-        セルのテキストの領域が取るべき高さを返します。
+        セルが取るべき高さを返します。
         */
-        get textBoxHeight() {
+        get calculatedHeight() {
             if (this.isLocated) {
                 return this.svgText.getBBox().height + GraphTableSVG.parsePXString(this.svgGroup.style.paddingTop) + GraphTableSVG.parsePXString(this.svgGroup.style.paddingBottom);
             }
@@ -1908,12 +1978,23 @@ var GraphTableSVG;
          *セルのサイズを再計算します。
          */
         resize() {
-            if (this.width < this.textBoxWidth) {
-                this.width = this.textBoxWidth;
+            if (this.width < this.calculatedWidth) {
+                this.width = this.calculatedWidth;
             }
-            if (this.height < this.textBoxHeight) {
-                this.height = this.textBoxHeight;
+            if (this.height < this.calculatedHeight) {
+                this.height = this.calculatedHeight;
             }
+        }
+        /**
+         * 再描画します。
+         */
+        localUpdate() {
+            var innerRect = new GraphTableSVG.Rectangle();
+            innerRect.x = this.innerExtraPaddingLeft + this.paddingLeft;
+            innerRect.y = this.paddingTop;
+            innerRect.height = this.height - this.paddingTop - this.paddingBottom;
+            innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
+            GraphTableSVG.Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
         }
         /**
          *セルの位置を再計算します。
@@ -1940,12 +2021,7 @@ var GraphTableSVG;
             //this.textSVG.x.baseVal.getItem(0).value = 0;
             var text_x = 0;
             var text_y = 0;
-            var innerRect = new GraphTableSVG.Rectangle();
-            innerRect.x = this.paddingLeft;
-            innerRect.y = this.paddingTop;
-            innerRect.height = this.height - this.paddingTop - this.paddingBottom;
-            innerRect.width = this.width - this.paddingLeft - this.paddingRight;
-            GraphTableSVG.Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+            this.localUpdate();
         }
         get isMaster() {
             return this.ID == this.masterID;
@@ -1957,31 +2033,31 @@ var GraphTableSVG;
         セルのIDを返します。
         */
         get ID() {
-            return this.cellX + (this.cellY * this.parent.width);
+            return this.cellX + (this.cellY * this.table.width);
         }
         /**
         上にあるセルを返します。
         */
         get upCell() {
-            return this.cellY != 0 ? this.parent.cells[this.cellY - 1][this.cellX] : null;
+            return this.cellY != 0 ? this.table.cells[this.cellY - 1][this.cellX] : null;
         }
         /**
         左にあるセルを返します。
         */
         get leftCell() {
-            return this.cellX != 0 ? this.parent.cells[this.cellY][this.cellX - 1] : null;
+            return this.cellX != 0 ? this.table.cells[this.cellY][this.cellX - 1] : null;
         }
         /**
         右にあるセルを返します。
         */
         get rightCell() {
-            return this.cellX + 1 != this.parent.width ? this.parent.cells[this.cellY][this.cellX + 1] : null;
+            return this.cellX + 1 != this.table.width ? this.table.cells[this.cellY][this.cellX + 1] : null;
         }
         /**
         下にあるセルを返します。
         */
         get bottomCell() {
-            return this.cellY + 1 != this.parent.height ? this.parent.cells[this.cellY + 1][this.cellX] : null;
+            return this.cellY + 1 != this.table.height ? this.table.cells[this.cellY + 1][this.cellX] : null;
         }
         /**
         未定義
@@ -2022,7 +2098,7 @@ var GraphTableSVG;
         */
         get leftBottomGroupCell() {
             if (this.isMaster) {
-                return this.parent.cells[this.cellY + this.logicalHeight - 1][this.cellX];
+                return this.table.cells[this.cellY + this.logicalHeight - 1][this.cellX];
             }
             else {
                 return null;
@@ -2033,7 +2109,7 @@ var GraphTableSVG;
         */
         get rightUpGroupCell() {
             if (this.isMaster) {
-                return this.parent.cells[this.cellY][this.cellX + this.logicalWidth - 1];
+                return this.table.cells[this.cellY][this.cellX + this.logicalWidth - 1];
             }
             else {
                 return null;
@@ -2144,22 +2220,40 @@ var GraphTableSVG;
             var p = new GraphTableSVG.Rectangle(this.x, this.y, this.width, this.height);
             return p;
         }
+        /*
+        get fill(): string {
+            return this.backRect.style.fill;
+        }
+        set fill(value : string) {
+            this.backRect.style.fill = value;
+        }
+        */
+        static createCellRectangle(className = null) {
+            var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.width.baseVal.value = 30;
+            rect.height.baseVal.value = 30;
+            if (className == null) {
+                rect.style.fill = "#ffffff";
+            }
+            else {
+                return GraphTableSVG.createRectangle(className);
+            }
+            return rect;
+        }
     }
     Cell.defaultBackgroundClassName = "--default-background-class";
     Cell.defaultTextClass = "--default-text-class";
     GraphTableSVG.Cell = Cell;
 })(GraphTableSVG || (GraphTableSVG = {}));
-SVGGElement.prototype.getX = function () {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "translate(0,0)");
+SVGGElement.prototype.getX = () => {
+    if (this.transform.baseVal.numberOfItems == 0) {
+        this.setAttribute('transform', "translate(0,0)");
     }
-    return p.transform.baseVal.getItem(0).matrix.e;
+    return this.transform.baseVal.getItem(0).matrix.e;
 };
-SVGGElement.prototype.setX = function (value) {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "translate(0,0)");
+SVGGElement.prototype.setX = (value) => {
+    if (this.transform.baseVal.numberOfItems == 0) {
+        this.setAttribute('transform', "translate(0,0)");
     }
     var a = this.transform.baseVal.getItem(0).matrix.a;
     var b = this.transform.baseVal.getItem(0).matrix.b;
@@ -2167,20 +2261,17 @@ SVGGElement.prototype.setX = function (value) {
     var d = this.transform.baseVal.getItem(0).matrix.d;
     var e = value;
     var f = this.transform.baseVal.getItem(0).matrix.f;
-    p.setAttribute('transform', `matrix(${a} ${b} ${c} ${d} ${e} ${f})`);
-    //p.transform.baseVal.getItem(0).matrix.e = value;
+    this.setAttribute('transform', `matrix(${a} ${b} ${c} ${d} ${e} ${f})`);
 };
-SVGGElement.prototype.getY = function () {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "translate(0,0)");
+SVGGElement.prototype.getY = () => {
+    if (this.transform.baseVal.numberOfItems == 0) {
+        this.setAttribute('transform', "translate(0,0)");
     }
     return this.transform.baseVal.getItem(0).matrix.f;
 };
-SVGGElement.prototype.setY = function (value) {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "translate(0,0)");
+SVGGElement.prototype.setY = (value) => {
+    if (this.transform.baseVal.numberOfItems == 0) {
+        this.setAttribute('transform', "translate(0,0)");
     }
     var a = this.transform.baseVal.getItem(0).matrix.a;
     var b = this.transform.baseVal.getItem(0).matrix.b;
@@ -2188,12 +2279,10 @@ SVGGElement.prototype.setY = function (value) {
     var d = this.transform.baseVal.getItem(0).matrix.d;
     var e = this.transform.baseVal.getItem(0).matrix.e;
     var f = value;
-    p.setAttribute('transform', `matrix(${a} ${b} ${c} ${d} ${e} ${f})`);
-    //this.transform.baseVal.getItem(0).matrix.f = value;
+    this.setAttribute('transform', `matrix(${a} ${b} ${c} ${d} ${e} ${f})`);
 };
-CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name) {
-    var p = this;
-    var r = p.getPropertyValue(name).trim();
+CSSStyleDeclaration.prototype.tryGetPropertyValue = (name) => {
+    var r = this.getPropertyValue(name).trim();
     if (r.length == 0) {
         return null;
     }
@@ -2201,26 +2290,34 @@ CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name) {
         return r;
     }
 };
-SVGElement.prototype.getActiveStyle = function () {
-    var p = this;
-    var r = p.getAttribute("class");
+SVGElement.prototype.getActiveStyle = () => {
+    //var p: SVGElement = this;
+    var r = this.getAttribute("class");
     if (r == null) {
-        return p.style;
+        return this.style;
     }
     else {
-        return getComputedStyle(p);
+        return getComputedStyle(this);
     }
 };
-SVGElement.prototype.getPropertyStyleValue = function (name) {
-    var item = this;
-    var p = item.style.getPropertyValue(name).trim();
+SVGElement.prototype.getPropertyStyleValueWithDefault = (name, defaultValue) => {
+    var p = this.getPropertyStyleValue(name);
+    if (p == null) {
+        return defaultValue;
+    }
+    else {
+        return p;
+    }
+};
+SVGElement.prototype.getPropertyStyleValue = (name) => {
+    var p = this.style.getPropertyValue(name).trim();
     if (p.length == 0) {
-        var r = item.getAttribute("class");
+        var r = this.getAttribute("class");
         if (r == null) {
             return null;
         }
         else {
-            var p2 = getComputedStyle(item).getPropertyValue(name).trim();
+            var p2 = getComputedStyle(this).getPropertyValue(name).trim();
             if (p2.length == 0) {
                 return null;
             }
@@ -2233,38 +2330,33 @@ SVGElement.prototype.getPropertyStyleValue = function (name) {
         return p;
     }
 };
-SVGElement.prototype.setPropertyStyleValue = function (name, value) {
-    var item = this;
-    item.style.setProperty(name, value);
+SVGElement.prototype.setPropertyStyleValue = (name, value) => {
+    this.style.setProperty(name, value);
 };
-SVGTextElement.prototype.getX = function () {
-    var p = this;
-    if (p.x.baseVal.numberOfItems == 0) {
-        p.setAttribute('x', "0");
+SVGTextElement.prototype.getX = () => {
+    if (this.x.baseVal.numberOfItems == 0) {
+        this.setAttribute('x', "0");
     }
-    return p.x.baseVal.getItem(0).value;
+    return this.x.baseVal.getItem(0).value;
 };
-SVGTextElement.prototype.setX = function (value) {
-    var p = this;
-    if (p.x.baseVal.numberOfItems == 0) {
-        p.setAttribute('x', "0");
+SVGTextElement.prototype.setX = (value) => {
+    if (this.x.baseVal.numberOfItems == 0) {
+        this.setAttribute('x', "0");
     }
     //p.setAttribute('x', value.toString());
-    p.x.baseVal.getItem(0).value = value;
+    this.x.baseVal.getItem(0).value = value;
 };
-SVGTextElement.prototype.getY = function () {
-    var p = this;
-    if (p.y.baseVal.numberOfItems == 0) {
-        p.setAttribute('y', "0");
+SVGTextElement.prototype.getY = () => {
+    if (this.y.baseVal.numberOfItems == 0) {
+        this.setAttribute('y', "0");
     }
-    return p.y.baseVal.getItem(0).value;
+    return this.y.baseVal.getItem(0).value;
 };
-SVGTextElement.prototype.setY = function (value) {
-    var p = this;
-    if (p.y.baseVal.numberOfItems == 0) {
-        p.setAttribute('y', "0");
+SVGTextElement.prototype.setY = (value) => {
+    if (this.y.baseVal.numberOfItems == 0) {
+        this.setAttribute('y', "0");
     }
-    p.y.baseVal.getItem(0).value = value;
+    this.y.baseVal.getItem(0).value = value;
 };
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -2299,8 +2391,8 @@ var GraphTableSVG;
             var height = 0;
             for (var x = 0; x < this.table.width; x++) {
                 var cell = this.table.cells[this.cellY][x];
-                if (height < cell.textBoxHeight)
-                    height = cell.textBoxHeight;
+                if (height < cell.calculatedHeight)
+                    height = cell.calculatedHeight;
                 if (height < cell.height)
                     height = cell.height;
             }
@@ -2316,10 +2408,16 @@ var GraphTableSVG;
         行の高さを設定します。
         */
         set height(value) {
+            var b = false;
             for (var x = 0; x < this.table.width; x++) {
                 var cell = this.table.cells[this.cellY][x];
-                cell.height = value;
+                if (cell.height != value) {
+                    cell.height = value;
+                    b = true;
+                }
             }
+            if (b && !this.table.isDrawing && this.table.isAutoResized)
+                this.table.resize();
         }
     }
     GraphTableSVG.Row = Row;
@@ -2338,8 +2436,8 @@ var GraphTableSVG;
             var width = 0;
             for (var y = 0; y < this.table.height; y++) {
                 var cell = this.table.cells[y][this.cellX];
-                if (width < cell.textBoxWidth)
-                    width = cell.textBoxWidth;
+                if (width < cell.calculatedWidth)
+                    width = cell.calculatedWidth;
                 if (width < cell.width)
                     width = cell.width;
             }
@@ -2371,10 +2469,16 @@ var GraphTableSVG;
         列の幅を設定します。
         */
         set width(value) {
+            var b = false;
             for (var y = 0; y < this.table.height; y++) {
                 var cell = this.table.cells[y][this.cellX];
-                cell.width = value;
+                if (cell.width != value) {
+                    cell.width = value;
+                    b = true;
+                }
             }
+            if (b && !this.table.isDrawing && this.table.isAutoResized)
+                this.table.resize();
         }
     }
     GraphTableSVG.Column = Column;
@@ -2382,6 +2486,16 @@ var GraphTableSVG;
 var GraphTableSVG;
 (function (GraphTableSVG) {
     class SVGToVBA {
+        static create(items) {
+            var s = "";
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                if (item instanceof GraphTableSVG.Table) {
+                    s += SVGToVBA.createTable(item);
+                }
+            }
+            return s;
+        }
         static createTable(table) {
             var lines = new Array(0);
             lines.push(`Sub createMyTable()`);
@@ -2412,10 +2526,11 @@ Sub EditCell(cell_ As cell, text_ As String, backColor As Variant)
     cell_.Shape.TextFrame.TextRange.text = text_
     cell_.Shape.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))
 End Sub
-Sub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant)
+Sub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant, fontBold As Integer)
     frame_.TextRange.Font.Size = fontSize
     frame_.TextRange.Font.name = fontName
     frame_.TextRange.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))
+    frame_.TextRange.Font.Bold = fontBold
 End Sub
 
 
@@ -2428,11 +2543,13 @@ Sub EditColumn(column_ As Column, width As Integer)
     column_.width = width
 End Sub
 
-Sub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double)
+Sub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, vAnchor As Integer, hAnchor As Integer)
     frame_.marginLeft = marginLeft
     frame_.marginRight = marginRight
     frame_.marginTop = marginTop
     frame_.marginBottom = marginBottom
+    frame_.VerticalAnchor = vAnchor
+    frame_.TextRange.ParagraphFormat.Alignment = hAnchor
 End Sub
 
 Sub EditTextRange(range_ As TextRange, text As String, subBeg As Integer, subLen As Integer, color As Variant)
@@ -2475,6 +2592,30 @@ End Sub
     }
     GraphTableSVG.visible = visible;
     class VBATranslateFunctions {
+        static ToFontBold(bold) {
+            if (bold == "bold") {
+                return "msotrue";
+            }
+            else {
+                return "msofalse";
+            }
+        }
+        static ToVerticalAnchor(value) {
+            switch (value) {
+                case "top": return "msoAnchorTop";
+                case "middle": return "msoAnchorMiddle";
+                case "bottom": return "msoAnchorBottom";
+                default: return "msoAnchorTop";
+            }
+        }
+        static ToHorizontalAnchor(value) {
+            switch (value) {
+                case "left": return "ppAlignLeft";
+                case "center": return "ppAlignCenter";
+                case "right": return "ppAlignRight";
+                default: return "ppAlignLeft";
+            }
+        }
         static createStringFunction(item) {
             return item.length == 0 ? `""` : `"` + item + `"`;
         }
@@ -2517,17 +2658,18 @@ End Sub
             return s;
         }
         static colorToVBA(color) {
+            color = Color.translateRGBCodeFromColorName(color);
             if (color.indexOf("rgb") != -1) {
                 return color.replace("rgb", "Array");
             }
             else {
-                if (color == "black") {
-                    return VBATranslateFunctions.colorToVBA("rgb(0,0,0)");
-                }
-                else {
-                    return VBATranslateFunctions.colorToVBA("rgb(0,255,0)");
-                }
+                return "Array(0, 0, 0)";
             }
+        }
+        static ToVBAFont(font) {
+            font = font.replace(/"/g, "");
+            font = font.replace(/'/g, "");
+            return font;
         }
     }
     GraphTableSVG.VBATranslateFunctions = VBATranslateFunctions;
@@ -2540,14 +2682,25 @@ var GraphTableSVG;
     class Table {
         constructor(svgbox, width, height, _tableClassName = null) {
             this._cells = [];
-            this.observerFunc = (x) => {
+            this._isDrawing = false;
+            this._isAutoResized = false;
+            this._cellTextObserverFunc = (x) => {
+                var b = false;
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
-                    //console.log(p.attributeName);
+                    for (var j = 0; j < p.addedNodes.length; j++) {
+                        var item = p.addedNodes.item(j);
+                        if (item.nodeName == "#text") {
+                            b = true;
+                        }
+                    }
                 }
+                if (b)
+                    this.resize();
             };
             this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             svgbox.appendChild(this.svgGroup);
+            this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             //this.svgGroup.appendChild(this.svgLineGroup);
             if (_tableClassName != null)
@@ -2555,10 +2708,21 @@ var GraphTableSVG;
             for (var y = 0; y < height; y++) {
                 this.insertRowFunction(y, width);
             }
-            this._observer = new MutationObserver(this.observerFunc);
-            var option = { characterData: true, attributes: true, subtree: true };
-            this._observer.observe(this.svgGroup, option);
-            this.resize();
+        }
+        get isDrawing() {
+            return this._isDrawing;
+        }
+        get isAutoResized() {
+            return this._isAutoResized;
+        }
+        set isAutoResized(value) {
+            this._isAutoResized = value;
+            if (value) {
+                this.resize();
+            }
+        }
+        get cellTextObserver() {
+            return this._cellTextObserver;
         }
         insertRowFunction(i, width = this.width) {
             var cell = [];
@@ -2760,6 +2924,7 @@ var GraphTableSVG;
         各セルのサイズを再計算します。
         */
         resize() {
+            this._isDrawing = true;
             var rows = this.rows;
             var columns = this.columns;
             rows.forEach(function (x, i, arr) { x.resize(); });
@@ -2775,6 +2940,7 @@ var GraphTableSVG;
                 width += x.width;
             });
             this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
+            this._isDrawing = false;
         }
         /**
         所属しているSVGタグ上でのテーブルの領域を表すRectangleクラスを返します。
@@ -2814,43 +2980,48 @@ var GraphTableSVG;
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    var style = cell.svgBackground.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
-                    lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${style})`);
+                    var color = GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgBackground.getPropertyStyleValueWithDefault("fill", "gray"));
+                    //var style = cell.svgBackground.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
+                    lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${color})`);
                 }
             }
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    var fontSize = cell.svgText.style.fontSize != null ? parseInt(cell.svgText.style.fontSize) : "";
-                    var color = cell.svgText.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgText.style.fill) : "";
-                    lines.push(` Call EditCellFont(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${fontSize}, "${cell.svgText.style.fontFamily}", ${color})`);
+                    var fontSize = parseInt(cell.svgText.getPropertyStyleValueWithDefault("font-size", "12pt"));
+                    var color = GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgText.getPropertyStyleValueWithDefault("fill", "gray"));
+                    var fontFamily = GraphTableSVG.VBATranslateFunctions.ToVBAFont(cell.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+                    var fontBold = GraphTableSVG.VBATranslateFunctions.ToFontBold(cell.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
+                    lines.push(` Call EditCellFont(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${fontSize}, "${fontFamily}", ${color}, ${fontBold})`);
                 }
             }
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    lines.push(` Call EditCellTextFrame(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.paddingTop}, ${cell.paddingBottom}, ${cell.paddingLeft}, ${cell.paddingRight})`);
+                    var vAnchor = GraphTableSVG.VBATranslateFunctions.ToVerticalAnchor(cell.verticalAnchor == null ? "" : cell.verticalAnchor);
+                    var hAnchor = GraphTableSVG.VBATranslateFunctions.ToHorizontalAnchor(cell.horizontalAnchor == null ? "" : cell.horizontalAnchor);
+                    lines.push(` Call EditCellTextFrame(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.paddingTop}, ${cell.paddingBottom}, ${cell.paddingLeft}, ${cell.paddingRight}, ${vAnchor}, ${hAnchor})`);
                 }
             }
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    var upLineStyle = cell.upLine.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.upLine.style.fill) : "";
+                    var upLineStyle = GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.upLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                     var upLineStrokeWidth = cell.upLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.upLine.style.strokeWidth) : "";
                     var upLineVisibility = cell.upLine.style.visibility != null ? GraphTableSVG.visible(cell.upLine.style.visibility) : "";
                     lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${upLineStyle}, ${upLineStrokeWidth}, ${upLineVisibility})`);
-                    var leftLineStyle = cell.leftLine.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.leftLine.style.fill) : "";
+                    var leftLineStyle = GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.leftLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                     var leftLineStrokeWidth = cell.leftLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.leftLine.style.strokeWidth) : "";
                     var leftLineVisibility = cell.leftLine.style.visibility != null ? GraphTableSVG.visible(cell.leftLine.style.visibility) : "";
                     lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${leftLineStyle}, ${leftLineStrokeWidth}, ${leftLineVisibility})`);
                     if (x + 1 == this.width) {
-                        var rightLineStyle = cell.rightLine.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.rightLine.style.fill) : "";
+                        var rightLineStyle = GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.rightLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                         var rightLineStrokeWidth = cell.rightLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.rightLine.style.strokeWidth) : "";
                         var rightLineVisibility = cell.rightLine.style.visibility != null ? GraphTableSVG.visible(cell.rightLine.style.visibility) : "";
                         lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderRight), ${rightLineStyle}, ${rightLineStrokeWidth}, ${rightLineVisibility})`);
                     }
                     if (y + 1 == this.height) {
-                        var bottomLineStyle = cell.bottomLine.style.fill != null ? GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.bottomLine.style.fill) : "";
+                        var bottomLineStyle = GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.bottomLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                         var bottomLineStrokeWidth = cell.bottomLine.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.bottomLine.style.strokeWidth) : "";
                         var bottomLineVisibility = cell.bottomLine.style.visibility != null ? GraphTableSVG.visible(cell.bottomLine.style.visibility) : "";
                         lines.push(` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderBottom), ${bottomLineStyle}, ${bottomLineStrokeWidth}, ${bottomLineVisibility})`);
@@ -2957,6 +3128,7 @@ var GraphTableSVG;
             _svgText.style.fill = "black";
             _svgText.style.fontSize = "14px";
             _svgText.style.fontWeight = "bold";
+            _svgText.style.fontFamily = "Yu Gothic";
         }
         else {
             _svgText.setAttribute("class", className);
@@ -3013,6 +3185,7 @@ var GraphTableSVG;
         style.fill = null;
         style.fontSize = null;
         style.fontWeight = null;
+        style.fontFamily = null;
     }
     GraphTableSVG.resetStyle = resetStyle;
     var defaultRadiusName = "--default-radius";
@@ -3044,6 +3217,16 @@ var GraphTableSVG;
         return circle;
     }
     GraphTableSVG.createCircle = createCircle;
+    function setClass(svg, className = null) {
+        if (className == null) {
+            svg.removeAttribute("class");
+        }
+        else {
+            resetStyle(svg.style);
+            svg.setAttribute("class", className);
+        }
+    }
+    GraphTableSVG.setClass = setClass;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {

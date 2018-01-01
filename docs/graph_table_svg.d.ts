@@ -1,3 +1,7 @@
+declare module Color {
+    function translateHexCodeFromColorName(str: string): string;
+    function translateRGBCodeFromColorName(str: string): string;
+}
 declare module GraphTableSVG {
     /**
     ノードの並び順です。
@@ -571,11 +575,11 @@ declare module GraphTableSVG {
     class Cell {
         private static readonly defaultBackgroundClassName;
         private static readonly defaultTextClass;
-        private _observaer;
-        private observerFunc;
-        private _textObservaer;
-        private textObserverFunc;
+        private _observer;
+        private _observerFunc;
         constructor(parent: Table, _px: number, _py: number, cellClass?: string | null, borderClass?: string | null);
+        private readonly innerExtraPaddingLeft;
+        private readonly innerExtraPaddingRight;
         private _masterID;
         readonly masterID: number;
         private _upLine;
@@ -610,11 +614,11 @@ declare module GraphTableSVG {
         セルの下にある枠を設定します
         */
         bottomLine: SVGLineElement;
-        private _parent;
+        private _table;
         /**
         所属しているTableを返します。
         */
-        readonly parent: Table;
+        readonly table: Table;
         private _svgBackground;
         /**
         セルの背景を表現しているSVGRectElementを返します。
@@ -630,6 +634,7 @@ declare module GraphTableSVG {
         セルを表しているSVGGElementを返します。
         */
         readonly svgGroup: SVGGElement;
+        readonly fontSize: number;
         /**
         テキストとセル間の左のパディング値を返します。
         */
@@ -695,17 +700,21 @@ declare module GraphTableSVG {
         */
         readonly isLocated: boolean;
         /**
-        セルのテキストの領域が取るべき幅を返します。
+        セルが取るべき幅を返します。
         */
-        readonly textBoxWidth: number;
+        readonly calculatedWidth: number;
         /**
-        セルのテキストの領域が取るべき高さを返します。
+        セルが取るべき高さを返します。
         */
-        readonly textBoxHeight: number;
+        readonly calculatedHeight: number;
         /**
          *セルのサイズを再計算します。
          */
         resize(): void;
+        /**
+         * 再描画します。
+         */
+        private localUpdate();
         /**
          *セルの位置を再計算します。
          */
@@ -788,6 +797,7 @@ declare module GraphTableSVG {
         セルの領域を表すRectangleを返します。領域の基準は属しているテーブルのSVGGElementです。
         */
         readonly region: Rectangle;
+        private static createCellRectangle(className?);
     }
 }
 interface SVGGElement {
@@ -802,6 +812,7 @@ interface CSSStyleDeclaration {
 interface SVGElement {
     getActiveStyle(): CSSStyleDeclaration;
     getPropertyStyleValue(name: string): string | null;
+    getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
     setPropertyStyleValue(name: string, value: string | null): void;
 }
 interface SVGTextElement {
@@ -866,18 +877,23 @@ declare module GraphTableSVG {
 }
 declare module GraphTableSVG {
     class SVGToVBA {
+        static create(items: (Graph | Table)[]): string;
         static createTable(table: Table): string;
         static cellFunctionCode: string;
     }
     function parseInteger(value: string): number;
     function visible(value: string): number;
     class VBATranslateFunctions {
+        static ToFontBold(bold: string): string;
+        static ToVerticalAnchor(value: string): string;
+        static ToHorizontalAnchor(value: string): string;
         static createStringFunction(item: string): string;
         static createArrayFunction(items: any[]): string;
         static createStringArrayFunction(items: string[]): string;
         static createJagArrayFunction(items: any[][]): string;
         static joinLines(lines: string[]): string;
         static colorToVBA(color: string): string;
+        static ToVBAFont(font: string): string;
     }
 }
 declare module GraphTableSVG {
@@ -889,9 +905,14 @@ declare module GraphTableSVG {
         private static readonly defaultBorderClass;
         private _svgGroup;
         private _cells;
-        private _observer;
+        private _isDrawing;
+        readonly isDrawing: boolean;
+        private _isAutoResized;
+        isAutoResized: boolean;
+        private _cellTextObserver;
+        readonly cellTextObserver: MutationObserver;
+        private _cellTextObserverFunc;
         constructor(svgbox: HTMLElement, width: number, height: number, _tableClassName?: string | null);
-        private observerFunc;
         private insertRowFunction(i, width?);
         private createCell();
         private updateBorder(cell);
@@ -1007,6 +1028,7 @@ declare module GraphTableSVG {
      * @param className
      */
     function createCircle(className?: string | null): SVGCircleElement;
+    function setClass(svg: SVGElement, className?: string | null): void;
 }
 declare module GraphTableSVG {
     /**
