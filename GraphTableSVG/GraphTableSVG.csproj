@@ -35,6 +35,7 @@
     <TypeScriptCompile Include="graph\vertex.ts" />
     <TypeScriptCompile Include="graph\vertex2.ts" />
     <TypeScriptCompile Include="graph\virtual_tree.ts" />
+    <TypeScriptCompile Include="gui.ts" />
     <TypeScriptCompile Include="table\cell.ts" />
     <TypeScriptCompile Include="interface.ts" />
     <TypeScriptCompile Include="table\row.ts" />

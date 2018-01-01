@@ -300,6 +300,15 @@
                 return Graph.IsDescendantOfBody(parent);
             }
         }
+
+        public static getRegion(items: (Graph | Table)[]): Rectangle {
+            var rects = items.map((v) => v.getRegion());
+            if (rects.length > 0) {
+                return GraphTableSVG.Rectangle.merge(rects);
+            } else {
+                return new Rectangle();
+            }
+        }
     }
     
 

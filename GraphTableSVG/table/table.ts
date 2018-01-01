@@ -311,7 +311,7 @@ module GraphTableSVG {
         /**
          * 現在のテーブルを表すVBAコードを返します。
          */
-        public createVBAMainCode(slideName: string): [string, string] {
+        public createVBAMainCode(slideName: string, id: number): [string, string] {
             var fstLines: string[] = [];
             var lines = new Array(0);
 
@@ -319,6 +319,9 @@ module GraphTableSVG {
             fstLines.push(` Dim table_ As table`);
             //lines.push(` Set tableS = CreateTable(createdSlide, ${table.height}, ${table.width})`);
             fstLines.push(` Set tableS = ${slideName}.Shapes.AddTable(${this.height}, ${this.width})`)
+            fstLines.push(` tableS.Left = ${this.svgGroup.getX()}`);
+            fstLines.push(` tableS.Top = ${this.svgGroup.getY()}`);
+
             //page.Shapes.AddTable(row_, column_)
             fstLines.push(` Set table_ = tableS.table`);
 
@@ -413,16 +416,16 @@ module GraphTableSVG {
             */
             //return [VBATranslateFunctions.joinLines(lines),""];
             var x0 = VBATranslateFunctions.joinLines(fstLines);
-            var [x1, y1] = this.splitCode(tableName, lines);
+            var [x1, y1] = this.splitCode(tableName, lines, id);
             return [VBATranslateFunctions.joinLines([x0, x1]), y1];
         }
-        private splitCode(tableName: string, codes: string[]): [string, string] {
+        private splitCode(tableName: string, codes: string[], id: number): [string, string] {
             var functions: string[] = [];
 
             var p = this.splitCode1(codes);
             p.forEach(function (x, i, arr) {
-                functions.push(`Call SubFunction${i}(${tableName})`);
-                var begin = `Sub SubFunction${i}(${tableName} As Table)`;
+                functions.push(`Call SubFunction${id}_${i}(${tableName})`);
+                var begin = `Sub SubFunction${id}_${i}(${tableName} As Table)`;
                 var end = `End Sub`;
                 p[i] = VBATranslateFunctions.joinLines([begin, x, end]);
             });

@@ -1,32 +1,45 @@
 ﻿
 module GraphTableSVG {
     export class SVGToVBA {
-        public static create(items: (Graph | Table)[]) : string {
-            var s = "";
+        public static create(items: (Graph | Table)[]): string {
+            //var id = 0;
+            var s: string[] = new Array(0);
+
+            s.push(`Sub create()`);
+            s.push(` Dim createdSlide As slide`);
+            s.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
+            for (var i = 0; i < items.length; i++) {
+                s.push(`Call create${i}(createdSlide)`);
+            }
+            s.push(`MsgBox "created"`);
+
+            s.push(`End Sub`);
+
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item instanceof Table) {
-                    s += SVGToVBA.createTable(item);
+                    var lines = SVGToVBA.createTable(item, i, "createdSlide");
+                    lines.forEach((v) => s.push(v));
                 }
             }
-            return s;
+            s.push(SVGToVBA.cellFunctionCode);
+            var r = VBATranslateFunctions.joinLines(s);
+            return r;
         }
-        public static createTable(table: Table): string {
+        public static createTable(table: Table, id: number, slide : string): string[] {
             var lines = new Array(0);
-            lines.push(`Sub createMyTable()`);
-            lines.push(` Dim createdSlide As slide`);
-            lines.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
+            lines.push(`Sub create${id}(createdSlide As slide)`);
+            //lines.push(` Dim createdSlide As slide`);
+            //lines.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
             
-            var [main, sub] = table.createVBAMainCode("createdSlide");
+            var [main, sub] = table.createVBAMainCode("createdSlide", id);
 
             lines.push(main);
-            lines.push(`MsgBox "created"`);
             lines.push(`End Sub`);
             lines.push(sub);
-            lines.push(SVGToVBA.cellFunctionCode);
 
-
-            return VBATranslateFunctions.joinLines(lines);
+            return lines;
+            //return VBATranslateFunctions.joinLines(lines);
         }
 
 
