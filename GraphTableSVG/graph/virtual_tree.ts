@@ -1,4 +1,4 @@
-﻿module GraphTableSVG {
+﻿namespace GraphTableSVG {
     export class VirtualTree {
         graph: Graph;
         root: Vertex;

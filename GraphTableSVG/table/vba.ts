@@ -1,5 +1,5 @@
 ﻿
-module GraphTableSVG {
+namespace GraphTableSVG {
     export class SVGToVBA {
         public static create(items: (Graph | Table)[]): string {
             //var id = 0;

@@ -1,4 +1,4 @@
-﻿module GraphTableSVG {
+﻿namespace GraphTableSVG {
     
     /**
     グラフを表します。

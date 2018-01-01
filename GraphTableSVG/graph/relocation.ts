@@ -1,6 +1,6 @@
-﻿module GraphTableSVG {
+﻿namespace GraphTableSVG {
 
-    export module GraphArrangement {
+    export namespace GraphArrangement {
 
         export function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void {
             var leafCounter = 0;

@@ -1,4 +1,4 @@
-﻿module GraphTableSVG {
+﻿namespace GraphTableSVG {
     export class Vertex {
         //public symbol: symbol = Symbol();
         public static readonly defaultSurfaceType: string = "--default-surface-type";

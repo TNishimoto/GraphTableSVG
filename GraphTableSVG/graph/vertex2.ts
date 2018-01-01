@@ -1,4 +1,4 @@
-﻿module GraphTableSVG {
+﻿namespace GraphTableSVG {
     /**
      * 輪郭が円の頂点です。
      */

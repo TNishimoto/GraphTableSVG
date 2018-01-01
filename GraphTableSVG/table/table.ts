@@ -1,5 +1,5 @@
 ﻿
-module GraphTableSVG {
+namespace GraphTableSVG {
     
     /**
     テーブルを表します。

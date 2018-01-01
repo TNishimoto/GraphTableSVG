@@ -2,7 +2,7 @@ declare module Color {
     function translateHexCodeFromColorName(str: string): string;
     function translateRGBCodeFromColorName(str: string): string;
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     /**
     ノードの並び順です。
     */
@@ -93,7 +93,7 @@ declare module GraphTableSVG {
     }
     function parsePXString(item: string | null): number;
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     class Edge {
         static readonly beginConnectorTypeName: string;
         static readonly endConnectorTypeName: string;
@@ -189,7 +189,7 @@ declare module GraphTableSVG {
         update(): boolean;
     }
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     /**
     グラフを表します。
     */
@@ -282,9 +282,10 @@ declare module GraphTableSVG {
         save(): void;
         static setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null): void;
         static IsDescendantOfBody(node: Node): boolean;
+        static getRegion(items: (Graph | Table)[]): Rectangle;
     }
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     module GraphArrangement {
         function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void;
         function reverse(graph: Graph, isX: boolean, isY: boolean): void;
@@ -293,7 +294,7 @@ declare module GraphTableSVG {
         function standardTreeArrangement(graph: GraphTableSVG.Graph, xInterval: number, yInterval: number): void;
     }
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     class EdgeText {
         private _svgText;
         /**
@@ -322,7 +323,7 @@ declare module GraphTableSVG {
         private static reverse(str);
     }
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     class Vertex {
         static readonly defaultSurfaceType: string;
         static readonly defaultTextClass: string;
@@ -481,7 +482,7 @@ declare module GraphTableSVG {
         readonly isDisposed: boolean;
     }
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     /**
      * 輪郭が円の頂点です。
      */
@@ -554,7 +555,7 @@ declare module GraphTableSVG {
         private getAutoPosition(x, y);
     }
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     class VirtualTree {
         graph: Graph;
         root: Vertex;
@@ -571,7 +572,14 @@ declare module GraphTableSVG {
         setRootLocation(_x: number, _y: number): void;
     }
 }
-declare module GraphTableSVG {
+declare module GUI {
+    function createMacroModal(text: string): void;
+    function removeMacroModal(): void;
+    function copyAndCloseMacroModal(): void;
+    function setSVGBoxSize(box: HTMLElement, w: number, h: number): void;
+    function setSVGBoxSize(box: HTMLElement, rect: GraphTableSVG.Rectangle, padding: GraphTableSVG.Padding): void;
+}
+declare namespace GraphTableSVG {
     class Cell {
         private static readonly defaultBackgroundClassName;
         private static readonly defaultTextClass;
@@ -821,7 +829,7 @@ interface SVGTextElement {
     getY(): number;
     setY(value: number): void;
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     class Row {
         private readonly table;
         private readonly _cellY;
@@ -875,10 +883,10 @@ declare module GraphTableSVG {
         width: number;
     }
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     class SVGToVBA {
         static create(items: (Graph | Table)[]): string;
-        static createTable(table: Table): string;
+        static createTable(table: Table, id: number, slide: string): string[];
         static cellFunctionCode: string;
     }
     function parseInteger(value: string): number;
@@ -896,7 +904,7 @@ declare module GraphTableSVG {
         static ToVBAFont(font: string): string;
     }
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     /**
     テーブルを表します。
     */
@@ -987,13 +995,13 @@ declare module GraphTableSVG {
         /**
          * 現在のテーブルを表すVBAコードを返します。
          */
-        createVBAMainCode(slideName: string): [string, string];
-        private splitCode(tableName, codes);
+        createVBAMainCode(slideName: string, id: number): [string, string];
+        private splitCode(tableName, codes, id);
         private splitCode1(codes);
         removeTable(svg: HTMLElement): void;
     }
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     /**
      * SVGLineElementを生成します。
      * @param x
@@ -1030,7 +1038,7 @@ declare module GraphTableSVG {
     function createCircle(className?: string | null): SVGCircleElement;
     function setClass(svg: SVGElement, className?: string | null): void;
 }
-declare module GraphTableSVG {
+declare namespace GraphTableSVG {
     /**
      * 傾きや切片を計算できる線です。
      */
@@ -1048,6 +1056,13 @@ declare module GraphTableSVG {
         readonly intercept: number | null;
         readonly inverseSlope: number | null;
         inverseIntercept(x: number, y: number): number | null;
+    }
+    class Padding {
+        top: number;
+        left: number;
+        right: number;
+        bottom: number;
+        constructor(top?: number, left?: number, right?: number, bottom?: number);
     }
     /**
      * 四角形を表します。

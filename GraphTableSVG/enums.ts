@@ -1,4 +1,4 @@
-﻿module GraphTableSVG {
+﻿namespace GraphTableSVG {
     
     /**
     ノードの並び順です。

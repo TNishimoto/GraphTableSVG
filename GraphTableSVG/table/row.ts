@@ -1,4 +1,4 @@
-﻿module GraphTableSVG {
+﻿namespace GraphTableSVG {
     export class Row {
         private readonly table: Table;
         private readonly _cellY: number;

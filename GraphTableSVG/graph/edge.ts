@@ -1,4 +1,4 @@
-﻿module GraphTableSVG {
+﻿namespace GraphTableSVG {
     export class Edge {
         //public static defaultBeginConnectorPosition: string = "--default-begin-connector-position";
         //public static defaultEndConnectorPosition: string = "--default-end-connector-position";

@@ -742,6 +742,15 @@ var GraphTableSVG;
                 return Graph.IsDescendantOfBody(parent);
             }
         }
+        static getRegion(items) {
+            var rects = items.map((v) => v.getRegion());
+            if (rects.length > 0) {
+                return GraphTableSVG.Rectangle.merge(rects);
+            }
+            else {
+                return new GraphTableSVG.Rectangle();
+            }
+        }
     }
     Graph.idCounter = 0;
     Graph.defaultVertexClass = "--default-vertex-class";
@@ -1665,6 +1674,96 @@ var GraphTableSVG;
     }
     GraphTableSVG.VirtualTree = VirtualTree;
 })(GraphTableSVG || (GraphTableSVG = {}));
+var GUI;
+(function (GUI) {
+    function createMacroModal(text) {
+        var mainDiv = document.createElement("div");
+        mainDiv.id = "macro-modal";
+        mainDiv.innerHTML = `
+    使い方（Powerpoint 2013）<br>
+        新規ファイル<br>
+        →表示→マクロ→作成<br>
+        →生成したコードをユーザーフォームに貼り付ける<br>
+        →F5 or ユーザーフォームを実行<br>
+        →木が貼られたスライドが１ページ目に挿入される<br>
+        ※サイズの大きすぎる木はマクロ実行時にエラーが出ます。
+        <br>
+        <textarea id="codeBox" rows="8" cols="100" style="overflow:auto;"></textarea>
+        <button class="btn" onClick="GUI.copyAndCloseMacroModal();">
+            クリップボードにコピー
+        </button>
+    `;
+        mainDiv.style.position = "fixed";
+        mainDiv.style.zIndex = "16";
+        mainDiv.style.width = "900px";
+        mainDiv.style.height = "400px";
+        mainDiv.style.left = `${((window.outerWidth - parseInt(mainDiv.style.width)) / 2)}px`;
+        mainDiv.style.top = `${((window.outerHeight - parseInt(mainDiv.style.height)) / 2)}px`;
+        mainDiv.style.display = "inline";
+        mainDiv.style.backgroundColor = "#ffffff";
+        document.body.appendChild(mainDiv);
+        var cnt = document.getElementById("codeBox");
+        cnt.value = text;
+        var bgDiv = document.createElement("div");
+        document.body.appendChild(bgDiv);
+        bgDiv.style.width = "100%";
+        bgDiv.style.height = "100%";
+        bgDiv.style.backgroundColor = "rgba(0,0,0,0.5)";
+        bgDiv.style.position = "fixed";
+        bgDiv.style.top = "0";
+        bgDiv.style.left = "0";
+        bgDiv.id = "modal-bg";
+        bgDiv.style.zIndex = "5";
+        bgDiv.style.display = "inline";
+        bgDiv.onclick = removeMacroModal;
+        //$("body").append('<div id="modal-bg" style="z-index:5"></div>');
+    }
+    GUI.createMacroModal = createMacroModal;
+    function removeMacroModal() {
+        var div1 = document.getElementById("macro-modal");
+        var div2 = document.getElementById("modal-bg");
+        if (div1 != null)
+            document.body.removeChild(div1);
+        if (div2 != null)
+            document.body.removeChild(div2);
+    }
+    GUI.removeMacroModal = removeMacroModal;
+    function copyAndCloseMacroModal() {
+        var cnt = document.getElementById("codeBox");
+        cnt.select();
+        window.document.execCommand('copy');
+        alert('クリップボードにコピーしました。');
+        removeMacroModal();
+    }
+    GUI.copyAndCloseMacroModal = copyAndCloseMacroModal;
+    function setSVGBoxSize(box, item1, item2) {
+        if (item1 instanceof GraphTableSVG.Rectangle) {
+            if (item2 instanceof GraphTableSVG.Padding) {
+                var w = item1.right + item2.left + item2.right;
+                var h = item1.bottom + item2.top + item2.bottom;
+                setSVGBoxSize(box, w, h);
+            }
+            else {
+                throw new Error();
+            }
+        }
+        else {
+            if (item2 instanceof GraphTableSVG.Padding) {
+                throw new Error();
+            }
+            else {
+                var width = `${item1}px`;
+                var height = `${item2}px`;
+                if (box.style.width != width || box.style.height != height) {
+                    box.style.width = width;
+                    box.style.height = height;
+                    box.setAttribute(`viewBox`, `0 0 ${item1} ${item2}`);
+                }
+            }
+        }
+    }
+    GUI.setSVGBoxSize = setSVGBoxSize;
+})(GUI || (GUI = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
     class Cell {
@@ -2501,27 +2600,38 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     class SVGToVBA {
         static create(items) {
-            var s = "";
+            //var id = 0;
+            var s = new Array(0);
+            s.push(`Sub create()`);
+            s.push(` Dim createdSlide As slide`);
+            s.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
+            for (var i = 0; i < items.length; i++) {
+                s.push(`Call create${i}(createdSlide)`);
+            }
+            s.push(`MsgBox "created"`);
+            s.push(`End Sub`);
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item instanceof GraphTableSVG.Table) {
-                    s += SVGToVBA.createTable(item);
+                    var lines = SVGToVBA.createTable(item, i, "createdSlide");
+                    lines.forEach((v) => s.push(v));
                 }
             }
-            return s;
+            s.push(SVGToVBA.cellFunctionCode);
+            var r = VBATranslateFunctions.joinLines(s);
+            return r;
         }
-        static createTable(table) {
+        static createTable(table, id, slide) {
             var lines = new Array(0);
-            lines.push(`Sub createMyTable()`);
-            lines.push(` Dim createdSlide As slide`);
-            lines.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
-            var [main, sub] = table.createVBAMainCode("createdSlide");
+            lines.push(`Sub create${id}(createdSlide As slide)`);
+            //lines.push(` Dim createdSlide As slide`);
+            //lines.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
+            var [main, sub] = table.createVBAMainCode("createdSlide", id);
             lines.push(main);
-            lines.push(`MsgBox "created"`);
             lines.push(`End Sub`);
             lines.push(sub);
-            lines.push(SVGToVBA.cellFunctionCode);
-            return VBATranslateFunctions.joinLines(lines);
+            return lines;
+            //return VBATranslateFunctions.joinLines(lines);
         }
     }
     SVGToVBA.cellFunctionCode = `
@@ -2975,13 +3085,15 @@ var GraphTableSVG;
         /**
          * 現在のテーブルを表すVBAコードを返します。
          */
-        createVBAMainCode(slideName) {
+        createVBAMainCode(slideName, id) {
             var fstLines = [];
             var lines = new Array(0);
             fstLines.push(` Dim tableS As shape`);
             fstLines.push(` Dim table_ As table`);
             //lines.push(` Set tableS = CreateTable(createdSlide, ${table.height}, ${table.width})`);
             fstLines.push(` Set tableS = ${slideName}.Shapes.AddTable(${this.height}, ${this.width})`);
+            fstLines.push(` tableS.Left = ${this.svgGroup.getX()}`);
+            fstLines.push(` tableS.Top = ${this.svgGroup.getY()}`);
             //page.Shapes.AddTable(row_, column_)
             fstLines.push(` Set table_ = tableS.table`);
             var tableName = "table_";
@@ -3062,15 +3174,15 @@ var GraphTableSVG;
             */
             //return [VBATranslateFunctions.joinLines(lines),""];
             var x0 = GraphTableSVG.VBATranslateFunctions.joinLines(fstLines);
-            var [x1, y1] = this.splitCode(tableName, lines);
+            var [x1, y1] = this.splitCode(tableName, lines, id);
             return [GraphTableSVG.VBATranslateFunctions.joinLines([x0, x1]), y1];
         }
-        splitCode(tableName, codes) {
+        splitCode(tableName, codes, id) {
             var functions = [];
             var p = this.splitCode1(codes);
             p.forEach(function (x, i, arr) {
-                functions.push(`Call SubFunction${i}(${tableName})`);
-                var begin = `Sub SubFunction${i}(${tableName} As Table)`;
+                functions.push(`Call SubFunction${id}_${i}(${tableName})`);
+                var begin = `Sub SubFunction${id}_${i}(${tableName} As Table)`;
                 var end = `End Sub`;
                 p[i] = GraphTableSVG.VBATranslateFunctions.joinLines([begin, x, end]);
             });
@@ -3341,6 +3453,15 @@ var GraphTableSVG;
         }
     }
     GraphTableSVG.VLine = VLine;
+    class Padding {
+        constructor(top = 0, left = 0, right = 0, bottom = 0) {
+            this.top = top;
+            this.left = left;
+            this.right = right;
+            this.bottom = bottom;
+        }
+    }
+    GraphTableSVG.Padding = Padding;
     /**
      * 四角形を表します。
      */

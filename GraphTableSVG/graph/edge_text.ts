@@ -1,4 +1,4 @@
-﻿module GraphTableSVG {
+﻿namespace GraphTableSVG {
     export class EdgeText {
 
         private _svgText: SVGTextElement;
