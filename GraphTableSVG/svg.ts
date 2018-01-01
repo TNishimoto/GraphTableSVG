@@ -39,6 +39,7 @@ module GraphTableSVG {
             _svgText.style.fill = "black";
             _svgText.style.fontSize = "14px";
             _svgText.style.fontWeight = "bold";
+            _svgText.style.fontFamily = "Yu Gothic";
         } else {
             _svgText.setAttribute("class", className);
             //_svgText.className = className;
@@ -97,6 +98,7 @@ module GraphTableSVG {
         style.fill = null;
         style.fontSize = null;
         style.fontWeight = null;
+        style.fontFamily = null;
     }
     var defaultRadiusName = "--default-radius";
     var defaultWidthName = "--default-width";

@@ -18,35 +18,33 @@ module GraphTableSVG {
         };
         
 
-
+        /*
         private _textObserver: MutationObserver;
         private _textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
             for (var i = 0; i < x.length; i++) {
                 var p = x[i];
-                /*
-                if (p.attributeName == "class") {
-                    var name = this.svgText.getAttribute("class");
-                    if (name != null) {
-                        resetStyle(this.svgText.style);
-                    }
-                }
-                */
-                for (var i = 0; i < p.addedNodes.length; i++) {
-                    var item = p.addedNodes.item(i);
+                for (var j = 0; j < p.addedNodes.length; j++) {
+                    var item = p.addedNodes.item(j);
+                    console.log(`${this.table.isDrawing} ${this.table.isAutoResized}`)
+                    console.log(this.svgText.textContent);
+
                     if (item.nodeName == "#text") {
-                        this.parent.resize();
+                        if (!this.table.isDrawing && this.table.isAutoResized) {
+                            this.table.resize();
+                        }
                     }
                 }
             }
         };
+        */
         constructor(parent: Table, _px: number, _py: number, cellClass: string | null = null, borderClass: string | null = null) {
 
 
 
             this._svgGroup = createGroup();
-            this._parent = parent;
+            this._table = parent;
 
-            this.parent.svgGroup.insertBefore(this.svgGroup, this.parent.svgGroup.firstChild);
+            this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
 
             if (cellClass != null) this.svgGroup.setAttribute("class", cellClass);
             //this.padding = new Padding();
@@ -75,17 +73,13 @@ module GraphTableSVG {
             this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
             this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
             this.bottomLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.parent.svgGroup.appendChild(this.upLine);
-            this.parent.svgGroup.appendChild(this.leftLine);
-            this.parent.svgGroup.appendChild(this.rightLine);
-            this.parent.svgGroup.appendChild(this.bottomLine);
+            this.table.svgGroup.appendChild(this.upLine);
+            this.table.svgGroup.appendChild(this.leftLine);
+            this.table.svgGroup.appendChild(this.rightLine);
+            this.table.svgGroup.appendChild(this.bottomLine);
 
-
-
-            this._textObserver = new MutationObserver(this._textObserverFunc);
             var option1: MutationObserverInit = { childList: true };
-            this._textObserver.observe(this.svgText, option1);
-
+            this.table.cellTextObserver.observe(this.svgText, option1);
 
             this._observer = new MutationObserver(this._observerFunc);
             var option2: MutationObserverInit = { attributes : true};
@@ -166,12 +160,12 @@ module GraphTableSVG {
         set bottomLine(line: SVGLineElement) {
             this._bottomLine = line;
         } 
-        private _parent: Table;
+        private _table: Table;
         /**
         所属しているTableを返します。
         */
-        public get parent(): Table {
-            return this._parent;
+        public get table(): Table {
+            return this._table;
         }        
         private _svgBackground: SVGRectElement;
         /**
@@ -235,9 +229,7 @@ module GraphTableSVG {
         テキストの水平方向の配置設定を設定します。
         */
         set horizontalAnchor(value: string | null) {
-            this.svgGroup.setPropertyStyleValue(HorizontalAnchorPropertyName, value);
-            //this.svgGroup.getActiveStyle().setHorizontalAnchor(value)
-            //this.relocation();
+            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(HorizontalAnchorPropertyName, value);
         }
         /**
         テキストの垂直方向の配置設定を返します。
@@ -249,8 +241,7 @@ module GraphTableSVG {
         テキストの垂直方向の配置設定を設定します。
         */
         set verticalAnchor(value: string | null) {
-            this.svgGroup.setPropertyStyleValue(VerticalAnchorPropertyName, value);
-            //this.relocation();
+            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(VerticalAnchorPropertyName, value);
         }
 
         /**
@@ -263,7 +254,7 @@ module GraphTableSVG {
         単位セルを基準にした自身のX座標を設定します。
         */
         set cellX(value: number) {
-            this.svgGroup.setAttribute("cellX", value.toString());
+            if (this.cellX != value) this.svgGroup.setAttribute("cellX", value.toString());
         }
         /**
         単位セルを基準にした自身のY座標を返します。
@@ -275,7 +266,7 @@ module GraphTableSVG {
         単位セルを基準にした自身のY座標を設定します。
         */
         set cellY(value: number) {
-            this.svgGroup.setAttribute("cellY", value.toString());
+            if (this.cellY != value) this.svgGroup.setAttribute("cellY", value.toString());
         }
 
         /**
@@ -424,31 +415,31 @@ module GraphTableSVG {
         セルのIDを返します。
         */
         get ID(): number {
-            return this.cellX + (this.cellY * this.parent.width);
+            return this.cellX + (this.cellY * this.table.width);
         }
         /**
         上にあるセルを返します。
         */
         get upCell(): Cell | null {
-            return this.cellY != 0 ? this.parent.cells[this.cellY - 1][this.cellX] : null;
+            return this.cellY != 0 ? this.table.cells[this.cellY - 1][this.cellX] : null;
         }
         /**
         左にあるセルを返します。
         */
         get leftCell(): Cell | null {
-            return this.cellX != 0 ? this.parent.cells[this.cellY][this.cellX - 1] : null;
+            return this.cellX != 0 ? this.table.cells[this.cellY][this.cellX - 1] : null;
         }
         /**
         右にあるセルを返します。
         */
         get rightCell(): Cell | null {
-            return this.cellX + 1 != this.parent.width ? this.parent.cells[this.cellY][this.cellX + 1] : null;
+            return this.cellX + 1 != this.table.width ? this.table.cells[this.cellY][this.cellX + 1] : null;
         }
         /**
         下にあるセルを返します。
         */
         get bottomCell(): Cell | null {
-            return this.cellY + 1 != this.parent.height ? this.parent.cells[this.cellY + 1][this.cellX] : null;
+            return this.cellY + 1 != this.table.height ? this.table.cells[this.cellY + 1][this.cellX] : null;
         }
         /**
         未定義
@@ -487,7 +478,7 @@ module GraphTableSVG {
         */
         get leftBottomGroupCell(): Cell | null {
             if (this.isMaster) {
-                return this.parent.cells[this.cellY + this.logicalHeight - 1][this.cellX];
+                return this.table.cells[this.cellY + this.logicalHeight - 1][this.cellX];
             } else {
                 return null;
             }
@@ -497,7 +488,7 @@ module GraphTableSVG {
         */
         get rightUpGroupCell(): Cell | null {
             if (this.isMaster) {
-                return this.parent.cells[this.cellY][this.cellX + this.logicalWidth - 1];
+                return this.table.cells[this.cellY][this.cellX + this.logicalWidth - 1];
             } else {
                 return null;
             }

@@ -46,10 +46,11 @@ Sub EditCell(cell_ As cell, text_ As String, backColor As Variant)
     cell_.Shape.TextFrame.TextRange.text = text_
     cell_.Shape.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))
 End Sub
-Sub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant)
+Sub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant, fontBold As Integer)
     frame_.TextRange.Font.Size = fontSize
     frame_.TextRange.Font.name = fontName
     frame_.TextRange.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))
+    frame_.TextRange.Font.Bold = fontBold
 End Sub
 
 
@@ -62,11 +63,13 @@ Sub EditColumn(column_ As Column, width As Integer)
     column_.width = width
 End Sub
 
-Sub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double)
+Sub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, vAnchor As Integer, hAnchor As Integer)
     frame_.marginLeft = marginLeft
     frame_.marginRight = marginRight
     frame_.marginTop = marginTop
     frame_.marginBottom = marginBottom
+    frame_.VerticalAnchor = vAnchor
+    frame_.TextRange.ParagraphFormat.Alignment = hAnchor
 End Sub
 
 Sub EditTextRange(range_ As TextRange, text As String, subBeg As Integer, subLen As Integer, color As Variant)
@@ -107,6 +110,30 @@ End Sub
     }
 
     export class VBATranslateFunctions {
+
+        public static ToFontBold(bold : string) : string {
+            if (bold == "bold") {
+                return "msotrue";
+            } else {
+                return "msofalse";
+            }
+        }
+        public static ToVerticalAnchor(value: string): string {
+            switch (value) {
+                case "top": return "msoAnchorTop";
+                case "middle": return "msoAnchorMiddle";
+                case "bottom": return "msoAnchorBottom";
+                default: return "msoAnchorTop";
+            }
+        }
+        public static ToHorizontalAnchor(value: string): string {
+            switch (value) {
+                case "left": return "ppAlignLeft";
+                case "center": return "ppAlignCenter";
+                case "right": return "ppAlignRight";
+                default: return "ppAlignLeft";
+            }
+        }
 
         static createStringFunction(item: string) {
             return item.length == 0 ? `""` : `"` + item + `"`;

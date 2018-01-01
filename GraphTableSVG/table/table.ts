@@ -9,12 +9,46 @@ module GraphTableSVG {
         private static readonly defaultBorderClass: string = "--default-border-class";
         private _svgGroup: SVGGElement;
         private _cells: Cell[][] = [];
-        private _observer: MutationObserver;
+        private _isDrawing: boolean = false;
+        public get isDrawing(): boolean {
+            return this._isDrawing;
+        }
+        private _isAutoResized: boolean = false;
+        public get isAutoResized(): boolean {
+            return this._isAutoResized;
+        }
+        public set isAutoResized(value: boolean) {
+            this._isAutoResized = value;
+            if (value) {
+                this.resize();
+            }
+        }
+
+        private _cellTextObserver: MutationObserver;
+        public get cellTextObserver(): MutationObserver {
+            return this._cellTextObserver;
+        }
+        private _cellTextObserverFunc: MutationCallback = (x: MutationRecord[]) => {            
+            var b = false;
+            for (var i = 0; i < x.length; i++) {
+                var p = x[i];
+                for (var j = 0; j < p.addedNodes.length; j++) {
+                    var item = p.addedNodes.item(j);
+
+                    if (item.nodeName == "#text") {
+                        b = true;
+                    }
+                }
+            }
+            if (b) this.resize();
+        };
 
         constructor(svgbox: HTMLElement, width: number, height: number, _tableClassName: string | null = null) {
 
             this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             svgbox.appendChild(this.svgGroup);
+
+            this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             //this.svgGroup.appendChild(this.svgLineGroup);
 
@@ -25,21 +59,8 @@ module GraphTableSVG {
 
 
 
-            this._observer = new MutationObserver(this.observerFunc);
-            var option: MutationObserverInit = { characterData: true, attributes: true, subtree: true };
-            this._observer.observe(this.svgGroup, option);
-
-
-            this.resize();
-
         }
 
-        private observerFunc: MutationCallback = (x: MutationRecord[]) => {
-            for (var i = 0; i < x.length; i++) {
-                var p = x[i];
-                //console.log(p.attributeName);
-            }
-        };
         
         private insertRowFunction(i: number, width: number = this.width) {
             var cell: Cell[] = [];
@@ -243,11 +264,11 @@ module GraphTableSVG {
         public appendColumn() {
             this.insertColumn(this.width);
         }
-        
         /**
         各セルのサイズを再計算します。
         */
         public resize() {
+            this._isDrawing = true;
             var rows = this.rows;
             var columns = this.columns;
             rows.forEach(function (x, i, arr) { x.resize(); });
@@ -265,6 +286,8 @@ module GraphTableSVG {
             });
             this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
 
+            this._isDrawing = false;
+            
         }
         /**
         所属しているSVGタグ上でのテーブルの領域を表すRectangleクラスを返します。        
@@ -323,13 +346,16 @@ module GraphTableSVG {
                     var fontSize = parseInt(cell.svgText.getPropertyStyleValueWithDefault("font-size", "12pt"));
                     var color = VBATranslateFunctions.colorToVBA(cell.svgText.getPropertyStyleValueWithDefault("fill", "gray"));
                     var fontFamily = VBATranslateFunctions.ToVBAFont(cell.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
-                    lines.push(` Call EditCellFont(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${fontSize}, "${fontFamily}", ${color})`);
+                    var fontBold = VBATranslateFunctions.ToFontBold(cell.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
+                    lines.push(` Call EditCellFont(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${fontSize}, "${fontFamily}", ${color}, ${fontBold})`);
                 }
             }
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    lines.push(` Call EditCellTextFrame(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.paddingTop}, ${cell.paddingBottom}, ${cell.paddingLeft}, ${cell.paddingRight})`);
+                    var vAnchor = VBATranslateFunctions.ToVerticalAnchor(cell.verticalAnchor == null ? "" : cell.verticalAnchor);
+                    var hAnchor = VBATranslateFunctions.ToHorizontalAnchor(cell.horizontalAnchor == null ? "" : cell.horizontalAnchor);
+                    lines.push(` Call EditCellTextFrame(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.paddingTop}, ${cell.paddingBottom}, ${cell.paddingLeft}, ${cell.paddingRight}, ${vAnchor}, ${hAnchor})`);
                 }
             }
             for (var y = 0; y < this.height; y++) {
