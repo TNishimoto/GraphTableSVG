@@ -117,7 +117,8 @@
                 }
             }
         }
-        private getAutoPosition(x: number, y: number): ConnectorPosition {
+
+        protected getAutoPosition(x: number, y: number): ConnectorPosition {
             var r = (Math.sqrt(2) / 2) * this.radius;
             var line1 = new VLine(this.x, this.y, this.x + r, this.y + r);
             var line2 = new VLine(this.x, this.y, this.x + r, this.y - r);
@@ -213,7 +214,7 @@
                     return this.getLocation(autoType, x, y);
             }
         }
-        private getAutoPosition(x: number, y: number): ConnectorPosition {
+        protected getAutoPosition(x: number, y: number): ConnectorPosition {
             var wr = this.width / 2;
             var hr = this.height / 2;
 

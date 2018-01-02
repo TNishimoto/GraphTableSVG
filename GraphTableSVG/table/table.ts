@@ -307,11 +307,22 @@ namespace GraphTableSVG {
         */
         
 
-        
+        public createVBACode(id: number, slide: string): string[] {
+            var lines = new Array(0);
+            lines.push(`Sub create${id}(createdSlide As slide)`);
+            
+            var [main, sub] = this.createVBAMainCode("createdSlide", id);
+
+            lines.push(main);
+            lines.push(`End Sub`);
+            lines.push(sub);
+
+            return lines;
+        }
         /**
          * 現在のテーブルを表すVBAコードを返します。
          */
-        public createVBAMainCode(slideName: string, id: number): [string, string] {
+        private createVBAMainCode(slideName: string, id: number): [string, string] {
             var fstLines: string[] = [];
             var lines = new Array(0);
 
@@ -394,35 +405,15 @@ namespace GraphTableSVG {
 
                 }
             }
-            /*
-            lines.push(`Call EditCellFonts(table_)`);
-            lines.push(`Call EditCellTextFrames(table_)`);
-            lines.push(`Call EditBorders(table_)`);
-            */
-
-            //lines.push(`End Sub`);
-
-            /*
-            lines.push(`Sub EditCellFonts(table_ As Table)`);
-            
-            lines.push(`End Sub`);
-
-            lines.push(`Sub EditCellTextFrames(table_ As Table)`);
-            
-            lines.push(`End Sub`);
-
-
-            lines.push(`Sub EditBorders(table_ As Table)`);
-            */
-            //return [VBATranslateFunctions.joinLines(lines),""];
             var x0 = VBATranslateFunctions.joinLines(fstLines);
-            var [x1, y1] = this.splitCode(tableName, lines, id);
+            var [x1, y1] = VBATranslateFunctions.splitCode(lines, `${tableName} as Table`, `${tableName}`, id);
             return [VBATranslateFunctions.joinLines([x0, x1]), y1];
         }
+        /*
         private splitCode(tableName: string, codes: string[], id: number): [string, string] {
             var functions: string[] = [];
 
-            var p = this.splitCode1(codes);
+            var p = VBATranslateFunctions.grouping80(codes);
             p.forEach(function (x, i, arr) {
                 functions.push(`Call SubFunction${id}_${i}(${tableName})`);
                 var begin = `Sub SubFunction${id}_${i}(${tableName} As Table)`;
@@ -431,22 +422,8 @@ namespace GraphTableSVG {
             });
             return [VBATranslateFunctions.joinLines(functions), VBATranslateFunctions.joinLines(p)];
         }
-        private splitCode1(codes: string[]): string[] {
-            var r: string[] = [];
-            var r1: string[] = [];
-            codes.forEach(function (x, i, arr) {
-                r.push(x);
-                if (r.length == 80) {
-                    r1.push(VBATranslateFunctions.joinLines(r));
-                    r = [];
-                }
-            });
-            if (r.length > 0) {
-                r1.push(VBATranslateFunctions.joinLines(r));
-                r = [];
-            }
-            return r1;
-        }
+        */
+        
         public removeTable(svg: HTMLElement) {
             if (svg.contains(this.svgGroup)) {
                 svg.removeChild(this.svgGroup);

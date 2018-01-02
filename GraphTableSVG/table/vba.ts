@@ -18,7 +18,10 @@ namespace GraphTableSVG {
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item instanceof Table) {
-                    var lines = SVGToVBA.createTable(item, i, "createdSlide");
+                    var lines = item.createVBACode(i, "createdSlide");
+                    lines.forEach((v) => s.push(v));
+                } else {
+                    var lines = item.createVBACode(i);
                     lines.forEach((v) => s.push(v));
                 }
             }
@@ -26,21 +29,7 @@ namespace GraphTableSVG {
             var r = VBATranslateFunctions.joinLines(s);
             return r;
         }
-        public static createTable(table: Table, id: number, slide : string): string[] {
-            var lines = new Array(0);
-            lines.push(`Sub create${id}(createdSlide As slide)`);
-            //lines.push(` Dim createdSlide As slide`);
-            //lines.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
-            
-            var [main, sub] = table.createVBAMainCode("createdSlide", id);
-
-            lines.push(main);
-            lines.push(`End Sub`);
-            lines.push(sub);
-
-            return lines;
-            //return VBATranslateFunctions.joinLines(lines);
-        }
+        
 
 
         public static cellFunctionCode: string = `
@@ -104,6 +93,38 @@ Sub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer,
     line_.Transparency = transparent
 End Sub
 
+Sub EditConnector(connector_ As ConnectorFormat, begShape As Shape, endShape As Shape, begPos As Integer, endPos As Integer)
+    Call connector_.BeginConnect(begShape, begPos)
+    Call connector_.EndConnect(endShape, endPos)
+End Sub
+
+Sub EditTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, wordWrap As Boolean, autoSize As Integer)
+    frame_.autoSize = autoSize
+    frame_.wordWrap = wordWrap
+    frame_.marginLeft = marginLeft
+    frame_.marginRight = marginRight
+    frame_.marginTop = marginTop
+    frame_.marginBottom = marginBottom
+End Sub
+
+Sub EditTextEffect(effect_ As TextEffectFormat, fontSize As Double, fontName As String)
+ effect_.fontSize = fontSize
+ effect_.fontName = fontName
+End Sub
+
+Sub EditVertexShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)
+    shape_.name = name
+    shape_.Fill.visible = visible
+    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))
+End Sub
+
+Sub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer)
+    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))
+    line_.dashStyle = dashStyle
+    line_.Transparency = transparent
+    line_.weight = weight
+End Sub
+
 `
     }
 
@@ -123,6 +144,34 @@ End Sub
     }
 
     export class VBATranslateFunctions {
+        public static grouping80(codes: string[]): string[] {
+            var r: string[] = [];
+            var r1: string[] = [];
+            codes.forEach(function (x, i, arr) {
+                r.push(x);
+                if (r.length == 80) {
+                    r1.push(VBATranslateFunctions.joinLines(r));
+                    r = [];
+                }
+            });
+            if (r.length > 0) {
+                r1.push(VBATranslateFunctions.joinLines(r));
+                r = [];
+            }
+            return r1;
+        }
+        public static splitCode(codes: string[], subArg : string, callArg : string, id: number): [string, string] {
+            var functions: string[] = [];
+
+            var p = VBATranslateFunctions.grouping80(codes);
+            p.forEach(function (x, i, arr) {
+                functions.push(`Call SubFunction${id}_${i}(${callArg})`);
+                var begin = `Sub SubFunction${id}_${i}(${subArg})`;
+                var end = `End Sub`;
+                p[i] = VBATranslateFunctions.joinLines([begin, x, end]);
+            });
+            return [VBATranslateFunctions.joinLines(functions), VBATranslateFunctions.joinLines(p)];
+        }
 
         public static ToFontBold(bold : string) : string {
             if (bold == "bold") {

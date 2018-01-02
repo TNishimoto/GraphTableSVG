@@ -190,6 +190,17 @@
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
             return [this.x, this.y];
         }
+        public getConnectorType(type: ConnectorPosition, x: number, y: number): ConnectorPosition {
+            if (type == ConnectorPosition.Auto) {
+                return this.getAutoPosition(x, y);
+            } else {
+                return type;
+            }
+        }
+        protected getAutoPosition(x: number, y: number): ConnectorPosition {
+            return ConnectorPosition.Top;
+
+        }
 
         /**
         再描画します。
@@ -398,6 +409,41 @@
         */
         get isDisposed(): boolean {
             return this.graph == null;
+        }
+
+        public createVBACode(main: string[], sub: string[], indexDic: { [key: string]: number; }): void{
+            if (this.graph != null) {
+                var i = indexDic[this.objectID];
+                var left = this.graph.svgGroup.getX() + this.x;
+                var top = this.graph.svgGroup.getY() + this.y;
+
+                var surface = this.surface;
+                var shape = surface instanceof SVGRectElement ? "msoShapeRectangle" : "msoShapeOval";
+                sub.push(` Set nodes(${i}) = shapes_.AddShape(${shape}, ${left}, ${top}, ${this.width}, ${this.height})`);
+
+                if (surface == null) {
+                    var backColor = VBATranslateFunctions.colorToVBA("gray");
+                    sub.push(` Call EditVertexShape(nodes(${i}), "${this.objectID}", ${1}, ${backColor})`);
+                } else {
+                    var backColor = VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("fill", "gray"));
+                    var lineColor = VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    var strokeWidth = parseInt(surface.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                    sub.push(` Call EditVertexShape(nodes(${i}), "${this.objectID}", ${1}, ${backColor})`);
+                    sub.push(` Call EditLine(nodes(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth})`);
+
+                }
+
+                var text = this.svgText.textContent == null ? "" : this.svgText.textContent;
+                var color = this.svgText.getPropertyStyleValueWithDefault("fill", "gray");
+                var fontSize = parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "24"));
+                var fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+                var fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
+                sub.push(` Call EditTextFrame(nodes(${i}).TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeNone)`);
+                sub.push(` Call EditTextRange(nodes(${i}).TextFrame.TextRange, ${VBATranslateFunctions.createStringFunction(text)}, ${0}, ${0}, ${VBATranslateFunctions.colorToVBA(color)})`);
+                sub.push(` Call EditTextEffect(nodes(${i}).TextEffect, ${fontSize}, "${fontFamily}")`);
+
+                
+            }
         }
     }
 

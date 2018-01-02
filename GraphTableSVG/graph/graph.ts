@@ -309,6 +309,32 @@
                 return new Rectangle();
             }
         }
+
+        public createVBACode(id: number): string[] {
+            var dic: { [key: string]: number; } = {};
+
+            this.vertices.forEach((v, i) => dic[v.objectID] = i);
+            this.edges.forEach((v, i) => dic[v.objectID] = i);
+            var main: string[] = [];
+            var sub: string[] = [];
+
+            var lines = new Array(0);
+            lines.push(`Sub create${id}(createdSlide As slide)`);
+            lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
+            lines.push(` Dim nodes(${this.vertices.length}) As Shape`);
+            lines.push(` Dim edges(${this.edges.length}) As Shape`);
+
+
+            this.vertices.forEach((v, i) => v.createVBACode(main, sub, dic));
+            this.edges.forEach((v, i) => v.createVBACode(main, sub, dic));
+            var [x1, y1] = VBATranslateFunctions.splitCode(sub, `shapes_ As Shapes, nodes() As Shape, edges() As Shape`, `shapes_, nodes, edges`, id);
+            lines.push(x1);
+            lines.push(`End Sub`);
+            lines.push(y1);
+
+            return lines;
+        }
+
     }
     
 

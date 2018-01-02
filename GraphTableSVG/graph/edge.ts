@@ -211,12 +211,12 @@
         /**
         ObjectIDを返します。
         */
-        public get objectID(): number | null {
+        public get objectID(): string {
             var r = this.svgGroup.getAttribute(Graph.objectIDName);
             if (r == null) {
-                return null;
+                throw new Error();
             } else {
-                return Number(r);
+                return r;
             }
         }
         /*
@@ -242,6 +242,19 @@
             
             var line = new LineEdge(graph, className);
             return line;
+        }
+        public createVBACode(main: string[], sub: string[], indexDic: { [key: string]: number; }): void {
+            if (this.graph != null) {
+                var i = indexDic[this.objectID];
+                sub.push(` Set edges(${i}) = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+                if (this.beginVertex != null && this.endVertex != null) {
+                    var beg = indexDic[this.beginVertex.objectID];
+                    var end = indexDic[this.endVertex.objectID];
+                    var begType = this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
+                    var endType = this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
+                    sub.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
+                }
+            }
         }
     }
 
@@ -295,6 +308,15 @@
             
 
             return false;
+        }
+        public createVBACode(main: string[], sub: string[], indexDic: { [key: string]: number; }): void {
+            super.createVBACode(main, sub, indexDic);
+            if (this.graph != null) {
+                var i = indexDic[this.objectID];
+                var lineColor = VBATranslateFunctions.colorToVBA(this._svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
+                var strokeWidth = parseInt(this._svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                sub.push(` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth})`);
+            }
         }
         
     }
