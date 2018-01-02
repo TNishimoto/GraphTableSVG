@@ -1,49 +1,98 @@
-var Color;
-(function (Color) {
-    var color_name = new Array("aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred", "darksalmon", "darkseagreen", "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsboro", "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indianred", "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgreen", "lightgrey", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream", "mistyrose", "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow", "springgreen", "steelblue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen");
-    var color_dic;
-    //redの16進数の配列
-    var r_value = new Array("F0", "FA", "00", "7F", "F0", "F5", "FF", "00", "FF", "00", "8A", "A5", "DE", "5F", "7F", "D2", "FF", "64", "FF", "DC", "00", "00", "00", "B8", "A9", "00", "BD", "8B", "55", "FF", "99", "8B", "E9", "8F", "48", "2F", "00", "94", "FF", "00", "69", "1E", "B2", "FF", "22", "FF", "DC", "F8", "FF", "DA", "80", "00", "AD", "F0", "FF", "CD", "4B", "FF", "F0", "E6", "FF", "7C", "FF", "AD", "F0", "E0", "FA", "90", "D3", "FF", "FF", "20", "87", "77", "B0", "FF", "00", "32", "FA", "FF", "80", "66", "00", "BA", "93", "3C", "7B", "00", "48", "C7", "19", "F5", "FF", "FF", "FF", "00", "FD", "80", "6B", "FF", "FF", "DA", "EE", "98", "AF", "DB", "FF", "FF", "CD", "FF", "DD", "B0", "80", "FF", "BC", "41", "8B", "FA", "F4", "2E", "FF", "A0", "C0", "87", "6A", "70", "FF", "00", "46", "D2", "00", "D8", "FF", "40", "EE", "F5", "FF", "F5", "FF", "9A");
-    //greenの16進数の配列
-    var g_value = new Array("F8", "EB", "FF", "FF", "FF", "F5", "E4", "00", "EB", "00", "2B", "2A", "B8", "9E", "FF", "69", "7F", "95", "F8", "14", "FF", "00", "8B", "86", "A9", "64", "B7", "00", "6B", "8C", "32", "00", "96", "BC", "3D", "4F", "CE", "00", "14", "BF", "69", "90", "22", "FA", "8B", "00", "DC", "F8", "D7", "A5", "80", "80", "FF", "FF", "69", "5C", "00", "FF", "E6", "E6", "F0", "FC", "FA", "D8", "80", "FF", "FA", "EE", "D3", "B6", "A0", "B2", "CE", "88", "C4", "FF", "FF", "CD", "F0", "00", "00", "CD", "00", "55", "70", "B3", "68", "FA", "D1", "15", "19", "FF", "E4", "E4", "DE", "00", "F5", "80", "8E", "A5", "45", "70", "E8", "FB", "EE", "70", "EF", "DA", "85", "C0", "A0", "E0", "00", "00", "8F", "69", "45", "80", "A4", "8B", "F5", "52", "C0", "CE", "5A", "80", "FA", "FF", "82", "B4", "80", "BF", "63", "E0", "82", "DE", "FF", "F5", "FF", "CD");
-    //blueの16進数の配列
-    var b_value = new Array("FF", "D7", "FF", "D4", "FF", "DC", "C4", "00", "CD", "FF", "E2", "2A", "87", "A0", "00", "1E", "50", "ED", "DC", "3C", "FF", "8B", "8B", "0B", "A9", "00", "6B", "8B", "2F", "00", "CC", "00", "7A", "8F", "8B", "4F", "D1", "D3", "93", "FF", "69", "FF", "22", "F0", "22", "FF", "DC", "FF", "00", "20", "80", "00", "2F", "F0", "B4", "5C", "82", "F0", "8C", "FA", "F5", "00", "CD", "E6", "80", "FF", "D2", "90", "D3", "C1", "7A", "AA", "FA", "99", "DE", "E0", "00", "32", "E6", "FF", "00", "AA", "CD", "D3", "DB", "71", "EE", "9A", "CC", "85", "70", "FA", "E1", "B5", "AD", "80", "E6", "00", "23", "00", "00", "D6", "AA", "98", "EE", "93", "D5", "B9", "3F", "CB", "DD", "E6", "80", "00", "8F", "E1", "13", "72", "60", "57", "EE", "2D", "C0", "EB", "CD", "90", "FA", "7F", "B4", "8C", "80", "D8", "47", "D0", "EE", "B3", "FF", "F5", "00", "32");
-    function translateHexCodeFromColorName(str) {
-        if (!color_dic) {
-            color_dic = {};
-            for (var i = 0; i < color_name.length; i++) {
-                color_dic[color_name[i]] = i;
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var Color;
+    (function (Color) {
+        var color_name = new Array("aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred", "darksalmon", "darkseagreen", "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsboro", "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indianred", "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgreen", "lightgrey", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream", "mistyrose", "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow", "springgreen", "steelblue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen");
+        var color_dic;
+        //redの16進数の配列
+        var r_value = new Array("F0", "FA", "00", "7F", "F0", "F5", "FF", "00", "FF", "00", "8A", "A5", "DE", "5F", "7F", "D2", "FF", "64", "FF", "DC", "00", "00", "00", "B8", "A9", "00", "BD", "8B", "55", "FF", "99", "8B", "E9", "8F", "48", "2F", "00", "94", "FF", "00", "69", "1E", "B2", "FF", "22", "FF", "DC", "F8", "FF", "DA", "80", "00", "AD", "F0", "FF", "CD", "4B", "FF", "F0", "E6", "FF", "7C", "FF", "AD", "F0", "E0", "FA", "90", "D3", "FF", "FF", "20", "87", "77", "B0", "FF", "00", "32", "FA", "FF", "80", "66", "00", "BA", "93", "3C", "7B", "00", "48", "C7", "19", "F5", "FF", "FF", "FF", "00", "FD", "80", "6B", "FF", "FF", "DA", "EE", "98", "AF", "DB", "FF", "FF", "CD", "FF", "DD", "B0", "80", "FF", "BC", "41", "8B", "FA", "F4", "2E", "FF", "A0", "C0", "87", "6A", "70", "FF", "00", "46", "D2", "00", "D8", "FF", "40", "EE", "F5", "FF", "F5", "FF", "9A");
+        //greenの16進数の配列
+        var g_value = new Array("F8", "EB", "FF", "FF", "FF", "F5", "E4", "00", "EB", "00", "2B", "2A", "B8", "9E", "FF", "69", "7F", "95", "F8", "14", "FF", "00", "8B", "86", "A9", "64", "B7", "00", "6B", "8C", "32", "00", "96", "BC", "3D", "4F", "CE", "00", "14", "BF", "69", "90", "22", "FA", "8B", "00", "DC", "F8", "D7", "A5", "80", "80", "FF", "FF", "69", "5C", "00", "FF", "E6", "E6", "F0", "FC", "FA", "D8", "80", "FF", "FA", "EE", "D3", "B6", "A0", "B2", "CE", "88", "C4", "FF", "FF", "CD", "F0", "00", "00", "CD", "00", "55", "70", "B3", "68", "FA", "D1", "15", "19", "FF", "E4", "E4", "DE", "00", "F5", "80", "8E", "A5", "45", "70", "E8", "FB", "EE", "70", "EF", "DA", "85", "C0", "A0", "E0", "00", "00", "8F", "69", "45", "80", "A4", "8B", "F5", "52", "C0", "CE", "5A", "80", "FA", "FF", "82", "B4", "80", "BF", "63", "E0", "82", "DE", "FF", "F5", "FF", "CD");
+        //blueの16進数の配列
+        var b_value = new Array("FF", "D7", "FF", "D4", "FF", "DC", "C4", "00", "CD", "FF", "E2", "2A", "87", "A0", "00", "1E", "50", "ED", "DC", "3C", "FF", "8B", "8B", "0B", "A9", "00", "6B", "8B", "2F", "00", "CC", "00", "7A", "8F", "8B", "4F", "D1", "D3", "93", "FF", "69", "FF", "22", "F0", "22", "FF", "DC", "FF", "00", "20", "80", "00", "2F", "F0", "B4", "5C", "82", "F0", "8C", "FA", "F5", "00", "CD", "E6", "80", "FF", "D2", "90", "D3", "C1", "7A", "AA", "FA", "99", "DE", "E0", "00", "32", "E6", "FF", "00", "AA", "CD", "D3", "DB", "71", "EE", "9A", "CC", "85", "70", "FA", "E1", "B5", "AD", "80", "E6", "00", "23", "00", "00", "D6", "AA", "98", "EE", "93", "D5", "B9", "3F", "CB", "DD", "E6", "80", "00", "8F", "E1", "13", "72", "60", "57", "EE", "2D", "C0", "EB", "CD", "90", "FA", "7F", "B4", "8C", "80", "D8", "47", "D0", "EE", "B3", "FF", "F5", "00", "32");
+        function translateHexCodeFromColorName(str) {
+            if (!color_dic) {
+                color_dic = {};
+                for (var i = 0; i < color_name.length; i++) {
+                    color_dic[color_name[i]] = i;
+                }
             }
-        }
-        if (str in color_dic) {
-            var i = color_dic[str];
-            return r_value[i] + g_value[i] + b_value[i];
-        }
-        else {
-            return str;
-        }
-    }
-    Color.translateHexCodeFromColorName = translateHexCodeFromColorName;
-    function translateRGBCodeFromColorName(str) {
-        str = translateHexCodeFromColorName(str);
-        if (str.substr(0, 3) == "rgb") {
-            return str;
-        }
-        else {
-            console.log(str);
-            if (str.length == 6) {
-                var r = str.substr(0, 2);
-                var g = str.substr(2, 2);
-                var b = str.substr(4, 2);
-                return `rgb(${parseInt(r)}, ${parseInt(g)}, ${parseInt(b)})`;
+            if (str in color_dic) {
+                var i = color_dic[str];
+                return r_value[i] + g_value[i] + b_value[i];
             }
             else {
-                return `rgb(${80}, ${80}, ${80})`;
+                return str;
             }
         }
-    }
-    Color.translateRGBCodeFromColorName = translateRGBCodeFromColorName;
-})(Color || (Color = {}));
+        Color.translateHexCodeFromColorName = translateHexCodeFromColorName;
+        function translateHexCodeFromColorName2(str) {
+            if (!color_dic) {
+                color_dic = {};
+                for (var i = 0; i < color_name.length; i++) {
+                    color_dic[color_name[i]] = i;
+                }
+            }
+            if (str in color_dic) {
+                var i = color_dic[str];
+                //return r_value[i] + g_value[i] + b_value[i];
+                return { r: parseInt(r_value[i], 16), g: parseInt(g_value[i], 16), b: parseInt(b_value[i], 16) };
+            }
+            else {
+                return null;
+            }
+        }
+        Color.translateHexCodeFromColorName2 = translateHexCodeFromColorName2;
+        function translateRGBCodeFromColorName(str) {
+            str = translateHexCodeFromColorName(str);
+            if (str.substr(0, 3) == "rgb") {
+                return str;
+            }
+            else {
+                if (str.length == 6) {
+                    var r = str.substr(0, 2);
+                    var g = str.substr(2, 2);
+                    var b = str.substr(4, 2);
+                    return `rgb(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)})`;
+                }
+                else {
+                    return `rgb(${80}, ${80}, ${80})`;
+                }
+            }
+        }
+        Color.translateRGBCodeFromColorName = translateRGBCodeFromColorName;
+        function translateRGBCodeFromColorName2(str) {
+            var v = translateHexCodeFromColorName2(str);
+            var def = { r: 80, g: 80, b: 80 };
+            if (v != null) {
+                return v;
+            }
+            else {
+                if (str.substr(0, 3) == "rgb") {
+                    str = str.replace("rgb(", "");
+                    str = str.replace(")", "");
+                    var values = str.split(",");
+                    if (values.length == 3) {
+                        return { r: parseInt(values[0]), g: parseInt(values[1]), b: parseInt(values[2]) };
+                    }
+                    else {
+                        return def;
+                    }
+                }
+                else if (str.length == 6) {
+                    var r = str.substr(0, 2);
+                    var g = str.substr(2, 2);
+                    var b = str.substr(4, 2);
+                    return { r: parseInt(r), g: parseInt(g), b: parseInt(b) };
+                }
+                else {
+                    return def;
+                }
+            }
+        }
+        Color.translateRGBCodeFromColorName2 = translateRGBCodeFromColorName2;
+    })(Color = GraphTableSVG.Color || (GraphTableSVG.Color = {}));
+})(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
     /**
@@ -377,10 +426,10 @@ var GraphTableSVG;
         get objectID() {
             var r = this.svgGroup.getAttribute(GraphTableSVG.Graph.objectIDName);
             if (r == null) {
-                return null;
+                throw new Error();
             }
             else {
-                return Number(r);
+                return r;
             }
         }
         /*
@@ -405,6 +454,19 @@ var GraphTableSVG;
             var textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();
             var line = new LineEdge(graph, className);
             return line;
+        }
+        createVBACode(main, sub, indexDic) {
+            if (this.graph != null) {
+                var i = indexDic[this.objectID];
+                sub.push(` Set edges(${i}) = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+                if (this.beginVertex != null && this.endVertex != null) {
+                    var beg = indexDic[this.beginVertex.objectID];
+                    var end = indexDic[this.endVertex.objectID];
+                    var begType = this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
+                    var endType = this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
+                    sub.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`);
+                }
+            }
         }
     }
     //public static defaultBeginConnectorPosition: string = "--default-begin-connector-position";
@@ -434,7 +496,7 @@ var GraphTableSVG;
             //this.graph.svgGroup.appendChild(this._svg);
         }
         //svgText: SVGTextElement;
-        get svg() {
+        get svgLine() {
             return this._svgLine;
         }
         /*
@@ -455,6 +517,16 @@ var GraphTableSVG;
                 }
             }
             return false;
+        }
+        createVBACode(main, sub, indexDic) {
+            super.createVBACode(main, sub, indexDic);
+            if (this.graph != null) {
+                var i = indexDic[this.objectID];
+                var lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this._svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
+                var strokeWidth = parseInt(this._svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                var visible = this._svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                sub.push(` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
+            }
         }
     }
     GraphTableSVG.LineEdge = LineEdge;
@@ -750,6 +822,25 @@ var GraphTableSVG;
             else {
                 return new GraphTableSVG.Rectangle();
             }
+        }
+        createVBACode(id) {
+            var dic = {};
+            this.vertices.forEach((v, i) => dic[v.objectID] = i);
+            this.edges.forEach((v, i) => dic[v.objectID] = i);
+            var main = [];
+            var sub = [];
+            var lines = new Array(0);
+            lines.push(`Sub create${id}(createdSlide As slide)`);
+            lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
+            lines.push(` Dim nodes(${this.vertices.length}) As Shape`);
+            lines.push(` Dim edges(${this.edges.length}) As Shape`);
+            this.vertices.forEach((v, i) => v.createVBACode(main, sub, dic));
+            this.edges.forEach((v, i) => v.createVBACode(main, sub, dic));
+            var [x1, y1] = GraphTableSVG.VBATranslateFunctions.splitCode(sub, `shapes_ As Shapes, nodes() As Shape, edges() As Shape`, `shapes_, nodes, edges`, id);
+            lines.push(x1);
+            lines.push(`End Sub`);
+            lines.push(y1);
+            return lines;
         }
     }
     Graph.idCounter = 0;
@@ -1111,6 +1202,17 @@ var GraphTableSVG;
         getLocation(type, x, y) {
             return [this.x, this.y];
         }
+        getConnectorType(type, x, y) {
+            if (type == GraphTableSVG.ConnectorPosition.Auto) {
+                return this.getAutoPosition(x, y);
+            }
+            else {
+                return type;
+            }
+        }
+        getAutoPosition(x, y) {
+            return GraphTableSVG.ConnectorPosition.Top;
+        }
         /**
         再描画します。
         */
@@ -1316,6 +1418,37 @@ var GraphTableSVG;
         get isDisposed() {
             return this.graph == null;
         }
+        createVBACode(main, sub, indexDic) {
+            if (this.graph != null) {
+                var i = indexDic[this.objectID];
+                var left = this.graph.svgGroup.getX() + this.x;
+                var top = this.graph.svgGroup.getY() + this.y;
+                var surface = this.surface;
+                var shape = surface instanceof SVGRectElement ? "msoShapeRectangle" : "msoShapeOval";
+                sub.push(` Set nodes(${i}) = shapes_.AddShape(${shape}, ${left}, ${top}, ${this.width}, ${this.height})`);
+                if (surface == null) {
+                    var backColor = GraphTableSVG.VBATranslateFunctions.colorToVBA("gray");
+                    sub.push(` Call EditVertexShape(nodes(${i}), "${this.objectID}", msoFalse, ${backColor})`);
+                }
+                else {
+                    var backColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("fill", "gray"));
+                    var lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    var strokeWidth = parseInt(surface.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                    var visible = surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                    sub.push(` Call EditVertexShape(nodes(${i}), "${this.objectID}", ${visible}, ${backColor})`);
+                    sub.push(` Call EditLine(nodes(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
+                }
+                //var text = this.svgText.textContent == null ? "" : this.svgText.textContent;
+                //var color = this.svgText.getPropertyStyleValueWithDefault("fill", "gray");
+                var fontSize = parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "24"));
+                var fontFamily = GraphTableSVG.VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+                var fontBold = GraphTableSVG.VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
+                sub.push(` Call EditTextFrame(nodes(${i}).TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeNone)`);
+                GraphTableSVG.VBATranslateFunctions.TranslateSVGTextElement(sub, this.svgText, `nodes(${i}).TextFrame.TextRange`);
+                //sub.push(` Call EditTextRange(nodes(${i}).TextFrame.TextRange, ${VBATranslateFunctions.createStringFunction(text)}, ${0}, ${0}, ${VBATranslateFunctions.colorToVBA(color)})`);
+                sub.push(` Call EditTextEffect(nodes(${i}).TextEffect, ${fontSize}, "${fontFamily}")`);
+            }
+        }
     }
     //public symbol: symbol = Symbol();
     Vertex.defaultSurfaceType = "--default-surface-type";
@@ -1340,6 +1473,7 @@ var GraphTableSVG;
             super(__graph, className, text);
             this._svgCircle = GraphTableSVG.createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue(GraphTableSVG.Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
+            GraphTableSVG.setDefaultValue(this.svgCircle);
         }
         get svgCircle() {
             return this._svgCircle;
@@ -1480,6 +1614,7 @@ var GraphTableSVG;
             super(__graph, className, text);
             this._svgRectangle = GraphTableSVG.createRectangle(this.svgGroup.getActiveStyle().tryGetPropertyValue(GraphTableSVG.Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
+            GraphTableSVG.setDefaultValue(this.svgRectangle);
             this.svgRectangle.x.baseVal.value = -this.width / 2;
             this.svgRectangle.y.baseVal.value = -this.height / 2;
         }
@@ -1674,12 +1809,14 @@ var GraphTableSVG;
     }
     GraphTableSVG.VirtualTree = VirtualTree;
 })(GraphTableSVG || (GraphTableSVG = {}));
-var GUI;
-(function (GUI) {
-    function createMacroModal(text) {
-        var mainDiv = document.createElement("div");
-        mainDiv.id = "macro-modal";
-        mainDiv.innerHTML = `
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var GUI;
+    (function (GUI) {
+        function createMacroModal(text) {
+            var mainDiv = document.createElement("div");
+            mainDiv.id = "macro-modal";
+            mainDiv.innerHTML = `
     使い方（Powerpoint 2013）<br>
         新規ファイル<br>
         →表示→マクロ→作成<br>
@@ -1689,81 +1826,92 @@ var GUI;
         ※サイズの大きすぎる木はマクロ実行時にエラーが出ます。
         <br>
         <textarea id="codeBox" rows="8" cols="100" style="overflow:auto;"></textarea>
-        <button class="btn" onClick="GUI.copyAndCloseMacroModal();">
+        <button class="btn" onClick="GraphTableSVG.GUI.copyAndCloseMacroModal();">
             クリップボードにコピー
         </button>
     `;
-        mainDiv.style.position = "fixed";
-        mainDiv.style.zIndex = "16";
-        mainDiv.style.width = "900px";
-        mainDiv.style.height = "400px";
-        mainDiv.style.left = `${((window.outerWidth - parseInt(mainDiv.style.width)) / 2)}px`;
-        mainDiv.style.top = `${((window.outerHeight - parseInt(mainDiv.style.height)) / 2)}px`;
-        mainDiv.style.display = "inline";
-        mainDiv.style.backgroundColor = "#ffffff";
-        document.body.appendChild(mainDiv);
-        var cnt = document.getElementById("codeBox");
-        cnt.value = text;
-        var bgDiv = document.createElement("div");
-        document.body.appendChild(bgDiv);
-        bgDiv.style.width = "100%";
-        bgDiv.style.height = "100%";
-        bgDiv.style.backgroundColor = "rgba(0,0,0,0.5)";
-        bgDiv.style.position = "fixed";
-        bgDiv.style.top = "0";
-        bgDiv.style.left = "0";
-        bgDiv.id = "modal-bg";
-        bgDiv.style.zIndex = "5";
-        bgDiv.style.display = "inline";
-        bgDiv.onclick = removeMacroModal;
-        //$("body").append('<div id="modal-bg" style="z-index:5"></div>');
-    }
-    GUI.createMacroModal = createMacroModal;
-    function removeMacroModal() {
-        var div1 = document.getElementById("macro-modal");
-        var div2 = document.getElementById("modal-bg");
-        if (div1 != null)
-            document.body.removeChild(div1);
-        if (div2 != null)
-            document.body.removeChild(div2);
-    }
-    GUI.removeMacroModal = removeMacroModal;
-    function copyAndCloseMacroModal() {
-        var cnt = document.getElementById("codeBox");
-        cnt.select();
-        window.document.execCommand('copy');
-        alert('クリップボードにコピーしました。');
-        removeMacroModal();
-    }
-    GUI.copyAndCloseMacroModal = copyAndCloseMacroModal;
-    function setSVGBoxSize(box, item1, item2) {
-        if (item1 instanceof GraphTableSVG.Rectangle) {
-            if (item2 instanceof GraphTableSVG.Padding) {
-                var w = item1.right + item2.left + item2.right;
-                var h = item1.bottom + item2.top + item2.bottom;
-                setSVGBoxSize(box, w, h);
-            }
-            else {
-                throw new Error();
-            }
+            mainDiv.style.position = "fixed";
+            mainDiv.style.zIndex = "16";
+            mainDiv.style.width = "900px";
+            mainDiv.style.height = "400px";
+            mainDiv.style.left = `${((window.outerWidth - parseInt(mainDiv.style.width)) / 2)}px`;
+            mainDiv.style.top = `${((window.outerHeight - parseInt(mainDiv.style.height)) / 2)}px`;
+            mainDiv.style.display = "inline";
+            mainDiv.style.backgroundColor = "#ffffff";
+            document.body.appendChild(mainDiv);
+            var cnt = document.getElementById("codeBox");
+            cnt.value = text;
+            var bgDiv = document.createElement("div");
+            document.body.appendChild(bgDiv);
+            bgDiv.style.width = "100%";
+            bgDiv.style.height = "100%";
+            bgDiv.style.backgroundColor = "rgba(0,0,0,0.5)";
+            bgDiv.style.position = "fixed";
+            bgDiv.style.top = "0";
+            bgDiv.style.left = "0";
+            bgDiv.id = "modal-bg";
+            bgDiv.style.zIndex = "5";
+            bgDiv.style.display = "inline";
+            bgDiv.onclick = removeMacroModal;
+            //$("body").append('<div id="modal-bg" style="z-index:5"></div>');
         }
-        else {
-            if (item2 instanceof GraphTableSVG.Padding) {
-                throw new Error();
+        GUI.createMacroModal = createMacroModal;
+        function removeMacroModal() {
+            var div1 = document.getElementById("macro-modal");
+            var div2 = document.getElementById("modal-bg");
+            if (div1 != null)
+                document.body.removeChild(div1);
+            if (div2 != null)
+                document.body.removeChild(div2);
+        }
+        GUI.removeMacroModal = removeMacroModal;
+        function copyAndCloseMacroModal() {
+            var cnt = document.getElementById("codeBox");
+            cnt.select();
+            window.document.execCommand('copy');
+            alert('クリップボードにコピーしました。');
+            removeMacroModal();
+        }
+        GUI.copyAndCloseMacroModal = copyAndCloseMacroModal;
+        function setSVGBoxSize(box, item1, item2) {
+            if (item1 instanceof GraphTableSVG.Rectangle) {
+                if (item2 instanceof GraphTableSVG.Padding) {
+                    var w = item1.right + item2.left + item2.right;
+                    var h = item1.bottom + item2.top + item2.bottom;
+                    setSVGBoxSize(box, w, h);
+                }
+                else {
+                    throw new Error();
+                }
             }
             else {
-                var width = `${item1}px`;
-                var height = `${item2}px`;
-                if (box.style.width != width || box.style.height != height) {
-                    box.style.width = width;
-                    box.style.height = height;
-                    box.setAttribute(`viewBox`, `0 0 ${item1} ${item2}`);
+                if (item2 instanceof GraphTableSVG.Padding) {
+                    throw new Error();
+                }
+                else {
+                    var width = `${item1}px`;
+                    var height = `${item2}px`;
+                    if (box.style.width != width || box.style.height != height) {
+                        box.style.width = width;
+                        box.style.height = height;
+                        box.setAttribute(`viewBox`, `0 0 ${item1} ${item2}`);
+                    }
                 }
             }
         }
-    }
-    GUI.setSVGBoxSize = setSVGBoxSize;
-})(GUI || (GUI = {}));
+        GUI.setSVGBoxSize = setSVGBoxSize;
+        function GetURLParameters() {
+            var arg = new Object;
+            var pair = location.search.substring(1).split('&');
+            for (var i = 0; pair[i]; i++) {
+                var kv = pair[i].split('=');
+                arg[kv[0]] = kv[1];
+            }
+            return arg;
+        }
+        GUI.GetURLParameters = GetURLParameters;
+    })(GUI = GraphTableSVG.GUI || (GraphTableSVG.GUI = {}));
+})(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
     class Cell {
@@ -1807,6 +1955,7 @@ var GraphTableSVG;
             this._svgBackground = Cell.createCellRectangle(this.defaultBackgroundClass);
             this._svgText = GraphTableSVG.createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
+            GraphTableSVG.setDefaultValue(this.svgBackground);
             this.svgGroup.appendChild(this.svgText);
             /*
             var circle = createRectangle();
@@ -1823,7 +1972,7 @@ var GraphTableSVG;
             this.table.svgGroup.appendChild(this.leftLine);
             this.table.svgGroup.appendChild(this.rightLine);
             this.table.svgGroup.appendChild(this.bottomLine);
-            var option1 = { childList: true };
+            var option1 = { childList: true, subtree: true };
             this.table.cellTextObserver.observe(this.svgText, option1);
             this._observer = new MutationObserver(this._observerFunc);
             var option2 = { attributes: true };
@@ -2442,6 +2591,57 @@ SVGElement.prototype.setPropertyStyleValue = function (name, value) {
     var item = this;
     item.style.setProperty(name, value);
 };
+SVGTextElement.prototype.setLatexTextContent = function (str) {
+    str += "_";
+    var p = this;
+    p.textContent = "";
+    var h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
+    var mode = "";
+    var tmp = "";
+    var dy = (1 * h) / 3;
+    var lastMode = "none";
+    var smallFontSize = (2 * h) / 3;
+    for (var i = 0; i < str.length; i++) {
+        var c = str[i];
+        if (c == "_" || c == "{" || c == "^" || c == "}") {
+            mode += c;
+            if (mode == "_{}") {
+                var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                tspan.textContent = tmp;
+                tspan.setAttribute("dy", `${dy}`);
+                tspan.setAttribute("data-script", "subscript");
+                tspan.style.fontSize = `${smallFontSize}pt`;
+                p.appendChild(tspan);
+                lastMode = "down";
+                mode = "";
+                tmp = "";
+            }
+            else if (mode == "^{}") {
+                var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                tspan.textContent = tmp;
+                tspan.setAttribute("dy", `-${dy}`);
+                tspan.style.fontSize = `${smallFontSize}pt`;
+                tspan.setAttribute("data-script", "superscript");
+                p.appendChild(tspan);
+                lastMode = "up";
+                mode = "";
+                tmp = "";
+            }
+            else if (mode == "_" || mode == "^") {
+                var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                tspan.textContent = tmp;
+                var normaldy = lastMode == "up" ? dy : lastMode == "down" ? -dy : 0;
+                tspan.setAttribute("dy", `${normaldy}`);
+                p.appendChild(tspan);
+                lastMode = "none";
+                tmp = "";
+            }
+        }
+        else {
+            tmp += c;
+        }
+    }
+};
 SVGTextElement.prototype.getX = function () {
     var p = this;
     if (p.x.baseVal.numberOfItems == 0) {
@@ -2530,7 +2730,7 @@ var GraphTableSVG;
                 }
             }
             if (b && !this.table.isDrawing && this.table.isAutoResized)
-                this.table.resize();
+                this.table.update();
         }
     }
     GraphTableSVG.Row = Row;
@@ -2591,7 +2791,7 @@ var GraphTableSVG;
                 }
             }
             if (b && !this.table.isDrawing && this.table.isAutoResized)
-                this.table.resize();
+                this.table.update();
         }
     }
     GraphTableSVG.Column = Column;
@@ -2613,25 +2813,17 @@ var GraphTableSVG;
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item instanceof GraphTableSVG.Table) {
-                    var lines = SVGToVBA.createTable(item, i, "createdSlide");
+                    var lines = item.createVBACode(i, "createdSlide");
+                    lines.forEach((v) => s.push(v));
+                }
+                else {
+                    var lines = item.createVBACode(i);
                     lines.forEach((v) => s.push(v));
                 }
             }
             s.push(SVGToVBA.cellFunctionCode);
             var r = VBATranslateFunctions.joinLines(s);
             return r;
-        }
-        static createTable(table, id, slide) {
-            var lines = new Array(0);
-            lines.push(`Sub create${id}(createdSlide As slide)`);
-            //lines.push(` Dim createdSlide As slide`);
-            //lines.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
-            var [main, sub] = table.createVBAMainCode("createdSlide", id);
-            lines.push(main);
-            lines.push(`End Sub`);
-            lines.push(sub);
-            return lines;
-            //return VBATranslateFunctions.joinLines(lines);
         }
     }
     SVGToVBA.cellFunctionCode = `
@@ -2695,6 +2887,40 @@ Sub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer,
     line_.Transparency = transparent
 End Sub
 
+Sub EditConnector(connector_ As ConnectorFormat, begShape As Shape, endShape As Shape, begPos As Integer, endPos As Integer)
+    Call connector_.BeginConnect(begShape, begPos)
+    Call connector_.EndConnect(endShape, endPos)
+End Sub
+
+Sub EditTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, wordWrap As Boolean, autoSize As Integer)
+    frame_.autoSize = autoSize
+    frame_.wordWrap = wordWrap
+    frame_.marginLeft = marginLeft
+    frame_.marginRight = marginRight
+    frame_.marginTop = marginTop
+    frame_.marginBottom = marginBottom
+End Sub
+
+Sub EditTextEffect(effect_ As TextEffectFormat, fontSize As Double, fontName As String)
+ effect_.fontSize = fontSize
+ effect_.fontName = fontName
+End Sub
+
+Sub EditVertexShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)
+    shape_.name = name
+    shape_.Fill.visible = visible
+    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))
+End Sub
+
+Sub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer, visible As Integer)
+    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))
+    line_.dashStyle = dashStyle
+    line_.Transparency = transparent
+    line_.weight = weight
+    line_.visible = visible
+End Sub
+
+
 `;
     GraphTableSVG.SVGToVBA = SVGToVBA;
     function parseInteger(value) {
@@ -2716,6 +2942,33 @@ End Sub
     }
     GraphTableSVG.visible = visible;
     class VBATranslateFunctions {
+        static grouping80(codes) {
+            var r = [];
+            var r1 = [];
+            codes.forEach(function (x, i, arr) {
+                r.push(x);
+                if (r.length == 80) {
+                    r1.push(VBATranslateFunctions.joinLines(r));
+                    r = [];
+                }
+            });
+            if (r.length > 0) {
+                r1.push(VBATranslateFunctions.joinLines(r));
+                r = [];
+            }
+            return r1;
+        }
+        static splitCode(codes, subArg, callArg, id) {
+            var functions = [];
+            var p = VBATranslateFunctions.grouping80(codes);
+            p.forEach(function (x, i, arr) {
+                functions.push(`Call SubFunction${id}_${i}(${callArg})`);
+                var begin = `Sub SubFunction${id}_${i}(${subArg})`;
+                var end = `End Sub`;
+                p[i] = VBATranslateFunctions.joinLines([begin, x, end]);
+            });
+            return [VBATranslateFunctions.joinLines(functions), VBATranslateFunctions.joinLines(p)];
+        }
         static ToFontBold(bold) {
             if (bold == "bold") {
                 return "msotrue";
@@ -2782,7 +3035,7 @@ End Sub
             return s;
         }
         static colorToVBA(color) {
-            color = Color.translateRGBCodeFromColorName(color);
+            color = GraphTableSVG.Color.translateRGBCodeFromColorName(color);
             if (color.indexOf("rgb") != -1) {
                 return color.replace("rgb", "Array");
             }
@@ -2794,6 +3047,31 @@ End Sub
             font = font.replace(/"/g, "");
             font = font.replace(/'/g, "");
             return font;
+        }
+        static TranslateSVGTextElement(sub, item, range) {
+            var text = item.textContent == null ? "" : item.textContent;
+            var color = GraphTableSVG.Color.translateRGBCodeFromColorName2(item.getPropertyStyleValueWithDefault("fill", "gray"));
+            sub.push(`${range}.text = "${item.textContent}"`);
+            sub.push(`${range}.Font.color.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`);
+            if (item.children.length > 0) {
+                var pos = 1;
+                for (var i = 0; i < item.children.length; i++) {
+                    var child = item.children.item(i);
+                    if (child.textContent != null && child.textContent.length > 0) {
+                        var len = child.textContent.length;
+                        var f = child.getAttribute("data-script");
+                        if (f != null) {
+                            if (f == "superscript") {
+                                sub.push(`${range}.Characters(${pos}, ${len}).Font.Superscript = True`);
+                            }
+                            else if (f == "subscript") {
+                                sub.push(`${range}.Characters(${pos}, ${len}).Font.Subscript = True`);
+                            }
+                        }
+                        pos += len;
+                    }
+                }
+            }
         }
     }
     GraphTableSVG.VBATranslateFunctions = VBATranslateFunctions;
@@ -2812,6 +3090,9 @@ var GraphTableSVG;
                 var b = false;
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
+                    if (p.type == "childList") {
+                        b = true;
+                    }
                     for (var j = 0; j < p.addedNodes.length; j++) {
                         var item = p.addedNodes.item(j);
                         if (item.nodeName == "#text") {
@@ -2820,7 +3101,7 @@ var GraphTableSVG;
                     }
                 }
                 if (b)
-                    this.resize();
+                    this.update();
             };
             this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             svgbox.appendChild(this.svgGroup);
@@ -2842,7 +3123,7 @@ var GraphTableSVG;
         set isAutoResized(value) {
             this._isAutoResized = value;
             if (value) {
-                this.resize();
+                this.update();
             }
         }
         get cellTextObserver() {
@@ -3047,7 +3328,7 @@ var GraphTableSVG;
         /**
         各セルのサイズを再計算します。
         */
-        resize() {
+        update() {
             this._isDrawing = true;
             var rows = this.rows;
             var columns = this.columns;
@@ -3082,6 +3363,15 @@ var GraphTableSVG;
             return this.cells[y][x];
         }
         */
+        createVBACode(id, slide) {
+            var lines = new Array(0);
+            lines.push(`Sub create${id}(createdSlide As slide)`);
+            var [main, sub] = this.createVBAMainCode("createdSlide", id);
+            lines.push(main);
+            lines.push(`End Sub`);
+            lines.push(sub);
+            return lines;
+        }
         /**
          * 現在のテーブルを表すVBAコードを返します。
          */
@@ -3106,9 +3396,11 @@ var GraphTableSVG;
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    var color = GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgBackground.getPropertyStyleValueWithDefault("fill", "gray"));
+                    let color = GraphTableSVG.Color.translateRGBCodeFromColorName2(cell.svgBackground.getPropertyStyleValueWithDefault("fill", "gray"));
                     //var style = cell.svgBackground.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
-                    lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${color})`);
+                    GraphTableSVG.VBATranslateFunctions.TranslateSVGTextElement(lines, this.cells[y][x].svgText, `${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame.TextRange`);
+                    lines.push(`${tableName}.cell(${y + 1},${x + 1}).Shape.Fill.ForeColor.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`);
+                    //lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${color})`);
                 }
             }
             for (var y = 0; y < this.height; y++) {
@@ -3154,56 +3446,24 @@ var GraphTableSVG;
                     }
                 }
             }
-            /*
-            lines.push(`Call EditCellFonts(table_)`);
-            lines.push(`Call EditCellTextFrames(table_)`);
-            lines.push(`Call EditBorders(table_)`);
-            */
-            //lines.push(`End Sub`);
-            /*
-            lines.push(`Sub EditCellFonts(table_ As Table)`);
-            
-            lines.push(`End Sub`);
-
-            lines.push(`Sub EditCellTextFrames(table_ As Table)`);
-            
-            lines.push(`End Sub`);
-
-
-            lines.push(`Sub EditBorders(table_ As Table)`);
-            */
-            //return [VBATranslateFunctions.joinLines(lines),""];
             var x0 = GraphTableSVG.VBATranslateFunctions.joinLines(fstLines);
-            var [x1, y1] = this.splitCode(tableName, lines, id);
+            var [x1, y1] = GraphTableSVG.VBATranslateFunctions.splitCode(lines, `${tableName} as Table`, `${tableName}`, id);
             return [GraphTableSVG.VBATranslateFunctions.joinLines([x0, x1]), y1];
         }
-        splitCode(tableName, codes, id) {
-            var functions = [];
-            var p = this.splitCode1(codes);
+        /*
+        private splitCode(tableName: string, codes: string[], id: number): [string, string] {
+            var functions: string[] = [];
+
+            var p = VBATranslateFunctions.grouping80(codes);
             p.forEach(function (x, i, arr) {
                 functions.push(`Call SubFunction${id}_${i}(${tableName})`);
                 var begin = `Sub SubFunction${id}_${i}(${tableName} As Table)`;
                 var end = `End Sub`;
-                p[i] = GraphTableSVG.VBATranslateFunctions.joinLines([begin, x, end]);
+                p[i] = VBATranslateFunctions.joinLines([begin, x, end]);
             });
-            return [GraphTableSVG.VBATranslateFunctions.joinLines(functions), GraphTableSVG.VBATranslateFunctions.joinLines(p)];
+            return [VBATranslateFunctions.joinLines(functions), VBATranslateFunctions.joinLines(p)];
         }
-        splitCode1(codes) {
-            var r = [];
-            var r1 = [];
-            codes.forEach(function (x, i, arr) {
-                r.push(x);
-                if (r.length == 80) {
-                    r1.push(GraphTableSVG.VBATranslateFunctions.joinLines(r));
-                    r = [];
-                }
-            });
-            if (r.length > 0) {
-                r1.push(GraphTableSVG.VBATranslateFunctions.joinLines(r));
-                r = [];
-            }
-            return r1;
-        }
+        */
         removeTable(svg) {
             if (svg.contains(this.svgGroup)) {
                 svg.removeChild(this.svgGroup);
@@ -3277,14 +3537,6 @@ var GraphTableSVG;
         }
         else {
             rect.setAttribute("class", className);
-            var s1 = rect.getActiveStyle().getPropertyValue(defaultWidthName).trim();
-            if (s1.length > 0) {
-                rect.width.baseVal.value = Number(s1);
-            }
-            var s2 = rect.getActiveStyle().getPropertyValue(defaultHeightName).trim();
-            if (s2.length > 0) {
-                rect.height.baseVal.value = Number(s2);
-            }
         }
         return rect;
     }
@@ -3331,8 +3583,7 @@ var GraphTableSVG;
         }
         else {
             circle.setAttribute("class", className);
-            var s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
-            circle.r.baseVal.value = Number(s);
+            //var s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
             //circle.className = className
             //console.log("d : " + circle.setAttribute("class", className));
         }
@@ -3343,6 +3594,28 @@ var GraphTableSVG;
         return circle;
     }
     GraphTableSVG.createCircle = createCircle;
+    function setDefaultValue(item) {
+        var className = item.getAttribute("class");
+        if (className != null) {
+            if (item instanceof SVGCircleElement) {
+                var s = item.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
+                if (s.length > 0) {
+                    item.r.baseVal.value = Number(s);
+                }
+            }
+            else {
+                var s1 = item.getActiveStyle().getPropertyValue(defaultWidthName).trim();
+                if (s1.length > 0) {
+                    item.width.baseVal.value = Number(s1);
+                }
+                var s2 = item.getActiveStyle().getPropertyValue(defaultHeightName).trim();
+                if (s2.length > 0) {
+                    item.height.baseVal.value = Number(s2);
+                }
+            }
+        }
+    }
+    GraphTableSVG.setDefaultValue = setDefaultValue;
     function setClass(svg, className = null) {
         if (className == null) {
             svg.removeAttribute("class");

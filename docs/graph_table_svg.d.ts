@@ -1,6 +1,18 @@
-declare module Color {
-    function translateHexCodeFromColorName(str: string): string;
-    function translateRGBCodeFromColorName(str: string): string;
+declare namespace GraphTableSVG {
+    namespace Color {
+        function translateHexCodeFromColorName(str: string): string;
+        function translateHexCodeFromColorName2(str: string): {
+            r: number;
+            g: number;
+            b: number;
+        } | null;
+        function translateRGBCodeFromColorName(str: string): string;
+        function translateRGBCodeFromColorName2(str: string): {
+            r: number;
+            g: number;
+            b: number;
+        };
+    }
 }
 declare namespace GraphTableSVG {
     /**
@@ -172,7 +184,7 @@ declare namespace GraphTableSVG {
         /**
         ObjectIDを返します。
         */
-        readonly objectID: number | null;
+        readonly objectID: string;
         save(): void;
         /**
          * Edgeを作成します。
@@ -181,12 +193,18 @@ declare namespace GraphTableSVG {
          * @param lineType
          */
         static create(graph: Graph, className?: string | null, lineType?: string | null): GraphTableSVG.Edge;
+        createVBACode(main: string[], sub: string[], indexDic: {
+            [key: string]: number;
+        }): void;
     }
     class LineEdge extends Edge {
         private _svgLine;
-        readonly svg: SVGLineElement;
+        readonly svgLine: SVGLineElement;
         constructor(__graph: Graph, className?: string | null);
         update(): boolean;
+        createVBACode(main: string[], sub: string[], indexDic: {
+            [key: string]: number;
+        }): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -206,7 +224,7 @@ declare namespace GraphTableSVG {
         constructor(box: HTMLElement, className?: string | null);
         private updateVertices();
         private updateEdges();
-        private update();
+        update(): void;
         /**
         Vertexインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
         */
@@ -283,10 +301,11 @@ declare namespace GraphTableSVG {
         static setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null): void;
         static IsDescendantOfBody(node: Node): boolean;
         static getRegion(items: (Graph | Table)[]): Rectangle;
+        createVBACode(id: number): string[];
     }
 }
 declare namespace GraphTableSVG {
-    module GraphArrangement {
+    namespace GraphArrangement {
         function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void;
         function reverse(graph: Graph, isX: boolean, isY: boolean): void;
         function average(items: number[]): number;
@@ -394,6 +413,8 @@ declare namespace GraphTableSVG {
          * @param y
          */
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
+        getConnectorType(type: ConnectorPosition, x: number, y: number): ConnectorPosition;
+        protected getAutoPosition(x: number, y: number): ConnectorPosition;
         /**
         再描画します。
         */
@@ -480,6 +501,9 @@ declare namespace GraphTableSVG {
         この頂点が廃棄されていたらTrueを返します。
         */
         readonly isDisposed: boolean;
+        createVBACode(main: string[], sub: string[], indexDic: {
+            [key: string]: number;
+        }): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -524,7 +548,7 @@ declare namespace GraphTableSVG {
         */
         readonly surface: SVGElement | null;
         private getRadian(x, y);
-        private getAutoPosition(x, y);
+        protected getAutoPosition(x: number, y: number): ConnectorPosition;
     }
     /**
      * 輪郭が四角形の頂点です。
@@ -552,7 +576,7 @@ declare namespace GraphTableSVG {
          * @param y
          */
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
-        private getAutoPosition(x, y);
+        protected getAutoPosition(x: number, y: number): ConnectorPosition;
     }
 }
 declare namespace GraphTableSVG {
@@ -572,12 +596,15 @@ declare namespace GraphTableSVG {
         setRootLocation(_x: number, _y: number): void;
     }
 }
-declare module GUI {
-    function createMacroModal(text: string): void;
-    function removeMacroModal(): void;
-    function copyAndCloseMacroModal(): void;
-    function setSVGBoxSize(box: HTMLElement, w: number, h: number): void;
-    function setSVGBoxSize(box: HTMLElement, rect: GraphTableSVG.Rectangle, padding: GraphTableSVG.Padding): void;
+declare namespace GraphTableSVG {
+    namespace GUI {
+        function createMacroModal(text: string): void;
+        function removeMacroModal(): void;
+        function copyAndCloseMacroModal(): void;
+        function setSVGBoxSize(box: HTMLElement, w: number, h: number): void;
+        function setSVGBoxSize(box: HTMLElement, rect: Rectangle, padding: Padding): void;
+        function GetURLParameters(): Object;
+    }
 }
 declare namespace GraphTableSVG {
     class Cell {
@@ -828,6 +855,7 @@ interface SVGTextElement {
     setX(value: number): void;
     getY(): number;
     setY(value: number): void;
+    setLatexTextContent(str: string): void;
 }
 declare namespace GraphTableSVG {
     class Row {
@@ -886,12 +914,13 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     class SVGToVBA {
         static create(items: (Graph | Table)[]): string;
-        static createTable(table: Table, id: number, slide: string): string[];
         static cellFunctionCode: string;
     }
     function parseInteger(value: string): number;
     function visible(value: string): number;
     class VBATranslateFunctions {
+        static grouping80(codes: string[]): string[];
+        static splitCode(codes: string[], subArg: string, callArg: string, id: number): [string, string];
         static ToFontBold(bold: string): string;
         static ToVerticalAnchor(value: string): string;
         static ToHorizontalAnchor(value: string): string;
@@ -902,6 +931,7 @@ declare namespace GraphTableSVG {
         static joinLines(lines: string[]): string;
         static colorToVBA(color: string): string;
         static ToVBAFont(font: string): string;
+        static TranslateSVGTextElement(sub: string[], item: SVGTextElement, range: string): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -987,17 +1017,16 @@ declare namespace GraphTableSVG {
         /**
         各セルのサイズを再計算します。
         */
-        resize(): void;
+        update(): void;
         /**
         所属しているSVGタグ上でのテーブルの領域を表すRectangleクラスを返します。
         */
         getRegion(): Rectangle;
+        createVBACode(id: number, slide: string): string[];
         /**
          * 現在のテーブルを表すVBAコードを返します。
          */
-        createVBAMainCode(slideName: string, id: number): [string, string];
-        private splitCode(tableName, codes, id);
-        private splitCode1(codes);
+        private createVBAMainCode(slideName, id);
         removeTable(svg: HTMLElement): void;
     }
 }
@@ -1036,6 +1065,7 @@ declare namespace GraphTableSVG {
      * @param className
      */
     function createCircle(className?: string | null): SVGCircleElement;
+    function setDefaultValue(item: SVGCircleElement | SVGRectElement): void;
     function setClass(svg: SVGElement, className?: string | null): void;
 }
 declare namespace GraphTableSVG {
