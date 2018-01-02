@@ -83,7 +83,6 @@
                 } else {
                     var width = `${item1}px`;
                     var height = `${item2}px`;
-
                     if (box.style.width != width || box.style.height != height) {
                         box.style.width = width;
                         box.style.height = height;

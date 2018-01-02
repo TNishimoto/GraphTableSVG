@@ -262,7 +262,7 @@
         private _svgLine: SVGLineElement;
         //svgText: SVGTextElement;
 
-        get svg(): SVGLineElement {
+        get svgLine(): SVGLineElement {
             return this._svgLine;
         }
         /*
@@ -315,7 +315,8 @@
                 var i = indexDic[this.objectID];
                 var lineColor = VBATranslateFunctions.colorToVBA(this._svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                 var strokeWidth = parseInt(this._svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
-                sub.push(` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth})`);
+                var visible = this._svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                sub.push(` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
             }
         }
         

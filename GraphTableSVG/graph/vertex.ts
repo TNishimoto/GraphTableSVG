@@ -423,23 +423,25 @@
 
                 if (surface == null) {
                     var backColor = VBATranslateFunctions.colorToVBA("gray");
-                    sub.push(` Call EditVertexShape(nodes(${i}), "${this.objectID}", ${1}, ${backColor})`);
+                    sub.push(` Call EditVertexShape(nodes(${i}), "${this.objectID}", msoFalse, ${backColor})`);
                 } else {
                     var backColor = VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("fill", "gray"));
                     var lineColor = VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("stroke", "gray"));
                     var strokeWidth = parseInt(surface.getPropertyStyleValueWithDefault("stroke-width", "4"));
-                    sub.push(` Call EditVertexShape(nodes(${i}), "${this.objectID}", ${1}, ${backColor})`);
-                    sub.push(` Call EditLine(nodes(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth})`);
+                    var visible = surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                    sub.push(` Call EditVertexShape(nodes(${i}), "${this.objectID}", ${visible}, ${backColor})`);
+                    sub.push(` Call EditLine(nodes(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
 
                 }
 
-                var text = this.svgText.textContent == null ? "" : this.svgText.textContent;
-                var color = this.svgText.getPropertyStyleValueWithDefault("fill", "gray");
+                //var text = this.svgText.textContent == null ? "" : this.svgText.textContent;
+                //var color = this.svgText.getPropertyStyleValueWithDefault("fill", "gray");
                 var fontSize = parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "24"));
                 var fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
                 var fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
                 sub.push(` Call EditTextFrame(nodes(${i}).TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeNone)`);
-                sub.push(` Call EditTextRange(nodes(${i}).TextFrame.TextRange, ${VBATranslateFunctions.createStringFunction(text)}, ${0}, ${0}, ${VBATranslateFunctions.colorToVBA(color)})`);
+                VBATranslateFunctions.TranslateSVGTextElement(sub, this.svgText, `nodes(${i}).TextFrame.TextRange`);
+                //sub.push(` Call EditTextRange(nodes(${i}).TextFrame.TextRange, ${VBATranslateFunctions.createStringFunction(text)}, ${0}, ${0}, ${VBATranslateFunctions.colorToVBA(color)})`);
                 sub.push(` Call EditTextEffect(nodes(${i}).TextEffect, ${fontSize}, "${fontFamily}")`);
 
                 

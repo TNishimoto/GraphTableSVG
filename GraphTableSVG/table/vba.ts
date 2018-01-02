@@ -118,12 +118,14 @@ Sub EditVertexShape(shape_ As Shape, name As String, visible As Integer, backCol
     shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))
 End Sub
 
-Sub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer)
+Sub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer, visible As Integer)
     line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))
     line_.dashStyle = dashStyle
     line_.Transparency = transparent
     line_.weight = weight
+    line_.visible = visible
 End Sub
+
 
 `
     }
@@ -253,6 +255,35 @@ End Sub
             font = font.replace(/'/g, "");
             return font;
         }
+        public static TranslateSVGTextElement(sub: string[], item: SVGTextElement, range: string): void {
+
+            var text = item.textContent == null ? "" : item.textContent;
+            var color = Color.translateRGBCodeFromColorName2(item.getPropertyStyleValueWithDefault("fill", "gray"));
+
+            sub.push(`${range}.text = "${item.textContent}"`);
+            sub.push(`${range}.Font.color.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`)
+            if (item.children.length > 0) {
+                var pos = 1;
+                for (var i = 0; i < item.children.length; i++) {
+                    var child = item.children.item(i);
+                    if (child.textContent != null && child.textContent.length > 0) {
+                        var len = child.textContent.length;
+
+                        var f = child.getAttribute("data-script");
+                        if (f != null) {
+                            if (f == "superscript") {
+                                sub.push(`${range}.Characters(${pos}, ${len}).Font.Superscript = True`)
+                            } else if (f == "subscript") {
+                                sub.push(`${range}.Characters(${pos}, ${len}).Font.Subscript = True`)
+                            }
+                        }
+                        pos += len;
+                    }
+                    
+                }
+            }
+        }
+
         /*
         public static shapeToVBA(shape: ShapeStyle, item: string) {
             return ` Call EditNodeLine(${item}, ${VBATranslateFunctions.colorToVBA(shape.lineColor)}, ${shape.dashStyleCode}, ${shape.transparency}, ${shape.weight})`;

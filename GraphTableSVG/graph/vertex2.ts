@@ -17,6 +17,7 @@
             super(__graph, className, text);
             this._svgCircle = createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
+            setDefaultValue(this.svgCircle);
         }
         /**
         頂点の幅を返します。
@@ -156,6 +157,8 @@
             super(__graph, className, text);
             this._svgRectangle = createRectangle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
+
+            setDefaultValue(this.svgRectangle);
 
             this.svgRectangle.x.baseVal.value = -this.width / 2;
             this.svgRectangle.y.baseVal.value = -this.height / 2;

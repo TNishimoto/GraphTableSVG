@@ -60,18 +60,7 @@ namespace GraphTableSVG {
             rect.style.stroke = "#000000";
         } else {
             rect.setAttribute("class", className);
-
-            var s1 = rect.getActiveStyle().getPropertyValue(defaultWidthName).trim();
-            if (s1.length > 0) {
-                rect.width.baseVal.value = Number(s1);
-            }
-
-            var s2 = rect.getActiveStyle().getPropertyValue(defaultHeightName).trim();
-            if (s2.length > 0) {
-                rect.height.baseVal.value = Number(s2);
-            }
-
-
+            
         }
         return rect;
     }
@@ -117,8 +106,7 @@ namespace GraphTableSVG {
             circle.style.fill = "#ffffff";
         } else {
             circle.setAttribute("class", className);
-            var s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
-            circle.r.baseVal.value = Number(s);
+            //var s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
             //circle.className = className
             //console.log("d : " + circle.setAttribute("class", className));
         }
@@ -127,8 +115,28 @@ namespace GraphTableSVG {
         circle.cy.baseVal.value = 0;
         //circle.r.baseVal.value = r;
         
-
         return circle;
+    }
+    export function setDefaultValue(item: SVGCircleElement | SVGRectElement) {
+        var className = item.getAttribute("class");
+        if (className != null) {
+            if (item instanceof SVGCircleElement) {
+                var s = item.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
+                if (s.length > 0) {
+                    item.r.baseVal.value = Number(s);
+                }
+            } else {
+                var s1 = item.getActiveStyle().getPropertyValue(defaultWidthName).trim();
+                if (s1.length > 0) {
+                    item.width.baseVal.value = Number(s1);
+                }
+
+                var s2 = item.getActiveStyle().getPropertyValue(defaultHeightName).trim();
+                if (s2.length > 0) {
+                    item.height.baseVal.value = Number(s2);
+                }
+            }
+        }
     }
 
     export function setClass(svg: SVGElement, className: string | null = null) {

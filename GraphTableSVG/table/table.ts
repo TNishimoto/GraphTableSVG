@@ -20,7 +20,7 @@ namespace GraphTableSVG {
         public set isAutoResized(value: boolean) {
             this._isAutoResized = value;
             if (value) {
-                this.resize();
+                this.update();
             }
         }
 
@@ -32,6 +32,9 @@ namespace GraphTableSVG {
             var b = false;
             for (var i = 0; i < x.length; i++) {
                 var p = x[i];
+                if (p.type == "childList") {
+                    b = true;
+                }
                 for (var j = 0; j < p.addedNodes.length; j++) {
                     var item = p.addedNodes.item(j);
 
@@ -40,7 +43,7 @@ namespace GraphTableSVG {
                     }
                 }
             }
-            if (b) this.resize();
+            if (b) this.update();
         };
 
         constructor(svgbox: HTMLElement, width: number, height: number, _tableClassName: string | null = null) {
@@ -267,7 +270,7 @@ namespace GraphTableSVG {
         /**
         各セルのサイズを再計算します。
         */
-        public resize() {
+        public update() {
             this._isDrawing = true;
             var rows = this.rows;
             var columns = this.columns;
@@ -348,9 +351,11 @@ namespace GraphTableSVG {
             for (var y = 0; y < this.height; y++) {
                 for (var x = 0; x < this.width; x++) {
                     var cell = this.cells[y][x];
-                    var color = VBATranslateFunctions.colorToVBA(cell.svgBackground.getPropertyStyleValueWithDefault("fill", "gray"));
+                    let color = Color.translateRGBCodeFromColorName2(cell.svgBackground.getPropertyStyleValueWithDefault("fill", "gray"));
                     //var style = cell.svgBackground.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
-                    lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${color})`);
+                    VBATranslateFunctions.TranslateSVGTextElement(lines, this.cells[y][x].svgText, `${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame.TextRange`);
+                    lines.push(`${tableName}.cell(${y + 1},${x + 1}).Shape.Fill.ForeColor.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`);
+                    //lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${color})`);
                 }
             }
 

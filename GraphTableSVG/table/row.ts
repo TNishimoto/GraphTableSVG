@@ -56,7 +56,7 @@
                     b = true;
                 }
             }
-            if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.resize();
+            if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
         }
     }
     export class Column {
@@ -119,7 +119,7 @@
                 }
             }
 
-            if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.resize();
+            if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
         }
     }
 }

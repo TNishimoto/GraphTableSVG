@@ -57,6 +57,8 @@ namespace GraphTableSVG {
             this._svgBackground = Cell.createCellRectangle(this.defaultBackgroundClass);
             this._svgText = createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
+            setDefaultValue(this.svgBackground);
+
             this.svgGroup.appendChild(this.svgText);
 
             /*
@@ -78,7 +80,7 @@ namespace GraphTableSVG {
             this.table.svgGroup.appendChild(this.rightLine);
             this.table.svgGroup.appendChild(this.bottomLine);
 
-            var option1: MutationObserverInit = { childList: true };
+            var option1: MutationObserverInit = { childList: true, subtree: true };
             this.table.cellTextObserver.observe(this.svgText, option1);
 
             this._observer = new MutationObserver(this._observerFunc);

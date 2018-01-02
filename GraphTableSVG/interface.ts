@@ -122,7 +122,59 @@ interface SVGTextElement {
     setX(value: number): void;
     getY(): number;
     setY(value: number): void;
+    setLatexTextContent(str: string): void;
 }
+SVGTextElement.prototype.setLatexTextContent = function (str: string) {
+    str += "_";
+    var p: SVGTextElement = this;
+    p.textContent = "";
+    var h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
+
+    var mode = "";
+    var tmp = "";
+    var dy = (1 * h) / 3;
+    var lastMode: string = "none";
+    var smallFontSize = (2 * h) / 3;
+    for (var i = 0; i < str.length; i++) {
+        var c = str[i];
+        if (c == "_" || c == "{" || c == "^" || c == "}") {
+            mode += c;
+            if (mode == "_{}") {
+                var tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                tspan.textContent = tmp;
+                tspan.setAttribute("dy", `${dy}`);
+                tspan.setAttribute("data-script", "subscript");
+                tspan.style.fontSize = `${smallFontSize}pt`;
+                p.appendChild(tspan);
+                lastMode = "down";
+                mode = "";
+                tmp = "";
+            } else if (mode == "^{}") {
+                var tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                tspan.textContent = tmp;
+                tspan.setAttribute("dy", `-${dy}`);
+                tspan.style.fontSize = `${smallFontSize}pt`;
+                tspan.setAttribute("data-script", "superscript");
+                p.appendChild(tspan);
+                lastMode = "up";
+                mode = "";
+                tmp = "";
+            } else if (mode == "_" || mode == "^") {
+                var tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                tspan.textContent = tmp;
+                var normaldy = lastMode == "up" ? dy : lastMode == "down" ? -dy : 0;
+                tspan.setAttribute("dy", `${normaldy}`);
+                p.appendChild(tspan);
+
+                lastMode = "none";
+                tmp = "";
+            }
+        } else {
+            tmp += c;
+        }
+    }
+};
+
 SVGTextElement.prototype.getX = function () {
     var p: SVGTextElement = this;
     if (p.x.baseVal.numberOfItems == 0) {

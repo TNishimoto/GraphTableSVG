@@ -67,6 +67,22 @@
                 return str;
             }
         }
+        export function translateHexCodeFromColorName2(str: string): { r: number, g: number, b: number } | null {
+            if (!color_dic) {
+                color_dic = {};
+                for (var i = 0; i < color_name.length; i++) {
+                    color_dic[color_name[i]] = i;
+                }
+            }
+
+            if (str in color_dic) {
+                var i = color_dic[str];
+                //return r_value[i] + g_value[i] + b_value[i];
+                return { r: parseInt(r_value[i], 16), g: parseInt(g_value[i], 16), b: parseInt(b_value[i], 16) };
+            } else {
+                return null;
+            }
+        }
 
         export function translateRGBCodeFromColorName(str: string): string {
             str = translateHexCodeFromColorName(str);
@@ -83,5 +99,33 @@
                 }
             }
         }
+        export function translateRGBCodeFromColorName2(str: string): { r: number, g: number, b: number } {
+            var v = translateHexCodeFromColorName2(str);
+            var def = { r: 80, g: 80, b : 80 };
+            if (v != null) {
+                return v;
+            } else {
+                if (str.substr(0, 3) == "rgb") {
+                    str = str.replace("rgb(", "");
+                    str = str.replace(")", "");
+                    var values = str.split(",");
+                    if (values.length == 3) {
+                        return { r: parseInt(values[0]), g: parseInt(values[1]), b: parseInt(values[2]) };
+                    } else {
+                        return def;
+                    }
+                } else if (str.length == 6) {
+                    var r = str.substr(0, 2);
+                    var g = str.substr(2, 2);
+                    var b = str.substr(4, 2);
+                    return { r: parseInt(r), g: parseInt(g), b: parseInt(b) };
+
+                } else {
+                    return def;
+                }
+                
+            }
+        }
+
     }
 }
