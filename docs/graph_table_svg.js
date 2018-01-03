@@ -1051,12 +1051,16 @@ var GraphTableSVG;
             this._outcomingEdges = [];
             this._incomingEdges = [];
             this.observerFunc = (x) => {
+                var b = false;
                 for (var i = 0; i < x.length; i++) {
+                    console.log(x[i]);
                     var p = x[i];
                     if (p.attributeName == "transform") {
-                        this.localUpdate();
+                        b = true;
                     }
                 }
+                if (b)
+                    this.localUpdate();
             };
             this.textObserverFunc = (x) => {
                 for (var i = 0; i < x.length; i++) {
@@ -1081,11 +1085,12 @@ var GraphTableSVG;
             this.svgText.textContent = text;
             this.svgGroup.appendChild(this.svgText);
             this._observer = new MutationObserver(this.observerFunc);
-            var option = { attributes: true };
-            this._observer.observe(this.svgGroup, option);
+            //var option1: MutationObserverInit = { attributes: true };
+            var option1 = { attributes: true, childList: true, subtree: true };
+            this._observer.observe(this.svgGroup, option1);
             this._textObserver = new MutationObserver(this.textObserverFunc);
-            var option = { childList: true };
-            this._textObserver.observe(this.svgText, option);
+            var option2 = { childList: true };
+            this._textObserver.observe(this.svgText, option2);
             this.x = 0;
             this.y = 0;
             /*

@@ -77,6 +77,9 @@
             this.svgText.setAttribute('transform', `rotate(${rar}, ${this.svgText.getX()}, ${this.svgText.getY()})`);
             
         }
+        public get fontSize(): number {
+            return parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "12"));
+        }
         
         private static reverse(str: string): string {
             var rv: string[] = [];
@@ -84,6 +87,30 @@
                 rv[i] = str.charAt(n - i - 1);
             }
             return rv.join("");
+        }
+        public createVBACode(shapes : string, result : string[][]) : void {
+            var s : string[] = new Array(0);
+            if (this.edge.graph != null) {
+                var region = this.svgText.getBBox();
+                
+                var fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+                var fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
+                var left = this.edge.graph.svgGroup.getX() + this.svgText.getX();
+                var top = this.edge.graph.svgGroup.getY() + this.svgText.getY() - (this.fontSize/2);
+                s.push(`With ${shapes}.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${region.width},${this.fontSize})`);
+                s.push(`.TextFrame.TextRange.Text = "${this.svgText.textContent}"`);
+                s.push(`.TextFrame.marginLeft = 0`);
+                s.push(`.TextFrame.marginRight = 0`);
+                s.push(`.TextFrame.marginTop = 0`);
+                s.push(`.TextFrame.marginBottom = 0`);
+                s.push(`.TextFrame.TextRange.Font.Size = ${this.fontSize}`);
+                s.push(`.TextFrame.TextRange.Font.name = "${fontFamily}"`);
+                s.push(`.TextFrame.TextRange.Font.Bold = ${fontBold}`);
+                s.push(`.IncrementRotation(${this.svgText.transform.baseVal.getItem(0).angle})`);
+                s.push(`End With`);
+
+            }
+            result.push(s);
         }
     }
 }

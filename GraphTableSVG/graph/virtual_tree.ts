@@ -1,34 +1,31 @@
 ﻿namespace GraphTableSVG {
-    export class VirtualTree {
-        graph: Graph;
-        root: Vertex;
+    export class VirtualSubTree {
+        subTreeRoot: Vertex;
 
-        constructor(_graph: Graph, _root: Vertex) {
-            this.graph = _graph;
-            this.root = _root;
+        constructor(_root: Vertex) {
+            this.subTreeRoot = _root;
         }
-        getChildren(): VirtualTree[] {
+        get children(): Vertex[] {
             var p = this;
-            return this.root.outcomingEdges.map(function (x, i, arr) {
-                return new VirtualTree(p.graph, <Vertex>x.endVertex);
+            return this.subTreeRoot.children.map(function (x, i, arr) {
+                return x;
             });
         }
         
         get parentEdge(): Edge | null {
-            return this.root.parentEdge;
+            return this.subTreeRoot.parentEdge;
         }
         
 
         public getSubtree(result: Vertex[] = []): Vertex[] {
-            var p = this;
-            result.push(this.root);
-            var children = this.getChildren();
+            result.push(this.subTreeRoot);
+
+            var children = this.children;
             if (children.length == 0) {
                 return result;
             } else {
-                var width = 0;
                 children.forEach(function (x, i, arr) {
-                    x.getSubtree(result);
+                    x.tree.getSubtree(result);
                 });
                 return result;
             }
@@ -40,23 +37,23 @@
             });
         }
         public getHeight(): number {
-            var children = this.getChildren();
+            var children = this.children;
             if (children.length == 0) {
                 return 1;
             } else {
                 var max = 0;
                 children.forEach(function (x, i, arr) {
-                    if (max < x.getHeight()) max = x.getHeight();
+                    if (max < x.tree.getHeight()) max = x.tree.getHeight();
                 })
                 return max + 1;
             }
         }
         public region(): Rectangle {
             var p = this.getSubtree();
-            var minX = this.root.x;
-            var maxX = this.root.x;
-            var minY = this.root.y;
-            var maxY = this.root.y;
+            var minX = this.subTreeRoot.x;
+            var maxX = this.subTreeRoot.x;
+            var minY = this.subTreeRoot.y;
+            var maxY = this.subTreeRoot.y;
             p.forEach(function (x, i, arr) {
                 var rect = x.region;
                 if (minX > rect.x) minX = rect.x;
@@ -71,13 +68,8 @@
             result.height = maxY - minY;
             return result;
         }
-        public getMostLeftLeave(): VirtualTree {
-            var children = this.getChildren();
-            if (children.length == 0) {
-                return this;
-            } else {
-                return children[0].getMostLeftLeave();
-            }
+        public get mostLeftLeave(): Vertex {
+            return this.leaves[0];
         }
 
         public addOffset(_x: number, _y: number) {
@@ -87,22 +79,27 @@
             });
         }
         public setRectangleLocation(_x: number, _y: number) {
-            var x = this.getMostLeftLeave().root.region.x;
-            var y = this.root.region.y;
+            var x = this.mostLeftLeave.region.x;
+            var y = this.subTreeRoot.region.y;
             var diffX = _x - x;
             var diffY = _y - y;
             this.addOffset(diffX, diffY);
             //this.graph.updateEdges();
         }
         public setRootLocation(_x: number, _y: number) {
-            var x = this.root.x;
-            var y = this.root.y;
+            var x = this.subTreeRoot.x;
+            var y = this.subTreeRoot.y;
             var diffX = _x - x;
             var diffY = _y - y;
             this.addOffset(diffX, diffY);
             //this.graph.updateEdges();
         }
-        
+        get leaves(): Vertex[] {
+            var p = this;
+            return this.getSubtree().filter(function (x, i, arr) {
+                return x.outcomingEdges.length == 0;
+            });
+        }
 
         
     }

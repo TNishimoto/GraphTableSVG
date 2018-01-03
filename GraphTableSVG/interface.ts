@@ -9,14 +9,14 @@ interface SVGGElement {
 SVGGElement.prototype.getX = function () {
     var p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "translate(0,0)");
+        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
     }
     return p.transform.baseVal.getItem(0).matrix.e;
 };
 SVGGElement.prototype.setX = function (value: number) {
     var p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "translate(0,0)");
+        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
     }
     var a = this.transform.baseVal.getItem(0).matrix.a;
     var b = this.transform.baseVal.getItem(0).matrix.b;
@@ -32,7 +32,7 @@ SVGGElement.prototype.setX = function (value: number) {
 SVGGElement.prototype.getY = function () {
     var p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "translate(0,0)");
+        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
     }
 
     return this.transform.baseVal.getItem(0).matrix.f;
@@ -40,7 +40,7 @@ SVGGElement.prototype.getY = function () {
 SVGGElement.prototype.setY = function (value: number) {
     var p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "translate(0,0)");
+        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
     }
     var a = this.transform.baseVal.getItem(0).matrix.a;
     var b = this.transform.baseVal.getItem(0).matrix.b;

@@ -146,23 +146,23 @@ End Sub
     }
 
     export class VBATranslateFunctions {
-        public static grouping80(codes: string[]): string[] {
+        public static grouping80(codes: string[][]): string[] {
             var r: string[] = [];
-            var r1: string[] = [];
+            var result: string[] = [];
             codes.forEach(function (x, i, arr) {
-                r.push(x);
-                if (r.length == 80) {
-                    r1.push(VBATranslateFunctions.joinLines(r));
+                if (r.length + x.length >= 80) {
+                    result.push(VBATranslateFunctions.joinLines(r));
                     r = [];
                 }
+                x.forEach((v) => r.push(v));
             });
             if (r.length > 0) {
-                r1.push(VBATranslateFunctions.joinLines(r));
+                result.push(VBATranslateFunctions.joinLines(r));
                 r = [];
             }
-            return r1;
+            return result;
         }
-        public static splitCode(codes: string[], subArg : string, callArg : string, id: number): [string, string] {
+        public static splitCode(codes: string[][], subArg : string, callArg : string, id: number): [string, string] {
             var functions: string[] = [];
 
             var p = VBATranslateFunctions.grouping80(codes);
@@ -255,13 +255,13 @@ End Sub
             font = font.replace(/'/g, "");
             return font;
         }
-        public static TranslateSVGTextElement(sub: string[], item: SVGTextElement, range: string): void {
+        public static TranslateSVGTextElement(sub: string[][], item: SVGTextElement, range: string): void {
 
             var text = item.textContent == null ? "" : item.textContent;
             var color = Color.translateRGBCodeFromColorName2(item.getPropertyStyleValueWithDefault("fill", "gray"));
 
-            sub.push(`${range}.text = "${item.textContent}"`);
-            sub.push(`${range}.Font.color.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`)
+            sub.push([`${range}.text = "${item.textContent}"`]);
+            sub.push([`${range}.Font.color.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`])
             if (item.children.length > 0) {
                 var pos = 1;
                 for (var i = 0; i < item.children.length; i++) {
@@ -272,9 +272,9 @@ End Sub
                         var f = child.getAttribute("data-script");
                         if (f != null) {
                             if (f == "superscript") {
-                                sub.push(`${range}.Characters(${pos}, ${len}).Font.Superscript = True`)
+                                sub.push([`${range}.Characters(${pos}, ${len}).Font.Superscript = True`])
                             } else if (f == "subscript") {
-                                sub.push(`${range}.Characters(${pos}, ${len}).Font.Subscript = True`)
+                                sub.push([`${range}.Characters(${pos}, ${len}).Font.Subscript = True`])
                             }
                         }
                         pos += len;

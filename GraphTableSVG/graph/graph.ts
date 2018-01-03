@@ -7,6 +7,9 @@
         public static idCounter: number = 0;
         public static readonly defaultVertexClass: string = "--default-vertex-class";
         public static readonly defaultEdgeClass: string = "--default-edge-class";        
+        public static readonly vertexXIntervalName: string = "--vertex-x-interval";
+        public static readonly vertexYIntervalName: string = "--vertex-y-interval";        
+
         public static readonly objectIDName: string = "data-objectID";
         public static readonly typeName: string = "data-type";
 
@@ -31,6 +34,29 @@
         public update(): void {
             this.updateVertices();
             this.updateEdges();
+        }
+
+        public get vertexXInterval(): number | null {
+            var v = this.svgGroup.getPropertyStyleValue(Graph.vertexXIntervalName);
+            if (v == null) {
+                return null;
+            } else {
+                return parseInt(v);
+            }
+        }
+        public set vertexXInterval(value: number | null) {
+            this.svgGroup.setPropertyStyleValue(Graph.vertexXIntervalName, value == null ? null : value.toString());
+        }
+        public get vertexYInterval(): number | null {
+            var v = this.svgGroup.getPropertyStyleValue(Graph.vertexYIntervalName);
+            if (v == null) {
+                return null;
+            } else {
+                return parseInt(v);
+            }
+        }
+        public set vertexYInterval(value: number | null) {
+            this.svgGroup.setPropertyStyleValue(Graph.vertexYIntervalName, value == null ? null : value.toString());
         }
 
         /**
@@ -316,7 +342,7 @@
             this.vertices.forEach((v, i) => dic[v.objectID] = i);
             this.edges.forEach((v, i) => dic[v.objectID] = i);
             var main: string[] = [];
-            var sub: string[] = [];
+            var sub: string[][] = [];
 
             var lines = new Array(0);
             lines.push(`Sub create${id}(createdSlide As slide)`);

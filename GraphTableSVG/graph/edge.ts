@@ -236,23 +236,28 @@
          * @param className
          * @param lineType
          */
-        public static create(graph: Graph, className: string | null = null, lineType: string | null = null): GraphTableSVG.Edge {
-            var g = createGroup(className);
-            var textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();
+        public static create(graph: Graph, className: string | null = graph.defaultEdgeClass, lineType: string | null = null): GraphTableSVG.Edge {
+            //var g = createGroup(className);
+            //var textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();
             
             var line = new LineEdge(graph, className);
             return line;
         }
-        public createVBACode(main: string[], sub: string[], indexDic: { [key: string]: number; }): void {
+        public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
             if (this.graph != null) {
+                var subline  : string[]= [];
                 var i = indexDic[this.objectID];
-                sub.push(` Set edges(${i}) = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+                subline.push(` Set edges(${i}) = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
                 if (this.beginVertex != null && this.endVertex != null) {
                     var beg = indexDic[this.beginVertex.objectID];
                     var end = indexDic[this.endVertex.objectID];
                     var begType = this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
                     var endType = this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
-                    sub.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
+                    subline.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
+                }
+                subline.forEach((v) => sub.push([v]));
+                if (this.text != null) {
+                    this.text.createVBACode("shapes_", sub);
                 }
             }
         }
@@ -309,14 +314,14 @@
 
             return false;
         }
-        public createVBACode(main: string[], sub: string[], indexDic: { [key: string]: number; }): void {
+        public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
             super.createVBACode(main, sub, indexDic);
             if (this.graph != null) {
                 var i = indexDic[this.objectID];
                 var lineColor = VBATranslateFunctions.colorToVBA(this._svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                 var strokeWidth = parseInt(this._svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
                 var visible = this._svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-                sub.push(` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
+                sub.push([` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`]);
             }
         }
         

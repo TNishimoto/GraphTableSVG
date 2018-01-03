@@ -16,12 +16,15 @@
         private _svgGroup: SVGGElement;
         private _observer: MutationObserver;
         private observerFunc: MutationCallback = (x: MutationRecord[]) => {
+            var b = false;
             for (var i = 0; i < x.length; i++) {
                 var p = x[i];
                 if (p.attributeName == "transform") {
-                    this.localUpdate();
+                    b = true;
                 }
             }
+            if(b)this.localUpdate();
+
         };
 
         private _textObserver: MutationObserver;
@@ -54,12 +57,13 @@
 
 
             this._observer = new MutationObserver(this.observerFunc);
-            var option: MutationObserverInit = { attributes: true };
-            this._observer.observe(this.svgGroup, option);
+            var option1: MutationObserverInit = { attributes: true };
+            
+            this._observer.observe(this.svgGroup, option1);
 
             this._textObserver = new MutationObserver(this.textObserverFunc);
-            var option: MutationObserverInit = { childList: true };
-            this._textObserver.observe(this.svgText, option);
+            var option2: MutationObserverInit = { childList: true };
+            this._textObserver.observe(this.svgText, option2);
 
 
             this.x = 0;
@@ -274,8 +278,8 @@
         /**
         出辺配列を返します。
         */
-        get children(): Edge[] {
-            return this.outcomingEdges;
+        public get children(): Vertex[] {
+            return this.outcomingEdges.filter((v) => v.endVertex != null).map((v) => <Vertex>v.endVertex);
         }
 
         /**
@@ -297,6 +301,11 @@
             }
             return p;
         }
+        get tree(): VirtualSubTree {
+            return new VirtualSubTree(this);
+        }
+        
+
         /*
         get index(): number {
             if (this.isNoParent && this.graph != null) {
@@ -345,6 +354,10 @@
                 throw new Error();
             } else {
                 this.outcomingEdges.splice(insertIndex, 0, edge);
+
+                //var s = this.outcomingEdges.map((v) => v.objectID).join(', ')
+                //this.svgGroup.setAttribute("data-outcoming-edge", s);
+
                 edge.beginVertex = this;
             }
 
@@ -411,26 +424,27 @@
             return this.graph == null;
         }
 
-        public createVBACode(main: string[], sub: string[], indexDic: { [key: string]: number; }): void{
+        public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void{
             if (this.graph != null) {
+                //var subline: string[] = [];
                 var i = indexDic[this.objectID];
-                var left = this.graph.svgGroup.getX() + this.x;
-                var top = this.graph.svgGroup.getY() + this.y;
+                var left = this.graph.svgGroup.getX() + this.x - (this.width / 2);
+                var top = this.graph.svgGroup.getY() + this.y - (this.height / 2);
 
                 var surface = this.surface;
                 var shape = surface instanceof SVGRectElement ? "msoShapeRectangle" : "msoShapeOval";
-                sub.push(` Set nodes(${i}) = shapes_.AddShape(${shape}, ${left}, ${top}, ${this.width}, ${this.height})`);
+                sub.push([` Set nodes(${i}) = shapes_.AddShape(${shape}, ${left}, ${top}, ${this.width}, ${this.height})`]);
 
                 if (surface == null) {
                     var backColor = VBATranslateFunctions.colorToVBA("gray");
-                    sub.push(` Call EditVertexShape(nodes(${i}), "${this.objectID}", msoFalse, ${backColor})`);
+                    sub.push([` Call EditVertexShape(nodes(${i}), "${this.objectID}", msoFalse, ${backColor})`]);
                 } else {
                     var backColor = VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("fill", "gray"));
                     var lineColor = VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("stroke", "gray"));
                     var strokeWidth = parseInt(surface.getPropertyStyleValueWithDefault("stroke-width", "4"));
                     var visible = surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-                    sub.push(` Call EditVertexShape(nodes(${i}), "${this.objectID}", ${visible}, ${backColor})`);
-                    sub.push(` Call EditLine(nodes(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
+                    sub.push([` Call EditVertexShape(nodes(${i}), "${this.objectID}", ${visible}, ${backColor})`]);
+                    sub.push([` Call EditLine(nodes(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`]);
 
                 }
 
@@ -439,12 +453,11 @@
                 var fontSize = parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "24"));
                 var fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
                 var fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
-                sub.push(` Call EditTextFrame(nodes(${i}).TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeNone)`);
+                sub.push([` Call EditTextFrame(nodes(${i}).TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeNone)`]);
                 VBATranslateFunctions.TranslateSVGTextElement(sub, this.svgText, `nodes(${i}).TextFrame.TextRange`);
                 //sub.push(` Call EditTextRange(nodes(${i}).TextFrame.TextRange, ${VBATranslateFunctions.createStringFunction(text)}, ${0}, ${0}, ${VBATranslateFunctions.colorToVBA(color)})`);
-                sub.push(` Call EditTextEffect(nodes(${i}).TextEffect, ${fontSize}, "${fontFamily}")`);
+                sub.push([` Call EditTextEffect(nodes(${i}).TextEffect, ${fontSize}, "${fontFamily}")`]);
 
-                
             }
         }
     }

@@ -12,10 +12,9 @@
                     leafCounter++;
                 } else {
                     v.children.forEach((w) => {
-                        if (w.endVertex != null) {
-                            x += w.endVertex.x;
-                            if (y < w.endVertex.y) y = w.endVertex.y;
-                        }
+                        x += w.x;
+                        if (y < w.y) y = w.y;
+                        
                     });
                     x = x / v.children.length;
                     y += yInterval;
@@ -78,36 +77,43 @@
         }
 
         
-        export function standardTreeArrangement(graph: GraphTableSVG.Graph, xInterval: number, yInterval: number): void {
-            if (graph.rootVertex != null) {
-                var rootTree = new VirtualTree(graph, graph.rootVertex);
-                var [x, y] = [rootTree.root.x, rootTree.root.y];
-                standardTreeArrangementSub(rootTree, xInterval, yInterval);
-                rootTree.setRootLocation(x, y);
+        export function standardTreeArrangement(graph: GraphTableSVG.Graph): void {
+            var xInterval = graph.vertexXInterval;
+            var yInterval = graph.vertexYInterval;
+            if (xInterval != null && yInterval != null) {
 
-                //graph.update();
+                if (graph.rootVertex != null) {
+                    var rootTree = graph.rootVertex.tree;
+                    var [x, y] = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y];
+                    standardTreeArrangementSub(rootTree, xInterval, yInterval);
+                    rootTree.setRootLocation(x, y);
+
+                    //graph.update();
+                }
+            } else {
+                throw new Error();
             }
 
         }
 
-        function standardTreeArrangementSub(tree: VirtualTree, xInterval: number, yInterval: number): void {
-            tree.root.x = 0;
-            tree.root.y = 0;
-
+        function standardTreeArrangementSub(tree: VirtualSubTree, xInterval: number, yInterval: number): void {
+            tree.subTreeRoot.x = 0;
+            tree.subTreeRoot.y = 0;
             var leaves = 0;
-            var edges = tree.getChildren();
+            var children = tree.children;
 
-            var leaveSize = tree.getLeaves().length;
-            var leaveSizeWidthHalf = (leaveSize * xInterval) / 2;
+            var leaveSizeWidthHalf = (tree.leaves.length * xInterval) / 2;
             
-            var __x = -leaveSizeWidthHalf;
+            var x = -leaveSizeWidthHalf;
 
-            for (var i = 0; i < edges.length; i++) {
-                standardTreeArrangementSub(edges[i], xInterval, yInterval);
-                var w = (edges[i].getLeaves().length * xInterval) / 2;
-                edges[i].setRootLocation(__x + w, yInterval);
-                __x += edges[i].getLeaves().length * xInterval;                
+            
+            for (var i = 0; i < children.length; i++) {
+                standardTreeArrangementSub(children[i].tree, xInterval, yInterval);
+                var w = (children[i].tree.leaves.length * xInterval) / 2;
+                children[i].tree.setRootLocation(x + w, yInterval);
+                x += children[i].tree.leaves.length * xInterval;
             }
+            
         }
         
         
