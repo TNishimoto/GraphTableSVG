@@ -147,7 +147,44 @@ namespace GraphTableSVG {
             svg.setAttribute("class", className);
         }
     }
+    function getCSSStyle(svg: HTMLElement): CSSStyleDeclaration | null {
+        if (svg.getAttribute("class") == null) {
+            return null;
+        } else {
+            var css = getComputedStyle(svg);
+            return css;
+        }
+    }
+    export function setCSSToStyle(svg: HTMLElement) {
+        var css = getCSSStyle(svg);
+        if (css != null) {
+            let css2: CSSStyleDeclaration = css;
+            cssPropertyNames.forEach((v) => {
+                var value = css2.getPropertyValue(v).trim();
+                if (value.length > 0) {
+                    svg.style.setProperty(v, value);
+                }
+            });
+        }
+    }
+    export function setCSSToAllElementStyles(item: HTMLElement | string) {
+        if (typeof item == 'string') {
+            var svgBox: HTMLElement | null = document.getElementById(item);
+            if (svgBox != null) {
+                setCSSToAllElementStyles(svgBox);
+            }
+        }
+        else{
 
-    
+            setCSSToStyle(item);
+            for (var i = 0; i < item.children.length; i++) {
+                var child = <HTMLElement>item.children.item(i);
+                if (child != null) {
+                    setCSSToAllElementStyles(child);
+                }
+            }
+        }
+    }
+    var cssPropertyNames : string[] = ["font-size", "fill", "stroke"];
     
 }

@@ -271,6 +271,7 @@ namespace GraphTableSVG {
         各セルのサイズを再計算します。
         */
         public update() {
+            console.log("update");
             this._isDrawing = true;
             var rows = this.rows;
             var columns = this.columns;

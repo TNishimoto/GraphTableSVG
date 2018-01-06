@@ -93,6 +93,7 @@
             if (this.edge.graph != null) {
                 var region = this.svgText.getBBox();
                 
+                
                 var fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
                 var fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
                 var left = this.edge.graph.svgGroup.getX() + this.svgText.getX();

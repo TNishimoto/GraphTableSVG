@@ -12,6 +12,9 @@
             this.table = _table;
             this._cellY = _y;
         }
+        public get cells(): Cell[] {
+            return this.table.cells[this.cellY];
+        }
         
         /**
          * 行内のセルのサイズを再計算します。
@@ -67,6 +70,13 @@
         */
         public get cellX(): number {
             return this._cellX;
+        }
+        public get cells(): Cell[] {
+            var items: Cell[] = [];
+            for (var i = 0; i < this.table.height; i++) {
+                items.push(this.table.cells[i][this.cellX]);
+            }
+            return items;
         }
 
         constructor(_table: Table, _x: number) {

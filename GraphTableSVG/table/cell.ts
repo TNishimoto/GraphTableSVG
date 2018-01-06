@@ -443,6 +443,18 @@ namespace GraphTableSVG {
         get bottomCell(): Cell | null {
             return this.cellY + 1 != this.table.height ? this.table.cells[this.cellY + 1][this.cellX] : null;
         }
+        get bottomRightCell(): Cell | null {
+            return this.bottomCell == null ? null : this.bottomCell.rightCell == null ? null : this.bottomCell.rightCell;
+        }
+        get topRightCell(): Cell | null {
+            return this.upCell == null ? null : this.upCell.rightCell == null ? null : this.upCell.rightCell;
+        }
+        get bottomLeftCell(): Cell | null {
+            return this.bottomCell == null ? null : this.bottomCell.leftCell == null ? null : this.bottomCell.leftCell;
+        }
+        get topLeftCell(): Cell | null {
+            return this.upCell == null ? null : this.upCell.leftCell == null ? null : this.upCell.leftCell;
+        }
         /**
         未定義
         */
