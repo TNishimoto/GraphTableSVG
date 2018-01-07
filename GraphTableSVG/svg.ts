@@ -120,20 +120,23 @@ namespace GraphTableSVG {
     export function setDefaultValue(item: SVGCircleElement | SVGRectElement) {
         var className = item.getAttribute("class");
         if (className != null) {
-            if (item instanceof SVGCircleElement) {
-                var s = item.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
-                if (s.length > 0) {
-                    item.r.baseVal.value = Number(s);
-                }
-            } else {
-                var s1 = item.getActiveStyle().getPropertyValue(defaultWidthName).trim();
-                if (s1.length > 0) {
-                    item.width.baseVal.value = Number(s1);
-                }
+            var style = getStyleSheet(className);
+            if (style != null) {
+                if (item instanceof SVGCircleElement) {
+                    var s = style.getPropertyValue(defaultRadiusName).trim();
+                    if (s.length > 0) {
+                        item.r.baseVal.value = Number(s);
+                    }
+                } else {
+                    var s1 = style.getPropertyValue(defaultWidthName).trim();
+                    if (s1.length > 0) {
+                        item.width.baseVal.value = Number(s1);
+                    }
 
-                var s2 = item.getActiveStyle().getPropertyValue(defaultHeightName).trim();
-                if (s2.length > 0) {
-                    item.height.baseVal.value = Number(s2);
+                    var s2 = style.getPropertyValue(defaultHeightName).trim();
+                    if (s2.length > 0) {
+                        item.height.baseVal.value = Number(s2);
+                    }
                 }
             }
         }
@@ -186,5 +189,21 @@ namespace GraphTableSVG {
         }
     }
     var cssPropertyNames : string[] = ["font-size", "fill", "stroke"];
-    
+
+    export function getStyleSheet(name: string): CSSStyleDeclaration | null {
+        var name2 = "." + name;
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            var sheet = <CSSStyleSheet>document.styleSheets.item(i);
+            var rules: CSSRuleList | null = sheet.cssRules || sheet.rules;
+            if (rules != null) {
+                for (var j = 0; j < rules.length; j++) {
+                    var rule = <CSSStyleRule>rules.item(j);
+                    if (rule.selectorText == name2) {
+                        return rule.style;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

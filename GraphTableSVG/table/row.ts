@@ -15,6 +15,40 @@
         public get cells(): Cell[] {
             return this.table.cells[this.cellY];
         }
+
+        public get topBorders(): SVGLineElement[] {
+            var r: SVGLineElement[] = [];
+            this.cells.forEach((v) => {
+                if (r.length == 0) {
+                    r.push(v.topBorder);
+                } else {
+                    var last = r[r.length - 1];
+                    if (last != v.topBorder) r.push(v.topBorder);
+                }
+            });
+            return r;
+        }
+        public get bottomBorders(): SVGLineElement[] {
+            var r: SVGLineElement[] = [];
+            this.cells.forEach((v) => {
+                if (r.length == 0) {
+                    r.push(v.bottomBorder);
+                } else {
+                    var last = r[r.length - 1];
+                    if (last != v.bottomBorder) r.push(v.bottomBorder);
+                }
+            });
+            return r;
+        }
+        public get leftBorder(): SVGLineElement {
+            return this.cells[0].leftBorder;
+        }
+        public get rightBorder(): SVGLineElement {
+            var cells = this.cells;
+            return cells[cells.length - 1].rightBorder;
+        }
+
+
         
         /**
          * 行内のセルのサイズを再計算します。
@@ -130,6 +164,38 @@
             }
 
             if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
+        }
+
+        public get leftBorders(): SVGLineElement[] {
+            var r: SVGLineElement[] = [];
+            this.cells.forEach((v) => {
+                if (r.length == 0) {
+                    r.push(v.leftBorder);
+                } else {
+                    var last = r[r.length - 1];
+                    if (last != v.leftBorder) r.push(v.leftBorder);
+                }
+            });
+            return r;
+        }
+        public get rightBorders(): SVGLineElement[] {
+            var r: SVGLineElement[] = [];
+            this.cells.forEach((v) => {
+                if (r.length == 0) {
+                    r.push(v.rightBorder);
+                } else {
+                    var last = r[r.length - 1];
+                    if (last != v.rightBorder) r.push(v.rightBorder);
+                }
+            });
+            return r;
+        }
+        public get topBorder(): SVGLineElement {
+            return this.cells[0].topBorder;
+        }
+        public get bottomBorder(): SVGLineElement {
+            var cells = this.cells;
+            return cells[cells.length - 1].bottomBorder;
         }
     }
 }

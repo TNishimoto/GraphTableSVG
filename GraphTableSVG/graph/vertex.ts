@@ -51,7 +51,7 @@
             __graph.add(this);
 
 
-            this._svgText = createText(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultTextClass));
+            this._svgText = createText(this.svgGroup.getPropertyStyleValue(Vertex.defaultTextClass));
             this.svgText.textContent = text;
             this.svgGroup.appendChild(this.svgText);
 

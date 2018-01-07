@@ -100,7 +100,10 @@ SVGElement.prototype.getPropertyStyleValue = function (name: string): string | n
         if (r == null) {
             return null;
         } else {
-            var p2 = getComputedStyle(item).getPropertyValue(name).trim();
+
+            var css = GraphTableSVG.getStyleSheet(r);
+            if (css == null) css = getComputedStyle(item);
+            var p2 = css.getPropertyValue(name).trim();
             if (p2.length == 0) {
                 return null;
             } else {

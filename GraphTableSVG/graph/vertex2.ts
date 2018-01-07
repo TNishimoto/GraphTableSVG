@@ -15,7 +15,7 @@
          */
         constructor(__graph: Graph, className: string | null = null, text: string = "") {
             super(__graph, className, text);
-            this._svgCircle = createCircle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
+            this._svgCircle = createCircle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
             setDefaultValue(this.svgCircle);
         }
@@ -155,7 +155,7 @@
 
         constructor(__graph: Graph, className: string | null = null, text: string = "") {
             super(__graph, className, text);
-            this._svgRectangle = createRectangle(this.svgGroup.getActiveStyle().tryGetPropertyValue(Vertex.defaultSurfaceClass));
+            this._svgRectangle = createRectangle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
 
             setDefaultValue(this.svgRectangle);

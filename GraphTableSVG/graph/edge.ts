@@ -283,8 +283,8 @@
 
         constructor(__graph: Graph, className: string | null = null) {
             super(__graph, className);
-            var p = this.svgGroup.getActiveStyle().getPropertyValue(Edge.defaultLineClass).trim();
-            this._svgLine = createLine(0, 0, 0, 0, p.length > 0 ? p : null);
+            var p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
+            this._svgLine = createLine(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this._svgLine);
             //this.graph.svgGroup.appendChild(this._svg);
 

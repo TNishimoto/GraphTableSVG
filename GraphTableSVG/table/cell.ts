@@ -71,14 +71,14 @@ namespace GraphTableSVG {
             //this.parent.svgGroup.appendChild(this.svgGroup);
 
 
-            this.upLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.leftLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.rightLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.bottomLine = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.table.svgGroup.appendChild(this.upLine);
-            this.table.svgGroup.appendChild(this.leftLine);
-            this.table.svgGroup.appendChild(this.rightLine);
-            this.table.svgGroup.appendChild(this.bottomLine);
+            this.topBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.leftBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.rightBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.bottomBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.table.svgGroup.appendChild(this.topBorder);
+            this.table.svgGroup.appendChild(this.leftBorder);
+            this.table.svgGroup.appendChild(this.rightBorder);
+            this.table.svgGroup.appendChild(this.bottomBorder);
 
             var option1: MutationObserverInit = { childList: true, subtree: true };
             this.table.cellTextObserver.observe(this.svgText, option1);
@@ -107,60 +107,61 @@ namespace GraphTableSVG {
         public get masterID(): number {
             return this._masterID;
         }
-        private _upLine: SVGLineElement;
+        private _topBorder: SVGLineElement;
         /**
         セルの上にある枠を返します
         */
-        get upLine(): SVGLineElement {
-            return this._upLine;
+        get topBorder(): SVGLineElement {
+            
+            return this._topBorder;
         }
         /**
         セルの上にある枠を設定します
         */
-        set upLine(line: SVGLineElement) {
-            this._upLine = line;
+        set topBorder(line: SVGLineElement) {
+            this._topBorder = line;
         }
-        private _leftLine: SVGLineElement;
+        private _leftBorder: SVGLineElement;
         /**
         セルの左にある枠を返します
         */
-        get leftLine(): SVGLineElement {
-            return this._leftLine;
+        get leftBorder(): SVGLineElement {
+            return this._leftBorder;
         }
         /**
         セルの左にある枠を設定します
         */
-        set leftLine(line: SVGLineElement) {
-            this._leftLine = line;
+        set leftBorder(line: SVGLineElement) {
+            this._leftBorder = line;
         }
 
-        private _rightLine: SVGLineElement;
+        private _rightBorder: SVGLineElement;
         /**
         セルの右にある枠を返します
         */
-        get rightLine(): SVGLineElement {
-            return this._rightLine;
+        get rightBorder(): SVGLineElement {
+            return this._rightBorder;
         }
         /**
         セルの右にある枠を設定します
         */
-        set rightLine(line: SVGLineElement) {
-            this._rightLine = line;
+        set rightBorder(line: SVGLineElement) {
+            this._rightBorder = line;
         }
 
 
-        private _bottomLine: SVGLineElement;
+        private _bottomBorder: SVGLineElement;
         /**
         セルの下にある枠を返します
         */
-        get bottomLine(): SVGLineElement {
-            return this._bottomLine;
+        get bottomBorder(): SVGLineElement {
+            return this._bottomBorder;
         }
         /**
         セルの下にある枠を設定します
         */
-        set bottomLine(line: SVGLineElement) {
-            this._bottomLine = line;
+        set bottomBorder(line: SVGLineElement) {
+            this._bottomBorder = line;
         } 
         private _table: Table;
         /**
@@ -376,25 +377,25 @@ namespace GraphTableSVG {
          */
         public relocation() {
             if (!Graph.IsDescendantOfBody(this.svgGroup)) return;
-            this.upLine.x1.baseVal.value = this.x;
-            this.upLine.x2.baseVal.value = this.x + this.width;
-            this.upLine.y1.baseVal.value = this.y;
-            this.upLine.y2.baseVal.value = this.upLine.y1.baseVal.value;
+            this.topBorder.x1.baseVal.value = this.x;
+            this.topBorder.x2.baseVal.value = this.x + this.width;
+            this.topBorder.y1.baseVal.value = this.y;
+            this.topBorder.y2.baseVal.value = this.topBorder.y1.baseVal.value;
 
-            this.leftLine.x1.baseVal.value = this.x;
-            this.leftLine.x2.baseVal.value = this.leftLine.x1.baseVal.value;
-            this.leftLine.y1.baseVal.value = this.y;
-            this.leftLine.y2.baseVal.value = this.y + this.height;
+            this.leftBorder.x1.baseVal.value = this.x;
+            this.leftBorder.x2.baseVal.value = this.leftBorder.x1.baseVal.value;
+            this.leftBorder.y1.baseVal.value = this.y;
+            this.leftBorder.y2.baseVal.value = this.y + this.height;
 
-            this.rightLine.x1.baseVal.value = this.x + this.width;
-            this.rightLine.x2.baseVal.value = this.rightLine.x1.baseVal.value;
-            this.rightLine.y1.baseVal.value = this.y;
-            this.rightLine.y2.baseVal.value = this.y + this.height;
+            this.rightBorder.x1.baseVal.value = this.x + this.width;
+            this.rightBorder.x2.baseVal.value = this.rightBorder.x1.baseVal.value;
+            this.rightBorder.y1.baseVal.value = this.y;
+            this.rightBorder.y2.baseVal.value = this.y + this.height;
 
-            this.bottomLine.x1.baseVal.value = this.x;
-            this.bottomLine.x2.baseVal.value = this.x + this.width;
-            this.bottomLine.y1.baseVal.value = this.y + this.height;
-            this.bottomLine.y2.baseVal.value = this.bottomLine.y1.baseVal.value;
+            this.bottomBorder.x1.baseVal.value = this.x;
+            this.bottomBorder.x2.baseVal.value = this.x + this.width;
+            this.bottomBorder.y1.baseVal.value = this.y + this.height;
+            this.bottomBorder.y2.baseVal.value = this.bottomBorder.y1.baseVal.value;
 
             //this.textSVG.x.baseVal.getItem(0).value = 0;
             var text_x = 0;
