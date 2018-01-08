@@ -237,8 +237,8 @@
          * @param lineType
          */
         public static create(graph: Graph, className: string | null = graph.defaultEdgeClass, lineType: string | null = null): GraphTableSVG.Edge {
-            //var g = createGroup(className);
-            //var textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();
+            //const g = createGroup(className);
+            //const textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();
             
             const line = new LineEdge(graph, className);
             return line;
@@ -291,7 +291,7 @@
         }
         /*
         public static create(className: string | null = null): LineEdge {
-            var line = new LineEdge(className);
+            const line = new LineEdge(className);
             
             return line;
         }

@@ -37,7 +37,7 @@
         }
 
         public get vertexXInterval(): number | null {
-            var v = this.svgGroup.getPropertyStyleValue(Graph.vertexXIntervalName);
+            const v = this.svgGroup.getPropertyStyleValue(Graph.vertexXIntervalName);
             if (v == null) {
                 return null;
             } else {
@@ -48,7 +48,7 @@
             this.svgGroup.setPropertyStyleValue(Graph.vertexXIntervalName, value == null ? null : value.toString());
         }
         public get vertexYInterval(): number | null {
-            var v = this.svgGroup.getPropertyStyleValue(Graph.vertexYIntervalName);
+            const v = this.svgGroup.getPropertyStyleValue(Graph.vertexYIntervalName);
             if (v == null) {
                 return null;
             } else {
@@ -134,7 +134,7 @@
          */
         public add(item: Vertex | Edge) : void {
             if (item instanceof Vertex) {
-                var i = this._vertices.indexOf(item);
+                const i = this._vertices.indexOf(item);
                 if (i == -1 && item.graph == this) {
                     this._vertices.push(item);
                     this.svgGroup.appendChild(item.svgGroup);
@@ -144,7 +144,7 @@
 
             } else {
                 
-                var i = this._edges.indexOf(item);
+                const i = this._edges.indexOf(item);
                 if (i == -1 && item.graph == this) {
                     this._edges.push(item);
                     this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
@@ -159,14 +159,14 @@
          */
         public remove(item: Vertex | Edge): void {
             if (item instanceof Vertex) {
-                var p = this.vertices.indexOf(item);
+                const p = this.vertices.indexOf(item);
                 if (p != -1) {
                     this._vertices.splice(p, 1);
                     this.svgGroup.removeChild(item.svgGroup);
                     item.dispose();
                 }
             } else {
-                var p = this.edges.indexOf(item);
+                const p = this.edges.indexOf(item);
                 if (p != -1) {
                     this._vertices.splice(p, 1);
                     this.svgGroup.removeChild(item.svgGroup);
@@ -192,8 +192,8 @@
          * グラフの領域を表すRectangleを返します。位置の基準はグラフが追加されているNodeです。
          */
         public getRegion(): Rectangle {
-            var rects = this.vertices.map((v) => v.region);
-            var rect = GraphTableSVG.Rectangle.merge(rects);
+            const rects = this.vertices.map((v) => v.region);
+            const rect = GraphTableSVG.Rectangle.merge(rects);
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
             return rect;
         }
@@ -202,7 +202,7 @@
          * @param id
          */
         public getObjectByObjectID(id: string): Vertex | Edge | null {
-            for (var i = 0; i < this.vertices.length; i++) {
+            for (let i = 0; i < this.vertices.length; i++) {
                 if (this.vertices[i].containsObjectID(id)) {
                     return this.vertices[i];
                 }
@@ -224,8 +224,8 @@
             node1.insertOutcomingEdge(edge, outcomingInsertIndex);
             node2.insertIncomingEdge(edge, incomingInsertIndex);
 
-            var i = this.roots.indexOf(node1);
-            var j = this.roots.indexOf(node2);
+            const i = this.roots.indexOf(node1);
+            const j = this.roots.indexOf(node2);
             if (j != -1) {
                 if (i == -1) {
                     this.roots[j] = node1;
@@ -247,7 +247,7 @@
          * @param node
          */
         public getOrderedVertices(order: NodeOrder, node: Vertex | null = null): Vertex[] {
-            var r: Vertex[] = [];
+            const r: Vertex[] = [];
             if (node == null) {
                 this.roots.forEach((v) => {
                     this.getOrderedVertices(order, v).forEach((w) => {
@@ -255,7 +255,7 @@
                     });
                 });
             } else {
-                var edges = node.outcomingEdges;
+                const edges = node.outcomingEdges;
                 if (order == NodeOrder.Preorder) {
                     r.push(node);
                     edges.forEach((v) => {
@@ -277,24 +277,24 @@
         }
 
         public save() {
-            var id = 0;
+            //const id = 0;
             //this.nodes.forEach((v) => v.objectID = id++);
             //this.edges.forEach((v) => v.objectID = id++);
-            var ids = this.vertices.map((v) => v.objectID);
+            const ids = this.vertices.map((v) => v.objectID);
             this.svgGroup.setAttribute("node", JSON.stringify(ids));
         }
 
         public static setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null) {
 
-            var x = rect.x;
-            var y = rect.y;
+            let x = rect.x;
+            let y = rect.y;
             text.setAttribute('x', x.toString());
             text.setAttribute('y', y.toString());
 
-            var b2 = text.getBBox();
+            const b2 = text.getBBox();
 
-            var dy = b2.y - y;
-            var dx = b2.x - x;
+            const dy = b2.y - y;
+            const dx = b2.x - x;
 
             y -= dy;
 
@@ -316,7 +316,7 @@
             text.setAttribute('x', x.toString());
         }
         public static IsDescendantOfBody(node: Node): boolean {
-            var parent = node.parentNode;
+            const parent = node.parentNode;
             if (parent == null) {
                 return false;
             }
@@ -328,7 +328,7 @@
         }
 
         public static getRegion(items: (Graph | Table)[]): Rectangle {
-            var rects = items.map((v) => v.getRegion());
+            const rects = items.map((v) => v.getRegion());
             if (rects.length > 0) {
                 return GraphTableSVG.Rectangle.merge(rects);
             } else {
@@ -337,14 +337,14 @@
         }
 
         public createVBACode(id: number): string[] {
-            var dic: { [key: string]: number; } = {};
+            const dic: { [key: string]: number; } = {};
 
             this.vertices.forEach((v, i) => dic[v.objectID] = i);
             this.edges.forEach((v, i) => dic[v.objectID] = i);
-            var main: string[] = [];
-            var sub: string[][] = [];
+            const main: string[] = [];
+            const sub: string[][] = [];
 
-            var lines = new Array(0);
+            const lines = new Array(0);
             lines.push(`Sub create${id}(createdSlide As slide)`);
             lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
             lines.push(` Dim nodes(${this.vertices.length}) As Shape`);
@@ -353,7 +353,7 @@
 
             this.vertices.forEach((v, i) => v.createVBACode(main, sub, dic));
             this.edges.forEach((v, i) => v.createVBACode(main, sub, dic));
-            var [x1, y1] = VBATranslateFunctions.splitCode(sub, `shapes_ As Shapes, nodes() As Shape, edges() As Shape`, `shapes_, nodes, edges`, id);
+            const [x1, y1] = VBATranslateFunctions.splitCode(sub, `shapes_ As Shapes, nodes() As Shape, edges() As Shape`, `shapes_, nodes, edges`, id);
             lines.push(x1);
             lines.push(`End Sub`);
             lines.push(y1);

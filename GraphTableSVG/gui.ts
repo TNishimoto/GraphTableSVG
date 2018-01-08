@@ -2,7 +2,7 @@
     export namespace GUI {
         export function createMacroModal(text: string) {
 
-            var mainDiv = document.createElement("div");
+            const mainDiv = document.createElement("div");
             mainDiv.id = "macro-modal"
             mainDiv.innerHTML = `
     使い方（Powerpoint 2013）<br>
@@ -30,10 +30,10 @@
             document.body.appendChild(mainDiv);
 
 
-            var cnt = <HTMLInputElement>document.getElementById("codeBox");
+            const cnt = <HTMLInputElement>document.getElementById("codeBox");
             cnt.value = text;
 
-            var bgDiv = document.createElement("div");
+            const bgDiv = document.createElement("div");
             document.body.appendChild(bgDiv);
             bgDiv.style.width = "100%";
             bgDiv.style.height = "100%";
@@ -52,15 +52,15 @@
         }
         export function removeMacroModal() {
 
-            var div1 = document.getElementById("macro-modal");
+            const div1 = document.getElementById("macro-modal");
 
-            var div2 = document.getElementById("modal-bg");
+            const div2 = document.getElementById("modal-bg");
             if (div1 != null) document.body.removeChild(div1);
             if (div2 != null) document.body.removeChild(div2);
 
         }
         export function copyAndCloseMacroModal() {
-            var cnt = <HTMLInputElement>document.getElementById("codeBox");
+            const cnt = <HTMLInputElement>document.getElementById("codeBox");
             cnt.select();
             window.document.execCommand('copy');
             alert('クリップボードにコピーしました。');
@@ -71,8 +71,8 @@
         export function setSVGBoxSize(box: HTMLElement, item1: Rectangle | number, item2: Padding | number) {            
             if (item1 instanceof Rectangle) {
                 if (item2 instanceof Padding) {
-                    var w: number = item1.right + item2.left + item2.right;
-                    var h: number = item1.bottom + item2.top + item2.bottom;
+                    const w: number = item1.right + item2.left + item2.right;
+                    const h: number = item1.bottom + item2.top + item2.bottom;
                     setSVGBoxSize(box, w, h);
                 } else {
                     throw new Error();
@@ -81,8 +81,8 @@
                 if (item2 instanceof Padding) {
                     throw new Error();
                 } else {
-                    var width = `${item1}px`;
-                    var height = `${item2}px`;
+                    const width = `${item1}px`;
+                    const height = `${item2}px`;
                     if (box.style.width != width || box.style.height != height) {
                         box.style.width = width;
                         box.style.height = height;
@@ -93,10 +93,10 @@
 
         }
         export function GetURLParameters(): Object {
-            var arg: Object = new Object;
-            var pair = location.search.substring(1).split('&');
-            for (var i = 0; pair[i]; i++) {
-                var kv = pair[i].split('=');
+            const arg: Object = new Object;
+            const pair = location.search.substring(1).split('&');
+            for (let i = 0; pair[i]; i++) {
+                const kv = pair[i].split('=');
                 arg[kv[0]] = kv[1];
             }
             return arg;

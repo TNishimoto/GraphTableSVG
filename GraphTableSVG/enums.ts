@@ -80,7 +80,7 @@
         }
     }
 
-    export var VerticalAnchorPropertyName: string = "--vertical-anchor";
+    export const VerticalAnchorPropertyName: string = "--vertical-anchor";
     /**
     垂直方向の配置位置を表す値です。
     */
@@ -101,7 +101,7 @@
     }
 
     
-    export var HorizontalAnchorPropertyName: string = "--horizontal-anchor";
+    export const HorizontalAnchorPropertyName: string = "--horizontal-anchor";
     /**
     水平方向の配置位置を表す値です。
     */

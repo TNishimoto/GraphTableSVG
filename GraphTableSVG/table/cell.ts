@@ -8,8 +8,8 @@ namespace GraphTableSVG {
 
         private _observer: MutationObserver;
         private _observerFunc: MutationCallback = (x: MutationRecord[]) => {
-            for (var i = 0; i < x.length; i++) {
-                var p = x[i];
+            for (let i = 0; i < x.length; i++) {
+                const p = x[i];
                 if (p.attributeName == "style" || p.attributeName == "class") {
                     this.localUpdate();
                 }
@@ -21,10 +21,10 @@ namespace GraphTableSVG {
         /*
         private _textObserver: MutationObserver;
         private _textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
-            for (var i = 0; i < x.length; i++) {
-                var p = x[i];
-                for (var j = 0; j < p.addedNodes.length; j++) {
-                    var item = p.addedNodes.item(j);
+            for (let i = 0; i < x.length; i++) {
+                const p = x[i];
+                for (let j = 0; j < p.addedNodes.length; j++) {
+                    const item = p.addedNodes.item(j);
                     console.log(`${this.table.isDrawing} ${this.table.isAutoResized}`)
                     console.log(this.svgText.textContent);
 
@@ -62,7 +62,7 @@ namespace GraphTableSVG {
             this.svgGroup.appendChild(this.svgText);
 
             /*
-            var circle = createRectangle();
+            const circle = createRectangle();
             circle.style.fill = "blue";
             this.rect = circle;
             this.svgGroup.appendChild(circle);
@@ -80,11 +80,11 @@ namespace GraphTableSVG {
             this.table.svgGroup.appendChild(this.rightBorder);
             this.table.svgGroup.appendChild(this.bottomBorder);
 
-            var option1: MutationObserverInit = { childList: true, subtree: true };
+            const option1: MutationObserverInit = { childList: true, subtree: true };
             this.table.cellTextObserver.observe(this.svgText, option1);
 
             this._observer = new MutationObserver(this._observerFunc);
-            var option2: MutationObserverInit = { attributes : true};
+            const option2: MutationObserverInit = { attributes : true};
             this._observer.observe(this.svgGroup, option2);
             
 
@@ -96,11 +96,11 @@ namespace GraphTableSVG {
 
         }
         private get innerExtraPaddingLeft(): number {
-            var p = this.fontSize;
+            const p = this.fontSize;
             return p / 16;
         }
         private get innerExtraPaddingRight(): number{
-            var p = this.fontSize;
+            const p = this.fontSize;
             return p / 16;            
         }
         private _masterID: number;
@@ -192,8 +192,8 @@ namespace GraphTableSVG {
             return this._svgGroup;
         }
         get fontSize(): number {
-            var p = this.svgText.getPropertyStyleValueWithDefault("font-size", "24");
-            var p2 = parseInt(p);
+            const p = this.svgText.getPropertyStyleValueWithDefault("font-size", "24");
+            const p2 = parseInt(p);
             return p2;
         }
         /**
@@ -276,7 +276,7 @@ namespace GraphTableSVG {
         SVGTextElement生成時に設定するクラス名を返します。
         */
         get defaultTextClass(): string | null {
-            var r = this.svgGroup.getPropertyStyleValue(Cell.defaultTextClass);
+            const r = this.svgGroup.getPropertyStyleValue(Cell.defaultTextClass);
             return r;
         }
         /**
@@ -291,8 +291,8 @@ namespace GraphTableSVG {
         */
         get logicalWidth(): number {
             if (this.isMaster) {
-                var w = 0;
-                var now: Cell | null = this;
+                let w = 0;
+                let now: Cell | null = this;
                 while (now != null && this.ID == now.masterID) {
                     now = this.rightCell;
                     w++;
@@ -307,8 +307,8 @@ namespace GraphTableSVG {
         */
         get logicalHeight(): number {
             if (this.isMaster) {
-                var h = 0;
-                var now: Cell | null = this;
+                let h = 0;
+                let now: Cell | null = this;
                 while (now != null && this.ID == now.masterID) {
                     now = this.bottomCell;
                     h++;
@@ -363,7 +363,7 @@ namespace GraphTableSVG {
          * 再描画します。
          */
         private localUpdate() {
-            var innerRect = new Rectangle();
+            const innerRect = new Rectangle();
             innerRect.x = this.innerExtraPaddingLeft + this.paddingLeft;
             innerRect.y = this.paddingTop;
             innerRect.height = this.height  - this.paddingTop - this.paddingBottom;
@@ -398,8 +398,8 @@ namespace GraphTableSVG {
             this.bottomBorder.y2.baseVal.value = this.bottomBorder.y1.baseVal.value;
 
             //this.textSVG.x.baseVal.getItem(0).value = 0;
-            var text_x = 0;
-            var text_y = 0;
+            //const text_x = 0;
+            //const text_y = 0;
 
             this.localUpdate();
 
@@ -461,8 +461,8 @@ namespace GraphTableSVG {
         */
         get upperGroupCells(): Cell[] {
             if (this.isMaster) {
-                var w: Cell[] = [];
-                var now: Cell | null = this;
+                let w: Cell[] = [];
+                let now: Cell | null = this;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = this.upCell;
@@ -477,8 +477,8 @@ namespace GraphTableSVG {
         */
         get leftGroupCells(): Cell[] {
             if (this.isMaster) {
-                var w: Cell[] = [];
-                var now: Cell | null = this;
+                let w: Cell[] = [];
+                let now: Cell | null = this;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = this.leftCell;
@@ -513,8 +513,8 @@ namespace GraphTableSVG {
         */
         get bottomGroupCells(): Cell[] {
             if (this.isMaster) {
-                var w: Cell[] = [];
-                var now: Cell | null = this.leftBottomGroupCell;
+                let w: Cell[] = [];
+                let now: Cell | null = this.leftBottomGroupCell;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = this.bottomCell;
@@ -530,8 +530,8 @@ namespace GraphTableSVG {
         */
         get rightGroupCells(): Cell[] {
             if (this.isMaster) {
-                var w: Cell[] = [];
-                var now: Cell | null = this.rightUpGroupCell;
+                let w: Cell[] = [];
+                let now: Cell | null = this.rightUpGroupCell;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = this.rightCell;
@@ -545,11 +545,11 @@ namespace GraphTableSVG {
         /*
         get upVirtualCells(): Cell[] {
             if (this.isMaster && this.cellY != 0) {
-                var upperGroupCells = this.upperGroupCells;
-                var r1 = upperGroupCells.map(function (x, i, self) {
+                const upperGroupCells = this.upperGroupCells;
+                const r1 = upperGroupCells.map(function (x, i, self) {
                     return upperGroupCells[i].upCell;
                 });
-                var r2 = r1.filter(function (x, i, self) {
+                const r2 = r1.filter(function (x, i, self) {
                     return r1.indexOf(x) === i;
                 });
                 return r2;
@@ -611,7 +611,7 @@ namespace GraphTableSVG {
         セルの領域を表すRectangleを返します。領域の基準は属しているテーブルのSVGGElementです。
         */
         get region(): Rectangle {
-            var p = new Rectangle(this.x, this.y, this.width, this.height);
+            const p = new Rectangle(this.x, this.y, this.width, this.height);
             return p;
         }
 
@@ -626,7 +626,7 @@ namespace GraphTableSVG {
         */
 
         private static createCellRectangle(className: string | null = null): SVGRectElement {
-            var rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             rect.width.baseVal.value = 30;
             rect.height.baseVal.value = 30;
             if (className == null) {

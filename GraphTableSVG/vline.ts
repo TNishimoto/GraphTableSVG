@@ -23,7 +23,7 @@
         constructor(public x1: number, public y1: number, public x2: number, public y2: number) {
         }
         public contains(x: number, y: number): boolean {
-            var lineY = this.getY(x);
+            const lineY = this.getY(x);
             if (lineY == null) {
                 return x < this.x1;
             } else {
@@ -32,7 +32,7 @@
         }
 
         public getY(x: number): number | null {
-            var intercept = this.intercept;
+            const intercept = this.intercept;
             if (intercept == null) {
                 return null;
             } else {
@@ -44,8 +44,8 @@
             }
         }
         public get slope(): number | null {
-            var [x1, y1] = this.smallPoint;
-            var [x2, y2] = this.largePoint;
+            const [x1, y1] = this.smallPoint;
+            const [x2, y2] = this.largePoint;
             if (x2 - x1 == 0) {
                 return null;
             } else {
@@ -53,8 +53,8 @@
             }
         }
         public get intercept(): number | null {
-            var [x1, y1] = this.smallPoint;
-            var [x2, y2] = this.largePoint;
+            const [x1, y1] = this.smallPoint;
+            const [x2, y2] = this.largePoint;
             if (this.slope == null) {
                 return null;
             } else {
@@ -124,11 +124,11 @@
          * @param rects
          */
         public static merge(rects: Rectangle[]): Rectangle {
-            var x1 = rects[0].x;
-            var y1 = rects[0].y;
+            let x1 = rects[0].x;
+            let y1 = rects[0].y;
 
-            var x2 = rects[0].right;
-            var y2 = rects[0].bottom;
+            let x2 = rects[0].right;
+            let y2 = rects[0].bottom;
 
             rects.forEach((v) => {
                 if (x1 > v.x) x1 = v.x;
@@ -136,7 +136,7 @@
                 if (x2 < v.right) x2 = v.right;
                 if (y2 < v.bottom) y2 = v.bottom;
             })
-            var rect = new Rectangle();
+            const rect = new Rectangle();
             rect.x = x1;
             rect.y = y1;
             rect.width = x2 - x1;

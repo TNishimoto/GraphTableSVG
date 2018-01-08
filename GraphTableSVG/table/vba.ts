@@ -2,31 +2,31 @@
 namespace GraphTableSVG {
     export class SVGToVBA {
         public static create(items: (Graph | Table)[]): string {
-            //var id = 0;
-            var s: string[] = new Array(0);
+            //const id = 0;
+            const s: string[] = new Array(0);
 
             s.push(`Sub create()`);
             s.push(` Dim createdSlide As slide`);
             s.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
-            for (var i = 0; i < items.length; i++) {
+            for (let i = 0; i < items.length; i++) {
                 s.push(`Call create${i}(createdSlide)`);
             }
             s.push(`MsgBox "created"`);
 
             s.push(`End Sub`);
 
-            for (var i = 0; i < items.length; i++) {
-                var item = items[i];
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
                 if (item instanceof Table) {
-                    var lines = item.createVBACode(i, "createdSlide");
+                    const lines = item.createVBACode(i, "createdSlide");
                     lines.forEach((v) => s.push(v));
                 } else {
-                    var lines = item.createVBACode(i);
+                    const lines = item.createVBACode(i);
                     lines.forEach((v) => s.push(v));
                 }
             }
             s.push(SVGToVBA.cellFunctionCode);
-            var r = VBATranslateFunctions.joinLines(s);
+            const r = VBATranslateFunctions.joinLines(s);
             return r;
         }
         
@@ -147,8 +147,8 @@ End Sub
 
     export class VBATranslateFunctions {
         public static grouping80(codes: string[][]): string[] {
-            var r: string[] = [];
-            var result: string[] = [];
+            let r: string[] = [];
+            const result: string[] = [];
             codes.forEach(function (x, i, arr) {
                 if (r.length + x.length >= 80) {
                     result.push(VBATranslateFunctions.joinLines(r));
@@ -163,13 +163,13 @@ End Sub
             return result;
         }
         public static splitCode(codes: string[][], subArg : string, callArg : string, id: number): [string, string] {
-            var functions: string[] = [];
+            const functions: string[] = [];
 
-            var p = VBATranslateFunctions.grouping80(codes);
+            const p = VBATranslateFunctions.grouping80(codes);
             p.forEach(function (x, i, arr) {
                 functions.push(`Call SubFunction${id}_${i}(${callArg})`);
-                var begin = `Sub SubFunction${id}_${i}(${subArg})`;
-                var end = `End Sub`;
+                const begin = `Sub SubFunction${id}_${i}(${subArg})`;
+                const end = `End Sub`;
                 p[i] = VBATranslateFunctions.joinLines([begin, x, end]);
             });
             return [VBATranslateFunctions.joinLines(functions), VBATranslateFunctions.joinLines(p)];
@@ -204,9 +204,9 @@ End Sub
         }
 
         static createArrayFunction(items: any[]) {
-            var s = ``;
+            let s = ``;
 
-            for (var i = 0; i < items.length; i++) {
+            for (let i = 0; i < items.length; i++) {
                 s += items[i];
                 if (i + 1 != items.length) {
                     s += `, `;
@@ -215,8 +215,8 @@ End Sub
             return `Array(${s})`;
         }
         static createStringArrayFunction(items: string[]) {
-            var s = ``;
-            for (var i = 0; i < items.length; i++) {
+            let s = ``;
+            for (let i = 0; i < items.length; i++) {
                 s += `"${items[i]}"`;
                 if (i + 1 != items.length) {
                     s += `, `;
@@ -225,16 +225,16 @@ End Sub
             return `Array(${s})`;
         }
         static createJagArrayFunction(items: any[][]) {
-            var s = ``;
-            for (var i = 0; i < items.length; i++) {
+            let s = ``;
+            for (let i = 0; i < items.length; i++) {
                 s += VBATranslateFunctions.createArrayFunction(items[i]);
                 if (i + 1 != items.length) s += `, `;
             }
             return `Array(${s})`;
         }
         static joinLines(lines: string[]) {
-            var s = ``;
-            for (var i = 0; i < lines.length; i++) {
+            let s = ``;
+            for (let i = 0; i < lines.length; i++) {
                 s += lines[i];
                 if (i + 1 != lines.length) s += `\n`;
             }
@@ -257,19 +257,19 @@ End Sub
         }
         public static TranslateSVGTextElement(sub: string[][], item: SVGTextElement, range: string): void {
 
-            var text = item.textContent == null ? "" : item.textContent;
-            var color = Color.translateRGBCodeFromColorName2(item.getPropertyStyleValueWithDefault("fill", "gray"));
+            const text = item.textContent == null ? "" : item.textContent;
+            const color = Color.translateRGBCodeFromColorName2(item.getPropertyStyleValueWithDefault("fill", "gray"));
 
             sub.push([`${range}.text = "${item.textContent}"`]);
             sub.push([`${range}.Font.color.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`])
             if (item.children.length > 0) {
-                var pos = 1;
-                for (var i = 0; i < item.children.length; i++) {
-                    var child = item.children.item(i);
+                let pos = 1;
+                for (let i = 0; i < item.children.length; i++) {
+                    const child = item.children.item(i);
                     if (child.textContent != null && child.textContent.length > 0) {
-                        var len = child.textContent.length;
+                        const len = child.textContent.length;
 
-                        var f = child.getAttribute("data-script");
+                        const f = child.getAttribute("data-script");
                         if (f != null) {
                             if (f == "superscript") {
                                 sub.push([`${range}.Characters(${pos}, ${len}).Font.Superscript = True`])

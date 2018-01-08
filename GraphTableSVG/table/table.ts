@@ -29,14 +29,14 @@ namespace GraphTableSVG {
             return this._cellTextObserver;
         }
         private _cellTextObserverFunc: MutationCallback = (x: MutationRecord[]) => {            
-            var b = false;
-            for (var i = 0; i < x.length; i++) {
-                var p = x[i];
+            let b = false;
+            for (let i = 0; i < x.length; i++) {
+                const p = x[i];
                 if (p.type == "childList") {
                     b = true;
                 }
-                for (var j = 0; j < p.addedNodes.length; j++) {
-                    var item = p.addedNodes.item(j);
+                for (let j = 0; j < p.addedNodes.length; j++) {
+                    const item = p.addedNodes.item(j);
 
                     if (item.nodeName == "#text") {
                         b = true;
@@ -56,7 +56,7 @@ namespace GraphTableSVG {
             //this.svgGroup.appendChild(this.svgLineGroup);
 
             if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);
-            for (var y = 0; y < height; y++) {
+            for (let y = 0; y < height; y++) {
                 this.insertRowFunction(y, width);
             }
 
@@ -66,19 +66,19 @@ namespace GraphTableSVG {
 
         
         private insertRowFunction(i: number, width: number = this.width) {
-            var cell: Cell[] = [];
-            for (var x = 0; x < width; x++) {
+            const cell: Cell[] = [];
+            for (let x = 0; x < width; x++) {
                 cell[x] = this.createCell();
             }
             if (i < this.height) {
-                for (var x = 0; x < width; x++) {
+                for (let x = 0; x < width; x++) {
                     this.cells[i][x].topBorder = createLine(0, 0, 0, 0);
                     this.svgGroup.appendChild(this.cells[i][x].topBorder);
                 }
             }
             this.cells.splice(i, 0, cell);
             this.renumbering();
-            for (var x = 0; x < width; x++) {
+            for (let x = 0; x < width; x++) {
                 this.updateBorder(this.cells[i][x]);
             }
         }
@@ -107,8 +107,8 @@ namespace GraphTableSVG {
             }
         }
         private renumbering() {
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                for (let x = 0; x < this.width; x++) {
                     this.cells[y][x].cellX = x;
                     this.cells[y][x].cellY = y;
 
@@ -117,8 +117,8 @@ namespace GraphTableSVG {
             this.borders.forEach((v, i) => { v.setAttribute("borderID", i.toString()) });
 
             /*
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                for (let x = 0; x < this.width; x++) {
                     this.setLine(this.cells[y][x]);
                 }
             }
@@ -171,8 +171,8 @@ namespace GraphTableSVG {
         各行を表す配列を返します。読み取り専用です。
         */
         get rows(): Row[] {
-            var arr = new Array(0);
-            for (var y = 0; y < this.height; y++) {
+            const arr = new Array(0);
+            for (let y = 0; y < this.height; y++) {
                 arr.push(new Row(this, y));
             }
             return arr;
@@ -181,8 +181,8 @@ namespace GraphTableSVG {
         各列を表す配列を返します。読み取り専用です。
         */
         get columns(): Column[] {
-            var arr = new Array(0);
-            for (var x = 0; x < this.width; x++) {
+            const arr = new Array(0);
+            for (let x = 0; x < this.width; x++) {
                 arr.push(new Column(this, x));
             }
             return arr;
@@ -192,9 +192,9 @@ namespace GraphTableSVG {
         テーブル右下のセルが配列の最後の値となります。読み取り専用です。
         */
         get cellArray(): Cell[] {
-            var arr = new Array(0);
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
+            const arr = new Array(0);
+            for (let y = 0; y < this.height; y++) {
+                for (let x = 0; x < this.width; x++) {
                     arr.push(this.cells[y][x]);
                 }
             }
@@ -207,9 +207,9 @@ namespace GraphTableSVG {
         読み取り専用です。
         */
         get borders(): SVGLineElement[] {
-            var arr = new Array(0);
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
+            const arr = new Array(0);
+            for (let y = 0; y < this.height; y++) {
+                for (let x = 0; x < this.width; x++) {
                     if (arr.indexOf(this.cells[y][x].topBorder) == -1) {
                         arr.push(this.cells[y][x].topBorder);
                     }
@@ -243,18 +243,18 @@ namespace GraphTableSVG {
         */
         public insertColumn(i: number) {
             if (this.height > 0) {
-                for (var y = 0; y < this.height; y++) {
-                    var cell = this.createCell();
+                for (let y = 0; y < this.height; y++) {
+                    const cell = this.createCell();
                     this.cells[y].splice(i, 0, cell);
                 }
                 if (i < this.height) {
-                    for (var y = 0; y < this.height; y++) {
+                    for (let y = 0; y < this.height; y++) {
                         this.cells[y][i].leftBorder = createLine(0, 0, 0, 0);
                         this.svgGroup.appendChild(this.cells[y][i].leftBorder);
                     }
                 }
                 this.renumbering();
-                for (var y = 0; y < this.height; y++) {
+                for (let y = 0; y < this.height; y++) {
                     this.updateBorder(this.cells[y][i]);
                 }
             } else {
@@ -273,16 +273,16 @@ namespace GraphTableSVG {
         public update() {
             console.log("update");
             this._isDrawing = true;
-            var rows = this.rows;
-            var columns = this.columns;
+            const rows = this.rows;
+            const columns = this.columns;
             rows.forEach(function (x, i, arr) { x.resize(); });
             columns.forEach(function (x, i, arr) { x.resize(); });
-            var height = 0;
+            let height = 0;
             rows.forEach(function (x, i, arr) {
                 x.setY(height);
                 height += x.height;
             });
-            var width = 0;
+            let width = 0;
             columns.forEach(function (x, i, arr) {
                 x.setX(width);
 
@@ -297,25 +297,25 @@ namespace GraphTableSVG {
         所属しているSVGタグ上でのテーブルの領域を表すRectangleクラスを返します。        
         */
         public getRegion(): Rectangle {
-            var regions = this.cellArray.map((v) => v.region);
-            var rect = Rectangle.merge(regions);
+            const regions = this.cellArray.map((v) => v.region);
+            const rect = Rectangle.merge(regions);
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
             return rect;            
         }
         /*
         private getCellFromID(id: number): Cell {
-            var y = Math.floor(id / this.height);
-            var x = id % this.width;
+            const y = Math.floor(id / this.height);
+            const x = id % this.width;
             return this.cells[y][x];
         }
         */
         
 
         public createVBACode(id: number, slide: string): string[] {
-            var lines = new Array(0);
+            const lines = new Array(0);
             lines.push(`Sub create${id}(createdSlide As slide)`);
             
-            var [main, sub] = this.createVBAMainCode("createdSlide", id);
+            const [main, sub] = this.createVBAMainCode("createdSlide", id);
 
             lines.push(main);
             lines.push(`End Sub`);
@@ -327,8 +327,8 @@ namespace GraphTableSVG {
          * 現在のテーブルを表すVBAコードを返します。
          */
         private createVBAMainCode(slideName: string, id: number): [string, string] {
-            var fstLines: string[] = [];
-            var lines : string[][] = new Array(0);
+            const fstLines: string[] = [];
+            const lines : string[][] = new Array(0);
 
             fstLines.push(` Dim tableS As shape`);
             fstLines.push(` Dim table_ As table`);
@@ -340,90 +340,90 @@ namespace GraphTableSVG {
             //page.Shapes.AddTable(row_, column_)
             fstLines.push(` Set table_ = tableS.table`);
 
-            var tableName = "table_";
+            const tableName = "table_";
             
-            for (var y = 0; y < this.height; y++) {
+            for (let y = 0; y < this.height; y++) {
                 lines.push([` Call EditRow(${tableName}.Rows(${y + 1}), ${this.rows[y].height})`]);
             }
-            for (var x = 0; x < this.width; x++) {
+            for (let x = 0; x < this.width; x++) {
                 lines.push([` Call EditColumn(${tableName}.Columns(${x + 1}), ${this.columns[x].width})`]);
             }
 
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    var cell = this.cells[y][x];
+            for (let y = 0; y < this.height; y++) {
+                for (let x = 0; x < this.width; x++) {
+                    const cell = this.cells[y][x];
                     let color = Color.translateRGBCodeFromColorName2(cell.svgBackground.getPropertyStyleValueWithDefault("fill", "gray"));
-                    //var style = cell.svgBackground.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
+                    //const style = cell.svgBackground.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
                     VBATranslateFunctions.TranslateSVGTextElement(lines, this.cells[y][x].svgText, `${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame.TextRange`);
                     lines.push([`${tableName}.cell(${y + 1},${x + 1}).Shape.Fill.ForeColor.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`]);
                     //lines.push(` Call EditCell(${tableName}.cell(${y + 1},${x + 1}), "${cell.svgText.textContent}", ${color})`);
                 }
             }
 
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    var cell = this.cells[y][x];
-                    var fontSize = parseInt(cell.svgText.getPropertyStyleValueWithDefault("font-size", "12pt"));
-                    var color = VBATranslateFunctions.colorToVBA(cell.svgText.getPropertyStyleValueWithDefault("fill", "gray"));
-                    var fontFamily = VBATranslateFunctions.ToVBAFont(cell.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
-                    var fontBold = VBATranslateFunctions.ToFontBold(cell.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
+            for (let y = 0; y < this.height; y++) {
+                for (let x = 0; x < this.width; x++) {
+                    const cell = this.cells[y][x];
+                    const fontSize = parseInt(cell.svgText.getPropertyStyleValueWithDefault("font-size", "12pt"));
+                    const color = VBATranslateFunctions.colorToVBA(cell.svgText.getPropertyStyleValueWithDefault("fill", "gray"));
+                    const fontFamily = VBATranslateFunctions.ToVBAFont(cell.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+                    const fontBold = VBATranslateFunctions.ToFontBold(cell.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
                     lines.push([` Call EditCellFont(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${fontSize}, "${fontFamily}", ${color}, ${fontBold})`]);
                 }
             }
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    var cell = this.cells[y][x];
-                    var vAnchor = VBATranslateFunctions.ToVerticalAnchor(cell.verticalAnchor == null ? "" : cell.verticalAnchor);
-                    var hAnchor = VBATranslateFunctions.ToHorizontalAnchor(cell.horizontalAnchor == null ? "" : cell.horizontalAnchor);
+            for (let y = 0; y < this.height; y++) {
+                for (let x = 0; x < this.width; x++) {
+                    const cell = this.cells[y][x];
+                    const vAnchor = VBATranslateFunctions.ToVerticalAnchor(cell.verticalAnchor == null ? "" : cell.verticalAnchor);
+                    const hAnchor = VBATranslateFunctions.ToHorizontalAnchor(cell.horizontalAnchor == null ? "" : cell.horizontalAnchor);
                     lines.push([` Call EditCellTextFrame(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.paddingTop}, ${cell.paddingBottom}, ${cell.paddingLeft}, ${cell.paddingRight}, ${vAnchor}, ${hAnchor})`]);
                 }
             }
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    var cell = this.cells[y][x];
-                    var upLineStyle = VBATranslateFunctions.colorToVBA(cell.topBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                    var upLineStrokeWidth = cell.topBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.topBorder.style.strokeWidth) : "";
-                    var upLineVisibility = cell.topBorder.style.visibility != null ? GraphTableSVG.visible(cell.topBorder.style.visibility) : ""; 
+            for (let y = 0; y < this.height; y++) {
+                for (let x = 0; x < this.width; x++) {
+                    const cell = this.cells[y][x];
+                    const upLineStyle = VBATranslateFunctions.colorToVBA(cell.topBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    const upLineStrokeWidth = cell.topBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.topBorder.style.strokeWidth) : "";
+                    const upLineVisibility = cell.topBorder.style.visibility != null ? GraphTableSVG.visible(cell.topBorder.style.visibility) : ""; 
 
                     lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${upLineStyle}, ${upLineStrokeWidth}, ${upLineVisibility})`]);
 
-                    var leftLineStyle = VBATranslateFunctions.colorToVBA(cell.leftBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                    var leftLineStrokeWidth = cell.leftBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.leftBorder.style.strokeWidth) : "";
-                    var leftLineVisibility = cell.leftBorder.style.visibility != null ? GraphTableSVG.visible(cell.leftBorder.style.visibility) : ""; 
+                    const leftLineStyle = VBATranslateFunctions.colorToVBA(cell.leftBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    const leftLineStrokeWidth = cell.leftBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.leftBorder.style.strokeWidth) : "";
+                    const leftLineVisibility = cell.leftBorder.style.visibility != null ? GraphTableSVG.visible(cell.leftBorder.style.visibility) : ""; 
 
                     lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${leftLineStyle}, ${leftLineStrokeWidth}, ${leftLineVisibility})`]);
                     if (x + 1 == this.width) {
 
-                        var rightLineStyle = VBATranslateFunctions.colorToVBA(cell.rightBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                        var rightLineStrokeWidth = cell.rightBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.rightBorder.style.strokeWidth) : "";
-                        var rightLineVisibility = cell.rightBorder.style.visibility != null ? GraphTableSVG.visible(cell.rightBorder.style.visibility) : ""; 
+                        const rightLineStyle = VBATranslateFunctions.colorToVBA(cell.rightBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                        const rightLineStrokeWidth = cell.rightBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.rightBorder.style.strokeWidth) : "";
+                        const rightLineVisibility = cell.rightBorder.style.visibility != null ? GraphTableSVG.visible(cell.rightBorder.style.visibility) : ""; 
 
                         lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderRight), ${rightLineStyle}, ${rightLineStrokeWidth}, ${rightLineVisibility})`]);
                     }
 
                     if (y + 1 == this.height) {
-                        var bottomLineStyle = VBATranslateFunctions.colorToVBA(cell.bottomBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                        var bottomLineStrokeWidth = cell.bottomBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.bottomBorder.style.strokeWidth) : "";
-                        var bottomLineVisibility = cell.bottomBorder.style.visibility != null ? GraphTableSVG.visible(cell.bottomBorder.style.visibility) : ""; 
+                        const bottomLineStyle = VBATranslateFunctions.colorToVBA(cell.bottomBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                        const bottomLineStrokeWidth = cell.bottomBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.bottomBorder.style.strokeWidth) : "";
+                        const bottomLineVisibility = cell.bottomBorder.style.visibility != null ? GraphTableSVG.visible(cell.bottomBorder.style.visibility) : ""; 
 
                         lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderBottom), ${bottomLineStyle}, ${bottomLineStrokeWidth}, ${bottomLineVisibility})`]);
                     }
 
                 }
             }
-            var x0 = VBATranslateFunctions.joinLines(fstLines);
-            var [x1, y1] = VBATranslateFunctions.splitCode(lines, `${tableName} as Table`, `${tableName}`, id);
+            const x0 = VBATranslateFunctions.joinLines(fstLines);
+            const [x1, y1] = VBATranslateFunctions.splitCode(lines, `${tableName} as Table`, `${tableName}`, id);
             return [VBATranslateFunctions.joinLines([x0, x1]), y1];
         }
         /*
         private splitCode(tableName: string, codes: string[], id: number): [string, string] {
-            var functions: string[] = [];
+            const functions: string[] = [];
 
-            var p = VBATranslateFunctions.grouping80(codes);
+            const p = VBATranslateFunctions.grouping80(codes);
             p.forEach(function (x, i, arr) {
                 functions.push(`Call SubFunction${id}_${i}(${tableName})`);
-                var begin = `Sub SubFunction${id}_${i}(${tableName} As Table)`;
-                var end = `End Sub`;
+                const begin = `Sub SubFunction${id}_${i}(${tableName} As Table)`;
+                const end = `End Sub`;
                 p[i] = VBATranslateFunctions.joinLines([begin, x, end]);
             });
             return [VBATranslateFunctions.joinLines(functions), VBATranslateFunctions.joinLines(p)];

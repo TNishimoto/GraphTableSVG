@@ -138,8 +138,8 @@
          * @param posX
          */
         public setX(posX: number) {
-            for (var y = 0; y < this.table.height; y++) {
-                var cell = this.table.cells[y][this.cellX];
+            for (let y = 0; y < this.table.height; y++) {
+                const cell = this.table.cells[y][this.cellX];
                 cell.x = posX;
             }
 
@@ -154,9 +154,9 @@
         列の幅を設定します。
         */
         set width(value: number) {
-            var b = false;
-            for (var y = 0; y < this.table.height; y++) {
-                var cell = this.table.cells[y][this.cellX];
+            let b = false;
+            for (let y = 0; y < this.table.height; y++) {
+                const cell = this.table.cells[y][this.cellX];
                 if (cell.width != value) {
                     cell.width = value;
                     b = true;
@@ -167,24 +167,24 @@
         }
 
         public get leftBorders(): SVGLineElement[] {
-            var r: SVGLineElement[] = [];
+            const r: SVGLineElement[] = [];
             this.cells.forEach((v) => {
                 if (r.length == 0) {
                     r.push(v.leftBorder);
                 } else {
-                    var last = r[r.length - 1];
+                    const last = r[r.length - 1];
                     if (last != v.leftBorder) r.push(v.leftBorder);
                 }
             });
             return r;
         }
         public get rightBorders(): SVGLineElement[] {
-            var r: SVGLineElement[] = [];
+            const r: SVGLineElement[] = [];
             this.cells.forEach((v) => {
                 if (r.length == 0) {
                     r.push(v.rightBorder);
                 } else {
-                    var last = r[r.length - 1];
+                    const last = r[r.length - 1];
                     if (last != v.rightBorder) r.push(v.rightBorder);
                 }
             });

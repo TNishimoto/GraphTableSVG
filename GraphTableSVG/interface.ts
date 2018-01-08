@@ -7,30 +7,30 @@ interface SVGGElement {
 }
 
 SVGGElement.prototype.getX = function () {
-    var p: SVGGElement = this;
+    const p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
         p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
     }
     return p.transform.baseVal.getItem(0).matrix.e;
 };
 SVGGElement.prototype.setX = function (value: number) {
-    var p: SVGGElement = this;
+    const p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
         p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
     }
-    var a = this.transform.baseVal.getItem(0).matrix.a;
-    var b = this.transform.baseVal.getItem(0).matrix.b;
-    var c = this.transform.baseVal.getItem(0).matrix.c;
-    var d = this.transform.baseVal.getItem(0).matrix.d;
-    var e = value;
-    var f = this.transform.baseVal.getItem(0).matrix.f;
+    const a = this.transform.baseVal.getItem(0).matrix.a;
+    const b = this.transform.baseVal.getItem(0).matrix.b;
+    const c = this.transform.baseVal.getItem(0).matrix.c;
+    const d = this.transform.baseVal.getItem(0).matrix.d;
+    const e = value;
+    const f = this.transform.baseVal.getItem(0).matrix.f;
     p.setAttribute('transform', `matrix(${a} ${b} ${c} ${d} ${e} ${f})`);
 
 
     //p.transform.baseVal.getItem(0).matrix.e = value;
 };
 SVGGElement.prototype.getY = function () {
-    var p: SVGGElement = this;
+    const p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
         p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
     }
@@ -38,16 +38,16 @@ SVGGElement.prototype.getY = function () {
     return this.transform.baseVal.getItem(0).matrix.f;
 };
 SVGGElement.prototype.setY = function (value: number) {
-    var p: SVGGElement = this;
+    const p: SVGGElement = this;
     if (p.transform.baseVal.numberOfItems == 0) {
         p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
     }
-    var a = this.transform.baseVal.getItem(0).matrix.a;
-    var b = this.transform.baseVal.getItem(0).matrix.b;
-    var c = this.transform.baseVal.getItem(0).matrix.c;
-    var d = this.transform.baseVal.getItem(0).matrix.d;
-    var e = this.transform.baseVal.getItem(0).matrix.e;
-    var f = value;
+    const a = this.transform.baseVal.getItem(0).matrix.a;
+    const b = this.transform.baseVal.getItem(0).matrix.b;
+    const c = this.transform.baseVal.getItem(0).matrix.c;
+    const d = this.transform.baseVal.getItem(0).matrix.d;
+    const e = this.transform.baseVal.getItem(0).matrix.e;
+    const f = value;
     p.setAttribute('transform', `matrix(${a} ${b} ${c} ${d} ${e} ${f})`);
 
 
@@ -59,8 +59,8 @@ interface CSSStyleDeclaration {
     tryGetPropertyValue(name: string): string | null;
 }
 CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name: string) {
-    var p: CSSStyleDeclaration = this;
-    var r = p.getPropertyValue(name).trim();
+    const p: CSSStyleDeclaration = this;
+    const r = p.getPropertyValue(name).trim();
     if (r.length == 0) {
         return null;
     } else {
@@ -74,8 +74,8 @@ interface SVGElement {
     setPropertyStyleValue(name: string, value: string | null): void;
 }
 SVGElement.prototype.getActiveStyle = function () {
-    var p: SVGElement = this;
-    var r = p.getAttribute("class");
+    const p: SVGElement = this;
+    const r = p.getAttribute("class");
     if (r == null) {
         return p.style;
     } else {
@@ -83,9 +83,9 @@ SVGElement.prototype.getActiveStyle = function () {
     }
 }
 SVGElement.prototype.getPropertyStyleValueWithDefault = function (name: string, defaultValue: string): string {
-    var item: SVGElement = this;
+    const item: SVGElement = this;
 
-    var p = item.getPropertyStyleValue(name);
+    const p = item.getPropertyStyleValue(name);
     if (p == null) {
         return defaultValue;
     } else {
@@ -93,17 +93,17 @@ SVGElement.prototype.getPropertyStyleValueWithDefault = function (name: string, 
     }
 }
 SVGElement.prototype.getPropertyStyleValue = function (name: string): string | null {
-    var item: SVGElement = this;
-    var p = item.style.getPropertyValue(name).trim();
+    const item: SVGElement = this;
+    const p = item.style.getPropertyValue(name).trim();
     if (p.length == 0) {
-        var r = item.getAttribute("class");
+        const r = item.getAttribute("class");
         if (r == null) {
             return null;
         } else {
 
-            var css = GraphTableSVG.getStyleSheet(r);
+            let css = GraphTableSVG.getStyleSheet(r);
             if (css == null) css = getComputedStyle(item);
-            var p2 = css.getPropertyValue(name).trim();
+            const p2 = css.getPropertyValue(name).trim();
             if (p2.length == 0) {
                 return null;
             } else {
@@ -115,7 +115,7 @@ SVGElement.prototype.getPropertyStyleValue = function (name: string): string | n
     }
 }
 SVGElement.prototype.setPropertyStyleValue = function (name: string, value: string | null) {
-    var item: SVGElement = this;
+    const item: SVGElement = this;
 
     item.style.setProperty(name, value);
 }
@@ -129,21 +129,21 @@ interface SVGTextElement {
 }
 SVGTextElement.prototype.setLatexTextContent = function (str: string) {
     str += "_";
-    var p: SVGTextElement = this;
+    const p: SVGTextElement = this;
     p.textContent = "";
-    var h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
+    const h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
 
-    var mode = "";
-    var tmp = "";
-    var dy = (1 * h) / 3;
-    var lastMode: string = "none";
-    var smallFontSize = (2 * h) / 3;
-    for (var i = 0; i < str.length; i++) {
-        var c = str[i];
+    let mode = "";
+    let tmp = "";
+    const dy = (1 * h) / 3;
+    let lastMode: string = "none";
+    const smallFontSize = (2 * h) / 3;
+    for (let i = 0; i < str.length; i++) {
+        const c = str[i];
         if (c == "_" || c == "{" || c == "^" || c == "}") {
             mode += c;
             if (mode == "_{}") {
-                var tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                 tspan.textContent = tmp;
                 tspan.setAttribute("dy", `${dy}`);
                 tspan.setAttribute("data-script", "subscript");
@@ -153,7 +153,7 @@ SVGTextElement.prototype.setLatexTextContent = function (str: string) {
                 mode = "";
                 tmp = "";
             } else if (mode == "^{}") {
-                var tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                 tspan.textContent = tmp;
                 tspan.setAttribute("dy", `-${dy}`);
                 tspan.style.fontSize = `${smallFontSize}pt`;
@@ -163,9 +163,9 @@ SVGTextElement.prototype.setLatexTextContent = function (str: string) {
                 mode = "";
                 tmp = "";
             } else if (mode == "_" || mode == "^") {
-                var tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                 tspan.textContent = tmp;
-                var normaldy = lastMode == "up" ? dy : lastMode == "down" ? -dy : 0;
+                const normaldy = lastMode == "up" ? dy : lastMode == "down" ? -dy : 0;
                 tspan.setAttribute("dy", `${normaldy}`);
                 p.appendChild(tspan);
 
@@ -179,14 +179,14 @@ SVGTextElement.prototype.setLatexTextContent = function (str: string) {
 };
 
 SVGTextElement.prototype.getX = function () {
-    var p: SVGTextElement = this;
+    const p: SVGTextElement = this;
     if (p.x.baseVal.numberOfItems == 0) {
         p.setAttribute('x', "0");
     }
     return p.x.baseVal.getItem(0).value;
 };
 SVGTextElement.prototype.setX = function (value: number) {
-    var p: SVGTextElement = this;
+    const p: SVGTextElement = this;
     if (p.x.baseVal.numberOfItems == 0) {
         p.setAttribute('x', "0");
     }
@@ -196,14 +196,14 @@ SVGTextElement.prototype.setX = function (value: number) {
     p.x.baseVal.getItem(0).value = value;
 };
 SVGTextElement.prototype.getY = function () {
-    var p: SVGTextElement = this;
+    const p: SVGTextElement = this;
     if (p.y.baseVal.numberOfItems == 0) {
         p.setAttribute('y', "0");
     }
     return p.y.baseVal.getItem(0).value;
 };
 SVGTextElement.prototype.setY = function (value: number) {
-    var p: SVGTextElement = this;
+    const p: SVGTextElement = this;
     if (p.y.baseVal.numberOfItems == 0) {
         p.setAttribute('y', "0");
     }

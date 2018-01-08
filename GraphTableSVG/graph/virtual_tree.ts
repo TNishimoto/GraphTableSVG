@@ -6,7 +6,7 @@
             this.subTreeRoot = _root;
         }
         get children(): Vertex[] {
-            var p = this;
+            const p = this;
             return this.subTreeRoot.children.map(function (x, i, arr) {
                 return x;
             });
@@ -20,7 +20,7 @@
         public getSubtree(result: Vertex[] = []): Vertex[] {
             result.push(this.subTreeRoot);
 
-            var children = this.children;
+            const children = this.children;
             if (children.length == 0) {
                 return result;
             } else {
@@ -31,17 +31,17 @@
             }
         }
         public getLeaves(): Vertex[] {
-            var p = this;
+            const p = this;
             return this.getSubtree().filter(function (x, i, arr) {
                 return x.outcomingEdges.length == 0;
             });
         }
         public getHeight(): number {
-            var children = this.children;
+            const children = this.children;
             if (children.length == 0) {
                 return 1;
             } else {
-                var max = 0;
+                let max = 0;
                 children.forEach(function (x, i, arr) {
                     if (max < x.tree.getHeight()) max = x.tree.getHeight();
                 })
@@ -49,19 +49,19 @@
             }
         }
         public region(): Rectangle {
-            var p = this.getSubtree();
-            var minX = this.subTreeRoot.x;
-            var maxX = this.subTreeRoot.x;
-            var minY = this.subTreeRoot.y;
-            var maxY = this.subTreeRoot.y;
+            const p = this.getSubtree();
+            let minX = this.subTreeRoot.x;
+            let maxX = this.subTreeRoot.x;
+            let minY = this.subTreeRoot.y;
+            let maxY = this.subTreeRoot.y;
             p.forEach(function (x, i, arr) {
-                var rect = x.region;
+                const rect = x.region;
                 if (minX > rect.x) minX = rect.x;
                 if (maxX < rect.right) maxX = rect.right;
                 if (minY > rect.y) minY = rect.y;
                 if (maxY < rect.bottom) maxY = rect.bottom;
             });
-            var result = new Rectangle();
+            const result = new Rectangle();
             result.x = minX;
             result.y = minY;
             result.width = maxX - minX;
@@ -79,23 +79,23 @@
             });
         }
         public setRectangleLocation(_x: number, _y: number) {
-            var x = this.mostLeftLeave.region.x;
-            var y = this.subTreeRoot.region.y;
-            var diffX = _x - x;
-            var diffY = _y - y;
+            const x = this.mostLeftLeave.region.x;
+            const y = this.subTreeRoot.region.y;
+            const diffX = _x - x;
+            const diffY = _y - y;
             this.addOffset(diffX, diffY);
             //this.graph.updateEdges();
         }
         public setRootLocation(_x: number, _y: number) {
-            var x = this.subTreeRoot.x;
-            var y = this.subTreeRoot.y;
-            var diffX = _x - x;
-            var diffY = _y - y;
+            const x = this.subTreeRoot.x;
+            const y = this.subTreeRoot.y;
+            const diffX = _x - x;
+            const diffY = _y - y;
             this.addOffset(diffX, diffY);
             //this.graph.updateEdges();
         }
         get leaves(): Vertex[] {
-            var p = this;
+            const p = this;
             return this.getSubtree().filter(function (x, i, arr) {
                 return x.outcomingEdges.length == 0;
             });

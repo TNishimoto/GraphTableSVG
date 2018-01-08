@@ -37,14 +37,14 @@
             return this.svgText.getY();
         }
         private getCenterPosition(): [number, number] {
-            var x = (this.edge.x1 + this.edge.x2) / 2;
-            var y = (this.edge.y1 + this.edge.y2) / 2;
+            let x = (this.edge.x1 + this.edge.x2) / 2;
+            let y = (this.edge.y1 + this.edge.y2) / 2;
             return [x, y];
         }
 
         /*
         public static create(graph: Graph, edge: Edge, text: string): EdgeText {
-            var p = new EdgeText();
+            let p = new EdgeText();
             p._svgText = createText();
             p.svgText.textContent = text;
             edge.svgGroup.appendChild(p.svgText);
@@ -58,15 +58,15 @@
          * 再描画します。
          */
         public update() {
-            var [x, y] = this.getCenterPosition();
+            const [x, y] = this.getCenterPosition();
             this.svgText.setX(x);
             this.svgText.setY(y);
 
-            var [x1, y1] = [this.edge.x1, this.edge.y1];
-            var [x2, y2] = [this.edge.x2, this.edge.y2];
+            const [x1, y1] = [this.edge.x1, this.edge.y1];
+            const [x2, y2] = [this.edge.x2, this.edge.y2];
             
-            var rad = Math.atan2(y2 - y1, x2 - x1);
-            var rar = rad * (180 / Math.PI);
+            const rad = Math.atan2(y2 - y1, x2 - x1);
+            let rar = rad * (180 / Math.PI);
             
             if (rar > 90) {
                 rar = rar - 180;
@@ -82,22 +82,22 @@
         }
         
         private static reverse(str: string): string {
-            var rv: string[] = [];
-            for (var i = 0, n = str.length; i < n; i++) {
+            const rv: string[] = [];
+            for (let i = 0, n = str.length; i < n; i++) {
                 rv[i] = str.charAt(n - i - 1);
             }
             return rv.join("");
         }
         public createVBACode(shapes : string, result : string[][]) : void {
-            var s : string[] = new Array(0);
+            const s : string[] = new Array(0);
             if (this.edge.graph != null) {
-                var region = this.svgText.getBBox();
+                const region = this.svgText.getBBox();
                 
                 
-                var fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
-                var fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
-                var left = this.edge.graph.svgGroup.getX() + this.svgText.getX();
-                var top = this.edge.graph.svgGroup.getY() + this.svgText.getY() - (this.fontSize/2);
+                const fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+                const fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
+                const left = this.edge.graph.svgGroup.getX() + this.svgText.getX();
+                let top = this.edge.graph.svgGroup.getY() + this.svgText.getY() - (this.fontSize/2);
                 s.push(`With ${shapes}.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${region.width},${this.fontSize})`);
                 s.push(`.TextFrame.TextRange.Text = "${this.svgText.textContent}"`);
                 s.push(`.TextFrame.marginLeft = 0`);

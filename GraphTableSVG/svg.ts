@@ -10,7 +10,7 @@ namespace GraphTableSVG {
      * @param className
      */
     export function createLine(x: number, y: number, x2: number, y2: number, className: string | null = null): SVGLineElement {
-        var line1 = <SVGLineElement>document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        const line1 = <SVGLineElement>document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line1.x1.baseVal.value = x;
         line1.x2.baseVal.value = x2;
         line1.y1.baseVal.value = y;
@@ -32,7 +32,7 @@ namespace GraphTableSVG {
      * @param className
      */
     export function createText(className : string | null = null): SVGTextElement {
-        var _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
         //_svgText.style.textAnchor = "middle";
         if (className == null) {
@@ -52,7 +52,7 @@ namespace GraphTableSVG {
      * @param className
      */
     export function createRectangle(className: string | null = null): SVGRectElement {
-        var rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.width.baseVal.value = 30;
         rect.height.baseVal.value = 30;
         if (className == null) {
@@ -71,7 +71,7 @@ namespace GraphTableSVG {
      * @param className
      */
     export function createGroup(className : string | null = null): SVGGElement {
-        var g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
         if (className != null) {
             g.setAttribute("class", className);
         }
@@ -89,16 +89,16 @@ namespace GraphTableSVG {
         style.fontWeight = null;
         style.fontFamily = null;
     }
-    var defaultRadiusName = "--default-radius";
-    var defaultWidthName = "--default-width";
-    var defaultHeightName = "--default-height";
+    const defaultRadiusName = "--default-radius";
+    const defaultWidthName = "--default-width";
+    const defaultHeightName = "--default-height";
 
     /**
      * SVGCircleElementを生成します。
      * @param className
      */
     export function createCircle(className : string | null = null): SVGCircleElement {
-        var circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.r.baseVal.value = 30;
         if (className == null) {
             circle.style.stroke = "black";
@@ -106,7 +106,7 @@ namespace GraphTableSVG {
             circle.style.fill = "#ffffff";
         } else {
             circle.setAttribute("class", className);
-            //var s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
+            //const s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
             //circle.className = className
             //console.log("d : " + circle.setAttribute("class", className));
         }
@@ -118,22 +118,22 @@ namespace GraphTableSVG {
         return circle;
     }
     export function setDefaultValue(item: SVGCircleElement | SVGRectElement) {
-        var className = item.getAttribute("class");
+        const className = item.getAttribute("class");
         if (className != null) {
-            var style = getStyleSheet(className);
+            const style = getStyleSheet(className);
             if (style != null) {
                 if (item instanceof SVGCircleElement) {
-                    var s = style.getPropertyValue(defaultRadiusName).trim();
+                    const s = style.getPropertyValue(defaultRadiusName).trim();
                     if (s.length > 0) {
                         item.r.baseVal.value = Number(s);
                     }
                 } else {
-                    var s1 = style.getPropertyValue(defaultWidthName).trim();
+                    const s1 = style.getPropertyValue(defaultWidthName).trim();
                     if (s1.length > 0) {
                         item.width.baseVal.value = Number(s1);
                     }
 
-                    var s2 = style.getPropertyValue(defaultHeightName).trim();
+                    const s2 = style.getPropertyValue(defaultHeightName).trim();
                     if (s2.length > 0) {
                         item.height.baseVal.value = Number(s2);
                     }
@@ -154,16 +154,16 @@ namespace GraphTableSVG {
         if (svg.getAttribute("class") == null) {
             return null;
         } else {
-            var css = getComputedStyle(svg);
+            const css = getComputedStyle(svg);
             return css;
         }
     }
     export function setCSSToStyle(svg: HTMLElement) {
-        var css = getCSSStyle(svg);
+        const css = getCSSStyle(svg);
         if (css != null) {
             let css2: CSSStyleDeclaration = css;
             cssPropertyNames.forEach((v) => {
-                var value = css2.getPropertyValue(v).trim();
+                const value = css2.getPropertyValue(v).trim();
                 if (value.length > 0) {
                     svg.style.setProperty(v, value);
                 }
@@ -172,7 +172,7 @@ namespace GraphTableSVG {
     }
     export function setCSSToAllElementStyles(item: HTMLElement | string) {
         if (typeof item == 'string') {
-            var svgBox: HTMLElement | null = document.getElementById(item);
+            const svgBox: HTMLElement | null = document.getElementById(item);
             if (svgBox != null) {
                 setCSSToAllElementStyles(svgBox);
             }
@@ -180,24 +180,24 @@ namespace GraphTableSVG {
         else{
 
             setCSSToStyle(item);
-            for (var i = 0; i < item.children.length; i++) {
-                var child = <HTMLElement>item.children.item(i);
+            for (let i = 0; i < item.children.length; i++) {
+                const child = <HTMLElement>item.children.item(i);
                 if (child != null) {
                     setCSSToAllElementStyles(child);
                 }
             }
         }
     }
-    var cssPropertyNames : string[] = ["font-size", "fill", "stroke"];
+    const cssPropertyNames : string[] = ["font-size", "fill", "stroke"];
 
     export function getStyleSheet(name: string): CSSStyleDeclaration | null {
-        var name2 = "." + name;
-        for (var i = 0; i < document.styleSheets.length; i++) {
-            var sheet = <CSSStyleSheet>document.styleSheets.item(i);
-            var rules: CSSRuleList | null = sheet.cssRules || sheet.rules;
+        const name2 = "." + name;
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            const sheet = <CSSStyleSheet>document.styleSheets.item(i);
+            const rules: CSSRuleList | null = sheet.cssRules || sheet.rules;
             if (rules != null) {
-                for (var j = 0; j < rules.length; j++) {
-                    var rule = <CSSStyleRule>rules.item(j);
+                for (let j = 0; j < rules.length; j++) {
+                    const rule = <CSSStyleRule>rules.item(j);
                     if (rule.selectorText == name2) {
                         return rule.style;
                     }

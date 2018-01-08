@@ -35,8 +35,8 @@
         テキストの領域を返します。
         */
         get innerRectangle(): Rectangle {
-            var r = this.svgCircle.r.baseVal.value;
-            var rect = new Rectangle();
+            const r = this.svgCircle.r.baseVal.value;
+            const rect = new Rectangle();
             rect.width = r * 2;
             rect.height = r * 2;
             rect.x = -r;
@@ -57,7 +57,7 @@
          * @param y
          */
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
-            var r = (Math.sqrt(2) / 2) * this.radius;
+            const r = (Math.sqrt(2) / 2) * this.radius;
 
 
             switch (type) {
@@ -78,7 +78,7 @@
                 case ConnectorPosition.LeftUp:
                     return [this.x - r, this.y - r];
                 default:
-                    var autoType = this.getAutoPosition(x, y);
+                    const autoType = this.getAutoPosition(x, y);
                     return this.getLocation(autoType, x, y);
             }
         }
@@ -90,7 +90,7 @@
         }
 
         private getRadian(x: number, y: number): ConnectorPosition {
-            var [x2, y2] = [x - this.x, y - this.y];
+            const [x2, y2] = [x - this.x, y - this.y];
 
             if (x2 < 0) {
                 if (y2 < 0) {
@@ -120,12 +120,12 @@
         }
 
         protected getAutoPosition(x: number, y: number): ConnectorPosition {
-            var r = (Math.sqrt(2) / 2) * this.radius;
-            var line1 = new VLine(this.x, this.y, this.x + r, this.y + r);
-            var line2 = new VLine(this.x, this.y, this.x + r, this.y - r);
+            const r = (Math.sqrt(2) / 2) * this.radius;
+            const line1 = new VLine(this.x, this.y, this.x + r, this.y + r);
+            const line2 = new VLine(this.x, this.y, this.x + r, this.y - r);
 
-            var b1 = line1.contains(x, y);
-            var b2 = line2.contains(x, y);
+            const b1 = line1.contains(x, y);
+            const b2 = line2.contains(x, y);
 
             if (b1) {
                 if (b2) {
@@ -180,7 +180,7 @@
         テキストの領域を返します。
         */
         get innerRectangle(): Rectangle {
-            var rect = new Rectangle();
+            const rect = new Rectangle();
             rect.width = this.width;
             rect.height = this.height;
             rect.x = -this.width / 2;
@@ -195,8 +195,8 @@
          * @param y
          */
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
-            var wr = this.width / 2;
-            var hr = this.height / 2;
+            const wr = this.width / 2;
+            const hr = this.height / 2;
 
 
             switch (type) {
@@ -213,19 +213,19 @@
                 case ConnectorPosition.LeftUp:
                     return [this.x - wr, this.y];
                 default:
-                    var autoType = this.getAutoPosition(x, y);
+                    const autoType = this.getAutoPosition(x, y);
                     return this.getLocation(autoType, x, y);
             }
         }
         protected getAutoPosition(x: number, y: number): ConnectorPosition {
-            var wr = this.width / 2;
-            var hr = this.height / 2;
+            const wr = this.width / 2;
+            const hr = this.height / 2;
 
-            var line1 = new VLine(this.x, this.y, this.x + wr, this.y + hr);
-            var line2 = new VLine(this.x, this.y, this.x + wr, this.y - hr);
+            const line1 = new VLine(this.x, this.y, this.x + wr, this.y + hr);
+            const line2 = new VLine(this.x, this.y, this.x + wr, this.y - hr);
 
-            var b1 = line1.contains(x, y);
-            var b2 = line2.contains(x, y);
+            const b1 = line1.contains(x, y);
+            const b2 = line2.contains(x, y);
 
             if (b1) {
                 if (b2) {
