@@ -28,8 +28,8 @@
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "edge");
 
-            var t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
-            var t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
+            const t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
+            const t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
 
             this.beginConnectorType = ToConnectorPosition(t1);
             this.endConnectorType = ToConnectorPosition(t2);
@@ -47,7 +47,7 @@
         開始接点の接続位置を返します。
         */
         get beginConnectorType(): ConnectorPosition {
-            var p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
+            const p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
             if (p == null) {
                 return ConnectorPosition.Auto;
             } else {
@@ -65,7 +65,7 @@
         終了接点の接続位置を返します。
         */
         get endConnectorType(): ConnectorPosition {
-            var p = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
+            const p = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
             if (p == null) {
                 return ConnectorPosition.Auto;
             } else {
@@ -89,7 +89,7 @@
         開始接点を設定します。
         */
         set beginVertex(value: Vertex | null) {
-            var prev = this._beginVertex;
+            const prev = this._beginVertex;
             this._beginVertex = value;
             if (value != null) {
                 this.svgGroup.setAttribute(Edge.beginNodeName, value.objectID);
@@ -114,7 +114,7 @@
         終了接点を設定します。
         */
         set endVertex(value: Vertex | null) {
-            var prev = this._endVertex;
+            const prev = this._endVertex;
 
             this._endVertex = value;
             if (value != null) {
@@ -142,7 +142,7 @@
         public dispose() {
             this.beginVertex = null;
             this.endVertex = null;
-            var prev = this.graph;
+            const prev = this.graph;
             this._graph = null;
 
             if (prev != null) {
@@ -162,7 +162,7 @@
         */
         public get x1(): number {
             if (this.beginVertex != null && this.endVertex != null) {
-                var [x1, y1] = this.beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
+                const [x1, y1] = this.beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
                 return x1;
             } else {
                 return 0;
@@ -173,7 +173,7 @@
         */
         public get y1(): number {
             if (this.beginVertex != null && this.endVertex != null) {
-                var [x1, y1] = this.beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
+                const [x1, y1] = this.beginVertex.getLocation(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
                 return y1;
             } else {
                 return 0;
@@ -184,7 +184,7 @@
         */
         public get x2(): number {
             if (this.beginVertex != null && this.endVertex != null) {
-                var [x2, y2] = this.endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
+                const [x2, y2] = this.endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
                 return x2;
             } else {
                 return 0;
@@ -195,7 +195,7 @@
         */
         public get y2(): number {
             if (this.beginVertex != null && this.endVertex != null) {
-                var [x2, y2] = this.endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
+                const [x2, y2] = this.endVertex.getLocation(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
                 return y2;
             } else {
                 return 0;
@@ -212,7 +212,7 @@
         ObjectIDを返します。
         */
         public get objectID(): string {
-            var r = this.svgGroup.getAttribute(Graph.objectIDName);
+            const r = this.svgGroup.getAttribute(Graph.objectIDName);
             if (r == null) {
                 throw new Error();
             } else {
@@ -240,19 +240,19 @@
             //var g = createGroup(className);
             //var textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();
             
-            var line = new LineEdge(graph, className);
+            const line = new LineEdge(graph, className);
             return line;
         }
         public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
             if (this.graph != null) {
-                var subline  : string[]= [];
-                var i = indexDic[this.objectID];
+                const subline  : string[]= [];
+                const i = indexDic[this.objectID];
                 subline.push(` Set edges(${i}) = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
                 if (this.beginVertex != null && this.endVertex != null) {
-                    var beg = indexDic[this.beginVertex.objectID];
-                    var end = indexDic[this.endVertex.objectID];
-                    var begType = this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
-                    var endType = this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
+                    const beg = indexDic[this.beginVertex.objectID];
+                    const end = indexDic[this.endVertex.objectID];
+                    const begType = this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
+                    const endType = this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
                     subline.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
                 }
                 subline.forEach((v) => sub.push([v]));
@@ -283,7 +283,7 @@
 
         constructor(__graph: Graph, className: string | null = null) {
             super(__graph, className);
-            var p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
+            const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
             this._svgLine = createLine(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this._svgLine);
             //this.graph.svgGroup.appendChild(this._svg);
@@ -317,10 +317,10 @@
         public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
             super.createVBACode(main, sub, indexDic);
             if (this.graph != null) {
-                var i = indexDic[this.objectID];
-                var lineColor = VBATranslateFunctions.colorToVBA(this._svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
-                var strokeWidth = parseInt(this._svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
-                var visible = this._svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                const i = indexDic[this.objectID];
+                const lineColor = VBATranslateFunctions.colorToVBA(this._svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
+                const strokeWidth = parseInt(this._svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                const visible = this._svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
                 sub.push([` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`]);
             }
         }

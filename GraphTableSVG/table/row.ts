@@ -17,24 +17,24 @@
         }
 
         public get topBorders(): SVGLineElement[] {
-            var r: SVGLineElement[] = [];
+            const r: SVGLineElement[] = [];
             this.cells.forEach((v) => {
                 if (r.length == 0) {
                     r.push(v.topBorder);
                 } else {
-                    var last = r[r.length - 1];
+                    const last = r[r.length - 1];
                     if (last != v.topBorder) r.push(v.topBorder);
                 }
             });
             return r;
         }
         public get bottomBorders(): SVGLineElement[] {
-            var r: SVGLineElement[] = [];
+            const r: SVGLineElement[] = [];
             this.cells.forEach((v) => {
                 if (r.length == 0) {
                     r.push(v.bottomBorder);
                 } else {
-                    var last = r[r.length - 1];
+                    const last = r[r.length - 1];
                     if (last != v.bottomBorder) r.push(v.bottomBorder);
                 }
             });
@@ -44,7 +44,7 @@
             return this.cells[0].leftBorder;
         }
         public get rightBorder(): SVGLineElement {
-            var cells = this.cells;
+            const cells = this.cells;
             return cells[cells.length - 1].rightBorder;
         }
 
@@ -61,15 +61,15 @@
          * 
          */
         public setY(posY: number) {
-            for (var x = 0; x < this.table.width; x++) {
-                var cell = this.table.cells[this.cellY][x];
+            for (let x = 0; x < this.table.width; x++) {
+                const cell = this.table.cells[this.cellY][x];
                 cell.y = posY;
             }
         }
         private getMaxHeight(): number {
-            var height = 0;
-            for (var x = 0; x < this.table.width; x++) {
-                var cell = this.table.cells[this.cellY][x];
+            let height = 0;
+            for (let x = 0; x < this.table.width; x++) {
+                const cell = this.table.cells[this.cellY][x];
                 if (height < cell.calculatedHeight) height = cell.calculatedHeight;
                 if (height < cell.height) height = cell.height;
             }
@@ -85,9 +85,9 @@
         行の高さを設定します。
         */
         set height(value: number) {
-            var b = false;
-            for (var x = 0; x < this.table.width; x++) {
-                var cell = this.table.cells[this.cellY][x];
+            let b = false;
+            for (let x = 0; x < this.table.width; x++) {
+                const cell = this.table.cells[this.cellY][x];
                 if (cell.height != value) {
                     cell.height = value;
                     b = true;
@@ -106,8 +106,8 @@
             return this._cellX;
         }
         public get cells(): Cell[] {
-            var items: Cell[] = [];
-            for (var i = 0; i < this.table.height; i++) {
+            const items: Cell[] = [];
+            for (let i = 0; i < this.table.height; i++) {
                 items.push(this.table.cells[i][this.cellX]);
             }
             return items;
@@ -119,9 +119,9 @@
         }
 
         private getMaxWidth(): number {
-            var width = 0;
-            for (var y = 0; y < this.table.height; y++) {
-                var cell = this.table.cells[y][this.cellX];
+            let width = 0;
+            for (let y = 0; y < this.table.height; y++) {
+                const cell = this.table.cells[y][this.cellX];
                 if (width < cell.calculatedWidth) width = cell.calculatedWidth;
                 if (width < cell.width) width = cell.width;
             }
@@ -194,7 +194,7 @@
             return this.cells[0].topBorder;
         }
         public get bottomBorder(): SVGLineElement {
-            var cells = this.cells;
+            const cells = this.cells;
             return cells[cells.length - 1].bottomBorder;
         }
     }

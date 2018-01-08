@@ -68,7 +68,7 @@
         }
         export function setSVGBoxSize(box: HTMLElement, w: number, h: number): void;
         export function setSVGBoxSize(box: HTMLElement, rect: Rectangle, padding: Padding): void;
-        export function setSVGBoxSize(box: HTMLElement, item1: Rectangle | number, item2: Padding | number) {
+        export function setSVGBoxSize(box: HTMLElement, item1: Rectangle | number, item2: Padding | number) {            
             if (item1 instanceof Rectangle) {
                 if (item2 instanceof Padding) {
                     var w: number = item1.right + item2.left + item2.right;
