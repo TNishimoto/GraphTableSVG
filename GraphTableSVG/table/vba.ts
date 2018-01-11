@@ -74,13 +74,20 @@ Sub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As 
     frame_.TextRange.ParagraphFormat.Alignment = hAnchor
 End Sub
 
-Sub EditTextRange(range_ As TextRange, text As String, subBeg As Integer, subLen As Integer, color As Variant)
+Sub EditTextRange(range_ As TextRange, text As String)
     range_.text = text
-    range_.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))
-    If subLen > 0 Then
+End Sub
+Sub EditTextRangeSub(range_ As TextRange, subBeg As Integer, subLen As Integer, script As String, color As Variant)
+    range_.Characters(subBeg, subLen).Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))
+    If script = "subscript" Then
     range_.Characters(subBeg, subLen).Font.Subscript = True
     End If
+    If script = "superscript" Then
+    range_.Characters(subBeg, subLen).Font.Superscript = True
+    End If
 End Sub
+
+
 
 Sub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)
     shape_.name = name
@@ -261,7 +268,7 @@ End Sub
             const color = Color.translateRGBCodeFromColorName2(item.getPropertyStyleValueWithDefault("fill", "gray"));
 
             sub.push([`${range}.text = "${item.textContent}"`]);
-            sub.push([`${range}.Font.color.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`])
+            //sub.push([`${range}.Font.color.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`])
             if (item.children.length > 0) {
                 let pos = 1;
                 for (let i = 0; i < item.children.length; i++) {
@@ -269,14 +276,21 @@ End Sub
                     if (child.textContent != null && child.textContent.length > 0) {
                         const len = child.textContent.length;
 
-                        const f = child.getAttribute("data-script");
+                        let f = child.getAttribute("data-script");
+                        if (f == null) {
+                            f = "";
+                        }
+                        sub.push([`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${color.r}, ${color.g}, ${color.b}))`]);
+                        /*
                         if (f != null) {
                             if (f == "superscript") {
+
                                 sub.push([`${range}.Characters(${pos}, ${len}).Font.Superscript = True`])
                             } else if (f == "subscript") {
                                 sub.push([`${range}.Characters(${pos}, ${len}).Font.Subscript = True`])
                             }
                         }
+                        */
                         pos += len;
                     }
                     
