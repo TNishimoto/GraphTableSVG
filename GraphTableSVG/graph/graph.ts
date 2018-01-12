@@ -137,7 +137,7 @@
                 const i = this._vertices.indexOf(item);
                 if (i == -1 && item.graph == this) {
                     this._vertices.push(item);
-                    this.svgGroup.appendChild(item.svgGroup);
+                    this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
                 } else {
                     throw Error();
                 }
@@ -147,7 +147,7 @@
                 const i = this._edges.indexOf(item);
                 if (i == -1 && item.graph == this) {
                     this._edges.push(item);
-                    this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
+                    this.svgGroup.appendChild(item.svgGroup);
                 } else {
                     throw Error();
                 }

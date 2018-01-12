@@ -249,6 +249,7 @@ var GraphTableSVG;
             this._beginVertex = null;
             this._endVertex = null;
             this._graph = null;
+            this._surface = null;
             this._text = null;
             this._svgGroup = g;
             this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.idCounter++).toString());
@@ -268,8 +269,71 @@ var GraphTableSVG;
             this._endNode = _endNode;
             */
         }
+        get markerStart() {
+            if (this.surface != null) {
+                var p = this.surface.getAttribute("marker-start");
+                if (p != null) {
+                    const str = p.substring(5, p.length - 1);
+                    const ele = document.getElementById(str);
+                    return ele;
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        }
+        set markerStart(value) {
+            if (this.surface != null) {
+                if (value == null) {
+                    this.surface.removeAttribute("marker-start");
+                }
+                else {
+                    this.surface.setAttribute("marker-start", `url(#${value.id})`);
+                }
+            }
+        }
+        get markerEnd() {
+            if (this.surface != null) {
+                var p = this.surface.getAttribute("marker-end");
+                if (p != null) {
+                    const str = p.substring(5, p.length - 1);
+                    const ele = document.getElementById(str);
+                    return ele;
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        }
+        set markerEnd(value) {
+            if (this.surface != null) {
+                if (value == null) {
+                    this.surface.removeAttribute("marker-end");
+                }
+                else {
+                    this.surface.setAttribute("marker-end", `url(#${value.id})`);
+                }
+            }
+        }
+        get lineColor() {
+            if (this.surface != null) {
+                return this.surface.getPropertyStyleValueWithDefault("stroke", "black");
+            }
+            else {
+                return null;
+            }
+        }
         get svgGroup() {
             return this._svgGroup;
+        }
+        get surface() {
+            return this._surface;
         }
         get text() {
             return this._text;
@@ -436,6 +500,12 @@ var GraphTableSVG;
          * 再描画します。
          */
         update() {
+            if (this.markerStart != null) {
+                var node = this.markerStart.firstChild;
+                if (this.lineColor != null) {
+                    node.setAttribute("fill", this.lineColor);
+                }
+            }
             return false;
         }
         /**
@@ -512,25 +582,23 @@ var GraphTableSVG;
     Edge.defaultTextClass = "--default-text-class";
     GraphTableSVG.Edge = Edge;
     class LineEdge extends Edge {
-        /*
-        public setGraph(value: Graph)
-        {
-            super.setGraph(value);
-            if (this.graph != null) {
-                this.graph.svgGroup.appendChild(this.svgGroup);
-            }
-        }
-        */
         constructor(__graph, g) {
             super(__graph, g);
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgLine = GraphTableSVG.createLine(0, 0, 0, 0, p);
-            this.svgGroup.appendChild(this._svgLine);
+            this._surface = GraphTableSVG.createLine(0, 0, 0, 0, p);
+            this.svgGroup.appendChild(this.svgLine);
+            var marker = GraphTableSVG.createMarker();
+            marker.id = `marker-${this.objectID}`;
+            this.svgGroup.appendChild(marker);
+            this.markerStart = marker;
+            this.markerEnd = marker;
+            //this.update();
             //this.graph.svgGroup.appendChild(this._svg);
         }
+        //private _svgLine: SVGLineElement;
         //svgText: SVGTextElement;
         get svgLine() {
-            return this._svgLine;
+            return this.surface;
         }
         /*
         public static create(className: string | null = null): LineEdge {
@@ -540,11 +608,12 @@ var GraphTableSVG;
         }
         */
         update() {
+            super.update();
             if (this.beginVertex != null && this.endVertex != null) {
-                this._svgLine.x1.baseVal.value = this.x1;
-                this._svgLine.y1.baseVal.value = this.y1;
-                this._svgLine.x2.baseVal.value = this.x2;
-                this._svgLine.y2.baseVal.value = this.y2;
+                this.svgLine.x1.baseVal.value = this.x1;
+                this.svgLine.y1.baseVal.value = this.y1;
+                this.svgLine.x2.baseVal.value = this.x2;
+                this.svgLine.y2.baseVal.value = this.y2;
                 if (this.text != null) {
                     this.text.update();
                 }
@@ -555,9 +624,9 @@ var GraphTableSVG;
             super.createVBACode(main, sub, indexDic);
             if (this.graph != null) {
                 const i = indexDic[this.objectID];
-                const lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this._svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
-                const strokeWidth = parseInt(this._svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
-                const visible = this._svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                const lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
+                const strokeWidth = parseInt(this.svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                const visible = this.svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
                 sub.push([` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`]);
             }
         }
@@ -567,11 +636,17 @@ var GraphTableSVG;
         constructor(__graph, g) {
             super(__graph, g);
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgBezier = GraphTableSVG.createPath(0, 0, 0, 0, p);
+            this._surface = GraphTableSVG.createPath(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this.svgBezier);
+            var marker = GraphTableSVG.createMarker();
+            marker.id = `marker-${this.objectID}`;
+            this.svgGroup.appendChild(marker);
+            this.markerStart = marker;
+            this.update();
         }
+        //private _svgBezier: SVGPathElement;
         get svgBezier() {
-            return this._svgBezier;
+            return this.surface;
         }
         get controlPoint() {
             const str = this.svgBezier.getAttribute(BezierEdge.controlPointName);
@@ -589,6 +664,7 @@ var GraphTableSVG;
             this.svgBezier.setAttribute(BezierEdge.controlPointName, str);
         }
         update() {
+            super.update();
             if (this.beginVertex != null && this.endVertex != null) {
                 var [cx1, cy1] = this.controlPoint;
                 const path = `M ${this.x1} ${this.y1} Q ${cx1} ${cy1} ${this.x2} ${this.y2}`;
@@ -731,7 +807,7 @@ var GraphTableSVG;
                 const i = this._vertices.indexOf(item);
                 if (i == -1 && item.graph == this) {
                     this._vertices.push(item);
-                    this.svgGroup.appendChild(item.svgGroup);
+                    this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
                 }
                 else {
                     throw Error();
@@ -741,7 +817,7 @@ var GraphTableSVG;
                 const i = this._edges.indexOf(item);
                 if (i == -1 && item.graph == this) {
                     this._edges.push(item);
-                    this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
+                    this.svgGroup.appendChild(item.svgGroup);
                 }
                 else {
                     throw Error();
@@ -3854,6 +3930,26 @@ var GraphTableSVG;
         return circle;
     }
     GraphTableSVG.createCircle = createCircle;
+    function createMarker(className = null) {
+        const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        poly.setAttribute("points", "0,0 0,10 10,5");
+        poly.setAttribute("fill", "red");
+        marker.setAttribute("markerUnits", "userSpaceOnUse");
+        marker.setAttribute("markerHeight", "15");
+        marker.setAttribute("markerWidth", "15");
+        marker.refX.baseVal.value = 5;
+        marker.refY.baseVal.value = 5;
+        marker.setAttribute("preserveAspectRatio", "none");
+        marker.setAttribute("orient", "auto-start-reverse");
+        marker.setAttribute("viewBox", "0 0 10 10");
+        marker.appendChild(poly);
+        if (className != null) {
+            marker.setAttribute("class", className);
+        }
+        return marker;
+    }
+    GraphTableSVG.createMarker = createMarker;
     function setDefaultValue(item) {
         const className = item.getAttribute("class");
         if (className != null) {

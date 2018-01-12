@@ -18,7 +18,61 @@
             if (b) this.update();
 
         };
+        public get markerStart(): SVGMarkerElement | null {
+            if (this.surface != null) {
+                var p = this.surface.getAttribute("marker-start");
+                if (p != null) {
+                    const str = p.substring(5, p.length - 1);
+                    const ele = <SVGMarkerElement><any>document.getElementById(str);
+                    return ele;
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+        public set markerStart(value: SVGMarkerElement | null) {
+            if (this.surface != null) {
+                if (value == null) {
+                    this.surface.removeAttribute("marker-start");
+                } else {
+                    this.surface.setAttribute("marker-start", `url(#${value.id})`);
+                }
+            }
+        } 
+        public get markerEnd(): SVGMarkerElement | null {
+            if (this.surface != null) {
+                var p = this.surface.getAttribute("marker-end");
+                if (p != null) {
+                    const str = p.substring(5, p.length - 1);
+                    const ele = <SVGMarkerElement><any>document.getElementById(str);
+                    return ele;
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+        public set markerEnd(value: SVGMarkerElement | null) {
+            if (this.surface != null) {
+                if (value == null) {
+                    this.surface.removeAttribute("marker-end");
+                } else {
+                    this.surface.setAttribute("marker-end", `url(#${value.id})`);
+                }
+            }
+        } 
 
+
+        public get lineColor(): string | null {
+            if (this.surface != null) {
+                return this.surface.getPropertyStyleValueWithDefault("stroke", "black");
+            } else {
+                return null;
+            }
+        }
         private _beginVertex: Vertex | null = null;
         private _endVertex: Vertex | null = null;
         private _graph: Graph | null = null;
@@ -26,6 +80,12 @@
         public get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
+        protected _surface: SVGElement | null = null;
+        public get surface(): SVGElement | null {
+            return this._surface;
+        }
+
+
         protected _text: EdgeText | null = null;
         public get text(): EdgeText | null {
             return this._text;
@@ -222,6 +282,12 @@
          * 再描画します。
          */
         public update(): boolean {
+            if (this.markerStart != null) {
+                var node = <SVGPolygonElement>this.markerStart.firstChild;
+                if (this.lineColor != null) {
+                    node.setAttribute("fill", this.lineColor);
+                }
+            }
             return false;
         }
         /**
@@ -290,28 +356,29 @@
     }
 
     export class LineEdge extends Edge {
-        private _svgLine: SVGLineElement;
+        //private _svgLine: SVGLineElement;
         //svgText: SVGTextElement;
 
         get svgLine(): SVGLineElement {
-            return this._svgLine;
+            return <SVGLineElement>this.surface;
         }
-        /*
-        public setGraph(value: Graph)
-        {
-            super.setGraph(value);
-            if (this.graph != null) {
-                this.graph.svgGroup.appendChild(this.svgGroup);
-            }
-        }
-        */
+        
+        
+
 
 
         constructor(__graph: Graph, g: SVGGElement) {
             super(__graph, g);
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgLine = createLine(0, 0, 0, 0, p);
-            this.svgGroup.appendChild(this._svgLine);
+            this._surface = createLine(0, 0, 0, 0, p);
+            this.svgGroup.appendChild(this.svgLine);
+
+            var marker = GraphTableSVG.createMarker();
+            marker.id = `marker-${this.objectID}`;
+            this.svgGroup.appendChild(marker);
+            this.markerStart = marker;
+            this.markerEnd = marker;
+            //this.update();
             //this.graph.svgGroup.appendChild(this._svg);
 
         }
@@ -324,17 +391,22 @@
         */
 
         public update(): boolean {
-            if (this.beginVertex != null && this.endVertex != null) {
-                this._svgLine.x1.baseVal.value = this.x1;
-                this._svgLine.y1.baseVal.value = this.y1;
+            super.update();
 
-                this._svgLine.x2.baseVal.value = this.x2;
-                this._svgLine.y2.baseVal.value = this.y2;
+            if (this.beginVertex != null && this.endVertex != null) {
+                this.svgLine.x1.baseVal.value = this.x1;
+                this.svgLine.y1.baseVal.value = this.y1;
+
+                this.svgLine.x2.baseVal.value = this.x2;
+                this.svgLine.y2.baseVal.value = this.y2;
 
                 if (this.text != null) {
                     this.text.update();
                 }
+
+                
             }
+           
 
             
 
@@ -344,9 +416,9 @@
             super.createVBACode(main, sub, indexDic);
             if (this.graph != null) {
                 const i = indexDic[this.objectID];
-                const lineColor = VBATranslateFunctions.colorToVBA(this._svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
-                const strokeWidth = parseInt(this._svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
-                const visible = this._svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                const lineColor = VBATranslateFunctions.colorToVBA(this.svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
+                const strokeWidth = parseInt(this.svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                const visible = this.svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
                 sub.push([` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`]);
             }
         }
@@ -355,21 +427,28 @@
     export class BezierEdge extends Edge {
         public static readonly controlPointName: string = "data-control-point";
 
-        private _svgBezier: SVGPathElement;
+        //private _svgBezier: SVGPathElement;
 
         get svgBezier(): SVGPathElement {
-            return this._svgBezier;
+            return <SVGPathElement>this.surface;
         }
-
 
         constructor(__graph: Graph, g: SVGGElement) {
             super(__graph, g);
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgBezier = createPath(0, 0, 0, 0, p);
+            this._surface = createPath(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this.svgBezier);
+
+
+            var marker = GraphTableSVG.createMarker();
+            marker.id = `marker-${this.objectID}`;
+            this.svgGroup.appendChild(marker);
+            this.markerStart = marker;
+            this.update();
 
         }
         public get controlPoint(): [number, number] {
+            
             const str = this.svgBezier.getAttribute(BezierEdge.controlPointName);
             if (str != null) {
                 const p: [number, number] = JSON.parse(str);
@@ -385,6 +464,7 @@
         }
 
         public update(): boolean {
+            super.update();
             if (this.beginVertex != null && this.endVertex != null) {
                 var [cx1, cy1] = this.controlPoint;
                 const path = `M ${this.x1} ${this.y1} Q ${cx1} ${cy1} ${this.x2} ${this.y2}`

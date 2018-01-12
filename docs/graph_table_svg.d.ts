@@ -121,11 +121,16 @@ declare namespace GraphTableSVG {
         static readonly defaultTextClass: string;
         private _observer;
         private observerFunc;
+        markerStart: SVGMarkerElement | null;
+        markerEnd: SVGMarkerElement | null;
+        readonly lineColor: string | null;
         private _beginVertex;
         private _endVertex;
         private _graph;
         private _svgGroup;
         readonly svgGroup: SVGGElement;
+        protected _surface: SVGElement | null;
+        readonly surface: SVGElement | null;
         protected _text: EdgeText | null;
         text: EdgeText | null;
         constructor(__graph: Graph, g: SVGGElement);
@@ -206,7 +211,6 @@ declare namespace GraphTableSVG {
         }): void;
     }
     class LineEdge extends Edge {
-        private _svgLine;
         readonly svgLine: SVGLineElement;
         constructor(__graph: Graph, g: SVGGElement);
         update(): boolean;
@@ -216,7 +220,6 @@ declare namespace GraphTableSVG {
     }
     class BezierEdge extends Edge {
         static readonly controlPointName: string;
-        private _svgBezier;
         readonly svgBezier: SVGPathElement;
         constructor(__graph: Graph, g: SVGGElement);
         controlPoint: [number, number];
@@ -1103,6 +1106,7 @@ declare namespace GraphTableSVG {
      * @param className
      */
     function createCircle(className?: string | null): SVGCircleElement;
+    function createMarker(className?: string | null): SVGMarkerElement;
     function setDefaultValue(item: SVGCircleElement | SVGRectElement): void;
     function setClass(svg: SVGElement, className?: string | null): void;
     function setCSSToStyle(svg: HTMLElement): void;

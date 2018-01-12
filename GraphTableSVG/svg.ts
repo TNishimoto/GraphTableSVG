@@ -129,6 +129,29 @@ namespace GraphTableSVG {
         
         return circle;
     }
+    export function createMarker(className: string | null = null): SVGMarkerElement {
+        const marker = <SVGMarkerElement>document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+        const poly = <SVGPolygonElement>document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        poly.setAttribute("points", "0,0 0,10 10,5");
+        poly.setAttribute("fill", "red");
+        marker.setAttribute("markerUnits", "userSpaceOnUse");
+        marker.setAttribute("markerHeight", "15");
+        marker.setAttribute("markerWidth", "15");
+        marker.refX.baseVal.value = 5;
+        marker.refY.baseVal.value = 5;
+
+        marker.setAttribute("preserveAspectRatio", "none");
+        marker.setAttribute("orient", "auto-start-reverse");
+        marker.setAttribute("viewBox", "0 0 10 10")
+        marker.appendChild(poly);
+
+        if (className != null) {
+            marker.setAttribute("class", className);
+        }
+        return marker;
+        
+    }
+
     export function setDefaultValue(item: SVGCircleElement | SVGRectElement) {
         const className = item.getAttribute("class");
         if (className != null) {
