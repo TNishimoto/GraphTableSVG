@@ -43,8 +43,9 @@
             }
         };
 
-        constructor(__graph: Graph, className: string | null = null, text: string) {
-            this._svgGroup = GraphTableSVG.createGroup(className);
+        constructor(__graph: Graph, group: SVGGElement, text: string) {
+            this._svgGroup = group
+            //this._svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "vertex");
             this._graph = __graph;
@@ -328,18 +329,21 @@
          *   "circle"ならばSVGCircleElement <br>
          *   "rectangle"ならばSVGRectangleElement
          */
-        public static create(graph: Graph, className: string | null = null, defaultSurfaceType: string = "circle"): GraphTableSVG.Vertex {
-            const g = createGroup(className);
+        public static create(graph: Graph, className: string | null = null, defaultSurfaceType: string | null = null): GraphTableSVG.Vertex {
             className = className != null ? className : graph.defaultVertexClass;
+            const g = createGroup(className);
+            graph.svgGroup.appendChild(g);
+
             const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
-            const type = type1 != null ? type1 : defaultSurfaceType;
+            const type = defaultSurfaceType != null ? defaultSurfaceType :
+                type1 != null ? type1 : "circle";
             let p: Vertex;
             if (type == "circle") {
-                p = new CircleVertex(graph, className, "");
+                p = new CircleVertex(graph, g, "");
             } else if (type == "rectangle") {
-                p = new RectangleVertex(graph, className, "");
+                p = new RectangleVertex(graph, g, "");
             } else {
-                p = new Vertex(graph, className, "");
+                p = new Vertex(graph, g, "");
             }
             return p;
         }

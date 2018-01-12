@@ -27,6 +27,18 @@ namespace GraphTableSVG {
         //line1.setAttribute('stroke', 'black');
         return line1;
     }
+    export function createPath(x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
+        const line1 = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        line1.setAttribute("d", `M ${x} ${y} M ${x2} ${y2}`);
+        if (className != null) {
+            line1.setAttribute("class", className)
+        } else {
+            line1.style.stroke = "black";
+            line1.style.fill = "none";
+        }
+        return line1;
+    }
+
     /**
      * SVGTextElementを生成します。
      * @param className

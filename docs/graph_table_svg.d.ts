@@ -65,7 +65,7 @@ declare namespace GraphTableSVG {
     }
     function ToConnectorPosition(str: string | null): ConnectorPosition;
     function ToStrFromConnectorPosition(position: ConnectorPosition): string;
-    var VerticalAnchorPropertyName: string;
+    const VerticalAnchorPropertyName: string;
     /**
     垂直方向の配置位置を表す値です。
     */
@@ -84,7 +84,7 @@ declare namespace GraphTableSVG {
          */
         const Bottom: VerticalAnchor;
     }
-    var HorizontalAnchorPropertyName: string;
+    const HorizontalAnchorPropertyName: string;
     /**
     水平方向の配置位置を表す値です。
     */
@@ -106,6 +106,12 @@ declare namespace GraphTableSVG {
     function parsePXString(item: string | null): number;
 }
 declare namespace GraphTableSVG {
+    class AdjacencyMatrix {
+        matrix: number[][];
+        value: string[];
+    }
+}
+declare namespace GraphTableSVG {
     class Edge {
         static readonly beginConnectorTypeName: string;
         static readonly endConnectorTypeName: string;
@@ -113,6 +119,8 @@ declare namespace GraphTableSVG {
         static readonly beginNodeName: string;
         static readonly endNodeName: string;
         static readonly defaultTextClass: string;
+        private _observer;
+        private observerFunc;
         private _beginVertex;
         private _endVertex;
         private _graph;
@@ -120,7 +128,7 @@ declare namespace GraphTableSVG {
         readonly svgGroup: SVGGElement;
         protected _text: EdgeText | null;
         text: EdgeText | null;
-        constructor(__graph: Graph, className?: string | null);
+        constructor(__graph: Graph, g: SVGGElement);
         /**
         開始接点の接続位置を返します。
         */
@@ -192,19 +200,27 @@ declare namespace GraphTableSVG {
          * @param className
          * @param lineType
          */
-        static create(graph: Graph, className?: string | null, lineType?: string | null): GraphTableSVG.Edge;
-        createVBACode(main: string[], sub: string[], indexDic: {
+        static create(graph: Graph, className?: string | null, defaultSurfaceType?: string | null): GraphTableSVG.Edge;
+        createVBACode(main: string[], sub: string[][], indexDic: {
             [key: string]: number;
         }): void;
     }
     class LineEdge extends Edge {
         private _svgLine;
         readonly svgLine: SVGLineElement;
-        constructor(__graph: Graph, className?: string | null);
+        constructor(__graph: Graph, g: SVGGElement);
         update(): boolean;
-        createVBACode(main: string[], sub: string[], indexDic: {
+        createVBACode(main: string[], sub: string[][], indexDic: {
             [key: string]: number;
         }): void;
+    }
+    class BezierEdge extends Edge {
+        static readonly controlPointName: string;
+        private _svgBezier;
+        readonly svgBezier: SVGPathElement;
+        constructor(__graph: Graph, g: SVGGElement);
+        controlPoint: [number, number];
+        update(): boolean;
     }
 }
 declare namespace GraphTableSVG {
@@ -215,6 +231,8 @@ declare namespace GraphTableSVG {
         static idCounter: number;
         static readonly defaultVertexClass: string;
         static readonly defaultEdgeClass: string;
+        static readonly vertexXIntervalName: string;
+        static readonly vertexYIntervalName: string;
         static readonly objectIDName: string;
         static readonly typeName: string;
         protected _vertices: Vertex[];
@@ -225,6 +243,8 @@ declare namespace GraphTableSVG {
         private updateVertices();
         private updateEdges();
         update(): void;
+        vertexXInterval: number | null;
+        vertexYInterval: number | null;
         /**
         Vertexインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
         */
@@ -310,7 +330,7 @@ declare namespace GraphTableSVG {
         function reverse(graph: Graph, isX: boolean, isY: boolean): void;
         function average(items: number[]): number;
         function middle(items: number[]): number;
-        function standardTreeArrangement(graph: GraphTableSVG.Graph, xInterval: number, yInterval: number): void;
+        function standardTreeArrangement(graph: GraphTableSVG.Graph): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -339,7 +359,9 @@ declare namespace GraphTableSVG {
          * 再描画します。
          */
         update(): void;
+        readonly fontSize: number;
         private static reverse(str);
+        createVBACode(shapes: string, result: string[][]): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -356,7 +378,7 @@ declare namespace GraphTableSVG {
         private observerFunc;
         private _textObserver;
         protected textObserverFunc: MutationCallback;
-        constructor(__graph: Graph, className: string | null | undefined, text: string);
+        constructor(__graph: Graph, group: SVGGElement, text: string);
         /**
         所属しているグラフを返します。
         */
@@ -452,7 +474,7 @@ declare namespace GraphTableSVG {
         /**
         出辺配列を返します。
         */
-        readonly children: Edge[];
+        readonly children: Vertex[];
         /**
         このVertexが葉のときTrueを返します。
         */
@@ -461,6 +483,7 @@ declare namespace GraphTableSVG {
         このVertexの根を返します。
         */
         readonly firstNoParent: Vertex;
+        readonly tree: VirtualSubTree;
         save(): void;
         /**
          * Vertexインスタンスを生成します。
@@ -470,7 +493,7 @@ declare namespace GraphTableSVG {
          *   "circle"ならばSVGCircleElement <br>
          *   "rectangle"ならばSVGRectangleElement
          */
-        static create(graph: Graph, className?: string | null, defaultSurfaceType?: string): GraphTableSVG.Vertex;
+        static create(graph: Graph, className?: string | null, defaultSurfaceType?: string | null): GraphTableSVG.Vertex;
         /**
          * 出辺を挿入します。
          * @param edge
@@ -501,7 +524,7 @@ declare namespace GraphTableSVG {
         この頂点が廃棄されていたらTrueを返します。
         */
         readonly isDisposed: boolean;
-        createVBACode(main: string[], sub: string[], indexDic: {
+        createVBACode(main: string[], sub: string[][], indexDic: {
             [key: string]: number;
         }): void;
     }
@@ -519,7 +542,7 @@ declare namespace GraphTableSVG {
          * @param className
          * @param text
          */
-        constructor(__graph: Graph, className?: string | null, text?: string);
+        constructor(__graph: Graph, group: SVGGElement, text?: string);
         /**
         頂点の幅を返します。
         */
@@ -556,7 +579,7 @@ declare namespace GraphTableSVG {
     class RectangleVertex extends GraphTableSVG.Vertex {
         private _svgRectangle;
         readonly svgRectangle: SVGRectElement;
-        constructor(__graph: Graph, className?: string | null, text?: string);
+        constructor(__graph: Graph, group: SVGGElement, text?: string);
         /**
         頂点の幅を返します。
         */
@@ -580,20 +603,20 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class VirtualTree {
-        graph: Graph;
-        root: Vertex;
-        constructor(_graph: Graph, _root: Vertex);
-        getChildren(): VirtualTree[];
+    class VirtualSubTree {
+        subTreeRoot: Vertex;
+        constructor(_root: Vertex);
+        readonly children: Vertex[];
         readonly parentEdge: Edge | null;
         getSubtree(result?: Vertex[]): Vertex[];
         getLeaves(): Vertex[];
         getHeight(): number;
         region(): Rectangle;
-        getMostLeftLeave(): VirtualTree;
+        readonly mostLeftLeave: Vertex;
         addOffset(_x: number, _y: number): void;
         setRectangleLocation(_x: number, _y: number): void;
         setRootLocation(_x: number, _y: number): void;
+        readonly leaves: Vertex[];
     }
 }
 declare namespace GraphTableSVG {
@@ -617,38 +640,38 @@ declare namespace GraphTableSVG {
         private readonly innerExtraPaddingRight;
         private _masterID;
         readonly masterID: number;
-        private _upLine;
+        private _topBorder;
         /**
         セルの上にある枠を返します
         */
         /**
         セルの上にある枠を設定します
         */
-        upLine: SVGLineElement;
-        private _leftLine;
+        topBorder: SVGLineElement;
+        private _leftBorder;
         /**
         セルの左にある枠を返します
         */
         /**
         セルの左にある枠を設定します
         */
-        leftLine: SVGLineElement;
-        private _rightLine;
+        leftBorder: SVGLineElement;
+        private _rightBorder;
         /**
         セルの右にある枠を返します
         */
         /**
         セルの右にある枠を設定します
         */
-        rightLine: SVGLineElement;
-        private _bottomLine;
+        rightBorder: SVGLineElement;
+        private _bottomBorder;
         /**
         セルの下にある枠を返します
         */
         /**
         セルの下にある枠を設定します
         */
-        bottomLine: SVGLineElement;
+        bottomBorder: SVGLineElement;
         private _table;
         /**
         所属しているTableを返します。
@@ -776,6 +799,10 @@ declare namespace GraphTableSVG {
         下にあるセルを返します。
         */
         readonly bottomCell: Cell | null;
+        readonly bottomRightCell: Cell | null;
+        readonly topRightCell: Cell | null;
+        readonly bottomLeftCell: Cell | null;
+        readonly topLeftCell: Cell | null;
         /**
         未定義
         */
@@ -866,6 +893,11 @@ declare namespace GraphTableSVG {
         */
         readonly cellY: number;
         constructor(_table: Table, _y: number);
+        readonly cells: Cell[];
+        readonly topBorders: SVGLineElement[];
+        readonly bottomBorders: SVGLineElement[];
+        readonly leftBorder: SVGLineElement;
+        readonly rightBorder: SVGLineElement;
         /**
          * 行内のセルのサイズを再計算します。
          */
@@ -891,6 +923,7 @@ declare namespace GraphTableSVG {
         列の単位セルのX座標を返します。
         */
         readonly cellX: number;
+        readonly cells: Cell[];
         constructor(_table: Table, _x: number);
         private getMaxWidth();
         /**
@@ -909,6 +942,10 @@ declare namespace GraphTableSVG {
         列の幅を設定します。
         */
         width: number;
+        readonly leftBorders: SVGLineElement[];
+        readonly rightBorders: SVGLineElement[];
+        readonly topBorder: SVGLineElement;
+        readonly bottomBorder: SVGLineElement;
     }
 }
 declare namespace GraphTableSVG {
@@ -919,8 +956,8 @@ declare namespace GraphTableSVG {
     function parseInteger(value: string): number;
     function visible(value: string): number;
     class VBATranslateFunctions {
-        static grouping80(codes: string[]): string[];
-        static splitCode(codes: string[], subArg: string, callArg: string, id: number): [string, string];
+        static grouping80(codes: string[][]): string[];
+        static splitCode(codes: string[][], subArg: string, callArg: string, id: number): [string, string];
         static ToFontBold(bold: string): string;
         static ToVerticalAnchor(value: string): string;
         static ToHorizontalAnchor(value: string): string;
@@ -931,7 +968,7 @@ declare namespace GraphTableSVG {
         static joinLines(lines: string[]): string;
         static colorToVBA(color: string): string;
         static ToVBAFont(font: string): string;
-        static TranslateSVGTextElement(sub: string[], item: SVGTextElement, range: string): void;
+        static TranslateSVGTextElement(sub: string[][], item: SVGTextElement, range: string): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -1040,6 +1077,7 @@ declare namespace GraphTableSVG {
      * @param className
      */
     function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
+    function createPath(x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
     /**
      * SVGTextElementを生成します。
      * @param className
@@ -1067,6 +1105,9 @@ declare namespace GraphTableSVG {
     function createCircle(className?: string | null): SVGCircleElement;
     function setDefaultValue(item: SVGCircleElement | SVGRectElement): void;
     function setClass(svg: SVGElement, className?: string | null): void;
+    function setCSSToStyle(svg: HTMLElement): void;
+    function setCSSToAllElementStyles(item: HTMLElement | string): void;
+    function getStyleSheet(name: string): CSSStyleDeclaration | null;
 }
 declare namespace GraphTableSVG {
     /**

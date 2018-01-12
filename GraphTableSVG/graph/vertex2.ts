@@ -13,8 +13,8 @@
          * @param className
          * @param text
          */
-        constructor(__graph: Graph, className: string | null = null, text: string = "") {
-            super(__graph, className, text);
+        constructor(__graph: Graph, group: SVGGElement, text: string = "") {
+            super(__graph, group, text);
             this._svgCircle = createCircle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
             setDefaultValue(this.svgCircle);
@@ -153,8 +153,8 @@
         }
 
 
-        constructor(__graph: Graph, className: string | null = null, text: string = "") {
-            super(__graph, className, text);
+        constructor(__graph: Graph, group: SVGGElement, text: string = "") {
+            super(__graph, group, text);
             this._svgRectangle = createRectangle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
 

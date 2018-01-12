@@ -8,6 +8,16 @@
         public static readonly beginNodeName: string = "data-begin-node";
         public static readonly endNodeName: string = "data-end-node";
         public static readonly defaultTextClass: string = "--default-text-class";
+        private _observer: MutationObserver;
+        private observerFunc: MutationCallback = (x: MutationRecord[]) => {
+            let b = false;
+            for (let i = 0; i < x.length; i++) {
+                const p = x[i];
+                b = true;
+            }
+            if (b) this.update();
+
+        };
 
         private _beginVertex: Vertex | null = null;
         private _endVertex: Vertex | null = null;
@@ -23,8 +33,8 @@
         public set text(value: EdgeText | null) {
             this._text = value;
         }
-        constructor(__graph: Graph, className: string | null = null) {
-            this._svgGroup = createGroup(className);
+        constructor(__graph: Graph, g: SVGGElement) {
+            this._svgGroup = g;
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "edge");
 
@@ -36,6 +46,12 @@
 
             this._graph = __graph;
             this._graph.add(this);
+
+
+            this._observer = new MutationObserver(this.observerFunc);
+            const option1: MutationObserverInit = { attributes: true };
+            this._observer.observe(this.svgGroup, option1);
+
 
             //this._parent = graph;
             /*
@@ -236,12 +252,22 @@
          * @param className
          * @param lineType
          */
-        public static create(graph: Graph, className: string | null = graph.defaultEdgeClass, lineType: string | null = null): GraphTableSVG.Edge {
-            //const g = createGroup(className);
-            //const textClass = g.getActiveStyle().getPropertyValue(Edge.defaultTextClass).trim();
+        public static create(graph: Graph, className: string | null = graph.defaultEdgeClass, defaultSurfaceType: string | null = null): GraphTableSVG.Edge {
+            className = className != null ? className : graph.defaultVertexClass;
+            const g = createGroup(className);
+            graph.svgGroup.appendChild(g);
+
+            const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
+            const type = defaultSurfaceType != null ? defaultSurfaceType :
+                type1 != null ? type1 : "line";
             
-            const line = new LineEdge(graph, className);
-            return line;
+            if (type == "curve") {
+                const line = new BezierEdge(graph, g);
+                return line;
+            } else {
+                const line = new LineEdge(graph, g);
+                return line;
+            }
         }
         public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
             if (this.graph != null) {
@@ -281,8 +307,8 @@
         */
 
 
-        constructor(__graph: Graph, className: string | null = null) {
-            super(__graph, className);
+        constructor(__graph: Graph, g: SVGGElement) {
+            super(__graph, g);
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
             this._svgLine = createLine(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this._svgLine);
@@ -326,5 +352,57 @@
         }
         
     }
-    
+    export class BezierEdge extends Edge {
+        public static readonly controlPointName: string = "data-control-point";
+
+        private _svgBezier: SVGPathElement;
+
+        get svgBezier(): SVGPathElement {
+            return this._svgBezier;
+        }
+
+
+        constructor(__graph: Graph, g: SVGGElement) {
+            super(__graph, g);
+            const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
+            this._svgBezier = createPath(0, 0, 0, 0, p);
+            this.svgGroup.appendChild(this.svgBezier);
+
+        }
+        public get controlPoint(): [number, number] {
+            const str = this.svgBezier.getAttribute(BezierEdge.controlPointName);
+            if (str != null) {
+                const p: [number, number] = JSON.parse(str);
+                return p; 
+            } else {
+                this.controlPoint = [0, 0];
+                return [0, 0];
+            }
+        }
+        public set controlPoint(value: [number, number]) {
+            const str = JSON.stringify(value);
+            this.svgBezier.setAttribute(BezierEdge.controlPointName, str);
+        }
+
+        public update(): boolean {
+            if (this.beginVertex != null && this.endVertex != null) {
+                var [cx1, cy1] = this.controlPoint;
+                const path = `M ${this.x1} ${this.y1} Q ${cx1} ${cy1} ${this.x2} ${this.y2}`
+
+                var prevPath = this.svgBezier.getAttribute("d");
+                if (prevPath == null || path != prevPath) {
+                    this.svgBezier.setAttribute("d", path);
+                }
+
+
+                if (this.text != null) {
+                    this.text.update();
+                }
+            }
+
+
+
+            return false;
+        }
+    }
 }
