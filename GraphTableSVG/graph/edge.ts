@@ -8,6 +8,16 @@
         public static readonly beginNodeName: string = "data-begin-node";
         public static readonly endNodeName: string = "data-end-node";
         public static readonly defaultTextClass: string = "--default-text-class";
+        public static readonly controlPointName: string = "data-control-point";
+
+        get svgBezier(): SVGPathElement {
+            return <SVGPathElement>this.surface;
+        }
+        protected _svgTextPath: SVGTextPathElement;
+        public get svgTextPath(): SVGTextPathElement {
+            return this._svgTextPath;
+        }
+
         private _observer: MutationObserver;
         private observerFunc: MutationCallback = (x: MutationRecord[]) => {
             let b = false;
@@ -66,6 +76,22 @@
                 }
             }
         }
+        public get controlPoint(): [number, number][] {
+
+            const str = this.svgBezier.getAttribute(Edge.controlPointName);
+            if (str != null) {
+                const p: [number, number][]= JSON.parse(str);
+                return p;
+            } else {
+                this.controlPoint = [];
+                return [];
+            }
+        }
+        public set controlPoint(value: [number, number][]) {
+            const str = JSON.stringify(value);
+            this.svgBezier.setAttribute(Edge.controlPointName, str);
+        }
+
         public get strokeDasharray(): string | null{
             if (this.surface != null) {
                 var s = this.surface.getPropertyStyleValue("stroke-dasharray");
@@ -102,7 +128,10 @@
         public get surface(): SVGElement | null {
             return this._surface;
         }
-
+        protected _svgText: SVGTextElement;
+        public get svgText(): SVGTextElement {
+            return this._svgText;
+        }
 
         protected _text: EdgeText | null = null;
         public get text(): EdgeText | null {
@@ -115,6 +144,8 @@
             this._svgGroup = g;
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "edge");
+
+            
 
             const t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
             const t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
@@ -129,6 +160,16 @@
             this._observer = new MutationObserver(this.observerFunc);
             const option1: MutationObserverInit = { attributes: true };
             this._observer.observe(this.svgGroup, option1);
+
+            const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
+            this._surface = createPath(0, 0, 0, 0, p);
+            this.svgGroup.appendChild(this.svgBezier);
+            this._surface.id = `path-${this.objectID}`;
+
+            [this._svgText, this._svgTextPath] = createTextPath(null);
+            this.svgGroup.appendChild(this._svgText);
+            this._svgText.appendChild(this._svgTextPath);
+            this._svgTextPath.href.baseVal = `#${this._surface.id}`
 
 
             //this._parent = graph;
@@ -312,6 +353,32 @@
                     node.setAttribute("fill", this.lineColor);
                 }
             }
+
+            if (this.beginVertex != null && this.endVertex != null) {
+                const [x, y] = [this.svgText.getX(), this.svgText.getY()];
+
+                const points: [number, number][] = this.controlPoint;
+                let path = "";
+                if (points.length == 0) {
+                    path = `M ${this.x1} ${this.y1} L ${this.x2} ${this.y2}`
+                } else if (points.length == 1) {
+                    const [cx1, cy1] = points[0];
+                    path = `M ${this.x1} ${this.y1} Q ${cx1} ${cy1} ${this.x2} ${this.y2}`
+                } else {
+
+                }
+                
+                var prevPath = this.svgBezier.getAttribute("d");
+                if (prevPath == null || path != prevPath) {
+                    this.svgBezier.setAttribute("d", path);
+                }
+
+
+                if (this.text != null) {
+                    this.text.update();
+                }
+            }
+
             return false;
         }
         /**
@@ -325,15 +392,6 @@
                 return r;
             }
         }
-        /*
-        public set objectID(value: number | null) {
-            if (value == null) {
-                this.group.setAttribute("objectID", "");
-            } else {
-                this.group.setAttribute("objectID", value.toString());
-            }
-        }
-        */
         public save() {
         }
         /**
@@ -350,14 +408,8 @@
             const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
             const type = defaultSurfaceType != null ? defaultSurfaceType :
                 type1 != null ? type1 : "line";
-            
-            if (type == "curve") {
-                const line = new BezierEdge(graph, g);
-                return line;
-            } else {
-                const line = new LineEdge(graph, g);
-                return line;
-            }
+
+            return new Edge(graph, g);
         }
         public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
             if (this.graph != null) {
@@ -385,10 +437,8 @@
             return marker;
         }
     }
-
+    /*
     export class LineEdge extends Edge {
-        //private _svgLine: SVGLineElement;
-        //svgText: SVGTextElement;
 
         get svgLine(): SVGLineElement {
             return <SVGLineElement>this.surface;
@@ -404,17 +454,7 @@
             this._surface = createLine(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this.svgLine);
 
-            //this.update();
-            //this.graph.svgGroup.appendChild(this._svg);
-
         }
-        /*
-        public static create(className: string | null = null): LineEdge {
-            const line = new LineEdge(className);
-            
-            return line;
-        }
-        */
 
         public update(): boolean {
             super.update();
@@ -450,37 +490,16 @@
         }
         
     }
+    */
+    /*
     export class BezierEdge extends Edge {
-        public static readonly controlPointName: string = "data-control-point";
-
-        //private _svgBezier: SVGPathElement;
-
-        get svgBezier(): SVGPathElement {
-            return <SVGPathElement>this.surface;
-        }
 
         constructor(__graph: Graph, g: SVGGElement) {
             super(__graph, g);
-            const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._surface = createPath(0, 0, 0, 0, p);
-            this.svgGroup.appendChild(this.svgBezier);            
-
-        }
-        public get controlPoint(): [number, number] {
             
-            const str = this.svgBezier.getAttribute(BezierEdge.controlPointName);
-            if (str != null) {
-                const p: [number, number] = JSON.parse(str);
-                return p; 
-            } else {
-                this.controlPoint = [0, 0];
-                return [0, 0];
-            }
+            
         }
-        public set controlPoint(value: [number, number]) {
-            const str = JSON.stringify(value);
-            this.svgBezier.setAttribute(BezierEdge.controlPointName, str);
-        }
+        
 
         public update(): boolean {
             super.update();
@@ -504,4 +523,5 @@
             return false;
         }
     }
+    */
 }

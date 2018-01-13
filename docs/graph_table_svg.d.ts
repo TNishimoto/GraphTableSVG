@@ -119,10 +119,15 @@ declare namespace GraphTableSVG {
         static readonly beginNodeName: string;
         static readonly endNodeName: string;
         static readonly defaultTextClass: string;
+        static readonly controlPointName: string;
+        readonly svgBezier: SVGPathElement;
+        protected _svgTextPath: SVGTextPathElement;
+        readonly svgTextPath: SVGTextPathElement;
         private _observer;
         private observerFunc;
         markerStart: SVGMarkerElement | null;
         markerEnd: SVGMarkerElement | null;
+        controlPoint: [number, number][];
         strokeDasharray: string | null;
         readonly lineColor: string | null;
         private _beginVertex;
@@ -132,6 +137,8 @@ declare namespace GraphTableSVG {
         readonly svgGroup: SVGGElement;
         protected _surface: SVGElement | null;
         readonly surface: SVGElement | null;
+        protected _svgText: SVGTextElement;
+        readonly svgText: SVGTextElement;
         protected _text: EdgeText | null;
         text: EdgeText | null;
         constructor(__graph: Graph, g: SVGGElement);
@@ -211,21 +218,6 @@ declare namespace GraphTableSVG {
             [key: string]: number;
         }): void;
         static createMark(id: string): SVGMarkerElement;
-    }
-    class LineEdge extends Edge {
-        readonly svgLine: SVGLineElement;
-        constructor(__graph: Graph, g: SVGGElement);
-        update(): boolean;
-        createVBACode(main: string[], sub: string[][], indexDic: {
-            [key: string]: number;
-        }): void;
-    }
-    class BezierEdge extends Edge {
-        static readonly controlPointName: string;
-        readonly svgBezier: SVGPathElement;
-        constructor(__graph: Graph, g: SVGGElement);
-        controlPoint: [number, number];
-        update(): boolean;
     }
 }
 declare namespace GraphTableSVG {
@@ -889,6 +881,9 @@ interface SVGTextElement {
     setY(value: number): void;
     setLatexTextContent(str: string): void;
 }
+interface SVGTextPathElement {
+    setLatexTextContent(str: string): void;
+}
 declare namespace GraphTableSVG {
     class Row {
         private readonly table;
@@ -1109,6 +1104,10 @@ declare namespace GraphTableSVG {
      */
     function createCircle(className?: string | null): SVGCircleElement;
     function createMarker(className?: string | null): SVGMarkerElement;
+    function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
+    function createTextSpan(str: string, className?: string | null, fontsize?: number): SVGTSpanElement[];
+    function setTextToTextPath(path: SVGTextPathElement, str: string): void;
+    function setTextToSVGText(path: SVGTextElement, str: string): void;
     function setDefaultValue(item: SVGCircleElement | SVGRectElement): void;
     function setClass(svg: SVGElement, className?: string | null): void;
     function setCSSToStyle(svg: HTMLElement): void;

@@ -263,11 +263,25 @@ var GraphTableSVG;
             this._observer = new MutationObserver(this.observerFunc);
             const option1 = { attributes: true };
             this._observer.observe(this.svgGroup, option1);
+            const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
+            this._surface = GraphTableSVG.createPath(0, 0, 0, 0, p);
+            this.svgGroup.appendChild(this.svgBezier);
+            this._surface.id = `path-${this.objectID}`;
+            [this._svgText, this._svgTextPath] = GraphTableSVG.createTextPath(null);
+            this.svgGroup.appendChild(this._svgText);
+            this._svgText.appendChild(this._svgTextPath);
+            this._svgTextPath.href.baseVal = `#${this._surface.id}`;
             //this._parent = graph;
             /*
             this._beginNode = _beginNode;
             this._endNode = _endNode;
             */
+        }
+        get svgBezier() {
+            return this.surface;
+        }
+        get svgTextPath() {
+            return this._svgTextPath;
         }
         get markerStart() {
             if (this.surface != null) {
@@ -323,6 +337,21 @@ var GraphTableSVG;
                 }
             }
         }
+        get controlPoint() {
+            const str = this.svgBezier.getAttribute(Edge.controlPointName);
+            if (str != null) {
+                const p = JSON.parse(str);
+                return p;
+            }
+            else {
+                this.controlPoint = [];
+                return [];
+            }
+        }
+        set controlPoint(value) {
+            const str = JSON.stringify(value);
+            this.svgBezier.setAttribute(Edge.controlPointName, str);
+        }
         get strokeDasharray() {
             if (this.surface != null) {
                 var s = this.surface.getPropertyStyleValue("stroke-dasharray");
@@ -355,6 +384,9 @@ var GraphTableSVG;
         }
         get surface() {
             return this._surface;
+        }
+        get svgText() {
+            return this._svgText;
         }
         get text() {
             return this._text;
@@ -533,6 +565,27 @@ var GraphTableSVG;
                     node.setAttribute("fill", this.lineColor);
                 }
             }
+            if (this.beginVertex != null && this.endVertex != null) {
+                const [x, y] = [this.svgText.getX(), this.svgText.getY()];
+                const points = this.controlPoint;
+                let path = "";
+                if (points.length == 0) {
+                    path = `M ${this.x1} ${this.y1} L ${this.x2} ${this.y2}`;
+                }
+                else if (points.length == 1) {
+                    const [cx1, cy1] = points[0];
+                    path = `M ${this.x1} ${this.y1} Q ${cx1} ${cy1} ${this.x2} ${this.y2}`;
+                }
+                else {
+                }
+                var prevPath = this.svgBezier.getAttribute("d");
+                if (prevPath == null || path != prevPath) {
+                    this.svgBezier.setAttribute("d", path);
+                }
+                if (this.text != null) {
+                    this.text.update();
+                }
+            }
             return false;
         }
         /**
@@ -547,15 +600,6 @@ var GraphTableSVG;
                 return r;
             }
         }
-        /*
-        public set objectID(value: number | null) {
-            if (value == null) {
-                this.group.setAttribute("objectID", "");
-            } else {
-                this.group.setAttribute("objectID", value.toString());
-            }
-        }
-        */
         save() {
         }
         /**
@@ -571,14 +615,7 @@ var GraphTableSVG;
             const type1 = g.getPropertyStyleValue(GraphTableSVG.Vertex.defaultSurfaceType);
             const type = defaultSurfaceType != null ? defaultSurfaceType :
                 type1 != null ? type1 : "line";
-            if (type == "curve") {
-                const line = new BezierEdge(graph, g);
-                return line;
-            }
-            else {
-                const line = new LineEdge(graph, g);
-                return line;
-            }
+            return new Edge(graph, g);
         }
         createVBACode(main, sub, indexDic) {
             if (this.graph != null) {
@@ -612,97 +649,95 @@ var GraphTableSVG;
     Edge.beginNodeName = "data-begin-node";
     Edge.endNodeName = "data-end-node";
     Edge.defaultTextClass = "--default-text-class";
+    Edge.controlPointName = "data-control-point";
     GraphTableSVG.Edge = Edge;
-    class LineEdge extends Edge {
-        constructor(__graph, g) {
+    /*
+    export class LineEdge extends Edge {
+
+        get svgLine(): SVGLineElement {
+            return <SVGLineElement>this.surface;
+        }
+        
+        
+
+
+
+        constructor(__graph: Graph, g: SVGGElement) {
             super(__graph, g);
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._surface = GraphTableSVG.createLine(0, 0, 0, 0, p);
+            this._surface = createLine(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this.svgLine);
-            //this.update();
-            //this.graph.svgGroup.appendChild(this._svg);
+
         }
-        //private _svgLine: SVGLineElement;
-        //svgText: SVGTextElement;
-        get svgLine() {
-            return this.surface;
-        }
-        /*
-        public static create(className: string | null = null): LineEdge {
-            const line = new LineEdge(className);
-            
-            return line;
-        }
-        */
-        update() {
+
+        public update(): boolean {
             super.update();
+
             if (this.beginVertex != null && this.endVertex != null) {
                 this.svgLine.x1.baseVal.value = this.x1;
                 this.svgLine.y1.baseVal.value = this.y1;
+
                 this.svgLine.x2.baseVal.value = this.x2;
                 this.svgLine.y2.baseVal.value = this.y2;
+
                 if (this.text != null) {
                     this.text.update();
                 }
+
+                
             }
+           
+
+            
+
             return false;
         }
-        createVBACode(main, sub, indexDic) {
+        public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
             super.createVBACode(main, sub, indexDic);
             if (this.graph != null) {
                 const i = indexDic[this.objectID];
-                const lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
+                const lineColor = VBATranslateFunctions.colorToVBA(this.svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
                 const strokeWidth = parseInt(this.svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
                 const visible = this.svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
                 sub.push([` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`]);
             }
         }
+        
     }
-    GraphTableSVG.LineEdge = LineEdge;
-    class BezierEdge extends Edge {
-        constructor(__graph, g) {
+    */
+    /*
+    export class BezierEdge extends Edge {
+
+        constructor(__graph: Graph, g: SVGGElement) {
             super(__graph, g);
-            const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._surface = GraphTableSVG.createPath(0, 0, 0, 0, p);
-            this.svgGroup.appendChild(this.svgBezier);
+            
+            
         }
-        //private _svgBezier: SVGPathElement;
-        get svgBezier() {
-            return this.surface;
-        }
-        get controlPoint() {
-            const str = this.svgBezier.getAttribute(BezierEdge.controlPointName);
-            if (str != null) {
-                const p = JSON.parse(str);
-                return p;
-            }
-            else {
-                this.controlPoint = [0, 0];
-                return [0, 0];
-            }
-        }
-        set controlPoint(value) {
-            const str = JSON.stringify(value);
-            this.svgBezier.setAttribute(BezierEdge.controlPointName, str);
-        }
-        update() {
+        
+
+        public update(): boolean {
             super.update();
             if (this.beginVertex != null && this.endVertex != null) {
                 var [cx1, cy1] = this.controlPoint;
-                const path = `M ${this.x1} ${this.y1} Q ${cx1} ${cy1} ${this.x2} ${this.y2}`;
+                const path = `M ${this.x1} ${this.y1} Q ${cx1} ${cy1} ${this.x2} ${this.y2}`
+
                 var prevPath = this.svgBezier.getAttribute("d");
                 if (prevPath == null || path != prevPath) {
                     this.svgBezier.setAttribute("d", path);
                 }
+
+
                 if (this.text != null) {
                     this.text.update();
                 }
             }
+
+
+
             return false;
         }
     }
-    BezierEdge.controlPointName = "data-control-point";
-    GraphTableSVG.BezierEdge = BezierEdge;
+    */
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -2843,6 +2878,9 @@ SVGElement.prototype.setPropertyStyleValue = function (name, value) {
     const item = this;
     item.style.setProperty(name, value);
 };
+SVGTextPathElement.prototype.setLatexTextContent = function (str) {
+    GraphTableSVG.setTextToTextPath(this, str);
+};
 SVGTextElement.prototype.setLatexTextContent = function (str) {
     str += "_";
     const p = this;
@@ -3972,6 +4010,84 @@ var GraphTableSVG;
         return marker;
     }
     GraphTableSVG.createMarker = createMarker;
+    function createTextPath(className = null) {
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        ;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+        text.appendChild(path);
+        path.style.fill = "black";
+        path.style.fontSize = "14px";
+        path.style.fontWeight = "bold";
+        path.style.fontFamily = "Yu Gothic";
+        return [text, path];
+    }
+    GraphTableSVG.createTextPath = createTextPath;
+    function createTextSpan(str, className = null, fontsize = 12) {
+        let r = [];
+        str += "_";
+        //const p: SVGTextElement = this;
+        //p.textContent = "";
+        //const h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
+        let mode = "";
+        let tmp = "";
+        const dy = (1 * fontsize) / 3;
+        let lastMode = "none";
+        const smallFontSize = (2 * fontsize) / 3;
+        for (let i = 0; i < str.length; i++) {
+            const c = str[i];
+            if (c == "_" || c == "{" || c == "^" || c == "}") {
+                mode += c;
+                if (mode == "_{}") {
+                    const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                    tspan.textContent = tmp;
+                    tspan.setAttribute("dy", `${dy}`);
+                    tspan.setAttribute("data-script", "subscript");
+                    tspan.style.fontSize = `${smallFontSize}pt`;
+                    r.push(tspan);
+                    lastMode = "down";
+                    mode = "";
+                    tmp = "";
+                }
+                else if (mode == "^{}") {
+                    const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                    tspan.textContent = tmp;
+                    tspan.setAttribute("dy", `-${dy}`);
+                    tspan.style.fontSize = `${smallFontSize}pt`;
+                    tspan.setAttribute("data-script", "superscript");
+                    r.push(tspan);
+                    lastMode = "up";
+                    mode = "";
+                    tmp = "";
+                }
+                else if (mode == "_" || mode == "^") {
+                    const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                    tspan.textContent = tmp;
+                    const normaldy = lastMode == "up" ? dy : lastMode == "down" ? -dy : 0;
+                    tspan.setAttribute("dy", `${normaldy}`);
+                    r.push(tspan);
+                    lastMode = "none";
+                    tmp = "";
+                }
+            }
+            else {
+                tmp += c;
+            }
+        }
+        return r;
+    }
+    GraphTableSVG.createTextSpan = createTextSpan;
+    function setTextToTextPath(path, str) {
+        path.textContent = "";
+        var fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
+        createTextSpan(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
+    }
+    GraphTableSVG.setTextToTextPath = setTextToTextPath;
+    function setTextToSVGText(path, str) {
+        path.textContent = "";
+        var fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
+        createTextSpan(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
+    }
+    GraphTableSVG.setTextToSVGText = setTextToSVGText;
     function setDefaultValue(item) {
         const className = item.getAttribute("class");
         if (className != null) {

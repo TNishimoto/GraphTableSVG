@@ -127,6 +127,13 @@ interface SVGTextElement {
     setY(value: number): void;
     setLatexTextContent(str: string): void;
 }
+interface SVGTextPathElement {
+    setLatexTextContent(str: string): void;
+}
+SVGTextPathElement.prototype.setLatexTextContent = function (str: string) {
+    GraphTableSVG.setTextToTextPath(this, str);
+};
+
 SVGTextElement.prototype.setLatexTextContent = function (str: string) {
     str += "_";
     const p: SVGTextElement = this;
