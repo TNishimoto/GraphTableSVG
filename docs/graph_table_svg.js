@@ -291,6 +291,7 @@ var GraphTableSVG;
                     this.surface.removeAttribute("marker-start");
                 }
                 else {
+                    this.svgGroup.appendChild(value);
                     this.surface.setAttribute("marker-start", `url(#${value.id})`);
                 }
             }
@@ -317,7 +318,27 @@ var GraphTableSVG;
                     this.surface.removeAttribute("marker-end");
                 }
                 else {
+                    this.svgGroup.appendChild(value);
                     this.surface.setAttribute("marker-end", `url(#${value.id})`);
+                }
+            }
+        }
+        get strokeDasharray() {
+            if (this.surface != null) {
+                var s = this.surface.getAttribute("stroke-dasharray");
+                return s;
+            }
+            else {
+                return null;
+            }
+        }
+        set strokeDasharray(value) {
+            if (this.surface != null) {
+                if (value != null) {
+                    this.surface.setAttribute("stroke-dasharray", value);
+                }
+                else {
+                    this.surface.removeAttribute("stroke-dasharray");
                 }
             }
         }
@@ -571,6 +592,11 @@ var GraphTableSVG;
                 }
             }
         }
+        static createMark(id) {
+            var marker = GraphTableSVG.createMarker();
+            marker.id = `marker-${id}`;
+            return marker;
+        }
     }
     //public static defaultBeginConnectorPosition: string = "--default-begin-connector-position";
     //public static defaultEndConnectorPosition: string = "--default-end-connector-position";
@@ -587,11 +613,6 @@ var GraphTableSVG;
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
             this._surface = GraphTableSVG.createLine(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this.svgLine);
-            var marker = GraphTableSVG.createMarker();
-            marker.id = `marker-${this.objectID}`;
-            this.svgGroup.appendChild(marker);
-            this.markerStart = marker;
-            this.markerEnd = marker;
             //this.update();
             //this.graph.svgGroup.appendChild(this._svg);
         }
@@ -638,11 +659,6 @@ var GraphTableSVG;
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
             this._surface = GraphTableSVG.createPath(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this.svgBezier);
-            var marker = GraphTableSVG.createMarker();
-            marker.id = `marker-${this.objectID}`;
-            this.svgGroup.appendChild(marker);
-            this.markerStart = marker;
-            this.update();
         }
         //private _svgBezier: SVGPathElement;
         get svgBezier() {

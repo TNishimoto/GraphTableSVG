@@ -123,6 +123,7 @@ declare namespace GraphTableSVG {
         private observerFunc;
         markerStart: SVGMarkerElement | null;
         markerEnd: SVGMarkerElement | null;
+        strokeDasharray: string | null;
         readonly lineColor: string | null;
         private _beginVertex;
         private _endVertex;
@@ -209,6 +210,7 @@ declare namespace GraphTableSVG {
         createVBACode(main: string[], sub: string[][], indexDic: {
             [key: string]: number;
         }): void;
+        static createMark(id: string): SVGMarkerElement;
     }
     class LineEdge extends Edge {
         readonly svgLine: SVGLineElement;

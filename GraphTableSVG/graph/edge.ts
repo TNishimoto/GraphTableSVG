@@ -37,6 +37,7 @@
                 if (value == null) {
                     this.surface.removeAttribute("marker-start");
                 } else {
+                    this.svgGroup.appendChild(value);
                     this.surface.setAttribute("marker-start", `url(#${value.id})`);
                 }
             }
@@ -60,11 +61,28 @@
                 if (value == null) {
                     this.surface.removeAttribute("marker-end");
                 } else {
+                    this.svgGroup.appendChild(value);
                     this.surface.setAttribute("marker-end", `url(#${value.id})`);
                 }
             }
-        } 
-
+        }
+        public get strokeDasharray(): string | null{
+            if (this.surface != null) {
+                var s = this.surface.getPropertyStyleValue("stroke-dasharray");
+                return s;
+            } else {
+                return null;
+            }
+        }
+        public set strokeDasharray(value: string | null) {
+            if (this.surface != null) {
+                if (value != null) {
+                    this.surface.setPropertyStyleValue("stroke-dasharray", value);
+                } else {
+                    this.surface.removeAttribute("stroke-dasharray");
+                }
+            }
+        }
 
         public get lineColor(): string | null {
             if (this.surface != null) {
@@ -353,6 +371,13 @@
                 }
             }
         }
+
+        public static createMark(id : string): SVGMarkerElement {
+
+            var marker = GraphTableSVG.createMarker();
+            marker.id = `marker-${id}`;
+            return marker;
+        }
     }
 
     export class LineEdge extends Edge {
@@ -373,11 +398,6 @@
             this._surface = createLine(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this.svgLine);
 
-            var marker = GraphTableSVG.createMarker();
-            marker.id = `marker-${this.objectID}`;
-            this.svgGroup.appendChild(marker);
-            this.markerStart = marker;
-            this.markerEnd = marker;
             //this.update();
             //this.graph.svgGroup.appendChild(this._svg);
 
@@ -437,14 +457,7 @@
             super(__graph, g);
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
             this._surface = createPath(0, 0, 0, 0, p);
-            this.svgGroup.appendChild(this.svgBezier);
-
-
-            var marker = GraphTableSVG.createMarker();
-            marker.id = `marker-${this.objectID}`;
-            this.svgGroup.appendChild(marker);
-            this.markerStart = marker;
-            this.update();
+            this.svgGroup.appendChild(this.svgBezier);            
 
         }
         public get controlPoint(): [number, number] {
