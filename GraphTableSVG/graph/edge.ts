@@ -306,6 +306,12 @@
                     node.setAttribute("fill", this.lineColor);
                 }
             }
+            if (this.markerEnd != null) {
+                var node = <SVGPolygonElement>this.markerEnd.firstChild;
+                if (this.lineColor != null) {
+                    node.setAttribute("fill", this.lineColor);
+                }
+            }
             return false;
         }
         /**

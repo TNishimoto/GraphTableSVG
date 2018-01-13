@@ -325,7 +325,7 @@ var GraphTableSVG;
         }
         get strokeDasharray() {
             if (this.surface != null) {
-                var s = this.surface.getAttribute("stroke-dasharray");
+                var s = this.surface.getPropertyStyleValue("stroke-dasharray");
                 return s;
             }
             else {
@@ -335,7 +335,7 @@ var GraphTableSVG;
         set strokeDasharray(value) {
             if (this.surface != null) {
                 if (value != null) {
-                    this.surface.setAttribute("stroke-dasharray", value);
+                    this.surface.setPropertyStyleValue("stroke-dasharray", value);
                 }
                 else {
                     this.surface.removeAttribute("stroke-dasharray");
@@ -523,6 +523,12 @@ var GraphTableSVG;
         update() {
             if (this.markerStart != null) {
                 var node = this.markerStart.firstChild;
+                if (this.lineColor != null) {
+                    node.setAttribute("fill", this.lineColor);
+                }
+            }
+            if (this.markerEnd != null) {
+                var node = this.markerEnd.firstChild;
                 if (this.lineColor != null) {
                     node.setAttribute("fill", this.lineColor);
                 }
