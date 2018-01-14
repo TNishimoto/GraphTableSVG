@@ -20,7 +20,7 @@
             this.svgText.textContent = text;
             edge.svgGroup.appendChild(this.svgText);
             this._edge = edge;
-            edge.text = this;
+            //edge.text = this;
         }
 
         //private isReverse: boolean = false;
@@ -88,6 +88,7 @@
             }
             return rv.join("");
         }
+        /*
         public createVBACode(shapes : string, result : string[][]) : void {
             const s : string[] = new Array(0);
             if (this.edge.graph != null) {
@@ -113,5 +114,6 @@
             }
             result.push(s);
         }
+        */
     }
 }

@@ -125,64 +125,19 @@ interface SVGTextElement {
     setX(value: number): void;
     getY(): number;
     setY(value: number): void;
-    setLatexTextContent(str: string): void;
+    setTextContent(str: string, isLatexMode: boolean): void;
+    setTextContent(str: string): void;
 }
 interface SVGTextPathElement {
-    setLatexTextContent(str: string): void;
+    setTextContent(str: string, isLatexMode: boolean): void;
+    setTextContent(str: string): void;
 }
-SVGTextPathElement.prototype.setLatexTextContent = function (str: string) {
-    GraphTableSVG.setTextToTextPath(this, str);
+SVGTextPathElement.prototype.setTextContent = function (str: string, isLatexMode: boolean = false) {
+    GraphTableSVG.setTextToTextPath(this, str, isLatexMode);
 };
 
-SVGTextElement.prototype.setLatexTextContent = function (str: string) {
-    str += "_";
-    const p: SVGTextElement = this;
-    p.textContent = "";
-    const h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
-
-    let mode = "";
-    let tmp = "";
-    const dy = (1 * h) / 3;
-    let lastMode: string = "none";
-    const smallFontSize = (2 * h) / 3;
-    for (let i = 0; i < str.length; i++) {
-        const c = str[i];
-        if (c == "_" || c == "{" || c == "^" || c == "}") {
-            mode += c;
-            if (mode == "_{}") {
-                const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-                tspan.textContent = tmp;
-                tspan.setAttribute("dy", `${dy}`);
-                tspan.setAttribute("data-script", "subscript");
-                tspan.style.fontSize = `${smallFontSize}pt`;
-                p.appendChild(tspan);
-                lastMode = "down";
-                mode = "";
-                tmp = "";
-            } else if (mode == "^{}") {
-                const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-                tspan.textContent = tmp;
-                tspan.setAttribute("dy", `-${dy}`);
-                tspan.style.fontSize = `${smallFontSize}pt`;
-                tspan.setAttribute("data-script", "superscript");
-                p.appendChild(tspan);
-                lastMode = "up";
-                mode = "";
-                tmp = "";
-            } else if (mode == "_" || mode == "^") {
-                const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-                tspan.textContent = tmp;
-                const normaldy = lastMode == "up" ? dy : lastMode == "down" ? -dy : 0;
-                tspan.setAttribute("dy", `${normaldy}`);
-                p.appendChild(tspan);
-
-                lastMode = "none";
-                tmp = "";
-            }
-        } else {
-            tmp += c;
-        }
-    }
+SVGTextElement.prototype.setTextContent = function (str: string, isLatexMode: boolean = false) {
+    GraphTableSVG.setTextToSVGText(this, str, isLatexMode);    
 };
 
 SVGTextElement.prototype.getX = function () {

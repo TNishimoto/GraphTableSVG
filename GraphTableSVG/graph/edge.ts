@@ -9,10 +9,12 @@
         public static readonly endNodeName: string = "data-end-node";
         public static readonly defaultTextClass: string = "--default-text-class";
         public static readonly controlPointName: string = "data-control-point";
-
+        
+        /*
         get svgBezier(): SVGPathElement {
-            return <SVGPathElement>this.surface;
+            return <SVGPathElement>this._surface;
         }
+        */
         protected _svgTextPath: SVGTextPathElement;
         public get svgTextPath(): SVGTextPathElement {
             return this._svgTextPath;
@@ -29,8 +31,8 @@
 
         };
         public get markerStart(): SVGMarkerElement | null {
-            if (this.surface != null) {
-                var p = this.surface.getAttribute("marker-start");
+            if (this.svgPath != null) {
+                var p = this.svgPath.getAttribute("marker-start");
                 if (p != null) {
                     const str = p.substring(5, p.length - 1);
                     const ele = <SVGMarkerElement><any>document.getElementById(str);
@@ -43,18 +45,19 @@
             }
         }
         public set markerStart(value: SVGMarkerElement | null) {
-            if (this.surface != null) {
+            if (this.svgPath != null) {
                 if (value == null) {
-                    this.surface.removeAttribute("marker-start");
+                    this.svgPath.removeAttribute("marker-start");
                 } else {
+
                     this.svgGroup.appendChild(value);
-                    this.surface.setAttribute("marker-start", `url(#${value.id})`);
+                    this.svgPath.setAttribute("marker-start", `url(#${value.id})`);
                 }
             }
         } 
         public get markerEnd(): SVGMarkerElement | null {
-            if (this.surface != null) {
-                var p = this.surface.getAttribute("marker-end");
+            if (this.svgPath != null) {
+                var p = this.svgPath.getAttribute("marker-end");
                 if (p != null) {
                     const str = p.substring(5, p.length - 1);
                     const ele = <SVGMarkerElement><any>document.getElementById(str);
@@ -67,18 +70,18 @@
             }
         }
         public set markerEnd(value: SVGMarkerElement | null) {
-            if (this.surface != null) {
+            if (this.svgPath != null) {
                 if (value == null) {
-                    this.surface.removeAttribute("marker-end");
+                    this.svgPath.removeAttribute("marker-end");
                 } else {
                     this.svgGroup.appendChild(value);
-                    this.surface.setAttribute("marker-end", `url(#${value.id})`);
+                    this.svgPath.setAttribute("marker-end", `url(#${value.id})`);
                 }
             }
         }
         public get controlPoint(): [number, number][] {
 
-            const str = this.svgBezier.getAttribute(Edge.controlPointName);
+            const str = this.svgPath.getAttribute(Edge.controlPointName);
             if (str != null) {
                 const p: [number, number][]= JSON.parse(str);
                 return p;
@@ -89,30 +92,30 @@
         }
         public set controlPoint(value: [number, number][]) {
             const str = JSON.stringify(value);
-            this.svgBezier.setAttribute(Edge.controlPointName, str);
+            this.svgPath.setAttribute(Edge.controlPointName, str);
         }
 
         public get strokeDasharray(): string | null{
-            if (this.surface != null) {
-                var s = this.surface.getPropertyStyleValue("stroke-dasharray");
+            if (this.svgPath != null) {
+                var s = this.svgPath.getPropertyStyleValue("stroke-dasharray");
                 return s;
             } else {
                 return null;
             }
         }
         public set strokeDasharray(value: string | null) {
-            if (this.surface != null) {
+            if (this.svgPath != null) {
                 if (value != null) {
-                    this.surface.setPropertyStyleValue("stroke-dasharray", value);
+                    this.svgPath.setPropertyStyleValue("stroke-dasharray", value);
                 } else {
-                    this.surface.removeAttribute("stroke-dasharray");
+                    this.svgPath.removeAttribute("stroke-dasharray");
                 }
             }
         }
 
         public get lineColor(): string | null {
-            if (this.surface != null) {
-                return this.surface.getPropertyStyleValueWithDefault("stroke", "black");
+            if (this.svgPath != null) {
+                return this.svgPath.getPropertyStyleValueWithDefault("stroke", "black");
             } else {
                 return null;
             }
@@ -124,22 +127,27 @@
         public get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
-        protected _surface: SVGElement | null = null;
-        public get surface(): SVGElement | null {
-            return this._surface;
+
+        protected _svgPath : SVGPathElement;
+        
+        public get svgPath(): SVGPathElement {
+            return this._svgPath;
         }
+        
         protected _svgText: SVGTextElement;
         public get svgText(): SVGTextElement {
             return this._svgText;
         }
-
+        /*
         protected _text: EdgeText | null = null;
         public get text(): EdgeText | null {
             return this._text;
         }
+
         public set text(value: EdgeText | null) {
             this._text = value;
         }
+        */
         constructor(__graph: Graph, g: SVGGElement) {
             this._svgGroup = g;
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
@@ -162,14 +170,14 @@
             this._observer.observe(this.svgGroup, option1);
 
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._surface = createPath(0, 0, 0, 0, p);
-            this.svgGroup.appendChild(this.svgBezier);
-            this._surface.id = `path-${this.objectID}`;
+            this._svgPath = createPath(0, 0, 0, 0, p);
+            this.svgGroup.appendChild(this.svgPath);
+            this._svgPath.id = `path-${this.objectID}`;
 
             [this._svgText, this._svgTextPath] = createTextPath(null);
             this.svgGroup.appendChild(this._svgText);
             this._svgText.appendChild(this._svgTextPath);
-            this._svgTextPath.href.baseVal = `#${this._surface.id}`
+            this._svgTextPath.href.baseVal = `#${this._svgPath.id}`
 
 
             //this._parent = graph;
@@ -367,20 +375,48 @@
                 } else {
 
                 }
-                
-                var prevPath = this.svgBezier.getAttribute("d");
+
+                const prevPath = this.svgPath.getAttribute("d");
                 if (prevPath == null || path != prevPath) {
-                    this.svgBezier.setAttribute("d", path);
+                    this.svgPath.setAttribute("d", path);
                 }
 
+                if (this.isMaximalRegularInterval) {
+                    const pathLen = this.svgPath.getTotalLength();
+                    const strLen = this.svgText.textContent == null ? 0 : this.svgText.textContent.length;
+                    if (strLen > 0) {
+                        const startPos = pathLen / (strLen + 1);
+                        let textPathLen = pathLen - (startPos * 2);
+                        if (textPathLen <= 0) textPathLen = 5;
+                        this.svgTextPath.startOffset.baseVal.value = startPos;
+                        this.svgText.textLength.baseVal.value = textPathLen;
+                    }
 
+                } else {
+                    this.svgText.textLength.baseVal.value = 0;
+                }
+
+                /*
                 if (this.text != null) {
                     this.text.update();
                 }
+                */
             }
 
             return false;
         }
+        public get isMaximalRegularInterval(): boolean {
+            const value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "false");
+            return value == "true";             
+        }
+        public set isMaximalRegularInterval(value: boolean) {
+            const prev = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "false");
+            const prevV = prev == "true";
+            if (prevV != value) {
+                this.svgTextPath.setPropertyStyleValue(GraphTableSVG.MaximalRegularIntervalName, value ? "true" : "false");
+            }
+        }
+
         /**
         ObjectIDを返します。
         */
@@ -415,7 +451,13 @@
             if (this.graph != null) {
                 const subline  : string[]= [];
                 const i = indexDic[this.objectID];
-                subline.push(` Set edges(${i}) = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+                if (this.controlPoint.length == 0) {
+                    subline.push(` Set edges(${i}) = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+                } else if (this.controlPoint.length > 0) {
+                    subline.push(` Set edges(${i}) = shapes_.AddConnector(msoConnectorCurve, 0, 0, 0, 0)`);
+                    
+                }
+                    
                 if (this.beginVertex != null && this.endVertex != null) {
                     const beg = indexDic[this.beginVertex.objectID];
                     const end = indexDic[this.endVertex.objectID];
@@ -423,17 +465,90 @@
                     const endType = this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
                     subline.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
                 }
+                const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
+                const strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                subline.push(` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
+                if (this.controlPoint.length > 0) {
+                    subline.push(` edges(${i}).Adjustments(1) = ${this.svgPath.getTotalLength() / 2}`);
+                }
+
+
                 subline.forEach((v) => sub.push([v]));
+
+                this.createVBACodeOfText("shapes_", sub);
+                
+                /*
                 if (this.text != null) {
                     this.text.createVBACode("shapes_", sub);
                 }
+                */
             }
         }
+        public createVBACodeOfText(shapes: string, result: string[][]): void {
+            if (this.svgTextPath.textContent != null && this.graph != null) {
+                const fontSize = parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "12"));
+                const fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+                const fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
 
-        public static createMark(id : string): SVGMarkerElement {
+                for (let i = 0; i < this.svgTextPath.textContent.length; i++) {
+                    const s: string[] = new Array(0);
+                    const p1 = this.svgTextPath.getStartPositionOfChar(i);
+                    const p2 = this.svgTextPath.getEndPositionOfChar(i);
+                    console.log(this.svgTextPath.getRotationOfChar(i));
+                    const width = Math.abs(p2.x - p1.x);
+                    const height = Math.abs(p2.y - p1.y);
 
+                    const left = this.graph.svgGroup.getX() + p1.x;
+                    const top = this.graph.svgGroup.getY() + p1.y - (fontSize / 2);
+                    s.push(`With ${shapes}.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${width},${fontSize})`);
+                    s.push(`.TextFrame.TextRange.Text = "${this.svgTextPath.textContent[i]}"`);
+                    s.push(`.TextFrame.marginLeft = 0`);
+                    s.push(`.TextFrame.marginRight = 0`);
+                    s.push(`.TextFrame.marginTop = 0`);
+                    s.push(`.TextFrame.marginBottom = 0`);
+                    s.push(`.TextFrame.TextRange.Font.Size = ${fontSize}`);
+                    s.push(`.TextFrame.TextRange.Font.name = "${fontFamily}"`);
+                    s.push(`.TextFrame.TextRange.Font.Bold = ${fontBold}`);
+                    s.push(`.IncrementRotation(${this.svgTextPath.getRotationOfChar(i)})`);
+                    //s.push(`.IncrementRotation(${this.svgText.transform.baseVal.getItem(0).angle})`);
+                    s.push(`End With`);
+
+                    result.push(s);
+                }
+            }
+            /*
+            const s: string[] = new Array(0);
+            if (this.graph != null) {
+                const region = this.svgText.getBBox();
+
+                const fontSize = parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "12"));
+                const fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+                const fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
+                const left = this.edge.graph.svgGroup.getX() + this.svgText.getX();
+                let top = this.edge.graph.svgGroup.getY() + this.svgText.getY() - (fontSize / 2);
+                s.push(`With ${shapes}.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${region.width},${fontSize})`);
+                s.push(`.TextFrame.TextRange.Text = "${this.svgText.textContent}"`);
+                s.push(`.TextFrame.marginLeft = 0`);
+                s.push(`.TextFrame.marginRight = 0`);
+                s.push(`.TextFrame.marginTop = 0`);
+                s.push(`.TextFrame.marginBottom = 0`);
+                s.push(`.TextFrame.TextRange.Font.Size = ${fontSize}`);
+                s.push(`.TextFrame.TextRange.Font.name = "${fontFamily}"`);
+                s.push(`.TextFrame.TextRange.Font.Bold = ${fontBold}`);
+                s.push(`.IncrementRotation(${this.svgText.transform.baseVal.getItem(0).angle})`);
+                s.push(`End With`);
+
+            }
+            result.push(s);
+            */
+        }
+
+
+        private static markerCounter: number = 0;
+        public static createMark(): SVGMarkerElement {
             var marker = GraphTableSVG.createMarker();
-            marker.id = `marker-${id}`;
+            marker.id = `marker-${Edge.markerCounter++}`;
             return marker;
         }
     }

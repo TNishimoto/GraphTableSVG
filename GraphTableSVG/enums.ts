@@ -81,6 +81,9 @@
     }
 
     export const VerticalAnchorPropertyName: string = "--vertical-anchor";
+    export const MaximalRegularIntervalName: string = "--maximal-regular-interval";
+
+
     /**
     垂直方向の配置位置を表す値です。
     */

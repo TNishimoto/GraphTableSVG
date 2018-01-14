@@ -66,6 +66,7 @@ declare namespace GraphTableSVG {
     function ToConnectorPosition(str: string | null): ConnectorPosition;
     function ToStrFromConnectorPosition(position: ConnectorPosition): string;
     const VerticalAnchorPropertyName: string;
+    const MaximalRegularIntervalName: string;
     /**
     垂直方向の配置位置を表す値です。
     */
@@ -120,7 +121,6 @@ declare namespace GraphTableSVG {
         static readonly endNodeName: string;
         static readonly defaultTextClass: string;
         static readonly controlPointName: string;
-        readonly svgBezier: SVGPathElement;
         protected _svgTextPath: SVGTextPathElement;
         readonly svgTextPath: SVGTextPathElement;
         private _observer;
@@ -135,12 +135,10 @@ declare namespace GraphTableSVG {
         private _graph;
         private _svgGroup;
         readonly svgGroup: SVGGElement;
-        protected _surface: SVGElement | null;
-        readonly surface: SVGElement | null;
+        protected _svgPath: SVGPathElement;
+        readonly svgPath: SVGPathElement;
         protected _svgText: SVGTextElement;
         readonly svgText: SVGTextElement;
-        protected _text: EdgeText | null;
-        text: EdgeText | null;
         constructor(__graph: Graph, g: SVGGElement);
         /**
         開始接点の接続位置を返します。
@@ -202,6 +200,7 @@ declare namespace GraphTableSVG {
          * 再描画します。
          */
         update(): boolean;
+        isMaximalRegularInterval: boolean;
         /**
         ObjectIDを返します。
         */
@@ -217,7 +216,8 @@ declare namespace GraphTableSVG {
         createVBACode(main: string[], sub: string[][], indexDic: {
             [key: string]: number;
         }): void;
-        static createMark(id: string): SVGMarkerElement;
+        private static markerCounter;
+        static createMark(): SVGMarkerElement;
     }
 }
 declare namespace GraphTableSVG {
@@ -879,10 +879,12 @@ interface SVGTextElement {
     setX(value: number): void;
     getY(): number;
     setY(value: number): void;
-    setLatexTextContent(str: string): void;
+    setTextContent(str: string, isLatexMode: boolean): void;
+    setTextContent(str: string): void;
 }
 interface SVGTextPathElement {
-    setLatexTextContent(str: string): void;
+    setTextContent(str: string, isLatexMode: boolean): void;
+    setTextContent(str: string): void;
 }
 declare namespace GraphTableSVG {
     class Row {
@@ -1105,9 +1107,10 @@ declare namespace GraphTableSVG {
     function createCircle(className?: string | null): SVGCircleElement;
     function createMarker(className?: string | null): SVGMarkerElement;
     function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
-    function createTextSpan(str: string, className?: string | null, fontsize?: number): SVGTSpanElement[];
-    function setTextToTextPath(path: SVGTextPathElement, str: string): void;
-    function setTextToSVGText(path: SVGTextElement, str: string): void;
+    function createTextSpans(str: string, className?: string | null, fontsize?: number): SVGTSpanElement[];
+    function createSingleTextSpan(str: string, className?: string | null): SVGTSpanElement;
+    function setTextToTextPath(path: SVGTextPathElement, str: string, isLatexMode: boolean): void;
+    function setTextToSVGText(path: SVGTextElement, str: string, isLatexMode: boolean): void;
     function setDefaultValue(item: SVGCircleElement | SVGRectElement): void;
     function setClass(svg: SVGElement, className?: string | null): void;
     function setCSSToStyle(svg: HTMLElement): void;

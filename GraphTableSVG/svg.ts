@@ -163,7 +163,7 @@ namespace GraphTableSVG {
         path.style.fontFamily = "Yu Gothic";
         return [text,path];
     }
-    export function createTextSpan(str: string, className: string | null = null, fontsize: number = 12): SVGTSpanElement[] {
+    export function createTextSpans(str: string, className: string | null = null, fontsize: number = 12): SVGTSpanElement[] {
         let r: SVGTSpanElement[] = [];
         str += "_";
         //const p: SVGTextElement = this;
@@ -215,15 +215,31 @@ namespace GraphTableSVG {
         }
         return r;
     }
-    export function setTextToTextPath(path: SVGTextPathElement, str: string) {
-        path.textContent = "";
-        var fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
-        createTextSpan(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
+    export function createSingleTextSpan(str: string, className: string | null = null): SVGTSpanElement {
+        const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        tspan.textContent = str;
+
+        return tspan;
     }
-    export function setTextToSVGText(path: SVGTextElement, str: string) {
+
+    export function setTextToTextPath(path: SVGTextPathElement, str: string, isLatexMode: boolean) {
         path.textContent = "";
         var fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
-        createTextSpan(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
+        if (isLatexMode) {
+            createTextSpans(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
+        } else {
+            path.appendChild(createSingleTextSpan(str, null));
+        }
+    }
+    export function setTextToSVGText(path: SVGTextElement, str: string, isLatexMode: boolean) {
+        path.textContent = "";
+        var fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
+        if (isLatexMode) {
+            createTextSpans(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
+        } else {
+            path.appendChild(createSingleTextSpan(str, null));
+        }
+
     }
 
 
