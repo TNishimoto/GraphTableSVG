@@ -268,7 +268,6 @@ End Sub
             const color = Color.translateRGBCodeFromColorName2(item.getPropertyStyleValueWithDefault("fill", "gray"));
 
             sub.push([`${range}.text = "${item.textContent}"`]);
-            //sub.push([`${range}.Font.color.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`])
             if (item.children.length > 0) {
                 let pos = 1;
                 for (let i = 0; i < item.children.length; i++) {
@@ -280,21 +279,13 @@ End Sub
                         if (f == null) {
                             f = "";
                         }
-                        sub.push([`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${color.r}, ${color.g}, ${color.b}))`]);
-                        /*
-                        if (f != null) {
-                            if (f == "superscript") {
-
-                                sub.push([`${range}.Characters(${pos}, ${len}).Font.Superscript = True`])
-                            } else if (f == "subscript") {
-                                sub.push([`${range}.Characters(${pos}, ${len}).Font.Subscript = True`])
-                            }
-                        }
-                        */
+                        sub.push([`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${color.r}, ${color.g}, ${color.b}))`]);                        
                         pos += len;
                     }
                     
                 }
+            } else if (item.textContent != null && item.textContent.length > 0) {
+                sub.push([`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}))`]);                        
             }
         }
 

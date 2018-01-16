@@ -478,11 +478,6 @@
 
                 this.createVBACodeOfText("shapes_", sub);
                 
-                /*
-                if (this.text != null) {
-                    this.text.createVBACode("shapes_", sub);
-                }
-                */
             }
         }
         public createVBACodeOfText(shapes: string, result: string[][]): void {
