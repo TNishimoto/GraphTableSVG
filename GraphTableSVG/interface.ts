@@ -72,6 +72,13 @@ interface SVGElement {
     getPropertyStyleValue(name: string): string | null;
     getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
     setPropertyStyleValue(name: string, value: string | null): void;
+
+    /*
+    getX(): number;
+    setX(value: number): void;
+    getY(): number;
+    setY(value: number): void;
+    */
 }
 SVGElement.prototype.getActiveStyle = function () {
     const p: SVGElement = this;
@@ -171,4 +178,38 @@ SVGTextElement.prototype.setY = function (value: number) {
     }
     p.y.baseVal.getItem(0).value = value;
 };
+/*
+SVGElement.prototype.getX = function () {
+    const p: SVGElement = this;
+    
+    if (p.x.baseVal.numberOfItems == 0) {
+        p.setAttribute('x', "0");
+    }
+    return p.x.baseVal.getItem(0).value;
+};
+SVGElement.prototype.setX = function (value: number) {
+    const p: SVGElement = this;
+    if (p.x.baseVal.numberOfItems == 0) {
+        p.setAttribute('x', "0");
+    }
+    //p.setAttribute('x', value.toString());
+
+
+    if (p.x.baseVal.getItem(0).value != value) p.x.baseVal.getItem(0).value = value;
+};
+SVGElement.prototype.getY = function () {
+    const p: SVGElement = this;
+    if (p.y.baseVal.numberOfItems == 0) {
+        p.setAttribute('y', "0");
+    }
+    return p.y.baseVal.getItem(0).value;
+};
+SVGElement.prototype.setY = function (value: number) {
+    const p: SVGElement = this;
+    if (p.y.baseVal.numberOfItems == 0) {
+        p.setAttribute('y', "0");
+    }
+    if (p.y.baseVal.getItem(0).value != value)p.y.baseVal.getItem(0).value = value;
+};
+*/
 

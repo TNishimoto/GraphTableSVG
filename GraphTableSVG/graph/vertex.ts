@@ -4,6 +4,7 @@
         public static readonly defaultSurfaceType: string = "--default-surface-type";
         public static readonly defaultTextClass: string = "--default-text-class";
         public static readonly defaultSurfaceClass: string = "--default-surface-class";
+        public static readonly autoSizeShapeToFitTextName: string = "--autosize"
 
         private static readonly id_counter: number = 0;
 
@@ -31,14 +32,21 @@
         protected textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
+
                 if (this.isLocated) {
 
                     let vAnchor = this.svgGroup.getPropertyStyleValue(VerticalAnchorPropertyName);
                     if (vAnchor == null) vAnchor = VerticalAnchor.Middle;
                     let hAnchor = this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
                     if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
-                    Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
+                    if (this.isAutoSizeShapeToFitText) {
+                        const box = this.svgText.getBBox();
+                        this.width = box.width;
+                        this.height = box.height;
 
+                    }
+                    Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
+                    this.localUpdate();
                 }
             }
         };
@@ -179,11 +187,16 @@
         get width(): number {
             return 0;
         }
+        set width(value: number) {
+        }
         /**
         このVertexの高さを返します。
         */
         get height(): number {
             return 0;
+        }
+        set height(value: number) {
+
         }
 
         /**
@@ -214,7 +227,16 @@
             return false;
         }
 
-        private localUpdate() {
+        protected localUpdate() {
+            /*
+            if (this.surface != null) {
+                this.surface.setX(-this.width / 2);
+                this.surface.setY(-this.height / 2);
+
+
+                console.log(`${this.surface.getX()} ${this.surface.getY()}`);
+            }
+            */
             this.incomingEdges.forEach((v) => v.update());
             this.outcomingEdges.forEach((v) => v.update());
         }
@@ -256,6 +278,25 @@
                 return null;
             } else {
                 return this.incomingEdges[0];
+            }
+        }
+
+        get isAutoSizeShapeToFitText(): boolean {
+            if (this.surface != null) {
+                var v = this.surface.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false");
+                return v == "true";
+            } else {
+                return false;
+            }
+        }
+        set isAutoSizeShapeToFitText(value: boolean) {
+            if (this.surface != null) {
+                this.surface.setPropertyStyleValue(Vertex.autoSizeShapeToFitTextName, value ? "true" : "false");
+                /*
+                if (this.isAutoSizeShapeToFitText != value) {
+                    throw new Error("Value Error");
+                }
+                */
             }
         }
 

@@ -25,23 +25,30 @@
         get width(): number {
             return this.svgCircle.r.baseVal.value * 2;
         }
+        set width(value: number) {
+            this.svgCircle.r.baseVal.value = value / 2;
+        }
         /**
         頂点の高さを返します。
         */
         get height(): number {
             return this.svgCircle.r.baseVal.value * 2;
         }
+        set height(value: number) {
+            this.svgCircle.r.baseVal.value = value / 2;
+        }
         /**
         テキストの領域を返します。
         */
         get innerRectangle(): Rectangle {
-            const r = this.svgCircle.r.baseVal.value;
             const rect = new Rectangle();
+            const r = this.svgCircle.r.baseVal.value;
             rect.width = r * 2;
             rect.height = r * 2;
             rect.x = -r;
             rect.y = -r;
             return rect;
+            
             //setXY(this.svgText, rect, VerticalAnchor.Middle, HorizontalAnchor.Center);
         }
         /**
@@ -164,6 +171,12 @@
             this.svgRectangle.y.baseVal.value = -this.height / 2;
 
         }
+        protected localUpdate() {
+            this.svgRectangle.x.baseVal.value = -this.width / 2;
+            this.svgRectangle.y.baseVal.value = -this.height / 2;
+            super.localUpdate();
+        }
+
         /**
         頂点の幅を返します。
         */
@@ -176,6 +189,13 @@
         get height(): number {
             return this.svgRectangle.height.baseVal.value;
         }
+        set width(value: number) {
+            this.svgRectangle.width.baseVal.value = value;
+        }
+        set height(value: number) {
+            this.svgRectangle.height.baseVal.value = value;
+        }
+
         /**
         テキストの領域を返します。
         */
@@ -241,6 +261,12 @@
                 }
             }
 
+        }
+        /**
+        頂点の輪郭を返します。
+        */
+        public get surface(): SVGElement | null {
+            return this.svgRectangle;
         }
     }
 
