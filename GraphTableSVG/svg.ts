@@ -171,16 +171,16 @@ namespace GraphTableSVG {
         path.style.fontFamily = "Yu Gothic";
         return [text,path];
     }
-    export function createTextSpans(str: string, className: string | null = null, fontsize: number = 12): SVGTSpanElement[] {
+    function createTextSpans(str: string, className: string | null = null, fontsize: number = 12, fstdx: number | null = null, fstdy: number | null = null): SVGTSpanElement[] {
         let r: SVGTSpanElement[] = [];
         str += "_";
         //const p: SVGTextElement = this;
         //p.textContent = "";
         //const h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
-
+        let isFst = true;
         let mode = "";
         let tmp = "";
-        const dy = (1 * fontsize) / 3;
+        const char_dy = (1 * fontsize) / 3;
         let lastMode: string = "none";
         const smallFontSize = (2 * fontsize) / 3;
         for (let i = 0; i < str.length; i++) {
@@ -190,7 +190,7 @@ namespace GraphTableSVG {
                 if (mode == "_{}") {
                     const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                     tspan.textContent = tmp;
-                    tspan.setAttribute("dy", `${dy}`);
+                    tspan.setAttribute("dy", `${char_dy}`);
                     tspan.setAttribute("data-script", "subscript");
                     tspan.style.fontSize = `${smallFontSize}pt`;
                     r.push(tspan)
@@ -200,7 +200,7 @@ namespace GraphTableSVG {
                 } else if (mode == "^{}") {
                     const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                     tspan.textContent = tmp;
-                    tspan.setAttribute("dy", `-${dy}`);
+                    tspan.setAttribute("dy", `-${char_dy}`);
                     tspan.style.fontSize = `${smallFontSize}pt`;
                     tspan.setAttribute("data-script", "superscript");
                     r.push(tspan)
@@ -210,20 +210,27 @@ namespace GraphTableSVG {
                 } else if (mode == "_" || mode == "^") {
                     const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                     tspan.textContent = tmp;
-                    const normaldy = lastMode == "up" ? dy : lastMode == "down" ? -dy : 0;
-                    tspan.setAttribute("dy", `${normaldy}`);
-                    r.push(tspan)
+                    const normaldy = lastMode == "up" ? char_dy : lastMode == "down" ? -char_dy : 0;
+                    if (isFst) {
+                        if (fstdx != null) tspan.setAttribute("dx", `${fstdx}`);
+                        if (fstdy != null)tspan.setAttribute("dy", `${fstdy}`);
 
+                    } else {
+                        tspan.setAttribute("dy", `${normaldy}`);
+                    }
+                    r.push(tspan)
                     lastMode = "none";
                     tmp = "";
+                    isFst = false;
                 }
-            } else {
+            }
+            else {
                 tmp += c;
             }
         }
         return r;
     }
-    export function createSingleTextSpan(str: string, className: string | null = null): SVGTSpanElement {
+    function createSingleTextSpan(str: string, className: string | null = null): SVGTSpanElement {
         const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
         tspan.textContent = str;
 
@@ -232,7 +239,7 @@ namespace GraphTableSVG {
 
     export function setTextToTextPath(path: SVGTextPathElement, str: string, isLatexMode: boolean) {
         path.textContent = "";
-        var fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
+        const fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
         if (isLatexMode) {
             createTextSpans(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
         } else {
@@ -241,12 +248,30 @@ namespace GraphTableSVG {
     }
     export function setTextToSVGText(path: SVGTextElement, str: string, isLatexMode: boolean) {
         path.textContent = "";
-        var fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
-        if (isLatexMode) {
-            createTextSpans(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
-        } else {
-            path.appendChild(createSingleTextSpan(str, null));
+        const fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
+        const fs = parseInt(fontSize);
+        let dx = 0;
+
+        str.split("\n").forEach((w) => {
+            let dy = fs;
+            let width = 0;
+            if (isLatexMode) {
+                createTextSpans(w, null, fs, dx, dy).forEach((v) => {
+                    path.appendChild(v)
+                    const rect = v.getBoundingClientRect();
+                    dx = 0;
+                    dy = 0;
+                    width += rect.width;
+                });
+                
+                dy += fs;
+            } else {
+                path.appendChild(createSingleTextSpan(w, null));
+            }
+            dx = -width;
         }
+        );
+
 
     }
 
