@@ -35,17 +35,7 @@
 
                 if (this.isLocated) {
 
-                    let vAnchor = this.svgGroup.getPropertyStyleValue(VerticalAnchorPropertyName);
-                    if (vAnchor == null) vAnchor = VerticalAnchor.Middle;
-                    let hAnchor = this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
-                    if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
-                    if (this.isAutoSizeShapeToFitText) {
-                        const box = this.svgText.getBBox();
-                        this.width = box.width;
-                        this.height = box.height;
-
-                    }
-                    Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
+                    
                     this.localUpdate();
                 }
             }
@@ -224,10 +214,22 @@
         再描画します。
         */
         public update(): boolean {
+            this.localUpdate();
             return false;
         }
 
         protected localUpdate() {
+            let vAnchor = this.svgGroup.getPropertyStyleValue(VerticalAnchorPropertyName);
+            if (vAnchor == null) vAnchor = VerticalAnchor.Middle;
+            let hAnchor = this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
+            if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
+            if (this.isAutoSizeShapeToFitText) {
+                const box = this.svgText.getBBox();
+                this.width = box.width;
+                this.height = box.height;
+
+            }
+            Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             /*
             if (this.surface != null) {
                 this.surface.setX(-this.width / 2);

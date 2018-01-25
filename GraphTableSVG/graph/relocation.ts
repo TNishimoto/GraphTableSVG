@@ -91,7 +91,7 @@
                     //graph.update();
                 }
             } else {
-                throw new Error();
+                throw new Error("The Graph.VertexInterval is not defined.");
             }
 
         }
@@ -114,6 +114,59 @@
                 x += children[i].tree.leaves.length * xInterval;
             }
             
+        }
+
+        export function standardTreeArrangement2(graph: GraphTableSVG.Graph): void {
+            const xInterval = graph.vertexXInterval;
+            const yInterval = graph.vertexYInterval;
+            if (xInterval != null && yInterval != null) {
+
+                if (graph.rootVertex != null) {
+                    const rootTree = graph.rootVertex.tree;
+                    const [x, y] = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y];
+                    standardTreeArrangementSub2(rootTree, xInterval, yInterval);
+                    rootTree.setRootLocation(x, y);
+
+                    //graph.update();
+                }
+            } else {
+                throw new Error("The Graph.VertexInterval is not defined.");
+            }
+
+        }
+        function standardTreeArrangementSub2(tree: VirtualSubTree, xInterval: number, yInterval: number): void {
+            tree.subTreeRoot.x = 0;
+            tree.subTreeRoot.y = 0;
+            let centerX = 0;
+            const children = tree.children;
+
+            let x = 0;
+
+            if (children.length == 1) {
+                tree.subTreeRoot.x = children[0].x;
+                standardTreeArrangementSub2(children[0].tree, xInterval, yInterval);
+
+                children[0].tree.setRootLocation(children[0].x, yInterval);
+            } else if (children.length == 0) {
+            }else {
+                for (let i = 0; i < children.length; i++) {
+                    standardTreeArrangementSub2(children[i].tree, xInterval, yInterval);
+                    const rect = children[i].tree.region();
+                    const diffX = children[i].x - rect.x;
+
+                    children[i].tree.setRootLocation(x + diffX, yInterval);
+                    x += rect.width + xInterval;
+                    if (i < children.length - 1) {
+                        centerX += x - (xInterval / 2);
+                    }
+                }
+
+                centerX = centerX / (children.length - 1);
+
+                tree.subTreeRoot.x = centerX;
+            }
+            
+
         }
         
         
