@@ -116,7 +116,7 @@
             
         }
 
-        export function standardTreeArrangement2(graph: GraphTableSVG.Graph): void {
+        export function standardTreeWidthArrangement(graph: GraphTableSVG.Graph): void {
             const xInterval = graph.vertexXInterval;
             const yInterval = graph.vertexYInterval;
             if (xInterval != null && yInterval != null) {
@@ -124,7 +124,7 @@
                 if (graph.rootVertex != null) {
                     const rootTree = graph.rootVertex.tree;
                     const [x, y] = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y];
-                    standardTreeArrangementSub2(rootTree, xInterval, yInterval);
+                    standardTreeWidthArrangementSub(rootTree, xInterval, yInterval);
                     rootTree.setRootLocation(x, y);
 
                     //graph.update();
@@ -134,7 +134,7 @@
             }
 
         }
-        function standardTreeArrangementSub2(tree: VirtualSubTree, xInterval: number, yInterval: number): void {
+        function standardTreeWidthArrangementSub(tree: VirtualSubTree, xInterval: number, yInterval: number): void {
             tree.subTreeRoot.x = 0;
             tree.subTreeRoot.y = 0;
             let centerX = 0;
@@ -144,13 +144,13 @@
 
             if (children.length == 1) {
                 tree.subTreeRoot.x = children[0].x;
-                standardTreeArrangementSub2(children[0].tree, xInterval, yInterval);
+                standardTreeWidthArrangementSub(children[0].tree, xInterval, yInterval);
 
                 children[0].tree.setRootLocation(children[0].x, yInterval);
             } else if (children.length == 0) {
             }else {
                 for (let i = 0; i < children.length; i++) {
-                    standardTreeArrangementSub2(children[i].tree, xInterval, yInterval);
+                    standardTreeWidthArrangementSub(children[i].tree, xInterval, yInterval);
                     const rect = children[i].tree.region();
                     const diffX = children[i].x - rect.x;
 
