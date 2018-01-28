@@ -490,7 +490,6 @@
                     const s: string[] = new Array(0);
                     const p1 = this.svgTextPath.getStartPositionOfChar(i);
                     const p2 = this.svgTextPath.getEndPositionOfChar(i);
-                    console.log(this.svgTextPath.getRotationOfChar(i));
                     const width = Math.abs(p2.x - p1.x);
                     const height = Math.abs(p2.y - p1.y);
 

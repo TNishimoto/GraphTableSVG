@@ -219,7 +219,7 @@
          */
         public connect(node1: Vertex, edge: Edge, node2: Vertex,
             outcomingInsertIndex: number | null = null, incomingInsertIndex: number | null = null,
-            beginConnectorType: GraphTableSVG.ConnectorPosition = GraphTableSVG.ConnectorPosition.Auto, endConnectorType: GraphTableSVG.ConnectorPosition = GraphTableSVG.ConnectorPosition.Auto) {
+            beginConnectorType: GraphTableSVG.ConnectorPosition | null = null, endConnectorType: GraphTableSVG.ConnectorPosition | null = null) {
             const oIndex = outcomingInsertIndex == null ? node1.outcomingEdges.length : outcomingInsertIndex;
             const iIndex = incomingInsertIndex == null ? node2.incomingEdges.length : incomingInsertIndex;
             //this._connect(node1, edge, node2);
@@ -236,8 +236,8 @@
                     this.roots.splice(j, 1);
                 }
             }
-            edge.beginConnectorType = beginConnectorType;
-            edge.endConnectorType = endConnectorType;
+            if (beginConnectorType != null) edge.beginConnectorType = beginConnectorType;
+            if (endConnectorType != null)edge.endConnectorType = endConnectorType;
             /*
             if (!(node1.id in this.outcomingEdgesDic)) {
                 this.outcomingEdgesDic[node1.id] = [];

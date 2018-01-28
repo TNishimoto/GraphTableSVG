@@ -49,7 +49,6 @@
             }
         }
         public region(): Rectangle {
-            console.log("region")
             const p = this.getSubtree();
             let minX = this.subTreeRoot.x;
             let maxX = this.subTreeRoot.x;
@@ -57,7 +56,6 @@
             let maxY = this.subTreeRoot.y;
             p.forEach(function (x, i, arr) {
                 const rect = x.region;
-                console.log(rect);
                 if (minX > rect.x) minX = rect.x;
                 if (maxX < rect.right) maxX = rect.right;
                 if (minY > rect.y) minY = rect.y;
