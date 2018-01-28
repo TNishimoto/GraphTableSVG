@@ -194,14 +194,14 @@
             if (p == null) {
                 return ConnectorPosition.Auto;
             } else {
-                return GraphTableSVG.ToConnectorPosition(p);
+                return <ConnectorPosition>p;
             }
         }
         /**
         開始接点の接続位置を設定します。
         */
         set beginConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
+            this.svgGroup.setPropertyStyleValue(Edge.beginConnectorTypeName, value)
             //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
         /**
@@ -212,14 +212,14 @@
             if (p == null) {
                 return ConnectorPosition.Auto;
             } else {
-                return GraphTableSVG.ToConnectorPosition(p);
+                return <ConnectorPosition>p;
             }
         }
         /**
         終了接点の接続位置を設定します。
         */
         set endConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(Edge.endConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value))
+            this.svgGroup.setPropertyStyleValue(Edge.endConnectorTypeName, value)
         }
 
         /**
@@ -461,8 +461,8 @@
                 if (this.beginVertex != null && this.endVertex != null) {
                     const beg = indexDic[this.beginVertex.objectID];
                     const end = indexDic[this.endVertex.objectID];
-                    const begType = this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y);
-                    const endType = this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y);
+                    const begType: number = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
+                    const endType: number = GraphTableSVG.ToVBAConnectorPosition(this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
                     subline.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
                 }
                 const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));

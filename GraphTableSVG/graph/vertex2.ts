@@ -70,19 +70,19 @@
             switch (type) {
                 case ConnectorPosition.Top:
                     return [this.x, this.y - this.radius];
-                case ConnectorPosition.RightUp:
+                case ConnectorPosition.TopRight:
                     return [this.x + r, this.y - r];
                 case ConnectorPosition.Right:
                     return [this.x + this.radius, this.y];
-                case ConnectorPosition.RightDown:
+                case ConnectorPosition.BottomRight:
                     return [this.x + r, this.y + r];
                 case ConnectorPosition.Bottom:
                     return [this.x, this.y + this.radius];
-                case ConnectorPosition.LeftDown:
+                case ConnectorPosition.BottomLeft:
                     return [this.x - r, this.y + r];
                 case ConnectorPosition.Left:
                     return [this.x - this.radius, this.y];
-                case ConnectorPosition.LeftUp:
+                case ConnectorPosition.TopLeft:
                     return [this.x - r, this.y - r];
                 default:
                     const autoType = this.getAutoPosition(x, y);
@@ -101,17 +101,17 @@
 
             if (x2 < 0) {
                 if (y2 < 0) {
-                    return ConnectorPosition.LeftUp;
+                    return ConnectorPosition.TopLeft;
                 } else if (y2 > 0) {
-                    return ConnectorPosition.LeftDown;
+                    return ConnectorPosition.BottomLeft;
                 } else {
                     return ConnectorPosition.Left;
                 }
             } else if (x2 > 0) {
                 if (y2 < 0) {
-                    return ConnectorPosition.RightUp;
+                    return ConnectorPosition.TopRight;
                 } else if (y2 > 0) {
-                    return ConnectorPosition.RightDown;
+                    return ConnectorPosition.BottomRight;
                 } else {
                     return ConnectorPosition.Right;
                 }
@@ -222,15 +222,15 @@
             switch (type) {
                 case ConnectorPosition.Top:
                     return [this.x, this.y - hr];
-                case ConnectorPosition.RightUp:
+                case ConnectorPosition.TopRight:
                 case ConnectorPosition.Right:
-                case ConnectorPosition.RightDown:
+                case ConnectorPosition.BottomRight:
                     return [this.x + wr, this.y];
                 case ConnectorPosition.Bottom:
                     return [this.x, this.y + hr];
-                case ConnectorPosition.LeftDown:
+                case ConnectorPosition.BottomLeft:
                 case ConnectorPosition.Left:
-                case ConnectorPosition.LeftUp:
+                case ConnectorPosition.TopLeft:
                     return [this.x - wr, this.y];
                 default:
                     const autoType = this.getAutoPosition(x, y);

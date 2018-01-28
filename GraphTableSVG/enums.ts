@@ -6,80 +6,84 @@
     export enum NodeOrder {
         Preorder, Postorder
     }
-    /**
-    Vertexの接続位置を表す値です。
-    */
-    export enum ConnectorPosition {
-        /**
-        上を表します。
-        */
+    /*
+    export enum OldConnectorPosition {
         Top = 1,
-        /**
-        左上を表します。
-        */
         LeftUp = 2,
-        /**
-        左を表します。
-        */
         Left = 3,
-        /**
-        左下を表します。
-        */
         LeftDown = 4,
-        /**
-        下を表します。
-        */
         Bottom = 5,
-        /**
-        右下を表します。
-        */
         RightDown = 6,
-        /**
-        右を表します。
-        */
         Right = 7,
-        /**
-        右上を表します。
-        */
         RightUp = 8,
-        /**
-        ノードの位置によって自動判定
-        */
         Auto = 9
     }
+    */
+    export type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
+    export namespace ConnectorPosition {
+        export const Top: ConnectorPosition = "top"
+        export const TopLeft: ConnectorPosition = "topleft"
+        export const Left: ConnectorPosition = "left"
+        export const BottomLeft: ConnectorPosition = "bottomleft"
+        export const Bottom: ConnectorPosition = "bottom"
+        export const BottomRight: ConnectorPosition = "bottomright"
+        export const Right: ConnectorPosition = "right"
+        export const TopRight: ConnectorPosition = "topright"
+        export const Auto: ConnectorPosition = "auto"
+
+    }
+    export function ToVBAConnectorPosition(str: ConnectorPosition): number {
+        switch (str) {
+            case "top": return 1;
+            case "topleft": return 2;
+            case "left": return 3;
+            case "bottomleft": return 4;
+            case "bottom": return 5;
+            case "bottomright": return 6;
+            case "right": return 7;
+            case "topright": return 8;
+            case "auto": return 9;
+            default: return 1;
+        }
+    }
+    
     export function ToConnectorPosition(str: string | null): ConnectorPosition {
         if (str == null) {
             return ConnectorPosition.Auto;
         } else {
+            return <ConnectorPosition>str;
+            /*
             switch (str) {
                 case "top": return ConnectorPosition.Top;
-                case "leftup": return ConnectorPosition.LeftUp;
+                case "topleft": return ConnectorPosition.TopLeft;
                 case "left": return ConnectorPosition.Left;
-                case "leftdown": return ConnectorPosition.LeftDown;
+                case "bottomleft": return ConnectorPosition.BottomLeft;
                 case "bottom": return ConnectorPosition.Bottom;
-                case "rightdown": return ConnectorPosition.RightDown;
+                case "bottomright": return ConnectorPosition.BottomRight;
                 case "right": return ConnectorPosition.Right;
-                case "rightup": return ConnectorPosition.RightUp;
+                case "topright": return ConnectorPosition.TopRight;
                 case "auto": return ConnectorPosition.Auto;
                 default: return ConnectorPosition.Auto;
             }
+            */
         }
     }
-    export function ToStrFromConnectorPosition(position: ConnectorPosition): string {
+    /*
+    export function ToStrFromConnectorPosition(position: OldConnectorPosition): string {
         switch (position) {
-            case ConnectorPosition.Top: return "top";
-            case ConnectorPosition.LeftUp: return "leftup";
-            case ConnectorPosition.Left: return "left";
-            case ConnectorPosition.LeftDown: return "leftdown";
-            case ConnectorPosition.Bottom: return "bottom";
-            case ConnectorPosition.RightUp: return "rightup";
-            case ConnectorPosition.Right: return "right";
-            case ConnectorPosition.RightDown: return "rightdown";
-            case ConnectorPosition.Auto: return "auto";
+            case OldConnectorPosition.Top: return "top";
+            case ConnectorPosition.TopLeft: return "leftup";
+            case OldConnectorPosition.Left: return "left";
+            case OldConnectorPosition.BottomLeft: return "leftdown";
+            case OldConnectorPosition.Bottom: return "bottom";
+            case ConnectorPosition.TopRight: return "rightup";
+            case OldConnectorPosition.Right: return "right";
+            case ConnectorPosition.BottomRight: return "rightdown";
+            case OldConnectorPosition.Auto: return "auto";
             default: return "auto";
         }
     }
-
+    */
     export const VerticalAnchorPropertyName: string = "--vertical-anchor";
     export const MaximalRegularIntervalName: string = "--maximal-regular-interval";
 
