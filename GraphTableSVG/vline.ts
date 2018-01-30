@@ -124,24 +124,28 @@
          * @param rects
          */
         public static merge(rects: Rectangle[]): Rectangle {
-            let x1 = rects[0].x;
-            let y1 = rects[0].y;
+            if (rects.length > 0) {
+                let x1 = rects[0].x;
+                let y1 = rects[0].y;
 
-            let x2 = rects[0].right;
-            let y2 = rects[0].bottom;
+                let x2 = rects[0].right;
+                let y2 = rects[0].bottom;
 
-            rects.forEach((v) => {
-                if (x1 > v.x) x1 = v.x;
-                if (y1 > v.y) y1 = v.y;
-                if (x2 < v.right) x2 = v.right;
-                if (y2 < v.bottom) y2 = v.bottom;
-            })
-            const rect = new Rectangle();
-            rect.x = x1;
-            rect.y = y1;
-            rect.width = x2 - x1;
-            rect.height = y2 - y1;
-            return rect;
+                rects.forEach((v) => {
+                    if (x1 > v.x) x1 = v.x;
+                    if (y1 > v.y) y1 = v.y;
+                    if (x2 < v.right) x2 = v.right;
+                    if (y2 < v.bottom) y2 = v.bottom;
+                })
+                const rect = new Rectangle();
+                rect.x = x1;
+                rect.y = y1;
+                rect.width = x2 - x1;
+                rect.height = y2 - y1;
+                return rect;
+            } else {
+                return new Rectangle(0,0,0,0);
+            }
         }
     }
 

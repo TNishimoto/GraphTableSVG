@@ -18,6 +18,7 @@
         private _observer: MutationObserver;
         private observerFunc: MutationCallback = (x: MutationRecord[]) => {
             let b = false;
+            if (!this.isLocated) return;
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
                 if (p.attributeName == "transform") {
@@ -30,14 +31,11 @@
 
         private _textObserver: MutationObserver;
         protected textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
+            if (!this.isLocated) return;
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
+                this.localUpdate();
 
-                if (this.isLocated) {
-
-                    
-                    this.localUpdate();
-                }
             }
         };
 

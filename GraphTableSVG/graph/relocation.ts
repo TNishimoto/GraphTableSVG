@@ -19,6 +19,7 @@
                     x = x / v.children.length;
                     y += yInterval;
                 }
+
                 v.x = x;
                 v.y = y;
             });

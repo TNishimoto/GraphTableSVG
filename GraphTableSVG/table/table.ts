@@ -254,13 +254,64 @@ namespace GraphTableSVG {
                     }
                 }
                 this.renumbering();
+                const p = i + 1 < this.width ? i : i - 1; 
                 for (let y = 0; y < this.height; y++) {
-                    this.updateBorder(this.cells[y][i]);
+                    this.updateBorder(this.cells[y][p]);
                 }
             } else {
                 this.insertRow(0);
             }
         }
+        public deleteColumn(i: number) {
+            if (this.width > 1) {
+                for (let y = 0; y < this.height; y++) {
+                    const cell = this.cells[y][i];
+                    this.svgGroup.removeChild(cell.svgGroup);
+                    this.svgGroup.removeChild(cell.topBorder);
+                    if (cell.bottomCell == null) this.svgGroup.removeChild(cell.bottomBorder);
+                    if (cell.leftCell == null) this.svgGroup.removeChild(cell.leftBorder);
+                    if (cell.rightCell == null) this.svgGroup.removeChild(cell.rightBorder);
+
+                    this.cells[y].splice(i, 1);
+                }
+                this.renumbering();
+                for (let y = 0; y < this.height; y++) {
+                    this.updateBorder(this.cells[y][i]);
+                }
+            } else {
+                throw Error("Error");
+            }
+        }
+        public deleteRow(i: number) {
+            if (this.height == 1) throw Error("Error");
+            for (let x = 0; x < this.width; x++) {
+                const cell = this.cells[i][x];
+                this.svgGroup.removeChild(cell.svgGroup);
+                this.svgGroup.removeChild(cell.leftBorder);
+                if (cell.rightCell == null) this.svgGroup.removeChild(cell.rightBorder);
+                if (cell.upCell == null) this.svgGroup.removeChild(cell.topBorder);
+                if (cell.bottomCell == null) this.svgGroup.removeChild(cell.bottomBorder);
+
+            }
+
+            this.cells.splice(i, 1);
+            this.renumbering();
+
+            const p = i + 1 < this.height ? i : i - 1; 
+            for (let x = 0; x < this.width; x++) {
+                this.updateBorder(this.cells[p][x]);
+            }
+        }
+        public clear() {
+            while (this.height > 1) {
+                this.deleteRow(1);
+            }
+            while (this.width > 1) {
+                this.deleteColumn(1);
+            }
+            this.cells[0][0].svgText.textContent = "";
+        }
+
         /**
         新しい列を最後の列に追加します。
         */

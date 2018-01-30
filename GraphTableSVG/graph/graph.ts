@@ -168,21 +168,24 @@
             } else {
                 const p = this.edges.indexOf(item);
                 if (p != -1) {
-                    this._vertices.splice(p, 1);
+                    this._edges.splice(p, 1);
                     this.svgGroup.removeChild(item.svgGroup);
                     item.dispose();
                 }
             }
         }
         
-        /*
-        clear(svg: HTMLElement) {
-            this._nodes.forEach(function (x) { x.setGraph(null) });
-            this._edges.forEach(function (x) { x.setGraph(null) });
-            this._nodes = [];
-            this._edges = [];
+        
+        public clear() {
+            while (this.edges.length > 0) {
+                this.remove(this.edges[0]);
+            }
+            while (this.vertices.length > 0) {
+                this.remove(this.vertices[0]);
+            }
+            this._roots = [];
         }
-        */
+        
         removeGraph(svg: HTMLElement) {
             if (svg.contains(this.svgGroup)) {
                 svg.removeChild(this.svgGroup);
