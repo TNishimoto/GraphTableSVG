@@ -323,26 +323,7 @@
             text.setAttribute('y', y.toString());
             text.setAttribute('x', x.toString());
         }
-        public static IsDescendantOfBody(node: Node): boolean {
-            const parent = node.parentNode;
-            if (parent == null) {
-                return false;
-            }
-            else if (parent == document.body) {
-                return true;
-            } else {
-                return Graph.IsDescendantOfBody(parent);
-            }
-        }
-
-        public static getRegion(items: (Graph | Table)[]): Rectangle {
-            const rects = items.map((v) => v.getRegion());
-            if (rects.length > 0) {
-                return GraphTableSVG.Rectangle.merge(rects);
-            } else {
-                return new Rectangle();
-            }
-        }
+        
 
         public createVBACode(id: number): string[] {
             const dic: { [key: string]: number; } = {};

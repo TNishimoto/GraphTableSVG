@@ -27,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="color.ts" />
+    <TypeScriptCompile Include="common\common.ts" />
     <TypeScriptCompile Include="enums.ts" />
     <TypeScriptCompile Include="graph\adjacency_matrix.ts" />
     <TypeScriptCompile Include="graph\edge.ts" />

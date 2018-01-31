@@ -45,4 +45,3 @@ window.onload = () => {
     sample3();
     sample5();
 };
-//# sourceMappingURL=sample.js.map

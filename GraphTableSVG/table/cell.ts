@@ -323,7 +323,7 @@ namespace GraphTableSVG {
         CellがDocumentのDOMに所属しているかどうかを返します。
         */
         get isLocated(): boolean {
-            return Graph.IsDescendantOfBody(this.svgGroup);
+            return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }
 
         /**
@@ -376,7 +376,7 @@ namespace GraphTableSVG {
          *セルの位置を再計算します。
          */
         public relocation() {
-            if (!Graph.IsDescendantOfBody(this.svgGroup)) return;
+            if (!GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup)) return;
             this.topBorder.x1.baseVal.value = this.x;
             this.topBorder.x2.baseVal.value = this.x + this.width;
             this.topBorder.y1.baseVal.value = this.y;

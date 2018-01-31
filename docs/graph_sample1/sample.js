@@ -60,4 +60,3 @@ var sample1_mousemove = (e) => {
 window.onload = () => {
     sample1();
 };
-//# sourceMappingURL=sample.js.map

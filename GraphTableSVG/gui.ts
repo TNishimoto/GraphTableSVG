@@ -101,5 +101,44 @@
             }
             return arg;
         }
+
+
+        export function getInputText(boxname: string): string {
+            const textbox: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById(boxname);
+            return textbox.value;
+        }
+
+        export function getNonNullElementById(id: string): HTMLElement {
+            const tmp = document.getElementById(id);
+            if (tmp == null) {
+                throw Error("Null Error");
+            } else {
+                return tmp;
+            }
+        }
+
+        export function observeSVGBox(svgBox: HTMLElement, sizeFunc: () => GraphTableSVG.Rectangle, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {
+            let _observer: MutationObserver;
+            let observeFunction: MutationCallback = (x: MutationRecord[]) => {
+                let b = false;
+
+                for (let i = 0; i < x.length; i++) {
+                    const item = x[i];
+                    if (svgBox != item.target) {
+                        b = true;
+                    }
+                }
+
+                if (b) GraphTableSVG.GUI.setSVGBoxSize(svgBox, sizeFunc(), padding);
+            }
+
+            _observer = new MutationObserver(observeFunction);
+            const option: MutationObserverInit = {
+                subtree: true, attributes: true
+            };
+            _observer.observe(svgBox, option);
+
+        }
+        
     }
 }

@@ -126,7 +126,7 @@
         このVertexがBodyの子孫であるとき、Trueを返します。
         */
         get isLocated(): boolean {
-            return Graph.IsDescendantOfBody(this.svgGroup);
+            return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }
         
         /**

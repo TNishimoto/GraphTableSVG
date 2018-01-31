@@ -26,4 +26,3 @@ function sample7() {
 window.onload = () => {
     sample7();
 };
-//# sourceMappingURL=sample.js.map
