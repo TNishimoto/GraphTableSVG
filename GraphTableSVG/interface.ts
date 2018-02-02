@@ -108,7 +108,7 @@ SVGElement.prototype.getPropertyStyleValue = function (name: string): string | n
             return null;
         } else {
 
-            let css = GraphTableSVG.getStyleSheet(r);
+            let css = GraphTableSVG.SVG.getStyleSheet(r);
             if (css == null) css = getComputedStyle(item);
             const p2 = css.getPropertyValue(name).trim();
             if (p2.length == 0) {
@@ -140,11 +140,11 @@ interface SVGTextPathElement {
     setTextContent(str: string): void;
 }
 SVGTextPathElement.prototype.setTextContent = function (str: string, isLatexMode: boolean = false) {
-    GraphTableSVG.setTextToTextPath(this, str, isLatexMode);
+    GraphTableSVG.SVG.setTextToTextPath(this, str, isLatexMode);
 };
 
 SVGTextElement.prototype.setTextContent = function (str: string, isLatexMode: boolean = false) {
-    GraphTableSVG.setTextToSVGText(this, str, isLatexMode);    
+    GraphTableSVG.SVG.setTextToSVGText(this, str, isLatexMode);    
 };
 
 SVGTextElement.prototype.getX = function () {

@@ -41,7 +41,7 @@ namespace GraphTableSVG {
 
 
 
-            this._svgGroup = createGroup();
+            this._svgGroup = SVG.createGroup();
             this._table = parent;
 
             this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
@@ -55,9 +55,9 @@ namespace GraphTableSVG {
 
 
             this._svgBackground = Cell.createCellRectangle(this.defaultBackgroundClass);
-            this._svgText = createText(this.defaultTextClass);
+            this._svgText = SVG.createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
-            setDefaultValue(this.svgBackground);
+            SVG.setDefaultValue(this.svgBackground);
 
             this.svgGroup.appendChild(this.svgText);
 
@@ -71,10 +71,10 @@ namespace GraphTableSVG {
             //this.parent.svgGroup.appendChild(this.svgGroup);
 
 
-            this.topBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.leftBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.rightBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.bottomBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.topBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            this.leftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            this.rightBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            this.bottomBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.table.svgGroup.appendChild(this.topBorder);
             this.table.svgGroup.appendChild(this.leftBorder);
             this.table.svgGroup.appendChild(this.rightBorder);
@@ -632,7 +632,7 @@ namespace GraphTableSVG {
             if (className == null) {
                 rect.style.fill = "#ffffff";
             } else {
-                return GraphTableSVG.createRectangle(className);
+                return GraphTableSVG.SVG.createRectangle(className);
             }
             return rect;
         }

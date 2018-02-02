@@ -72,7 +72,7 @@ namespace GraphTableSVG {
             }
             if (i < this.height) {
                 for (let x = 0; x < width; x++) {
-                    this.cells[i][x].topBorder = createLine(0, 0, 0, 0);
+                    this.cells[i][x].topBorder = SVG.createLine(0, 0, 0, 0);
                     this.svgGroup.appendChild(this.cells[i][x].topBorder);
                 }
             }
@@ -249,7 +249,7 @@ namespace GraphTableSVG {
                 }
                 if (i < this.height) {
                     for (let y = 0; y < this.height; y++) {
-                        this.cells[y][i].leftBorder = createLine(0, 0, 0, 0);
+                        this.cells[y][i].leftBorder = SVG.createLine(0, 0, 0, 0);
                         this.svgGroup.appendChild(this.cells[y][i].leftBorder);
                     }
                 }

@@ -92,14 +92,26 @@
             }
 
         }
-        export function GetURLParameters(): Object {
-            const arg: Object = new Object;
+        export function getURLParameters(): { [key: string]: string; } {
+            const arg: { [key: string]: string; } = {};
             const pair = location.search.substring(1).split('&');
             for (let i = 0; pair[i]; i++) {
                 const kv = pair[i].split('=');
                 arg[kv[0]] = kv[1];
             }
             return arg;
+        }
+        export function setURLParametersToHTMLElements() {
+            const parameters = getURLParameters();
+            Object.keys(parameters).forEach((key) => {
+                const val = parameters[key]; // this は obj
+                const element = document.getElementById(key);
+                if (element != null) {
+                    if (element instanceof HTMLTextAreaElement) {
+                        element.value = val;
+                    }
+                }
+            }, parameters);
         }
 
 

@@ -16,7 +16,7 @@
             return this._edge;
         }
         constructor(graph: Graph, edge: Edge, text: string) {
-            this._svgText = createText();
+            this._svgText = SVG.createText();
             this.svgText.textContent = text;
             edge.svgGroup.appendChild(this.svgText);
             this._edge = edge;

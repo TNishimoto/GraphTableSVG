@@ -197,6 +197,7 @@ declare namespace GraphTableSVG {
         createVBACodeOfText(shapes: string, result: string[][]): void;
         private static markerCounter;
         static createMark(): SVGMarkerElement;
+        setStyleForPNG(): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -297,6 +298,7 @@ declare namespace GraphTableSVG {
         save(): void;
         static setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null): void;
         createVBACode(id: number): string[];
+        setStyleForPNG(): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -501,6 +503,7 @@ declare namespace GraphTableSVG {
         この頂点が廃棄されていたらTrueを返します。
         */
         readonly isDisposed: boolean;
+        setStyleForPNG(): void;
         createVBACode(main: string[], sub: string[][], indexDic: {
             [key: string]: number;
         }): void;
@@ -625,6 +628,11 @@ declare namespace GraphTableSVG {
         item: T;
         children: LogicTree<T>[];
         constructor(item: T, children?: LogicTree<T>[]);
+    }
+}
+declare namespace GraphTableSVG {
+    namespace SVG {
+        function savePNG(svgIDorElement: string | HTMLElement): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -1074,58 +1082,61 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    /**
-     * SVGLineElementを生成します。
-     * @param x
-     * @param y
-     * @param x2
-     * @param y2
-     * @param className
-     */
-    function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
-    /**
-     * SVGPathElementを生成します。
-     * @param x
-     * @param y
-     * @param x2
-     * @param y2
-     * @param className
-     */
-    function createPath(x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
-    /**
-     * SVGTextElementを生成します。
-     * @param className
-     */
-    function createText(className?: string | null): SVGTextElement;
-    /**
-     * SVGRectElementを生成します。
-     * @param className
-     */
-    function createRectangle(className?: string | null): SVGRectElement;
-    /**
-     * SVGGElementを生成します。
-     * @param className
-     */
-    function createGroup(className?: string | null): SVGGElement;
-    /**
-     * Styleの設定を消去します。
-     * @param style
-     */
-    function resetStyle(style: CSSStyleDeclaration): void;
-    /**
-     * SVGCircleElementを生成します。
-     * @param className
-     */
-    function createCircle(className?: string | null): SVGCircleElement;
-    function createMarker(className?: string | null): SVGMarkerElement;
-    function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
-    function setTextToTextPath(path: SVGTextPathElement, str: string, isLatexMode: boolean): void;
-    function setTextToSVGText(path: SVGTextElement, str: string, isLatexMode: boolean): void;
-    function setDefaultValue(item: SVGCircleElement | SVGRectElement): void;
-    function setClass(svg: SVGElement, className?: string | null): void;
-    function setCSSToStyle(svg: HTMLElement): void;
-    function setCSSToAllElementStyles(item: HTMLElement | string): void;
-    function getStyleSheet(name: string): CSSStyleDeclaration | null;
+    namespace SVG {
+        /**
+         * SVGLineElementを生成します。
+         * @param x
+         * @param y
+         * @param x2
+         * @param y2
+         * @param className
+         */
+        function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
+        /**
+         * SVGPathElementを生成します。
+         * @param x
+         * @param y
+         * @param x2
+         * @param y2
+         * @param className
+         */
+        function createPath(x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
+        /**
+         * SVGTextElementを生成します。
+         * @param className
+         */
+        function createText(className?: string | null): SVGTextElement;
+        /**
+         * SVGRectElementを生成します。
+         * @param className
+         */
+        function createRectangle(className?: string | null): SVGRectElement;
+        /**
+         * SVGGElementを生成します。
+         * @param className
+         */
+        function createGroup(className?: string | null): SVGGElement;
+        /**
+         * Styleの設定を消去します。
+         * @param style
+         */
+        function resetStyle(style: CSSStyleDeclaration): void;
+        /**
+         * SVGCircleElementを生成します。
+         * @param className
+         */
+        function createCircle(className?: string | null): SVGCircleElement;
+        function createMarker(className?: string | null): SVGMarkerElement;
+        function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
+        function setTextToTextPath(path: SVGTextPathElement, str: string, isLatexMode: boolean): void;
+        function setTextToSVGText(path: SVGTextElement, str: string, isLatexMode: boolean): void;
+        function setDefaultValue(item: SVGCircleElement | SVGRectElement): void;
+        function setClass(svg: SVGElement, className?: string | null): void;
+        function setCSSToStyle(svg: HTMLElement): void;
+        function setCSSToAllElementStyles(item: HTMLElement | string): void;
+        function getStyleSheet(name: string): CSSStyleDeclaration | null;
+        function setStyleForPNG(svg: SVGElement): void;
+    }
 }
 declare namespace GraphTableSVG {
     /**

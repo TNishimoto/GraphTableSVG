@@ -170,11 +170,11 @@
             this._observer.observe(this.svgGroup, option1);
 
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgPath = createPath(0, 0, 0, 0, p);
+            this._svgPath = SVG.createPath(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this.svgPath);
             this._svgPath.id = `path-${this.objectID}`;
 
-            [this._svgText, this._svgTextPath] = createTextPath(null);
+            [this._svgText, this._svgTextPath] = SVG.createTextPath(null);
             this.svgGroup.appendChild(this._svgText);
             this._svgText.appendChild(this._svgTextPath);
             this._svgTextPath.href.baseVal = `#${this._svgPath.id}`
@@ -438,7 +438,7 @@
          */
         public static create(graph: Graph, className: string | null = graph.defaultEdgeClass, defaultSurfaceType: string | null = null): GraphTableSVG.Edge {
             className = className != null ? className : graph.defaultVertexClass;
-            const g = createGroup(className);
+            const g = SVG.createGroup(className);
             graph.svgGroup.appendChild(g);
 
             const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
@@ -541,10 +541,18 @@
 
         private static markerCounter: number = 0;
         public static createMark(): SVGMarkerElement {
-            var marker = GraphTableSVG.createMarker();
+            var marker = GraphTableSVG.SVG.createMarker();
             marker.id = `marker-${Edge.markerCounter++}`;
             return marker;
         }
+        /*
+        public setStyleForPNG() {
+            SVG.setStyleForPNG(this.svgPath);
+            SVG.setStyleForPNG(this.svgText);
+            SVG.setStyleForPNG(this.svgTextPath);
+
+        }
+        */
     }
     /*
     export class LineEdge extends Edge {

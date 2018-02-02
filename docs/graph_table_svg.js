@@ -95,6 +95,47 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    var Common;
+    (function (Common) {
+        function clearGraphTables(svg, items) {
+            for (let i = 0; i < items.length; i++) {
+                var item = items[i];
+                if (item instanceof GraphTableSVG.Graph) {
+                    item.removeGraph(svg);
+                }
+                else if (item instanceof GraphTableSVG.Table) {
+                    item.removeTable(svg);
+                }
+            }
+        }
+        Common.clearGraphTables = clearGraphTables;
+        function IsDescendantOfBody(node) {
+            const parent = node.parentNode;
+            if (parent == null) {
+                return false;
+            }
+            else if (parent == document.body) {
+                return true;
+            }
+            else {
+                return Common.IsDescendantOfBody(parent);
+            }
+        }
+        Common.IsDescendantOfBody = IsDescendantOfBody;
+        function getRegion(items) {
+            const rects = items.map((v) => v.getRegion());
+            if (rects.length > 0) {
+                return GraphTableSVG.Rectangle.merge(rects);
+            }
+            else {
+                return new GraphTableSVG.Rectangle();
+            }
+        }
+        Common.getRegion = getRegion;
+    })(Common = GraphTableSVG.Common || (GraphTableSVG.Common = {}));
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     /**
     ノードの並び順です。
     */
@@ -262,10 +303,10 @@ var GraphTableSVG;
             const option1 = { attributes: true };
             this._observer.observe(this.svgGroup, option1);
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgPath = GraphTableSVG.createPath(0, 0, 0, 0, p);
+            this._svgPath = GraphTableSVG.SVG.createPath(0, 0, 0, 0, p);
             this.svgGroup.appendChild(this.svgPath);
             this._svgPath.id = `path-${this.objectID}`;
-            [this._svgText, this._svgTextPath] = GraphTableSVG.createTextPath(null);
+            [this._svgText, this._svgTextPath] = GraphTableSVG.SVG.createTextPath(null);
             this.svgGroup.appendChild(this._svgText);
             this._svgText.appendChild(this._svgTextPath);
             this._svgTextPath.href.baseVal = `#${this._svgPath.id}`;
@@ -627,7 +668,7 @@ var GraphTableSVG;
          */
         static create(graph, className = graph.defaultEdgeClass, defaultSurfaceType = null) {
             className = className != null ? className : graph.defaultVertexClass;
-            const g = GraphTableSVG.createGroup(className);
+            const g = GraphTableSVG.SVG.createGroup(className);
             graph.svgGroup.appendChild(g);
             const type1 = g.getPropertyStyleValue(GraphTableSVG.Vertex.defaultSurfaceType);
             const type = defaultSurfaceType != null ? defaultSurfaceType :
@@ -717,9 +758,14 @@ var GraphTableSVG;
             */
         }
         static createMark() {
-            var marker = GraphTableSVG.createMarker();
+            var marker = GraphTableSVG.SVG.createMarker();
             marker.id = `marker-${Edge.markerCounter++}`;
             return marker;
+        }
+        setStyleForPNG() {
+            GraphTableSVG.SVG.setStyleForPNG(this.svgPath);
+            GraphTableSVG.SVG.setStyleForPNG(this.svgText);
+            GraphTableSVG.SVG.setStyleForPNG(this.svgTextPath);
         }
     }
     //public static defaultBeginConnectorPosition: string = "--default-begin-connector-position";
@@ -831,7 +877,7 @@ var GraphTableSVG;
             this._vertices = new Array(0);
             this._edges = new Array(0);
             this._roots = [];
-            this._svgGroup = GraphTableSVG.createGroup(className);
+            this._svgGroup = GraphTableSVG.SVG.createGroup(className);
             box.appendChild(this.svgGroup);
             this._svgGroup.setAttribute(Graph.typeName, "graph");
         }
@@ -1123,27 +1169,6 @@ var GraphTableSVG;
             text.setAttribute('y', y.toString());
             text.setAttribute('x', x.toString());
         }
-        static IsDescendantOfBody(node) {
-            const parent = node.parentNode;
-            if (parent == null) {
-                return false;
-            }
-            else if (parent == document.body) {
-                return true;
-            }
-            else {
-                return Graph.IsDescendantOfBody(parent);
-            }
-        }
-        static getRegion(items) {
-            const rects = items.map((v) => v.getRegion());
-            if (rects.length > 0) {
-                return GraphTableSVG.Rectangle.merge(rects);
-            }
-            else {
-                return new GraphTableSVG.Rectangle();
-            }
-        }
         createVBACode(id) {
             const dic = {};
             this.vertices.forEach((v, i) => dic[v.objectID] = i);
@@ -1162,6 +1187,10 @@ var GraphTableSVG;
             lines.push(`End Sub`);
             lines.push(y1);
             return lines;
+        }
+        setStyleForPNG() {
+            this.vertices.forEach((v) => v.setStyleForPNG());
+            this.edges.forEach((v) => v.setStyleForPNG());
         }
     }
     Graph.idCounter = 0;
@@ -1339,7 +1368,7 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     class EdgeText {
         constructor(graph, edge, text) {
-            this._svgText = GraphTableSVG.createText();
+            this._svgText = GraphTableSVG.SVG.createText();
             this.svgText.textContent = text;
             edge.svgGroup.appendChild(this.svgText);
             this._edge = edge;
@@ -1452,7 +1481,7 @@ var GraphTableSVG;
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "vertex");
             this._graph = __graph;
             __graph.add(this);
-            this._svgText = GraphTableSVG.createText(this.svgGroup.getPropertyStyleValue(Vertex.defaultTextClass));
+            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(Vertex.defaultTextClass));
             this.svgText.textContent = text;
             this.svgGroup.appendChild(this.svgText);
             this._observer = new MutationObserver(this.observerFunc);
@@ -1515,7 +1544,7 @@ var GraphTableSVG;
         このVertexがBodyの子孫であるとき、Trueを返します。
         */
         get isLocated() {
-            return GraphTableSVG.Graph.IsDescendantOfBody(this.svgGroup);
+            return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }
         /**
         このVertexのObjectIDを返します。
@@ -1752,7 +1781,7 @@ var GraphTableSVG;
          */
         static create(graph, className = null, defaultSurfaceType = null) {
             className = className != null ? className : graph.defaultVertexClass;
-            const g = GraphTableSVG.createGroup(className);
+            const g = GraphTableSVG.SVG.createGroup(className);
             graph.svgGroup.appendChild(g);
             const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
             const type = defaultSurfaceType != null ? defaultSurfaceType :
@@ -1845,6 +1874,11 @@ var GraphTableSVG;
         get isDisposed() {
             return this.graph == null;
         }
+        setStyleForPNG() {
+            if (this.surface != null)
+                GraphTableSVG.SVG.setStyleForPNG(this.surface);
+            GraphTableSVG.SVG.setStyleForPNG(this.svgText);
+        }
         createVBACode(main, sub, indexDic) {
             if (this.graph != null) {
                 //const subline: string[] = [];
@@ -1900,9 +1934,9 @@ var GraphTableSVG;
          */
         constructor(__graph, group, text = "") {
             super(__graph, group, text);
-            this._svgCircle = GraphTableSVG.createCircle(this.svgGroup.getPropertyStyleValue(GraphTableSVG.Vertex.defaultSurfaceClass));
+            this._svgCircle = GraphTableSVG.SVG.createCircle(this.svgGroup.getPropertyStyleValue(GraphTableSVG.Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
-            GraphTableSVG.setDefaultValue(this.svgCircle);
+            GraphTableSVG.SVG.setDefaultValue(this.svgCircle);
         }
         get svgCircle() {
             return this._svgCircle;
@@ -2047,9 +2081,9 @@ var GraphTableSVG;
     class RectangleVertex extends GraphTableSVG.Vertex {
         constructor(__graph, group, text = "") {
             super(__graph, group, text);
-            this._svgRectangle = GraphTableSVG.createRectangle(this.svgGroup.getPropertyStyleValue(GraphTableSVG.Vertex.defaultSurfaceClass));
+            this._svgRectangle = GraphTableSVG.SVG.createRectangle(this.svgGroup.getPropertyStyleValue(GraphTableSVG.Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
-            GraphTableSVG.setDefaultValue(this.svgRectangle);
+            GraphTableSVG.SVG.setDefaultValue(this.svgRectangle);
             this.svgRectangle.x.baseVal.value = -this.width / 2;
             this.svgRectangle.y.baseVal.value = -this.height / 2;
         }
@@ -2416,6 +2450,100 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    //https://st40.xyz/one-run/article/133/
+    var SVG;
+    (function (SVG) {
+        function savePNG(svgIDorElement) {
+            const userAgent = window.navigator.userAgent;
+            if (userAgent.indexOf("Firefox") != -1) {
+                alert(`Firefox is not supported!`);
+                return;
+            }
+            var canvas = document.createElement("canvas");
+            let svg = "";
+            if (typeof (svgIDorElement) == "string") {
+                const s1 = document.getElementById(svgIDorElement);
+                if (s1 == null)
+                    throw Error("Error");
+                svg = s1.outerHTML;
+            }
+            else {
+                svg = svgIDorElement.outerHTML;
+            }
+            var img = document.createElement("img");
+            img.src = "data:image/svg+xml;base64," + btoa(svg);
+            img.onload = () => {
+                console.log("hello");
+                const ctx = canvas.getContext("2d");
+                if (ctx == null)
+                    throw Error("Error");
+                ctx.drawImage(img, 0, 0);
+                saveCanvas("png", canvas);
+            };
+            /*
+            img.onload = function() {
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, 200, 200);
+            }
+            */
+        }
+        SVG.savePNG = savePNG;
+        // canvas上のイメージを保存
+        function saveCanvas(saveType, canvas) {
+            let imageType = "image/png";
+            let fileName = "sample.png";
+            if (saveType === "jpeg") {
+                imageType = "image/jpeg";
+                fileName = "sample.jpg";
+            }
+            //var canvas = document.getElementById("canvas");
+            // base64エンコードされたデータを取得 「data:image/png;base64,iVBORw0k～」
+            const base64 = canvas.toDataURL(imageType);
+            // base64データをblobに変換
+            const blob = Base64toBlob(base64);
+            // blobデータをa要素を使ってダウンロード
+            saveBlob(blob, fileName);
+        }
+        // Base64データをBlobデータに変換
+        function Base64toBlob(base64) {
+            // カンマで分割して以下のようにデータを分ける
+            // tmp[0] : データ形式（data:image/png;base64）
+            // tmp[1] : base64データ（iVBORw0k～）
+            const tmp = base64.split(',');
+            // base64データの文字列をデコード
+            const data = atob(tmp[1]);
+            // tmp[0]の文字列（data:image/png;base64）からコンテンツタイプ（image/png）部分を取得
+            const mime = tmp[0].split(':')[1].split(';')[0];
+            //  1文字ごとにUTF-16コードを表す 0から65535 の整数を取得
+            const buf = new Uint8Array(data.length);
+            for (let i = 0; i < data.length; i++) {
+                buf[i] = data.charCodeAt(i);
+            }
+            // blobデータを作成
+            const blob = new Blob([buf], { type: mime });
+            return blob;
+        }
+        // 画像のダウンロード
+        function saveBlob(blob, fileName) {
+            var url = (window.URL);
+            // ダウンロード用のURL作成
+            var dataUrl = url.createObjectURL(blob);
+            // イベント作成
+            var event = document.createEvent("MouseEvents");
+            event.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            // a要素を作成
+            var a = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+            // ダウンロード用のURLセット
+            a.href = dataUrl;
+            // ファイル名セット
+            a.download = fileName;
+            // イベントの発火
+            a.dispatchEvent(event);
+        }
+    })(SVG = GraphTableSVG.SVG || (GraphTableSVG.SVG = {}));
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     class Cell {
         /*
         private _textObserver: MutationObserver;
@@ -2445,7 +2573,7 @@ var GraphTableSVG;
                     }
                 }
             };
-            this._svgGroup = GraphTableSVG.createGroup();
+            this._svgGroup = GraphTableSVG.SVG.createGroup();
             this._table = parent;
             this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
             if (cellClass != null)
@@ -2455,9 +2583,9 @@ var GraphTableSVG;
             this.cellY = _py;
             this._masterID = this.ID;
             this._svgBackground = Cell.createCellRectangle(this.defaultBackgroundClass);
-            this._svgText = GraphTableSVG.createText(this.defaultTextClass);
+            this._svgText = GraphTableSVG.SVG.createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
-            GraphTableSVG.setDefaultValue(this.svgBackground);
+            GraphTableSVG.SVG.setDefaultValue(this.svgBackground);
             this.svgGroup.appendChild(this.svgText);
             /*
             const circle = createRectangle();
@@ -2466,10 +2594,10 @@ var GraphTableSVG;
             this.svgGroup.appendChild(circle);
             */
             //this.parent.svgGroup.appendChild(this.svgGroup);
-            this.topBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.leftBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.rightBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
-            this.bottomBorder = GraphTableSVG.createLine(0, 0, 0, 0, borderClass);
+            this.topBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            this.leftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            this.rightBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            this.bottomBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.table.svgGroup.appendChild(this.topBorder);
             this.table.svgGroup.appendChild(this.leftBorder);
             this.table.svgGroup.appendChild(this.rightBorder);
@@ -2699,7 +2827,7 @@ var GraphTableSVG;
         CellがDocumentのDOMに所属しているかどうかを返します。
         */
         get isLocated() {
-            return GraphTableSVG.Graph.IsDescendantOfBody(this.svgGroup);
+            return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }
         /**
         セルが取るべき幅を返します。
@@ -2750,7 +2878,7 @@ var GraphTableSVG;
          *セルの位置を再計算します。
          */
         relocation() {
-            if (!GraphTableSVG.Graph.IsDescendantOfBody(this.svgGroup))
+            if (!GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup))
                 return;
             this.topBorder.x1.baseVal.value = this.x;
             this.topBorder.x2.baseVal.value = this.x + this.width;
@@ -2998,7 +3126,7 @@ var GraphTableSVG;
                 rect.style.fill = "#ffffff";
             }
             else {
-                return GraphTableSVG.createRectangle(className);
+                return GraphTableSVG.SVG.createRectangle(className);
             }
             return rect;
         }
@@ -3088,7 +3216,7 @@ SVGElement.prototype.getPropertyStyleValue = function (name) {
             return null;
         }
         else {
-            let css = GraphTableSVG.getStyleSheet(r);
+            let css = GraphTableSVG.SVG.getStyleSheet(r);
             if (css == null)
                 css = getComputedStyle(item);
             const p2 = css.getPropertyValue(name).trim();
@@ -3109,10 +3237,10 @@ SVGElement.prototype.setPropertyStyleValue = function (name, value) {
     item.style.setProperty(name, value);
 };
 SVGTextPathElement.prototype.setTextContent = function (str, isLatexMode = false) {
-    GraphTableSVG.setTextToTextPath(this, str, isLatexMode);
+    GraphTableSVG.SVG.setTextToTextPath(this, str, isLatexMode);
 };
 SVGTextElement.prototype.setTextContent = function (str, isLatexMode = false) {
-    GraphTableSVG.setTextToSVGText(this, str, isLatexMode);
+    GraphTableSVG.SVG.setTextToSVGText(this, str, isLatexMode);
 };
 SVGTextElement.prototype.getX = function () {
     const p = this;
@@ -3727,7 +3855,7 @@ var GraphTableSVG;
             }
             if (i < this.height) {
                 for (let x = 0; x < width; x++) {
-                    this.cells[i][x].topBorder = GraphTableSVG.createLine(0, 0, 0, 0);
+                    this.cells[i][x].topBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0);
                     this.svgGroup.appendChild(this.cells[i][x].topBorder);
                 }
             }
@@ -3897,7 +4025,7 @@ var GraphTableSVG;
                 }
                 if (i < this.height) {
                     for (let y = 0; y < this.height; y++) {
-                        this.cells[y][i].leftBorder = GraphTableSVG.createLine(0, 0, 0, 0);
+                        this.cells[y][i].leftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0);
                         this.svgGroup.appendChild(this.cells[y][i].leftBorder);
                     }
                 }
@@ -4121,374 +4249,384 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    /**
-     * SVGLineElementを生成します。
-     * @param x
-     * @param y
-     * @param x2
-     * @param y2
-     * @param className
-     */
-    function createLine(x, y, x2, y2, className = null) {
-        const line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line1.x1.baseVal.value = x;
-        line1.x2.baseVal.value = x2;
-        line1.y1.baseVal.value = y;
-        line1.y2.baseVal.value = y2;
-        //line1.style.color = "black";
-        if (className != null) {
-            line1.setAttribute("class", className);
-        }
-        else {
-            line1.style.stroke = "black";
-        }
-        //line1.style.visibility = "hidden";
-        //line1.style.strokeWidth = `${5}`
-        //line1.setAttribute('stroke', 'black');
-        return line1;
-    }
-    GraphTableSVG.createLine = createLine;
-    /**
-     * SVGPathElementを生成します。
-     * @param x
-     * @param y
-     * @param x2
-     * @param y2
-     * @param className
-     */
-    function createPath(x, y, x2, y2, className = null) {
-        const line1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        line1.setAttribute("d", `M ${x} ${y} M ${x2} ${y2}`);
-        if (className != null) {
-            line1.setAttribute("class", className);
-        }
-        else {
-            line1.style.stroke = "black";
-            line1.style.fill = "none";
-        }
-        return line1;
-    }
-    GraphTableSVG.createPath = createPath;
-    /**
-     * SVGTextElementを生成します。
-     * @param className
-     */
-    function createText(className = null) {
-        const _svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        //_svgText.style.textAnchor = "middle";
-        if (className == null) {
-            _svgText.style.fill = "black";
-            _svgText.style.fontSize = "14px";
-            _svgText.style.fontWeight = "bold";
-            _svgText.style.fontFamily = "Yu Gothic";
-        }
-        else {
-            _svgText.setAttribute("class", className);
-            //_svgText.className = className;
-        }
-        return _svgText;
-    }
-    GraphTableSVG.createText = createText;
-    /**
-     * SVGRectElementを生成します。
-     * @param className
-     */
-    function createRectangle(className = null) {
-        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.width.baseVal.value = 30;
-        rect.height.baseVal.value = 30;
-        if (className == null) {
-            rect.style.fill = "#ffffff";
-            rect.style.stroke = "#000000";
-        }
-        else {
-            rect.setAttribute("class", className);
-        }
-        return rect;
-    }
-    GraphTableSVG.createRectangle = createRectangle;
-    /**
-     * SVGGElementを生成します。
-     * @param className
-     */
-    function createGroup(className = null) {
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        if (className != null) {
-            g.setAttribute("class", className);
-        }
-        return g;
-    }
-    GraphTableSVG.createGroup = createGroup;
-    /**
-     * Styleの設定を消去します。
-     * @param style
-     */
-    function resetStyle(style) {
-        style.stroke = null;
-        style.strokeWidth = null;
-        style.fill = null;
-        style.fontSize = null;
-        style.fontWeight = null;
-        style.fontFamily = null;
-    }
-    GraphTableSVG.resetStyle = resetStyle;
-    const defaultRadiusName = "--default-radius";
-    const defaultWidthName = "--default-width";
-    const defaultHeightName = "--default-height";
-    /**
-     * SVGCircleElementを生成します。
-     * @param className
-     */
-    function createCircle(className = null) {
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.r.baseVal.value = 30;
-        if (className == null) {
-            circle.style.stroke = "black";
-            circle.style.strokeWidth = "1pt";
-            circle.style.fill = "#ffffff";
-        }
-        else {
-            circle.setAttribute("class", className);
-            //const s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
-            //circle.className = className
-            //console.log("d : " + circle.setAttribute("class", className));
-        }
-        //circle.style.fill = "#ffffff";
-        circle.cx.baseVal.value = 0;
-        circle.cy.baseVal.value = 0;
-        //circle.r.baseVal.value = r;
-        return circle;
-    }
-    GraphTableSVG.createCircle = createCircle;
-    function createMarker(className = null) {
-        const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
-        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        poly.setAttribute("points", "0,0 0,10 10,5");
-        poly.setAttribute("fill", "red");
-        marker.setAttribute("markerUnits", "userSpaceOnUse");
-        marker.setAttribute("markerHeight", "15");
-        marker.setAttribute("markerWidth", "15");
-        marker.refX.baseVal.value = 5;
-        marker.refY.baseVal.value = 5;
-        marker.setAttribute("preserveAspectRatio", "none");
-        marker.setAttribute("orient", "auto-start-reverse");
-        marker.setAttribute("viewBox", "0 0 10 10");
-        marker.appendChild(poly);
-        if (className != null) {
-            marker.setAttribute("class", className);
-        }
-        return marker;
-    }
-    GraphTableSVG.createMarker = createMarker;
-    function createTextPath(className = null) {
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        ;
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
-        text.appendChild(path);
-        path.style.fill = "black";
-        path.style.fontSize = "14px";
-        path.style.fontWeight = "bold";
-        path.style.fontFamily = "Yu Gothic";
-        return [text, path];
-    }
-    GraphTableSVG.createTextPath = createTextPath;
-    function createTextSpans(str, className = null, fontsize = 12, fstdx = null, fstdy = null) {
-        let r = [];
-        str += "_";
-        //const p: SVGTextElement = this;
-        //p.textContent = "";
-        //const h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
-        let isFst = true;
-        let mode = "";
-        let tmp = "";
-        const char_dy = (1 * fontsize) / 3;
-        let lastMode = "none";
-        const smallFontSize = (2 * fontsize) / 3;
-        for (let i = 0; i < str.length; i++) {
-            const c = str[i];
-            if (c == "_" || c == "{" || c == "^" || c == "}") {
-                mode += c;
-                if (mode == "_{}") {
-                    const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-                    tspan.textContent = tmp;
-                    tspan.setAttribute("dy", `${char_dy}`);
-                    tspan.setAttribute("data-script", "subscript");
-                    tspan.style.fontSize = `${smallFontSize}pt`;
-                    r.push(tspan);
-                    lastMode = "down";
-                    mode = "";
-                    tmp = "";
-                }
-                else if (mode == "^{}") {
-                    const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-                    tspan.textContent = tmp;
-                    tspan.setAttribute("dy", `-${char_dy}`);
-                    tspan.style.fontSize = `${smallFontSize}pt`;
-                    tspan.setAttribute("data-script", "superscript");
-                    r.push(tspan);
-                    lastMode = "up";
-                    mode = "";
-                    tmp = "";
-                }
-                else if (mode == "_" || mode == "^") {
-                    const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-                    tspan.textContent = tmp;
-                    const normaldy = lastMode == "up" ? char_dy : lastMode == "down" ? -char_dy : 0;
-                    if (isFst) {
-                        if (fstdx != null)
-                            tspan.setAttribute("dx", `${fstdx}`);
-                        if (fstdy != null)
-                            tspan.setAttribute("dy", `${fstdy}`);
-                    }
-                    else {
-                        tspan.setAttribute("dy", `${normaldy}`);
-                    }
-                    r.push(tspan);
-                    lastMode = "none";
-                    tmp = "";
-                    isFst = false;
-                }
+    var SVG;
+    (function (SVG) {
+        /**
+         * SVGLineElementを生成します。
+         * @param x
+         * @param y
+         * @param x2
+         * @param y2
+         * @param className
+         */
+        function createLine(x, y, x2, y2, className = null) {
+            const line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line1.x1.baseVal.value = x;
+            line1.x2.baseVal.value = x2;
+            line1.y1.baseVal.value = y;
+            line1.y2.baseVal.value = y2;
+            //line1.style.color = "black";
+            if (className != null) {
+                line1.setAttribute("class", className);
             }
             else {
-                tmp += c;
+                line1.style.stroke = "black";
             }
+            //line1.style.visibility = "hidden";
+            //line1.style.strokeWidth = `${5}`
+            //line1.setAttribute('stroke', 'black');
+            return line1;
         }
-        return r;
-    }
-    function createSingleTextSpan(str, className = null) {
-        const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-        tspan.textContent = str;
-        return tspan;
-    }
-    function setTextToTextPath(path, str, isLatexMode) {
-        path.textContent = "";
-        const fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
-        if (isLatexMode) {
-            createTextSpans(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
-        }
-        else {
-            path.appendChild(createSingleTextSpan(str, null));
-        }
-    }
-    GraphTableSVG.setTextToTextPath = setTextToTextPath;
-    function setTextToSVGText(path, str, isLatexMode) {
-        path.textContent = "";
-        const fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
-        const fs = parseInt(fontSize);
-        let dx = 0;
-        str.split("\n").forEach((w) => {
-            let dy = fs;
-            let width = 0;
-            if (isLatexMode) {
-                createTextSpans(w, null, fs, dx, dy).forEach((v) => {
-                    path.appendChild(v);
-                    const rect = v.getBoundingClientRect();
-                    dx = 0;
-                    dy = 0;
-                    width += rect.width;
-                });
-                dy += fs;
+        SVG.createLine = createLine;
+        /**
+         * SVGPathElementを生成します。
+         * @param x
+         * @param y
+         * @param x2
+         * @param y2
+         * @param className
+         */
+        function createPath(x, y, x2, y2, className = null) {
+            const line1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            line1.setAttribute("d", `M ${x} ${y} M ${x2} ${y2}`);
+            if (className != null) {
+                line1.setAttribute("class", className);
             }
             else {
-                path.appendChild(createSingleTextSpan(w, null));
+                line1.style.stroke = "black";
+                line1.style.fill = "none";
             }
-            dx = -width;
-        });
-    }
-    GraphTableSVG.setTextToSVGText = setTextToSVGText;
-    function setDefaultValue(item) {
-        const className = item.getAttribute("class");
-        if (className != null) {
-            const style = getStyleSheet(className);
-            if (style != null) {
-                if (item instanceof SVGCircleElement) {
-                    const s = style.getPropertyValue(defaultRadiusName).trim();
-                    if (s.length > 0) {
-                        item.r.baseVal.value = Number(s);
+            return line1;
+        }
+        SVG.createPath = createPath;
+        /**
+         * SVGTextElementを生成します。
+         * @param className
+         */
+        function createText(className = null) {
+            const _svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            //_svgText.style.textAnchor = "middle";
+            if (className == null) {
+                _svgText.style.fill = "black";
+                _svgText.style.fontSize = "14px";
+                _svgText.style.fontWeight = "bold";
+                _svgText.style.fontFamily = "Yu Gothic";
+            }
+            else {
+                _svgText.setAttribute("class", className);
+                //_svgText.className = className;
+            }
+            return _svgText;
+        }
+        SVG.createText = createText;
+        /**
+         * SVGRectElementを生成します。
+         * @param className
+         */
+        function createRectangle(className = null) {
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.width.baseVal.value = 30;
+            rect.height.baseVal.value = 30;
+            if (className == null) {
+                rect.style.fill = "#ffffff";
+                rect.style.stroke = "#000000";
+            }
+            else {
+                rect.setAttribute("class", className);
+            }
+            return rect;
+        }
+        SVG.createRectangle = createRectangle;
+        /**
+         * SVGGElementを生成します。
+         * @param className
+         */
+        function createGroup(className = null) {
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            if (className != null) {
+                g.setAttribute("class", className);
+            }
+            return g;
+        }
+        SVG.createGroup = createGroup;
+        /**
+         * Styleの設定を消去します。
+         * @param style
+         */
+        function resetStyle(style) {
+            style.stroke = null;
+            style.strokeWidth = null;
+            style.fill = null;
+            style.fontSize = null;
+            style.fontWeight = null;
+            style.fontFamily = null;
+        }
+        SVG.resetStyle = resetStyle;
+        const defaultRadiusName = "--default-radius";
+        const defaultWidthName = "--default-width";
+        const defaultHeightName = "--default-height";
+        /**
+         * SVGCircleElementを生成します。
+         * @param className
+         */
+        function createCircle(className = null) {
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.r.baseVal.value = 30;
+            if (className == null) {
+                circle.style.stroke = "black";
+                circle.style.strokeWidth = "1pt";
+                circle.style.fill = "#ffffff";
+            }
+            else {
+                circle.setAttribute("class", className);
+                //const s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
+                //circle.className = className
+                //console.log("d : " + circle.setAttribute("class", className));
+            }
+            //circle.style.fill = "#ffffff";
+            circle.cx.baseVal.value = 0;
+            circle.cy.baseVal.value = 0;
+            //circle.r.baseVal.value = r;
+            return circle;
+        }
+        SVG.createCircle = createCircle;
+        function createMarker(className = null) {
+            const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+            const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            poly.setAttribute("points", "0,0 0,10 10,5");
+            poly.setAttribute("fill", "red");
+            marker.setAttribute("markerUnits", "userSpaceOnUse");
+            marker.setAttribute("markerHeight", "15");
+            marker.setAttribute("markerWidth", "15");
+            marker.refX.baseVal.value = 5;
+            marker.refY.baseVal.value = 5;
+            marker.setAttribute("preserveAspectRatio", "none");
+            marker.setAttribute("orient", "auto-start-reverse");
+            marker.setAttribute("viewBox", "0 0 10 10");
+            marker.appendChild(poly);
+            if (className != null) {
+                marker.setAttribute("class", className);
+            }
+            return marker;
+        }
+        SVG.createMarker = createMarker;
+        function createTextPath(className = null) {
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            ;
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+            text.appendChild(path);
+            path.style.fill = "black";
+            path.style.fontSize = "14px";
+            path.style.fontWeight = "bold";
+            path.style.fontFamily = "Yu Gothic";
+            return [text, path];
+        }
+        SVG.createTextPath = createTextPath;
+        function createTextSpans(str, className = null, fontsize = 12, fstdx = null, fstdy = null) {
+            let r = [];
+            str += "_";
+            //const p: SVGTextElement = this;
+            //p.textContent = "";
+            //const h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
+            let isFst = true;
+            let mode = "";
+            let tmp = "";
+            const char_dy = (1 * fontsize) / 3;
+            let lastMode = "none";
+            const smallFontSize = (2 * fontsize) / 3;
+            for (let i = 0; i < str.length; i++) {
+                const c = str[i];
+                if (c == "_" || c == "{" || c == "^" || c == "}") {
+                    mode += c;
+                    if (mode == "_{}") {
+                        const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan.textContent = tmp;
+                        tspan.setAttribute("dy", `${char_dy}`);
+                        tspan.setAttribute("data-script", "subscript");
+                        tspan.style.fontSize = `${smallFontSize}pt`;
+                        r.push(tspan);
+                        lastMode = "down";
+                        mode = "";
+                        tmp = "";
+                    }
+                    else if (mode == "^{}") {
+                        const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan.textContent = tmp;
+                        tspan.setAttribute("dy", `-${char_dy}`);
+                        tspan.style.fontSize = `${smallFontSize}pt`;
+                        tspan.setAttribute("data-script", "superscript");
+                        r.push(tspan);
+                        lastMode = "up";
+                        mode = "";
+                        tmp = "";
+                    }
+                    else if (mode == "_" || mode == "^") {
+                        const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan.textContent = tmp;
+                        const normaldy = lastMode == "up" ? char_dy : lastMode == "down" ? -char_dy : 0;
+                        if (isFst) {
+                            if (fstdx != null)
+                                tspan.setAttribute("dx", `${fstdx}`);
+                            if (fstdy != null)
+                                tspan.setAttribute("dy", `${fstdy}`);
+                        }
+                        else {
+                            tspan.setAttribute("dy", `${normaldy}`);
+                        }
+                        r.push(tspan);
+                        lastMode = "none";
+                        tmp = "";
+                        isFst = false;
                     }
                 }
                 else {
-                    const s1 = style.getPropertyValue(defaultWidthName).trim();
-                    if (s1.length > 0) {
-                        item.width.baseVal.value = Number(s1);
-                    }
-                    const s2 = style.getPropertyValue(defaultHeightName).trim();
-                    if (s2.length > 0) {
-                        item.height.baseVal.value = Number(s2);
-                    }
+                    tmp += c;
                 }
             }
+            return r;
         }
-    }
-    GraphTableSVG.setDefaultValue = setDefaultValue;
-    function setClass(svg, className = null) {
-        if (className == null) {
-            svg.removeAttribute("class");
+        function createSingleTextSpan(str, className = null) {
+            const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            tspan.textContent = str;
+            return tspan;
         }
-        else {
-            resetStyle(svg.style);
-            svg.setAttribute("class", className);
+        function setTextToTextPath(path, str, isLatexMode) {
+            path.textContent = "";
+            const fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
+            if (isLatexMode) {
+                createTextSpans(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
+            }
+            else {
+                path.appendChild(createSingleTextSpan(str, null));
+            }
         }
-    }
-    GraphTableSVG.setClass = setClass;
-    function getCSSStyle(svg) {
-        if (svg.getAttribute("class") == null) {
-            return null;
-        }
-        else {
-            const css = getComputedStyle(svg);
-            return css;
-        }
-    }
-    function setCSSToStyle(svg) {
-        const css = getCSSStyle(svg);
-        if (css != null) {
-            let css2 = css;
-            cssPropertyNames.forEach((v) => {
-                const value = css2.getPropertyValue(v).trim();
-                if (value.length > 0) {
-                    svg.style.setProperty(v, value);
+        SVG.setTextToTextPath = setTextToTextPath;
+        function setTextToSVGText(path, str, isLatexMode) {
+            path.textContent = "";
+            const fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
+            const fs = parseInt(fontSize);
+            let dx = 0;
+            str.split("\n").forEach((w) => {
+                let dy = fs;
+                let width = 0;
+                if (isLatexMode) {
+                    createTextSpans(w, null, fs, dx, dy).forEach((v) => {
+                        path.appendChild(v);
+                        const rect = v.getBoundingClientRect();
+                        dx = 0;
+                        dy = 0;
+                        width += rect.width;
+                    });
+                    dy += fs;
                 }
+                else {
+                    path.appendChild(createSingleTextSpan(w, null));
+                }
+                dx = -width;
             });
         }
-    }
-    GraphTableSVG.setCSSToStyle = setCSSToStyle;
-    function setCSSToAllElementStyles(item) {
-        if (typeof item == 'string') {
-            const svgBox = document.getElementById(item);
-            if (svgBox != null) {
-                setCSSToAllElementStyles(svgBox);
-            }
-        }
-        else {
-            setCSSToStyle(item);
-            for (let i = 0; i < item.children.length; i++) {
-                const child = item.children.item(i);
-                if (child != null) {
-                    setCSSToAllElementStyles(child);
-                }
-            }
-        }
-    }
-    GraphTableSVG.setCSSToAllElementStyles = setCSSToAllElementStyles;
-    const cssPropertyNames = ["font-size", "fill", "stroke"];
-    function getStyleSheet(name) {
-        const name2 = "." + name;
-        for (let i = 0; i < document.styleSheets.length; i++) {
-            const sheet = document.styleSheets.item(i);
-            const rules = sheet.cssRules || sheet.rules;
-            if (rules != null) {
-                for (let j = 0; j < rules.length; j++) {
-                    const rule = rules.item(j);
-                    if (rule.selectorText == name2) {
-                        return rule.style;
+        SVG.setTextToSVGText = setTextToSVGText;
+        function setDefaultValue(item) {
+            const className = item.getAttribute("class");
+            if (className != null) {
+                const style = getStyleSheet(className);
+                if (style != null) {
+                    if (item instanceof SVGCircleElement) {
+                        const s = style.getPropertyValue(defaultRadiusName).trim();
+                        if (s.length > 0) {
+                            item.r.baseVal.value = Number(s);
+                        }
+                    }
+                    else {
+                        const s1 = style.getPropertyValue(defaultWidthName).trim();
+                        if (s1.length > 0) {
+                            item.width.baseVal.value = Number(s1);
+                        }
+                        const s2 = style.getPropertyValue(defaultHeightName).trim();
+                        if (s2.length > 0) {
+                            item.height.baseVal.value = Number(s2);
+                        }
                     }
                 }
             }
         }
-        return null;
-    }
-    GraphTableSVG.getStyleSheet = getStyleSheet;
+        SVG.setDefaultValue = setDefaultValue;
+        function setClass(svg, className = null) {
+            if (className == null) {
+                svg.removeAttribute("class");
+            }
+            else {
+                resetStyle(svg.style);
+                svg.setAttribute("class", className);
+            }
+        }
+        SVG.setClass = setClass;
+        function getCSSStyle(svg) {
+            if (svg.getAttribute("class") == null) {
+                return null;
+            }
+            else {
+                const css = getComputedStyle(svg);
+                return css;
+            }
+        }
+        function setCSSToStyle(svg) {
+            const css = getCSSStyle(svg);
+            if (css != null) {
+                let css2 = css;
+                cssPropertyNames.forEach((v) => {
+                    const value = css2.getPropertyValue(v).trim();
+                    if (value.length > 0) {
+                        svg.style.setProperty(v, value);
+                    }
+                });
+            }
+        }
+        SVG.setCSSToStyle = setCSSToStyle;
+        function setCSSToAllElementStyles(item) {
+            if (typeof item == 'string') {
+                const svgBox = document.getElementById(item);
+                if (svgBox != null) {
+                    setCSSToAllElementStyles(svgBox);
+                }
+            }
+            else {
+                setCSSToStyle(item);
+                for (let i = 0; i < item.children.length; i++) {
+                    const child = item.children.item(i);
+                    if (child != null) {
+                        setCSSToAllElementStyles(child);
+                    }
+                }
+            }
+        }
+        SVG.setCSSToAllElementStyles = setCSSToAllElementStyles;
+        const cssPropertyNames = ["font-size", "fill", "stroke"];
+        function getStyleSheet(name) {
+            const name2 = "." + name;
+            for (let i = 0; i < document.styleSheets.length; i++) {
+                const sheet = document.styleSheets.item(i);
+                const rules = sheet.cssRules || sheet.rules;
+                if (rules != null) {
+                    for (let j = 0; j < rules.length; j++) {
+                        const rule = rules.item(j);
+                        if (rule.selectorText == name2) {
+                            return rule.style;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        SVG.getStyleSheet = getStyleSheet;
+        function setStyleForPNG(svg) {
+            const style = getComputedStyle(svg);
+            svg.style.fill = style.fill;
+            svg.style.stroke = style.stroke;
+            svg.style.strokeWidth = style.stroke;
+        }
+        SVG.setStyleForPNG = setStyleForPNG;
+    })(SVG = GraphTableSVG.SVG || (GraphTableSVG.SVG = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {

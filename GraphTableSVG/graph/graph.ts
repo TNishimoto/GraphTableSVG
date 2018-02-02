@@ -18,7 +18,7 @@
         protected _svgGroup: SVGGElement;
         protected _roots: Vertex[] = [];
         constructor(box: HTMLElement, className: string | null = null) {
-            this._svgGroup = GraphTableSVG.createGroup(className);
+            this._svgGroup = GraphTableSVG.SVG.createGroup(className);
             box.appendChild(this.svgGroup);
 
             this._svgGroup.setAttribute(Graph.typeName, "graph");
@@ -349,7 +349,12 @@
 
             return lines;
         }
-
+        /*
+        public setStyleForPNG() {
+            this.vertices.forEach((v) => v.setStyleForPNG());
+            this.edges.forEach((v) => v.setStyleForPNG());
+        }
+        */
     }
     
 

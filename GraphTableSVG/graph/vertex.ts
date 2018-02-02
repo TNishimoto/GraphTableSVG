@@ -48,7 +48,7 @@
             __graph.add(this);
 
 
-            this._svgText = createText(this.svgGroup.getPropertyStyleValue(Vertex.defaultTextClass));
+            this._svgText = SVG.createText(this.svgGroup.getPropertyStyleValue(Vertex.defaultTextClass));
             this.svgText.textContent = text;
             this.svgGroup.appendChild(this.svgText);
 
@@ -372,7 +372,7 @@
          */
         public static create(graph: Graph, className: string | null = null, defaultSurfaceType: string | null = null): GraphTableSVG.Vertex {
             className = className != null ? className : graph.defaultVertexClass;
-            const g = createGroup(className);
+            const g = SVG.createGroup(className);
             graph.svgGroup.appendChild(g);
 
             const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
@@ -468,6 +468,12 @@
         get isDisposed(): boolean {
             return this.graph == null;
         }
+        /*
+        public setStyleForPNG() {
+            if (this.surface != null) SVG.setStyleForPNG(this.surface);
+            SVG.setStyleForPNG(this.svgText);
+        }
+        */
 
         public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void{
             if (this.graph != null) {

@@ -15,9 +15,9 @@
          */
         constructor(__graph: Graph, group: SVGGElement, text: string = "") {
             super(__graph, group, text);
-            this._svgCircle = createCircle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
+            this._svgCircle = SVG.createCircle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
-            setDefaultValue(this.svgCircle);
+            SVG.setDefaultValue(this.svgCircle);
         }
         /**
         頂点の幅を返します。
@@ -162,10 +162,10 @@
 
         constructor(__graph: Graph, group: SVGGElement, text: string = "") {
             super(__graph, group, text);
-            this._svgRectangle = createRectangle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
+            this._svgRectangle = SVG.createRectangle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
 
-            setDefaultValue(this.svgRectangle);
+            SVG.setDefaultValue(this.svgRectangle);
 
             this.svgRectangle.x.baseVal.value = -this.width / 2;
             this.svgRectangle.y.baseVal.value = -this.height / 2;
