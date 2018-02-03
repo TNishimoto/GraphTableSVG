@@ -117,9 +117,11 @@ namespace GraphTableSVG {
          * SVGCircleElementを生成します。
          * @param className
          */
+
+        export let defaultCircleRadius = 30;
         export function createCircle(className: string | null = null): SVGCircleElement {
             const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.r.baseVal.value = 30;
+            circle.r.baseVal.value = defaultCircleRadius;
             if (className == null) {
                 circle.style.stroke = "black";
                 circle.style.strokeWidth = "1pt";

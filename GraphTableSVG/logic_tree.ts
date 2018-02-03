@@ -7,8 +7,4 @@
         constructor(public item: T, public children: LogicTree<T>[] = []) {
         }
     }
-    export class LogicForest<T> {
-        constructor(public roots : LogicTree<T>[] = []) {
-        }
-    }
 }

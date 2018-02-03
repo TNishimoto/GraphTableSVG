@@ -56,12 +56,24 @@ namespace GraphTableSVG {
             //this.svgGroup.appendChild(this.svgLineGroup);
 
             if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);
+            this.setSize(width, height);
+        }
+        public construct(table: string[][], isLatexMode: boolean = false) {
+            this.clear();
+            let width = 0;
+            table.forEach((v) => { if (v.length > width) width = v.length });
+            let height = table.length;
+            this.setSize(width, height);
+            table.forEach((v, y) => {
+                v.forEach((str, x) => {
+                    this.cells[y][x].svgText.setTextContent(str, isLatexMode);
+                })
+            })
+        }
+        public setSize(width: number, height: number) {
             for (let y = 0; y < height; y++) {
                 this.insertRowFunction(y, width);
             }
-
-
-
         }
 
         
@@ -302,6 +314,17 @@ namespace GraphTableSVG {
                 this.updateBorder(this.cells[p][x]);
             }
         }
+        private deleteLastCell() {
+            if (this.height == 1 && this.width == 1) {
+                const cell = this.cells[0][0];
+                this.svgGroup.removeChild(cell.svgGroup);
+                this.svgGroup.removeChild(cell.leftBorder);
+                this.svgGroup.removeChild(cell.rightBorder);
+                this.svgGroup.removeChild(cell.topBorder);
+                this.svgGroup.removeChild(cell.bottomBorder);
+                this._cells.splice(0, 1);
+            }
+        }
         public clear() {
             while (this.height > 1) {
                 this.deleteRow(1);
@@ -309,7 +332,8 @@ namespace GraphTableSVG {
             while (this.width > 1) {
                 this.deleteColumn(1);
             }
-            this.cells[0][0].svgText.textContent = "";
+            this.deleteLastCell();
+            //this.cells[0][0].svgText.textContent = "";
         }
 
         /**
