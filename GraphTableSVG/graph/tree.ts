@@ -5,17 +5,23 @@ namespace GraphTableSVG {
         //public roots : LogicTree<string>[] = [];
         //public graph : Graph;
 
-
-        public construct(roots: LogicTree<string>[], isLatexMode: boolean = false){
+        /*
+        public constructFromStringLogicTree(roots: LogicTree<string>[], isLatexMode: boolean = false) {
+            this.constructFromLogicTree(roots, (v) => v, isLatexMode);
+        }
+        */
+        public constructFromLogicTree<T>(roots: LogicTree<T>[], isLatexMode: boolean = false) {
             //this.roots = roots;
             this.clear();
-            roots.forEach((v) => this.createChild(null, v, isLatexMode));
+            roots.forEach((v) => { if (v != null) this.createChild(null, v, isLatexMode) });
             this.relocate(this);
         }
-        private createChild(parent: Vertex | null = null, tree: LogicTree<string>, isLatexMode: boolean = false) : Vertex {    
+
+        private createChild<T>(parent: Vertex | null = null, tree: LogicTree<T>, isLatexMode: boolean = false) : Vertex {    
             
             const node = GraphTableSVG.Vertex.create(this);
-            node.svgText.setTextContent(tree.item, isLatexMode);
+            //node.svgText.setTextContent(displayFunction(tree.item), isLatexMode);
+            if (tree.nodeText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, tree.nodeText, isLatexMode);
             if(parent != null){
                 const edge = GraphTableSVG.Edge.create(this);
                 this.connect(parent, edge, node, null, null, "bottom", "top");
@@ -23,24 +29,16 @@ namespace GraphTableSVG {
                 this.roots.push(node);
             }
             tree.children.forEach((v) => {
-                this.createChild(node, v, isLatexMode);
+                if(v != null)this.createChild(node, v, isLatexMode);
             });
             this.createdNodeCallback(node);
             return node;
         }
+
+
+
         public createdNodeCallback = (node: GraphTableSVG.Vertex) => { }
-        public relocate = (tree: Tree = this) => {
-            this.vertices.forEach((v)=>{v.x = 0 ; v.y = 0});
-            const xi = this.vertexXInterval != null ? this.vertexXInterval : 30;
-            const yi = this.vertexYInterval != null ? this.vertexYInterval : 30;
-            GraphTableSVG.GraphArrangement.leaveBasedArrangement(this, xi, yi);
-            GraphTableSVG.GraphArrangement.reverse(this, false, true);
-            const region = this.getRegion();
-            if (region.x < 0) this.svgGroup.setX(-region.x);
-            if (region.y < 0) this.svgGroup.setY(-region.y);
-            //this.svgGroup.setY(180);
-            //this.svgGroup.setX(30);
-        }
+        public relocate: (Tree) => void = TreeArrangement.Arrangement1;
         public appendChild(parent : Vertex, str : string, insertIndex : number){
             const node = GraphTableSVG.Vertex.create(this);  
             const edge = GraphTableSVG.Edge.create(this);

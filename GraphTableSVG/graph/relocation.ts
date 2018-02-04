@@ -117,6 +117,12 @@
             
         }
 
+        
+        
+        
+    }
+
+    export namespace TreeArrangement {
         export function standardTreeWidthArrangement(graph: GraphTableSVG.Graph): void {
             const xInterval = graph.vertexXInterval;
             const yInterval = graph.vertexYInterval;
@@ -135,6 +141,21 @@
             }
 
         }
+        export function Arrangement1(graph: GraphTableSVG.Graph): void {
+            graph.vertices.forEach((v) => { v.x = 0; v.y = 0 });
+            const xi = graph.vertexXInterval != null ? graph.vertexXInterval : 30;
+            const yi = graph.vertexYInterval != null ? graph.vertexYInterval : 30;
+            GraphTableSVG.GraphArrangement.leaveBasedArrangement(graph, xi, yi);
+            GraphTableSVG.GraphArrangement.reverse(this, false, true);
+            const region = graph.getRegion();
+            if (region.x < 0) graph.svgGroup.setX(-region.x);
+            if (region.y < 0) graph.svgGroup.setY(-region.y);
+            //this.svgGroup.setY(180);
+            //this.svgGroup.setX(30);
+
+        }
+
+
         function standardTreeWidthArrangementSub(tree: VirtualSubTree, xInterval: number, yInterval: number): void {
             tree.subTreeRoot.x = 0;
             tree.subTreeRoot.y = 0;
@@ -149,7 +170,7 @@
 
                 children[0].tree.setRootLocation(children[0].x, yInterval);
             } else if (children.length == 0) {
-            }else {
+            } else {
                 for (let i = 0; i < children.length; i++) {
                     standardTreeWidthArrangementSub(children[i].tree, xInterval, yInterval);
                     const rect = children[i].tree.region();
@@ -166,10 +187,8 @@
 
                 tree.subTreeRoot.x = centerX;
             }
-            
+
 
         }
-        
-        
     }
 }

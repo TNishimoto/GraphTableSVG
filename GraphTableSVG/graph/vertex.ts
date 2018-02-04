@@ -4,7 +4,7 @@
         public static readonly defaultSurfaceType: string = "--default-surface-type";
         public static readonly defaultTextClass: string = "--default-text-class";
         public static readonly defaultSurfaceClass: string = "--default-surface-class";
-        public static readonly autoSizeShapeToFitTextName: string = "--autosize"
+        public static readonly autoSizeShapeToFitTextName: string = "--autosize-shape-to-fit-text"
 
         private static readonly id_counter: number = 0;
 
