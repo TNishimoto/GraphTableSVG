@@ -10,25 +10,34 @@ namespace GraphTableSVG {
             this.constructFromLogicTree(roots, (v) => v, isLatexMode);
         }
         */
-        public constructFromLogicTree<T>(roots: LogicTree<T>[], isLatexMode: boolean = false) {
+        public constructFromLogicTree<T>(roots: LogicTree<T>[] | LogicTree<T>, isLatexMode: boolean = false) {
+            if (roots instanceof Array){
+                this.clear();
+                roots.forEach((v) => { if (v != null) this.createChild(null, v, isLatexMode) });
+                this.relocate();            
+            } else {
+                this.constructFromLogicTree([roots], isLatexMode);
+            }
             //this.roots = roots;
-            this.clear();
-            roots.forEach((v) => { if (v != null) this.createChild(null, v, isLatexMode) });
-            this.relocate(this);
         }
 
-        private createChild<T>(parent: Vertex | null = null, tree: LogicTree<T>, isLatexMode: boolean = false) : Vertex {    
-            
-            const node = GraphTableSVG.Vertex.create(this);
+        private createChild<T>(parent: Vertex | null = null, logicNode: LogicTree<T>, isLatexMode: boolean = false) : Vertex {    
+
+            const node = GraphTableSVG.Vertex.create(this, logicNode.nodeClass);
             //node.svgText.setTextContent(displayFunction(tree.item), isLatexMode);
-            if (tree.nodeText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, tree.nodeText, isLatexMode);
-            if(parent != null){
-                const edge = GraphTableSVG.Edge.create(this);
+            if (logicNode.nodeText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicNode.nodeText, isLatexMode);
+            if (parent != null) {
+                const edge = GraphTableSVG.Edge.create(this, logicNode.edgeClass);
+                if (logicNode.edgeLabel != null) {
+                    edge.svgTextPath.setTextContent(logicNode.edgeLabel, isLatexMode);
+                    edge.isMaximalRegularInterval = true;
+                    //edge.svgText.setTextContent(tree.edgeLabel, isLatexMode);
+                }
                 this.connect(parent, edge, node, null, null, "bottom", "top");
             }else{
                 this.roots.push(node);
             }
-            tree.children.forEach((v) => {
+            logicNode.children.forEach((v) => {
                 if(v != null)this.createChild(node, v, isLatexMode);
             });
             this.createdNodeCallback(node);
@@ -38,14 +47,18 @@ namespace GraphTableSVG {
 
 
         public createdNodeCallback = (node: GraphTableSVG.Vertex) => { }
-        public relocate: (Tree) => void = TreeArrangement.Arrangement1;
+        public relocateFunction: (Tree) => void = TreeArrangement.Arrangement1;
+        public relocate() {
+            this.relocateFunction(this);
+        }
+
         public appendChild(parent : Vertex, str : string, insertIndex : number){
             const node = GraphTableSVG.Vertex.create(this);  
             const edge = GraphTableSVG.Edge.create(this);
             
             this.connect(parent, edge, node, null, null, "bottom", "top");
             this.createdNodeCallback(node);
-            this.relocate(this);
+            this.relocate();
         }
     }
     export namespace Parse{

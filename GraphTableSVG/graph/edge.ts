@@ -138,6 +138,7 @@
         public get svgText(): SVGTextElement {
             return this._svgText;
         }
+        
         /*
         protected _text: EdgeText | null = null;
         public get text(): EdgeText | null {
@@ -363,7 +364,7 @@
             }
 
             if (this.beginVertex != null && this.endVertex != null) {
-                const [x, y] = [this.svgText.getX(), this.svgText.getY()];
+                //const [x, y] = [this.svgText.getX(), this.svgText.getY()];
 
                 const points: [number, number][] = this.controlPoint;
                 let path = "";

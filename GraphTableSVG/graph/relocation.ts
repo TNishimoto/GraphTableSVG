@@ -2,6 +2,14 @@
 
     export namespace GraphArrangement {
 
+        
+
+        
+        
+        
+    }
+
+    export namespace TreeArrangement {
         export function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void {
             let leafCounter = 0;
             forest.getOrderedVertices(NodeOrder.Postorder).forEach((v) => {
@@ -14,7 +22,7 @@
                     v.children.forEach((w) => {
                         x += w.x;
                         if (y < w.y) y = w.y;
-                        
+
                     });
                     x = x / v.children.length;
                     y += yInterval;
@@ -50,7 +58,7 @@
                 }
             }
         }
-        
+
 
         export function average(items: number[]): number {
             if (items.length > 0) {
@@ -61,7 +69,7 @@
                 return y / items.length;
             } else {
                 throw new Error();
-            }            
+            }
         }
         export function middle(items: number[]): number {
             if (items.length > 0) {
@@ -71,13 +79,13 @@
                     if (min > w) min = w;
                     if (max < w) max = w;
                 });
-                return (min + max)/2;
+                return (min + max) / 2;
             } else {
                 throw new Error();
             }
         }
 
-        
+
         export function standardTreeArrangement(graph: GraphTableSVG.Graph): void {
             const xInterval = graph.vertexXInterval;
             const yInterval = graph.vertexYInterval;
@@ -104,25 +112,19 @@
             const children = tree.children;
 
             const leaveSizeWidthHalf = (tree.leaves.length * xInterval) / 2;
-            
+
             let x = -leaveSizeWidthHalf;
 
-            
+
             for (let i = 0; i < children.length; i++) {
                 standardTreeArrangementSub(children[i].tree, xInterval, yInterval);
                 const w = (children[i].tree.leaves.length * xInterval) / 2;
                 children[i].tree.setRootLocation(x + w, yInterval);
                 x += children[i].tree.leaves.length * xInterval;
             }
-            
+
         }
 
-        
-        
-        
-    }
-
-    export namespace TreeArrangement {
         export function standardTreeWidthArrangement(graph: GraphTableSVG.Graph): void {
             const xInterval = graph.vertexXInterval;
             const yInterval = graph.vertexYInterval;
@@ -145,8 +147,8 @@
             graph.vertices.forEach((v) => { v.x = 0; v.y = 0 });
             const xi = graph.vertexXInterval != null ? graph.vertexXInterval : 30;
             const yi = graph.vertexYInterval != null ? graph.vertexYInterval : 30;
-            GraphTableSVG.GraphArrangement.leaveBasedArrangement(graph, xi, yi);
-            GraphTableSVG.GraphArrangement.reverse(this, false, true);
+            GraphTableSVG.TreeArrangement.leaveBasedArrangement(graph, xi, yi);
+            GraphTableSVG.TreeArrangement.reverse(this, false, true);
             const region = graph.getRegion();
             if (region.x < 0) graph.svgGroup.setX(-region.x);
             if (region.y < 0) graph.svgGroup.setY(-region.y);

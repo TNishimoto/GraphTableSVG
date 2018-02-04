@@ -7,8 +7,39 @@
     */
 
     export class LogicTree<T> {
+        public nodeText: string | null = null
+        public edgeLabel: string | null = null
+        public nodeClass: string | null = null
+        public edgeClass: string | null = null
 
-        constructor(public item: T, public children: (LogicTree<T> | null)[] = [], public nodeText: string | null = null, public edgeLabel : string | null = null) {
+        constructor(public item: T, public children: (LogicTree<T> | null)[] = [], nodeText: string | null = null, edgeLabel: string | null = null) {
+            this.nodeText = nodeText;
+            this.edgeLabel = edgeLabel;
+        }
+        public getOrderedNodes(order: NodeOrder): LogicTree<T>[] {
+            const r: LogicTree<T>[] = [];
+            const edges = this.children;
+            if (order == NodeOrder.Preorder) {
+                r.push(this);
+                edges.forEach((v) => {
+                    if (v != null) {
+                        v.getOrderedNodes(order).forEach((w) => {
+                            r.push(w);
+                        });
+                    }
+                });
+
+            } else if (order == NodeOrder.Postorder) {
+                edges.forEach((v) => {
+                    if (v != null) {
+                        v.getOrderedNodes(order).forEach((w) => {
+                            r.push(w);
+                        });
+                    }
+                });
+                r.push(this);
+            }
+            return r;
         }
     }
     export class BinaryLogicTree<T> extends LogicTree<T> {
