@@ -418,12 +418,12 @@ namespace GraphTableSVG {
         セルのIDを返します。
         */
         get ID(): number {
-            return this.cellX + (this.cellY * this.table.width);
+            return this.cellX + (this.cellY * this.table.columnCount);
         }
         /**
         上にあるセルを返します。
         */
-        get upCell(): Cell | null {
+        get topCell(): Cell | null {
             return this.cellY != 0 ? this.table.cells[this.cellY - 1][this.cellX] : null;
         }
         /**
@@ -436,36 +436,36 @@ namespace GraphTableSVG {
         右にあるセルを返します。
         */
         get rightCell(): Cell | null {
-            return this.cellX + 1 != this.table.width ? this.table.cells[this.cellY][this.cellX + 1] : null;
+            return this.cellX + 1 != this.table.columnCount ? this.table.cells[this.cellY][this.cellX + 1] : null;
         }
         /**
         下にあるセルを返します。
         */
         get bottomCell(): Cell | null {
-            return this.cellY + 1 != this.table.height ? this.table.cells[this.cellY + 1][this.cellX] : null;
+            return this.cellY + 1 != this.table.rowCount ? this.table.cells[this.cellY + 1][this.cellX] : null;
         }
         get bottomRightCell(): Cell | null {
             return this.bottomCell == null ? null : this.bottomCell.rightCell == null ? null : this.bottomCell.rightCell;
         }
         get topRightCell(): Cell | null {
-            return this.upCell == null ? null : this.upCell.rightCell == null ? null : this.upCell.rightCell;
+            return this.topCell == null ? null : this.topCell.rightCell == null ? null : this.topCell.rightCell;
         }
         get bottomLeftCell(): Cell | null {
             return this.bottomCell == null ? null : this.bottomCell.leftCell == null ? null : this.bottomCell.leftCell;
         }
         get topLeftCell(): Cell | null {
-            return this.upCell == null ? null : this.upCell.leftCell == null ? null : this.upCell.leftCell;
+            return this.topCell == null ? null : this.topCell.leftCell == null ? null : this.topCell.leftCell;
         }
         /**
         未定義
         */
-        get upperGroupCells(): Cell[] {
+        get topGroupCells(): Cell[] {
             if (this.isMaster) {
                 let w: Cell[] = [];
                 let now: Cell | null = this;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
-                    now = this.upCell;
+                    now = this.topCell;
                 }
                 return w;
             } else {
@@ -491,7 +491,7 @@ namespace GraphTableSVG {
         /**
         未定義
         */
-        get leftBottomGroupCell(): Cell | null {
+        get bottomLeftGroupCell(): Cell | null {
             if (this.isMaster) {
                 return this.table.cells[this.cellY + this.logicalHeight - 1][this.cellX];
             } else {
@@ -501,7 +501,7 @@ namespace GraphTableSVG {
         /**
         未定義
         */
-        get rightUpGroupCell(): Cell | null {
+        get topRightGroupCell(): Cell | null {
             if (this.isMaster) {
                 return this.table.cells[this.cellY][this.cellX + this.logicalWidth - 1];
             } else {
@@ -514,7 +514,7 @@ namespace GraphTableSVG {
         get bottomGroupCells(): Cell[] {
             if (this.isMaster) {
                 let w: Cell[] = [];
-                let now: Cell | null = this.leftBottomGroupCell;
+                let now: Cell | null = this.bottomLeftGroupCell;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = this.bottomCell;
@@ -531,7 +531,7 @@ namespace GraphTableSVG {
         get rightGroupCells(): Cell[] {
             if (this.isMaster) {
                 let w: Cell[] = [];
-                let now: Cell | null = this.rightUpGroupCell;
+                let now: Cell | null = this.topRightGroupCell;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = this.rightCell;

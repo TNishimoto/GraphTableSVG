@@ -61,14 +61,14 @@
          * 
          */
         public setY(posY: number) {
-            for (let x = 0; x < this.table.width; x++) {
+            for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
                 cell.y = posY;
             }
         }
         private getMaxHeight(): number {
             let height = 0;
-            for (let x = 0; x < this.table.width; x++) {
+            for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
                 if (height < cell.calculatedHeight) height = cell.calculatedHeight;
                 if (height < cell.height) height = cell.height;
@@ -86,7 +86,7 @@
         */
         set height(value: number) {
             let b = false;
-            for (let x = 0; x < this.table.width; x++) {
+            for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
                 if (cell.height != value) {
                     cell.height = value;
@@ -107,7 +107,7 @@
         }
         public get cells(): Cell[] {
             const items: Cell[] = [];
-            for (let i = 0; i < this.table.height; i++) {
+            for (let i = 0; i < this.table.rowCount; i++) {
                 items.push(this.table.cells[i][this.cellX]);
             }
             return items;
@@ -120,7 +120,7 @@
 
         private getMaxWidth(): number {
             let width = 0;
-            for (let y = 0; y < this.table.height; y++) {
+            for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
                 if (width < cell.calculatedWidth) width = cell.calculatedWidth;
                 if (width < cell.width) width = cell.width;
@@ -138,7 +138,7 @@
          * @param posX
          */
         public setX(posX: number) {
-            for (let y = 0; y < this.table.height; y++) {
+            for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
                 cell.x = posX;
             }
@@ -155,7 +155,7 @@
         */
         set width(value: number) {
             let b = false;
-            for (let y = 0; y < this.table.height; y++) {
+            for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
                 if (cell.width != value) {
                     cell.width = value;
