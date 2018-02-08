@@ -137,6 +137,7 @@
         }
 
         public constructor(columnCount: number, rowCount: number, tableClassName: string | null = null) {
+            this.tableClassName = tableClassName;
             this.cells = new Array(rowCount);
             for (let y = 0; y < rowCount; y++) {
                 this.cells[y] = new Array(columnCount);
@@ -160,6 +161,20 @@
                 for (let x = 0; x < this.columnWidths.length; x++) {
                     r.push(this.cells[y][x]);
                 }
+            }
+            return r;
+        }
+        public getColumn(i: number): LogicCell<T>[] {
+            const r: LogicCell<T>[] = new Array();
+            for (let y = 0; y < this.rowHeights.length; y++) {
+                r.push(this.cells[y][i]);
+            }
+            return r;
+        }
+        public getRow(i: number): LogicCell<T>[] {
+            const r: LogicCell<T>[] = new Array();
+            for (let x = 0; x < this.columnWidths.length; x++) {
+                r.push(this.cells[i][x]);
             }
             return r;
         }
