@@ -6,18 +6,18 @@
     }
     */
 
-    export class LogicTree<T> {
+    export class LogicTree {
         public nodeText: string | null = null
         public edgeLabel: string | null = null
         public nodeClass: string | null = null
         public edgeClass: string | null = null
 
-        constructor(public item: T, public children: (LogicTree<T> | null)[] = [], nodeText: string | null = null, edgeLabel: string | null = null) {
+        constructor(public item: any = null, public children: (LogicTree | null)[] = [], nodeText: string | null = null, edgeLabel: string | null = null) {
             this.nodeText = nodeText;
             this.edgeLabel = edgeLabel;
         }
-        public getOrderedNodes(order: NodeOrder): LogicTree<T>[] {
-            const r: LogicTree<T>[] = [];
+        public getOrderedNodes(order: NodeOrder): LogicTree[] {
+            const r: LogicTree[] = [];
             const edges = this.children;
             if (order == NodeOrder.Preorder) {
                 r.push(this);
@@ -42,31 +42,31 @@
             return r;
         }
     }
-    export class BinaryLogicTree<T> extends LogicTree<T> {
-        public get left(): BinaryLogicTree<T> | null {
+    export class BinaryLogicTree extends LogicTree {
+        public get left(): BinaryLogicTree | null {
             const left = this.children[0];
             if (left == null) {
                 return null;
             } else {
-                return <BinaryLogicTree<T>>left;
+                return <BinaryLogicTree>left;
             }
         }
-        public set left(value: BinaryLogicTree<T> | null) {
+        public set left(value: BinaryLogicTree | null) {
             this.children[0] = value;
         }
-        public get right(): BinaryLogicTree<T> | null {
+        public get right(): BinaryLogicTree | null {
             const right = this.children[1];
             if (right == null) {
                 return null;
             } else {
-                return <BinaryLogicTree<T>>right;
+                return <BinaryLogicTree>right;
             }
 
         }
-        public set right(value: BinaryLogicTree<T> | null) {
+        public set right(value: BinaryLogicTree | null) {
             this.children[1] = value;
         }
-        constructor(public item: T, left: BinaryLogicTree<T> | null = null, right: BinaryLogicTree<T> | null = null, nodeText: string | null = null, edgeLabel: string | null = null) {
+        constructor(public item: any = null, left: BinaryLogicTree | null = null, right: BinaryLogicTree | null = null, nodeText: string | null = null, edgeLabel: string | null = null) {
             super(item, [left, right], nodeText, edgeLabel);
         }
         /*
@@ -82,7 +82,7 @@
         }
         */
     }
-    export class LogicCell<T> {
+    export class LogicCell {
 
         public text: string | null = null;
         public cellClass: string | null = null;
@@ -92,7 +92,7 @@
         public leftBorderClass: string | null = null;
         public rightBorderClass: string | null = null;
         public bottomBorderClass: string | null = null;
-        public item: T;
+        public item: any;
 
         public isLatexMode: boolean = false;
         constructor() {
@@ -124,8 +124,8 @@
         }
         */
     }
-    export class LogicTable<T> {
-        public cells: LogicCell<T>[][];
+    export class LogicTable {
+        public cells: LogicCell[][];
         public columnWidths: (number | null)[];
         public rowHeights: (number | null)[];
         public tableClassName: string | null = null;
@@ -142,7 +142,7 @@
             for (let y = 0; y < rowCount; y++) {
                 this.cells[y] = new Array(columnCount);
                 for (let x = 0; x < columnCount; x++) {
-                    this.cells[y][x] = new LogicCell<T>();
+                    this.cells[y][x] = new LogicCell();
                 }
             }
             this.rowHeights = new Array(rowCount);
@@ -155,8 +155,8 @@
             }
 
         }
-        public get cellArray(): LogicCell<T>[] {
-            const r: LogicCell<T>[] = new Array();
+        public get cellArray(): LogicCell[] {
+            const r: LogicCell[] = new Array();
             for (let y = 0; y < this.rowHeights.length; y++) {
                 for (let x = 0; x < this.columnWidths.length; x++) {
                     r.push(this.cells[y][x]);
@@ -164,15 +164,15 @@
             }
             return r;
         }
-        public getColumn(i: number): LogicCell<T>[] {
-            const r: LogicCell<T>[] = new Array();
+        public getColumn(i: number): LogicCell[] {
+            const r: LogicCell[] = new Array();
             for (let y = 0; y < this.rowHeights.length; y++) {
                 r.push(this.cells[y][i]);
             }
             return r;
         }
-        public getRow(i: number): LogicCell<T>[] {
-            const r: LogicCell<T>[] = new Array();
+        public getRow(i: number): LogicCell[] {
+            const r: LogicCell[] = new Array();
             for (let x = 0; x < this.columnWidths.length; x++) {
                 r.push(this.cells[i][x]);
             }

@@ -58,7 +58,7 @@ namespace GraphTableSVG {
             if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);
             this.setSize(5, 5);
         }
-        public constructFromLogicTable<T>(table: LogicTable<T>) {
+        public constructFromLogicTable(table: LogicTable) {
 
             if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
             this.setSize(table.columnWidths.length, table.rowHeights.length);
@@ -144,7 +144,7 @@ namespace GraphTableSVG {
                 })
             })
         }
-        public constructFromLogicCell<T>(table: LogicCell<T>[][], isLatexMode: boolean = false) {
+        public constructFromLogicCell(table: LogicCell[][], isLatexMode: boolean = false) {
 
         }
 
