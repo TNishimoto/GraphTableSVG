@@ -70,11 +70,11 @@ namespace GraphTableSVG {
 
             //this.parent.svgGroup.appendChild(this.svgGroup);
 
-
             this.topBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.leftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.rightBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.bottomBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            this.updateBorderAttributes();
             this.table.svgGroup.appendChild(this.topBorder);
             this.table.svgGroup.appendChild(this.leftBorder);
             this.table.svgGroup.appendChild(this.rightBorder);
@@ -94,6 +94,26 @@ namespace GraphTableSVG {
             this.horizontalAnchor = HorizontalAnchor.Left;
             */
 
+        }
+        public updateBorderAttributes() : void {
+            this.topBorder.setAttribute("data-cellX", this.cellX.toString());
+            this.topBorder.setAttribute("data-cellY", this.cellY.toString());
+            this.topBorder.setAttribute("data-border", "top");
+
+
+            this.leftBorder.setAttribute("data-cellX", this.cellX.toString());
+            this.leftBorder.setAttribute("data-cellY", this.cellY.toString());
+            this.leftBorder.setAttribute("data-border", "left");
+
+
+            this.rightBorder.setAttribute("data-cellX", this.cellX.toString());
+            this.rightBorder.setAttribute("data-cellY", this.cellY.toString());
+            this.rightBorder.setAttribute("data-border", "right");
+
+
+            this.bottomBorder.setAttribute("data-cellX", this.cellX.toString());
+            this.bottomBorder.setAttribute("data-cellY", this.cellY.toString());
+            this.bottomBorder.setAttribute("data-border", "bottom");
         }
         private get innerExtraPaddingLeft(): number {
             const p = this.fontSize;

@@ -227,7 +227,7 @@ namespace GraphTableSVG {
                 for (let x = 0; x < this.columnCount; x++) {
                     this.cells[y][x].cellX = x;
                     this.cells[y][x].cellY = y;
-
+                    this.cells[y][x].updateBorderAttributes();
                 }
             }
             this.borders.forEach((v, i) => { v.setAttribute("borderID", i.toString()) });
