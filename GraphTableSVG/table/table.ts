@@ -7,6 +7,9 @@ namespace GraphTableSVG {
     export class Table {
         private static readonly defaultCellClass: string = "--default-cell-class";
         private static readonly defaultBorderClass: string = "--default-border-class";
+        
+
+
         private _svgGroup: SVGGElement;
         private _cells: Cell[][] = [];
         private _isDrawing: boolean = false;
@@ -57,6 +60,7 @@ namespace GraphTableSVG {
 
             if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);
             this.setSize(5, 5);
+
         }
         public constructFromLogicTable(table: LogicTable) {
 
@@ -138,6 +142,7 @@ namespace GraphTableSVG {
             table.forEach((v) => { if (v.length > width) width = v.length });
             let height = table.length;
             this.setSize(width, height);
+
             table.forEach((v, y) => {
                 v.forEach((str, x) => {
                     this.cells[y][x].svgText.setTextContent(str, isLatexMode);
@@ -149,7 +154,8 @@ namespace GraphTableSVG {
         }
 
         public setSize(width: number, height: number) {
-            
+            if (this.columnCount != this.columns.length) throw Error(`Error : ${this.columnCount} ${this.columns.length}`);
+
             this.clear();
 
             /*
@@ -158,6 +164,8 @@ namespace GraphTableSVG {
             }
             */
             while (this.rowCount < height) {
+                if (this.columnCount != this.columns.length) throw Error(`ErrorR : ${this.columnCount} ${this.columns.length}`);
+
                 this.insertRowFunction(this.rowCount, width);
             }
             /*
@@ -166,6 +174,7 @@ namespace GraphTableSVG {
             }
             */
             while (this.columnCount < width) {
+                if (this.columnCount != this.columns.length) throw Error(`ErrorC : ${this.columnCount} ${this.columns.length}`);
                 
                 this.insertColumn(this.columnCount);
             }
@@ -178,6 +187,8 @@ namespace GraphTableSVG {
                 }
             }
             */
+            if (this.columnCount != this.columns.length) throw Error(`ErrorX : ${this.columnCount} ${this.columns.length}`);
+
         }
 
         public getTryCell(x: number, y: number): Cell | null {
@@ -205,27 +216,11 @@ namespace GraphTableSVG {
 
 
         
-        private insertRowFunction(i: number, width: number = this.columnCount) {
-            const cell: Cell[] = [];
-            for (let x = 0; x < width; x++) {
-                cell[x] = this.createCell();
-            }
-            if (i < this.rowCount) {
-                for (let x = 0; x < width; x++) {
-                    this.cells[i][x].topBorder = SVG.createLine(0, 0, 0, 0);
-                    this.svgGroup.appendChild(this.cells[i][x].topBorder);
-                }
-            }
-            this.cells.splice(i, 0, cell);
-            this.renumbering();
-            for (let x = 0; x < width; x++) {
-                this.updateBorder(this.cells[i][x]);
-            }
-        }
+        
         private createCell(): Cell {
             return new Cell(this, 0, 0, this.defaultCellClass, this.defaultBorderClass);
         }
-        private updateBorder(cell: Cell) {
+        public updateBorder(cell: Cell) {
             if (cell.leftCell != null && cell.leftCell.rightBorder != cell.leftBorder) {
                 this.svgGroup.removeChild(cell.leftBorder);
                 cell.leftBorder = cell.leftCell.rightBorder;
@@ -246,7 +241,12 @@ namespace GraphTableSVG {
                 cell.bottomCell.topBorder = cell.bottomBorder;
             }
         }
-        private renumbering() {
+        public renumbering() {
+            if (this.rows.length != this.cells.length) throw Error("Error");
+
+            this.rows.forEach((v, i) => v.cellY = i);
+            this.columns.forEach((v, i) => v.cellX = i);
+
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
                     this.cells[y][x].cellX = x;
@@ -254,6 +254,10 @@ namespace GraphTableSVG {
                     this.cells[y][x].updateBorderAttributes();
                 }
             }
+            this.rows.forEach((v, i) => v.update());
+            this.columns.forEach((v, i) => v.update());
+
+
             this.borders.forEach((v, i) => { v.setAttribute("borderID", i.toString()) });
 
             /*
@@ -307,25 +311,36 @@ namespace GraphTableSVG {
         get rowCount(): number {
             return this.cells.length;
         }
+
+
         /**
         各行を表す配列を返します。読み取り専用です。
         */
+        private _rows: Row[] = new Array(0);
         get rows(): Row[] {
+            return this._rows;
+            /*
             const arr = new Array(0);
             for (let y = 0; y < this.rowCount; y++) {
                 arr.push(new Row(this, y));
             }
             return arr;
+            */
         }
         /**
         各列を表す配列を返します。読み取り専用です。
         */
+        private _columns: Column[] = new Array(0);
+
         get columns(): Column[] {
+            return this._columns;
+            /*
             const arr = new Array(0);
             for (let x = 0; x < this.columnCount; x++) {
                 arr.push(new Column(this, x));
             }
             return arr;
+            */
         }
         /**
         各セルを表す配列を返します。テーブルの左上のセルから右に向かってインデックスが割り当てられ、
@@ -366,113 +381,7 @@ namespace GraphTableSVG {
             }
             return arr;
         }
-        /**
-        新しい行をi番目の行に挿入します
-        */
-        public insertRow(i: number) {
-            this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
-        }
-        /**
-        新しい行を行の最後に追加します。
-        */
-        public appendRow() {
-            this.insertRow(this.rowCount);
-        }
-        /**
-        新しい列をi番目の列に挿入します。
-        */
-        public insertColumn(i: number) {
-            if (this.rowCount > 0) {
-                for (let y = 0; y < this.rowCount; y++) {
-                    const cell = this.createCell();
-                    this.cells[y].splice(i, 0, cell);
-                }
-                if (i < this.rowCount) {
-                    for (let y = 0; y < this.rowCount; y++) {
-                        this.cells[y][i].leftBorder = SVG.createLine(0, 0, 0, 0);
-                        this.svgGroup.appendChild(this.cells[y][i].leftBorder);
-                    }
-                }
-                this.renumbering();
-                const p = i + 1 < this.columnCount ? i : i - 1; 
-                for (let y = 0; y < this.rowCount; y++) {
-                    this.updateBorder(this.cells[y][p]);
-                }
-            } else {
-                this.insertRow(0);
-            }
-        }
-        public deleteColumn(i: number) {
-            if (this.columnCount > 1) {
-                for (let y = 0; y < this.rowCount; y++) {
-                    const cell = this.cells[y][i];
-                    this.svgGroup.removeChild(cell.svgGroup);
-                    this.svgGroup.removeChild(cell.topBorder);
-                    if (cell.bottomCell == null) this.svgGroup.removeChild(cell.bottomBorder);
-                    if (cell.leftCell == null) this.svgGroup.removeChild(cell.leftBorder);
-                    if (cell.rightCell == null) this.svgGroup.removeChild(cell.rightBorder);
-
-                    this.cells[y].splice(i, 1);
-                }
-                this.renumbering();
-
-                const p = i + 1 < this.columnCount ? i : i - 1; 
-                for (let y = 0; y < this.rowCount; y++) {
-                    this.updateBorder(this.cells[y][p]);
-                }
-            } else {
-                throw Error("Error");
-            }
-        }
-        public deleteRow(i: number) {
-            const h = this.rowCount;
-            if (this.rowCount == 1) throw Error("Error");
-            for (let x = 0; x < this.columnCount; x++) {
-                const cell = this.cells[i][x];
-                this.svgGroup.removeChild(cell.svgGroup);
-                this.svgGroup.removeChild(cell.leftBorder);
-                if (cell.rightCell == null) this.svgGroup.removeChild(cell.rightBorder);
-                if (cell.topCell == null) this.svgGroup.removeChild(cell.topBorder);
-                if (cell.bottomCell == null) this.svgGroup.removeChild(cell.bottomBorder);
-
-            }
-
-            this.cells.splice(i, 1);
-            this.renumbering();
-
-            const p = i + 1 < this.rowCount ? i : i - 1; 
-            for (let x = 0; x < this.columnCount; x++) {
-                this.updateBorder(this.cells[p][x]);
-            }
-        }
-        private deleteLastCell() {
-            if (this.rowCount == 1 && this.columnCount == 1) {
-                const cell = this.cells[0][0];
-                this.svgGroup.removeChild(cell.svgGroup);
-                this.svgGroup.removeChild(cell.leftBorder);
-                this.svgGroup.removeChild(cell.rightBorder);
-                this.svgGroup.removeChild(cell.topBorder);
-                this.svgGroup.removeChild(cell.bottomBorder);
-                this._cells.splice(0, 1);
-            }
-        }
-        public clear() {
-            while (this.rowCount > 1) {
-                this.deleteRow(1);
-            }
-            while (this.columnCount > 1) {
-                this.deleteColumn(1);
-            }
-            this.deleteLastCell();
-            //this.cells[0][0].svgText.textContent = "";
-        }
-
-        /**
-        新しい列を最後の列に追加します。
-        */
-        public appendColumn() {
-            this.insertColumn(this.columnCount);
-        }
+        
         /**
         各セルのサイズを再計算します。
         */
@@ -640,6 +549,151 @@ namespace GraphTableSVG {
                 svg.removeChild(this.svgGroup);
             }
         }
+        /*
+        Dynamic Method
+        */
 
+        public clear() {
+            if (this.columnCount != this.columns.length) throw Error("Error");
+
+            while (this.rowCount > 1) {
+
+                this.deleteRow(1);
+
+            }
+            while (this.columnCount > 1) {
+
+                this.deleteColumn(1);
+
+            }
+            this.deleteLastCell();
+            //this.cells[0][0].svgText.textContent = "";
+        }
+
+        /**
+        新しい列を最後の列に追加します。
+        */
+        public appendColumn() {
+            this.insertColumn(this.columnCount);
+        }
+
+        /**
+        新しい行をi番目の行に挿入します
+        */
+        public insertRow(i: number) {
+            this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
+        }
+        /**
+        新しい行を行の最後に追加します。
+        */
+        public appendRow() {
+            this.insertRow(this.rowCount);
+        }
+        /**
+        新しい列をi番目の列に挿入します。
+        */
+        public insertColumn(i: number) {
+            if (this.rowCount > 0) {
+                for (let y = 0; y < this.rowCount; y++) {
+                    const cell = this.createCell();
+                    this.cells[y].splice(i, 0, cell);
+                }
+                if (i < this.rowCount) {
+                    for (let y = 0; y < this.rowCount; y++) {
+                        this.cells[y][i].leftBorder = SVG.createLine(0, 0, 0, 0);
+                        this.svgGroup.appendChild(this.cells[y][i].leftBorder);
+                    }
+                }
+                this._columns.splice(i, 0, new Column(this, i));
+                this.renumbering();
+                const p = i + 1 < this.columnCount ? i : i - 1;
+                for (let y = 0; y < this.rowCount; y++) {
+                    this.updateBorder(this.cells[y][p]);
+                }
+            } else {
+                this.insertRow(0);
+            }
+        }
+        private insertRowFunction(i: number, width: number = this.columnCount) {
+            const cell: Cell[] = [];
+            for (let x = 0; x < width; x++) {
+                cell[x] = this.createCell();
+                if (this._columns.length <= x) this._columns.push(new Column(this, 0));
+            }
+            if (i < this.rowCount) {
+                for (let x = 0; x < width; x++) {
+                    this.cells[i][x].topBorder = SVG.createLine(0, 0, 0, 0);
+                    this.svgGroup.appendChild(this.cells[i][x].topBorder);
+                }
+            }
+            this.cells.splice(i, 0, cell);
+            this._rows.splice(i, 0, new Row(this, i));
+
+            this.renumbering();
+            for (let x = 0; x < width; x++) {
+                this.updateBorder(this.cells[i][x]);
+            }
+        }
+        public deleteColumn(i: number) {
+            if (this.columnCount != this.columns.length) throw Error("Error");
+            if (i > this.columnCount) throw Error("Error");
+            if (this.columnCount == 1) throw Error("Error");
+            for (let y = 0; y < this.rowCount; y++) {
+                const cell = this.cells[y][i];
+                this.svgGroup.removeChild(cell.svgGroup);
+                this.svgGroup.removeChild(cell.topBorder);
+                if (cell.bottomCell == null) this.svgGroup.removeChild(cell.bottomBorder);
+                if (cell.leftCell == null) this.svgGroup.removeChild(cell.leftBorder);
+                if (cell.rightCell == null) this.svgGroup.removeChild(cell.rightBorder);
+
+                this.cells[y].splice(i, 1);
+            }
+            this.columns[i].detouch();
+            this.renumbering();
+
+            const p = i + 1 < this.columnCount ? i : i - 1;
+            for (let y = 0; y < this.rowCount; y++) {
+                this.updateBorder(this.cells[y][p]);
+            }
+
+        }
+        public deleteRow(i: number) {
+            const h = this.rowCount;
+            if (this.rowCount == 1) throw Error("Error");
+            for (let x = 0; x < this.columnCount; x++) {
+                const cell = this.cells[i][x];
+                this.svgGroup.removeChild(cell.svgGroup);
+                this.svgGroup.removeChild(cell.leftBorder);
+                if (cell.rightCell == null) this.svgGroup.removeChild(cell.rightBorder);
+                if (cell.topCell == null) this.svgGroup.removeChild(cell.topBorder);
+                if (cell.bottomCell == null) this.svgGroup.removeChild(cell.bottomBorder);
+
+            }
+
+            this.cells.splice(i, 1);
+            this.rows[i].detouch();
+
+            this.renumbering();
+
+            const p = i + 1 < this.rowCount ? i : i - 1;
+            for (let x = 0; x < this.columnCount; x++) {
+                this.updateBorder(this.cells[p][x]);
+            }
+        }
+        private deleteLastCell() {
+            if (this.rowCount == 1 && this.columnCount == 1) {
+                const cell = this.cells[0][0];
+                this.svgGroup.removeChild(cell.svgGroup);
+                this.svgGroup.removeChild(cell.leftBorder);
+                this.svgGroup.removeChild(cell.rightBorder);
+                this.svgGroup.removeChild(cell.topBorder);
+                this.svgGroup.removeChild(cell.bottomBorder);
+                this._cells.splice(0, 1);
+
+                this.rows[0].detouch();
+                this.columns[0].detouch();
+
+            }
+        }
     }
 }

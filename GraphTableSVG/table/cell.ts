@@ -428,9 +428,7 @@ namespace GraphTableSVG {
                 this.bottomGroupCells.forEach((v) => h += this.table.rows[v.cellY].height);
 
                 this.rightGroupCells.forEach((v) => w += this.table.columns[v.cellX].width);
-
-                this.rightGroupCells.forEach((v) => console.log(this.table.columns[v.cellX].width));
-                console.log([w, h]);
+                
                 return [w, h];
 
             } else {
@@ -807,9 +805,15 @@ namespace GraphTableSVG {
             if (this.isMaster) {
                 let w: Cell[] = [this];
                 let now: Cell | null = this.bottomCell;
+                let y = -1;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = now.bottomCell;
+                    if (now != null) {
+                        if (y == now.cellY) throw Error("Error");
+                        y = now.cellY;
+                    }
+
                 }
                 return w;
 
