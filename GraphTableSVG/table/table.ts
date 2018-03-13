@@ -180,6 +180,30 @@ namespace GraphTableSVG {
             */
         }
 
+        public getTryCell(x: number, y: number): Cell | null {
+            if (x < 0 || x >= this.columnCount || y < 0 || y >= this.rowCount) {
+                return null;
+            } else {
+                return this.cells[y][x];
+            }
+        }
+        public getRangeCells(x: number, y: number, width: number, height: number): Cell[][] {
+            let cells: Cell[][] = new Array(height);
+            for (let i = 0; i < cells.length; i++) {
+                cells[i] = new Array(0);
+                for (let j = 0; j < width; j++) {
+                    cells[i].push(this.cells[y + i][x + j]);
+                }
+            }
+            return cells;
+        }
+        public getRangeCellArray(x: number, y: number, width: number, height: number): Cell[] {
+            let cells: Cell[] = new Array();
+            this.getRangeCells(x, y, width, height).forEach((v) => { v.forEach((w) => { cells.push(w) }) });
+            return cells;
+        }
+
+
         
         private insertRowFunction(i: number, width: number = this.columnCount) {
             const cell: Cell[] = [];

@@ -5,6 +5,13 @@ namespace GraphTableSVG {
     export class Cell {
         private static readonly defaultBackgroundClassName: string = "--default-background-class";
         private static readonly defaultTextClass: string = "--default-text-class";
+        public static readonly cellXName = "data-cellX";
+        public static readonly cellYName = "data-cellY";
+        public static readonly masterIDName = "data-masterID";
+        public static readonly masterDiffXName = "data-masterDiffX";
+        public static readonly masterDiffYName = "data-masterDiffY";
+
+        public static readonly elementTypeName = "data-elementType";
 
         private _observer: MutationObserver;
         private _observerFunc: MutationCallback = (x: MutationRecord[]) => {
@@ -47,10 +54,17 @@ namespace GraphTableSVG {
             this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
 
             if (cellClass != null) this.svgGroup.setAttribute("class", cellClass);
+
+            this.svgGroup.setAttribute(Cell.elementTypeName, "cell-group");
+
             //this.padding = new Padding();
-            this.cellX = _px;
-            this.cellY = _py;
-            this._masterID = this.ID;
+            this.svgGroup.setAttribute(Cell.cellXName, `${_px}`);
+            this.svgGroup.setAttribute(Cell.cellYName, `${_py}`);
+
+            //this.cellX = _px;
+            //this.cellY = _py;
+            this.masterDiffX = 0;
+            this.masterDiffY = 0;
 
 
 
@@ -95,24 +109,24 @@ namespace GraphTableSVG {
             */
 
         }
-        public updateBorderAttributes() : void {
-            this.topBorder.setAttribute("data-cellX", this.cellX.toString());
-            this.topBorder.setAttribute("data-cellY", this.cellY.toString());
+        public updateBorderAttributes(): void {
+            this.topBorder.setAttribute(Cell.cellXName, this.cellX.toString());
+            this.topBorder.setAttribute(Cell.cellYName, this.cellY.toString());
             this.topBorder.setAttribute("data-border", "top");
 
 
-            this.leftBorder.setAttribute("data-cellX", this.cellX.toString());
-            this.leftBorder.setAttribute("data-cellY", this.cellY.toString());
+            this.leftBorder.setAttribute(Cell.cellXName, this.cellX.toString());
+            this.leftBorder.setAttribute(Cell.cellYName, this.cellY.toString());
             this.leftBorder.setAttribute("data-border", "left");
 
 
-            this.rightBorder.setAttribute("data-cellX", this.cellX.toString());
-            this.rightBorder.setAttribute("data-cellY", this.cellY.toString());
+            this.rightBorder.setAttribute(Cell.cellXName, this.cellX.toString());
+            this.rightBorder.setAttribute(Cell.cellYName, this.cellY.toString());
             this.rightBorder.setAttribute("data-border", "right");
 
 
-            this.bottomBorder.setAttribute("data-cellX", this.cellX.toString());
-            this.bottomBorder.setAttribute("data-cellY", this.cellY.toString());
+            this.bottomBorder.setAttribute(Cell.cellXName, this.cellX.toString());
+            this.bottomBorder.setAttribute(Cell.cellYName, this.cellY.toString());
             this.bottomBorder.setAttribute("data-border", "bottom");
         }
         private get innerExtraPaddingLeft(): number {
@@ -123,10 +137,49 @@ namespace GraphTableSVG {
             const p = this.fontSize;
             return p / 16;            
         }
-        private _masterID: number;
-        public get masterID(): number {
-            return this._masterID;
+        //private _masterID: number;
+        public get masterDiffX(): number {
+            return Number(this.svgGroup.getAttribute(Cell.masterDiffXName));
         }
+        public set masterDiffX(id: number) {
+            this.svgGroup.setAttribute(Cell.masterDiffXName, `${id}`);
+        }
+
+        public get masterDiffY(): number {
+            return Number(this.svgGroup.getAttribute(Cell.masterDiffYName));
+        }
+        public set masterDiffY(id: number) {
+            this.svgGroup.setAttribute(Cell.masterDiffYName, `${id}`);
+        }
+
+        public get masterCellX(): number {
+            return this.cellX + this.masterDiffX;
+        }
+        public set masterCellX(id: number) {
+            this.masterDiffX = id - this.cellX;
+        }
+
+        public get masterCellY(): number {
+            return this.cellY + this.masterDiffY;
+        }
+        public set masterCellY(id: number) {
+            this.masterDiffY = id - this.cellY;
+        }
+
+
+        public get masterID(): number {
+            return this.table.cells[this.masterCellY][this.masterCellX].ID;
+        }
+        /*
+        public set masterID(id: number) {
+            this.svgGroup.setAttribute(Cell.masterIDName, `${id}`);
+        }
+        */
+
+        public get master(): Cell {
+            return this.table.cellArray[this.masterID];
+        }
+
         private _topBorder: SVGLineElement;
         /**
         セルの上にある枠を返します
@@ -271,25 +324,25 @@ namespace GraphTableSVG {
         単位セルを基準にした自身のX座標を返します。
         */
         get cellX(): number {
-            return Number(this.svgGroup.getAttribute("cellX"));
+            return Number(this.svgGroup.getAttribute(Cell.cellXName));
         }
         /**
         単位セルを基準にした自身のX座標を設定します。
         */
         set cellX(value: number) {
-            if (this.cellX != value) this.svgGroup.setAttribute("cellX", value.toString());
+            if (this.cellX != value) this.svgGroup.setAttribute(Cell.cellXName, value.toString());
         }
         /**
         単位セルを基準にした自身のY座標を返します。
         */
         get cellY(): number {
-            return Number(this.svgGroup.getAttribute("cellY"));
+            return Number(this.svgGroup.getAttribute(Cell.cellYName));
         }
         /**
         単位セルを基準にした自身のY座標を設定します。
         */
         set cellY(value: number) {
-            if (this.cellY != value) this.svgGroup.setAttribute("cellY", value.toString());
+            if (this.cellY != value) this.svgGroup.setAttribute(Cell.cellYName, value.toString());
         }
 
         /**
@@ -446,12 +499,15 @@ namespace GraphTableSVG {
         get topCell(): Cell | null {
             return this.cellY != 0 ? this.table.cells[this.cellY - 1][this.cellX] : null;
         }
+        
         /**
         左にあるセルを返します。
         */
         get leftCell(): Cell | null {
             return this.cellX != 0 ? this.table.cells[this.cellY][this.cellX - 1] : null;
         }
+
+
         /**
         右にあるセルを返します。
         */
@@ -476,10 +532,88 @@ namespace GraphTableSVG {
         get topLeftCell(): Cell | null {
             return this.topCell == null ? null : this.topCell.leftCell == null ? null : this.topCell.leftCell;
         }
-        /**
-        未定義
-        */
-        get topGroupCells(): Cell[] {
+        
+        get topGroupCell(): Cell | null {
+            return this.topCell == null ? null : this.topCell.master;
+        }
+        get leftGroupCell(): Cell | null {
+            return this.leftCell == null ? null : this.leftCell.master;
+        }
+        get rightGroupCell(): Cell | null {
+            return this.rightCell == null ? null : this.rightCell.master;
+        }
+        get bottomGroupCell(): Cell | null {
+            return this.bottomCell == null ? null : this.bottomCell.master;
+        }
+        get GroupRowCount(): number {
+            if (!this.isMaster) throw Error("Slave Error");
+            return this.bottomGroupCells.length;
+        }
+        get GroupColumnCount(): number {
+            if (!this.isMaster) throw Error("Slave Error");
+            return this.rightGroupCells.length;
+        }
+
+        get cellsInGroup(): Cell[][] {
+            if (this.isMaster) {
+                return this.table.getRangeCells(this.cellX, this.cellY, this.GroupColumnCount, this.GroupRowCount);
+            } else {
+                throw Error("Slave Error");
+            }
+        }
+        get cellArrayInGroup(): Cell[] {
+            if (this.isMaster) {
+                return this.table.getRangeCellArray(this.cellX, this.cellY, this.GroupColumnCount, this.GroupRowCount);
+            } else {
+                throw Error("Slave Error");
+            }
+        }
+        private slaveUpdate() {
+            if (this.isSlave) {
+                this.svgGroup.style.visibility = "hidden";
+                //this.svgBackground.style.visibility = "hidden";
+                //this.svgText.style.visibility = "hidden";
+            }
+        }
+        connectRight(): void {
+            if (this.isMaster) {
+                if (this.rightGroupCell != null) {
+                    console.log(this.GroupRowCount + "/" + this.rightGroupCell.GroupRowCount);
+                    if (this.GroupRowCount == this.rightGroupCell.GroupRowCount) {
+                        const preRight = this.rightGroupCell.cellArrayInGroup;
+                        preRight.forEach((v) => { v.masterCellX = this.masterCellX; v.masterCellY = this.masterCellY });
+                        preRight.forEach((v) => { v.slaveUpdate() });
+
+                    } else {
+                        throw Error("Error");
+                    }
+                } else {
+                    throw Error("Error");
+                }
+            } else {
+                throw Error("Slave Error");
+            }
+        }
+        connectBottom(): void {
+            if (this.isMaster) {
+                if (this.bottomGroupCell != null) {
+                    if (this.GroupColumnCount == this.bottomGroupCell.GroupColumnCount) {
+                        const preBottom = this.bottomGroupCell.cellArrayInGroup;
+                        preBottom.forEach((v) => { v.masterCellX = this.masterCellX; v.masterCellY = this.masterCellY });
+                        preBottom.forEach((v) => { v.slaveUpdate() });
+
+                    } else {
+                        throw Error("Error");
+                    }
+                } else {
+                    throw Error("Error");
+                }
+            } else {
+                throw Error("Slave Error");
+            }
+        }
+        /*
+        private get topGroupCells(): Cell[] {
             if (this.isMaster) {
                 let w: Cell[] = [];
                 let now: Cell | null = this;
@@ -492,10 +626,7 @@ namespace GraphTableSVG {
                 return [];
             }
         }
-        /**
-        未定義
-        */
-        get leftGroupCells(): Cell[] {
+        private get leftGroupCells(): Cell[] {
             if (this.isMaster) {
                 let w: Cell[] = [];
                 let now: Cell | null = this;
@@ -508,33 +639,30 @@ namespace GraphTableSVG {
                 return [];
             }
         }
-        /**
-        未定義
-        */
-        get bottomLeftGroupCell(): Cell | null {
+        
+        private get bottomLeftGroupCell(): Cell | null {
             if (this.isMaster) {
                 return this.table.cells[this.cellY + this.logicalHeight - 1][this.cellX];
             } else {
                 return null;
             }
         }
-        /**
-        未定義
-        */
-        get topRightGroupCell(): Cell | null {
+        private get topRightGroupCell(): Cell | null {
             if (this.isMaster) {
                 return this.table.cells[this.cellY][this.cellX + this.logicalWidth - 1];
             } else {
                 return null;
             }
         }
+        */
+
         /**
         未定義
         */
-        get bottomGroupCells(): Cell[] {
+        private get bottomGroupCells(): Cell[] {
             if (this.isMaster) {
-                let w: Cell[] = [];
-                let now: Cell | null = this.bottomLeftGroupCell;
+                let w: Cell[] = [this];
+                let now: Cell | null = this.bottomCell;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = this.bottomCell;
@@ -548,10 +676,10 @@ namespace GraphTableSVG {
         /**
         未定義
         */
-        get rightGroupCells(): Cell[] {
+        private get rightGroupCells(): Cell[] {
             if (this.isMaster) {
-                let w: Cell[] = [];
-                let now: Cell | null = this.topRightGroupCell;
+                let w: Cell[] = [this];
+                let now: Cell | null = this.rightCell;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = this.rightCell;
