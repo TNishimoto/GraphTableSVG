@@ -70,8 +70,10 @@
             let height = 0;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                if (height < cell.calculatedHeight) height = cell.calculatedHeight;
-                if (height < cell.height) height = cell.height;
+                if (cell.isRowSingleCell) {
+                    if (height < cell.calculatedHeightUsingText) height = cell.calculatedHeightUsingText;
+                    if (height < cell.height) height = cell.height;
+                }
             }
             return height;
         }
@@ -88,8 +90,15 @@
             let b = false;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                if (cell.height != value) {
+                if (cell.isRowSingleCell && cell.height != value) {
                     cell.height = value;
+                    b = true;
+                }
+            }
+            for (let x = 0; x < this.table.columnCount; x++) {
+                const cell = this.table.cells[this.cellY][x];
+                if (!cell.isRowSingleCell) {
+                    cell.resize();
                     b = true;
                 }
             }
@@ -122,8 +131,10 @@
             let width = 0;
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
-                if (width < cell.calculatedWidth) width = cell.calculatedWidth;
-                if (width < cell.width) width = cell.width;
+                if (cell.isColumnSingleCell) {
+                    if (width < cell.calculatedWidthUsingText) width = cell.calculatedWidthUsingText;
+                    if (width < cell.width) width = cell.width;
+                }
             }
             return width;
         }
@@ -157,11 +168,19 @@
             let b = false;
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
-                if (cell.width != value) {
+                if (cell.isColumnSingleCell && cell.width != value) {
                     cell.width = value;
                     b = true;
                 }
             }
+            for (let y = 0; y < this.table.rowCount; y++) {
+                const cell = this.table.cells[y][this.cellX];
+                if (!cell.isColumnSingleCell) {
+                    cell.resize();
+                    b = true;
+                }
+            }
+
 
             if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
         }
