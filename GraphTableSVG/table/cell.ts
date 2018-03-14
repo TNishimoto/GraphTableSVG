@@ -563,10 +563,13 @@ namespace GraphTableSVG {
             return this.leftCell == null ? null : this.leftCell.master;
         }
         get rightMasterCell(): Cell | null {
-            return this.rightCell == null ? null : this.rightCell.master;
+            return this.rightCell == null ? null :
+                this.rightCell.masterID != this.masterID ? this.rightCell.master : this.rightCell.rightMasterCell;
         }
         get bottomMasterCell(): Cell | null {
-            return this.bottomCell == null ? null : this.bottomCell.master;
+            return this.bottomCell == null ? null :
+                this.bottomCell.masterID != this.masterID ? this.bottomCell.master : this.bottomCell.bottomMasterCell;
+
         }
         get GroupRowCount(): number {
             if (!this.isMaster) throw Error("Slave Error");
@@ -932,6 +935,14 @@ namespace GraphTableSVG {
                 return GraphTableSVG.SVG.createRectangle(className);
             }
             return rect;
+        }
+        public toPlainText(): string {
+            if (this.isMaster) {
+                
+                return this.svgText.textContent != null ? this.svgText.textContent : "";
+            } else {
+                return `@(${this.masterCellX},${this.masterCellY})`;
+            }
         }
     }
 }

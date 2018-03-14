@@ -30,5 +30,11 @@
                 return new Rectangle();
             }
         }
+        export function paddingLeft(str: string, n: number, char: string): string {
+            while (str.length < n) {
+                str = char + str;
+            }
+            return str;
+        }
     }
 }

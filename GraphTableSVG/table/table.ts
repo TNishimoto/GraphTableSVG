@@ -549,6 +549,32 @@ namespace GraphTableSVG {
                 svg.removeChild(this.svgGroup);
             }
         }
+
+
+        public toPlainText(): string {
+            const plainTable = this.cells.map((v) => v.map((w) => w.toPlainText()));
+
+            const widtharr: number[] = new Array(this.columnCount);
+            for (let x = 0; x < this.columnCount; x++) {
+                widtharr[x] = 0;
+            }
+
+
+            for (let y = 0; y < this.rowCount; y++) {
+                for (let x = 0; x < this.columnCount; x++) {
+                    const width = plainTable[y][x].length;
+                    if (widtharr[x] < width) widtharr[x] = width;
+                }
+            }
+            for (let y = 0; y < this.rowCount; y++) {
+                for (let x = 0; x < this.columnCount; x++) {
+                    plainTable[y][x] = GraphTableSVG.Common.paddingLeft(plainTable[y][x], widtharr[x], " ");
+                }
+            }
+
+            return plainTable.map((v) => v.join(",")).join("\n");
+        }
+
         /*
         Dynamic Method
         */
