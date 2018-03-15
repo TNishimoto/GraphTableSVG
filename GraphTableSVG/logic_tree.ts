@@ -92,6 +92,9 @@
         public leftBorderClass: string | null = null;
         public rightBorderClass: string | null = null;
         public bottomBorderClass: string | null = null;
+        public connectedColumnCount: number = 1;
+        public connectedRowCount: number = 1;
+
         public item: any;
 
         public isLatexMode: boolean = false;
@@ -121,6 +124,15 @@
             if (rightBorderClass != null) this.rightBorderClass = rightBorderClass;
             if (bottomBorderClass != null) this.bottomBorderClass = bottomBorderClass;
             this.isLatexMode = isLatexMode;
+        }
+        */
+        /*
+        public checkCell(): boolean {
+            if (this.masterCell != null) {
+
+            } else {
+
+            }
         }
         */
     }
@@ -177,6 +189,45 @@
                 r.push(this.cells[i][x]);
             }
             return r;
+        }
+        /*
+        public checkTable(): boolean {
+
+        }
+        */
+
+        public static parse(str: string, delimiter: string): string[][] {
+            const lines = str.split("\n");
+            const r: string[][] = new Array(lines.length);
+            for (let y = 0; y < lines.length; y++) {
+                const line = lines[y].split(delimiter);
+                r[y] = new Array(line.length);
+                for (let x = 0; x < line.length; x++) {
+                    r[y][x] = line[x];
+                }
+                if (y > 0) {
+                    if (r[y].length != r[y - 1].length) {
+                        alert("Parse Error");
+                        throw Error("Parse Error");
+                    }
+                }
+            }
+            return r;
+        }
+        public static create(str: string[][], tableClassName: string | null = null): LogicTable {
+            const table = new LogicTable(str[0].length, str.length, tableClassName);
+
+            for (let y = 0; y < str.length; y++) {
+                for (let x = 0; x < str[y].length; x++) {
+                    const p = str[y][x].split("%%%");
+                    table.cells[y][x].text = p[0];
+                    if (p.length == 3) {
+                        table.cells[y][x].connectedColumnCount = Number(p[1]);
+                        table.cells[y][x].connectedRowCount = Number(p[2]);
+                    }
+                }
+            }
+            return table;
         }
     }
 }

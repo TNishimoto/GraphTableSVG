@@ -8,10 +8,43 @@ namespace GraphTableSVG {
         private static readonly defaultCellClass: string = "--default-cell-class";
         private static readonly defaultBorderClass: string = "--default-border-class";
         
-
-
+        /*
+        field
+        */
         private _svgGroup: SVGGElement;
+        /**
+        テーブルを表現しているSVGGElementを返します。
+        */
+        public get svgGroup(): SVGGElement {
+            return this._svgGroup;
+        }
+        private _svgHiddenGroup: SVGGElement;
+        public get svgHiddenGroup(): SVGGElement {
+            return this._svgHiddenGroup;
+        }
+
+        /**
+        各行を表す配列を返します。読み取り専用です。
+        */
+        private _rows: Row[] = new Array(0);
+        get rows(): Row[] {
+            return this._rows;
+        }
+        /**
+        各列を表す配列を返します。読み取り専用です。
+        */
+        private _columns: Column[] = new Array(0);
+        get columns(): Column[] {
+            return this._columns;
+        }
         private _cells: Cell[][] = [];
+        /**
+        各セルを格納している二次元ジャグ配列を返します。
+        */
+        get cells(): Cell[][] {
+            return this._cells;
+        }
+
         private _isDrawing: boolean = false;
         public get isDrawing(): boolean {
             return this._isDrawing;
@@ -31,7 +64,7 @@ namespace GraphTableSVG {
         public get cellTextObserver(): MutationObserver {
             return this._cellTextObserver;
         }
-        private _cellTextObserverFunc: MutationCallback = (x: MutationRecord[]) => {            
+        private _cellTextObserverFunc: MutationCallback = (x: MutationRecord[]) => {
             let b = false;
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
@@ -49,10 +82,68 @@ namespace GraphTableSVG {
             if (b) this.update();
         };
 
+
+        /**
+        セルのインスタント生成時にこの値がインスタントのクラス名にセットされます。
+        */
+        get defaultCellClass(): string | null {
+            return this.svgGroup.getPropertyStyleValue(Table.defaultCellClass);
+        }
+        /**
+        ボーダーのインスタント生成時にこの値がインスタントのクラス名にセットされます。
+        */
+        get defaultBorderClass(): string | null {
+            return this.svgGroup.getPropertyStyleValue(Table.defaultBorderClass);
+        }
+        /**
+        テーブルの行方向の単位セルの数を返します。
+        */
+        get columnCount(): number {
+            if (this.cells.length == 0) {
+                return 0;
+            } else {
+                return this.cells[0].length;
+            }
+        }
+        /**
+        テーブルの列方向の単位セルの数を返します。
+        */
+        get rowCount(): number {
+            return this.cells.length;
+        }
+        public getTryCell(x: number, y: number): Cell | null {
+            if (x < 0 || x >= this.columnCount || y < 0 || y >= this.rowCount) {
+                return null;
+            } else {
+                return this.cells[y][x];
+            }
+        }
+        public getRangeCells(x: number, y: number, width: number, height: number): Cell[][] {
+            let cells: Cell[][] = new Array(height);
+            for (let i = 0; i < cells.length; i++) {
+                cells[i] = new Array(0);
+                for (let j = 0; j < width; j++) {
+                    cells[i].push(this.cells[y + i][x + j]);
+                }
+            }
+            return cells;
+        }
+        public getRangeCellArray(x: number, y: number, width: number, height: number): Cell[] {
+            let cells: Cell[] = new Array();
+            this.getRangeCells(x, y, width, height).forEach((v) => { v.forEach((w) => { cells.push(w) }) });
+            return cells;
+        }
+
+
         constructor(svgbox: HTMLElement, _tableClassName: string | null = null) {
 
             this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             svgbox.appendChild(this.svgGroup);
+
+            this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            this._svgHiddenGroup.style.visibility = "hidden";
+            svgbox.appendChild(this.svgHiddenGroup);
+
 
             this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -134,7 +225,22 @@ namespace GraphTableSVG {
                     }
                 }
             }
+
+            
+
             this.update();
+            for (let y = 0; y < this.rowCount; y++) {
+                for (let x = 0; x < this.columnCount; x++) {
+                    const cell = this.cells[y][x];
+                    const logicCell = table.cells[y][x];
+                    if (logicCell.connectedColumnCount > 1 || logicCell.connectedRowCount > 1) {
+                        if (cell.canMerge(logicCell.connectedColumnCount, logicCell.connectedRowCount)) {
+                            cell.Merge(logicCell.connectedColumnCount, logicCell.connectedRowCount);
+                        }
+                    }
+                }
+            }
+
         }
         public construct(table: string[][], isLatexMode: boolean = false) {
             this.clear();
@@ -191,28 +297,7 @@ namespace GraphTableSVG {
 
         }
 
-        public getTryCell(x: number, y: number): Cell | null {
-            if (x < 0 || x >= this.columnCount || y < 0 || y >= this.rowCount) {
-                return null;
-            } else {
-                return this.cells[y][x];
-            }
-        }
-        public getRangeCells(x: number, y: number, width: number, height: number): Cell[][] {
-            let cells: Cell[][] = new Array(height);
-            for (let i = 0; i < cells.length; i++) {
-                cells[i] = new Array(0);
-                for (let j = 0; j < width; j++) {
-                    cells[i].push(this.cells[y + i][x + j]);
-                }
-            }
-            return cells;
-        }
-        public getRangeCellArray(x: number, y: number, width: number, height: number): Cell[] {
-            let cells: Cell[] = new Array();
-            this.getRangeCells(x, y, width, height).forEach((v) => { v.forEach((w) => { cells.push(w) }) });
-            return cells;
-        }
+        
 
 
         
@@ -268,80 +353,10 @@ namespace GraphTableSVG {
             }
             */
         }
-        //private _textClassName: string | null = "table_text";
-        /**
-        セルのインスタント生成時にこの値がインスタントのクラス名にセットされます。
-        */
-        get defaultCellClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(Table.defaultCellClass);            
-        }
-        /**
-        ボーダーのインスタント生成時にこの値がインスタントのクラス名にセットされます。
-        */
-        get defaultBorderClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(Table.defaultBorderClass);            
-        }
+        
 
-        /**
-        各セルを格納している二次元ジャグ配列を返します。
-        */
-        get cells(): Cell[][] {
-            return this._cells;
-        }
+        
 
-        /**
-        テーブルを表現しているSVGGElementを返します。
-        */
-        public get svgGroup(): SVGGElement {
-            return this._svgGroup;
-        }
-        /**
-        テーブルの行方向の単位セルの数を返します。
-        */
-        get columnCount(): number {
-            if (this.cells.length == 0) {
-                return 0;
-            } else {
-                return this.cells[0].length;
-            }
-        }
-        /**
-        テーブルの列方向の単位セルの数を返します。
-        */
-        get rowCount(): number {
-            return this.cells.length;
-        }
-
-
-        /**
-        各行を表す配列を返します。読み取り専用です。
-        */
-        private _rows: Row[] = new Array(0);
-        get rows(): Row[] {
-            return this._rows;
-            /*
-            const arr = new Array(0);
-            for (let y = 0; y < this.rowCount; y++) {
-                arr.push(new Row(this, y));
-            }
-            return arr;
-            */
-        }
-        /**
-        各列を表す配列を返します。読み取り専用です。
-        */
-        private _columns: Column[] = new Array(0);
-
-        get columns(): Column[] {
-            return this._columns;
-            /*
-            const arr = new Array(0);
-            for (let x = 0; x < this.columnCount; x++) {
-                arr.push(new Column(this, x));
-            }
-            return arr;
-            */
-        }
         /**
         各セルを表す配列を返します。テーブルの左上のセルから右に向かってインデックスが割り当てられ、
         テーブル右下のセルが配列の最後の値となります。読み取り専用です。
@@ -574,6 +589,7 @@ namespace GraphTableSVG {
 
             return plainTable.map((v) => v.join(",")).join("\n");
         }
+        
 
         /*
         Dynamic Method
