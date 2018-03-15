@@ -1,6 +1,12 @@
 ﻿
 namespace GraphTableSVG {
-    
+
+    export enum DirectionType {
+        top = 0, left = 1, right = 2, bottom = 3
+    }
+    export enum DirectionType2 {
+        topLeft = 0, bottomLeft = 1, bottomRight = 2, topRight = 3
+    }
 
     export class Cell {
         private static readonly defaultBackgroundClassName: string = "--default-background-class";
@@ -126,11 +132,11 @@ namespace GraphTableSVG {
 
 
             this.rightBorder.setAttribute(Cell.borderXName, `${this.cellX+1}`);
-            this.rightBorder.setAttribute(Cell.borderYName, `${this.cellY+1}`);
+            this.rightBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
             this.rightBorder.setAttribute(Cell.borderTypeName, "vertical");
 
 
-            this.bottomBorder.setAttribute(Cell.borderXName, `${this.cellX+1}`);
+            this.bottomBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
             this.bottomBorder.setAttribute(Cell.borderYName, `${this.cellY+1}`);
             this.bottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
         }
@@ -185,61 +191,59 @@ namespace GraphTableSVG {
             return this.table.cellArray[this.masterID];
         }
 
-        private _topBorder: SVGLineElement;
+        private _borders: SVGLineElement[] = new Array(4);
+        //private _topBorder: SVGLineElement;
         /**
         セルの上にある枠を返します
         */
         get topBorder(): SVGLineElement {
-            
-            return this._topBorder;
+
+            return this._borders[DirectionType.top];
         }
         /**
         セルの上にある枠を設定します
         */
         set topBorder(line: SVGLineElement) {
-            this._topBorder = line;
+            this._borders[DirectionType.top] = line;
         }
-        private _leftBorder: SVGLineElement;
         /**
         セルの左にある枠を返します
         */
         get leftBorder(): SVGLineElement {
-            return this._leftBorder;
+            return this._borders[DirectionType.left];
         }
         /**
         セルの左にある枠を設定します
         */
         set leftBorder(line: SVGLineElement) {
-            this._leftBorder = line;
+            this._borders[DirectionType.left] = line;
         }
-
-        private _rightBorder: SVGLineElement;
         /**
         セルの右にある枠を返します
         */
         get rightBorder(): SVGLineElement {
-            return this._rightBorder;
+            return this._borders[DirectionType.right];
         }
         /**
         セルの右にある枠を設定します
         */
         set rightBorder(line: SVGLineElement) {
-            this._rightBorder = line;
+            this._borders[DirectionType.right] = line;
+
         }
-
-
-        private _bottomBorder: SVGLineElement;
         /**
         セルの下にある枠を返します
         */
         get bottomBorder(): SVGLineElement {
-            return this._bottomBorder;
+            return this._borders[DirectionType.bottom];
+
         }
         /**
         セルの下にある枠を設定します
         */
         set bottomBorder(line: SVGLineElement) {
-            this._bottomBorder = line;
+            this._borders[DirectionType.bottom] = line;
+
         } 
         private _table: Table;
         /**
@@ -269,6 +273,8 @@ namespace GraphTableSVG {
         public get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
+        
+
         get fontSize(): number {
             const p = this.svgText.getPropertyStyleValueWithDefault("font-size", "24");
             const p2 = parseInt(p);
@@ -475,11 +481,56 @@ namespace GraphTableSVG {
 
         }
 
+        public removeBorder(dir: DirectionType) {
+            const border = this._borders[dir];
+            if (this.table.svgHiddenGroup.contains(border)) {
+                this.table.svgHiddenGroup.removeChild(border);
+            } else if (this.table.svgGroup.contains(border)) {
+                this.table.svgGroup.removeChild(border);
+            } else {
+                throw Error("error");
+            }
+        }
+        public removeFromTable(isColumn: boolean) {
+
+            if (this.table.svgGroup.contains(this.svgGroup)) {
+                this.table.svgGroup.removeChild(this.svgGroup);
+            } else if (this.table.svgHiddenGroup.contains(this.svgGroup)) {
+                this.table.svgHiddenGroup.removeChild(this.svgGroup);
+            } else {
+                throw Error("error");
+            }
+            if (isColumn) {
+                this.removeBorder(DirectionType.top);
+                if (this.table.svgGroup.contains(this.topBorder)) {
+                    throw Error("err");
+                }
+                if (this.bottomCell == null) this.removeBorder(DirectionType.bottom);
+                if (this.leftCell == null) this.removeBorder(DirectionType.left);
+                if (this.rightCell == null) this.removeBorder(DirectionType.right);
+            } else {
+
+                this.table.svgGroup.removeChild(this.leftBorder);
+                if (this.rightCell == null) this.removeBorder(DirectionType.right);
+                if (this.topCell == null) this.removeBorder(DirectionType.top);
+                if (this.bottomCell == null) this.removeBorder(DirectionType.bottom);
+            }
+        }
+
+        private computeSidePosition(dir: DirectionType2): [number, number] {
+            switch (dir) {
+                case DirectionType2.topLeft: return [this.x, this.y];
+                case DirectionType2.topRight: return [this.x + this.width, this.y];
+                case DirectionType2.bottomLeft: return [this.x, this.y + this.height];
+                case DirectionType2.bottomRight: return [this.x + this.width, this.y + this.height];
+            }
+            throw Error("error");
+        }
         public relocateTopBorder() {
             if (this.table.svgGroup.contains(this.topBorder)) {
                 if (this.isMaster) {
                     this.topBorder.x1.baseVal.value = this.x;
-                    this.topBorder.x2.baseVal.value = this.x + this.computeTopBorderWidth();
+                    this.topBorder.x2.baseVal.value = this.x + this.computeBorderLength2(DirectionType.top);
                     this.topBorder.y1.baseVal.value = this.y;
                     this.topBorder.y2.baseVal.value = this.topBorder.y1.baseVal.value;
                 } else if (this.topCell != null && this.topCell.isMaster) {
@@ -495,7 +546,7 @@ namespace GraphTableSVG {
                     this.leftBorder.x1.baseVal.value = this.x;
                     this.leftBorder.x2.baseVal.value = this.leftBorder.x1.baseVal.value;
                     this.leftBorder.y1.baseVal.value = this.y;
-                    this.leftBorder.y2.baseVal.value = this.y + this.computeLeftBorderHeight();
+                    this.leftBorder.y2.baseVal.value = this.y + this.computeBorderLength2(DirectionType.left);
                 } else if (this.leftCell != null && this.leftCell.isMaster) {
                     this.leftCell.relocateRightBorder();
                 } else {
@@ -510,7 +561,7 @@ namespace GraphTableSVG {
                     this.rightBorder.x1.baseVal.value = this.x + this.width;
                     this.rightBorder.x2.baseVal.value = this.rightBorder.x1.baseVal.value;
                     this.rightBorder.y1.baseVal.value = this.y;
-                    this.rightBorder.y2.baseVal.value = this.y + this.computeRightBorderHeight();
+                    this.rightBorder.y2.baseVal.value = this.y + this.computeBorderLength2(DirectionType.right);
                 } else if (this.rightCell != null && this.rightCell.isMaster) {
                     this.rightCell.relocateLeftBorder();
                 } else {
@@ -522,7 +573,7 @@ namespace GraphTableSVG {
             if (this.table.svgGroup.contains(this.bottomBorder)) {
                 if (this.isMaster) {
                     this.bottomBorder.x1.baseVal.value = this.x;
-                    this.bottomBorder.x2.baseVal.value = this.x + this.computebottomBorderWidth();
+                    this.bottomBorder.x2.baseVal.value = this.x + this.computeBorderLength2(DirectionType.bottom);
                     this.bottomBorder.y1.baseVal.value = this.y + this.height;
                     this.bottomBorder.y2.baseVal.value = this.bottomBorder.y1.baseVal.value;
                 } else if (this.bottomCell != null && this.bottomCell.isMaster) {
@@ -603,18 +654,34 @@ namespace GraphTableSVG {
         get ID(): number {
             return this.cellX + (this.cellY * this.table.columnCount);
         }
+
+        getNextCell(direction: DirectionType): Cell | null {
+            switch (direction) {
+                case DirectionType.top: return this.cellY != 0 ? this.table.cells[this.cellY - 1][this.cellX] : null;
+                case DirectionType.left: return this.cellX != 0 ? this.table.cells[this.cellY][this.cellX - 1] : null;
+                case DirectionType.right: return this.cellX + 1 != this.table.columnCount ? this.table.cells[this.cellY][this.cellX + 1] : null;
+                case DirectionType.bottom: return this.cellY + 1 != this.table.rowCount ? this.table.cells[this.cellY + 1][this.cellX] : null;
+            }
+            throw Error("error");
+        }
+        getNextMasterCell(direction: DirectionType): Cell | null {
+            const nextCell = this.getNextCell(direction);
+            return nextCell == null ? null :
+                nextCell.masterID != this.masterID ? nextCell.master : nextCell.getNextMasterCell(direction);
+        }
+
         /**
         上にあるセルを返します。
         */
         get topCell(): Cell | null {
-            return this.cellY != 0 ? this.table.cells[this.cellY - 1][this.cellX] : null;
+            return this.getNextCell(DirectionType.top);
         }
         
         /**
         左にあるセルを返します。
         */
         get leftCell(): Cell | null {
-            return this.cellX != 0 ? this.table.cells[this.cellY][this.cellX - 1] : null;
+            return this.getNextCell(DirectionType.left);
         }
 
 
@@ -622,13 +689,14 @@ namespace GraphTableSVG {
         右にあるセルを返します。
         */
         get rightCell(): Cell | null {
-            return this.cellX + 1 != this.table.columnCount ? this.table.cells[this.cellY][this.cellX + 1] : null;
+            return this.getNextCell(DirectionType.right);
         }
         /**
         下にあるセルを返します。
         */
         get bottomCell(): Cell | null {
-            return this.cellY + 1 != this.table.rowCount ? this.table.cells[this.cellY + 1][this.cellX] : null;
+            return this.getNextCell(DirectionType.bottom);
+
         }
         get bottomRightCell(): Cell | null {
             return this.bottomCell == null ? null : this.bottomCell.rightCell == null ? null : this.bottomCell.rightCell;
@@ -644,22 +712,39 @@ namespace GraphTableSVG {
         }
         
         get topMasterCell(): Cell | null {
-            return this.topCell == null ? null :
-                this.topCell.masterID != this.masterID ? this.topCell.master : this.topCell.topMasterCell;
+            return this.getNextMasterCell(DirectionType.top);
         }
         get leftMasterCell(): Cell | null {
-            return this.leftCell == null ? null :
-                this.leftCell.masterID != this.masterID ? this.leftCell.master : this.leftCell.leftMasterCell;
+            return this.getNextMasterCell(DirectionType.left);
         }
         get rightMasterCell(): Cell | null {
-            return this.rightCell == null ? null :
-                this.rightCell.masterID != this.masterID ? this.rightCell.master : this.rightCell.rightMasterCell;
+            return this.getNextMasterCell(DirectionType.right);
         }
         get bottomMasterCell(): Cell | null {
-            return this.bottomCell == null ? null :
-                this.bottomCell.masterID != this.masterID ? this.bottomCell.master : this.bottomCell.bottomMasterCell;
+            return this.getNextMasterCell(DirectionType.bottom);
 
         }
+        get computeGroupWidth(): number {
+            const p = this.master.upperSideGroupCells;
+            const x2 = p[p.length - 1].cellX;
+            let w = 0;
+            for (let i = this.cellX; i <= x2; i++) {
+                w += this.table.columns[i].width;
+            }
+            return w;
+        }
+
+        get computeGroupHeight(): number {
+            const p = this.master.leftSideGroupCells;
+            const y2 = p[p.length - 1].cellY;
+            let w = 0;
+            for (let i = this.cellY; i <= y2; i++) {
+                w += this.table.rows[i].height;
+            }
+            return w;
+
+        }
+
         get GroupRowCount(): number {
             if (!this.isMaster) throw Error("Slave Error");
             return this.leftSideGroupCells.length;
@@ -688,6 +773,13 @@ namespace GraphTableSVG {
 
         private groupUpdate() {
 
+            if (this.isMaster) {
+                this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
+
+            } else {
+                this.table.svgHiddenGroup.appendChild(this.svgGroup);
+
+            }
             this.svgGroup.style.visibility = this.isMaster ? "visible" : "hidden";
 
             if (this.isMaster || (this.topCell != null && this.topCell.isMaster)) {
@@ -790,6 +882,61 @@ namespace GraphTableSVG {
             }
 
         }
+
+        private static computeOverlapRange(v: [number, number], w: [number, number]): [number, number] | null {
+            if (w[0] < v[0]) {
+                return Cell.computeOverlapRange(w, v);
+            } else {
+                if (v[1] < w[0]) {
+                    return null;
+                } else {
+                    if (w[1] < v[1]) {
+                        return [w[0], w[1]];
+                    } else {
+                        return [w[0], v[1]];
+                    }
+                }
+            }
+        }
+        private computeBorderLength2(dir: DirectionType): number {
+            const andFunc = ((v, w) => v);
+
+            const d1 = dir == DirectionType.top || dir == DirectionType.bottom ? this.master.x : this.master.y;
+            const d2 = dir == DirectionType.top || dir == DirectionType.bottom ? this.master.x + this.computeGroupWidth : this.master.y + this.computeGroupHeight;
+
+            const nextCell = this.getNextMasterCell(dir);
+            if (nextCell != null) {
+                const e1 = dir == DirectionType.top || dir == DirectionType.bottom ? nextCell.x : nextCell.y;
+                const e2 = dir == DirectionType.top || dir == DirectionType.bottom ? nextCell.x + nextCell.computeGroupWidth : nextCell.y + nextCell.computeGroupHeight;
+
+                const range = Cell.computeOverlapRange([d1, d2], [e1, e2]);
+                if (range == null) {
+                    throw Error("error");
+                } else {
+                    return range[1] - range[0];
+                }
+            } else {
+                return d2 - d1;
+            }
+
+        }
+        /*
+        private computeBorderLength(dir: DirectionType): number {
+            const b = (dir == DirectionType.top || dir == DirectionType.bottom);
+            const edgePos = b ? this.master.mostRightCellX : this.master.mostBottomCellY;
+            const nextCell = this.getNextMasterCell(dir);
+            const d = nextCell == null ? edgePos : b ? nextCell.mostRightCellX : nextCell.mostBottomCellY;
+            const r = Math.min(edgePos, d);
+            const start = b ? this.cellX : this.cellY;
+            let w = 0;
+            for (var i = start; i <= r; i++) {
+                w += b ? this.table.columns[i].width : this.table.rows[i].height;
+            }
+            return w;
+        }
+        */
+
+        /*
         private computeTopBorderWidth(): number {
             const mostRightCellX = this.master.mostRightCellX;
             const d = this.topMasterCell == null ? mostRightCellX : this.topMasterCell.mostRightCellX;
@@ -820,17 +967,6 @@ namespace GraphTableSVG {
                 w += this.table.rows[i].height;
             }
             return w;
-            /*
-            if (this.isMaster) {
-                
-            } else {
-                if (this.leftCell != null && this.lef) {
-                    return this.master.leftMasterCell.computeRightBorderHeight();
-                } else {
-                    return 0;
-                }
-            }
-            */
         }
         private computeRightBorderHeight(): number {
             const mostBottomCellY = this.master.mostBottomCellY;
@@ -843,6 +979,7 @@ namespace GraphTableSVG {
             }
             return w;
         }
+        */
 
         canMerge(w: number, h: number): boolean {
             const range = this.table.getRangeCells(this.cellX, this.cellY, w, h);
@@ -942,62 +1079,6 @@ namespace GraphTableSVG {
                 throw Error("Error");
             }
         }
-        /*
-        connectBottom(): void {
-            if (this.canConnectBottom && this.bottomMasterCell != null) {
-                const preBottom = this.bottomMasterCell.cellArrayInGroup;
-                preBottom.forEach((v) => { v.masterCellX = this.masterCellX; v.masterCellY = this.masterCellY });
-                preBottom.forEach((v) => { v.groupUpdate() });
-                this.groupUpdate();
-            } else {
-                throw Error("Error");
-            }
-        }
-        */
-        /*
-        private get topGroupCells(): Cell[] {
-            if (this.isMaster) {
-                let w: Cell[] = [];
-                let now: Cell | null = this;
-                while (now != null && this.ID == now.masterID) {
-                    w.push(now);
-                    now = this.topCell;
-                }
-                return w;
-            } else {
-                return [];
-            }
-        }
-        private get leftGroupCells(): Cell[] {
-            if (this.isMaster) {
-                let w: Cell[] = [];
-                let now: Cell | null = this;
-                while (now != null && this.ID == now.masterID) {
-                    w.push(now);
-                    now = this.leftCell;
-                }
-                return w;
-            } else {
-                return [];
-            }
-        }
-        
-        private get bottomLeftGroupCell(): Cell | null {
-            if (this.isMaster) {
-                return this.table.cells[this.cellY + this.logicalHeight - 1][this.cellX];
-            } else {
-                return null;
-            }
-        }
-        private get topRightGroupCell(): Cell | null {
-            if (this.isMaster) {
-                return this.table.cells[this.cellY][this.cellX + this.logicalWidth - 1];
-            } else {
-                return null;
-            }
-        }
-        */
-
         public get mostRightCellX(): number {
             return this.cellX + this.GroupColumnCount - 1;
         }
@@ -1005,21 +1086,13 @@ namespace GraphTableSVG {
             return this.cellY + this.GroupRowCount - 1;
         }
 
-        /**
-        未定義
-        */
-        private get leftSideGroupCells(): Cell[] {
+        private getNextGroupCells(direction: DirectionType): Cell[] {
             if (this.isMaster) {
                 let w: Cell[] = [this];
-                let now: Cell | null = this.bottomCell;
-                let y = -1;
+                let now: Cell | null = this.getNextCell(direction);
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
-                    now = now.bottomCell;
-                    if (now != null) {
-                        if (y == now.cellY) throw Error("Error");
-                        y = now.cellY;
-                    }
+                    now = now.getNextCell(direction);
 
                 }
                 return w;
@@ -1028,23 +1101,19 @@ namespace GraphTableSVG {
                 return [];
             }
         }
+
+        /**
+        未定義
+        */
+        private get leftSideGroupCells(): Cell[] {
+            return this.getNextGroupCells(DirectionType.bottom);
+        }
         /**
         未定義
         */
         private get upperSideGroupCells(): Cell[] {
-            if (this.isMaster) {
-                let w: Cell[] = [this];
-                let now: Cell | null = this.rightCell;
-                while (now != null && this.ID == now.masterID) {
-                    w.push(now);
-                    now = now.rightCell;
-
-                }
-                return w;
-
-            } else {
-                return [];
-            }
+            return this.getNextGroupCells(DirectionType.right);
+            
         }
         /*
         get upVirtualCells(): Cell[] {

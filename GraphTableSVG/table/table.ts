@@ -307,22 +307,22 @@ namespace GraphTableSVG {
         }
         public updateBorder(cell: Cell) {
             if (cell.leftCell != null && cell.leftCell.rightBorder != cell.leftBorder) {
-                this.svgGroup.removeChild(cell.leftBorder);
+                cell.removeBorder(DirectionType.left);
                 cell.leftBorder = cell.leftCell.rightBorder;
             }
 
             if (cell.topCell != null && cell.topCell.bottomBorder != cell.topBorder) {
-                this.svgGroup.removeChild(cell.topBorder);
+                cell.removeBorder(DirectionType.top);
                 cell.topBorder = cell.topCell.bottomBorder;
             }
 
             if (cell.rightCell != null && cell.rightCell.leftBorder != cell.rightBorder) {
-                this.svgGroup.removeChild(cell.rightCell.leftBorder);
+                cell.rightCell.removeBorder(DirectionType.left);
                 cell.rightCell.leftBorder = cell.rightBorder;
             }
 
             if (cell.bottomCell != null && cell.bottomCell.topBorder != cell.bottomBorder) {
-                this.svgGroup.removeChild(cell.bottomCell.topBorder);
+                cell.bottomCell.removeBorder(DirectionType.top);
                 cell.bottomCell.topBorder = cell.bottomBorder;
             }
         }
@@ -617,6 +617,8 @@ namespace GraphTableSVG {
         */
         public appendColumn() {
             this.insertColumn(this.columnCount);
+            this.update();
+
         }
 
         /**
@@ -630,6 +632,15 @@ namespace GraphTableSVG {
         */
         public appendRow() {
             this.insertRow(this.rowCount);
+            this.update();
+        }
+        public deleteLastRow() {
+            this.deleteRow(this.rowCount - 1);
+            this.update();
+        }
+        public deleteLastColumn() {
+            this.deleteColumn(this.columnCount - 1);
+            this.update();
         }
         /**
         新しい列をi番目の列に挿入します。
@@ -648,9 +659,9 @@ namespace GraphTableSVG {
                 }
                 this._columns.splice(i, 0, new Column(this, i));
                 this.renumbering();
-                const p = i + 1 < this.columnCount ? i : i - 1;
+                //const p = i + 1 < this.columnCount ? i : i - 1;
                 for (let y = 0; y < this.rowCount; y++) {
-                    this.updateBorder(this.cells[y][p]);
+                    this.updateBorder(this.cells[y][i]);
                 }
             } else {
                 this.insertRow(0);
@@ -682,11 +693,8 @@ namespace GraphTableSVG {
             if (this.columnCount == 1) throw Error("Error");
             for (let y = 0; y < this.rowCount; y++) {
                 const cell = this.cells[y][i];
-                this.svgGroup.removeChild(cell.svgGroup);
-                this.svgGroup.removeChild(cell.topBorder);
-                if (cell.bottomCell == null) this.svgGroup.removeChild(cell.bottomBorder);
-                if (cell.leftCell == null) this.svgGroup.removeChild(cell.leftBorder);
-                if (cell.rightCell == null) this.svgGroup.removeChild(cell.rightBorder);
+                cell.removeFromTable(true);
+                
 
                 this.cells[y].splice(i, 1);
             }
@@ -704,12 +712,7 @@ namespace GraphTableSVG {
             if (this.rowCount == 1) throw Error("Error");
             for (let x = 0; x < this.columnCount; x++) {
                 const cell = this.cells[i][x];
-                this.svgGroup.removeChild(cell.svgGroup);
-                this.svgGroup.removeChild(cell.leftBorder);
-                if (cell.rightCell == null) this.svgGroup.removeChild(cell.rightBorder);
-                if (cell.topCell == null) this.svgGroup.removeChild(cell.topBorder);
-                if (cell.bottomCell == null) this.svgGroup.removeChild(cell.bottomBorder);
-
+                cell.removeFromTable(false);
             }
 
             this.cells.splice(i, 1);
@@ -725,11 +728,14 @@ namespace GraphTableSVG {
         private deleteLastCell() {
             if (this.rowCount == 1 && this.columnCount == 1) {
                 const cell = this.cells[0][0];
+                cell.removeFromTable(true);
+                /*
                 this.svgGroup.removeChild(cell.svgGroup);
                 this.svgGroup.removeChild(cell.leftBorder);
                 this.svgGroup.removeChild(cell.rightBorder);
                 this.svgGroup.removeChild(cell.topBorder);
                 this.svgGroup.removeChild(cell.bottomBorder);
+                */
                 this._cells.splice(0, 1);
 
                 this.rows[0].detouch();
