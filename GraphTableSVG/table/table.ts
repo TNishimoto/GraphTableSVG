@@ -134,7 +134,60 @@ namespace GraphTableSVG {
             return cells;
         }
 
+        /**
+        各セルを表す配列を返します。テーブルの左上のセルから右に向かってインデックスが割り当てられ、
+        テーブル右下のセルが配列の最後の値となります。読み取り専用です。
+        */
+        get cellArray(): Cell[] {
+            const arr = new Array(0);
+            for (let y = 0; y < this.rowCount; y++) {
+                for (let x = 0; x < this.columnCount; x++) {
+                    arr.push(this.cells[y][x]);
+                }
+            }
+            return arr;
 
+        }
+        /**
+        各ボーダーを表す配列を返します。
+        ボーダーの順番は未定義です。
+        読み取り専用です。
+        */
+        get borders(): SVGLineElement[] {
+            const arr = new Array(0);
+            for (let y = 0; y < this.rowCount; y++) {
+                for (let x = 0; x < this.columnCount; x++) {
+                    if (arr.indexOf(this.cells[y][x].topBorder) == -1) {
+                        arr.push(this.cells[y][x].topBorder);
+                    }
+                    if (arr.indexOf(this.cells[y][x].leftBorder) == -1) {
+                        arr.push(this.cells[y][x].leftBorder);
+                    }
+                    if (arr.indexOf(this.cells[y][x].rightBorder) == -1) {
+                        arr.push(this.cells[y][x].rightBorder);
+                    }
+                    if (arr.indexOf(this.cells[y][x].bottomBorder) == -1) {
+                        arr.push(this.cells[y][x].bottomBorder);
+                    }
+                }
+            }
+            return arr;
+        }
+
+
+        /**
+        所属しているSVGタグ上でのテーブルの領域を表すRectangleクラスを返します。        
+        */
+        public getRegion(): Rectangle {
+            const regions = this.cellArray.map((v) => v.region);
+            const rect = Rectangle.merge(regions);
+            rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
+            return rect;
+        }
+
+        /*
+         constructor
+        */
         constructor(svgbox: HTMLElement, _tableClassName: string | null = null) {
 
             this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -259,187 +312,19 @@ namespace GraphTableSVG {
 
         }
 
-        public setSize(width: number, height: number) {
-            if (this.columnCount != this.columns.length) throw Error(`Error : ${this.columnCount} ${this.columns.length}`);
-
-            this.clear();
-
-            /*
-            while (this.rowCount > height) {
-                this.deleteRow(this.rowCount - 1);
-            }
-            */
-            while (this.rowCount < height) {
-                if (this.columnCount != this.columns.length) throw Error(`ErrorR : ${this.columnCount} ${this.columns.length}`);
-
-                this.insertRowFunction(this.rowCount, width);
-            }
-            /*
-            while (this.columnCount > width) {
-                this.deleteColumn(this.columnCount - 1);
-            }
-            */
-            while (this.columnCount < width) {
-                if (this.columnCount != this.columns.length) throw Error(`ErrorC : ${this.columnCount} ${this.columns.length}`);
-                
-                this.insertColumn(this.columnCount);
-            }
-
-            /*
-            if (this.rowCount < height) {
-                for (let y = this.rowCount; y < height; y++) {
-                    console.log(`insert : ${this.rowCount}`)
-                    this.insertRowFunction(y, width);
-                }
-            }
-            */
-            if (this.columnCount != this.columns.length) throw Error(`ErrorX : ${this.columnCount} ${this.columns.length}`);
-
-        }
 
         
 
 
         
         
-        private createCell(): Cell {
-            return new Cell(this, 0, 0, this.defaultCellClass, this.defaultBorderClass);
-        }
-        public updateBorder(cell: Cell) {
-            if (cell.leftCell != null && cell.leftCell.rightBorder != cell.leftBorder) {
-                cell.removeBorder(DirectionType.left);
-                cell.leftBorder = cell.leftCell.rightBorder;
-            }
-
-            if (cell.topCell != null && cell.topCell.bottomBorder != cell.topBorder) {
-                cell.removeBorder(DirectionType.top);
-                cell.topBorder = cell.topCell.bottomBorder;
-            }
-
-            if (cell.rightCell != null && cell.rightCell.leftBorder != cell.rightBorder) {
-                cell.rightCell.removeBorder(DirectionType.left);
-                cell.rightCell.leftBorder = cell.rightBorder;
-            }
-
-            if (cell.bottomCell != null && cell.bottomCell.topBorder != cell.bottomBorder) {
-                cell.bottomCell.removeBorder(DirectionType.top);
-                cell.bottomCell.topBorder = cell.bottomBorder;
-            }
-        }
-        public renumbering() {
-            if (this.rows.length != this.cells.length) throw Error("Error");
-
-            this.rows.forEach((v, i) => v.cellY = i);
-            this.columns.forEach((v, i) => v.cellX = i);
-
-            for (let y = 0; y < this.rowCount; y++) {
-                for (let x = 0; x < this.columnCount; x++) {
-                    this.cells[y][x].cellX = x;
-                    this.cells[y][x].cellY = y;
-                    this.cells[y][x].updateBorderAttributes();
-                }
-            }
-            this.rows.forEach((v, i) => v.update());
-            this.columns.forEach((v, i) => v.update());
-
-
-            this.borders.forEach((v, i) => { v.setAttribute("borderID", i.toString()) });
-
-            /*
-            for (let y = 0; y < this.height; y++) {
-                for (let x = 0; x < this.width; x++) {
-                    this.setLine(this.cells[y][x]);
-                }
-            }
-            */
-        }
-        
 
         
 
-        /**
-        各セルを表す配列を返します。テーブルの左上のセルから右に向かってインデックスが割り当てられ、
-        テーブル右下のセルが配列の最後の値となります。読み取り専用です。
-        */
-        get cellArray(): Cell[] {
-            const arr = new Array(0);
-            for (let y = 0; y < this.rowCount; y++) {
-                for (let x = 0; x < this.columnCount; x++) {
-                    arr.push(this.cells[y][x]);
-                }
-            }
-            return arr;
-
-        }
-        /**
-        各ボーダーを表す配列を返します。
-        ボーダーの順番は未定義です。
-        読み取り専用です。
-        */
-        get borders(): SVGLineElement[] {
-            const arr = new Array(0);
-            for (let y = 0; y < this.rowCount; y++) {
-                for (let x = 0; x < this.columnCount; x++) {
-                    if (arr.indexOf(this.cells[y][x].topBorder) == -1) {
-                        arr.push(this.cells[y][x].topBorder);
-                    }
-                    if (arr.indexOf(this.cells[y][x].leftBorder) == -1) {
-                        arr.push(this.cells[y][x].leftBorder);
-                    }
-                    if (arr.indexOf(this.cells[y][x].rightBorder) == -1) {
-                        arr.push(this.cells[y][x].rightBorder);
-                    }
-                    if (arr.indexOf(this.cells[y][x].bottomBorder) == -1) {
-                        arr.push(this.cells[y][x].bottomBorder);
-                    }
-                }
-            }
-            return arr;
-        }
         
-        /**
-        各セルのサイズを再計算します。
-        */
-        public update() {
-            this._isDrawing = true;
-            const rows = this.rows;
-            const columns = this.columns;
-            rows.forEach(function (x, i, arr) { x.resize(); });
-            columns.forEach(function (x, i, arr) { x.resize(); });
-            let height = 0;
-            rows.forEach(function (x, i, arr) {
-                x.setY(height);
-                height += x.height;
-            });
-            let width = 0;
-            columns.forEach(function (x, i, arr) {
-                x.setX(width);
-
-                width += x.width;
-            });
-            this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
-
-            this._isDrawing = false;
-            
-        }
-        /**
-        所属しているSVGタグ上でのテーブルの領域を表すRectangleクラスを返します。        
-        */
-        public getRegion(): Rectangle {
-            const regions = this.cellArray.map((v) => v.region);
-            const rect = Rectangle.merge(regions);
-            rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
-            return rect;            
-        }
         /*
-        private getCellFromID(id: number): Cell {
-            const y = Math.floor(id / this.height);
-            const x = id % this.width;
-            return this.cells[y][x];
-        }
+        VBA Code
         */
-        
-
         public createVBACode(id: number, slide: string): string[] {
             const lines = new Array(0);
             lines.push(`Sub create${id}(createdSlide As slide)`);
@@ -559,11 +444,6 @@ namespace GraphTableSVG {
         }
         */
         
-        public removeTable(svg: HTMLElement) {
-            if (svg.contains(this.svgGroup)) {
-                svg.removeChild(this.svgGroup);
-            }
-        }
 
 
         public toPlainText(): string {
@@ -592,9 +472,82 @@ namespace GraphTableSVG {
         
 
         /*
+        Update
+        */
+        /**
+        各セルのサイズを再計算します。
+        */
+        public update() {
+            this._isDrawing = true;
+            const rows = this.rows;
+            const columns = this.columns;
+            rows.forEach(function (x, i, arr) { x.resize(); });
+            columns.forEach(function (x, i, arr) { x.resize(); });
+            let height = 0;
+            rows.forEach(function (x, i, arr) {
+                x.setY(height);
+                height += x.height;
+            });
+            let width = 0;
+            columns.forEach(function (x, i, arr) {
+                x.setX(width);
+
+                width += x.width;
+            });
+            this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
+
+            this._isDrawing = false;
+
+        }
+
+        private createCell(): Cell {
+            return new Cell(this, 0, 0, this.defaultCellClass, this.defaultBorderClass);
+        }
+
+        private renumbering() {
+            if (this.rows.length != this.cells.length) throw Error("Error");
+
+            this.rows.forEach((v, i) => v.cellY = i);
+            this.columns.forEach((v, i) => v.cellX = i);
+
+            for (let y = 0; y < this.rowCount; y++) {
+                for (let x = 0; x < this.columnCount; x++) {
+                    this.cells[y][x].cellX = x;
+                    this.cells[y][x].cellY = y;
+                    this.cells[y][x].updateBorderAttributes();
+                }
+            }
+            this.rows.forEach((v, i) => v.update());
+            this.columns.forEach((v, i) => v.update());
+
+
+            this.borders.forEach((v, i) => { v.setAttribute("borderID", i.toString()) });
+            
+        }
+
+
+
+        /*
         Dynamic Method
         */
 
+        public removeTable(svg: HTMLElement) {
+            if (svg.contains(this.svgGroup)) {
+                svg.removeChild(this.svgGroup);
+            }
+        }
+
+        public setSize(width: number, height: number) {
+
+            this.clear();
+            while (this.rowCount < height) {
+                this.insertRowFunction(this.rowCount, width);
+            }
+            while (this.columnCount < width) {
+                this.insertColumn(this.columnCount);
+            }
+
+        }
         public clear() {
             if (this.columnCount != this.columns.length) throw Error("Error");
 
@@ -608,40 +561,14 @@ namespace GraphTableSVG {
                 this.deleteColumn(1);
 
             }
-            this.deleteLastCell();
+            if (this.rowCount == 1 && this.columnCount == 1) {
+                this.deleteLastCell();
+            }
+
             //this.cells[0][0].svgText.textContent = "";
         }
 
-        /**
-        新しい列を最後の列に追加します。
-        */
-        public appendColumn() {
-            this.insertColumn(this.columnCount);
-            this.update();
-
-        }
-
-        /**
-        新しい行をi番目の行に挿入します
-        */
-        public insertRow(i: number) {
-            this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
-        }
-        /**
-        新しい行を行の最後に追加します。
-        */
-        public appendRow() {
-            this.insertRow(this.rowCount);
-            this.update();
-        }
-        public deleteLastRow() {
-            this.deleteRow(this.rowCount - 1);
-            this.update();
-        }
-        public deleteLastColumn() {
-            this.deleteColumn(this.columnCount - 1);
-            this.update();
-        }
+        
         /**
         新しい列をi番目の列に挿入します。
         */
@@ -661,11 +588,13 @@ namespace GraphTableSVG {
                 this.renumbering();
                 //const p = i + 1 < this.columnCount ? i : i - 1;
                 for (let y = 0; y < this.rowCount; y++) {
-                    this.updateBorder(this.cells[y][i]);
+                    this.cells[y][i].updateBorder();
                 }
             } else {
                 this.insertRow(0);
             }
+            this.update();
+
         }
         private insertRowFunction(i: number, width: number = this.columnCount) {
             const cell: Cell[] = [];
@@ -683,65 +612,107 @@ namespace GraphTableSVG {
             this._rows.splice(i, 0, new Row(this, i));
 
             this.renumbering();
-            for (let x = 0; x < width; x++) {
-                this.updateBorder(this.cells[i][x]);
-            }
+            this.rows[i].cells.forEach((v) => v.updateBorder());
+            this.update();
+
         }
         public deleteColumn(i: number) {
-            if (this.columnCount != this.columns.length) throw Error("Error");
-            if (i > this.columnCount) throw Error("Error");
-            if (this.columnCount == 1) throw Error("Error");
-            for (let y = 0; y < this.rowCount; y++) {
-                const cell = this.cells[y][i];
-                cell.removeFromTable(true);
-                
+            if (this.rows.length == 1 && this.columns.length == 1 && i == 0) {
+                this.deleteLastCell();
+            } else {
 
-                this.cells[y].splice(i, 1);
-            }
-            this.columns[i].detouch();
-            this.renumbering();
+                if (this.columnCount != this.columns.length) throw Error("Error");
+                if (i > this.columnCount) throw Error("Error");
+                if (this.columnCount == 1) throw Error("Error");
+                for (let y = 0; y < this.rowCount; y++) {
+                    const cell = this.cells[y][i];
+                    cell.removeFromTable(true);
 
-            const p = i + 1 < this.columnCount ? i : i - 1;
-            for (let y = 0; y < this.rowCount; y++) {
-                this.updateBorder(this.cells[y][p]);
+
+                    this.cells[y].splice(i, 1);
+                }
+                this.columns[i].detouch();
+                this.renumbering();
+
+                const p = i + 1 < this.columnCount ? i : i - 1;
+                this.columns[p].cells.forEach((v) => v.updateBorder());
+                /*
+                for (let y = 0; y < this.rowCount; y++) {
+                    this.cells[y][p].updateBorder();
+                }
+                */
+                this.update();
+
             }
 
         }
         public deleteRow(i: number) {
-            const h = this.rowCount;
-            if (this.rowCount == 1) throw Error("Error");
-            for (let x = 0; x < this.columnCount; x++) {
-                const cell = this.cells[i][x];
-                cell.removeFromTable(false);
+            if (this.rows.length == 1 && this.columns.length == 1 && i == 0) {
+                this.deleteLastCell();
+            } else {
+                const h = this.rowCount;
+                if (this.rowCount == 1) throw Error("Error");
+                for (let x = 0; x < this.columnCount; x++) {
+                    const cell = this.cells[i][x];
+                    cell.removeFromTable(false);
+                }
+
+                this.cells.splice(i, 1);
+                this.rows[i].detouch();
+
+                this.renumbering();
+
+                const p = i + 1 < this.rowCount ? i : i - 1;
+                this.rows[p].cells.forEach((v) => v.updateBorder());
+                /*
+                for (let x = 0; x < this.columnCount; x++) {
+                    this.cells[p][x].updateBorder();
+                    this.cells[p][x].relocation();
+                }
+                */
+                this.update();
+
             }
 
-            this.cells.splice(i, 1);
-            this.rows[i].detouch();
-
-            this.renumbering();
-
-            const p = i + 1 < this.rowCount ? i : i - 1;
-            for (let x = 0; x < this.columnCount; x++) {
-                this.updateBorder(this.cells[p][x]);
-            }
         }
         private deleteLastCell() {
             if (this.rowCount == 1 && this.columnCount == 1) {
                 const cell = this.cells[0][0];
-                cell.removeFromTable(true);
-                /*
-                this.svgGroup.removeChild(cell.svgGroup);
-                this.svgGroup.removeChild(cell.leftBorder);
-                this.svgGroup.removeChild(cell.rightBorder);
-                this.svgGroup.removeChild(cell.topBorder);
-                this.svgGroup.removeChild(cell.bottomBorder);
-                */
+                cell.removeFromTable(true);                
                 this._cells.splice(0, 1);
 
                 this.rows[0].detouch();
                 this.columns[0].detouch();
 
             }
+            this.update();
+
         }
+        /**
+        新しい列を最後の列に追加します。
+        */
+        public appendColumn() {
+            this.insertColumn(this.columnCount);
+        }
+
+        /**
+        新しい行をi番目の行に挿入します
+        */
+        public insertRow(i: number) {
+            this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
+        }
+        /**
+        新しい行を行の最後に追加します。
+        */
+        public appendRow() {
+            this.insertRow(this.rowCount);
+        }
+        public deleteLastRow() {
+            this.deleteRow(this.rowCount - 1);
+        }
+        public deleteLastColumn() {
+            this.deleteColumn(this.columnCount - 1);
+        }
+
     }
 }

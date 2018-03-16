@@ -37,7 +37,8 @@
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
                 if (!cell.isRowSingleCell) {
-                    cell.resize();
+                    cell.update();
+                    //cell.resize();
                     b = true;
                 }
             }
@@ -152,6 +153,11 @@
             this.table.rows.forEach((v, i) => v.cellY = i);
             this.table.svgGroup.removeChild(this._svgGroup);            
         }
+        /*
+        public updateBorders() {
+            this.cells.forEach((v) => v.updateBorder());
+        }
+        */
     }
     export class Column {
         private readonly table: Table;
@@ -191,7 +197,8 @@
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
                 if (!cell.isColumnSingleCell) {
-                    cell.resize();
+                    cell.update();
+                    //cell.resize();
                     b = true;
                 }
             }

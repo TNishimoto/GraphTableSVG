@@ -34,26 +34,7 @@ namespace GraphTableSVG {
             }
         };
         
-
-        /*
-        private _textObserver: MutationObserver;
-        private _textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
-            for (let i = 0; i < x.length; i++) {
-                const p = x[i];
-                for (let j = 0; j < p.addedNodes.length; j++) {
-                    const item = p.addedNodes.item(j);
-                    console.log(`${this.table.isDrawing} ${this.table.isAutoResized}`)
-                    console.log(this.svgText.textContent);
-
-                    if (item.nodeName == "#text") {
-                        if (!this.table.isDrawing && this.table.isAutoResized) {
-                            this.table.resize();
-                        }
-                    }
-                }
-            }
-        };
-        */
+        
         constructor(parent: Table, _px: number, _py: number, cellClass: string | null = null, borderClass: string | null = null) {
 
 
@@ -119,27 +100,7 @@ namespace GraphTableSVG {
             */
 
         }
-        public updateBorderAttributes(): void {
-            this.topBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.topBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.topBorder.setAttribute(Cell.borderTypeName, "horizontal");
-            //this.topBorder.setAttribute("data-border", "top");
-
-
-            this.leftBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.leftBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.leftBorder.setAttribute(Cell.borderTypeName, "vertical");
-
-
-            this.rightBorder.setAttribute(Cell.borderXName, `${this.cellX+1}`);
-            this.rightBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.rightBorder.setAttribute(Cell.borderTypeName, "vertical");
-
-
-            this.bottomBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.bottomBorder.setAttribute(Cell.borderYName, `${this.cellY+1}`);
-            this.bottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
-        }
+        
         private get innerExtraPaddingLeft(): number {
             const p = this.fontSize;
             return p / 16;
@@ -447,75 +408,6 @@ namespace GraphTableSVG {
             }
         }
 
-        /**
-         *セルのサイズを再計算します。
-         */
-        public resize() {
-            const [w, h] = this.calculatedSizeUsingGroup(); 
-            if (this.width != w) {
-                this.width = w;
-            }
-            if (this.height != h) {
-                this.height = h;
-            }
-
-            if (this.width < this.calculatedWidthUsingText) {
-                this.width = this.calculatedWidthUsingText;
-            }
-            if (this.height < this.calculatedHeightUsingText) {
-                this.height = this.calculatedHeightUsingText;
-            }
-            //console.log([-1, this.width, this.height, w, h]);
-        }
-        /**
-         * 再描画します。
-         */
-        private localUpdate() {
-            const innerRect = new Rectangle();
-            innerRect.x = this.innerExtraPaddingLeft + this.paddingLeft;
-            innerRect.y = this.paddingTop;
-            innerRect.height = this.height  - this.paddingTop - this.paddingBottom;
-            innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
-
-            Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
-
-        }
-
-        public removeBorder(dir: DirectionType) {
-            const border = this._borders[dir];
-            if (this.table.svgHiddenGroup.contains(border)) {
-                this.table.svgHiddenGroup.removeChild(border);
-            } else if (this.table.svgGroup.contains(border)) {
-                this.table.svgGroup.removeChild(border);
-            } else {
-                throw Error("error");
-            }
-        }
-        public removeFromTable(isColumn: boolean) {
-
-            if (this.table.svgGroup.contains(this.svgGroup)) {
-                this.table.svgGroup.removeChild(this.svgGroup);
-            } else if (this.table.svgHiddenGroup.contains(this.svgGroup)) {
-                this.table.svgHiddenGroup.removeChild(this.svgGroup);
-            } else {
-                throw Error("error");
-            }
-            if (isColumn) {
-                this.removeBorder(DirectionType.top);
-                if (this.table.svgGroup.contains(this.topBorder)) {
-                    throw Error("err");
-                }
-                if (this.bottomCell == null) this.removeBorder(DirectionType.bottom);
-                if (this.leftCell == null) this.removeBorder(DirectionType.left);
-                if (this.rightCell == null) this.removeBorder(DirectionType.right);
-            } else {
-
-                this.table.svgGroup.removeChild(this.leftBorder);
-                if (this.rightCell == null) this.removeBorder(DirectionType.right);
-                if (this.topCell == null) this.removeBorder(DirectionType.top);
-                if (this.bottomCell == null) this.removeBorder(DirectionType.bottom);
-            }
-        }
 
         private computeSidePosition(dir: DirectionType2): [number, number] {
             switch (dir) {
@@ -525,120 +417,6 @@ namespace GraphTableSVG {
                 case DirectionType2.bottomRight: return [this.x + this.width, this.y + this.height];
             }
             throw Error("error");
-        }
-        public relocateTopBorder() {
-            if (this.table.svgGroup.contains(this.topBorder)) {
-                if (this.isMaster) {
-                    this.topBorder.x1.baseVal.value = this.x;
-                    this.topBorder.x2.baseVal.value = this.x + this.computeBorderLength2(DirectionType.top);
-                    this.topBorder.y1.baseVal.value = this.y;
-                    this.topBorder.y2.baseVal.value = this.topBorder.y1.baseVal.value;
-                } else if (this.topCell != null && this.topCell.isMaster) {
-                    this.topCell.relocateBottomBorder();
-                } else {
-                    throw Error("error");
-                }
-            }
-        }
-        public relocateLeftBorder() {
-            if (this.table.svgGroup.contains(this.leftBorder)) {
-                if (this.isMaster) {
-                    this.leftBorder.x1.baseVal.value = this.x;
-                    this.leftBorder.x2.baseVal.value = this.leftBorder.x1.baseVal.value;
-                    this.leftBorder.y1.baseVal.value = this.y;
-                    this.leftBorder.y2.baseVal.value = this.y + this.computeBorderLength2(DirectionType.left);
-                } else if (this.leftCell != null && this.leftCell.isMaster) {
-                    this.leftCell.relocateRightBorder();
-                } else {
-                    throw Error("error");
-                }
-            }
-        }
-        public relocateRightBorder() {
-            if (this.table.svgGroup.contains(this.rightBorder)) {
-                if (this.isMaster) {
-
-                    this.rightBorder.x1.baseVal.value = this.x + this.width;
-                    this.rightBorder.x2.baseVal.value = this.rightBorder.x1.baseVal.value;
-                    this.rightBorder.y1.baseVal.value = this.y;
-                    this.rightBorder.y2.baseVal.value = this.y + this.computeBorderLength2(DirectionType.right);
-                } else if (this.rightCell != null && this.rightCell.isMaster) {
-                    this.rightCell.relocateLeftBorder();
-                } else {
-                    throw Error("error");
-                }
-            }
-        }
-        public relocateBottomBorder() {
-            if (this.table.svgGroup.contains(this.bottomBorder)) {
-                if (this.isMaster) {
-                    this.bottomBorder.x1.baseVal.value = this.x;
-                    this.bottomBorder.x2.baseVal.value = this.x + this.computeBorderLength2(DirectionType.bottom);
-                    this.bottomBorder.y1.baseVal.value = this.y + this.height;
-                    this.bottomBorder.y2.baseVal.value = this.bottomBorder.y1.baseVal.value;
-                } else if (this.bottomCell != null && this.bottomCell.isMaster) {
-                    this.bottomCell.relocateTopBorder();
-                } else {
-                    throw Error("error");
-                }
-            }
-        }
-
-        /**
-         *セルの位置を再計算します。
-         */
-        public relocation() {
-            if (!GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup)) return;
-
-            this.relocateTopBorder();
-            this.relocateLeftBorder();
-            this.relocateRightBorder();
-            this.relocateBottomBorder();
-            /*
-            if (this.table.svgGroup.contains(this.topBorder)) {
-                this.topBorder.x1.baseVal.value = this.x;
-                this.topBorder.x2.baseVal.value = this.x + this.computeTopBorderWidth();
-                this.topBorder.y1.baseVal.value = this.y;
-                this.topBorder.y2.baseVal.value = this.topBorder.y1.baseVal.value;
-            }
-
-            if (this.table.svgGroup.contains(this.leftBorder)) {
-                this.leftBorder.x1.baseVal.value = this.x;
-                this.leftBorder.x2.baseVal.value = this.leftBorder.x1.baseVal.value;
-                this.leftBorder.y1.baseVal.value = this.y;
-                this.leftBorder.y2.baseVal.value = this.y + this.computeLeftBorderHeight();
-            }
-
-            if (this.table.svgGroup.contains(this.rightBorder)) {
-                this.rightBorder.x1.baseVal.value = this.x + this.width;
-                this.rightBorder.x2.baseVal.value = this.rightBorder.x1.baseVal.value;
-                this.rightBorder.y1.baseVal.value = this.y;
-                this.rightBorder.y2.baseVal.value = this.y + this.computeRightBorderHeight();
-
-            }
-
-            if (this.table.svgGroup.contains(this.bottomBorder)) {
-                this.bottomBorder.x1.baseVal.value = this.x;
-                this.bottomBorder.x2.baseVal.value = this.x + this.computebottomBorderWidth();
-                this.bottomBorder.y1.baseVal.value = this.y + this.height;
-                this.bottomBorder.y2.baseVal.value = this.bottomBorder.y1.baseVal.value;
-
-                if (this.cellX == 1 && this.cellY == 1) {
-                    console.log(this.calculatedSizeUsingGroup());
-                }
-
-            }
-            */
-
-
-            //this.textSVG.x.baseVal.getItem(0).value = 0;
-            //const text_x = 0;
-            //const text_y = 0;
-
-            this.localUpdate();
-
-            
-
         }
 
 
@@ -770,79 +548,6 @@ namespace GraphTableSVG {
         }
 
 
-
-        private groupUpdate() {
-
-            if (this.isMaster) {
-                this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
-
-            } else {
-                this.table.svgHiddenGroup.appendChild(this.svgGroup);
-
-            }
-            this.svgGroup.style.visibility = this.isMaster ? "visible" : "hidden";
-
-            if (this.isMaster || (this.topCell != null && this.topCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.topBorder);
-            } else {
-                this.table.svgHiddenGroup.appendChild(this.topBorder);
-            }
-
-            if (this.isMaster || (this.leftCell != null && this.leftCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.leftBorder);
-            } else {
-                this.table.svgHiddenGroup.appendChild(this.leftBorder);
-            }
-
-            if (this.isMaster || (this.rightCell != null && this.rightCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.rightBorder);
-            } else {
-                this.table.svgHiddenGroup.appendChild(this.rightBorder);
-            }
-
-            if (this.isMaster || (this.bottomCell != null && this.bottomCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.bottomBorder);
-            } else {
-                this.table.svgHiddenGroup.appendChild(this.bottomBorder);
-            }
-
-            this.resize();
-            this.relocation();
-
-            /*
-            this.topBorder.style.visibility = this.isMaster || (this.topCell != null && this.topCell.isMaster) ? "visible" : "hidden";
-            this.leftBorder.style.visibility = this.isMaster || (this.leftCell != null && this.leftCell.isMaster) ? "visible" : "hidden";
-            this.rightBorder.style.visibility = this.isMaster || (this.rightCell != null && this.rightCell.isMaster) ? "visible" : "hidden";
-            this.bottomBorder.style.visibility = this.isMaster || (this.bottomCell != null && this.bottomCell.isMaster) ? "visible" : "hidden";
-            */
-
-            /*
-            if (this.isSlave) {
-                this.svgGroup.style.visibility = "hidden";
-                //this.svgBackground.style.visibility = "hidden";
-                //this.svgText.style.visibility = "hidden";
-
-
-                this.topBorder.style.visibility = this.topCell != null && this.topCell.isMaster && this.masterID != this.topCell.masterID ? "visible" : "hidden";
-                this.leftBorder.style.visibility = this.leftCell != null && this.leftCell.isMaster && this.masterID != this.leftCell.masterID ? "visible" : "hidden";
-                this.rightBorder.style.visibility = this.rightCell != null && this.rightCell.isMaster && this.masterID != this.rightCell.masterID ? "visible" : "hidden";
-                this.bottomBorder.style.visibility = this.bottomCell != null && this.bottomCell.isMaster && this.masterID != this.bottomCell.masterID ? "visible" : "hidden";
-                //console.log(`${this.cellX},${this.cellY}@ ${this.topBorder.style.visibility}`);
-                //this.relocation();
-
-            }
-            if (this.isMaster) {
-                this.resize();
-                this.relocation();
-
-                this.topBorder.style.visibility = "visible";
-                this.leftBorder.style.visibility = "visible";
-                this.rightBorder.style.visibility = "visible";
-                this.bottomBorder.style.visibility = "visible";
-
-            }
-            */
-        }
         get isSingleCell(): boolean {
             return this.isMaster && this.leftSideGroupCells.length == 1 && this.upperSideGroupCells.length == 1;
         }
@@ -852,36 +557,7 @@ namespace GraphTableSVG {
         get isColumnSingleCell(): boolean {
             return this.isMaster && this.upperSideGroupCells.length == 1;
         }
-        private decomposeRow(upperRowCount: number) {
-            if (this.isMaster) {
-                const upperSide = this.table.getRangeCellArray(this.cellX, this.cellY, this.GroupColumnCount, upperRowCount);
-                const lowerSide = this.table.getRangeCellArray(this.cellX, this.cellY + upperRowCount, this.GroupColumnCount, this.GroupRowCount - upperRowCount);
-                const lowerMaster = lowerSide[0];
-                lowerSide.forEach((v) => [v.masterCellX, v.masterCellY] = [lowerMaster.cellX, lowerMaster.cellY]);
-
-                upperSide.forEach((v) => v.groupUpdate());
-                lowerSide.forEach((v) => v.groupUpdate());
-
-            } else {
-                throw Error("Slave Error");
-            }
-        }
-
-        private decomposeColomn(leftColumnCount: number) {
-            if (this.isMaster) {
-                const leftSide = this.table.getRangeCellArray(this.cellX, this.cellY, leftColumnCount, this.GroupRowCount);
-                const rightSide = this.table.getRangeCellArray(this.cellX + leftColumnCount, this.cellY, this.GroupColumnCount - leftColumnCount, this.GroupRowCount);
-                const rightMaster = rightSide[0];
-                rightSide.forEach((v) => [v.masterCellX, v.masterCellY] = [rightMaster.cellX, rightMaster.cellY]);
-
-                leftSide.forEach((v) => v.groupUpdate());
-                rightSide.forEach((v) => v.groupUpdate());
-
-            } else {
-                throw Error("Slave Error");
-            }
-
-        }
+        
 
         private static computeOverlapRange(v: [number, number], w: [number, number]): [number, number] | null {
             if (w[0] < v[0]) {
@@ -920,66 +596,6 @@ namespace GraphTableSVG {
             }
 
         }
-        /*
-        private computeBorderLength(dir: DirectionType): number {
-            const b = (dir == DirectionType.top || dir == DirectionType.bottom);
-            const edgePos = b ? this.master.mostRightCellX : this.master.mostBottomCellY;
-            const nextCell = this.getNextMasterCell(dir);
-            const d = nextCell == null ? edgePos : b ? nextCell.mostRightCellX : nextCell.mostBottomCellY;
-            const r = Math.min(edgePos, d);
-            const start = b ? this.cellX : this.cellY;
-            let w = 0;
-            for (var i = start; i <= r; i++) {
-                w += b ? this.table.columns[i].width : this.table.rows[i].height;
-            }
-            return w;
-        }
-        */
-
-        /*
-        private computeTopBorderWidth(): number {
-            const mostRightCellX = this.master.mostRightCellX;
-            const d = this.topMasterCell == null ? mostRightCellX : this.topMasterCell.mostRightCellX;
-            const r = Math.min(mostRightCellX, d);
-            let w = 0;
-            for (var i = this.cellX; i <= r; i++) {
-                w += this.table.columns[i].width;
-            }
-            return w;
-        }
-        private computebottomBorderWidth(): number {
-            const mostRightCellX = this.master.mostRightCellX;
-            const d = this.bottomMasterCell == null ? mostRightCellX : this.bottomMasterCell.mostRightCellX;
-            const r = Math.min(mostRightCellX, d);
-            let w = 0;
-            for (var i = this.cellX; i <= r; i++) {
-                w += this.table.columns[i].width;
-            }
-            return w;
-        }
-        private computeLeftBorderHeight(): number {
-            const mostBottomCellY = this.master.mostBottomCellY;
-            const d = this.leftMasterCell == null ? mostBottomCellY : this.leftMasterCell.mostBottomCellY;
-            const r = Math.min(mostBottomCellY, d);
-            let w = 0;
-
-            for (var i = this.cellY; i <= r; i++) {
-                w += this.table.rows[i].height;
-            }
-            return w;
-        }
-        private computeRightBorderHeight(): number {
-            const mostBottomCellY = this.master.mostBottomCellY;
-
-            const d = this.rightMasterCell == null ? mostBottomCellY : this.rightMasterCell.mostBottomCellY;
-            const r = Math.min(mostBottomCellY, d);
-            let w = 0;
-            for (var i = this.cellY; i <= r; i++) {
-                w += this.table.rows[i].height;
-            }
-            return w;
-        }
-        */
 
         canMerge(w: number, h: number): boolean {
             const range = this.table.getRangeCells(this.cellX, this.cellY, w, h);
@@ -1049,36 +665,8 @@ namespace GraphTableSVG {
         get canMergeBottom(): boolean {
             return this.getMergedRangeBottom() != null;
         }
-
-
-        /*
-        get canConnectRight(): boolean {
-            if (!this.isMaster) return false;
-            if (this.rightMasterCell != null) {
-                const b1 = this.cellY == this.rightMasterCell.cellY;
-                const b2 = this.GroupRowCount == this.rightMasterCell.GroupRowCount;
-                return b1 && b2;
-            } else {
-                return false;
-            }
-        }
-        */
-        mergeRight(): void {
-            const range = this.getMergedRangeRight();
-            if (range != null) {
-                this.Merge(range[0], range[1]);
-            } else {
-                throw Error("Error");
-            }
-        }
-        mergeBottom(): void {
-            const range = this.getMergedRangeBottom();
-            if (range != null) {
-                this.Merge(range[0], range[1]);
-            } else {
-                throw Error("Error");
-            }
-        }
+        
+        
         public get mostRightCellX(): number {
             return this.cellX + this.GroupColumnCount - 1;
         }
@@ -1115,22 +703,6 @@ namespace GraphTableSVG {
             return this.getNextGroupCells(DirectionType.right);
             
         }
-        /*
-        get upVirtualCells(): Cell[] {
-            if (this.isMaster && this.cellY != 0) {
-                const upperGroupCells = this.upperGroupCells;
-                const r1 = upperGroupCells.map(function (x, i, self) {
-                    return upperGroupCells[i].upCell;
-                });
-                const r2 = r1.filter(function (x, i, self) {
-                    return r1.indexOf(x) === i;
-                });
-                return r2;
-            } else {
-                return [];
-            }
-        }
-        */
         /**
         セルのX座標を返します。
         */
@@ -1220,6 +792,301 @@ namespace GraphTableSVG {
             } else {
                 return "";
             }
+        }
+
+        /*
+        update
+        */
+
+        public update() {
+            this.updateBorder();
+            this.groupUpdate();
+            this.updateBorderAttributes();
+            this.resize();
+            this.relocation();
+        }
+
+
+        private groupUpdate() {
+
+            if (this.isMaster) {
+                this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
+
+            } else {
+                this.table.svgHiddenGroup.appendChild(this.svgGroup);
+
+            }
+            this.svgGroup.style.visibility = this.isMaster ? "visible" : "hidden";
+
+            if (this.isMaster || (this.topCell != null && this.topCell.isMaster)) {
+                this.table.svgGroup.appendChild(this.topBorder);
+            } else {
+                this.table.svgHiddenGroup.appendChild(this.topBorder);
+            }
+
+            if (this.isMaster || (this.leftCell != null && this.leftCell.isMaster)) {
+                this.table.svgGroup.appendChild(this.leftBorder);
+            } else {
+                this.table.svgHiddenGroup.appendChild(this.leftBorder);
+            }
+
+            if (this.isMaster || (this.rightCell != null && this.rightCell.isMaster)) {
+                this.table.svgGroup.appendChild(this.rightBorder);
+            } else {
+                this.table.svgHiddenGroup.appendChild(this.rightBorder);
+            }
+
+            if (this.isMaster || (this.bottomCell != null && this.bottomCell.isMaster)) {
+                this.table.svgGroup.appendChild(this.bottomBorder);
+            } else {
+                this.table.svgHiddenGroup.appendChild(this.bottomBorder);
+            }
+
+            this.resize();
+            this.relocation();
+            
+        }
+
+        /**
+         *セルのサイズを再計算します。
+         */
+        private resize() {
+            const [w, h] = this.calculatedSizeUsingGroup();
+            if (this.width != w) {
+                this.width = w;
+            }
+            if (this.height != h) {
+                this.height = h;
+            }
+
+            if (this.width < this.calculatedWidthUsingText) {
+                this.width = this.calculatedWidthUsingText;
+            }
+            if (this.height < this.calculatedHeightUsingText) {
+                this.height = this.calculatedHeightUsingText;
+            }
+            //console.log([-1, this.width, this.height, w, h]);
+        }
+        /**
+         * 再描画します。
+         */
+        private localUpdate() {
+            const innerRect = new Rectangle();
+            innerRect.x = this.innerExtraPaddingLeft + this.paddingLeft;
+            innerRect.y = this.paddingTop;
+            innerRect.height = this.height - this.paddingTop - this.paddingBottom;
+            innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
+
+            Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+
+        }
+
+        public removeBorder(dir: DirectionType) {
+            const border = this._borders[dir];
+            if (this.table.svgHiddenGroup.contains(border)) {
+                this.table.svgHiddenGroup.removeChild(border);
+            } else if (this.table.svgGroup.contains(border)) {
+                this.table.svgGroup.removeChild(border);
+            } else {
+                throw Error("error");
+            }
+        }
+        public removeFromTable(isColumn: boolean) {
+
+            if (this.table.svgGroup.contains(this.svgGroup)) {
+                this.table.svgGroup.removeChild(this.svgGroup);
+            } else if (this.table.svgHiddenGroup.contains(this.svgGroup)) {
+                this.table.svgHiddenGroup.removeChild(this.svgGroup);
+            } else {
+                throw Error("error");
+            }
+            if (isColumn) {
+                this.removeBorder(DirectionType.top);
+                if (this.table.svgGroup.contains(this.topBorder)) {
+                    throw Error("err");
+                }
+                if (this.bottomCell == null) this.removeBorder(DirectionType.bottom);
+                if (this.leftCell == null) this.removeBorder(DirectionType.left);
+                if (this.rightCell == null) this.removeBorder(DirectionType.right);
+            } else {
+
+                this.removeBorder(DirectionType.left);
+                if (this.rightCell == null) this.removeBorder(DirectionType.right);
+                if (this.topCell == null) this.removeBorder(DirectionType.top);
+                if (this.bottomCell == null) this.removeBorder(DirectionType.bottom);
+            }
+        }
+
+        public updateBorder() {
+            if (this.leftCell != null && this.leftCell.rightBorder != this.leftBorder) {
+                this.removeBorder(DirectionType.left);
+                this.leftBorder = this.leftCell.rightBorder;
+            }
+
+            if (this.topCell != null && this.topCell.bottomBorder != this.topBorder) {
+                this.removeBorder(DirectionType.top);
+                this.topBorder = this.topCell.bottomBorder;
+            }
+
+            if (this.rightCell != null && this.rightCell.leftBorder != this.rightBorder) {
+                this.rightCell.removeBorder(DirectionType.left);
+                this.rightCell.leftBorder = this.rightBorder;
+            }
+
+            if (this.bottomCell != null && this.bottomCell.topBorder != this.bottomBorder) {
+                this.bottomCell.removeBorder(DirectionType.top);
+                this.bottomCell.topBorder = this.bottomBorder;
+            }
+        }
+
+        private relocateTopBorder() {
+            if (!this.isMaster) return;
+
+            if (this.table.svgGroup.contains(this.topBorder)) {
+                if (this.isMaster) {
+                    this.topBorder.x1.baseVal.value = this.x;
+                    this.topBorder.x2.baseVal.value = this.x + this.computeBorderLength2(DirectionType.top);
+                    this.topBorder.y1.baseVal.value = this.y;
+                    this.topBorder.y2.baseVal.value = this.topBorder.y1.baseVal.value;
+                } else if (this.topCell != null && this.topCell.isMaster) {
+                    this.topCell.relocateBottomBorder();
+                } else {
+                    throw Error("error");
+                }
+            }
+        }
+        private relocateLeftBorder() {
+            if (!this.isMaster) return;
+
+            if (this.table.svgGroup.contains(this.leftBorder)) {
+                if (this.isMaster) {
+                    this.leftBorder.x1.baseVal.value = this.x;
+                    this.leftBorder.x2.baseVal.value = this.leftBorder.x1.baseVal.value;
+                    this.leftBorder.y1.baseVal.value = this.y;
+                    this.leftBorder.y2.baseVal.value = this.y + this.computeBorderLength2(DirectionType.left);
+                } else if (this.leftCell != null && this.leftCell.isMaster) {
+                    this.leftCell.relocateRightBorder();
+                } else {
+                    throw Error("error");
+                }
+            }
+        }
+        private relocateRightBorder() {
+            if (!this.isMaster) return;
+
+            if (this.table.svgGroup.contains(this.rightBorder)) {
+                if (this.isMaster) {
+
+                    this.rightBorder.x1.baseVal.value = this.x + this.width;
+                    this.rightBorder.x2.baseVal.value = this.rightBorder.x1.baseVal.value;
+                    this.rightBorder.y1.baseVal.value = this.y;
+                    this.rightBorder.y2.baseVal.value = this.y + this.computeBorderLength2(DirectionType.right);
+                } else if (this.rightCell != null && this.rightCell.isMaster) {
+                    this.rightCell.relocateLeftBorder();
+                } else {
+                    throw Error("error");
+                }
+            }
+        }
+        private relocateBottomBorder() {
+            if (!this.isMaster) return;
+            if (this.table.svgGroup.contains(this.bottomBorder)) {
+                if (this.isMaster) {
+                    this.bottomBorder.x1.baseVal.value = this.x;
+                    this.bottomBorder.x2.baseVal.value = this.x + this.computeBorderLength2(DirectionType.bottom);
+                    this.bottomBorder.y1.baseVal.value = this.y + this.height;
+                    this.bottomBorder.y2.baseVal.value = this.bottomBorder.y1.baseVal.value;
+                } else if (this.bottomCell != null && this.bottomCell.isMaster) {
+                    this.bottomCell.relocateTopBorder();
+                } else {
+                    throw Error("error");
+                }
+            }
+        }
+
+        /**
+         *セルの位置を再計算します。
+         */
+        public relocation() {
+            if (!GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup)) return;
+
+            this.relocateTopBorder();
+            this.relocateLeftBorder();
+            this.relocateRightBorder();
+            this.relocateBottomBorder();
+
+
+            this.localUpdate();
+
+
+
+        }
+        mergeRight(): void {
+            const range = this.getMergedRangeRight();
+            if (range != null) {
+                this.Merge(range[0], range[1]);
+            } else {
+                throw Error("Error");
+            }
+        }
+        mergeBottom(): void {
+            const range = this.getMergedRangeBottom();
+            if (range != null) {
+                this.Merge(range[0], range[1]);
+            } else {
+                throw Error("Error");
+            }
+        }
+        private decomposeRow(upperRowCount: number) {
+            if (this.isMaster) {
+                const upperSide = this.table.getRangeCellArray(this.cellX, this.cellY, this.GroupColumnCount, upperRowCount);
+                const lowerSide = this.table.getRangeCellArray(this.cellX, this.cellY + upperRowCount, this.GroupColumnCount, this.GroupRowCount - upperRowCount);
+                const lowerMaster = lowerSide[0];
+                lowerSide.forEach((v) => [v.masterCellX, v.masterCellY] = [lowerMaster.cellX, lowerMaster.cellY]);
+
+                upperSide.forEach((v) => v.groupUpdate());
+                lowerSide.forEach((v) => v.groupUpdate());
+
+            } else {
+                throw Error("Slave Error");
+            }
+        }
+
+        private decomposeColomn(leftColumnCount: number) {
+            if (this.isMaster) {
+                const leftSide = this.table.getRangeCellArray(this.cellX, this.cellY, leftColumnCount, this.GroupRowCount);
+                const rightSide = this.table.getRangeCellArray(this.cellX + leftColumnCount, this.cellY, this.GroupColumnCount - leftColumnCount, this.GroupRowCount);
+                const rightMaster = rightSide[0];
+                rightSide.forEach((v) => [v.masterCellX, v.masterCellY] = [rightMaster.cellX, rightMaster.cellY]);
+
+                leftSide.forEach((v) => v.groupUpdate());
+                rightSide.forEach((v) => v.groupUpdate());
+
+            } else {
+                throw Error("Slave Error");
+            }
+
+        }
+        public updateBorderAttributes(): void {
+            this.topBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            this.topBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            this.topBorder.setAttribute(Cell.borderTypeName, "horizontal");
+            //this.topBorder.setAttribute("data-border", "top");
+
+
+            this.leftBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            this.leftBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            this.leftBorder.setAttribute(Cell.borderTypeName, "vertical");
+
+
+            this.rightBorder.setAttribute(Cell.borderXName, `${this.cellX + 1}`);
+            this.rightBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            this.rightBorder.setAttribute(Cell.borderTypeName, "vertical");
+
+
+            this.bottomBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            this.bottomBorder.setAttribute(Cell.borderYName, `${this.cellY + 1}`);
+            this.bottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
         }
     }
 }
