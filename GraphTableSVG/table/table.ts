@@ -425,6 +425,20 @@ namespace GraphTableSVG {
 
                 }
             }
+            this.cellArray.forEach((v) => {
+                if (v.isMaster) {
+                    const cells = v.cellsInGroup;
+                    for (let y = 0; y < cells.length; y++) {
+                        for (let x = 1; x < cells[y].length; x++) {
+                            lines.push([` ${tableName}.Cell(${cells[y][0].cellY + 1}, ${cells[y][0].cellX + 1}).Merge MergeTo := ${tableName}.Cell(${cells[y][x].cellY + 1}, ${cells[y][x].cellX + 1})`]);
+                        }
+                    }
+                    for (let y = 1; y < cells.length; y++) {
+                        lines.push([` ${tableName}.Cell(${cells[0][0].cellY + 1}, ${cells[0][0].cellX + 1}).Merge MergeTo := ${tableName}.Cell(${cells[y][0].cellY + 1}, ${cells[y][0].cellX + 1})`]);
+                    }
+                }
+            });
+
             const x0 = VBATranslateFunctions.joinLines(fstLines);
             const [x1, y1] = VBATranslateFunctions.splitCode(lines, `${tableName} as Table`, `${tableName}`, id);
             return [VBATranslateFunctions.joinLines([x0, x1]), y1];
@@ -486,11 +500,28 @@ namespace GraphTableSVG {
             this._isDrawing = false;
 
         }
+
+        private renumbering() {
+
+            this.rows.forEach((v, i) => v.cellY = i);
+            this.columns.forEach((v, i) => v.cellX = i);
+
+            this.cellArray.forEach((v) => v.renumbering());
+
+            /*
+            this.rows.forEach((v, i) => v.update());
+            this.columns.forEach((v, i) => v.update());
+            */
+
+            //this.borders.forEach((v, i) => { v.setAttribute("borderID", i.toString()) });
+
+        }
         private resize() {
             this.rows.forEach((v) => v.resize());
             this.columns.forEach((v)=>v.resize());
 
         }
+
         private relocation() {
             let height = 0;
             this.rows.forEach(function (x, i, arr) {
@@ -510,22 +541,6 @@ namespace GraphTableSVG {
             return new Cell(this, 0, 0, this.defaultCellClass, this.defaultBorderClass);
         }
 
-        private renumbering() {
-            if (this.rows.length != this.cells.length) throw Error("Error");
-
-            this.rows.forEach((v, i) => v.cellY = i);
-            this.columns.forEach((v, i) => v.cellX = i);
-
-            
-            this.cellArray.forEach((v) => v.updateBorderAttributes());
-
-            this.rows.forEach((v, i) => v.update());
-            this.columns.forEach((v, i) => v.update());
-
-
-            this.borders.forEach((v, i) => { v.setAttribute("borderID", i.toString()) });
-            
-        }
 
 
 
@@ -589,9 +604,11 @@ namespace GraphTableSVG {
                 this._columns.splice(i, 0, new Column(this, i));
                 this.renumbering();
                 //const p = i + 1 < this.columnCount ? i : i - 1;
+                /*
                 for (let y = 0; y < this.rowCount; y++) {
                     this.cells[y][i].updateBorder();
                 }
+                */
             } else {
                 this.insertRow(0);
             }
@@ -614,7 +631,7 @@ namespace GraphTableSVG {
             this._rows.splice(i, 0, new Row(this, i));
 
             this.renumbering();
-            this.rows[i].cells.forEach((v) => v.updateBorder());
+            //this.rows[i].cells.forEach((v) => v.updateBorder());
             this.update();
 
         }
@@ -637,7 +654,7 @@ namespace GraphTableSVG {
                 this.renumbering();
 
                 const p = i + 1 < this.columnCount ? i : i - 1;
-                this.columns[p].cells.forEach((v) => v.updateBorder());
+                //this.columns[p].cells.forEach((v) => v.updateBorder());
                 /*
                 for (let y = 0; y < this.rowCount; y++) {
                     this.cells[y][p].updateBorder();
@@ -665,7 +682,7 @@ namespace GraphTableSVG {
                 this.renumbering();
 
                 const p = i + 1 < this.rowCount ? i : i - 1;
-                this.rows[p].cells.forEach((v) => v.updateBorder());
+                //this.rows[p].cells.forEach((v) => v.updateBorder());
                 /*
                 for (let x = 0; x < this.columnCount; x++) {
                     this.cells[p][x].updateBorder();

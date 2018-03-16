@@ -79,7 +79,7 @@ namespace GraphTableSVG {
             this.leftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.rightBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.bottomBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
-            this.updateBorderAttributes();
+            //this.updateBorderAttributes();
             this.table.svgGroup.appendChild(this.topBorder);
             this.table.svgGroup.appendChild(this.leftBorder);
             this.table.svgGroup.appendChild(this.rightBorder);
@@ -799,9 +799,9 @@ namespace GraphTableSVG {
         */
 
         public update() {
-            this.updateBorder();
+            //this.updateBorder();
             this.groupUpdate();
-            this.updateBorderAttributes();
+            //this.updateBorderAttributes();
             this.resize();
             this.relocation();
         }
@@ -814,9 +814,10 @@ namespace GraphTableSVG {
 
             } else {
                 this.table.svgHiddenGroup.appendChild(this.svgGroup);
+                this.svgText.textContent = "";
 
             }
-            this.svgGroup.style.visibility = this.isMaster ? "visible" : "hidden";
+            //this.svgGroup.style.visibility = this.isMaster ? "visible" : "hidden";
 
             if (this.isMaster || (this.topCell != null && this.topCell.isMaster)) {
                 this.table.svgGroup.appendChild(this.topBorder);
@@ -916,28 +917,7 @@ namespace GraphTableSVG {
                 if (this.bottomCell == null) this.removeBorder(DirectionType.bottom);
             }
         }
-
-        public updateBorder() {
-            if (this.leftCell != null && this.leftCell.rightBorder != this.leftBorder) {
-                this.removeBorder(DirectionType.left);
-                this.leftBorder = this.leftCell.rightBorder;
-            }
-
-            if (this.topCell != null && this.topCell.bottomBorder != this.topBorder) {
-                this.removeBorder(DirectionType.top);
-                this.topBorder = this.topCell.bottomBorder;
-            }
-
-            if (this.rightCell != null && this.rightCell.leftBorder != this.rightBorder) {
-                this.rightCell.removeBorder(DirectionType.left);
-                this.rightCell.leftBorder = this.rightBorder;
-            }
-
-            if (this.bottomCell != null && this.bottomCell.topBorder != this.bottomBorder) {
-                this.bottomCell.removeBorder(DirectionType.top);
-                this.bottomCell.topBorder = this.bottomBorder;
-            }
-        }
+        
 
         private relocateTopBorder() {
             if (!this.isMaster) return;
@@ -1067,7 +1047,31 @@ namespace GraphTableSVG {
             }
 
         }
-        public updateBorderAttributes(): void {
+        public renumbering() {
+            this.updateBorderAttributes();
+        }
+        private updateBorderAttributes(): void {
+            if (this.leftCell != null && this.leftCell.rightBorder != this.leftBorder) {
+                this.removeBorder(DirectionType.left);
+                this.leftBorder = this.leftCell.rightBorder;
+            }
+
+            if (this.topCell != null && this.topCell.bottomBorder != this.topBorder) {
+                this.removeBorder(DirectionType.top);
+                this.topBorder = this.topCell.bottomBorder;
+            }
+
+            //console.log(this.cellY + "/" + this.cellX + "/" + this.table.rows.length + "/" + this.table.columns.length);
+            if (this.rightCell != null && this.rightCell.leftBorder != this.rightBorder) {
+                this.rightCell.removeBorder(DirectionType.left);
+                this.rightCell.leftBorder = this.rightBorder;
+            }
+
+            if (this.bottomCell != null && this.bottomCell.topBorder != this.bottomBorder) {
+                this.bottomCell.removeBorder(DirectionType.top);
+                this.bottomCell.topBorder = this.bottomBorder;
+            }
+
             this.topBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
             this.topBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
             this.topBorder.setAttribute(Cell.borderTypeName, "horizontal");
