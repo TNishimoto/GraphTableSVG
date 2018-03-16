@@ -13,6 +13,7 @@
         }
         public set cellY(v: number) {
             this._svgGroup.setAttribute(Cell.cellYName, `${v}`);
+            this.cells.forEach((w) => w.cellY = v);
         }
         /**
         行の高さを返します。
@@ -158,6 +159,9 @@
             this.cells.forEach((v) => v.updateBorder());
         }
         */
+        public relocation() {
+            this.cells.forEach((v) => v.relocation());
+        }
     }
     export class Column {
         private readonly table: Table;
@@ -173,6 +177,7 @@
         }
         public set cellX(v: number) {
             this._svgGroup.setAttribute(Cell.cellXName, `${v}`);
+            this.cells.forEach((w) => w.cellX = v);
         }
         /**
         列の幅を返します。
@@ -298,5 +303,9 @@
             this.table.columns.forEach((v, i) => v.cellX = i);
             this.table.svgGroup.removeChild(this._svgGroup);
         }
+        public relocation() {
+            this.cells.forEach((v) => v.relocation());
+        }
+
     }
 }

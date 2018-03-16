@@ -479,25 +479,31 @@ namespace GraphTableSVG {
         */
         public update() {
             this._isDrawing = true;
-            const rows = this.rows;
-            const columns = this.columns;
-            rows.forEach(function (x, i, arr) { x.resize(); });
-            columns.forEach(function (x, i, arr) { x.resize(); });
+            this.resize();
+            this.relocation();
+            //this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
+
+            this._isDrawing = false;
+
+        }
+        private resize() {
+            this.rows.forEach((v) => v.resize());
+            this.columns.forEach((v)=>v.resize());
+
+        }
+        private relocation() {
             let height = 0;
-            rows.forEach(function (x, i, arr) {
+            this.rows.forEach(function (x, i, arr) {
                 x.setY(height);
                 height += x.height;
             });
             let width = 0;
-            columns.forEach(function (x, i, arr) {
+            this.columns.forEach(function (x, i, arr) {
                 x.setX(width);
 
                 width += x.width;
             });
-            this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
-
-            this._isDrawing = false;
-
+            this.rows.forEach((v) => v.relocation());
         }
 
         private createCell(): Cell {
@@ -510,13 +516,9 @@ namespace GraphTableSVG {
             this.rows.forEach((v, i) => v.cellY = i);
             this.columns.forEach((v, i) => v.cellX = i);
 
-            for (let y = 0; y < this.rowCount; y++) {
-                for (let x = 0; x < this.columnCount; x++) {
-                    this.cells[y][x].cellX = x;
-                    this.cells[y][x].cellY = y;
-                    this.cells[y][x].updateBorderAttributes();
-                }
-            }
+            
+            this.cellArray.forEach((v) => v.updateBorderAttributes());
+
             this.rows.forEach((v, i) => v.update());
             this.columns.forEach((v, i) => v.update());
 
