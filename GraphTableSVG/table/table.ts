@@ -308,9 +308,11 @@ namespace GraphTableSVG {
                 })
             })
         }
+        /*
         public constructFromLogicCell(table: LogicCell[][], isLatexMode: boolean = false) {
 
         }
+        */
 
 
         
@@ -493,6 +495,7 @@ namespace GraphTableSVG {
         */
         public update() {
             this._isDrawing = true;
+            this.renumbering();
             this.resize();
             this.relocation();
             //this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
@@ -505,15 +508,7 @@ namespace GraphTableSVG {
 
             this.rows.forEach((v, i) => v.cellY = i);
             this.columns.forEach((v, i) => v.cellX = i);
-
             this.cellArray.forEach((v) => v.renumbering());
-
-            /*
-            this.rows.forEach((v, i) => v.update());
-            this.columns.forEach((v, i) => v.update());
-            */
-
-            //this.borders.forEach((v, i) => { v.setAttribute("borderID", i.toString()) });
 
         }
         private resize() {
@@ -567,25 +562,25 @@ namespace GraphTableSVG {
         }
         public clear() {
             if (this.columnCount != this.columns.length) throw Error("Error");
-
             while (this.rowCount > 1) {
 
-                this.deleteRow(1);
+                this.rows[this.rows.length-1].remove(true);
 
             }
-            while (this.columnCount > 1) {
+            while (this.columnCount > 0) {
 
-                this.deleteColumn(1);
+                this.columns[this.columns.length - 1].remove(true);
 
             }
-            if (this.rowCount == 1 && this.columnCount == 1) {
-                this.deleteLastCell();
-            }
-
-            //this.cells[0][0].svgText.textContent = "";
         }
 
-        
+
+        /**
+        新しい行をi番目の行に挿入します
+        */
+        public insertRow(i: number) {
+            this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
+        }
         /**
         新しい列をi番目の列に挿入します。
         */
@@ -602,13 +597,6 @@ namespace GraphTableSVG {
                     }
                 }
                 this._columns.splice(i, 0, new Column(this, i));
-                this.renumbering();
-                //const p = i + 1 < this.columnCount ? i : i - 1;
-                /*
-                for (let y = 0; y < this.rowCount; y++) {
-                    this.cells[y][i].updateBorder();
-                }
-                */
             } else {
                 this.insertRow(0);
             }
@@ -630,83 +618,26 @@ namespace GraphTableSVG {
             this.cells.splice(i, 0, cell);
             this._rows.splice(i, 0, new Row(this, i));
 
-            this.renumbering();
-            //this.rows[i].cells.forEach((v) => v.updateBorder());
             this.update();
 
         }
+        /*
         public deleteColumn(i: number) {
-            if (this.rows.length == 1 && this.columns.length == 1 && i == 0) {
-                this.deleteLastCell();
-            } else {
-
-                if (this.columnCount != this.columns.length) throw Error("Error");
-                if (i > this.columnCount) throw Error("Error");
-                if (this.columnCount == 1) throw Error("Error");
-                for (let y = 0; y < this.rowCount; y++) {
-                    const cell = this.cells[y][i];
-                    cell.removeFromTable(true);
-
-
-                    this.cells[y].splice(i, 1);
-                }
-                this.columns[i].detouch();
-                this.renumbering();
-
-                const p = i + 1 < this.columnCount ? i : i - 1;
-                //this.columns[p].cells.forEach((v) => v.updateBorder());
-                /*
-                for (let y = 0; y < this.rowCount; y++) {
-                    this.cells[y][p].updateBorder();
-                }
-                */
-                this.update();
-
+            const [b,e] = this.columns[i].groupColumnRange;
+            for (let x = e; x >= b; x--) {
+                this.columns[x].remove();
             }
-
         }
+        */
+        /*
         public deleteRow(i: number) {
-            if (this.rows.length == 1 && this.columns.length == 1 && i == 0) {
-                this.deleteLastCell();
-            } else {
-                const h = this.rowCount;
-                if (this.rowCount == 1) throw Error("Error");
-                for (let x = 0; x < this.columnCount; x++) {
-                    const cell = this.cells[i][x];
-                    cell.removeFromTable(false);
-                }
-
-                this.cells.splice(i, 1);
-                this.rows[i].detouch();
-
-                this.renumbering();
-
-                const p = i + 1 < this.rowCount ? i : i - 1;
-                //this.rows[p].cells.forEach((v) => v.updateBorder());
-                /*
-                for (let x = 0; x < this.columnCount; x++) {
-                    this.cells[p][x].updateBorder();
-                    this.cells[p][x].relocation();
-                }
-                */
-                this.update();
-
+            
+            const [b, e] = this.rows[i].groupRowRange;
+            for (let y = e; y >= b; y--) {
+                this.rows[y].remove();
             }
-
         }
-        private deleteLastCell() {
-            if (this.rowCount == 1 && this.columnCount == 1) {
-                const cell = this.cells[0][0];
-                cell.removeFromTable(true);                
-                this._cells.splice(0, 1);
-
-                this.rows[0].detouch();
-                this.columns[0].detouch();
-
-            }
-            this.update();
-
-        }
+        */
         /**
         新しい列を最後の列に追加します。
         */
@@ -715,23 +646,18 @@ namespace GraphTableSVG {
         }
 
         /**
-        新しい行をi番目の行に挿入します
-        */
-        public insertRow(i: number) {
-            this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
-        }
-        /**
         新しい行を行の最後に追加します。
         */
         public appendRow() {
             this.insertRow(this.rowCount);
         }
+        /*
         public deleteLastRow() {
-            this.deleteRow(this.rowCount - 1);
+            this.rows[this.rowCount - 1].remove(true);
         }
         public deleteLastColumn() {
             this.deleteColumn(this.columnCount - 1);
         }
-
+        */
     }
 }

@@ -121,38 +121,35 @@
             }
             return height;
         }
-        /*
-        public remove() {
-            const h = this.table.rowCount;
-            if (this.table.rowCount == 1) throw Error("Error");
-            const rowCells = this.cells.map((v) => v);
-            for (let x = 0; x < this.table.columnCount; x++) {
-                const cell = rowCells[x];
-                this.table.svgGroup.removeChild(cell.svgGroup);
-                this.table.svgGroup.removeChild(cell.leftBorder);
-                if (cell.rightCell == null) this.table.svgGroup.removeChild(cell.rightBorder);
-                if (cell.topCell == null) this.table.svgGroup.removeChild(cell.topBorder);
-                if (cell.bottomCell == null) this.table.svgGroup.removeChild(cell.bottomBorder);
-
-            }
-
-            this.table.cells.splice(this.cellY, 1);
-            this.table.renumbering();
-
-            const p = this.cellY + 1 < this.table.rowCount ? this.cellY : this.cellY - 1;
-            for (let x = 0; x < this.table.columnCount; x++) {
-                this.table.updateBorder(this.cells[p][x]);
-            }
-        }
-        */
         public update() {
             this.height = this.getMaxHeight();
         }
 
-        public detouch() {
-            this.table.rows.splice(this.cellY, 1);
-            this.table.rows.forEach((v, i) => v.cellY = i);
-            this.table.svgGroup.removeChild(this._svgGroup);            
+        public remove(isUnit: boolean = false) {
+            if (isUnit) {
+                if (this.table.rows.length > 1 || (this.table.rows.length == 1 && this.table.columns.length == 1)) {
+                    this.cells.forEach((v) => v.removeFromTable(false));
+                    this.table.cells.splice(this.cellY, 1);
+
+
+                    this.table.rows.splice(this.cellY, 1);
+                    this.table.rows.forEach((v, i) => v.cellY = i);
+                    this.table.svgGroup.removeChild(this._svgGroup);
+                    this.table.update();
+                } else if (this.table.rows.length == 1) {
+                    while (this.table.columns.length > 1) {
+                        this.table.columns[this.table.columns.length - 1].remove(true);
+                    }
+                    this.table.rows[0].remove(true);
+                } else {
+                    throw Error("Error");
+                }
+            } else {
+                const [b, e] = this.groupRowRange;
+                for (let y = e; y >= b; y--) {
+                    this.table.rows[y].remove(true);
+                }
+            }
         }
         /*
         public updateBorders() {
@@ -161,6 +158,19 @@
         */
         public relocation() {
             this.cells.forEach((v) => v.relocation());
+        }
+        public get groupRowRange(): [number, number] {
+            let range: [number, number] | null = this.cells[0].groupRowRange;
+            this.cells.forEach((v) => {
+                if (range != null) {
+                    range = Cell.computeDisjunction(range, v.groupRowRange);
+                }
+            })
+            if (range == null) {
+                throw Error("error");
+            } else {
+                return range;
+            }
         }
     }
     export class Column {
@@ -236,7 +246,6 @@
         private getMaxWidth(): number {
             let width = 0;
             for (let y = 0; y < this.table.rowCount; y++) {
-
                 const cell = this.table.cells[y][this.cellX];
                 if (cell.isColumnSingleCell) {
                     if (width < cell.calculatedWidthUsingText) width = cell.calculatedWidthUsingText;
@@ -298,13 +307,48 @@
             const cells = this.cells;
             return cells[cells.length - 1].bottomBorder;
         }
-        public detouch() {
-            this.table.columns.splice(this.cellX, 1);
-            this.table.columns.forEach((v, i) => v.cellX = i);
-            this.table.svgGroup.removeChild(this._svgGroup);
+        public remove(isUnit: boolean = false) {
+            if (isUnit) {
+                if (this.table.columns.length > 1) {
+                    this.table.columns[this.cellX].cells.forEach((v) => {
+                        v.removeFromTable(true);
+                        this.table.cells[v.cellY].splice(this.cellX, 1);
+                    });
+
+
+                    this.table.columns.splice(this.cellX, 1);
+                    this.table.columns.forEach((v, i) => v.cellX = i);
+                    this.table.svgGroup.removeChild(this._svgGroup);
+                    this.table.update();
+                } else if (this.table.columns.length == 1) {
+                    while (this.table.rows.length > 0) {
+                        this.table.rows[this.table.rows.length - 1].remove(true);
+                    }
+                } else {
+                    throw Error("error");
+                }
+            } else {
+                const [b, e] = this.groupColumnRange;
+                for (let x = e; x >= b; x--) {
+                    this.table.columns[x].remove(true);
+                }
+            }
         }
         public relocation() {
             this.cells.forEach((v) => v.relocation());
+        }
+        public get groupColumnRange(): [number, number] {
+            let range: [number, number] | null = this.cells[0].groupColumnRange;
+            this.cells.forEach((v) => {
+                if (range != null) {
+                    range = Cell.computeDisjunction(range, v.groupColumnRange);
+                }
+            })
+            if (range == null) {
+                throw Error("error");
+            } else {
+                return range;
+            }
         }
 
     }

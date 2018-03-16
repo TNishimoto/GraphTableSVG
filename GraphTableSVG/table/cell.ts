@@ -574,6 +574,25 @@ namespace GraphTableSVG {
                 }
             }
         }
+        public static computeDisjunction(v: [number, number], w: [number, number]): [number, number] | null {
+            if (w[0] < v[0]) {
+                return Cell.computeDisjunction(w, v);
+            } else {
+                if (v[1] < w[0]) {
+                    return null;
+                } else {
+                    return [v[0], Math.max(v[1], w[1])];                    
+                }
+            }
+        }
+        public get groupColumnRange(): [number, number] {
+            return [this.master.cellX, this.master.mostRightCellX];
+        }
+
+        public get groupRowRange(): [number, number] {
+            return [this.master.cellY, this.master.mostBottomCellY];
+        }
+
         private computeBorderLength2(dir: DirectionType): number {
             const andFunc = ((v, w) => v);
 
