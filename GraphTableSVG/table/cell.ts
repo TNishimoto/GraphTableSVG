@@ -897,8 +897,9 @@ namespace GraphTableSVG {
             innerRect.height = this.height - this.paddingTop - this.paddingBottom;
             innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
 
-            Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
-
+            if (this.isLocated) {
+                Graph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+            }
         }
 
         public removeBorder(dir: DirectionType) {

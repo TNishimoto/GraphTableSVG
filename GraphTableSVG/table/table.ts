@@ -590,13 +590,20 @@ namespace GraphTableSVG {
                     const cell = this.createCell();
                     this.cells[y].splice(i, 0, cell);
                 }
-                if (i < this.rowCount) {
-                    for (let y = 0; y < this.rowCount; y++) {
-                        this.cells[y][i].leftBorder = SVG.createLine(0, 0, 0, 0);
-                        this.svgGroup.appendChild(this.cells[y][i].leftBorder);
-                    }
-                }
                 this._columns.splice(i, 0, new Column(this, i));
+                //this.columns[i].cellX = i;
+                if (i > 0 && i != this.columnCount - 1) {
+                    
+                    this.columns[i].cells.forEach((v, j) => {
+                        //v.cellY = j;
+                        this.cells[j][i - 1].rightBorder = v.leftBorder;
+                        /*
+                        if (v.leftCell != null && v.rightCell != null) {
+                            v.leftCell.rightBorder = v.leftBorder;
+                        }
+                        */
+                    });
+                }
             } else {
                 this.insertRow(0);
             }
@@ -609,14 +616,13 @@ namespace GraphTableSVG {
                 cell[x] = this.createCell();
                 if (this._columns.length <= x) this._columns.push(new Column(this, 0));
             }
-            if (i < this.rowCount) {
-                for (let x = 0; x < width; x++) {
-                    this.cells[i][x].topBorder = SVG.createLine(0, 0, 0, 0);
-                    this.svgGroup.appendChild(this.cells[i][x].topBorder);
-                }
-            }
             this.cells.splice(i, 0, cell);
             this._rows.splice(i, 0, new Row(this, i));
+            if (i > 0 && i < this.rowCount - 1) {
+                for (let x = 0; x < width; x++) {
+                    this.cells[i - 1][x].bottomBorder = this.cells[i][x].topBorder;
+                }
+            }
 
             this.update();
 
