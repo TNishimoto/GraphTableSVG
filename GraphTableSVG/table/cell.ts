@@ -11,6 +11,8 @@ namespace GraphTableSVG {
     export class Cell {
         private static readonly defaultBackgroundClassName: string = "--default-background-class";
         private static readonly defaultTextClass: string = "--default-text-class";
+        public static readonly emphasisCellClass: string = "___cell-emphasis";
+
         public static readonly cellXName = "data-cellX";
         public static readonly cellYName = "data-cellY";
         public static readonly borderXName = "data-borderX";
@@ -33,7 +35,33 @@ namespace GraphTableSVG {
                 
             }
         };
-        
+
+
+        private tmpStyle: string | null = null;
+        public get isEmphasized(): boolean {
+            const cellClass = this.svgBackground.getAttribute("class");
+            return cellClass == Cell.emphasisCellClass;
+        }
+        public set isEmphasized(v: boolean) {
+            if (v) {
+                if (!this.isEmphasized) {
+                    this.tmpStyle = this.svgBackground.getAttribute("class");
+                    this.svgBackground.setAttribute("class", Cell.emphasisCellClass);
+                }
+            } else {
+                if (this.isEmphasized) {
+                    if (this.tmpStyle == null) {
+                        this.svgBackground.removeAttribute("class");
+
+                    } else {
+                        this.svgBackground.setAttribute("class", this.tmpStyle);
+                        this.tmpStyle = null;
+                    }
+
+                }
+            }
+        }
+
         
         constructor(parent: Table, _px: number, _py: number, cellClass: string | null = null, borderClass: string | null = null) {
 
@@ -1070,6 +1098,8 @@ namespace GraphTableSVG {
         public renumbering() {
             this.updateBorderAttributes();
         }
+
+
         private updateBorderAttributes(): void {
             if (this.leftCell != null && this.leftCell.rightBorder != this.leftBorder) {
                 this.removeBorder(DirectionType.left);

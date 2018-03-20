@@ -36,5 +36,31 @@
             }
             return str;
         }
+        const CSSName: string = "___GraphTableCSS";
+        export function setGraphTableCSS(color: string) {
+            const item = document.head.getElementsByClassName(CSSName);
+            console.log(item);
+            if (item.length > 0) {
+                document.head.removeChild(item[0]);
+            }
+            var blankStyle: HTMLStyleElement = document.createElement('style');
+
+            blankStyle.innerHTML = `
+            .${Cell.emphasisCellClass}{
+            fill : ${color} !important;
+            }
+            `
+            blankStyle.type = "text/css";
+            blankStyle.setAttribute("class", CSSName);
+
+            const head = document.getElementsByTagName('head');
+            
+            head.item(0).appendChild(blankStyle);
+
+        }
+        export function getGraphTableCSS(): HTMLElement | null {
+            const item = document.getElementById(CSSName);
+            return item;
+        }
     }
 }
