@@ -178,6 +178,51 @@ SVGTextElement.prototype.setY = function (value: number) {
     }
     p.y.baseVal.getItem(0).value = value;
 };
+
+interface SVGLineElement {
+    setEmphasis(v: boolean);
+    getEmphasis(): boolean;
+
+}
+
+SVGLineElement.prototype.getEmphasis = function (){
+    const p: SVGLineElement = this;
+    
+    const emp = p.getAttribute("class");
+    if (emp != null) {
+        return emp == GraphTableSVG.Cell.emphasisBorderClass;
+    } else {
+        return false;
+    }
+};
+SVGLineElement.prototype.setEmphasis = function (value: boolean){
+    if (GraphTableSVG.Common.getGraphTableCSS() == null) GraphTableSVG.Common.setGraphTableCSS("yellow", "red");
+
+    const p: SVGLineElement = this;
+    if (p.getEmphasis() && !value) {
+        const tmp = p.getAttribute(GraphTableSVG.Cell.temporaryBorderClass);
+        if (tmp != null) {
+            p.setAttribute("class", tmp);
+            p.removeAttribute(GraphTableSVG.Cell.temporaryBorderClass);
+
+        } else {
+            p.removeAttribute("class");
+
+            p.removeAttribute(GraphTableSVG.Cell.temporaryBorderClass);
+
+        }
+
+    }
+    else if (!p.getEmphasis() && value) {
+        const lineClass = p.getAttribute("class");
+        p.setAttribute("class", GraphTableSVG.Cell.emphasisBorderClass);
+        if (lineClass != null) {
+            p.setAttribute(GraphTableSVG.Cell.temporaryBorderClass, lineClass);
+        }
+    }
+};
+
+
 /*
 SVGElement.prototype.getX = function () {
     const p: SVGElement = this;

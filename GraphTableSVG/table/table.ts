@@ -192,7 +192,7 @@ namespace GraphTableSVG {
         */
         constructor(svgbox: HTMLElement, _tableClassName: string | null = null) {
 
-            if (Common.getGraphTableCSS() == null) Common.setGraphTableCSS("yellow");
+            if (Common.getGraphTableCSS() == null) Common.setGraphTableCSS("yellow", "red");
 
             this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             svgbox.appendChild(this.svgGroup);

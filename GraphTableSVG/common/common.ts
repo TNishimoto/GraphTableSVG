@@ -37,9 +37,8 @@
             return str;
         }
         const CSSName: string = "___GraphTableCSS";
-        export function setGraphTableCSS(color: string) {
+        export function setGraphTableCSS(cellColor: string, borderColor : string) {
             const item = document.head.getElementsByClassName(CSSName);
-            console.log(item);
             if (item.length > 0) {
                 document.head.removeChild(item[0]);
             }
@@ -47,8 +46,12 @@
 
             blankStyle.innerHTML = `
             .${Cell.emphasisCellClass}{
-            fill : ${color} !important;
+            fill : ${cellColor} !important;
             }
+            .${Cell.emphasisBorderClass}{
+            stroke : ${borderColor} !important;
+            }
+
             `
             blankStyle.type = "text/css";
             blankStyle.setAttribute("class", CSSName);
