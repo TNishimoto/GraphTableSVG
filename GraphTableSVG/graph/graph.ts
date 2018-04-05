@@ -200,6 +200,20 @@
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
             return rect;
         }
+        public getObject(child: HTMLElement | SVGElement): Vertex | Edge | null {
+            const id = child.getAttribute(GraphTableSVG.Graph.objectIDName);
+            if (id != null) {
+                return this.getObjectByObjectID(id);
+            } else {
+                if (child.parentElement != null) {
+                    return this.getObject(child.parentElement);
+                } else {
+                    return null;
+                }
+            }
+            
+        }
+
         /**
          * ObjectIDから頂点もしくは辺を返します。
          * @param id

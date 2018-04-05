@@ -13,6 +13,7 @@
         private _graph: Graph | null = null;
         protected _outcomingEdges: Edge[] = [];
         protected _incomingEdges: Edge[] = [];
+        public tag: any;
 
         private _svgGroup: SVGGElement;
         private _observer: MutationObserver;
@@ -28,6 +29,9 @@
             if(b)this.localUpdate();
 
         };
+        public get shapeType(): string {
+            return "circle";
+        }
 
         private _textObserver: MutationObserver;
         protected textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
@@ -39,13 +43,16 @@
             }
         };
 
-        constructor(__graph: Graph, group: SVGGElement, text: string) {
-            this._svgGroup = group
+        constructor(graph: Graph, className: string | null = null, text: string = "", x: number, y: number) {
+            className = className != null ? className : graph.defaultVertexClass;
+            const g = SVG.createGroup(className);
+
+            this._svgGroup = g
             //this._svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "vertex");
-            this._graph = __graph;
-            __graph.add(this);
+            this._graph = graph;
+            graph.add(this);
 
 
             this._svgText = SVG.createText(this.svgGroup.getPropertyStyleValue(Vertex.defaultTextClass));
@@ -63,8 +70,8 @@
             this._textObserver.observe(this.svgText, option2);
 
 
-            this.x = 0;
-            this.y = 0;
+            this.x = x;
+            this.y = y;
 
 
             /*
@@ -370,21 +377,24 @@
          *   "circle"ならばSVGCircleElement <br>
          *   "rectangle"ならばSVGRectangleElement
          */
-        public static create(graph: Graph, className: string | null = null, defaultSurfaceType: string | null = null): GraphTableSVG.Vertex {
+        public static create(graph: Graph, className: string | null = null, defaultSurfaceType: string | null = null, x: number = 0, y: number = 0): GraphTableSVG.Vertex {
             className = className != null ? className : graph.defaultVertexClass;
             const g = SVG.createGroup(className);
             graph.svgGroup.appendChild(g);
 
-            const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
-            const type = defaultSurfaceType != null ? defaultSurfaceType :
-                type1 != null ? type1 : "circle";
+            const gSurfaceType = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
+            const surfaceType = defaultSurfaceType != null ? defaultSurfaceType :
+                gSurfaceType != null ? gSurfaceType : "circle";
+            graph.svgGroup.removeChild(g);
+
+
             let p: Vertex;
-            if (type == "circle") {
-                p = new CircleVertex(graph, g, "");
-            } else if (type == "rectangle") {
-                p = new RectangleVertex(graph, g, "");
+            if (surfaceType == "circle") {
+                p = new CircleVertex(graph, className, "", x, y);
+            } else if (surfaceType == "rectangle") {
+                p = new RectangleVertex(graph, className, "", x, y);
             } else {
-                p = new Vertex(graph, g, "");
+                p = new Vertex(graph, className, "", x, y);
             }
             return p;
         }

@@ -22,8 +22,19 @@
             }
         }
 
-        export function getRegion(items: (Graph | Table)[]): Rectangle {
-            const rects = items.map((v) => v.getRegion());
+        export function getRegion(items: (Graph | Table | SVGPathElement | SVGTextElement)[]): Rectangle {
+            const rects = items.map((v) => {
+                if (v instanceof Graph) {
+                    return v.getRegion();
+                } else if (v instanceof Table) {
+                    return v.getRegion();
+                } else if (v instanceof SVGPathElement || v instanceof SVGTextElement) {
+                    const rect = v.getBBox();
+                    return new Rectangle(rect.x, rect.y, rect.width, rect.height);
+                } else {
+                    return new Rectangle();
+                }
+            });
             if (rects.length > 0) {
                 return GraphTableSVG.Rectangle.merge(rects);
             } else {

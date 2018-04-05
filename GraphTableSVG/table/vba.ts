@@ -1,7 +1,7 @@
 ﻿
 namespace GraphTableSVG {
     export class SVGToVBA {
-        public static create(items: (Graph | Table)[]): string {
+        public static create(items: (Graph | Table | SVGPathElement | SVGTextElement)[]): string {
             //const id = 0;
             const s: string[] = new Array(0);
 
@@ -20,16 +20,61 @@ namespace GraphTableSVG {
                 if (item instanceof Table) {
                     const lines = item.createVBACode(i, "createdSlide");
                     lines.forEach((v) => s.push(v));
-                } else {
+                } else if (item instanceof Graph) {
                     const lines = item.createVBACode(i);
                     lines.forEach((v) => s.push(v));
+                } else if (item instanceof SVGPathElement) {
+                    const lines = SVGToVBA.createVBACodeOfSVGPath(item, i);
+                    lines.forEach((v) => s.push(v));
+
+                } else if (item instanceof SVGTextElement) {
+                    const lines = SVGToVBA.createVBACodeOfTextElement(item, i);
+                    lines.forEach((v) => s.push(v));
+
                 }
             }
             s.push(SVGToVBA.cellFunctionCode);
             const r = VBATranslateFunctions.joinLines(s);
             return r;
         }
-        
+        private static createVBACodeOfSVGPath(path: SVGPathElement, id: number) : string[] {
+            const lines = new Array(0);
+            const pos = path.getPathLocations();
+            lines.push(`Sub create${id}(createdSlide As slide)`);
+            lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
+            lines.push(` Dim edges${id}(${pos.length-1}) As Shape`);
+
+            
+            for (let i = 0; i < pos.length - 1; i++) {
+                lines.push(` Set edges${id}(${i}) = shapes_.AddConnector(msoConnectorStraight, ${pos[i][0]}, ${pos[i][1]}, ${pos[i + 1][0]}, ${pos[i + 1][1]})`);
+                const lineColor = VBATranslateFunctions.colorToVBA(path.getPropertyStyleValueWithDefault("stroke", "gray"));
+                const strokeWidth = parseInt(path.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                const visible = path.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                lines.push(` Call EditLine(edges${id}(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
+            }
+
+            lines.push(`End Sub`);
+            return lines;
+        }
+        private static createVBACodeOfTextElement(element : SVGTextElement, id: number): string[] {
+            const lines = new Array(0);
+            const sub: string[][] = [];
+            lines.push(`Sub create${id}(createdSlide As slide)`);
+            lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
+            lines.push(` Dim txt As Shape`);
+            lines.push(` Set txt = shapes_.AddTextbox(msoTextOrientationHorizontal, ${element.getX()}, ${element.getY()}, 0, 0)`);
+            const fontSize = parseInt(element.getPropertyStyleValueWithDefault("font-size", "24"));
+            const fontFamily = VBATranslateFunctions.ToVBAFont(element.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+            const fontBold = VBATranslateFunctions.ToFontBold(element.getPropertyStyleValueWithDefault("font-weight", "none"));
+            lines.push([` Call EditTextFrame(txt.TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeShapeToFitText)`]);
+            VBATranslateFunctions.TranslateSVGTextElement(sub, element, `txt.TextFrame.TextRange`);
+            sub.forEach((v) => lines.push(v[0]));
+            lines.push([` Call EditTextEffect(txt.TextEffect, ${fontSize}, "${fontFamily}")`]);
+
+
+            lines.push(`End Sub`);
+            return lines;
+        }
 
 
         public static cellFunctionCode: string = `

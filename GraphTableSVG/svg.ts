@@ -28,13 +28,13 @@ namespace GraphTableSVG {
             return line1;
         }
         /**
-         * SVGPathElementを生成します。
-         * @param x
-         * @param y
-         * @param x2
-         * @param y2
-         * @param className
-         */
+             * SVGPathElementを生成します。
+             * @param x
+             * @param y
+             * @param x2
+             * @param y2
+             * @param className
+             */
         export function createPath(x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
             const line1 = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             line1.setAttribute("d", `M ${x} ${y} M ${x2} ${y2}`);
@@ -46,6 +46,7 @@ namespace GraphTableSVG {
             }
             return line1;
         }
+        
 
         /**
          * SVGTextElementを生成します。
@@ -147,7 +148,7 @@ namespace GraphTableSVG {
             marker.setAttribute("markerUnits", "userSpaceOnUse");
             marker.setAttribute("markerHeight", "15");
             marker.setAttribute("markerWidth", "15");
-            marker.refX.baseVal.value = 5;
+            marker.refX.baseVal.value = 10;
             marker.refY.baseVal.value = 5;
 
             marker.setAttribute("preserveAspectRatio", "none");

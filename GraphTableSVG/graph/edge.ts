@@ -19,6 +19,7 @@
         public get svgTextPath(): SVGTextPathElement {
             return this._svgTextPath;
         }
+        public tag: any;
 
         private _observer: MutationObserver;
         private observerFunc: MutationCallback = (x: MutationRecord[]) => {
@@ -460,10 +461,21 @@
                 }
                     
                 if (this.beginVertex != null && this.endVertex != null) {
+                    if (this.markerStart != null) {
+                        subline.push(` edges(${i}).Line.BeginArrowheadLength = msoArrowheadLong`);
+                        subline.push(` edges(${i}).Line.BeginArrowheadStyle = msoArrowheadTriangle`);
+                        subline.push(` edges(${i}).Line.BeginArrowheadWidth = msoArrowheadWide`);
+                    }
+                    if (this.markerEnd != null) {
+                        subline.push(` edges(${i}).Line.EndArrowheadLength = msoArrowheadLong`);
+                        subline.push(` edges(${i}).Line.EndArrowheadStyle = msoArrowheadTriangle`);
+                        subline.push(` edges(${i}).Line.EndArrowheadWidth = msoArrowheadWide`);
+                    }
+
                     const beg = indexDic[this.beginVertex.objectID];
                     const end = indexDic[this.endVertex.objectID];
-                    const begType: number = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
-                    const endType: number = GraphTableSVG.ToVBAConnectorPosition(this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
+                    const begType: number = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
+                    const endType: number = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
                     subline.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
                 }
                 const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
@@ -555,91 +567,5 @@
         }
         */
     }
-    /*
-    export class LineEdge extends Edge {
-
-        get svgLine(): SVGLineElement {
-            return <SVGLineElement>this.surface;
-        }
-        
-        
-
-
-
-        constructor(__graph: Graph, g: SVGGElement) {
-            super(__graph, g);
-            const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._surface = createLine(0, 0, 0, 0, p);
-            this.svgGroup.appendChild(this.svgLine);
-
-        }
-
-        public update(): boolean {
-            super.update();
-
-            if (this.beginVertex != null && this.endVertex != null) {
-                this.svgLine.x1.baseVal.value = this.x1;
-                this.svgLine.y1.baseVal.value = this.y1;
-
-                this.svgLine.x2.baseVal.value = this.x2;
-                this.svgLine.y2.baseVal.value = this.y2;
-
-                if (this.text != null) {
-                    this.text.update();
-                }
-
-                
-            }
-           
-
-            
-
-            return false;
-        }
-        public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
-            super.createVBACode(main, sub, indexDic);
-            if (this.graph != null) {
-                const i = indexDic[this.objectID];
-                const lineColor = VBATranslateFunctions.colorToVBA(this.svgLine.getPropertyStyleValueWithDefault("stroke", "gray"));
-                const strokeWidth = parseInt(this.svgLine.getPropertyStyleValueWithDefault("stroke-width", "4"));
-                const visible = this.svgLine.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-                sub.push([` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`]);
-            }
-        }
-        
-    }
-    */
-    /*
-    export class BezierEdge extends Edge {
-
-        constructor(__graph: Graph, g: SVGGElement) {
-            super(__graph, g);
-            
-            
-        }
-        
-
-        public update(): boolean {
-            super.update();
-            if (this.beginVertex != null && this.endVertex != null) {
-                var [cx1, cy1] = this.controlPoint;
-                const path = `M ${this.x1} ${this.y1} Q ${cx1} ${cy1} ${this.x2} ${this.y2}`
-
-                var prevPath = this.svgBezier.getAttribute("d");
-                if (prevPath == null || path != prevPath) {
-                    this.svgBezier.setAttribute("d", path);
-                }
-
-
-                if (this.text != null) {
-                    this.text.update();
-                }
-            }
-
-
-
-            return false;
-        }
-    }
-    */
+    
 }

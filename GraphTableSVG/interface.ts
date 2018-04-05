@@ -222,6 +222,47 @@ SVGLineElement.prototype.setEmphasis = function (value: boolean){
     }
 };
 
+interface SVGPathElement {
+    setPathLocations(points: [number, number][]);
+    getPathLocations(): [number, number][];
+
+}
+SVGPathElement.prototype.setPathLocations = function (points: [number, number][]) {
+
+    const p: SVGPathElement = this;
+    let s = "";
+    for (let i = 0; i < points.length; i++) {
+        s += `${i == 0 ? "M" : "L"} ${points[i][0]} ${points[i][1]} `;
+    }
+    //points.forEach((x, y) => s += `M ${x} ${y} `);
+    p.setAttribute("d", s);
+};
+SVGPathElement.prototype.getPathLocations = function () {
+
+    const p: SVGPathElement = this;
+    const info = p.getAttribute("d");
+    if (info == null) return [];
+
+    const r: [number, number][] = [];
+    let pos: [number, number] = [0, 0];
+    let pathType = "";
+    console.log(info.split(" "));
+    info.split(" ").forEach((v, i) => {
+        if (i % 3 == 0) {
+            pathType = v;
+        } else if (i % 3 == 1) {
+            pos[0] = Number.parseInt(v);
+        } else {
+            pos[1] = Number.parseInt(v);
+            r.push(pos);
+            pos = [0, 0];
+        }
+    });
+    
+    return r;
+};
+
+
 
 /*
 SVGElement.prototype.getX = function () {

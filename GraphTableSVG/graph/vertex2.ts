@@ -13,8 +13,8 @@
          * @param className
          * @param text
          */
-        constructor(__graph: Graph, group: SVGGElement, text: string = "") {
-            super(__graph, group, text);
+        constructor(graph: Graph, className: string | null = null, text: string = "", x: number = 0, y: number = 0) {
+            super(graph, className, text, x, y);
             this._svgCircle = SVG.createCircle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
             SVG.setDefaultValue(this.svgCircle);
@@ -159,9 +159,12 @@
             return this._svgRectangle;
         }
 
+        public get shapeType(): string {
+            return "rectangle";
+        }
 
-        constructor(__graph: Graph, group: SVGGElement, text: string = "") {
-            super(__graph, group, text);
+        constructor(graph: Graph, className: string | null = null, text: string = "", x: number = 0, y: number = 0) {
+            super(graph, className, text, x, y);
             this._svgRectangle = SVG.createRectangle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
 
