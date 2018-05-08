@@ -180,7 +180,7 @@ SVGTextElement.prototype.setY = function (value: number) {
 };
 
 interface SVGLineElement {
-    setEmphasis(v: boolean);
+    setEmphasis(v: boolean) : void;
     getEmphasis(): boolean;
 
 }
@@ -223,7 +223,7 @@ SVGLineElement.prototype.setEmphasis = function (value: boolean){
 };
 
 interface SVGPathElement {
-    setPathLocations(points: [number, number][]);
+    setPathLocations(points: [number, number][]) : void;
     getPathLocations(): [number, number][];
 
 }
@@ -251,9 +251,10 @@ SVGPathElement.prototype.getPathLocations = function () {
         if (i % 3 == 0) {
             pathType = v;
         } else if (i % 3 == 1) {
-            pos[0] = Number.parseInt(v);
+            
+            pos[0] = parseInt(v);
         } else {
-            pos[1] = Number.parseInt(v);
+            pos[1] = parseInt(v);
             r.push(pos);
             pos = [0, 0];
         }

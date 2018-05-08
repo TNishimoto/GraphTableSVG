@@ -624,7 +624,7 @@ namespace GraphTableSVG {
         }
 
         private computeBorderLength2(dir: DirectionType): number {
-            const andFunc = ((v, w) => v);
+            //const andFunc = ((v, w) => v);
 
             const d1 = dir == DirectionType.top || dir == DirectionType.bottom ? this.master.x : this.master.y;
             const d2 = dir == DirectionType.top || dir == DirectionType.bottom ? this.master.x + this.computeGroupWidth : this.master.y + this.computeGroupHeight;

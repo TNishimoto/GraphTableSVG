@@ -47,7 +47,7 @@ namespace GraphTableSVG {
 
 
         public createdNodeCallback = (node: GraphTableSVG.Vertex) => { }
-        public relocateFunction: (Tree) => void = TreeArrangement.Arrangement1;
+        public relocateFunction: (Tree : Graph) => void = TreeArrangement.Arrangement1;
         public relocate() {
             this.relocateFunction(this);
         }

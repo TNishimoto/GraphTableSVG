@@ -3,12 +3,24 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "outFile": "out/graph_table_svg.js",
+        "outFile": "../graph_table_svg.js",
         "sourceMap": true,
-		"target" : "ES5"
+        "target" : "ES5",
+        "declaration" : true 
+        //"declarationDir" : "../"
     },
+    "files": [
+        "color.ts",
+        "enums.ts",
+        "gui.ts",
+        "interface.ts",
+        "logic_tree.ts",
+        "svg.ts",
+        "vline.ts"
+
+    ],
     "include": [
-        "graph", "table"
+        "graph", "table", "common"
     ],
     "exclude": [
         "out"
