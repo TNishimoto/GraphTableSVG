@@ -26,7 +26,7 @@
                     b = true;
                 }
             }
-            if(b)this.localUpdate();
+            if (b) this.localUpdate();
 
         };
         public get shapeType(): string {
@@ -62,7 +62,7 @@
 
             this._observer = new MutationObserver(this.observerFunc);
             const option1: MutationObserverInit = { attributes: true };
-            
+
             this._observer.observe(this.svgGroup, option1);
 
             this._textObserver = new MutationObserver(this.textObserverFunc);
@@ -91,14 +91,14 @@
         /**
         このVertexのグループを返します。
         */
-        public get svgGroup(): SVGGElement{
+        public get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
         private _svgText: SVGTextElement;
         /**
         このVertexのテキストを返します。
         */
-        public get svgText(): SVGTextElement{
+        public get svgText(): SVGTextElement {
             return this._svgText;
         }
 
@@ -135,7 +135,7 @@
         get isLocated(): boolean {
             return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }
-        
+
         /**
         このVertexのObjectIDを返します。
         */
@@ -230,8 +230,12 @@
             if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
             if (this.isAutoSizeShapeToFitText) {
                 const box = this.svgText.getBBox();
-                this.width = box.width;
-                this.height = box.height;
+                if(this.surface instanceof SVGCircleElement){
+                    this.width = Math.max(box.width, box.height);
+                }else{
+                    this.width = box.width;
+                    this.height = box.height;    
+                }
 
             }
             Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
@@ -353,7 +357,7 @@
         get tree(): VirtualSubTree {
             return new VirtualSubTree(this);
         }
-        
+
 
         /*
         get index(): number {
@@ -377,24 +381,28 @@
          *   "circle"ならばSVGCircleElement <br>
          *   "rectangle"ならばSVGRectangleElement
          */
-        public static create(graph: Graph, className: string | null = null, defaultSurfaceType: string | null = null, x: number = 0, y: number = 0): GraphTableSVG.Vertex {
-            className = className != null ? className : graph.defaultVertexClass;
-            const g = SVG.createGroup(className);
+        public static create(graph: Graph, params: { className?: string | null, surfaceType?: string | null, x?: number, y?: number, text? : string } = {}): GraphTableSVG.Vertex {
+            //public static create(graph: Graph, {className: string | null = null, defaultSurfaceType: string | null = null, x: number = 0, y: number = 0}): GraphTableSVG.Vertex {
+            
+
+            if(params.className == undefined)params.className = graph.defaultVertexClass;
+            const g = SVG.createGroup(params.className);
             graph.svgGroup.appendChild(g);
 
             const gSurfaceType = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
-            const surfaceType = defaultSurfaceType != null ? defaultSurfaceType :
-                gSurfaceType != null ? gSurfaceType : "circle";
+            if(params.surfaceType == undefined) params.surfaceType = gSurfaceType != null ? gSurfaceType : "circle";
             graph.svgGroup.removeChild(g);
 
-
+            if(params.x == undefined) params.x = 0;
+            if(params.y == undefined) params.y = 0;
+            if(params.text== undefined) params.text = "";
             let p: Vertex;
-            if (surfaceType == "circle") {
-                p = new CircleVertex(graph, className, "", x, y);
-            } else if (surfaceType == "rectangle") {
-                p = new RectangleVertex(graph, className, "", x, y);
+            if (params.surfaceType == "circle") {
+                p = new CircleVertex(graph, params.className, params.text, params.x, params.y);
+            } else if (params.surfaceType == "rectangle") {
+                p = new RectangleVertex(graph, params.className, params.text, params.x, params.y);
             } else {
-                p = new Vertex(graph, className, "", x, y);
+                p = new Vertex(graph, params.className, params.text, params.x, params.y);
             }
             return p;
         }
@@ -485,7 +493,7 @@
         }
         */
 
-        public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void{
+        public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
             if (this.graph != null) {
                 //const subline: string[] = [];
                 const i = indexDic[this.objectID];

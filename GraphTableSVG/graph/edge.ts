@@ -438,13 +438,15 @@
          * @param className
          * @param lineType
          */
-        public static create(graph: Graph, className: string | null = graph.defaultEdgeClass, defaultSurfaceType: string | null = null): GraphTableSVG.Edge {
-            className = className != null ? className : graph.defaultVertexClass;
-            const g = SVG.createGroup(className);
+        public static create(graph: Graph, params : {className?: string | null, surfaceType?: string | null} = {}): GraphTableSVG.Edge {
+            if(params.className == undefined) params.className = graph.defaultEdgeClass;
+            if(params.surfaceType == undefined) params.surfaceType = null;
+            params.className = params.className != null ? params.className : graph.defaultVertexClass;
+            const g = SVG.createGroup(params.className);
             graph.svgGroup.appendChild(g);
 
             const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
-            const type = defaultSurfaceType != null ? defaultSurfaceType :
+            const type = params.surfaceType != null ? params.surfaceType :
                 type1 != null ? type1 : "line";
 
             return new Edge(graph, g);

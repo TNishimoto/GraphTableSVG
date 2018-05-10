@@ -36,6 +36,7 @@
         }
         set height(value: number) {
             this.svgCircle.r.baseVal.value = value / 2;
+
         }
         /**
         テキストの領域を返します。

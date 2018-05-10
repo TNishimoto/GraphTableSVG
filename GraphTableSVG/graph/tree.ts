@@ -23,11 +23,11 @@ namespace GraphTableSVG {
 
         private createChild<T>(parent: Vertex | null = null, logicNode: LogicTree, isLatexMode: boolean = false) : Vertex {    
 
-            const node = GraphTableSVG.Vertex.create(this, logicNode.nodeClass);
+            const node = GraphTableSVG.Vertex.create(this, {className : logicNode.nodeClass});
             //node.svgText.setTextContent(displayFunction(tree.item), isLatexMode);
             if (logicNode.nodeText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicNode.nodeText, isLatexMode);
             if (parent != null) {
-                const edge = GraphTableSVG.Edge.create(this, logicNode.edgeClass);
+                const edge = GraphTableSVG.Edge.create(this, {className : logicNode.edgeClass});
                 if (logicNode.edgeLabel != null) {
                     edge.svgTextPath.setTextContent(logicNode.edgeLabel, isLatexMode);
                     edge.isMaximalRegularInterval = true;

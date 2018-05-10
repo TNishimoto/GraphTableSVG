@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Padding | </title>
+	<title>Parse | </title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,125 +56,107 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/graphtablesvg.html">GraphTableSVG</a>
+					<a href="graphtablesvg.html">GraphTableSVG</a>
 				</li>
 				<li>
-					<a href="graphtablesvg.padding.html">Padding</a>
+					<a href="graphtablesvg.parse.html">Parse</a>
 				</li>
 			</ul>
-			<h1>Class Padding</h1>
+			<h1>Module Parse</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
-					<li>
-						<span class="target">Padding</span>
-					</li>
-				</ul>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
+							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="graphtablesvg.padding.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.padding.html#bottom" class="tsd-kind-icon">bottom</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.padding.html#left" class="tsd-kind-icon">left</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.padding.html#right" class="tsd-kind-icon">right</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.padding.html#top" class="tsd-kind-icon">top</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="graphtablesvg.parse.html#getparsestring" class="tsd-kind-icon">get<wbr>Parse<wbr>String</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="graphtablesvg.parse.html#parsetree" class="tsd-kind-icon">parse<wbr>Tree</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="graphtablesvg.parse.html#parsetreesub" class="tsd-kind-icon">parse<wbr>Tree<wbr>Sub</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Padding<span class="tsd-signature-symbol">(</span>top<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, left<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, right<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, bottom<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.padding.html" class="tsd-signature-type">Padding</a></li>
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="getparsestring" class="tsd-anchor"></a>
+					<h3>get<wbr>Parse<wbr>String</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Parse<wbr>String<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/055b558/GraphTableSVG/vline.ts#L88">vline.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/055b558/GraphTableSVG/graph/tree.ts#L95">graph/tree.ts:95</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> top: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> left: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> right: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> bottom: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+									<h5>tree: <a href="../classes/graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.padding.html" class="tsd-signature-type">Padding</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="bottom" class="tsd-anchor"></a>
-					<h3>bottom</h3>
-					<div class="tsd-signature tsd-kind-icon">bottom<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/055b558/GraphTableSVG/vline.ts#L89">vline.ts:89</a></li>
-						</ul>
-					</aside>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="parsetree" class="tsd-anchor"></a>
+					<h3>parse<wbr>Tree</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Tree<span class="tsd-signature-symbol">(</span>str<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/055b558/GraphTableSVG/graph/tree.ts#L65">graph/tree.ts:65</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>str: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../classes/graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="left" class="tsd-anchor"></a>
-					<h3>left</h3>
-					<div class="tsd-signature tsd-kind-icon">left<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/055b558/GraphTableSVG/vline.ts#L89">vline.ts:89</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="right" class="tsd-anchor"></a>
-					<h3>right</h3>
-					<div class="tsd-signature tsd-kind-icon">right<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/055b558/GraphTableSVG/vline.ts#L89">vline.ts:89</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="top" class="tsd-anchor"></a>
-					<h3>top</h3>
-					<div class="tsd-signature tsd-kind-icon">top<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/055b558/GraphTableSVG/vline.ts#L89">vline.ts:89</a></li>
-						</ul>
-					</aside>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<a name="parsetreesub" class="tsd-anchor"></a>
+					<h3>parse<wbr>Tree<wbr>Sub</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Tree<wbr>Sub<span class="tsd-signature-symbol">(</span>str<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, pos<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><a href="../classes/graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/055b558/GraphTableSVG/graph/tree.ts#L69">graph/tree.ts:69</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>str: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>pos: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">[</span><a href="../classes/graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -185,37 +167,37 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module tsd-is-not-exported">
-						<a href="../modules/graphtablesvg.html">Graph<wbr>TableSVG</a>
+						<a href="graphtablesvg.html">Graph<wbr>TableSVG</a>
 						<ul>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/graphtablesvg.color.html">Color</a>
+								<a href="graphtablesvg.color.html">Color</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/graphtablesvg.common.html">Common</a>
+								<a href="graphtablesvg.common.html">Common</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/graphtablesvg.connectorposition.html">Connector<wbr>Position</a>
+								<a href="graphtablesvg.connectorposition.html">Connector<wbr>Position</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/graphtablesvg.gui.html">GUI</a>
+								<a href="graphtablesvg.gui.html">GUI</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/graphtablesvg.grapharrangement.html">Graph<wbr>Arrangement</a>
+								<a href="graphtablesvg.grapharrangement.html">Graph<wbr>Arrangement</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/graphtablesvg.horizontalanchor.html">Horizontal<wbr>Anchor</a>
+								<a href="graphtablesvg.horizontalanchor.html">Horizontal<wbr>Anchor</a>
+							</li>
+							<li class="current tsd-kind-module tsd-parent-kind-module">
+								<a href="graphtablesvg.parse.html">Parse</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/graphtablesvg.parse.html">Parse</a>
+								<a href="graphtablesvg.svg.html">SVG</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/graphtablesvg.svg.html">SVG</a>
+								<a href="graphtablesvg.treearrangement.html">Tree<wbr>Arrangement</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/graphtablesvg.treearrangement.html">Tree<wbr>Arrangement</a>
-							</li>
-							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/graphtablesvg.verticalanchor.html">Vertical<wbr>Anchor</a>
+								<a href="graphtablesvg.verticalanchor.html">Vertical<wbr>Anchor</a>
 							</li>
 						</ul>
 					</li>
@@ -223,30 +205,15 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="graphtablesvg.padding.html" class="tsd-kind-icon">Padding</a>
-						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="graphtablesvg.padding.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="graphtablesvg.padding.html#bottom" class="tsd-kind-icon">bottom</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="graphtablesvg.padding.html#left" class="tsd-kind-icon">left</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="graphtablesvg.padding.html#right" class="tsd-kind-icon">right</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="graphtablesvg.padding.html#top" class="tsd-kind-icon">top</a>
-							</li>
-						</ul>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="graphtablesvg.parse.html#getparsestring" class="tsd-kind-icon">get<wbr>Parse<wbr>String</a>
 					</li>
-				</ul>
-				<ul class="after-current">
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="graphtablesvg.parse.html#parsetree" class="tsd-kind-icon">parse<wbr>Tree</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="graphtablesvg.parse.html#parsetreesub" class="tsd-kind-icon">parse<wbr>Tree<wbr>Sub</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
