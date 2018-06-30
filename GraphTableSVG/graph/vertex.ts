@@ -43,9 +43,15 @@
             }
         };
 
-        constructor(graph: Graph, className: string | null = null, text: string = "", x: number, y: number) {
-            className = className != null ? className : graph.defaultVertexClass;
-            const g = SVG.createGroup(className);
+        constructor(graph: Graph, params : {className?: string, text?: string, x?: number, y?: number} = {}) {
+            if(params.className == undefined){
+                params.className = graph.defaultVertexClass;
+            }
+            if(params.text == undefined) params.text = "";
+            if(params.x == undefined) params.x = 0;
+            if(params.y == undefined) params.y = 0;
+
+            const g = SVG.createGroup(params.className);
 
             this._svgGroup = g
             //this._svgGroup = GraphTableSVG.createGroup(className);
@@ -56,7 +62,7 @@
 
 
             this._svgText = SVG.createText(this.svgGroup.getPropertyStyleValue(Vertex.defaultTextClass));
-            this.svgText.textContent = text;
+            this.svgText.textContent = params.text;
             this.svgGroup.appendChild(this.svgText);
 
 
@@ -70,8 +76,8 @@
             this._textObserver.observe(this.svgText, option2);
 
 
-            this.x = x;
-            this.y = y;
+            this.x = params.x;
+            this.y = params.y;
 
 
             /*
@@ -381,9 +387,9 @@
          *   "circle"ならばSVGCircleElement <br>
          *   "rectangle"ならばSVGRectangleElement
          */
-        public static create(graph: Graph, params: { className?: string | null, surfaceType?: string | null, x?: number, y?: number, text? : string } = {}): GraphTableSVG.Vertex {
+        public static create(graph: Graph, params: { className?: string | null, 
+            surfaceType?: string | null, x?: number, y?: number, text? : string, radius? : number, width? : number, height? :number } = {}): GraphTableSVG.Vertex {
             //public static create(graph: Graph, {className: string | null = null, defaultSurfaceType: string | null = null, x: number = 0, y: number = 0}): GraphTableSVG.Vertex {
-            
 
             if(params.className == undefined)params.className = graph.defaultVertexClass;
             const g = SVG.createGroup(params.className);
@@ -398,11 +404,11 @@
             if(params.text== undefined) params.text = "";
             let p: Vertex;
             if (params.surfaceType == "circle") {
-                p = new CircleVertex(graph, params.className, params.text, params.x, params.y);
+                p = new CircleVertex(graph, params);
             } else if (params.surfaceType == "rectangle") {
-                p = new RectangleVertex(graph, params.className, params.text, params.x, params.y);
+                p = new RectangleVertex(graph, params);
             } else {
-                p = new Vertex(graph, params.className, params.text, params.x, params.y);
+                p = new Vertex(graph, params);
             }
             return p;
         }

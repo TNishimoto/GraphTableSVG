@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<html>
+<head>
+<title>hello</title>
+<OUTPUT path="./tutorial.html" remove="" macro="html" />
+<MACRO path="./tutorial.js" remove=""/>
+<stylesheet path="tutorial.css" />
+</head>
+<body>
+
+<table_of_contents />
+<xarticle title="Table Sample 1 : hello world" >
+<load path="table/sample_table_hello.js" />
+<load path="table/sample_table_hello.html" />
+<load path="table/sample_table.css" />
+<load path="images/table1.png" />
+<comment>
+<a href="table//sample_table_hello.html">実行結果</a>
+<ol>
+<li><a href="./typedoc/classes/graphtablesvg.table.html" target="_blank">Table</a></li>
+<li><a href="./typedoc/classes/graphtablesvg.cell.html" target="_blank">Cell</a></li>
+</ol>
+</comment>
+</xarticle>
+
+<xarticle title="Table Document 2 : Tableの構成">
+<load path="images/table2.png" />
+<load path="images/table3.png" />
+<comment>
+hoghoge
+<ol>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGLineElement" target="_blank">SVGLineElement</a></li>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGTextElement" target="_blank">SVGTextElement</a></li>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGGElement" target="_blank">SVGGElement</a></li>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGRectElement" target="_blank">SVGRectElement</a></li>
+</ol>
+</comment>
+</xarticle>
+
+<xarticle title="Table Sample 3 : プロパティ">
+<load path="table/sample_table_style.js" />
+<load path="table/sample_table_style.html" />
+<load path="table/sample_table_style.css" />
+<comment>
+hoghoge
+<a href="table/sample_table_style.html">実行結果</a>
+</comment>
+</xarticle>
+
+<xarticle title="Table Sample 4 : デフォルトクラス名の指定" >
+<load path="table/sample_table_style_select.js" />
+<load path="table/sample_table_style_select.html" />
+<load path="table/sample_table_style_select.css" />
+<comment>
+hoghoge
+<a href="table/sample_table_style_select.html">実行結果</a>
+</comment>
+</xarticle>
+
+<xarticle title="Table Sample 5 : RowとColumn" >
+<load path="table/sample_table_4.js" />
+<comment>
+各行の高さ、各列の幅はRow,Columnのプロパティから設定できる。
+<a href="table/sample_table_4.html">実行結果</a>
+<ol>
+<li><a href="./typedoc/classes/graphtablesvg.row.html" target="_blank">Row</a></li>
+<li><a href="./typedoc/classes/graphtablesvg.column.html" target="_blank">Column</a></li>
+</ol>
+</comment>
+</xarticle>
+
+<xarticle title="Table Sample 6 : セルの連結" >
+<load path="table/sample_table_5.js" />
+<comment>
+<a href="table/sample_table_5.html">実行結果</a>
+</comment>
+</xarticle>
+
+<xarticle title="Table Sample 7 : テキスト位置の指定" >
+<load path="table/sample_table_6.js" />
+<load path="table/sample_table_6.css" />
+<comment>
+<a href="table/sample_table_6.html">実行結果</a>
+</comment>
+</xarticle>
+
+<xarticle title="Table Sample 8 : Logic Table" >
+<load path="table/sample_table_7.js" />
+<comment>
+<a href="table/sample_table_7.html">実行結果</a>
+<ol>
+<li><a href="./typedoc/classes/graphtablesvg.logictable.html" target="_blank">LogicTable</a></li>
+<li><a href="./typedoc/classes/graphtablesvg.logiccell.html" target="_blank">LogicCell</a></li>
+</ol>
+
+</comment>
+</xarticle>
+
+
+<xarticle title="Table Sample 9 : Powerpointへ出力" >
+<load path="table/sample_table_8.html" />
+<load path="table/sample_table_8.js" />
+<comment>
+<a href="table/sample_table_8.html">実行結果</a>
+</comment>
+</xarticle>
+
+<xarticle title="Graph Sample 1 : Hello World" >
+<load path="graph/sample_graph_hello.html" />
+<load path="graph/sample_graph_hello.js" />
+<load path="graph/sample_graph_hello.css" />
+<comment>
+<a href="graph/sample_graph_hello.html">実行結果</a>
+</comment>
+</xarticle>
+
+<xarticle title="Graph Sample 2 : Vertex and Edge" >
+<load path="graph/sample_graph_tree.html" />
+<load path="graph/sample_graph_tree.js" />
+<load path="graph/sample_graph_tree.css" />
+<comment>
+<a href="graph/sample_graph_tree.html">実行結果</a>
+<ol>
+<li><a href="./typedoc/classes/graphtablesvg.graph.html" target="_blank">Graph</a></li>
+<li><a href="./typedoc/classes/graphtablesvg.vertex.html" target="_blank">Vertex</a></li>
+<li><a href="./typedoc/classes/graphtablesvg.edge.html" target="_blank">Edge</a></li>
+</ol>
+</comment>
+<load path="images/graph1.png" />
+</xarticle>
+
+<xarticle title="Graph Sample 3 : Vertex and Edge" >
+<load path="graph/sample_graph_vertex.html" /><load path="graph/sample_graph_vertex.js" /><load path="graph/sample_graph_vertex.css" />
+<comment>
+<a href="graph/sample_graph_vertex.html">実行結果</a>
+</comment>
+</xarticle>
+
+<xarticle title="Graph Sample 4 : Connector" >
+<load path="graph/sample_graph_connector.html" /><load path="graph/sample_graph_connector.js" /><load path="graph/sample_graph_connector.css" />
+<comment>
+<a href="graph/sample_graph_connector.html">実行結果</a>
+</comment>
+</xarticle>
+
+
+
+</body>
+</html>

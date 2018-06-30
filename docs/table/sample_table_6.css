@@ -1,0 +1,38 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.svgbox {
+    border: #000000 solid 1px;
+    background: #e9e9e9;
+}
+.cell_T{
+    --vertical-anchor : top;
+}
+.cell_M{
+    --vertical-anchor : middle;
+}
+.cell_B{
+    --vertical-anchor : bottom;
+}
+.cell_L{
+    --horizontal-anchor : left;
+}
+.cell_C{
+    --horizontal-anchor : center;
+}
+.cell_R{
+    --horizontal-anchor : right;
+}
+.cell_TL{
+    --vertical-anchor : top;
+    --horizontal-anchor : left;
+}
+.cell_MC{
+    --vertical-anchor : middle;
+    --horizontal-anchor : center;
+}
+.cell_BR{
+    --vertical-anchor : bottom;
+    --horizontal-anchor : right;
+}

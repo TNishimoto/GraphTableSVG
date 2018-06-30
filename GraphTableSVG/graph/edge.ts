@@ -408,11 +408,11 @@
             return false;
         }
         public get isMaximalRegularInterval(): boolean {
-            const value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "false");
+            const value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "true");
             return value == "true";             
         }
         public set isMaximalRegularInterval(value: boolean) {
-            const prev = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "false");
+            const prev = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "true");
             const prevV = prev == "true";
             if (prevV != value) {
                 this.svgTextPath.setPropertyStyleValue(GraphTableSVG.MaximalRegularIntervalName, value ? "true" : "false");
@@ -445,9 +445,11 @@
             const g = SVG.createGroup(params.className);
             graph.svgGroup.appendChild(g);
 
+            /*
             const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
             const type = params.surfaceType != null ? params.surfaceType :
                 type1 != null ? type1 : "line";
+                */
 
             return new Edge(graph, g);
         }

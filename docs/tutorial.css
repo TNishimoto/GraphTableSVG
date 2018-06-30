@@ -1,0 +1,31 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.article-title{
+    font-size: 28px;
+    font-weight: 700;
+}
+.code-filename{
+    background-color: aqua;
+    position: relative;
+    top: 20pt;
+}
+
+.sample-table-of-contents{
+    background-color: palegoldenrod;
+    padding: 10pt;
+    width: 800pt;
+    margin: 10pt auto;
+}
+
+.sample-article{
+    background-color: palegoldenrod;
+    padding: 10pt;
+    width: 800pt;
+    margin: 10pt auto;
+}
+.sample-commentary{
+    background-color: darkseagreen;
+    padding: 10pt;    
+}

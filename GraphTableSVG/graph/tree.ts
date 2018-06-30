@@ -33,7 +33,7 @@ namespace GraphTableSVG {
                     edge.isMaximalRegularInterval = true;
                     //edge.svgText.setTextContent(tree.edgeLabel, isLatexMode);
                 }
-                this.connect(parent, edge, node, null, null, "bottom", "top");
+                this.connect(parent, edge, node, {beginConnectorType : "bottom", endConnectorType : "top"});
             }else{
                 this.roots.push(node);
             }
@@ -56,7 +56,7 @@ namespace GraphTableSVG {
             const node = GraphTableSVG.Vertex.create(this);  
             const edge = GraphTableSVG.Edge.create(this);
             
-            this.connect(parent, edge, node, null, null, "bottom", "top");
+            this.connect(parent, edge, node, {beginConnectorType : "bottom", endConnectorType : "top"});
             this.createdNodeCallback(node);
             this.relocate();
         }
