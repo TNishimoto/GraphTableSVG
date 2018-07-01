@@ -40,21 +40,32 @@ Javascript上ではTableは主にGraphTableSVG.TableとGraphTableSVG.Cellクラ�
 <load path="images/table2.png" />
 <load path="images/table3.png" />
 <comment>
-hoghoge
+<p>
+上の図はTableとCellがどのようなSVG要素で構成されているかを示している。
+Cellは背景をSVGRectElementで、テキストをSVGTextElementで表しており、それらをSVGGElementでまとめている。
+Tableは各Cellを表すSVGGElementと各枠を表すSVGLineElementをSVGGElementでまとめている。
+これらはブラウザのデバッグ機能で確認できる。
+</p>
+<p>
+参考のために各SVG要素のリファレンスを貼っておく。
+HTMLのSVG?を日本語で解説しているサイトは少ないが、
+<a href="http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo.htm" target="_blank">svg要素の基本的な使い方まとめ</a>が参考になる。
+</p>
 <ol>
 <li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGLineElement" target="_blank">SVGLineElement</a></li>
 <li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGTextElement" target="_blank">SVGTextElement</a></li>
 <li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGGElement" target="_blank">SVGGElement</a></li>
 <li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGRectElement" target="_blank">SVGRectElement</a></li>
 </ol>
+<p>
+下のコードはSVG要素のプロパティを編集してテーブルの見た目を変更する例である。
+SVG要素のスタイル属性を直接編集や、クラス名によるCSSでの設定によって見た目を変更することが出来る。
+<a href="table/sample_table_style.html">実行結果</a>
+</p>
 </comment>
 <load path="table/sample_table_style.js" />
-<load path="table/sample_table_style.html" />
 <load path="table/sample_table_style.css" />
-<comment>
-hoghoge
-<a href="table/sample_table_style.html">実行結果</a>
-</comment>
+<load path="images/table_style.png" />
 </xarticle>
 
 <xarticle title="Table Sample 3 : デフォルトクラス名の指定" >
