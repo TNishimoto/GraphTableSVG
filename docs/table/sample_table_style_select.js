@@ -7,6 +7,4 @@ window.onload = () => {
             table.cells[y][x].svgText.textContent = `[${y},${x}]`
         }    
     }
-
-    return table;
 };
