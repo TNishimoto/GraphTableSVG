@@ -71,10 +71,11 @@ SVG要素のスタイル属性を直接編集や、クラス名によるCSSで�
 <xarticle title="Table Sample 3 : デフォルトクラス名の指定" >
 <load path="table/sample_table_style_select.js" />
 <load path="table/sample_table_style_select.css" />
+<load path="images/table_select_style.png" />
 <comment>
 <p>
-　Tableの各セルや枠にCSSを適用するためには各要素のクラス属性を設定しないといけない。これは面倒だ。
-よって、TableのCSSからセルや枠のCSSも設定できるようにカスタム属性を追加している。
+　Tableの各セルや枠にCSSを適用するためには各要素のクラス属性を設定しないといけない。
+これは面倒なので、TableのCSSからセルや枠のCSSも設定できるようにカスタム属性を追加している。
 --default-cell-classと--default-border-classはそれぞれセルと枠の各クラス属性のデフォルト名を指定する属性である。
 これをtable.svgGroupのスタイルに設定しておくことで、一つずつクラス属性を設定する手間が省ける。
 同様にcell.svgGroupに--default-background-classと--default-text-classを適用することで
@@ -91,9 +92,11 @@ CSSファイルにこれらのカスタム属性を記述しておくことで�
 
 <xarticle title="Table Sample 4 : RowとColumn" >
 <load path="table/sample_table_width.js" />
+<load path="images/table_rowcolumn.png" />
 <comment>
-各行の高さ、各列の幅はRow,Columnのプロパティから設定できる。
 <a href="table/sample_table_width.html">実行結果</a>
+各行の高さ、各列の幅はRow,Columnのプロパティから設定できる。
+RowクラスとColumnクラスの詳細は下のリファレンスを参照すること。
 <ol>
 <li><a href="./typedoc/classes/graphtablesvg.row.html" target="_blank">Row</a></li>
 <li><a href="./typedoc/classes/graphtablesvg.column.html" target="_blank">Column</a></li>
@@ -103,6 +106,7 @@ CSSファイルにこれらのカスタム属性を記述しておくことで�
 
 <xarticle title="Table Sample 5 : セルの連結" >
 <load path="table/sample_table_merge.js" />
+<load path="images/table_merge.png" />
 <comment>
 <a href="table/sample_table_merge.html">実行結果</a>
 </comment>
@@ -111,6 +115,7 @@ CSSファイルにこれらのカスタム属性を記述しておくことで�
 <xarticle title="Table Sample 6 : テキスト位置の指定" >
 <load path="table/sample_table_anchor.js" />
 <load path="table/sample_table_anchor.css" />
+<load path="images/table_anchor.png" />
 <comment>
 <a href="table/sample_table_anchor.html">実行結果</a>
 </comment>

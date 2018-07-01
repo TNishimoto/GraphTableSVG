@@ -173,13 +173,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Vertex<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.graph.html" class="tsd-signature-type">Graph</a>, className<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, text<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Vertex<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.graph.html" class="tsd-signature-type">Graph</a>, params<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L44">graph/vertex.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L44">graph/vertex.ts:44</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -188,16 +188,21 @@
 									<h5>graph: <a href="graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> className: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> text: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
-								</li>
-								<li>
-									<h5>x: <span class="tsd-signature-type">number</span></h5>
-								</li>
-								<li>
-									<h5>y: <span class="tsd-signature-type">number</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> params: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> class<wbr>Name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> text<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> x<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> y<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.vertex.html" class="tsd-signature-type">Vertex</a></h4>
@@ -213,7 +218,7 @@
 					<div class="tsd-signature tsd-kind-icon">_graph<span class="tsd-signature-symbol">:</span> <a href="graphtablesvg.graph.html" class="tsd-signature-type">Graph</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L13">graph/vertex.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L13">graph/vertex.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -223,7 +228,7 @@
 					<div class="tsd-signature tsd-kind-icon">_incoming<wbr>Edges<span class="tsd-signature-symbol">:</span> <a href="graphtablesvg.edge.html" class="tsd-signature-type">Edge</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L15">graph/vertex.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L15">graph/vertex.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -233,7 +238,7 @@
 					<div class="tsd-signature tsd-kind-icon">_observer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MutationObserver</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L19">graph/vertex.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L19">graph/vertex.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -243,7 +248,7 @@
 					<div class="tsd-signature tsd-kind-icon">_outcoming<wbr>Edges<span class="tsd-signature-symbol">:</span> <a href="graphtablesvg.edge.html" class="tsd-signature-type">Edge</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L14">graph/vertex.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L14">graph/vertex.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -253,7 +258,7 @@
 					<div class="tsd-signature tsd-kind-icon">_svg<wbr>Group<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SVGGElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L18">graph/vertex.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L18">graph/vertex.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -263,7 +268,7 @@
 					<div class="tsd-signature tsd-kind-icon">_svg<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SVGTextElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L97">graph/vertex.ts:97</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L103">graph/vertex.ts:103</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -273,7 +278,7 @@
 					<div class="tsd-signature tsd-kind-icon">_text<wbr>Observer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MutationObserver</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L36">graph/vertex.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L36">graph/vertex.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -283,7 +288,7 @@
 					<div class="tsd-signature tsd-kind-icon">tag<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L16">graph/vertex.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L16">graph/vertex.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -293,7 +298,7 @@
 					<div class="tsd-signature tsd-kind-icon">auto<wbr>Size<wbr>Shape<wbr>ToFit<wbr>Text<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;--autosize-shape-to-fit-text&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L7">graph/vertex.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L7">graph/vertex.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -303,7 +308,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Surface<wbr>Class<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;--default-surface-class&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L6">graph/vertex.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L6">graph/vertex.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -313,7 +318,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Surface<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;--default-surface-type&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L4">graph/vertex.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L4">graph/vertex.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -323,7 +328,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Text<wbr>Class<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;--default-text-class&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L5">graph/vertex.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L5">graph/vertex.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -333,7 +338,7 @@
 					<div class="tsd-signature tsd-kind-icon">id_<wbr>counter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L9">graph/vertex.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L9">graph/vertex.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -350,7 +355,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L334">graph/vertex.ts:334</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L340">graph/vertex.ts:340</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -372,7 +377,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L348">graph/vertex.ts:348</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L354">graph/vertex.ts:354</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -394,7 +399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L87">graph/vertex.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L93">graph/vertex.ts:93</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -420,7 +425,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L190">graph/vertex.ts:190</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L196">graph/vertex.ts:196</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -433,7 +438,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L193">graph/vertex.ts:193</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L199">graph/vertex.ts:199</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -461,7 +466,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L115">graph/vertex.ts:115</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L121">graph/vertex.ts:121</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -483,7 +488,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L122">graph/vertex.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L128">graph/vertex.ts:128</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -506,7 +511,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L295">graph/vertex.ts:295</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L301">graph/vertex.ts:301</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -514,7 +519,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L303">graph/vertex.ts:303</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L309">graph/vertex.ts:309</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -537,7 +542,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L485">graph/vertex.ts:485</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L492">graph/vertex.ts:492</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -559,7 +564,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L341">graph/vertex.ts:341</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L347">graph/vertex.ts:347</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -581,7 +586,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L135">graph/vertex.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L141">graph/vertex.ts:141</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -603,7 +608,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L327">graph/vertex.ts:327</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L333">graph/vertex.ts:333</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -625,7 +630,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L142">graph/vertex.ts:142</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L148">graph/vertex.ts:148</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -647,7 +652,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L109">graph/vertex.ts:109</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L115">graph/vertex.ts:115</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -669,7 +674,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L317">graph/vertex.ts:317</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L323">graph/vertex.ts:323</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -694,7 +699,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L287">graph/vertex.ts:287</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L293">graph/vertex.ts:293</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -719,7 +724,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L257">graph/vertex.ts:257</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L263">graph/vertex.ts:263</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -741,7 +746,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L32">graph/vertex.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L32">graph/vertex.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -758,7 +763,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L275">graph/vertex.ts:275</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L281">graph/vertex.ts:281</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -783,7 +788,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L94">graph/vertex.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L100">graph/vertex.ts:100</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -805,7 +810,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L101">graph/vertex.ts:101</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L107">graph/vertex.ts:107</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -827,7 +832,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L357">graph/vertex.ts:357</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L363">graph/vertex.ts:363</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.virtualsubtree.html" class="tsd-signature-type">VirtualSubTree</a></h4>
@@ -845,7 +850,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L182">graph/vertex.ts:182</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L188">graph/vertex.ts:188</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -858,7 +863,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L185">graph/vertex.ts:185</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L191">graph/vertex.ts:191</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -887,7 +892,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L154">graph/vertex.ts:154</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L160">graph/vertex.ts:160</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -900,7 +905,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L157">graph/vertex.ts:157</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L163">graph/vertex.ts:163</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -929,7 +934,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L170">graph/vertex.ts:170</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L176">graph/vertex.ts:176</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -942,7 +947,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L173">graph/vertex.ts:173</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L179">graph/vertex.ts:179</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -973,7 +978,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L269">graph/vertex.ts:269</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L275">graph/vertex.ts:275</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1003,7 +1008,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L495">graph/vertex.ts:495</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L502">graph/vertex.ts:502</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1037,7 +1042,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L466">graph/vertex.ts:466</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L473">graph/vertex.ts:473</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1059,7 +1064,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L213">graph/vertex.ts:213</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L219">graph/vertex.ts:219</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1085,7 +1090,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L206">graph/vertex.ts:206</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L212">graph/vertex.ts:212</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1114,7 +1119,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L203">graph/vertex.ts:203</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L209">graph/vertex.ts:209</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1150,7 +1155,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L281">graph/vertex.ts:281</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L287">graph/vertex.ts:287</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1172,7 +1177,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L443">graph/vertex.ts:443</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L450">graph/vertex.ts:450</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1205,7 +1210,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L413">graph/vertex.ts:413</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L420">graph/vertex.ts:420</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1238,7 +1243,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L226">graph/vertex.ts:226</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L232">graph/vertex.ts:232</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1255,7 +1260,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L20">graph/vertex.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L20">graph/vertex.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1278,7 +1283,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L456">graph/vertex.ts:456</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L463">graph/vertex.ts:463</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1308,7 +1313,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L431">graph/vertex.ts:431</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L438">graph/vertex.ts:438</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1338,7 +1343,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L371">graph/vertex.ts:371</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L377">graph/vertex.ts:377</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1355,7 +1360,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L37">graph/vertex.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L37">graph/vertex.ts:37</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1378,7 +1383,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L221">graph/vertex.ts:221</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L227">graph/vertex.ts:227</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1400,7 +1405,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/da69528/GraphTableSVG/graph/vertex.ts#L384">graph/vertex.ts:384</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/9d16261/GraphTableSVG/graph/vertex.ts#L390">graph/vertex.ts:390</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1420,10 +1425,19 @@
 											<h5><span class="tsd-flag ts-flagOptional">Optional</span> class<wbr>Name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 										</li>
 										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> height<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> radius<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
 											<h5><span class="tsd-flag ts-flagOptional">Optional</span> surface<wbr>Type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 										</li>
 										<li class="tsd-parameter">
 											<h5><span class="tsd-flag ts-flagOptional">Optional</span> text<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> width<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
 										</li>
 										<li class="tsd-parameter">
 											<h5><span class="tsd-flag ts-flagOptional">Optional</span> x<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>

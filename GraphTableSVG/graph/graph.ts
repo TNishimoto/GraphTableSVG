@@ -17,8 +17,9 @@
         protected _edges: Edge[] = new Array(0);
         protected _svgGroup: SVGGElement;
         protected _roots: Vertex[] = [];
-        constructor(box: HTMLElement, className: string | null = null) {
-            this._svgGroup = GraphTableSVG.SVG.createGroup(className);
+        constructor(box: HTMLElement, option : {className?: string} = {}) {
+            if(option.className ==undefined) option.className = null;
+            this._svgGroup = GraphTableSVG.SVG.createGroup(option.className);
             box.appendChild(this.svgGroup);
 
             this._svgGroup.setAttribute(Graph.typeName, "graph");

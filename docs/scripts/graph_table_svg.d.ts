@@ -295,7 +295,9 @@ declare namespace GraphTableSVG {
         protected _edges: Edge[];
         protected _svgGroup: SVGGElement;
         protected _roots: Vertex[];
-        constructor(box: HTMLElement, className?: string | null);
+        constructor(box: HTMLElement, option?: {
+            className?: string;
+        });
         private updateVertices();
         private updateEdges();
         update(): void;

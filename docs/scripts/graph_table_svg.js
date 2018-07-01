@@ -1890,12 +1890,14 @@ var GraphTableSVG;
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var Graph = (function () {
-        function Graph(box, className) {
-            if (className === void 0) { className = null; }
+        function Graph(box, option) {
+            if (option === void 0) { option = {}; }
             this._vertices = new Array(0);
             this._edges = new Array(0);
             this._roots = [];
-            this._svgGroup = GraphTableSVG.SVG.createGroup(className);
+            if (option.className == undefined)
+                option.className = null;
+            this._svgGroup = GraphTableSVG.SVG.createGroup(option.className);
             box.appendChild(this.svgGroup);
             this._svgGroup.setAttribute(Graph.typeName, "graph");
         }
@@ -5163,7 +5165,7 @@ var GraphTableSVG;
                         }
                         if (cellInfo.topBorderClass != null) {
                             var topCellInfo = y > 0 ? table.cells[y - 1][x] : null;
-                            if (topCellInfo != null && topCellInfo.bottomBorderClass != null && cellInfo.topBorderClass != null) {
+                            if (topCellInfo != null && topCellInfo.bottomBorderClass != cellInfo.topBorderClass) {
                                 throw Error("Forbidden table[" + y + "][" + x + "].topBorderClass != null && table[" + (y - 1) + "][" + x + "].bottomBorderClass");
                             }
                             GraphTableSVG.SVG.resetStyle(cell.topBorder.style);
@@ -5171,7 +5173,7 @@ var GraphTableSVG;
                         }
                         if (cellInfo.leftBorderClass != null) {
                             var leftCellInfo = x > 0 ? table.cells[y][x - 1] : null;
-                            if (leftCellInfo != null && leftCellInfo.rightBorderClass != null && cellInfo.leftBorderClass != null) {
+                            if (leftCellInfo != null && leftCellInfo.rightBorderClass != cellInfo.leftBorderClass) {
                                 throw Error("Forbidden table[" + y + "][" + x + "].leftBorderClass != null && table[" + y + "][" + (x - 1) + "].rightBorderClass");
                             }
                             GraphTableSVG.SVG.resetStyle(cell.leftBorder.style);
@@ -5179,7 +5181,7 @@ var GraphTableSVG;
                         }
                         if (cellInfo.rightBorderClass != null) {
                             var rightCellInfo = x + 1 < table.columnCount ? table.cells[y][x + 1] : null;
-                            if (rightCellInfo != null && rightCellInfo.leftBorderClass != null && cellInfo.rightBorderClass != null) {
+                            if (rightCellInfo != null && rightCellInfo.leftBorderClass != cellInfo.rightBorderClass) {
                                 throw Error("Forbidden table[" + y + "][" + x + "].rightBorderClass != null && table[" + y + "][" + (x + 1) + "].leftBorderClass");
                             }
                             GraphTableSVG.SVG.resetStyle(cell.rightBorder.style);
@@ -5187,7 +5189,7 @@ var GraphTableSVG;
                         }
                         if (cellInfo.bottomBorderClass != null) {
                             var bottomCellInfo = y + 1 < table.rowCount ? table.cells[y + 1][x] : null;
-                            if (bottomCellInfo != null && bottomCellInfo.topBorderClass != null && cellInfo.bottomBorderClass != null) {
+                            if (bottomCellInfo != null && bottomCellInfo.topBorderClass != cellInfo.bottomBorderClass) {
                                 throw Error("Forbidden table[" + y + "][" + x + "].bottomBorderClass != null && table[" + (y + 1) + "][" + x + "].topBorderClass");
                             }
                             GraphTableSVG.SVG.resetStyle(cell.bottomBorder.style);

@@ -1,7 +1,6 @@
 window.onload = () => {
     const box = document.getElementById("svgbox");
-    const table = new GraphTableSVG.Table(box);
-    table.setSize(4,5);
+    const table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 5, columnCount: 5 });
 
     for(let y=0;y<table.rowCount;y++){
         for(let x=0;x<table.columnCount;x++){
@@ -13,8 +12,4 @@ window.onload = () => {
 
     table.rows[2].height = 0;
     table.columns[2].width = 0;
-
-
-    [table.x, table.y] = [50, 50];
-
 };
