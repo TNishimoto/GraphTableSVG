@@ -1,15 +1,9 @@
-var Table = GraphTableSVG.Table;
-function createTable() {
-    var box = document.getElementById("svgbox");
-    var table = new GraphTableSVG.Table(box);
-    table.setSize(5,5);
+window.onload = () => {
+    const box = document.getElementById("svgbox");
+    const table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 5, columnCount: 5, rowHeight : 60, columnWidth : 60 });
 
     for(let y=0;y<table.rowCount;y++){
-        table.rows[y].height = 60;
-
         for(let x=0;x<table.columnCount;x++){
-            table.columns[x].width = 60;
-
             table.cells[y][x].svgText.textContent = `[${y},${x}]`
         }    
     }
@@ -31,10 +25,4 @@ function createTable() {
     table.cells[4][2].horizontalAnchor = "center";
     table.cells[4][3].horizontalAnchor = "left";
 
-    table.svgGroup.setX(50);
-    table.svgGroup.setY(50);
-    return table;
-}
-window.onload = () => {
-    createTable();
 };

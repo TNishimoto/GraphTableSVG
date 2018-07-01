@@ -84,6 +84,19 @@ namespace GraphTableSVG {
             if (b) this.update();
         };
 
+        public get x() : number {
+            return this.svgGroup.getX();
+        }
+        public set x(value :number) {
+            this.svgGroup.setX(value);
+        }
+        public get y() : number {
+            return this.svgGroup.getY();
+        }
+        public set y(value :number) {
+            this.svgGroup.setY(value);
+        }
+
 
         /**
         セルのインスタント生成時にこの値がインスタントのクラス名にセットされます。
@@ -190,7 +203,9 @@ namespace GraphTableSVG {
         /*
          constructor
         */
-        constructor(svgbox: HTMLElement, _tableClassName: string | null = null) {
+        constructor(svgbox: HTMLElement, 
+            option : {tableClassName? : string, rowCount? : number, columnCount? : number, 
+                x? : number, y? :number, rowHeight? : number, columnWidth? : number } = {}) {
 
             if (Common.getGraphTableCSS() == null) Common.setGraphTableCSS("yellow", "red");
 
@@ -206,8 +221,22 @@ namespace GraphTableSVG {
             //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             //this.svgGroup.appendChild(this.svgLineGroup);
 
-            if (_tableClassName != null) this.svgGroup.setAttribute("class", _tableClassName);
-            this.setSize(5, 5);
+            if (option.tableClassName != null) this.svgGroup.setAttribute("class", option.tableClassName);
+            if(option.rowCount == undefined) option.rowCount = 5;
+            if(option.columnCount == undefined) option.columnCount = 5;
+            this.setSize(option.columnCount, option.rowCount);
+
+            if(option.x == undefined) option.x = 0;
+            if(option.y == undefined) option.y = 0;
+            [this.x, this.y] = [option.x, option.y];
+
+            if(option.rowHeight != undefined){
+                this.rows.forEach((v)=>v.height = option.rowHeight);
+            }
+            if(option.columnWidth != undefined){
+                this.columns.forEach((v)=>v.width = option.columnWidth);
+            }
+
 
         }
         public constructFromLogicTable(table: LogicTable) {

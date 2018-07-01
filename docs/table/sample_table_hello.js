@@ -1,8 +1,8 @@
 window.onload = () => {
+    /* SVG要素の取得 */
     const box = document.getElementById("svgbox");
-    const table = new GraphTableSVG.Table(box);
-    table.setSize(5,5);
+    /* Tableの作成 */
+    const table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 3, columnCount: 3 });
+    /* X : 2, Y : 1 のセルのテキストを変更 */
     table.cells[1][2].svgText.textContent = `Hello World`;
-    table.svgGroup.setX(50);
-    table.svgGroup.setY(50);
 };

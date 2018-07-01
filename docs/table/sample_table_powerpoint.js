@@ -1,5 +1,5 @@
-var Table = GraphTableSVG.Table;
-function createTable() {
+let _table = [];
+window.onload = () => {
     const logicTable = new GraphTableSVG.LogicTable(4, 5, null);
     
     for(let y=0;y<logicTable.rowCount;y++){
@@ -8,14 +8,11 @@ function createTable() {
         }    
     }
 
-    var box = document.getElementById("svgbox");
-    var table = new GraphTableSVG.Table(box);
+    const box = document.getElementById("svgbox");
+    const table = new GraphTableSVG.Table(box);
     table.constructFromLogicTable(logicTable);    
 
-    table.svgGroup.setX(50);
-    table.svgGroup.setY(50);
-    return table;
-}
-window.onload = () => {
-    createTable();
+    [table.x, table.y] = [50, 50];
+    _table.push(table);
+
 };

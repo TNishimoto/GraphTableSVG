@@ -1,6 +1,4 @@
-var Table = GraphTableSVG.Table;
-let _table = [];
-function createTable() {
+window.onload = () => {
     const logicTable = new GraphTableSVG.LogicTable(4, 5, null);
     
     for(let y=0;y<logicTable.rowCount;y++){
@@ -11,13 +9,5 @@ function createTable() {
 
     var box = document.getElementById("svgbox");
     var table = new GraphTableSVG.Table(box);
-    table.constructFromLogicTable(logicTable);    
-
-    table.svgGroup.setX(50);
-    table.svgGroup.setY(50);
-
-    _table.push(table);
-}
-window.onload = () => {
-    createTable();
+    table.constructFromLogicTable(logicTable, {x:50,y:50});    
 };

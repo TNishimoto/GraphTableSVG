@@ -36,6 +36,19 @@
             this.updateEdges();
         }
 
+        public get x() : number {
+            return this.svgGroup.getX();
+        }
+        public set x(value :number) {
+            this.svgGroup.setX(value);
+        }
+        public get y() : number {
+            return this.svgGroup.getY();
+        }
+        public set y(value :number) {
+            this.svgGroup.setY(value);
+        }
+
         public get vertexXInterval(): number | null {
             const v = this.svgGroup.getPropertyStyleValue(Graph.vertexXIntervalName);
             if (v == null) {

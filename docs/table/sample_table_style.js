@@ -23,6 +23,6 @@ window.onload = () => {
 
     GraphTableSVG.SVG.setClass(table.cells[1][1].svgText,"text");
 
-    table.svgGroup.setX(50);
-    table.svgGroup.setY(50);
+    [table.x, table.y] = [50, 50];
+
 };

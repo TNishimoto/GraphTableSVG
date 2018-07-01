@@ -12,10 +12,23 @@
 <xarticle title="Table Sample 1 : hello world" >
 <load path="table/sample_table_hello.js" />
 <load path="table/sample_table_hello.html" />
-<load path="table/sample_table.css" />
-<load path="images/table1.png" />
+<load path="images/table_hello1.png" />
 <comment>
-<a href="table//sample_table_hello.html">実行結果</a>
+<p><a href="table/sample_table_hello.html">実行結果</a></p>
+<p>
+Table（表）を作成する例。
+TableはSVGなのでどのSVG要素内に作成するかをConstructorの引数の第一要素で指定する。
+第二要素はオプションでTableのSVG要素内の位置や行数列数を指定することができる。
+また、前述の通りTableはSVGなので構成要素のプロパティを編集することでTableの中身を編集することができる。
+</p>
+<p>
+ブラウザのデバッグ機能を用いてTableがSVGでどのように構成されているか見ることも編集することも可能。
+</p>
+</comment>
+<load path="images/table_hello2.png" />
+<comment>
+Javascript上ではTableは主にGraphTableSVG.TableとGraphTableSVG.Cellクラスで構成されている。
+プロパティやメソッドの詳細は下記のリファレンスから確認できる。
 <ol>
 <li><a href="./typedoc/classes/graphtablesvg.table.html" target="_blank">Table</a></li>
 <li><a href="./typedoc/classes/graphtablesvg.cell.html" target="_blank">Cell</a></li>
@@ -23,7 +36,7 @@
 </comment>
 </xarticle>
 
-<xarticle title="Table Document 2 : Tableの構成">
+<xarticle title="Table Sample 2 : Tableの構成">
 <load path="images/table2.png" />
 <load path="images/table3.png" />
 <comment>
@@ -35,9 +48,6 @@ hoghoge
 <li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGRectElement" target="_blank">SVGRectElement</a></li>
 </ol>
 </comment>
-</xarticle>
-
-<xarticle title="Table Sample 3 : プロパティ">
 <load path="table/sample_table_style.js" />
 <load path="table/sample_table_style.html" />
 <load path="table/sample_table_style.css" />
@@ -47,7 +57,7 @@ hoghoge
 </comment>
 </xarticle>
 
-<xarticle title="Table Sample 4 : デフォルトクラス名の指定" >
+<xarticle title="Table Sample 3 : デフォルトクラス名の指定" >
 <load path="table/sample_table_style_select.js" />
 <load path="table/sample_table_style_select.html" />
 <load path="table/sample_table_style_select.css" />
@@ -57,11 +67,11 @@ hoghoge
 </comment>
 </xarticle>
 
-<xarticle title="Table Sample 5 : RowとColumn" >
-<load path="table/sample_table_4.js" />
+<xarticle title="Table Sample 4 : RowとColumn" >
+<load path="table/sample_table_width.js" />
 <comment>
 各行の高さ、各列の幅はRow,Columnのプロパティから設定できる。
-<a href="table/sample_table_4.html">実行結果</a>
+<a href="table/sample_table_width.html">実行結果</a>
 <ol>
 <li><a href="./typedoc/classes/graphtablesvg.row.html" target="_blank">Row</a></li>
 <li><a href="./typedoc/classes/graphtablesvg.column.html" target="_blank">Column</a></li>
@@ -69,25 +79,25 @@ hoghoge
 </comment>
 </xarticle>
 
-<xarticle title="Table Sample 6 : セルの連結" >
-<load path="table/sample_table_5.js" />
+<xarticle title="Table Sample 5 : セルの連結" >
+<load path="table/sample_table_merge.js" />
 <comment>
-<a href="table/sample_table_5.html">実行結果</a>
+<a href="table/sample_table_merge.html">実行結果</a>
 </comment>
 </xarticle>
 
-<xarticle title="Table Sample 7 : テキスト位置の指定" >
-<load path="table/sample_table_6.js" />
-<load path="table/sample_table_6.css" />
+<xarticle title="Table Sample 6 : テキスト位置の指定" >
+<load path="table/sample_table_anchor.js" />
+<load path="table/sample_table_anchor.css" />
 <comment>
-<a href="table/sample_table_6.html">実行結果</a>
+<a href="table/sample_table_anchor.html">実行結果</a>
 </comment>
 </xarticle>
 
-<xarticle title="Table Sample 8 : Logic Table" >
-<load path="table/sample_table_7.js" />
+<xarticle title="Table Sample 7 : Logic Table" >
+<load path="table/sample_table_logic.js" />
 <comment>
-<a href="table/sample_table_7.html">実行結果</a>
+<a href="table/sample_table_logic.html">実行結果</a>
 <ol>
 <li><a href="./typedoc/classes/graphtablesvg.logictable.html" target="_blank">LogicTable</a></li>
 <li><a href="./typedoc/classes/graphtablesvg.logiccell.html" target="_blank">LogicCell</a></li>
@@ -97,11 +107,11 @@ hoghoge
 </xarticle>
 
 
-<xarticle title="Table Sample 9 : Powerpointへ出力" >
-<load path="table/sample_table_8.html" />
-<load path="table/sample_table_8.js" />
+<xarticle title="Table Sample 8 : Powerpointへ出力" >
+<load path="table/sample_table_powerpoint.html" />
+<load path="table/sample_table_powerpoint.js" />
 <comment>
-<a href="table/sample_table_8.html">実行結果</a>
+<a href="table/sample_table_powerpoint.html">実行結果</a>
 </comment>
 </xarticle>
 
