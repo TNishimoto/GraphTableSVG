@@ -47,7 +47,9 @@ namespace GraphTableSVG {
 
             if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
         }
-
+        /**
+         * この列のセルの配列を返します。
+         */
         public get cells(): Cell[] {
             const items: Cell[] = [];
             for (let i = 0; i < this.table.rowCount; i++) {
@@ -68,7 +70,9 @@ namespace GraphTableSVG {
 
 
         }
-
+        /**
+         * この列に属しているセルの中で最大の横幅を返します。
+         */
         private getMaxWidth(): number {
             let width = 0;
             for (let y = 0; y < this.table.rowCount; y++) {
@@ -80,6 +84,9 @@ namespace GraphTableSVG {
             }
             return width;
         }
+        /**
+         * この列を更新します。
+         */
         public update() {
             this.width = this.getMaxWidth();
         }
@@ -101,7 +108,9 @@ namespace GraphTableSVG {
 
         }
 
-
+        /**
+         * この列の左の枠を配列で返します。
+         */
         public get leftBorders(): SVGLineElement[] {
             const r: SVGLineElement[] = [];
             this.cells.forEach((v) => {
@@ -114,6 +123,9 @@ namespace GraphTableSVG {
             });
             return r;
         }
+        /**
+         * この列の右の枠を配列で返します。
+         */
         public get rightBorders(): SVGLineElement[] {
             const r: SVGLineElement[] = [];
             this.cells.forEach((v) => {
@@ -126,13 +138,23 @@ namespace GraphTableSVG {
             });
             return r;
         }
+        /**
+         * この列の上の枠を返します。
+         */
         public get topBorder(): SVGLineElement {
             return this.cells[0].topBorder;
         }
+        /**
+         * この列の下の枠を返します。
+         */
         public get bottomBorder(): SVGLineElement {
             const cells = this.cells;
             return cells[cells.length - 1].bottomBorder;
         }
+        /**
+         * この列を取り除きます。
+         * @param isUnit 
+         */
         public remove(isUnit: boolean = false) {
             if (isUnit) {
                 if (this.table.columns.length > 1) {
@@ -161,9 +183,15 @@ namespace GraphTableSVG {
                 }
             }
         }
+        /**
+         * この列のセルの位置を再計算します。
+         */
         public relocation() {
             this.cells.forEach((v) => v.relocation());
         }
+        /**
+         * この列に属しているグループセルによって関係している列の範囲を返します。
+         */
         public get groupColumnRange(): [number, number] {
             let range: [number, number] | null = this.cells[0].groupColumnRange;
             this.cells.forEach((v) => {

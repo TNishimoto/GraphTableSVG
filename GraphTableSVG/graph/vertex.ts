@@ -209,6 +209,12 @@
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
             return [this.x, this.y];
         }
+        /**
+         * 与えられた位置から伸びた辺に対応する接続位置を返します。
+         * @param type 
+         * @param x 
+         * @param y 
+         */
         public getConnectorType(type: ConnectorPosition, x: number, y: number): ConnectorPosition {
             if (type == ConnectorPosition.Auto) {
                 return this.getAutoPosition(x, y);
@@ -216,6 +222,11 @@
                 return type;
             }
         }
+        /**
+         * 与えられた位置から伸びた辺に対応する接続位置がAutoだったときの実際の接続位置を返します。
+         * @param x 
+         * @param y 
+         */
         protected getAutoPosition(x: number, y: number): ConnectorPosition {
             return ConnectorPosition.Top;
 
@@ -228,7 +239,9 @@
             this.localUpdate();
             return false;
         }
-
+        /**
+         * このVertexを再描画します。
+         */
         protected localUpdate() {
             let vAnchor = this.svgGroup.getPropertyStyleValue(VerticalAnchorPropertyName);
             if (vAnchor == null) vAnchor = VerticalAnchor.Middle;
@@ -298,6 +311,9 @@
             }
         }
 
+        /**
+         * このVertexがテキストに合わせてサイズを変える場合Trueを返します。
+         */
         get isAutoSizeShapeToFitText(): boolean {
             if (this.surface != null) {
                 var v = this.surface.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false");
@@ -360,6 +376,9 @@
             }
             return p;
         }
+        /**
+         * このVertexを頂点とする仮想部分木を作成します。
+         */
         get tree(): VirtualSubTree {
             return new VirtualSubTree(this);
         }
@@ -498,7 +517,12 @@
             SVG.setStyleForPNG(this.svgText);
         }
         */
-
+        /**
+         * VBAコードを作成します。
+         * @param main 
+         * @param sub 
+         * @param indexDic 
+         */
         public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
             if (this.graph != null) {
                 //const subline: string[] = [];

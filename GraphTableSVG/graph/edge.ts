@@ -31,6 +31,9 @@
             if (b) this.update();
 
         };
+        /**
+         * 開始位置の矢印オブジェクトを返します。
+         */
         public get markerStart(): SVGMarkerElement | null {
             if (this.svgPath != null) {
                 var p = this.svgPath.getAttribute("marker-start");
@@ -56,6 +59,9 @@
                 }
             }
         } 
+        /**
+         * 終了位置の矢印オブジェクトを返します。
+         */
         public get markerEnd(): SVGMarkerElement | null {
             if (this.svgPath != null) {
                 var p = this.svgPath.getAttribute("marker-end");
@@ -80,6 +86,9 @@
                 }
             }
         }
+        /**
+         * 辺の制御点を返します。
+         */
         public get controlPoint(): [number, number][] {
 
             const str = this.svgPath.getAttribute(Edge.controlPointName);
@@ -90,12 +99,15 @@
                 this.controlPoint = [];
                 return [];
             }
-        }
+        }        
         public set controlPoint(value: [number, number][]) {
             const str = JSON.stringify(value);
             this.svgPath.setAttribute(Edge.controlPointName, str);
         }
 
+        /**
+         * svgPathのstyle:stroke-dasharrayを返します。
+         */
         public get strokeDasharray(): string | null{
             if (this.svgPath != null) {
                 var s = this.svgPath.getPropertyStyleValue("stroke-dasharray");
@@ -113,7 +125,9 @@
                 }
             }
         }
-
+        /**
+         * svgPathのstyle:strokeを返します。
+         */
         public get lineColor(): string | null {
             if (this.svgPath != null) {
                 return this.svgPath.getPropertyStyleValueWithDefault("stroke", "black");
@@ -125,17 +139,24 @@
         private _endVertex: Vertex | null = null;
         private _graph: Graph | null = null;
         private _svgGroup: SVGGElement;
+        /**
+         * この辺をまとめているSVGGElementを返します。
+         */
         public get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
-
-        protected _svgPath : SVGPathElement;
-        
+        protected _svgPath : SVGPathElement;        
+        /**
+         * この辺のSVGPathElementを返します。
+         */
         public get svgPath(): SVGPathElement {
             return this._svgPath;
         }
         
         protected _svgText: SVGTextElement;
+        /**
+         * この辺のSVGTextElementを返します。
+         */
         public get svgText(): SVGTextElement {
             return this._svgText;
         }
@@ -407,6 +428,9 @@
 
             return false;
         }
+        /**
+         * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
+         */
         public get isMaximalRegularInterval(): boolean {
             const value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "true");
             return value == "true";             
@@ -453,6 +477,12 @@
 
             return new Edge(graph, g);
         }
+        /**
+         * VBAコードを作成します。
+         * @param main 
+         * @param sub 
+         * @param indexDic 
+         */
         public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
             if (this.graph != null) {
                 const subline  : string[]= [];
@@ -497,6 +527,11 @@
                 
             }
         }
+        /**
+         * VBAコードを作成します。
+         * @param shapes 
+         * @param result 
+         */
         public createVBACodeOfText(shapes: string, result: string[][]): void {
             if (this.svgTextPath.textContent != null && this.graph != null) {
                 const fontSize = parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "12"));
@@ -557,6 +592,9 @@
 
 
         private static markerCounter: number = 0;
+        /**
+         * 矢印オブジェクトを作成します。
+         */
         public static createMark(): SVGMarkerElement {
             var marker = GraphTableSVG.SVG.createMarker();
             marker.id = `marker-${Edge.markerCounter++}`;
