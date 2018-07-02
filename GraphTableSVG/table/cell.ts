@@ -34,12 +34,15 @@ namespace GraphTableSVG {
                 if (p.attributeName == "style" || p.attributeName == "class") {
                     this.localUpdate();
                 }
-                
+
             }
         };
 
 
         private tmpStyle: string | null = null;
+        /**
+         * このセルが強調してるかどうかを返します。
+         */
         public get isEmphasized(): boolean {
             const cellClass = this.svgBackground.getAttribute("class");
             return cellClass == Cell.emphasisCellClass;
@@ -64,36 +67,24 @@ namespace GraphTableSVG {
             }
         }
 
-        
+
         constructor(parent: Table, _px: number, _py: number, cellClass: string | null = null, borderClass: string | null = null) {
-
-
-
             this._svgGroup = SVG.createGroup();
             this._table = parent;
-
             this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
-
             if (cellClass != null) this.svgGroup.setAttribute("class", cellClass);
-
             this.svgGroup.setAttribute(Cell.elementTypeName, "cell-group");
-
             //this.padding = new Padding();
             this.svgGroup.setAttribute(Cell.cellXName, `${_px}`);
             this.svgGroup.setAttribute(Cell.cellYName, `${_py}`);
-
             //this.cellX = _px;
             //this.cellY = _py;
-            this.masterDiffX = 0;
-            this.masterDiffY = 0;
-
-
-
+            this.setMasterDiffX(0);
+            this.setMasterDiffY(0);
             this._svgBackground = Cell.createCellRectangle(this.defaultBackgroundClass);
             this._svgText = SVG.createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
             SVG.setDefaultValue(this.svgBackground);
-
             this.svgGroup.appendChild(this.svgText);
 
             /*
@@ -119,56 +110,79 @@ namespace GraphTableSVG {
             this.table.cellTextObserver.observe(this.svgText, option1);
 
             this._observer = new MutationObserver(this._observerFunc);
-            const option2: MutationObserverInit = { attributes : true};
+            const option2: MutationObserverInit = { attributes: true };
             this._observer.observe(this.svgGroup, option2);
-            
-
-            
             /*
             this.verticalAnchor = VerticalAnchor.Middle;
             this.horizontalAnchor = HorizontalAnchor.Left;
             */
 
         }
-        
+
         private get innerExtraPaddingLeft(): number {
             const p = this.fontSize;
             return p / 16;
         }
-        private get innerExtraPaddingRight(): number{
+        private get innerExtraPaddingRight(): number {
             const p = this.fontSize;
-            return p / 16;            
+            return p / 16;
         }
         //private _masterID: number;
+
+        /**
+         * このセルのx座標とマスターセルとのX座標の差分を返します。
+         */
         public get masterDiffX(): number {
             return Number(this.svgGroup.getAttribute(Cell.masterDiffXName));
         }
-        public set masterDiffX(id: number) {
+        /**
+         * このセルのx座標とマスターセルとのX座標の差分を設定します。
+         */
+        private setMasterDiffX(id: number) {
             this.svgGroup.setAttribute(Cell.masterDiffXName, `${id}`);
         }
-
+        /**
+         * このセルのy座標とマスターセルとのy座標の差分を返します。
+         */
         public get masterDiffY(): number {
             return Number(this.svgGroup.getAttribute(Cell.masterDiffYName));
         }
-        public set masterDiffY(id: number) {
+        /**
+         * このセルのy座標とマスターセルとのy座標の差分を設定します。
+         */
+        private setMasterDiffY(id: number) {
             this.svgGroup.setAttribute(Cell.masterDiffYName, `${id}`);
         }
 
+        /**
+         * マスターセルのx座標を返します。
+         */
         public get masterCellX(): number {
             return this.cellX + this.masterDiffX;
         }
-        public set masterCellX(id: number) {
-            this.masterDiffX = id - this.cellX;
+        /**
+         * マスターセルのx座標を設定します。
+         */
+        private setMasterCellX(id: number) {
+            this.setMasterDiffX(id - this.cellX);
         }
 
+        /**
+         * マスターセルのy座標を返します。
+         */
         public get masterCellY(): number {
             return this.cellY + this.masterDiffY;
         }
-        public set masterCellY(id: number) {
-            this.masterDiffY = id - this.cellY;
+        /**
+         * マスターセルのy座標を設定します。
+         */
+        private setMasterCellY(id: number) {
+            this.setMasterDiffY(id - this.cellY);
         }
 
-
+        /**
+         * マスターセルのIDを返します。
+         */
         public get masterID(): number {
             return this.table.cells[this.masterCellY][this.masterCellX].ID;
         }
@@ -177,7 +191,9 @@ namespace GraphTableSVG {
             this.svgGroup.setAttribute(Cell.masterIDName, `${id}`);
         }
         */
-
+        /**
+         * マスターセルを返します。
+         */
         public get master(): Cell {
             return this.table.cellArray[this.masterID];
         }
@@ -235,14 +251,14 @@ namespace GraphTableSVG {
         set bottomBorder(line: SVGLineElement) {
             this._borders[DirectionType.bottom] = line;
 
-        } 
+        }
         private _table: Table;
         /**
         所属しているTableを返します。
         */
         public get table(): Table {
             return this._table;
-        }        
+        }
         private _svgBackground: SVGRectElement;
         /**
         セルの背景を表現しているSVGRectElementを返します。
@@ -264,8 +280,10 @@ namespace GraphTableSVG {
         public get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
-        
 
+        /**
+         * テキストのフォントサイズを返します。
+         */
         get fontSize(): number {
             const p = this.svgText.getPropertyStyleValueWithDefault("font-size", "24");
             const p2 = parseInt(p);
@@ -430,7 +448,7 @@ namespace GraphTableSVG {
                 this.leftSideGroupCells.forEach((v) => h += this.table.rows[v.cellY].height);
 
                 this.upperSideGroupCells.forEach((v) => w += this.table.columns[v.cellX].width);
-                
+
                 return [w, h];
 
             } else {
@@ -449,10 +467,15 @@ namespace GraphTableSVG {
             throw Error("error");
         }
 
-
+        /**
+         * このセルがマスターセルのときに限りTrueを返します。
+         */
         get isMaster(): boolean {
             return this.ID == this.masterID;
         }
+        /**
+         * このセルが奴隷セルのときに限りTrueを返します。
+         */
         get isSlave(): boolean {
             return !this.isMaster;
         }
@@ -462,7 +485,10 @@ namespace GraphTableSVG {
         get ID(): number {
             return this.cellX + (this.cellY * this.table.columnCount);
         }
-
+        /**
+         * 与えられた方向にあるセルを返します。
+         * @param direction 
+         */
         getNextCell(direction: DirectionType): Cell | null {
             switch (direction) {
                 case DirectionType.top: return this.cellY != 0 ? this.table.cells[this.cellY - 1][this.cellX] : null;
@@ -472,6 +498,10 @@ namespace GraphTableSVG {
             }
             throw Error("error");
         }
+        /**
+         * 与えられた方向にある、このセルが属しているグループセルとは異なる最初のグループセルのマスターセルを返します。
+         * @param direction 
+         */
         getNextMasterCell(direction: DirectionType): Cell | null {
             const nextCell = this.getNextCell(direction);
             return nextCell == null ? null :
@@ -484,7 +514,7 @@ namespace GraphTableSVG {
         get topCell(): Cell | null {
             return this.getNextCell(DirectionType.top);
         }
-        
+
         /**
         左にあるセルを返します。
         */
@@ -506,32 +536,58 @@ namespace GraphTableSVG {
             return this.getNextCell(DirectionType.bottom);
 
         }
+        /**
+         * 右下のセルを返します。
+         */
         get bottomRightCell(): Cell | null {
             return this.bottomCell == null ? null : this.bottomCell.rightCell == null ? null : this.bottomCell.rightCell;
         }
+        /**
+         * 右上のセルを返します。
+         */
         get topRightCell(): Cell | null {
             return this.topCell == null ? null : this.topCell.rightCell == null ? null : this.topCell.rightCell;
         }
+        /**
+         * 左下のセルを返します。
+         */
         get bottomLeftCell(): Cell | null {
             return this.bottomCell == null ? null : this.bottomCell.leftCell == null ? null : this.bottomCell.leftCell;
         }
+        /**
+         * 左上のセルを返します。
+         */
         get topLeftCell(): Cell | null {
             return this.topCell == null ? null : this.topCell.leftCell == null ? null : this.topCell.leftCell;
         }
-        
+        /**
+         * このグループセルの上にあるグループセルのマスターセルを返します。
+         */
         get topMasterCell(): Cell | null {
             return this.getNextMasterCell(DirectionType.top);
         }
+        /**
+         * このグループセルの左にあるグループセルのマスターセルを返します。
+         */
         get leftMasterCell(): Cell | null {
             return this.getNextMasterCell(DirectionType.left);
         }
+        /**
+         * このグループセルの右にあるグループセルのマスターセルを返します。
+         */
         get rightMasterCell(): Cell | null {
             return this.getNextMasterCell(DirectionType.right);
         }
+        /**
+         * このグループセルの下にあるグループセルのマスターセルを返します。
+         */
         get bottomMasterCell(): Cell | null {
             return this.getNextMasterCell(DirectionType.bottom);
 
         }
+        /**
+         * グループセルの横幅を返します。
+         */
         get computeGroupWidth(): number {
             const p = this.master.upperSideGroupCells;
             const x2 = p[p.length - 1].cellX;
@@ -541,7 +597,9 @@ namespace GraphTableSVG {
             }
             return w;
         }
-
+        /**
+         * グループセルの縦幅を返します。
+         */
         get computeGroupHeight(): number {
             const p = this.master.leftSideGroupCells;
             const y2 = p[p.length - 1].cellY;
@@ -552,16 +610,23 @@ namespace GraphTableSVG {
             return w;
 
         }
-
+        /**
+         * グループセルの行数を返します。
+         */
         get GroupRowCount(): number {
             if (!this.isMaster) throw Error("Slave Error");
             return this.leftSideGroupCells.length;
         }
+        /**
+         * グループセルの列数を返します。
+         */
         get GroupColumnCount(): number {
             if (!this.isMaster) throw Error("Slave Error");
             return this.upperSideGroupCells.length;
         }
-
+        /**
+         * グループセルを構成しているセルを2次元配列で返します。
+         */
         get cellsInGroup(): Cell[][] {
             if (this.isMaster) {
                 return this.table.getRangeCells(this.cellX, this.cellY, this.GroupColumnCount, this.GroupRowCount);
@@ -569,6 +634,9 @@ namespace GraphTableSVG {
                 throw Error("Slave Error");
             }
         }
+        /**
+         * グループセルを構成しているセルを配列で返します。
+         */
         get cellArrayInGroup(): Cell[] {
             if (this.isMaster) {
                 return this.table.getRangeCellArray(this.cellX, this.cellY, this.GroupColumnCount, this.GroupRowCount);
@@ -577,18 +645,31 @@ namespace GraphTableSVG {
             }
         }
 
-
+        /**
+         * このセルがグループセルであるときに限りTrueを返します。
+         */
         get isSingleCell(): boolean {
             return this.isMaster && this.leftSideGroupCells.length == 1 && this.upperSideGroupCells.length == 1;
         }
+        /**
+         * マスターセルかつ行数が１のときに限りTrueを返します。
+         */
         get isRowSingleCell(): boolean {
             return this.isMaster && this.leftSideGroupCells.length == 1;
         }
+        /**
+         * マスターセルかつ列数が１のときに限りTrueを返します。
+         */
         get isColumnSingleCell(): boolean {
             return this.isMaster && this.upperSideGroupCells.length == 1;
         }
-        
 
+
+        /**
+         * ２つの線分がオーバーラップしている部分の線分を返します。
+         * @param v 
+         * @param w 
+         */
         private static computeOverlapRange(v: [number, number], w: [number, number]): [number, number] | null {
             if (w[0] < v[0]) {
                 return Cell.computeOverlapRange(w, v);
@@ -604,6 +685,11 @@ namespace GraphTableSVG {
                 }
             }
         }
+        /**
+         * ２つの線分がオーバーラップしているときに限り、その結合した線分を返します。
+         * @param v 
+         * @param w 
+         */
         public static computeDisjunction(v: [number, number], w: [number, number]): [number, number] | null {
             if (w[0] < v[0]) {
                 return Cell.computeDisjunction(w, v);
@@ -611,14 +697,20 @@ namespace GraphTableSVG {
                 if (v[1] < w[0]) {
                     return null;
                 } else {
-                    return [v[0], Math.max(v[1], w[1])];                    
+                    return [v[0], Math.max(v[1], w[1])];
                 }
             }
         }
+        /**
+         * このグループセルの左上のX座標と右上のX座標を返します。
+         */
         public get groupColumnRange(): [number, number] {
             return [this.master.cellX, this.master.mostRightCellX];
         }
 
+        /**
+         * このグループセルの左上のY座標と左下のY座標を返します。
+         */
         public get groupRowRange(): [number, number] {
             return [this.master.cellY, this.master.mostBottomCellY];
         }
@@ -645,7 +737,11 @@ namespace GraphTableSVG {
             }
 
         }
-
+        /**
+         * このセルをマスターセルとした横セル数wかつ縦セル数hのグループセルを作成できるとき、Trueを返します。
+         * @param w 
+         * @param h 
+         */
         canMerge(w: number, h: number): boolean {
             const range = this.table.getRangeCells(this.cellX, this.cellY, w, h);
 
@@ -656,7 +752,7 @@ namespace GraphTableSVG {
                 }
                 const bottomCell = range[h - 1][x].bottomCell;
                 if (bottomCell != null) {
-                    if (range[h-1][x].masterID == bottomCell.masterID) return false;
+                    if (range[h - 1][x].masterID == bottomCell.masterID) return false;
                 }
             }
             for (let y = 0; y < h; y++) {
@@ -664,19 +760,28 @@ namespace GraphTableSVG {
                 if (leftCell != null) {
                     if (range[y][0].masterID == leftCell.masterID) return false;
                 }
-                const rightCell = range[y][w-1].rightCell;
+                const rightCell = range[y][w - 1].rightCell;
                 if (rightCell != null) {
-                    if (range[y][w-1].masterID == rightCell.masterID) return false;
+                    if (range[y][w - 1].masterID == rightCell.masterID) return false;
                 }
             }
             return true;
         }
+        /**
+         * このセルをマスターセルとした横セル数wかつ縦セル数hのグループセルを作成します。
+         * @param w 
+         * @param h 
+         */
         Merge(w: number, h: number) {
             if (!this.isMaster) throw Error("Error");
             const range = this.table.getRangeCellArray(this.cellX, this.cellY, w, h);
-            range.forEach((v) => { v.masterCellX = this.masterCellX; v.masterCellY = this.masterCellY });
+            range.forEach((v) => { v.setMasterCellX(this.masterCellX); v.setMasterCellY(this.masterCellY) });
             range.forEach((v) => { v.groupUpdate() });
         }
+        /**
+         * このセルから見て右にあるグループセルとこのセルが属しているグループセルが結合できるとき、そのグループセルの左上のY座標と左下のY座標を返します。
+         * さもなければnullを返します。
+         */
         getMergedRangeRight(): [number, number] | null {
             if (!this.isMaster) return null;
             if (this.rightMasterCell != null) {
@@ -691,6 +796,10 @@ namespace GraphTableSVG {
                 return null;
             }
         }
+        /**
+         * このセルから見て下にあるグループセルとこのセルが属しているグループセルが結合できるとき、そのグループセルの左上のX座標と右上のX座標を返します。
+         * さもなければnullを返します。
+         */
         getMergedRangeBottom(): [number, number] | null {
             if (!this.isMaster) return null;
             if (this.bottomMasterCell != null) {
@@ -708,21 +817,36 @@ namespace GraphTableSVG {
                 return null;
             }
         }
+        /**
+         * 右のセルと結合できるときTrueを返します。
+         */
         get canMergeRight(): boolean {
             return this.getMergedRangeRight() != null;
         }
+        /**
+         * 下のセルと結合できるときTrueを返します。
+         */
         get canMergeBottom(): boolean {
             return this.getMergedRangeBottom() != null;
         }
-        
-        
+
+        /**
+         * グループセル内の右端にあるせるセルのX座標を返します。
+         */
         public get mostRightCellX(): number {
             return this.cellX + this.GroupColumnCount - 1;
         }
+        /**
+         * グループセル内の下端にあるせるセルのY座標を返します。
+         */
         public get mostBottomCellY(): number {
             return this.cellY + this.GroupRowCount - 1;
         }
 
+        /**
+         * 指定した方向にあるグループセルの配列を返します。
+         * @param direction 
+         */
         private getNextGroupCells(direction: DirectionType): Cell[] {
             if (this.isMaster) {
                 let w: Cell[] = [this];
@@ -750,7 +874,7 @@ namespace GraphTableSVG {
         */
         private get upperSideGroupCells(): Cell[] {
             return this.getNextGroupCells(DirectionType.right);
-            
+
         }
         /**
         セルのX座標を返します。
@@ -776,7 +900,7 @@ namespace GraphTableSVG {
         set y(value: number) {
             this.svgGroup.setY(value);
         }
-        
+
         /**
         セルの幅を返します。
         */
@@ -809,7 +933,7 @@ namespace GraphTableSVG {
             return p;
         }
 
-        
+
         /*
         get fill(): string {
             return this.backRect.style.fill;
@@ -819,6 +943,10 @@ namespace GraphTableSVG {
         }
         */
 
+        /**
+         * セルの背景を表すSVGRectElementを作成します。
+         * @param className 
+         */
         private static createCellRectangle(className: string | null = null): SVGRectElement {
             const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             rect.width.baseVal.value = 30;
@@ -847,6 +975,9 @@ namespace GraphTableSVG {
         update
         */
 
+        /**
+         * このセルを更新します。
+         */
         public update() {
             //this.updateBorder();
             this.groupUpdate();
@@ -855,7 +986,9 @@ namespace GraphTableSVG {
             this.relocation();
         }
 
-
+        /**
+         * グループセルを更新します。
+         */
         private groupUpdate() {
 
             if (this.isMaster) {
@@ -894,7 +1027,7 @@ namespace GraphTableSVG {
 
             this.resize();
             this.relocation();
-            
+
         }
 
         /**
@@ -932,6 +1065,10 @@ namespace GraphTableSVG {
             }
         }
 
+        /**
+         * 指定した方向の枠を取り除きます。
+         * @param dir 
+         */
         public removeBorder(dir: DirectionType) {
             const border = this._borders[dir];
             if (this.table.svgHiddenGroup.contains(border)) {
@@ -942,6 +1079,10 @@ namespace GraphTableSVG {
                 throw Error("error");
             }
         }
+        /**
+         * このセルを取り除きます。
+         * @param isColumn 
+         */
         public removeFromTable(isColumn: boolean) {
 
             if (this.table.svgGroup.contains(this.svgGroup)) {
@@ -967,8 +1108,10 @@ namespace GraphTableSVG {
                 if (this.bottomCell == null) this.removeBorder(DirectionType.bottom);
             }
         }
-        
 
+        /**
+         * 上枠の位置を再計算します。
+         */
         private relocateTopBorder() {
             if (!this.isMaster) return;
 
@@ -985,6 +1128,9 @@ namespace GraphTableSVG {
                 }
             }
         }
+        /**
+         * 左枠の位置を再計算します。
+         */
         private relocateLeftBorder() {
             if (!this.isMaster) return;
 
@@ -1001,6 +1147,9 @@ namespace GraphTableSVG {
                 }
             }
         }
+        /**
+         * 右枠の位置を再計算します。
+         */
         private relocateRightBorder() {
             if (!this.isMaster) return;
 
@@ -1018,6 +1167,9 @@ namespace GraphTableSVG {
                 }
             }
         }
+        /**
+         * 下枠の位置を再計算します。
+         */
         private relocateBottomBorder() {
             if (!this.isMaster) return;
             if (this.table.svgGroup.contains(this.bottomBorder)) {
@@ -1051,6 +1203,9 @@ namespace GraphTableSVG {
 
 
         }
+        /**
+         * 右のグループセルと結合します。
+         */
         mergeRight(): void {
             const range = this.getMergedRangeRight();
             if (range != null) {
@@ -1059,6 +1214,9 @@ namespace GraphTableSVG {
                 throw Error("Error");
             }
         }
+        /**
+         * 下のグループセルと結合します。
+         */
         mergeBottom(): void {
             const range = this.getMergedRangeBottom();
             if (range != null) {
@@ -1072,7 +1230,10 @@ namespace GraphTableSVG {
                 const upperSide = this.table.getRangeCellArray(this.cellX, this.cellY, this.GroupColumnCount, upperRowCount);
                 const lowerSide = this.table.getRangeCellArray(this.cellX, this.cellY + upperRowCount, this.GroupColumnCount, this.GroupRowCount - upperRowCount);
                 const lowerMaster = lowerSide[0];
-                lowerSide.forEach((v) => [v.masterCellX, v.masterCellY] = [lowerMaster.cellX, lowerMaster.cellY]);
+                lowerSide.forEach((v) => {
+                    v.setMasterCellX(lowerMaster.cellX);
+                    v.setMasterCellY(lowerMaster.cellY);
+                });
 
                 upperSide.forEach((v) => v.groupUpdate());
                 lowerSide.forEach((v) => v.groupUpdate());
@@ -1087,7 +1248,10 @@ namespace GraphTableSVG {
                 const leftSide = this.table.getRangeCellArray(this.cellX, this.cellY, leftColumnCount, this.GroupRowCount);
                 const rightSide = this.table.getRangeCellArray(this.cellX + leftColumnCount, this.cellY, this.GroupColumnCount - leftColumnCount, this.GroupRowCount);
                 const rightMaster = rightSide[0];
-                rightSide.forEach((v) => [v.masterCellX, v.masterCellY] = [rightMaster.cellX, rightMaster.cellY]);
+                rightSide.forEach((v) => {
+                    v.setMasterCellX(rightMaster.cellX);
+                    v.setMasterCellY(rightMaster.cellY);
+                });
 
                 leftSide.forEach((v) => v.groupUpdate());
                 rightSide.forEach((v) => v.groupUpdate());
@@ -1097,12 +1261,17 @@ namespace GraphTableSVG {
             }
 
         }
+
+        /*
         public renumbering() {
             this.updateBorderAttributes();
         }
+        */
 
-
-        private updateBorderAttributes(): void {
+        /**
+         * このセルが持つ枠の情報を更新します。
+         */
+        public updateBorderAttributes(): void {
             if (this.leftCell != null && this.leftCell.rightBorder != this.leftBorder) {
                 this.removeBorder(DirectionType.left);
                 this.leftBorder = this.leftCell.rightBorder;

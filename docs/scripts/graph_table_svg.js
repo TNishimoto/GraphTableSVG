@@ -3385,8 +3385,8 @@ var GraphTableSVG;
             this.svgGroup.setAttribute(Cell.elementTypeName, "cell-group");
             this.svgGroup.setAttribute(Cell.cellXName, "" + _px);
             this.svgGroup.setAttribute(Cell.cellYName, "" + _py);
-            this.masterDiffX = 0;
-            this.masterDiffY = 0;
+            this.setMasterDiffX(0);
+            this.setMasterDiffY(0);
             this._svgBackground = Cell.createCellRectangle(this.defaultBackgroundClass);
             this._svgText = GraphTableSVG.SVG.createText(this.defaultTextClass);
             this.svgGroup.appendChild(this.svgBackground);
@@ -3453,42 +3453,42 @@ var GraphTableSVG;
             get: function () {
                 return Number(this.svgGroup.getAttribute(Cell.masterDiffXName));
             },
-            set: function (id) {
-                this.svgGroup.setAttribute(Cell.masterDiffXName, "" + id);
-            },
             enumerable: true,
             configurable: true
         });
+        Cell.prototype.setMasterDiffX = function (id) {
+            this.svgGroup.setAttribute(Cell.masterDiffXName, "" + id);
+        };
         Object.defineProperty(Cell.prototype, "masterDiffY", {
             get: function () {
                 return Number(this.svgGroup.getAttribute(Cell.masterDiffYName));
             },
-            set: function (id) {
-                this.svgGroup.setAttribute(Cell.masterDiffYName, "" + id);
-            },
             enumerable: true,
             configurable: true
         });
+        Cell.prototype.setMasterDiffY = function (id) {
+            this.svgGroup.setAttribute(Cell.masterDiffYName, "" + id);
+        };
         Object.defineProperty(Cell.prototype, "masterCellX", {
             get: function () {
                 return this.cellX + this.masterDiffX;
             },
-            set: function (id) {
-                this.masterDiffX = id - this.cellX;
-            },
             enumerable: true,
             configurable: true
         });
+        Cell.prototype.setMasterCellX = function (id) {
+            this.setMasterDiffX(id - this.cellX);
+        };
         Object.defineProperty(Cell.prototype, "masterCellY", {
             get: function () {
                 return this.cellY + this.masterDiffY;
             },
-            set: function (id) {
-                this.masterDiffY = id - this.cellY;
-            },
             enumerable: true,
             configurable: true
         });
+        Cell.prototype.setMasterCellY = function (id) {
+            this.setMasterDiffY(id - this.cellY);
+        };
         Object.defineProperty(Cell.prototype, "masterID", {
             get: function () {
                 return this.table.cells[this.masterCellY][this.masterCellX].ID;
@@ -4062,7 +4062,7 @@ var GraphTableSVG;
             if (!this.isMaster)
                 throw Error("Error");
             var range = this.table.getRangeCellArray(this.cellX, this.cellY, w, h);
-            range.forEach(function (v) { v.masterCellX = _this.masterCellX; v.masterCellY = _this.masterCellY; });
+            range.forEach(function (v) { v.setMasterCellX(_this.masterCellX); v.setMasterCellY(_this.masterCellY); });
             range.forEach(function (v) { v.groupUpdate(); });
         };
         Cell.prototype.getMergedRangeRight = function () {
@@ -4444,8 +4444,8 @@ var GraphTableSVG;
                 var lowerSide = this.table.getRangeCellArray(this.cellX, this.cellY + upperRowCount, this.GroupColumnCount, this.GroupRowCount - upperRowCount);
                 var lowerMaster_1 = lowerSide[0];
                 lowerSide.forEach(function (v) {
-                    return _a = [lowerMaster_1.cellX, lowerMaster_1.cellY], v.masterCellX = _a[0], v.masterCellY = _a[1], _a;
-                    var _a;
+                    v.setMasterCellX(lowerMaster_1.cellX);
+                    v.setMasterCellY(lowerMaster_1.cellY);
                 });
                 upperSide.forEach(function (v) { return v.groupUpdate(); });
                 lowerSide.forEach(function (v) { return v.groupUpdate(); });
@@ -4460,8 +4460,8 @@ var GraphTableSVG;
                 var rightSide = this.table.getRangeCellArray(this.cellX + leftColumnCount, this.cellY, this.GroupColumnCount - leftColumnCount, this.GroupRowCount);
                 var rightMaster_1 = rightSide[0];
                 rightSide.forEach(function (v) {
-                    return _a = [rightMaster_1.cellX, rightMaster_1.cellY], v.masterCellX = _a[0], v.masterCellY = _a[1], _a;
-                    var _a;
+                    v.setMasterCellX(rightMaster_1.cellX);
+                    v.setMasterCellY(rightMaster_1.cellY);
                 });
                 leftSide.forEach(function (v) { return v.groupUpdate(); });
                 rightSide.forEach(function (v) { return v.groupUpdate(); });
@@ -4520,6 +4520,198 @@ var GraphTableSVG;
         return Cell;
     }());
     GraphTableSVG.Cell = Cell;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var Column = (function () {
+        function Column(_table, _x) {
+            this._svgGroup = GraphTableSVG.SVG.createGroup();
+            this.table = _table;
+            this.table.svgGroup.appendChild(this._svgGroup);
+            this.cellX = _x;
+        }
+        Object.defineProperty(Column.prototype, "cellX", {
+            get: function () {
+                return Number(this._svgGroup.getAttribute(GraphTableSVG.Cell.cellXName));
+            },
+            set: function (v) {
+                this._svgGroup.setAttribute(GraphTableSVG.Cell.cellXName, "" + v);
+                this.cells.forEach(function (w) { return w.cellX = v; });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Column.prototype, "width", {
+            get: function () {
+                return Number(this._svgGroup.getAttribute(Column.rowWidthName));
+            },
+            set: function (value) {
+                this._svgGroup.setAttribute(Column.rowWidthName, "" + value);
+                var b = false;
+                for (var y = 0; y < this.table.rowCount; y++) {
+                    var cell = this.table.cells[y][this.cellX];
+                    if (cell.isColumnSingleCell && cell.width != value) {
+                        cell.width = value;
+                        b = true;
+                    }
+                }
+                for (var y = 0; y < this.table.rowCount; y++) {
+                    var cell = this.table.cells[y][this.cellX];
+                    if (!cell.isColumnSingleCell) {
+                        cell.update();
+                        b = true;
+                    }
+                }
+                if (b && !this.table.isDrawing && this.table.isAutoResized)
+                    this.table.update();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Column.prototype, "cells", {
+            get: function () {
+                var items = [];
+                for (var i = 0; i < this.table.rowCount; i++) {
+                    items.push(this.table.cells[i][this.cellX]);
+                }
+                return items;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Column.prototype.getMaxWidth = function () {
+            var width = 0;
+            for (var y = 0; y < this.table.rowCount; y++) {
+                var cell = this.table.cells[y][this.cellX];
+                if (cell.isColumnSingleCell) {
+                    if (width < cell.calculatedWidthUsingText)
+                        width = cell.calculatedWidthUsingText;
+                    if (width < cell.width)
+                        width = cell.width;
+                }
+            }
+            return width;
+        };
+        Column.prototype.update = function () {
+            this.width = this.getMaxWidth();
+        };
+        Column.prototype.resize = function () {
+            this.width = (this.getMaxWidth());
+        };
+        Column.prototype.setX = function (posX) {
+            for (var y = 0; y < this.table.rowCount; y++) {
+                var cell = this.table.cells[y][this.cellX];
+                cell.x = posX;
+            }
+        };
+        Object.defineProperty(Column.prototype, "leftBorders", {
+            get: function () {
+                var r = [];
+                this.cells.forEach(function (v) {
+                    if (r.length == 0) {
+                        r.push(v.leftBorder);
+                    }
+                    else {
+                        var last = r[r.length - 1];
+                        if (last != v.leftBorder)
+                            r.push(v.leftBorder);
+                    }
+                });
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Column.prototype, "rightBorders", {
+            get: function () {
+                var r = [];
+                this.cells.forEach(function (v) {
+                    if (r.length == 0) {
+                        r.push(v.rightBorder);
+                    }
+                    else {
+                        var last = r[r.length - 1];
+                        if (last != v.rightBorder)
+                            r.push(v.rightBorder);
+                    }
+                });
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Column.prototype, "topBorder", {
+            get: function () {
+                return this.cells[0].topBorder;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Column.prototype, "bottomBorder", {
+            get: function () {
+                var cells = this.cells;
+                return cells[cells.length - 1].bottomBorder;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Column.prototype.remove = function (isUnit) {
+            var _this = this;
+            if (isUnit === void 0) { isUnit = false; }
+            if (isUnit) {
+                if (this.table.columns.length > 1) {
+                    this.table.columns[this.cellX].cells.forEach(function (v) {
+                        v.removeFromTable(true);
+                        _this.table.cells[v.cellY].splice(_this.cellX, 1);
+                    });
+                    this.table.columns.splice(this.cellX, 1);
+                    this.table.columns.forEach(function (v, i) { return v.cellX = i; });
+                    this.table.svgGroup.removeChild(this._svgGroup);
+                    this.table.update();
+                }
+                else if (this.table.columns.length == 1) {
+                    while (this.table.rows.length > 0) {
+                        this.table.rows[this.table.rows.length - 1].remove(true);
+                    }
+                    if (this.table.columns.length == 1)
+                        this.table.columns.splice(0, 1);
+                }
+                else {
+                    throw Error("error");
+                }
+            }
+            else {
+                var _a = this.groupColumnRange, b = _a[0], e = _a[1];
+                for (var x = e; x >= b; x--) {
+                    this.table.columns[x].remove(true);
+                }
+            }
+        };
+        Column.prototype.relocation = function () {
+            this.cells.forEach(function (v) { return v.relocation(); });
+        };
+        Object.defineProperty(Column.prototype, "groupColumnRange", {
+            get: function () {
+                var range = this.cells[0].groupColumnRange;
+                this.cells.forEach(function (v) {
+                    if (range != null) {
+                        range = GraphTableSVG.Cell.computeDisjunction(range, v.groupColumnRange);
+                    }
+                });
+                if (range == null) {
+                    throw Error("error");
+                }
+                else {
+                    return range;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Column.rowWidthName = "data-width";
+        return Column;
+    }());
+    GraphTableSVG.Column = Column;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -4704,193 +4896,6 @@ var GraphTableSVG;
         return Row;
     }());
     GraphTableSVG.Row = Row;
-    var Column = (function () {
-        function Column(_table, _x) {
-            this._svgGroup = GraphTableSVG.SVG.createGroup();
-            this.table = _table;
-            this.table.svgGroup.appendChild(this._svgGroup);
-            this.cellX = _x;
-        }
-        Object.defineProperty(Column.prototype, "cellX", {
-            get: function () {
-                return Number(this._svgGroup.getAttribute(GraphTableSVG.Cell.cellXName));
-            },
-            set: function (v) {
-                this._svgGroup.setAttribute(GraphTableSVG.Cell.cellXName, "" + v);
-                this.cells.forEach(function (w) { return w.cellX = v; });
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Column.prototype, "width", {
-            get: function () {
-                return Number(this._svgGroup.getAttribute(Column.rowWidthName));
-            },
-            set: function (value) {
-                this._svgGroup.setAttribute(Column.rowWidthName, "" + value);
-                var b = false;
-                for (var y = 0; y < this.table.rowCount; y++) {
-                    var cell = this.table.cells[y][this.cellX];
-                    if (cell.isColumnSingleCell && cell.width != value) {
-                        cell.width = value;
-                        b = true;
-                    }
-                }
-                for (var y = 0; y < this.table.rowCount; y++) {
-                    var cell = this.table.cells[y][this.cellX];
-                    if (!cell.isColumnSingleCell) {
-                        cell.update();
-                        b = true;
-                    }
-                }
-                if (b && !this.table.isDrawing && this.table.isAutoResized)
-                    this.table.update();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Column.prototype, "cells", {
-            get: function () {
-                var items = [];
-                for (var i = 0; i < this.table.rowCount; i++) {
-                    items.push(this.table.cells[i][this.cellX]);
-                }
-                return items;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Column.prototype.getMaxWidth = function () {
-            var width = 0;
-            for (var y = 0; y < this.table.rowCount; y++) {
-                var cell = this.table.cells[y][this.cellX];
-                if (cell.isColumnSingleCell) {
-                    if (width < cell.calculatedWidthUsingText)
-                        width = cell.calculatedWidthUsingText;
-                    if (width < cell.width)
-                        width = cell.width;
-                }
-            }
-            return width;
-        };
-        Column.prototype.update = function () {
-            this.width = this.getMaxWidth();
-        };
-        Column.prototype.resize = function () {
-            this.width = (this.getMaxWidth());
-        };
-        Column.prototype.setX = function (posX) {
-            for (var y = 0; y < this.table.rowCount; y++) {
-                var cell = this.table.cells[y][this.cellX];
-                cell.x = posX;
-            }
-        };
-        Object.defineProperty(Column.prototype, "leftBorders", {
-            get: function () {
-                var r = [];
-                this.cells.forEach(function (v) {
-                    if (r.length == 0) {
-                        r.push(v.leftBorder);
-                    }
-                    else {
-                        var last = r[r.length - 1];
-                        if (last != v.leftBorder)
-                            r.push(v.leftBorder);
-                    }
-                });
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Column.prototype, "rightBorders", {
-            get: function () {
-                var r = [];
-                this.cells.forEach(function (v) {
-                    if (r.length == 0) {
-                        r.push(v.rightBorder);
-                    }
-                    else {
-                        var last = r[r.length - 1];
-                        if (last != v.rightBorder)
-                            r.push(v.rightBorder);
-                    }
-                });
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Column.prototype, "topBorder", {
-            get: function () {
-                return this.cells[0].topBorder;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Column.prototype, "bottomBorder", {
-            get: function () {
-                var cells = this.cells;
-                return cells[cells.length - 1].bottomBorder;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Column.prototype.remove = function (isUnit) {
-            var _this = this;
-            if (isUnit === void 0) { isUnit = false; }
-            if (isUnit) {
-                if (this.table.columns.length > 1) {
-                    this.table.columns[this.cellX].cells.forEach(function (v) {
-                        v.removeFromTable(true);
-                        _this.table.cells[v.cellY].splice(_this.cellX, 1);
-                    });
-                    this.table.columns.splice(this.cellX, 1);
-                    this.table.columns.forEach(function (v, i) { return v.cellX = i; });
-                    this.table.svgGroup.removeChild(this._svgGroup);
-                    this.table.update();
-                }
-                else if (this.table.columns.length == 1) {
-                    while (this.table.rows.length > 0) {
-                        this.table.rows[this.table.rows.length - 1].remove(true);
-                    }
-                }
-                else {
-                    throw Error("error");
-                }
-            }
-            else {
-                var _a = this.groupColumnRange, b = _a[0], e = _a[1];
-                for (var x = e; x >= b; x--) {
-                    this.table.columns[x].remove(true);
-                }
-            }
-        };
-        Column.prototype.relocation = function () {
-            this.cells.forEach(function (v) { return v.relocation(); });
-        };
-        Object.defineProperty(Column.prototype, "groupColumnRange", {
-            get: function () {
-                var range = this.cells[0].groupColumnRange;
-                this.cells.forEach(function (v) {
-                    if (range != null) {
-                        range = GraphTableSVG.Cell.computeDisjunction(range, v.groupColumnRange);
-                    }
-                });
-                if (range == null) {
-                    throw Error("error");
-                }
-                else {
-                    return range;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Column.rowWidthName = "data-width";
-        return Column;
-    }());
-    GraphTableSVG.Column = Column;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -5166,7 +5171,7 @@ var GraphTableSVG;
                         if (cellInfo.topBorderClass != null) {
                             var topCellInfo = y > 0 ? table.cells[y - 1][x] : null;
                             if (topCellInfo != null && topCellInfo.bottomBorderClass != cellInfo.topBorderClass) {
-                                throw Error("Forbidden table[" + y + "][" + x + "].topBorderClass != null && table[" + (y - 1) + "][" + x + "].bottomBorderClass");
+                                throw Error("Forbidden table[" + y + "][" + x + "].topBorderClass != table[" + (y - 1) + "][" + x + "].bottomBorderClass");
                             }
                             GraphTableSVG.SVG.resetStyle(cell.topBorder.style);
                             cell.topBorder.setAttribute("class", cellInfo.topBorderClass);
@@ -5174,7 +5179,7 @@ var GraphTableSVG;
                         if (cellInfo.leftBorderClass != null) {
                             var leftCellInfo = x > 0 ? table.cells[y][x - 1] : null;
                             if (leftCellInfo != null && leftCellInfo.rightBorderClass != cellInfo.leftBorderClass) {
-                                throw Error("Forbidden table[" + y + "][" + x + "].leftBorderClass != null && table[" + y + "][" + (x - 1) + "].rightBorderClass");
+                                throw Error("Forbidden table[" + y + "][" + x + "].leftBorderClass != table[" + y + "][" + (x - 1) + "].rightBorderClass");
                             }
                             GraphTableSVG.SVG.resetStyle(cell.leftBorder.style);
                             cell.leftBorder.setAttribute("class", cellInfo.leftBorderClass);
@@ -5182,7 +5187,7 @@ var GraphTableSVG;
                         if (cellInfo.rightBorderClass != null) {
                             var rightCellInfo = x + 1 < table.columnCount ? table.cells[y][x + 1] : null;
                             if (rightCellInfo != null && rightCellInfo.leftBorderClass != cellInfo.rightBorderClass) {
-                                throw Error("Forbidden table[" + y + "][" + x + "].rightBorderClass != null && table[" + y + "][" + (x + 1) + "].leftBorderClass");
+                                throw Error("Forbidden table[" + y + "][" + x + "].rightBorderClass != table[" + y + "][" + (x + 1) + "].leftBorderClass");
                             }
                             GraphTableSVG.SVG.resetStyle(cell.rightBorder.style);
                             cell.rightBorder.setAttribute("class", cellInfo.rightBorderClass);
@@ -5190,7 +5195,7 @@ var GraphTableSVG;
                         if (cellInfo.bottomBorderClass != null) {
                             var bottomCellInfo = y + 1 < table.rowCount ? table.cells[y + 1][x] : null;
                             if (bottomCellInfo != null && bottomCellInfo.topBorderClass != cellInfo.bottomBorderClass) {
-                                throw Error("Forbidden table[" + y + "][" + x + "].bottomBorderClass != null && table[" + (y + 1) + "][" + x + "].topBorderClass");
+                                throw Error("Forbidden table[" + y + "][" + x + "].bottomBorderClass != table[" + (y + 1) + "][" + x + "].topBorderClass");
                             }
                             GraphTableSVG.SVG.resetStyle(cell.bottomBorder.style);
                             cell.bottomBorder.setAttribute("class", cellInfo.bottomBorderClass);
@@ -5390,13 +5395,15 @@ var GraphTableSVG;
         };
         Table.prototype.clear = function () {
             if (this.columnCount != this.columns.length)
-                throw Error("Error");
+                throw Error("clear error");
             while (this.rowCount > 1) {
                 this.rows[this.rows.length - 1].remove(true);
             }
             while (this.columnCount > 0) {
                 this.columns[this.columns.length - 1].remove(true);
             }
+            if (this.columnCount != this.columns.length)
+                throw Error("clear error2");
         };
         Table.prototype.insertRow = function (i) {
             this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);

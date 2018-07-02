@@ -526,10 +526,14 @@ declare namespace GraphTableSVG {
         constructor(parent: Table, _px: number, _py: number, cellClass?: string | null, borderClass?: string | null);
         private readonly innerExtraPaddingLeft;
         private readonly innerExtraPaddingRight;
-        masterDiffX: number;
-        masterDiffY: number;
-        masterCellX: number;
-        masterCellY: number;
+        readonly masterDiffX: number;
+        private setMasterDiffX(id);
+        readonly masterDiffY: number;
+        private setMasterDiffY(id);
+        readonly masterCellX: number;
+        private setMasterCellX(id);
+        readonly masterCellY: number;
+        private setMasterCellY(id);
         readonly masterID: number;
         readonly master: Cell;
         private _borders;
@@ -632,26 +636,6 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class Row {
-        private readonly table;
-        private _svgGroup;
-        static readonly columnHeightName: string;
-        cellY: number;
-        height: number;
-        constructor(_table: Table, _y: number);
-        readonly cells: Cell[];
-        readonly topBorders: SVGLineElement[];
-        readonly bottomBorders: SVGLineElement[];
-        readonly leftBorder: SVGLineElement;
-        readonly rightBorder: SVGLineElement;
-        resize(): void;
-        setY(posY: number): void;
-        private getMaxHeight();
-        update(): void;
-        remove(isUnit?: boolean): void;
-        relocation(): void;
-        readonly groupRowRange: [number, number];
-    }
     class Column {
         private readonly table;
         static readonly rowWidthName: string;
@@ -671,6 +655,28 @@ declare namespace GraphTableSVG {
         remove(isUnit?: boolean): void;
         relocation(): void;
         readonly groupColumnRange: [number, number];
+    }
+}
+declare namespace GraphTableSVG {
+    class Row {
+        private readonly table;
+        private _svgGroup;
+        static readonly columnHeightName: string;
+        cellY: number;
+        height: number;
+        constructor(_table: Table, _y: number);
+        readonly cells: Cell[];
+        readonly topBorders: SVGLineElement[];
+        readonly bottomBorders: SVGLineElement[];
+        readonly leftBorder: SVGLineElement;
+        readonly rightBorder: SVGLineElement;
+        resize(): void;
+        setY(posY: number): void;
+        private getMaxHeight();
+        update(): void;
+        remove(isUnit?: boolean): void;
+        relocation(): void;
+        readonly groupRowRange: [number, number];
     }
 }
 declare namespace GraphTableSVG {

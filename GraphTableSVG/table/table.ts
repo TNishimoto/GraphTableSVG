@@ -583,7 +583,7 @@ namespace GraphTableSVG {
 
             this.rows.forEach((v, i) => v.cellY = i);
             this.columns.forEach((v, i) => v.cellX = i);
-            this.cellArray.forEach((v) => v.renumbering());
+            this.cellArray.forEach((v) => v.updateBorderAttributes());
 
         }
         /**
@@ -653,10 +653,9 @@ namespace GraphTableSVG {
 
             }
             while (this.columnCount > 0) {
-
                 this.columns[this.columns.length - 1].remove(true);
-
             }
+            if (this.columnCount != this.columns.length) throw Error("clear error2");
         }
 
 
