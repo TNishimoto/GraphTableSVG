@@ -481,7 +481,6 @@ declare namespace GraphTableSVG {
         readonly children: Vertex[];
         readonly parentEdge: Edge | null;
         getSubtree(result?: Vertex[]): Vertex[];
-        getLeaves(): Vertex[];
         getHeight(): number;
         region(): Rectangle;
         readonly mostLeftLeave: Vertex;
@@ -631,8 +630,7 @@ declare namespace GraphTableSVG {
         mergeBottom(): void;
         private decomposeRow(upperRowCount);
         private decomposeColomn(leftColumnCount);
-        renumbering(): void;
-        private updateBorderAttributes();
+        updateBorderAttributes(): void;
     }
 }
 declare namespace GraphTableSVG {

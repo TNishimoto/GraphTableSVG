@@ -36,6 +36,9 @@
         get y(): number {
             return this.svgText.getY();
         }
+        /**
+         * 辺の中央位置、すなわち開始位置と終了位置の和の平均を返します。
+         */
         private getCenterPosition(): [number, number] {
             let x = (this.edge.x1 + this.edge.x2) / 2;
             let y = (this.edge.y1 + this.edge.y2) / 2;
@@ -77,10 +80,17 @@
             this.svgText.setAttribute('transform', `rotate(${rar}, ${this.svgText.getX()}, ${this.svgText.getY()})`);
             
         }
+        /**
+         * svgTextのstyle:font-sizeを返します。
+         */
         public get fontSize(): number {
             return parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "12"));
         }
         
+        /**
+         * 入力文字列を反転させた結果を返します。
+         * @param str 
+         */
         private static reverse(str: string): string {
             const rv: string[] = [];
             for (let i = 0, n = str.length; i < n; i++) {

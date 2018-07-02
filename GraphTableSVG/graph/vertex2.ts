@@ -160,7 +160,7 @@
         public get svgRectangle(): SVGRectElement {
             return this._svgRectangle;
         }
-
+        
         public get shapeType(): string {
             return "rectangle";
         }

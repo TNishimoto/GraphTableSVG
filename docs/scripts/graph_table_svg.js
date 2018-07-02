@@ -3261,12 +3261,6 @@ var GraphTableSVG;
                 return result;
             }
         };
-        VirtualSubTree.prototype.getLeaves = function () {
-            var p = this;
-            return this.getSubtree().filter(function (x, i, arr) {
-                return x.outcomingEdges.length == 0;
-            });
-        };
         VirtualSubTree.prototype.getHeight = function () {
             var children = this.children;
             if (children.length == 0) {
@@ -4470,9 +4464,6 @@ var GraphTableSVG;
                 throw Error("Slave Error");
             }
         };
-        Cell.prototype.renumbering = function () {
-            this.updateBorderAttributes();
-        };
         Cell.prototype.updateBorderAttributes = function () {
             if (this.leftCell != null && this.leftCell.rightBorder != this.leftBorder) {
                 this.removeBorder(DirectionType.left);
@@ -5357,7 +5348,7 @@ var GraphTableSVG;
         Table.prototype.renumbering = function () {
             this.rows.forEach(function (v, i) { return v.cellY = i; });
             this.columns.forEach(function (v, i) { return v.cellX = i; });
-            this.cellArray.forEach(function (v) { return v.renumbering(); });
+            this.cellArray.forEach(function (v) { return v.updateBorderAttributes(); });
         };
         Table.prototype.resize = function () {
             this.rows.forEach(function (v) { return v.resize(); });

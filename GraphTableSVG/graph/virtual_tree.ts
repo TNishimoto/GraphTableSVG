@@ -5,6 +5,9 @@
         constructor(_root: Vertex) {
             this.subTreeRoot = _root;
         }
+        /**
+         * 根の子ノードの配列を返します。
+         */
         get children(): Vertex[] {
             const p = this;
             return this.subTreeRoot.children.map(function (x, i, arr) {
@@ -12,11 +15,17 @@
             });
         }
         
+        /**
+         * 根の親との間の辺を返します。
+         */
         get parentEdge(): Edge | null {
             return this.subTreeRoot.parentEdge;
         }
         
-
+        /**
+         * この木の中の全てのVertexを返します。
+         * @param result 
+         */
         public getSubtree(result: Vertex[] = []): Vertex[] {
             result.push(this.subTreeRoot);
 
@@ -30,12 +39,14 @@
                 return result;
             }
         }
+        /*
         public getLeaves(): Vertex[] {
             const p = this;
             return this.getSubtree().filter(function (x, i, arr) {
                 return x.outcomingEdges.length == 0;
             });
         }
+        */
         public getHeight(): number {
             const children = this.children;
             if (children.length == 0) {
@@ -48,6 +59,9 @@
                 return max + 1;
             }
         }
+        /**
+         * この木を内包する最小の四角形を返します。
+         */
         public region(): Rectangle {
             const p = this.getSubtree();
             let minX = this.subTreeRoot.x;
@@ -68,6 +82,9 @@
             result.height = maxY - minY;
             return result;
         }
+        /**
+         * 一番左の葉を返します。
+         */
         public get mostLeftLeave(): Vertex {
             return this.leaves[0];
         }
@@ -86,6 +103,11 @@
             this.addOffset(diffX, diffY);
             //this.graph.updateEdges();
         }
+        /**
+         * 根を入力位置に移動させます。木も同様に移動します。
+         * @param _x 
+         * @param _y 
+         */
         public setRootLocation(_x: number, _y: number) {
             const x = this.subTreeRoot.x;
             const y = this.subTreeRoot.y;
@@ -94,6 +116,9 @@
             this.addOffset(diffX, diffY);
             //this.graph.updateEdges();
         }
+        /**
+         * 葉の配列を返します。
+         */
         get leaves(): Vertex[] {
             const p = this;
             return this.getSubtree().filter(function (x, i, arr) {
