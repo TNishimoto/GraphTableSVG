@@ -10,6 +10,11 @@ namespace GraphTableSVG {
             this.constructFromLogicTree(roots, (v) => v, isLatexMode);
         }
         */
+       /**
+        * LogicTreeから木を構築します。
+        * @param roots 
+        * @param isLatexMode 
+        */
         public constructFromLogicTree(roots: LogicTree[] | LogicTree, isLatexMode: boolean = false) {
             if (roots instanceof Array){
                 this.clear();

@@ -77,21 +77,31 @@ namespace GraphTableSVG {
         }
         private _cellTextObserverFunc: MutationCallback = (x: MutationRecord[]) => {
             let b = false;
+            let b2 = false;
             for (let i = 0; i < x.length; i++) {
-                const p = x[i];
+                const p : MutationRecord = x[i];
                 if (p.type == "childList") {
                     b = true;
+                    b2 = true;
                 }
                 for (let j = 0; j < p.addedNodes.length; j++) {
                     const item = p.addedNodes.item(j);
 
                     if (item.nodeName == "#text") {
                         b = true;
+                        b2 = true;
                     }
                 }
             }
+            if(b2){
+                this.fitSizeToOriginalCells(false);
+            }
             if (b) this.update();
         };
+        public fitSizeToOriginalCells(allowShrink : boolean){
+            this.rows.forEach((v)=>v.fitHeightToMaximalCell(allowShrink));
+            this.columns.forEach((v)=>v.fitWidthToMaximalCell(allowShrink));
+        }
 
         /**
          * svgGroupのx座標です。
@@ -297,15 +307,6 @@ namespace GraphTableSVG {
             this.setSize(table.columnWidths.length, table.rowHeights.length);
 
             for (let y = 0; y < this.rowCount; y++) {
-                const h = table.rowHeights[y];
-                if (h != null) this.rows[y].height = h;
-            }
-            for (let x = 0; x < this.columnCount; x++) {
-                const w = table.columnWidths[x];
-                if (w != null) this.columns[x].width = w;
-            }
-
-            for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
                     const cellInfo = table.cells[y][x];
                     if (cellInfo != null) {
@@ -362,8 +363,18 @@ namespace GraphTableSVG {
 
                     }
                 }
+
             }
 
+            //this.fitSizeToOriginalCells();
+            for (let y = 0; y < this.rowCount; y++) {
+                const h = table.rowHeights[y];
+                if (h != null) this.rows[y].height = h;
+            }
+            for (let x = 0; x < this.columnCount; x++) {
+                const w = table.columnWidths[x];
+                if (w != null) this.columns[x].width = w;
+            }
             
 
             this.update();
@@ -373,7 +384,7 @@ namespace GraphTableSVG {
                     const logicCell = table.cells[y][x];
                     if (logicCell.connectedColumnCount > 1 || logicCell.connectedRowCount > 1) {
                         if (cell.canMerge(logicCell.connectedColumnCount, logicCell.connectedRowCount)) {
-                            cell.Merge(logicCell.connectedColumnCount, logicCell.connectedRowCount);
+                            cell.merge(logicCell.connectedColumnCount, logicCell.connectedRowCount);
                         }
                     }
                 }

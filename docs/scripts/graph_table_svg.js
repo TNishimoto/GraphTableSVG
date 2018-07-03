@@ -4051,7 +4051,7 @@ var GraphTableSVG;
             }
             return true;
         };
-        Cell.prototype.Merge = function (w, h) {
+        Cell.prototype.merge = function (w, h) {
             var _this = this;
             if (!this.isMaster)
                 throw Error("Error");
@@ -4226,8 +4226,6 @@ var GraphTableSVG;
         };
         Cell.prototype.update = function () {
             this.groupUpdate();
-            this.resize();
-            this.relocation();
         };
         Cell.prototype.groupUpdate = function () {
             if (this.isMaster) {
@@ -4417,7 +4415,7 @@ var GraphTableSVG;
         Cell.prototype.mergeRight = function () {
             var range = this.getMergedRangeRight();
             if (range != null) {
-                this.Merge(range[0], range[1]);
+                this.merge(range[0], range[1]);
             }
             else {
                 throw Error("Error");
@@ -4426,7 +4424,7 @@ var GraphTableSVG;
         Cell.prototype.mergeBottom = function () {
             var range = this.getMergedRangeBottom();
             if (range != null) {
-                this.Merge(range[0], range[1]);
+                this.merge(range[0], range[1]);
             }
             else {
                 throw Error("Error");
@@ -4515,11 +4513,13 @@ var GraphTableSVG;
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var Column = (function () {
-        function Column(_table, _x) {
+        function Column(_table, _x, _width) {
+            if (_width === void 0) { _width = 30; }
             this._svgGroup = GraphTableSVG.SVG.createGroup();
             this.table = _table;
             this.table.svgGroup.appendChild(this._svgGroup);
             this.cellX = _x;
+            this._svgGroup.setAttribute(Column.rowWidthName, "" + _width);
         }
         Object.defineProperty(Column.prototype, "cellX", {
             get: function () {
@@ -4538,27 +4538,31 @@ var GraphTableSVG;
             },
             set: function (value) {
                 this._svgGroup.setAttribute(Column.rowWidthName, "" + value);
-                var b = false;
-                for (var y = 0; y < this.table.rowCount; y++) {
-                    var cell = this.table.cells[y][this.cellX];
-                    if (cell.isColumnSingleCell && cell.width != value) {
-                        cell.width = value;
-                        b = true;
-                    }
-                }
-                for (var y = 0; y < this.table.rowCount; y++) {
-                    var cell = this.table.cells[y][this.cellX];
-                    if (!cell.isColumnSingleCell) {
-                        cell.update();
-                        b = true;
-                    }
-                }
-                if (b && !this.table.isDrawing && this.table.isAutoResized)
-                    this.table.update();
+                this.setWidthToCells();
             },
             enumerable: true,
             configurable: true
         });
+        Column.prototype.setWidthToCells = function () {
+            var width = this.width;
+            var b = false;
+            for (var y = 0; y < this.table.rowCount; y++) {
+                var cell = this.table.cells[y][this.cellX];
+                if (cell.isColumnSingleCell && cell.width != width) {
+                    cell.width = width;
+                    b = true;
+                }
+            }
+            for (var y = 0; y < this.table.rowCount; y++) {
+                var cell = this.table.cells[y][this.cellX];
+                if (!cell.isColumnSingleCell) {
+                    cell.update();
+                    b = true;
+                }
+            }
+            if (b && !this.table.isDrawing && this.table.isAutoResized)
+                this.table.update();
+        };
         Object.defineProperty(Column.prototype, "cells", {
             get: function () {
                 var items = [];
@@ -4584,10 +4588,18 @@ var GraphTableSVG;
             return width;
         };
         Column.prototype.update = function () {
-            this.width = this.getMaxWidth();
+            this.setWidthToCells();
         };
         Column.prototype.resize = function () {
-            this.width = (this.getMaxWidth());
+            this.setWidthToCells();
+        };
+        Column.prototype.fitWidthToMaximalCell = function (allowShrink) {
+            if (allowShrink) {
+                this.width = this.getMaxWidth();
+            }
+            else {
+                this.width = Math.max(this.width, this.getMaxWidth());
+            }
         };
         Column.prototype.setX = function (posX) {
             for (var y = 0; y < this.table.rowCount; y++) {
@@ -4707,11 +4719,13 @@ var GraphTableSVG;
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var Row = (function () {
-        function Row(_table, _y) {
+        function Row(_table, _y, _height) {
+            if (_height === void 0) { _height = 30; }
             this._svgGroup = GraphTableSVG.SVG.createGroup();
             this.table = _table;
             this.table.svgGroup.appendChild(this._svgGroup);
             this.cellY = _y;
+            this._svgGroup.setAttribute(Row.columnHeightName, "" + _height);
         }
         Object.defineProperty(Row.prototype, "cellY", {
             get: function () {
@@ -4730,23 +4744,7 @@ var GraphTableSVG;
             },
             set: function (value) {
                 this._svgGroup.setAttribute(Row.columnHeightName, "" + value);
-                var b = false;
-                for (var x = 0; x < this.table.columnCount; x++) {
-                    var cell = this.table.cells[this.cellY][x];
-                    if (cell.isRowSingleCell && cell.height != value) {
-                        cell.height = value;
-                        b = true;
-                    }
-                }
-                for (var x = 0; x < this.table.columnCount; x++) {
-                    var cell = this.table.cells[this.cellY][x];
-                    if (!cell.isRowSingleCell) {
-                        cell.update();
-                        b = true;
-                    }
-                }
-                if (b && !this.table.isDrawing && this.table.isAutoResized)
-                    this.table.update();
+                this.setHeightToCells();
             },
             enumerable: true,
             configurable: true
@@ -4809,8 +4807,39 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        Row.prototype.setHeightToCells = function () {
+            var height = this.height;
+            var b = false;
+            for (var x = 0; x < this.table.columnCount; x++) {
+                var cell = this.table.cells[this.cellY][x];
+                if (cell.isRowSingleCell && cell.height != height) {
+                    cell.height = height;
+                    b = true;
+                }
+            }
+            for (var x = 0; x < this.table.columnCount; x++) {
+                var cell = this.table.cells[this.cellY][x];
+                if (!cell.isRowSingleCell) {
+                    cell.update();
+                    b = true;
+                }
+            }
+            if (b && !this.table.isDrawing && this.table.isAutoResized)
+                this.table.update();
+        };
+        Row.prototype.update = function () {
+            this.setHeightToCells();
+        };
         Row.prototype.resize = function () {
-            this.height = this.getMaxHeight();
+            this.setHeightToCells();
+        };
+        Row.prototype.fitHeightToMaximalCell = function (allowShrink) {
+            if (allowShrink) {
+                this.height = this.getMaxHeight();
+            }
+            else {
+                this.height = Math.max(this.height, this.getMaxHeight());
+            }
         };
         Row.prototype.setY = function (posY) {
             for (var x = 0; x < this.table.columnCount; x++) {
@@ -4830,9 +4859,6 @@ var GraphTableSVG;
                 }
             }
             return height;
-        };
-        Row.prototype.update = function () {
-            this.height = this.getMaxHeight();
         };
         Row.prototype.remove = function (isUnit) {
             if (isUnit === void 0) { isUnit = false; }
@@ -4901,17 +4927,23 @@ var GraphTableSVG;
             this._isAutoResized = false;
             this._cellTextObserverFunc = function (x) {
                 var b = false;
+                var b2 = false;
                 for (var i = 0; i < x.length; i++) {
                     var p = x[i];
                     if (p.type == "childList") {
                         b = true;
+                        b2 = true;
                     }
                     for (var j = 0; j < p.addedNodes.length; j++) {
                         var item = p.addedNodes.item(j);
                         if (item.nodeName == "#text") {
                             b = true;
+                            b2 = true;
                         }
                     }
+                }
+                if (b2) {
+                    _this.fitSizeToOriginalCells(false);
                 }
                 if (b)
                     _this.update();
@@ -5006,6 +5038,10 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        Table.prototype.fitSizeToOriginalCells = function (allowShrink) {
+            this.rows.forEach(function (v) { return v.fitHeightToMaximalCell(allowShrink); });
+            this.columns.forEach(function (v) { return v.fitWidthToMaximalCell(allowShrink); });
+        };
         Object.defineProperty(Table.prototype, "x", {
             get: function () {
                 return this.svgGroup.getX();
@@ -5130,16 +5166,6 @@ var GraphTableSVG;
                 this.svgGroup.setAttribute("class", table.tableClassName);
             this.setSize(table.columnWidths.length, table.rowHeights.length);
             for (var y = 0; y < this.rowCount; y++) {
-                var h = table.rowHeights[y];
-                if (h != null)
-                    this.rows[y].height = h;
-            }
-            for (var x = 0; x < this.columnCount; x++) {
-                var w = table.columnWidths[x];
-                if (w != null)
-                    this.columns[x].width = w;
-            }
-            for (var y = 0; y < this.rowCount; y++) {
                 for (var x = 0; x < this.columnCount; x++) {
                     var cellInfo = table.cells[y][x];
                     if (cellInfo != null) {
@@ -5194,6 +5220,16 @@ var GraphTableSVG;
                     }
                 }
             }
+            for (var y = 0; y < this.rowCount; y++) {
+                var h = table.rowHeights[y];
+                if (h != null)
+                    this.rows[y].height = h;
+            }
+            for (var x = 0; x < this.columnCount; x++) {
+                var w = table.columnWidths[x];
+                if (w != null)
+                    this.columns[x].width = w;
+            }
             this.update();
             for (var y = 0; y < this.rowCount; y++) {
                 for (var x = 0; x < this.columnCount; x++) {
@@ -5201,11 +5237,12 @@ var GraphTableSVG;
                     var logicCell = table.cells[y][x];
                     if (logicCell.connectedColumnCount > 1 || logicCell.connectedRowCount > 1) {
                         if (cell.canMerge(logicCell.connectedColumnCount, logicCell.connectedRowCount)) {
-                            cell.Merge(logicCell.connectedColumnCount, logicCell.connectedRowCount);
+                            cell.merge(logicCell.connectedColumnCount, logicCell.connectedRowCount);
                         }
                     }
                 }
             }
+            console.log("logic end");
         };
         Table.prototype.construct = function (table, isLatexMode) {
             var _this = this;

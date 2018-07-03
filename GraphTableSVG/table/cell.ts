@@ -29,7 +29,7 @@ namespace GraphTableSVG {
 
         private _observer: MutationObserver;
         private _observerFunc: MutationCallback = (x: MutationRecord[]) => {
-            for (let i = 0; i < x.length; i++) {
+            for (let i = 0; i < x.length; i++) {                
                 const p = x[i];
                 if (p.attributeName == "style" || p.attributeName == "class") {
                     this.localUpdate();
@@ -772,7 +772,7 @@ namespace GraphTableSVG {
          * @param w 
          * @param h 
          */
-        Merge(w: number, h: number) {
+        merge(w: number, h: number) {
             if (!this.isMaster) throw Error("Error");
             const range = this.table.getRangeCellArray(this.cellX, this.cellY, w, h);
             range.forEach((v) => { v.setMasterCellX(this.masterCellX); v.setMasterCellY(this.masterCellY) });
@@ -982,8 +982,8 @@ namespace GraphTableSVG {
             //this.updateBorder();
             this.groupUpdate();
             //this.updateBorderAttributes();
-            this.resize();
-            this.relocation();
+            //this.resize();
+            //this.relocation();
         }
 
         /**
@@ -1049,9 +1049,11 @@ namespace GraphTableSVG {
                 this.height = this.calculatedHeightUsingText;
             }
             //console.log([-1, this.width, this.height, w, h]);
+            
+
         }
         /**
-         * 再描画します。
+         * テキストを再描画します。
          */
         private localUpdate() {
             const innerRect = new Rectangle();
@@ -1209,7 +1211,7 @@ namespace GraphTableSVG {
         mergeRight(): void {
             const range = this.getMergedRangeRight();
             if (range != null) {
-                this.Merge(range[0], range[1]);
+                this.merge(range[0], range[1]);
             } else {
                 throw Error("Error");
             }
@@ -1220,7 +1222,7 @@ namespace GraphTableSVG {
         mergeBottom(): void {
             const range = this.getMergedRangeBottom();
             if (range != null) {
-                this.Merge(range[0], range[1]);
+                this.merge(range[0], range[1]);
             } else {
                 throw Error("Error");
             }

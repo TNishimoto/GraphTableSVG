@@ -26,7 +26,8 @@
         */
         set height(value: number) {
             this._svgGroup.setAttribute(Row.columnHeightName, `${value}`);
-
+            this.setHeightToCells();
+            /*
             let b = false;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
@@ -44,15 +45,17 @@
                 }
             }
             if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
+            */
         }
 
-        constructor(_table: Table, _y: number) {
+        constructor(_table: Table, _y: number, _height: number = 30) {
             this._svgGroup = SVG.createGroup();
 
             this.table = _table;
             this.table.svgGroup.appendChild(this._svgGroup);
 
             this.cellY = _y;
+            this._svgGroup.setAttribute(Row.columnHeightName, `${_height}`);
             //this.height = this.getMaxHeight();
 
         }
@@ -106,13 +109,46 @@
             return cells[cells.length - 1].rightBorder;
         }
 
-
-        
+        public setHeightToCells() {
+            const height = this.height;
+            let b = false;
+            for (let x = 0; x < this.table.columnCount; x++) {
+                const cell = this.table.cells[this.cellY][x];
+                if (cell.isRowSingleCell && cell.height != height) {
+                    cell.height = height;
+                    b = true;
+                }
+            }
+            for (let x = 0; x < this.table.columnCount; x++) {
+                const cell = this.table.cells[this.cellY][x];
+                if (!cell.isRowSingleCell) {
+                    cell.update();
+                    //cell.resize();
+                    b = true;
+                }
+            }
+            if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
+        }
+        /**
+         * この行を更新します。
+         */
+        public update() {
+            this.setHeightToCells();
+            //this.height = this.getMaxHeight();
+        }
         /**
          * 行内のセルのサイズを再計算します。
          */
         public resize() {
-            this.height = this.getMaxHeight();
+            this.setHeightToCells();
+            //this.height = this.getMaxHeight();
+        }
+        public fitHeightToMaximalCell(allowShrink: boolean) {
+            if (allowShrink) {
+                this.height = this.getMaxHeight();
+            } else {
+                this.height = Math.max(this.height, this.getMaxHeight());
+            }
         }
         /**
          * 行内のセルのY座標を設定します。
@@ -137,12 +173,6 @@
                 }
             }
             return height;
-        }
-        /**
-         * この行を更新します。
-         */
-        public update() {
-            this.height = this.getMaxHeight();
         }
         /**
          * この行を取り除きます。
@@ -180,9 +210,9 @@
             this.cells.forEach((v) => v.updateBorder());
         }
         */
-       /**
-        * この行の各セルを再配置します。
-        */
+        /**
+         * この行の各セルを再配置します。
+         */
         public relocation() {
             this.cells.forEach((v) => v.relocation());
         }
@@ -203,5 +233,5 @@
             }
         }
     }
-    
+
 }

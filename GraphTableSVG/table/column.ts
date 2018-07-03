@@ -26,7 +26,8 @@ namespace GraphTableSVG {
         */
         set width(value: number) {
             this._svgGroup.setAttribute(Column.rowWidthName, `${value}`);
-
+            this.setWidthToCells();
+            /*
             let b = false;
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
@@ -43,9 +44,30 @@ namespace GraphTableSVG {
                     b = true;
                 }
             }
-
-
             if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
+            */
+        }
+        private setWidthToCells(){
+            const width = this.width;
+            
+            let b = false;
+            for (let y = 0; y < this.table.rowCount; y++) {
+                const cell = this.table.cells[y][this.cellX];
+                if (cell.isColumnSingleCell && cell.width != width) {
+                    cell.width = width;
+                    b = true;
+                }
+            }
+            for (let y = 0; y < this.table.rowCount; y++) {
+                const cell = this.table.cells[y][this.cellX];
+                if (!cell.isColumnSingleCell) {
+                    cell.update();
+                    //cell.resize();
+                    b = true;
+                }
+            }
+            if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
+            
         }
         /**
          * この列のセルの配列を返します。
@@ -58,13 +80,14 @@ namespace GraphTableSVG {
             return items;
         }
 
-        constructor(_table: Table, _x: number) {
+        constructor(_table: Table, _x: number, _width : number = 30) {
             this._svgGroup = SVG.createGroup();
 
             this.table = _table;
 
             this.table.svgGroup.appendChild(this._svgGroup);
             this.cellX = _x;
+            this._svgGroup.setAttribute(Column.rowWidthName, `${_width}`);
             //this.width = this.getMaxWidth();
 
 
@@ -88,14 +111,24 @@ namespace GraphTableSVG {
          * この列を更新します。
          */
         public update() {
-            this.width = this.getMaxWidth();
+            this.setWidthToCells();
+            //this.width = this.getMaxWidth();
         }
         /**
          * 列内のセルのサイズを再計算します。
          */
         public resize() {
-            this.width = (this.getMaxWidth());
+            this.setWidthToCells();
+            //this.width = (this.getMaxWidth());
         }
+        public fitWidthToMaximalCell(allowShrink : boolean){
+            if(allowShrink){
+                this.width = this.getMaxWidth();
+            }else{
+                this.width = Math.max(this.width, this.getMaxWidth());
+            }
+        }
+
         /**
          * 列のX座標を設定します。
          * @param posX
