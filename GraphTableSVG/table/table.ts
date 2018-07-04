@@ -98,9 +98,13 @@ namespace GraphTableSVG {
             }
             if (b) this.update();
         };
+        /**
+         * セルの元々のサイズに合わせて表のサイズを調整します。
+         * @param allowShrink 各行と各列が原罪の幅より短くなることを許す
+         */
         public fitSizeToOriginalCells(allowShrink : boolean){
-            this.rows.forEach((v)=>v.fitHeightToMaximalCell(allowShrink));
-            this.columns.forEach((v)=>v.fitWidthToMaximalCell(allowShrink));
+            this.rows.forEach((v)=>v.fitHeightToOriginalCell(allowShrink));
+            this.columns.forEach((v)=>v.fitWidthToOriginalCell(allowShrink));
         }
 
         /**
@@ -301,10 +305,13 @@ namespace GraphTableSVG {
          * LogicTableからTableを構築します。
          * @param table 
          */
-        public constructFromLogicTable(table: LogicTable) {
+        public constructFromLogicTable(table: LogicTable ) {
 
             if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
             this.setSize(table.columnWidths.length, table.rowHeights.length);
+
+            if(table.x != null) this.x = table.x;
+            if(table.y != null) this.y = table.y;
 
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
@@ -396,7 +403,13 @@ namespace GraphTableSVG {
          * @param table 
          * @param isLatexMode 
          */
-        public construct(table: string[][], isLatexMode: boolean = false) {
+        public construct(table: string[][], option : {tableClassName? : string, x? : number, y? :number, rowHeight? : number, columnWidth? : number, isLatexMode?: boolean  } = {}) {
+            if(option.isLatexMode == undefined) option.isLatexMode = false;
+            if(option.x == undefined) option.x = 0;
+            if(option.y == undefined) option.y = 0;
+            [this.x, this.y] = [option.x, option.y];
+
+
             this.clear();
             let width = 0;
             table.forEach((v) => { if (v.length > width) width = v.length });
@@ -405,9 +418,16 @@ namespace GraphTableSVG {
 
             table.forEach((v, y) => {
                 v.forEach((str, x) => {
-                    this.cells[y][x].svgText.setTextContent(str, isLatexMode);
+                    this.cells[y][x].svgText.setTextContent(str, option.isLatexMode);
                 })
             })
+            if(option.rowHeight != undefined){
+                this.rows.forEach((v)=>v.height = option.rowHeight);
+            }
+            if(option.columnWidth != undefined){
+                this.columns.forEach((v)=>v.width = option.columnWidth);
+            }
+
         }
 
         /*

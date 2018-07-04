@@ -23,12 +23,4 @@ window.onload = () => {
     //table.cells[3-4][6-8]を結合
     table.cells[3][6].merge(3,2);
 
-    
-    //table.cells[5][3].svgBackground.style.fill = "aqua"
-    //table.cells[2][2].svgBackground.style.fill = "aqua"
-    //table.cells[2][3].svgBackground.style.fill = "pink"
-    //table.cells[2][2].topBorder.style.strokeWidth = "5pt"
-
-    //table.update();
-
 };

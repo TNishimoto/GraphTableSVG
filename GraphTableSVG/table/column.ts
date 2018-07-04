@@ -121,7 +121,11 @@ namespace GraphTableSVG {
             this.setWidthToCells();
             //this.width = (this.getMaxWidth());
         }
-        public fitWidthToMaximalCell(allowShrink : boolean){
+        /**
+         * セルの元々のサイズに合わせて列のサイズを調整します。
+         * @param allowShrink 現在の列の幅より短くなることを許す
+         */
+        public fitWidthToOriginalCell(allowShrink : boolean){
             if(allowShrink){
                 this.width = this.getMaxWidth();
             }else{

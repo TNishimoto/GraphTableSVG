@@ -143,7 +143,11 @@
             this.setHeightToCells();
             //this.height = this.getMaxHeight();
         }
-        public fitHeightToMaximalCell(allowShrink: boolean) {
+        /**
+         * セルの元々のサイズに合わせて行のサイズを調整します。
+         * @param allowShrink 現在の行の幅より短くなることを許す
+         */
+        public fitHeightToOriginalCell(allowShrink: boolean) {
             if (allowShrink) {
                 this.height = this.getMaxHeight();
             } else {

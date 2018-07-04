@@ -661,25 +661,39 @@ var GraphTableSVG;
     }());
     GraphTableSVG.LogicCell = LogicCell;
     var LogicTable = (function () {
-        function LogicTable(columnCount, rowCount, tableClassName) {
-            if (tableClassName === void 0) { tableClassName = null; }
+        function LogicTable(option) {
+            if (option === void 0) { option = {}; }
             this.tableClassName = null;
-            this.tableClassName = tableClassName;
-            this.cells = new Array(rowCount);
-            for (var y = 0; y < rowCount; y++) {
-                this.cells[y] = new Array(columnCount);
-                for (var x = 0; x < columnCount; x++) {
+            this.x = null;
+            this.y = null;
+            if (option.columnCount == undefined)
+                option.columnCount = 3;
+            if (option.rowCount == undefined)
+                option.rowCount = 3;
+            if (option.x == undefined)
+                option.x = 0;
+            if (option.y == undefined)
+                option.y = 0;
+            _a = [option.x, option.y], this.x = _a[0], this.y = _a[1];
+            if (option.tableClassName == undefined)
+                option.tableClassName = null;
+            this.tableClassName = option.tableClassName;
+            this.cells = new Array(option.rowCount);
+            for (var y = 0; y < option.rowCount; y++) {
+                this.cells[y] = new Array(option.columnCount);
+                for (var x = 0; x < option.columnCount; x++) {
                     this.cells[y][x] = new LogicCell();
                 }
             }
-            this.rowHeights = new Array(rowCount);
-            for (var y = 0; y < rowCount; y++) {
+            this.rowHeights = new Array(option.rowCount);
+            for (var y = 0; y < option.rowCount; y++) {
                 this.rowHeights[y] = null;
             }
-            this.columnWidths = new Array(columnCount);
-            for (var x = 0; x < columnCount; x++) {
+            this.columnWidths = new Array(option.columnCount);
+            for (var x = 0; x < option.columnCount; x++) {
                 this.columnWidths[x] = null;
             }
+            var _a;
         }
         Object.defineProperty(LogicTable.prototype, "rowCount", {
             get: function () {
@@ -742,7 +756,7 @@ var GraphTableSVG;
         };
         LogicTable.create = function (str, tableClassName) {
             if (tableClassName === void 0) { tableClassName = null; }
-            var table = new LogicTable(str[0].length, str.length, tableClassName);
+            var table = new LogicTable({ columnCount: str[0].length, rowCount: str.length, tableClassName: tableClassName });
             for (var y = 0; y < str.length; y++) {
                 for (var x = 0; x < str[y].length; x++) {
                     var p = str[y][x].split("%%%");
@@ -4593,7 +4607,7 @@ var GraphTableSVG;
         Column.prototype.resize = function () {
             this.setWidthToCells();
         };
-        Column.prototype.fitWidthToMaximalCell = function (allowShrink) {
+        Column.prototype.fitWidthToOriginalCell = function (allowShrink) {
             if (allowShrink) {
                 this.width = this.getMaxWidth();
             }
@@ -4833,7 +4847,7 @@ var GraphTableSVG;
         Row.prototype.resize = function () {
             this.setHeightToCells();
         };
-        Row.prototype.fitHeightToMaximalCell = function (allowShrink) {
+        Row.prototype.fitHeightToOriginalCell = function (allowShrink) {
             if (allowShrink) {
                 this.height = this.getMaxHeight();
             }
@@ -5039,8 +5053,8 @@ var GraphTableSVG;
             configurable: true
         });
         Table.prototype.fitSizeToOriginalCells = function (allowShrink) {
-            this.rows.forEach(function (v) { return v.fitHeightToMaximalCell(allowShrink); });
-            this.columns.forEach(function (v) { return v.fitWidthToMaximalCell(allowShrink); });
+            this.rows.forEach(function (v) { return v.fitHeightToOriginalCell(allowShrink); });
+            this.columns.forEach(function (v) { return v.fitWidthToOriginalCell(allowShrink); });
         };
         Object.defineProperty(Table.prototype, "x", {
             get: function () {
@@ -5165,6 +5179,10 @@ var GraphTableSVG;
             if (table.tableClassName != null)
                 this.svgGroup.setAttribute("class", table.tableClassName);
             this.setSize(table.columnWidths.length, table.rowHeights.length);
+            if (table.x != null)
+                this.x = table.x;
+            if (table.y != null)
+                this.y = table.y;
             for (var y = 0; y < this.rowCount; y++) {
                 for (var x = 0; x < this.columnCount; x++) {
                     var cellInfo = table.cells[y][x];
@@ -5242,11 +5260,17 @@ var GraphTableSVG;
                     }
                 }
             }
-            console.log("logic end");
         };
-        Table.prototype.construct = function (table, isLatexMode) {
+        Table.prototype.construct = function (table, option) {
             var _this = this;
-            if (isLatexMode === void 0) { isLatexMode = false; }
+            if (option === void 0) { option = {}; }
+            if (option.isLatexMode == undefined)
+                option.isLatexMode = false;
+            if (option.x == undefined)
+                option.x = 0;
+            if (option.y == undefined)
+                option.y = 0;
+            _a = [option.x, option.y], this.x = _a[0], this.y = _a[1];
             this.clear();
             var width = 0;
             table.forEach(function (v) { if (v.length > width)
@@ -5255,9 +5279,16 @@ var GraphTableSVG;
             this.setSize(width, height);
             table.forEach(function (v, y) {
                 v.forEach(function (str, x) {
-                    _this.cells[y][x].svgText.setTextContent(str, isLatexMode);
+                    _this.cells[y][x].svgText.setTextContent(str, option.isLatexMode);
                 });
             });
+            if (option.rowHeight != undefined) {
+                this.rows.forEach(function (v) { return v.height = option.rowHeight; });
+            }
+            if (option.columnWidth != undefined) {
+                this.columns.forEach(function (v) { return v.width = option.columnWidth; });
+            }
+            var _a;
         };
         Table.prototype.createVBACode = function (id, slide) {
             var lines = new Array(0);

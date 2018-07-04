@@ -139,9 +139,17 @@ declare namespace GraphTableSVG {
         columnWidths: (number | null)[];
         rowHeights: (number | null)[];
         tableClassName: string | null;
+        x: number | null;
+        y: number | null;
         readonly rowCount: number;
         readonly columnCount: number;
-        constructor(columnCount: number, rowCount: number, tableClassName?: string | null);
+        constructor(option?: {
+            columnCount?: number;
+            rowCount?: number;
+            tableClassName?: string;
+            x?: number;
+            y?: number;
+        });
         readonly cellArray: LogicCell[];
         getColumn(i: number): LogicCell[];
         getRow(i: number): LogicCell[];
@@ -646,7 +654,7 @@ declare namespace GraphTableSVG {
         private getMaxWidth();
         update(): void;
         resize(): void;
-        fitWidthToMaximalCell(allowShrink: boolean): void;
+        fitWidthToOriginalCell(allowShrink: boolean): void;
         setX(posX: number): void;
         readonly leftBorders: SVGLineElement[];
         readonly rightBorders: SVGLineElement[];
@@ -673,7 +681,7 @@ declare namespace GraphTableSVG {
         setHeightToCells(): void;
         update(): void;
         resize(): void;
-        fitHeightToMaximalCell(allowShrink: boolean): void;
+        fitHeightToOriginalCell(allowShrink: boolean): void;
         setY(posY: number): void;
         private getMaxHeight();
         remove(isUnit?: boolean): void;
@@ -725,7 +733,14 @@ declare namespace GraphTableSVG {
             columnWidth?: number;
         });
         constructFromLogicTable(table: LogicTable): void;
-        construct(table: string[][], isLatexMode?: boolean): void;
+        construct(table: string[][], option?: {
+            tableClassName?: string;
+            x?: number;
+            y?: number;
+            rowHeight?: number;
+            columnWidth?: number;
+            isLatexMode?: boolean;
+        }): void;
         createVBACode(id: number, slide: string): string[];
         private createVBAMainCode(slideName, id);
         toPlainText(): string;

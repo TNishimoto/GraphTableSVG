@@ -108,7 +108,13 @@ RowクラスとColumnクラスの詳細は下のリファレンスを参照す�
 <load path="table/sample_table_merge.js" />
 <load path="images/table_merge.png" />
 <comment>
-<a href="table/sample_table_merge.html">実行結果</a>
+<p><a href="table/sample_table_merge.html">実行結果</a></p>
+<p>
+隣り合うセルを結合することが出来る。cell.mergeRight()は右のセルと結合、cellmergeBottom()は下のセルと結合する。
+cell.merge(w, h)はそのセルを基準として列セル数w、行セル数hの結合セルを作成する。
+出来上がるセルは必ず矩形でなければならない。そのような結合セルにならない場合はエラーが発生する。
+実際に結合できるかどうかはcell.canMerge(w, h), cell.canMergeRight, cell.canMergeBottomで確認できる。
+</p>
 </comment>
 </xarticle>
 
@@ -117,19 +123,33 @@ RowクラスとColumnクラスの詳細は下のリファレンスを参照す�
 <load path="table/sample_table_anchor.css" />
 <load path="images/table_anchor.png" />
 <comment>
-<a href="table/sample_table_anchor.html">実行結果</a>
+<p><a href="table/sample_table_anchor.html">実行結果</a></p>
+<p>
+Powerpointの表のようにセル内のテキスト位置を指定できる。
+垂直方向のテキストの配置位置はcell.verticalAnchorもしくはcell.svgGroupの--vertical-anchor属性で指定できる。
+水平方向のテキストの配置位置はcell.horizontalAnchorもしくはcell.svgGroupの--horizontal-anchor属性で指定できる。
+</p>
 </comment>
 </xarticle>
 
 <xarticle title="Table Sample 7 : Logic Table" >
 <load path="table/sample_table_logic.js" />
+<load path="images/table_logic.png" />
 <comment>
-<a href="table/sample_table_logic.html">実行結果</a>
+<p><a href="table/sample_table_logic.html">実行結果</a></p>
+<p>
+LogicTableクラスから表を作成することが出来る。
+LogicTableクラスはTableクラスから描画関係を取り除いたクラスである。
+よって、Tableクラスを作成する前からどのような表を作るか決まっている場合はLogicTableクラスを通してSVGを構築したほうがコードの見通しがすっきりするかもしれない。
+</p>
 <ol>
 <li><a href="./typedoc/classes/graphtablesvg.logictable.html" target="_blank">LogicTable</a></li>
 <li><a href="./typedoc/classes/graphtablesvg.logiccell.html" target="_blank">LogicCell</a></li>
 </ol>
-
+<p>
+table.construct(table, option)は文字列の2次元配列tableからSVGを構築する関数である。
+表の装飾にこだわらない場合はこっちから作ったほうが良いかもしれない。
+</p>
 </comment>
 </xarticle>
 
@@ -137,8 +157,17 @@ RowクラスとColumnクラスの詳細は下のリファレンスを参照す�
 <xarticle title="Table Sample 8 : Powerpointへ出力" >
 <load path="table/sample_table_powerpoint.html" />
 <load path="table/sample_table_powerpoint.js" />
+<load path="images/table_powerpoint1.png" />
+<load path="images/table_powerpoint2.png" />
+<load path="images/table_powerpoint3.png" />
+
 <comment>
-<a href="table/sample_table_powerpoint.html">実行結果</a>
+<p><a href="table/sample_table_powerpoint.html">実行結果</a></p>
+<p>
+表をVBAのコードに変換し、Powerpointのマクロとして実行することでスライド上に表を作成することが出来る。
+GraphTableSVG.SVGToVBA.create(tables)はそのようなVBAのコードを作成する関数であるが、作成された表はSVGの表と完全に一致するわけではないので注意。
+あくまで、似たような表を作るだけの関数である。コード変換に対応していないstyle属性が多くあるので、凝った装飾をしているとまず反映されない。
+</p>
 </comment>
 </xarticle>
 

@@ -141,6 +141,9 @@
         public columnWidths: (number | null)[];
         public rowHeights: (number | null)[];
         public tableClassName: string | null = null;
+        public x : number | null = null;
+        public y : number | null = null;
+
         public get rowCount(): number {
             return this.rowHeights.length;
         }
@@ -148,21 +151,31 @@
             return this.columnWidths.length;
         }
 
-        public constructor(columnCount: number, rowCount: number, tableClassName: string | null = null) {
-            this.tableClassName = tableClassName;
-            this.cells = new Array(rowCount);
-            for (let y = 0; y < rowCount; y++) {
-                this.cells[y] = new Array(columnCount);
-                for (let x = 0; x < columnCount; x++) {
+        public constructor(option : {columnCount?: number, rowCount?: number, tableClassName? : string, x? : number, y? :number } = {} ) {
+
+            if(option.columnCount == undefined) option.columnCount = 3;
+            if(option.rowCount == undefined) option.rowCount = 3;
+            
+            if(option.x == undefined) option.x = 0;
+            if(option.y == undefined) option.y = 0;
+            [this.x, this.y] = [option.x, option.y];
+
+            if(option.tableClassName == undefined) option.tableClassName = null;
+
+            this.tableClassName = option.tableClassName;
+            this.cells = new Array(option.rowCount);
+            for (let y = 0; y < option.rowCount; y++) {
+                this.cells[y] = new Array(option.columnCount);
+                for (let x = 0; x < option.columnCount; x++) {
                     this.cells[y][x] = new LogicCell();
                 }
             }
-            this.rowHeights = new Array(rowCount);
-            for (let y = 0; y < rowCount; y++) {
+            this.rowHeights = new Array(option.rowCount);
+            for (let y = 0; y < option.rowCount; y++) {
                 this.rowHeights[y] = null;
             }
-            this.columnWidths = new Array(columnCount);
-            for (let x = 0; x < columnCount; x++) {
+            this.columnWidths = new Array(option.columnCount);
+            for (let x = 0; x < option.columnCount; x++) {
                 this.columnWidths[x] = null;
             }
 
@@ -215,7 +228,7 @@
             return r;
         }
         public static create(str: string[][], tableClassName: string | null = null): LogicTable {
-            const table = new LogicTable(str[0].length, str.length, tableClassName);
+            const table = new LogicTable({ columnCount : str[0].length, rowCount : str.length, tableClassName : tableClassName });
 
             for (let y = 0; y < str.length; y++) {
                 for (let x = 0; x < str[y].length; x++) {
