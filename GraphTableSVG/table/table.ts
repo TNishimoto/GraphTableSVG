@@ -159,8 +159,8 @@ namespace GraphTableSVG {
         }
         /**
          * 指定したセル座標のセルを返します。そのようなセルが存在しない場合nullを返します。
-         * @param x 
-         * @param y 
+         * @param x セルの列番号
+         * @param y セルの行番号
          */
         public getTryCell(x: number, y: number): Cell | null {
             if (x < 0 || x >= this.columnCount || y < 0 || y >= this.rowCount) {
@@ -171,10 +171,10 @@ namespace GraphTableSVG {
         }
         /**
          * 指定したセル座標範囲の二次元セル配列を返します。
-         * @param x 
-         * @param y 
-         * @param width 
-         * @param height 
+         * @param x 範囲の左上を示す列番号
+         * @param y 範囲の左上を示す行番号
+         * @param width 範囲に含まれる列数
+         * @param height 範囲に含まれる行数
          */
         public getRangeCells(x: number, y: number, width: number, height: number): Cell[][] {
             let cells: Cell[][] = new Array(height);
@@ -188,10 +188,10 @@ namespace GraphTableSVG {
         }
         /**
          * 指定したセル座標範囲のセルを配列でかえします。
-         * @param x 
-         * @param y 
-         * @param width 
-         * @param height 
+         * @param x 範囲の左上を示す列番号
+         * @param y 範囲の左上を示す行番号
+         * @param width 範囲に含まれる列数
+         * @param height 範囲に含まれる行数
          */
         public getRangeCellArray(x: number, y: number, width: number, height: number): Cell[] {
             let cells: Cell[] = new Array();
@@ -303,7 +303,7 @@ namespace GraphTableSVG {
         }
         /**
          * LogicTableからTableを構築します。
-         * @param table 
+         * @param table 入力LogicTable
          */
         public constructFromLogicTable(table: LogicTable ) {
 
@@ -398,10 +398,18 @@ namespace GraphTableSVG {
             }
 
         }
+
         /**
          * 二次元文字列配列から表を作成します。
-         * @param table 
-         * @param isLatexMode 
+         * @param table 各セルの文字列
+         * @param option 表情報
+         * @param option.x 表のx座標
+         * @param option.y 表のy座標
+         * @param option.rowHeight 各行の縦幅(px)
+         * @param option.columnWidth 各列の横幅(px)
+         * @param option.tableClassName 表(svgGroup)のクラス属性
+         * @param option.isLatexMode Trueのときセルの文字列をLatex表記とみなして描画します。
+         * 
          */
         public construct(table: string[][], option : {tableClassName? : string, x? : number, y? :number, rowHeight? : number, columnWidth? : number, isLatexMode?: boolean  } = {}) {
             if(option.isLatexMode == undefined) option.isLatexMode = false;
@@ -654,21 +662,25 @@ namespace GraphTableSVG {
 
         /**
          * テーブルを削除します。
-         * @param svg 
+         * @param svg 表が格納されているSVG要素
          */
         public removeTable(svg: HTMLElement) {
             if (svg.contains(this.svgGroup)) {
                 svg.removeChild(this.svgGroup);
             }
         }
-
-        public setSize(width: number, height: number) {
+        /**
+         * 表の列数と行数を変更します。
+         * @param columnCount 列数 
+         * @param rowCount 行数
+         */
+        public setSize(columnCount : number, rowCount: number) {
 
             this.clear();
-            while (this.rowCount < height) {
-                this.insertRowFunction(this.rowCount, width);
+            while (this.rowCount < rowCount) {
+                this.insertRowFunction(this.rowCount, columnCount);
             }
-            while (this.columnCount < width) {
+            while (this.columnCount < columnCount) {
                 this.insertColumn(this.columnCount);
             }
 
@@ -691,13 +703,15 @@ namespace GraphTableSVG {
 
 
         /**
-        新しい行をi番目の行に挿入します
+        * 新しい行をi番目の行に挿入します
+        * @param 挿入行の行番号
         */
         public insertRow(i: number) {
             this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
         }
         /**
-        新しい列をi番目の列に挿入します。
+        * 新しい列をi番目の列に挿入します。
+        * @param i 挿入列の列番号
         */
         public insertColumn(i: number) {
             if (this.rowCount > 0) {
@@ -727,19 +741,19 @@ namespace GraphTableSVG {
         }
         /**
          * 新しい行を作って挿入します。
-         * @param i 
-         * @param width 
+         * @param i 挿入行の行番号
+         * @param columnCount 挿入行の列数
          */
-        private insertRowFunction(i: number, width: number = this.columnCount) {
+        private insertRowFunction(i: number, columnCount: number = this.columnCount) {
             const cell: Cell[] = [];
-            for (let x = 0; x < width; x++) {
+            for (let x = 0; x < columnCount; x++) {
                 cell[x] = this.createCell();
                 if (this._columns.length <= x) this._columns.push(new Column(this, 0));
             }
             this.cells.splice(i, 0, cell);
             this._rows.splice(i, 0, new Row(this, i));
             if (i > 0 && i < this.rowCount - 1) {
-                for (let x = 0; x < width; x++) {
+                for (let x = 0; x < columnCount; x++) {
                     this.cells[i - 1][x].bottomBorder = this.cells[i][x].topBorder;
                 }
             }

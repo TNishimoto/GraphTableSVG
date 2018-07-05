@@ -111,10 +111,12 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="graphtablesvg.row.html#fitheighttooriginalcell" class="tsd-kind-icon">fit<wbr>Height<wbr>ToOriginal<wbr>Cell</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="graphtablesvg.row.html#getmaxheight" class="tsd-kind-icon">get<wbr>Max<wbr>Height</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="graphtablesvg.row.html#relocation" class="tsd-kind-icon">relocation</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="graphtablesvg.row.html#remove" class="tsd-kind-icon">remove</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="graphtablesvg.row.html#resize" class="tsd-kind-icon">resize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="graphtablesvg.row.html#setheighttocells" class="tsd-kind-icon">set<wbr>Height<wbr>ToCells</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="graphtablesvg.row.html#sety" class="tsd-kind-icon">setY</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="graphtablesvg.row.html#update" class="tsd-kind-icon">update</a></li>
 							</ul>
@@ -128,13 +130,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Row<span class="tsd-signature-symbol">(</span>_table<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.table.html" class="tsd-signature-type">Table</a>, _y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.row.html" class="tsd-signature-type">Row</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Row<span class="tsd-signature-symbol">(</span>_table<span class="tsd-signature-symbol">: </span><a href="graphtablesvg.table.html" class="tsd-signature-type">Table</a>, _y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, _height<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.row.html" class="tsd-signature-type">Row</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L47">table/row.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L49">table/row.ts:49</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -144,6 +146,9 @@
 								</li>
 								<li>
 									<h5>_y: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> _height: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;30</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.row.html" class="tsd-signature-type">Row</a></h4>
@@ -159,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">_svg<wbr>Group<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SVGGElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L5">table/row.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L5">table/row.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -169,7 +174,7 @@
 					<div class="tsd-signature tsd-kind-icon">table<span class="tsd-signature-symbol">:</span> <a href="graphtablesvg.table.html" class="tsd-signature-type">Table</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L3">table/row.ts:3</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L3">table/row.ts:3</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -179,7 +184,7 @@
 					<div class="tsd-signature tsd-kind-icon">column<wbr>Height<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"data-height"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;data-height&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L6">table/row.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L6">table/row.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -196,7 +201,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L83">table/row.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L86">table/row.ts:86</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -219,7 +224,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L11">table/row.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L11">table/row.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -232,7 +237,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L14">table/row.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L14">table/row.ts:14</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -260,7 +265,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L62">table/row.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L65">table/row.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -282,7 +287,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L192">table/row.ts:192</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L226">table/row.ts:226</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -305,7 +310,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L21">table/row.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L21">table/row.ts:21</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -318,7 +323,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L27">table/row.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L27">table/row.ts:27</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -346,7 +351,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L98">table/row.ts:98</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L101">table/row.ts:101</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -368,7 +373,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L104">table/row.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L107">table/row.ts:107</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -390,7 +395,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L68">table/row.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L71">table/row.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -405,6 +410,37 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="fitheighttooriginalcell" class="tsd-anchor"></a>
+					<h3>fit<wbr>Height<wbr>ToOriginal<wbr>Cell</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">fit<wbr>Height<wbr>ToOriginal<wbr>Cell<span class="tsd-signature-symbol">(</span>allowShrink<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L150">table/row.ts:150</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>セルの元々のサイズに合わせて行のサイズを調整します。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>allowShrink: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>現在の行の幅より短くなることを許す</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a name="getmaxheight" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Max<wbr>Height</h3>
@@ -415,7 +451,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L130">table/row.ts:130</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L170">table/row.ts:170</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -437,7 +473,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L186">table/row.ts:186</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L220">table/row.ts:220</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -459,7 +495,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L151">table/row.ts:151</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L185">table/row.ts:185</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -489,7 +525,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L114">table/row.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L142">table/row.ts:142</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -497,6 +533,23 @@
 									<p>行内のセルのサイズを再計算します。</p>
 								</div>
 							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setheighttocells" class="tsd-anchor"></a>
+					<h3>set<wbr>Height<wbr>ToCells</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Height<wbr>ToCells<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L112">table/row.ts:112</a></li>
+								</ul>
+							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -511,7 +564,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L121">table/row.ts:121</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L161">table/row.ts:161</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -539,7 +592,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/table/row.ts#L144">table/row.ts:144</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/table/row.ts#L135">table/row.ts:135</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -639,6 +692,9 @@
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="graphtablesvg.row.html#topborders" class="tsd-kind-icon">top<wbr>Borders</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="graphtablesvg.row.html#fitheighttooriginalcell" class="tsd-kind-icon">fit<wbr>Height<wbr>ToOriginal<wbr>Cell</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="graphtablesvg.row.html#getmaxheight" class="tsd-kind-icon">get<wbr>Max<wbr>Height</a>
 							</li>
@@ -650,6 +706,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="graphtablesvg.row.html#resize" class="tsd-kind-icon">resize</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="graphtablesvg.row.html#setheighttocells" class="tsd-kind-icon">set<wbr>Height<wbr>ToCells</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="graphtablesvg.row.html#sety" class="tsd-kind-icon">setY</a>

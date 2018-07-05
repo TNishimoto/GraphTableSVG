@@ -94,6 +94,8 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictable.html#columnwidths" class="tsd-kind-icon">column<wbr>Widths</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictable.html#rowheights" class="tsd-kind-icon">row<wbr>Heights</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictable.html#tableclassname" class="tsd-kind-icon">table<wbr>Class<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictable.html#x" class="tsd-kind-icon">x</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictable.html#y" class="tsd-kind-icon">y</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -122,25 +124,36 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Logic<wbr>Table<span class="tsd-signature-symbol">(</span>columnCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, rowCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, tableClassName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.logictable.html" class="tsd-signature-type">LogicTable</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Logic<wbr>Table<span class="tsd-signature-symbol">(</span>option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.logictable.html" class="tsd-signature-type">LogicTable</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L149">logic_tree.ts:149</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L152">logic_tree.ts:152</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>columnCount: <span class="tsd-signature-type">number</span></h5>
-								</li>
-								<li>
-									<h5>rowCount: <span class="tsd-signature-type">number</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> tableClassName: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> option: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> column<wbr>Count<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> row<wbr>Count<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> table<wbr>Class<wbr>Name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> x<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> y<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.logictable.html" class="tsd-signature-type">LogicTable</a></h4>
@@ -156,7 +169,7 @@
 					<div class="tsd-signature tsd-kind-icon">cells<span class="tsd-signature-symbol">:</span> <a href="graphtablesvg.logiccell.html" class="tsd-signature-type">LogicCell</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L140">logic_tree.ts:140</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L140">logic_tree.ts:140</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -166,7 +179,7 @@
 					<div class="tsd-signature tsd-kind-icon">column<wbr>Widths<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L141">logic_tree.ts:141</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L141">logic_tree.ts:141</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -176,7 +189,7 @@
 					<div class="tsd-signature tsd-kind-icon">row<wbr>Heights<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L142">logic_tree.ts:142</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L142">logic_tree.ts:142</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -186,7 +199,27 @@
 					<div class="tsd-signature tsd-kind-icon">table<wbr>Class<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L143">logic_tree.ts:143</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L143">logic_tree.ts:143</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="x" class="tsd-anchor"></a>
+					<h3>x</h3>
+					<div class="tsd-signature tsd-kind-icon">x<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L144">logic_tree.ts:144</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="y" class="tsd-anchor"></a>
+					<h3>y</h3>
+					<div class="tsd-signature tsd-kind-icon">y<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L145">logic_tree.ts:145</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -203,7 +236,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L170">logic_tree.ts:170</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L183">logic_tree.ts:183</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.logiccell.html" class="tsd-signature-type">LogicCell</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -220,7 +253,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L147">logic_tree.ts:147</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L150">logic_tree.ts:150</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -237,7 +270,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L144">logic_tree.ts:144</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L147">logic_tree.ts:147</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -257,7 +290,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L179">logic_tree.ts:179</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L192">logic_tree.ts:192</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -280,7 +313,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L186">logic_tree.ts:186</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L199">logic_tree.ts:199</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -303,7 +336,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L217">logic_tree.ts:217</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L230">logic_tree.ts:230</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -329,7 +362,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/55f63cf/GraphTableSVG/logic_tree.ts#L199">logic_tree.ts:199</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/5b23671/GraphTableSVG/logic_tree.ts#L212">logic_tree.ts:212</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -411,6 +444,12 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="graphtablesvg.logictable.html#tableclassname" class="tsd-kind-icon">table<wbr>Class<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="graphtablesvg.logictable.html#x" class="tsd-kind-icon">x</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="graphtablesvg.logictable.html#y" class="tsd-kind-icon">y</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="graphtablesvg.logictable.html#cellarray" class="tsd-kind-icon">cell<wbr>Array</a>
