@@ -459,14 +459,15 @@
         /**
          * Edgeを作成します。
          * @param graph
-         * @param className
-         * @param lineType
+         * 
          */
-        public static create(graph: Graph, params : {className?: string | null, surfaceType?: string | null} = {}): GraphTableSVG.Edge {
-            if(params.className == undefined) params.className = graph.defaultEdgeClass;
-            if(params.surfaceType == undefined) params.surfaceType = null;
-            params.className = params.className != null ? params.className : graph.defaultVertexClass;
-            const g = SVG.createGroup(params.className);
+        public static create(graph: Graph, option : {className?: string, surfaceType?: string, 
+            beginVertex? : Vertex, endVertex? : Vertex, beginConnectorType?: ConnectorPosition, endConnectorType?: ConnectorPosition, 
+            incomingInsertIndex?: number, outcomingInsertIndex?: number, text? : string} = {}): GraphTableSVG.Edge {
+            if(option.className == undefined) option.className = graph.defaultEdgeClass;
+            if(option.surfaceType == undefined) option.surfaceType = null;
+            option.className = option.className != null ? option.className : graph.defaultVertexClass;
+            const g = SVG.createGroup(option.className);
             graph.svgGroup.appendChild(g);
 
             /*
@@ -475,7 +476,13 @@
                 type1 != null ? type1 : "line";
                 */
 
-            return new Edge(graph, g);
+            const r = new Edge(graph, g);
+            if(option.beginVertex != undefined && option.endVertex != undefined){
+                graph.connect(option.beginVertex, r, option.endVertex, option);
+            }
+            if(option.text != undefined)r.svgTextPath.setTextContent(option.text);
+
+            return r;
         }
         /**
          * VBAコードを作成します。

@@ -1731,16 +1731,22 @@ var GraphTableSVG;
         });
         Edge.prototype.save = function () {
         };
-        Edge.create = function (graph, params) {
-            if (params === void 0) { params = {}; }
-            if (params.className == undefined)
-                params.className = graph.defaultEdgeClass;
-            if (params.surfaceType == undefined)
-                params.surfaceType = null;
-            params.className = params.className != null ? params.className : graph.defaultVertexClass;
-            var g = GraphTableSVG.SVG.createGroup(params.className);
+        Edge.create = function (graph, option) {
+            if (option === void 0) { option = {}; }
+            if (option.className == undefined)
+                option.className = graph.defaultEdgeClass;
+            if (option.surfaceType == undefined)
+                option.surfaceType = null;
+            option.className = option.className != null ? option.className : graph.defaultVertexClass;
+            var g = GraphTableSVG.SVG.createGroup(option.className);
             graph.svgGroup.appendChild(g);
-            return new Edge(graph, g);
+            var r = new Edge(graph, g);
+            if (option.beginVertex != undefined && option.endVertex != undefined) {
+                graph.connect(option.beginVertex, r, option.endVertex, option);
+            }
+            if (option.text != undefined)
+                r.svgTextPath.setTextContent(option.text);
+            return r;
         };
         Edge.prototype.createVBACode = function (main, sub, indexDic) {
             if (this.graph != null) {
@@ -2125,17 +2131,17 @@ var GraphTableSVG;
             }
             return null;
         };
-        Graph.prototype.connect = function (node1, edge, node2, option) {
+        Graph.prototype.connect = function (beginVertex, edge, endVertex, option) {
             if (option === void 0) { option = {}; }
-            var oIndex = option.outcomingInsertIndex == undefined ? node1.outcomingEdges.length : option.outcomingInsertIndex;
-            var iIndex = option.incomingInsertIndex == undefined ? node2.incomingEdges.length : option.incomingInsertIndex;
-            node1.insertOutcomingEdge(edge, oIndex);
-            node2.insertIncomingEdge(edge, iIndex);
-            var i = this.roots.indexOf(node1);
-            var j = this.roots.indexOf(node2);
+            var oIndex = option.outcomingInsertIndex == undefined ? beginVertex.outcomingEdges.length : option.outcomingInsertIndex;
+            var iIndex = option.incomingInsertIndex == undefined ? endVertex.incomingEdges.length : option.incomingInsertIndex;
+            beginVertex.insertOutcomingEdge(edge, oIndex);
+            endVertex.insertIncomingEdge(edge, iIndex);
+            var i = this.roots.indexOf(beginVertex);
+            var j = this.roots.indexOf(endVertex);
             if (j != -1) {
                 if (i == -1) {
-                    this.roots[j] = node1;
+                    this.roots[j] = beginVertex;
                 }
                 else {
                     this.roots.splice(j, 1);
@@ -2842,31 +2848,31 @@ var GraphTableSVG;
             var out = JSON.stringify(p);
             this.svgGroup.setAttribute("outcomingEdges", out);
         };
-        Vertex.create = function (graph, params) {
-            if (params === void 0) { params = {}; }
-            if (params.className == undefined)
-                params.className = graph.defaultVertexClass;
-            var g = GraphTableSVG.SVG.createGroup(params.className);
+        Vertex.create = function (graph, option) {
+            if (option === void 0) { option = {}; }
+            if (option.className == undefined)
+                option.className = graph.defaultVertexClass;
+            var g = GraphTableSVG.SVG.createGroup(option.className);
             graph.svgGroup.appendChild(g);
             var gSurfaceType = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
-            if (params.surfaceType == undefined)
-                params.surfaceType = gSurfaceType != null ? gSurfaceType : "circle";
+            if (option.surfaceType == undefined)
+                option.surfaceType = gSurfaceType != null ? gSurfaceType : "circle";
             graph.svgGroup.removeChild(g);
-            if (params.x == undefined)
-                params.x = 0;
-            if (params.y == undefined)
-                params.y = 0;
-            if (params.text == undefined)
-                params.text = "";
+            if (option.x == undefined)
+                option.x = 0;
+            if (option.y == undefined)
+                option.y = 0;
+            if (option.text == undefined)
+                option.text = "";
             var p;
-            if (params.surfaceType == "circle") {
-                p = new GraphTableSVG.CircleVertex(graph, params);
+            if (option.surfaceType == "circle") {
+                p = new GraphTableSVG.CircleVertex(graph, option);
             }
-            else if (params.surfaceType == "rectangle") {
-                p = new GraphTableSVG.RectangleVertex(graph, params);
+            else if (option.surfaceType == "rectangle") {
+                p = new GraphTableSVG.RectangleVertex(graph, option);
             }
             else {
-                p = new Vertex(graph, params);
+                p = new Vertex(graph, option);
             }
             return p;
         };
@@ -5443,12 +5449,12 @@ var GraphTableSVG;
                 svg.removeChild(this.svgGroup);
             }
         };
-        Table.prototype.setSize = function (width, height) {
+        Table.prototype.setSize = function (columnCount, rowCount) {
             this.clear();
-            while (this.rowCount < height) {
-                this.insertRowFunction(this.rowCount, width);
+            while (this.rowCount < rowCount) {
+                this.insertRowFunction(this.rowCount, columnCount);
             }
-            while (this.columnCount < width) {
+            while (this.columnCount < columnCount) {
                 this.insertColumn(this.columnCount);
             }
         };
@@ -5486,10 +5492,10 @@ var GraphTableSVG;
             }
             this.update();
         };
-        Table.prototype.insertRowFunction = function (i, width) {
-            if (width === void 0) { width = this.columnCount; }
+        Table.prototype.insertRowFunction = function (i, columnCount) {
+            if (columnCount === void 0) { columnCount = this.columnCount; }
             var cell = [];
-            for (var x = 0; x < width; x++) {
+            for (var x = 0; x < columnCount; x++) {
                 cell[x] = this.createCell();
                 if (this._columns.length <= x)
                     this._columns.push(new GraphTableSVG.Column(this, 0));
@@ -5497,7 +5503,7 @@ var GraphTableSVG;
             this.cells.splice(i, 0, cell);
             this._rows.splice(i, 0, new GraphTableSVG.Row(this, i));
             if (i > 0 && i < this.rowCount - 1) {
-                for (var x = 0; x < width; x++) {
+                for (var x = 0; x < columnCount; x++) {
                     this.cells[i - 1][x].bottomBorder = this.cells[i][x].topBorder;
                 }
             }

@@ -400,34 +400,39 @@
         }
         /**
          * Vertexインスタンスを生成します。
-         * @param graph
-         * @param className
-         * @param defaultSurfaceType
-         *   "circle"ならばSVGCircleElement <br>
-         *   "rectangle"ならばSVGRectangleElement
+         * @param graph 作成したVertexを追加するグラフ
+         * @param option 作成するVertexのオプション
+         * @param option.className Vertex.svgGroupのクラス属性名
+         * @param option.surfaceType Vertexの形 <br/> "circle"ならばSVGCircleElement <br/> "rectangle"ならばSVGRectangleElement
+         * @param option.x Vertexの中心のx座標
+         * @param option.y Vertexの中心のy座標
+         * @param option.text Vertex.svgTextのテキスト
+         * @param option.radius VertexがCircleだったときの半径
+         * @param option.width VertexがRectangleだったときの横幅
+         * @param option.height VertexがRectangleだったときの縦幅
          */
-        public static create(graph: Graph, params: { className?: string | null, 
-            surfaceType?: string | null, x?: number, y?: number, text? : string, radius? : number, width? : number, height? :number } = {}): GraphTableSVG.Vertex {
+        public static create(graph: Graph, option: { className?: string, 
+            surfaceType?: string, x?: number, y?: number, text? : string, radius? : number, width? : number, height? :number } = {}): GraphTableSVG.Vertex {
             //public static create(graph: Graph, {className: string | null = null, defaultSurfaceType: string | null = null, x: number = 0, y: number = 0}): GraphTableSVG.Vertex {
 
-            if(params.className == undefined)params.className = graph.defaultVertexClass;
-            const g = SVG.createGroup(params.className);
+            if(option.className == undefined)option.className = graph.defaultVertexClass;
+            const g = SVG.createGroup(option.className);
             graph.svgGroup.appendChild(g);
 
             const gSurfaceType = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
-            if(params.surfaceType == undefined) params.surfaceType = gSurfaceType != null ? gSurfaceType : "circle";
+            if(option.surfaceType == undefined) option.surfaceType = gSurfaceType != null ? gSurfaceType : "circle";
             graph.svgGroup.removeChild(g);
 
-            if(params.x == undefined) params.x = 0;
-            if(params.y == undefined) params.y = 0;
-            if(params.text== undefined) params.text = "";
+            if(option.x == undefined) option.x = 0;
+            if(option.y == undefined) option.y = 0;
+            if(option.text== undefined) option.text = "";
             let p: Vertex;
-            if (params.surfaceType == "circle") {
-                p = new CircleVertex(graph, params);
-            } else if (params.surfaceType == "rectangle") {
-                p = new RectangleVertex(graph, params);
+            if (option.surfaceType == "circle") {
+                p = new CircleVertex(graph, option);
+            } else if (option.surfaceType == "rectangle") {
+                p = new RectangleVertex(graph, option);
             } else {
-                p = new Vertex(graph, params);
+                p = new Vertex(graph, option);
             }
             return p;
         }

@@ -263,9 +263,16 @@ declare namespace GraphTableSVG {
         isMaximalRegularInterval: boolean;
         readonly objectID: string;
         save(): void;
-        static create(graph: Graph, params?: {
-            className?: string | null;
-            surfaceType?: string | null;
+        static create(graph: Graph, option?: {
+            className?: string;
+            surfaceType?: string;
+            beginVertex?: Vertex;
+            endVertex?: Vertex;
+            beginConnectorType?: ConnectorPosition;
+            endConnectorType?: ConnectorPosition;
+            incomingInsertIndex?: number;
+            outcomingInsertIndex?: number;
+            text?: string;
         }): GraphTableSVG.Edge;
         createVBACode(main: string[], sub: string[][], indexDic: {
             [key: string]: number;
@@ -327,7 +334,7 @@ declare namespace GraphTableSVG {
         getRegion(): Rectangle;
         getObject(child: HTMLElement | SVGElement): Vertex | Edge | null;
         getObjectByObjectID(id: string): Vertex | Edge | null;
-        connect(node1: Vertex, edge: Edge, node2: Vertex, option?: {
+        connect(beginVertex: Vertex, edge: Edge, endVertex: Vertex, option?: {
             outcomingInsertIndex?: number;
             incomingInsertIndex?: number;
             beginConnectorType?: GraphTableSVG.ConnectorPosition;
@@ -420,9 +427,9 @@ declare namespace GraphTableSVG {
         readonly firstNoParent: Vertex;
         readonly tree: VirtualSubTree;
         save(): void;
-        static create(graph: Graph, params?: {
-            className?: string | null;
-            surfaceType?: string | null;
+        static create(graph: Graph, option?: {
+            className?: string;
+            surfaceType?: string;
             x?: number;
             y?: number;
             text?: string;
@@ -751,11 +758,11 @@ declare namespace GraphTableSVG {
         private relocation();
         private createCell();
         removeTable(svg: HTMLElement): void;
-        setSize(width: number, height: number): void;
+        setSize(columnCount: number, rowCount: number): void;
         clear(): void;
         insertRow(i: number): void;
         insertColumn(i: number): void;
-        private insertRowFunction(i, width?);
+        private insertRowFunction(i, columnCount?);
         appendColumn(): void;
         appendRow(): void;
     }

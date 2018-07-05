@@ -10,11 +10,12 @@ window.onload = () => {
 
         const edgeL = GraphTableSVG.Edge.create(graph);
         edgeL.svgPath.style.stroke="red";
+        /* 接続位置の設定 */
         graph.connect(nodeL, edgeL, nodeC, {beginConnectorType : connectorTypes[i], endConnectorType : connectorTypes[i]});
-        const edgeR = GraphTableSVG.Edge.create(graph);
-        edgeR.svgPath.style.stroke="blue";
-        graph.connect(nodeC, edgeR, nodeR, {beginConnectorType : connectorTypes[i], endConnectorType : connectorTypes[i]});
-    
+
+        /* create時にも接続位置の設定が可能 */
+        const edgeR = GraphTableSVG.Edge.create(graph, {beginVertex : nodeC, endVertex : nodeR, beginConnectorType : connectorTypes[i], endConnectorType : connectorTypes[i]});
+        edgeR.svgPath.style.stroke="blue";    
     }
     
 };

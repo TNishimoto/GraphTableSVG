@@ -174,36 +174,60 @@ GraphTableSVG.SVGToVBA.create(tables)はそのようなVBAのコードを作成�
 <xarticle title="Graph Sample 1 : Hello World" >
 <load path="graph/sample_graph_hello.html" />
 <load path="graph/sample_graph_hello.js" />
-<load path="graph/sample_graph_hello.css" />
+<load path="images/graph_hello.png" />
 <comment>
-<a href="graph/sample_graph_hello.html">実行結果</a>
-</comment>
-</xarticle>
-
-<xarticle title="Graph Sample 2 : Vertex and Edge" >
-<load path="graph/sample_graph_tree.html" />
-<load path="graph/sample_graph_tree.js" />
-<load path="graph/sample_graph_tree.css" />
-<comment>
-<a href="graph/sample_graph_tree.html">実行結果</a>
+<p><a href="graph/sample_graph_hello.html">実行結果</a></p>
+<p>
+節が一つだけのグラフのHello World。
+表と同じようにコンストラクタにsvg要素を与えてグラフを表すSVGを作成する。このとき指定したsvg要素に空のグラフが作成される。
+Vertex.createは節を作成する関数である。作成した節にはSVGTextElementがあるので、節にテキストを入れることが出来る。
+重要なクラスと関数のリファレンスを以下に列挙する。ただしEdgeクラス、すなわち辺については次の例で説明する。
+</p>
 <ol>
 <li><a href="./typedoc/classes/graphtablesvg.graph.html" target="_blank">Graph</a></li>
 <li><a href="./typedoc/classes/graphtablesvg.vertex.html" target="_blank">Vertex</a></li>
 <li><a href="./typedoc/classes/graphtablesvg.edge.html" target="_blank">Edge</a></li>
+<li><a href="./typedoc/classes/graphtablesvg.vertex.html#create" target="_blank">Vertex.create</a></li>
 </ol>
+</comment>
+</xarticle>
+
+<xarticle title="Graph Sample 2 : Edge" >
+<load path="graph/sample_graph_edge.js" />
+<load path="images/graph_edge.png" />
+<comment>
+<p><a href="graph/sample_graph_edge.html">実行結果</a></p>
+<p>
+辺を使って節同士を接続する例。
+GraphTableSVG.Edge.createでVertexと同じように辺を作成することができる。第二引数にあるbeginVertexとendVertexで辺が接続する開始節と終了節を指定することが出来る。
+ここで指定しない場合、辺を作成してもsvg要素上で描画されないので注意すること。
+また、graph.connectで辺の接続先を指定することが出来る。第一引数が開始節、第二引数が接続辺、第三引数が終了節。
+辺に沿ってテキストを設定することができる。create時の第二引数で指定するか、edge1.svgTextPath.setTextContent(text)で指定する。
+ちなみに、節の形は現在、円か四角形のどちらかを選択できる。第二引数でsurfaceType: "rectangle"とすると四角形、それ以外は円形。
+下の図は節や辺を構成しているSVG要素の参考図である。表と同じように直接SVGを編集してスタイルを変更することが可能。
+</p>
 </comment>
 <load path="images/graph1.png" />
 </xarticle>
 
 <xarticle title="Graph Sample 3 : Vertex and Edge" >
-<load path="graph/sample_graph_vertex.html" /><load path="graph/sample_graph_vertex.js" /><load path="graph/sample_graph_vertex.css" />
+<load path="graph/sample_graph_vertex.js" />
+<load path="images/graph_vertex.png" />
 <comment>
-<a href="graph/sample_graph_vertex.html">実行結果</a>
+<p><a href="graph/sample_graph_vertex.html">実行結果</a></p>
+<p>
+ベジエ曲線のように辺を曲げることが出来る。edge1.controlPointプロパティに点の配列を与えることで制御点を設定することが出来る。ただし、現在設定できる制御点は一つだけなので注意すること。
+edge1.markerEnd = GraphTableSVG.Edge.createMark()とすることで終了節の方向に矢印を設定することができる。
+SVGには矢印用のSVG要素があるのでそれをcreateMark()で作成し、markerEndに設定することで辺の先に矢印のSVG要素が設定される。
+edge1.markerStartも同様に開始節の方向に矢印を設定できる。
+ただし、現在は矢印の細かな設定はできないことに注意すること。
+</p>
 </comment>
 </xarticle>
 
 <xarticle title="Graph Sample 4 : Connector" >
-<load path="graph/sample_graph_connector.html" /><load path="graph/sample_graph_connector.js" /><load path="graph/sample_graph_connector.css" />
+<load path="graph/sample_graph_connector.js" />
+<load path="images/graph_connector.png" />
 <comment>
 <a href="graph/sample_graph_connector.html">実行結果</a>
 </comment>

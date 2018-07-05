@@ -242,27 +242,30 @@
         }
         /**
          * 与えられた二つの頂点と辺を接続します。
-         * @param node1
+         * @param beginVertex
          * @param edge
-         * @param node2
-         * @param outcomingInsertIndex
-         * @param incomingInsertIndex
+         * @param endVertex
+         * @param option
+         * @param option.incomingInsertIndex
+         * @param option.outcomingInsertIndex
+         * @param option.beginConnectorType
+         * @param option.endConnectorType
          */
-        public connect(node1: Vertex, edge: Edge, node2: Vertex, 
+        public connect(beginVertex: Vertex, edge: Edge, endVertex: Vertex, 
             option : {outcomingInsertIndex?: number, incomingInsertIndex?: number,
                 beginConnectorType?: GraphTableSVG.ConnectorPosition, endConnectorType?: GraphTableSVG.ConnectorPosition} = {}) {
-            const oIndex = option.outcomingInsertIndex == undefined ? node1.outcomingEdges.length : option.outcomingInsertIndex;
-            const iIndex = option.incomingInsertIndex == undefined ? node2.incomingEdges.length : option.incomingInsertIndex;
+            const oIndex = option.outcomingInsertIndex == undefined ? beginVertex.outcomingEdges.length : option.outcomingInsertIndex;
+            const iIndex = option.incomingInsertIndex == undefined ? endVertex.incomingEdges.length : option.incomingInsertIndex;
             //this._connect(node1, edge, node2);
 
-            node1.insertOutcomingEdge(edge, oIndex);
-            node2.insertIncomingEdge(edge, iIndex);
+            beginVertex.insertOutcomingEdge(edge, oIndex);
+            endVertex.insertIncomingEdge(edge, iIndex);
 
-            const i = this.roots.indexOf(node1);
-            const j = this.roots.indexOf(node2);
+            const i = this.roots.indexOf(beginVertex);
+            const j = this.roots.indexOf(endVertex);
             if (j != -1) {
                 if (i == -1) {
-                    this.roots[j] = node1;
+                    this.roots[j] = beginVertex;
                 } else {
                     this.roots.splice(j, 1);
                 }
