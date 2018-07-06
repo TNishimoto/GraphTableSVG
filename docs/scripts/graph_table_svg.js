@@ -106,33 +106,50 @@ var GraphTableSVG;
         NodeOrder[NodeOrder["Preorder"] = 0] = "Preorder";
         NodeOrder[NodeOrder["Postorder"] = 1] = "Postorder";
     })(NodeOrder = GraphTableSVG.NodeOrder || (GraphTableSVG.NodeOrder = {}));
+    var pathTextAlighnment;
+    (function (pathTextAlighnment) {
+        pathTextAlighnment.regularInterval = "regularInterval";
+        var typeDic = {
+            "none": "none",
+            "begin": "begin",
+            "end": "end",
+            "center": "center",
+            "regularInterval": "regularInterval",
+        };
+        function toPathTextAlighnment(value) {
+            if (value in typeDic) {
+                return typeDic[value];
+            }
+            else {
+                return "none";
+            }
+        }
+        pathTextAlighnment.toPathTextAlighnment = toPathTextAlighnment;
+    })(pathTextAlighnment = GraphTableSVG.pathTextAlighnment || (GraphTableSVG.pathTextAlighnment = {}));
     var msoDashStyle;
     (function (msoDashStyle) {
         msoDashStyle.msoLineDash = "msoLineDash";
         msoDashStyle.msoLineDashDot = "msoLineDashDot";
         msoDashStyle.msoLineDashDotDot = "msoLineDashDotDot";
-        msoDashStyle.msoLineDashStyleMixed = "msoLineDashStyleMixed";
         msoDashStyle.msoLineLongDash = "msoLineLongDash";
         msoDashStyle.msoLineLongDashDot = "msoLineLongDashDot";
         msoDashStyle.msoLineRoundDot = "msoLineRoundDot";
         msoDashStyle.msoLineSolid = "msoLineSolid";
         msoDashStyle.msoLineSquareDot = "msoLineSquareDot";
         msoDashStyle.dashArrayDic = {
-            "msoLineDash": "6,3",
-            "msoLineDashDot": "6,3",
-            "msoLineDashDotDot": "6,3",
-            "msoLineDashStyleMixed": "6,3",
-            "msoLineLongDash": "6,3",
-            "msoLineLongDashDot": "6,3",
-            "msoLineRoundDot": "6,3",
-            "msoLineSolid": "0",
-            "msoLineSquareDot": "6,3"
+            "msoLineDash": [4, 3],
+            "msoLineDashDot": [4, 3, 1, 3],
+            "msoLineDashDotDot": [3, 1, 1, 1, 1, 1],
+            "msoLineLongDash": [9, 3],
+            "msoLineLongDashDot": [9, 3, 1, 3],
+            "msoLineRoundDot": [0.25, 2],
+            "msoLineSolid": [],
+            "msoLineSquareDot": [1, 1]
         };
         var lineCapDic = {
             "msoLineDash": "butt",
             "msoLineDashDot": "butt",
             "msoLineDashDotDot": "butt",
-            "msoLineDashStyleMixed": "butt",
             "msoLineLongDash": "butt",
             "msoLineLongDashDot": "butt",
             "msoLineRoundDot": "round",
@@ -143,7 +160,6 @@ var GraphTableSVG;
             "msoLineDash": msoDashStyle.msoLineDash,
             "msoLineDashDot": msoDashStyle.msoLineDashDot,
             "msoLineDashDotDot": msoDashStyle.msoLineDashDotDot,
-            "msoLineDashStyleMixed": msoDashStyle.msoLineDashStyleMixed,
             "msoLineLongDash": msoDashStyle.msoLineLongDash,
             "msoLineLongDashDot": msoDashStyle.msoLineLongDashDot,
             "msoLineRoundDot": msoDashStyle.msoLineRoundDot,
@@ -158,9 +174,17 @@ var GraphTableSVG;
             }
         }
         msoDashStyle.toMSODashStyle = toMSODashStyle;
+        function computeDashArray(type, width) {
+            var r = [];
+            for (var i = 0; i < msoDashStyle.dashArrayDic[type].length; i++) {
+                r.push(msoDashStyle.dashArrayDic[type][i] * width);
+            }
+            return r.join(",");
+        }
         function setStyle(svgLine, type) {
             if (toMSODashStyle(type) != null) {
-                svgLine.setPropertyStyleValue("stroke-dasharray", msoDashStyle.dashArrayDic[type]);
+                var width = svgLine.getPropertyStyleNumberValue("stroke-width");
+                svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
                 svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
             }
             else {
@@ -168,18 +192,6 @@ var GraphTableSVG;
         }
         msoDashStyle.setStyle = setStyle;
     })(msoDashStyle = GraphTableSVG.msoDashStyle || (GraphTableSVG.msoDashStyle = {}));
-    var msoDashStyleDashArray;
-    (function (msoDashStyleDashArray) {
-        msoDashStyleDashArray.msoLineDash = "6,3";
-        msoDashStyleDashArray.msoLineDashDot = "6,3";
-        msoDashStyleDashArray.msoLineDashDotDot = "6,3";
-        msoDashStyleDashArray.msoLineDashStyleMixed = "6,3";
-        msoDashStyleDashArray.msoLineLongDash = "6,3";
-        msoDashStyleDashArray.msoLineLongDashDot = "6,3";
-        msoDashStyleDashArray.msoLineRoundDot = "6,3";
-        msoDashStyleDashArray.msoLineSolid = "6,3";
-        msoDashStyleDashArray.msoLineSquareDot = "6,3";
-    })(msoDashStyleDashArray = GraphTableSVG.msoDashStyleDashArray || (GraphTableSVG.msoDashStyleDashArray = {}));
     var ConnectorPosition;
     (function (ConnectorPosition) {
         ConnectorPosition.Top = "top";
@@ -232,7 +244,7 @@ var GraphTableSVG;
     }
     GraphTableSVG.ToConnectorPosition = ToConnectorPosition;
     GraphTableSVG.VerticalAnchorPropertyName = "--vertical-anchor";
-    GraphTableSVG.MaximalRegularIntervalName = "--maximal-regular-interval";
+    GraphTableSVG.PathTextAlignmentName = "--path-text-alignment";
     var VerticalAnchor;
     (function (VerticalAnchor) {
         VerticalAnchor.Top = "top";
@@ -1769,7 +1781,7 @@ var GraphTableSVG;
                 if (prevPath == null || path != prevPath) {
                     this.svgPath.setAttribute("d", path);
                 }
-                if (this.isMaximalRegularInterval) {
+                if (this.pathTextAlignment == GraphTableSVG.pathTextAlighnment.regularInterval) {
                     var pathLen = this.svgPath.getTotalLength();
                     var strLen = this.svgText.textContent == null ? 0 : this.svgText.textContent.length;
                     if (strLen > 0) {
@@ -1782,22 +1794,18 @@ var GraphTableSVG;
                     }
                 }
                 else {
-                    this.svgText.textLength.baseVal.value = 0;
+                    this.svgText.removeAttribute("textLength");
                 }
             }
             return false;
         };
-        Object.defineProperty(Edge.prototype, "isMaximalRegularInterval", {
+        Object.defineProperty(Edge.prototype, "pathTextAlignment", {
             get: function () {
-                var value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "true");
-                return value == "true";
+                var value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.PathTextAlignmentName, "none");
+                return GraphTableSVG.pathTextAlighnment.toPathTextAlighnment(value);
             },
             set: function (value) {
-                var prev = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "true");
-                var prevV = prev == "true";
-                if (prevV != value) {
-                    this.svgTextPath.setPropertyStyleValue(GraphTableSVG.MaximalRegularIntervalName, value ? "true" : "false");
-                }
+                this.svgTextPath.setPropertyStyleValue(GraphTableSVG.PathTextAlignmentName, value);
             },
             enumerable: true,
             configurable: true
@@ -1832,6 +1840,8 @@ var GraphTableSVG;
             }
             if (option.text != undefined)
                 r.svgTextPath.setTextContent(option.text);
+            if (option.pathTextAlignment != undefined)
+                r.pathTextAlignment = option.pathTextAlignment;
             return r;
         };
         Edge.prototype.createVBACode = function (main, sub, indexDic) {
@@ -2397,7 +2407,6 @@ var GraphTableSVG;
                 throw new Error();
             }
         }
-        TreeArrangement.average = average;
         function middle(items) {
             if (items.length > 0) {
                 var min_1 = items[0];
@@ -2414,7 +2423,6 @@ var GraphTableSVG;
                 throw new Error();
             }
         }
-        TreeArrangement.middle = middle;
         function standardTreeArrangement(graph) {
             var xInterval = graph.vertexXInterval;
             var yInterval = graph.vertexYInterval;
@@ -2538,7 +2546,7 @@ var GraphTableSVG;
                 var edge = GraphTableSVG.Edge.create(this, { className: logicNode.edgeClass });
                 if (logicNode.edgeLabel != null) {
                     edge.svgTextPath.setTextContent(logicNode.edgeLabel, isLatexMode);
-                    edge.isMaximalRegularInterval = true;
+                    edge.pathTextAlignment = GraphTableSVG.pathTextAlighnment.regularInterval;
                 }
                 this.connect(parent, edge, node, { beginConnectorType: "bottom", endConnectorType: "top" });
             }

@@ -1,12 +1,6 @@
 ﻿namespace GraphTableSVG {
 
-    export namespace GraphArrangement {
-
-        
-
-        
-        
-        
+    export namespace GraphArrangement {   
     }
 
     export namespace TreeArrangement {
@@ -60,7 +54,7 @@
         }
 
 
-        export function average(items: number[]): number {
+        function average(items: number[]): number {
             if (items.length > 0) {
                 let y = 0;
                 items.forEach((v) => {
@@ -71,7 +65,7 @@
                 throw new Error();
             }
         }
-        export function middle(items: number[]): number {
+        function middle(items: number[]): number {
             if (items.length > 0) {
                 let min = items[0];
                 let max = items[0];

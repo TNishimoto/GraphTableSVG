@@ -35,7 +35,7 @@ namespace GraphTableSVG {
                 const edge = GraphTableSVG.Edge.create(this, {className : logicNode.edgeClass});
                 if (logicNode.edgeLabel != null) {
                     edge.svgTextPath.setTextContent(logicNode.edgeLabel, isLatexMode);
-                    edge.isMaximalRegularInterval = true;
+                    edge.pathTextAlignment = pathTextAlighnment.regularInterval;
                     //edge.svgText.setTextContent(tree.edgeLabel, isLatexMode);
                 }
                 this.connect(parent, edge, node, {beginConnectorType : "bottom", endConnectorType : "top"});

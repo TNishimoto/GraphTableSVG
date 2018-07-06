@@ -413,7 +413,7 @@
                     this.svgPath.setAttribute("d", path);
                 }
 
-                if (this.isMaximalRegularInterval) {
+                if (this.pathTextAlignment == pathTextAlighnment.regularInterval) {
                     const pathLen = this.svgPath.getTotalLength();
                     const strLen = this.svgText.textContent == null ? 0 : this.svgText.textContent.length;
                     if (strLen > 0) {
@@ -425,7 +425,8 @@
                     }
 
                 } else {
-                    this.svgText.textLength.baseVal.value = 0;
+                    this.svgText.removeAttribute("textLength");
+                    //this.svgText.textLength.baseVal.value = 0;
                 }
 
                 /*
@@ -440,16 +441,20 @@
         /**
          * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
          */
-        public get isMaximalRegularInterval(): boolean {
-            const value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "true");
-            return value == "true";             
+        public get pathTextAlignment(): pathTextAlighnment {
+            const value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.PathTextAlignmentName, "none");
+            return pathTextAlighnment.toPathTextAlighnment(value);             
         }
-        public set isMaximalRegularInterval(value: boolean) {
-            const prev = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.MaximalRegularIntervalName, "true");
-            const prevV = prev == "true";
-            if (prevV != value) {
-                this.svgTextPath.setPropertyStyleValue(GraphTableSVG.MaximalRegularIntervalName, value ? "true" : "false");
+        public set pathTextAlignment(value: pathTextAlighnment) {
+            this.svgTextPath.setPropertyStyleValue(GraphTableSVG.PathTextAlignmentName, value);
+            /*
+            const prev = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.PathTextAlighnmentName, "none");
+            const str : string = value;
+            const prevV = prev == str;
+            if (prevV) {
+                this.svgTextPath.setPropertyStyleValue(GraphTableSVG.PathTextAlighnmentName, value);
             }
+            */
         }
 
         /**
@@ -481,7 +486,7 @@
          */
         public static create(graph: Graph, option : {className?: string, surfaceType?: string, 
             beginVertex? : Vertex, endVertex? : Vertex, beginConnectorType?: ConnectorPosition, endConnectorType?: ConnectorPosition, 
-            incomingInsertIndex?: number, outcomingInsertIndex?: number, text? : string} = {}): GraphTableSVG.Edge {
+            incomingInsertIndex?: number, outcomingInsertIndex?: number, text? : string, pathTextAlignment? : pathTextAlighnment } = {}): GraphTableSVG.Edge {
             if(option.className == undefined) option.className = graph.defaultEdgeClass;
             if(option.surfaceType == undefined) option.surfaceType = null;
             option.className = option.className != null ? option.className : graph.defaultVertexClass;
@@ -499,7 +504,7 @@
                 graph.connect(option.beginVertex, r, option.endVertex, option);
             }
             if(option.text != undefined)r.svgTextPath.setTextContent(option.text);
-
+            if(option.pathTextAlignment != undefined) r.pathTextAlignment = option.pathTextAlignment;
             return r;
         }
         /**

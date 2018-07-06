@@ -19,33 +19,52 @@
         Auto = 9
     }
     */
-    export type msoDashStyle = "msoLineDash"| "msoLineDashDot" | "msoLineDashDotDot" | "msoLineDashStyleMixed" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
+    export type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
+    export namespace pathTextAlighnment {
+        export const regularInterval : pathTextAlighnment = "regularInterval"
+        const typeDic :  { [key: string]: pathTextAlighnment; } = { 
+            "none" : "none",
+            "begin" : "begin",
+            "end" : "end",
+            "center" : "center",
+            "regularInterval" : "regularInterval",
+        }
+        export function toPathTextAlighnment(value : string) : pathTextAlighnment {
+            if(value in typeDic){
+                return typeDic[value];
+            }else{
+                return "none";
+            }
+        }
+    }
+
+    export type msoDashStyle = "msoLineDash"| "msoLineDashDot" | "msoLineDashDotDot" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
     export namespace msoDashStyle {
         export const msoLineDash: msoDashStyle = "msoLineDash"
         export const msoLineDashDot: msoDashStyle = "msoLineDashDot"
         export const msoLineDashDotDot: msoDashStyle = "msoLineDashDotDot"
-        export const msoLineDashStyleMixed: msoDashStyle = "msoLineDashStyleMixed"
+        //export const msoLineDashStyleMixed: msoDashStyle = "msoLineDashStyleMixed"
         export const msoLineLongDash : msoDashStyle = "msoLineLongDash"
         export const msoLineLongDashDot: msoDashStyle = "msoLineLongDashDot"
         export const msoLineRoundDot : msoDashStyle = "msoLineRoundDot"
         export const msoLineSolid: msoDashStyle = "msoLineSolid"
         export const msoLineSquareDot : msoDashStyle = "msoLineSquareDot"
-        export const dashArrayDic :  { [key: string]: string; } = { 
-            "msoLineDash" : "6,3",
-            "msoLineDashDot" : "6,3",
-            "msoLineDashDotDot" : "6,3",
-            "msoLineDashStyleMixed" : "6,3",
-            "msoLineLongDash" : "6,3",
-            "msoLineLongDashDot" : "6,3",
-            "msoLineRoundDot" : "6,3",
-            "msoLineSolid" : "0", 
-            "msoLineSquareDot" : "6,3"
+        export const dashArrayDic :  { [key: string]: number[]; } = { 
+            "msoLineDash" : [4, 3],
+            "msoLineDashDot" : [4, 3, 1, 3],
+            "msoLineDashDotDot" : [3, 1, 1, 1, 1, 1],
+            //"msoLineDashStyleMixed" : "6,3",
+            "msoLineLongDash" : [9, 3],
+            "msoLineLongDashDot" : [9, 3, 1, 3],
+            "msoLineRoundDot" : [0.25, 2],
+            "msoLineSolid" : [], 
+            "msoLineSquareDot" : [1, 1]
         };
         const lineCapDic :  { [key: string]: string; } = { 
             "msoLineDash" : "butt",
             "msoLineDashDot" : "butt",
             "msoLineDashDotDot" : "butt",
-            "msoLineDashStyleMixed" : "butt",
+            //"msoLineDashStyleMixed" : "butt",
             "msoLineLongDash" : "butt",
             "msoLineLongDashDot" : "butt",
             "msoLineRoundDot" : "round",
@@ -56,7 +75,7 @@
             "msoLineDash" : msoDashStyle.msoLineDash,
             "msoLineDashDot" : msoDashStyle.msoLineDashDot,
             "msoLineDashDotDot" : msoDashStyle.msoLineDashDotDot,
-            "msoLineDashStyleMixed" : msoDashStyle.msoLineDashStyleMixed,
+            //"msoLineDashStyleMixed" : msoDashStyle.msoLineDashStyleMixed,
             "msoLineLongDash" : msoDashStyle.msoLineLongDash,
             "msoLineLongDashDot" : msoDashStyle.msoLineLongDashDot,
             "msoLineRoundDot" : msoDashStyle.msoLineRoundDot,
@@ -69,26 +88,23 @@
                 return null;
             }
         }
+        function computeDashArray(type : msoDashStyle, width : number) : string {
+            const r = [];
+            for(let i=0;i<dashArrayDic[type].length;i++){
+                r.push(dashArrayDic[type][i] * width);
+            }
+            return r.join(",");
+        }
 
         export function setStyle(svgLine : SVGLineElement | SVGPathElement | SVGElement, type : string) : void{
             if(toMSODashStyle(type) != null){
-                svgLine.setPropertyStyleValue("stroke-dasharray", dashArrayDic[type]);
+                const width = svgLine.getPropertyStyleNumberValue("stroke-width");
+                svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
                 svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
             }else{
 
             }
         }
-    }
-    export namespace msoDashStyleDashArray {
-        export const msoLineDash: string = "6,3"
-        export const msoLineDashDot: string = "6,3"
-        export const msoLineDashDotDot: string = "6,3"
-        export const msoLineDashStyleMixed: string = "6,3"
-        export const msoLineLongDash : string = "6,3"
-        export const msoLineLongDashDot: string = "6,3"
-        export const msoLineRoundDot : string = "6,3"
-        export const msoLineSolid: string = "6,3"
-        export const msoLineSquareDot : string = "6,3"
     }
 
     export type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
@@ -170,7 +186,7 @@
     }
     */
     export const VerticalAnchorPropertyName: string = "--vertical-anchor";
-    export const MaximalRegularIntervalName: string = "--maximal-regular-interval";
+    export const PathTextAlignmentName: string = "--path-text-alignment";
 
 
     /**

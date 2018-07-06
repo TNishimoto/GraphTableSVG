@@ -19,33 +19,26 @@ declare namespace GraphTableSVG {
         Preorder = 0,
         Postorder = 1,
     }
-    type msoDashStyle = "msoLineDash" | "msoLineDashDot" | "msoLineDashDotDot" | "msoLineDashStyleMixed" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
+    type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
+    namespace pathTextAlighnment {
+        const regularInterval: pathTextAlighnment;
+        function toPathTextAlighnment(value: string): pathTextAlighnment;
+    }
+    type msoDashStyle = "msoLineDash" | "msoLineDashDot" | "msoLineDashDotDot" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
     namespace msoDashStyle {
         const msoLineDash: msoDashStyle;
         const msoLineDashDot: msoDashStyle;
         const msoLineDashDotDot: msoDashStyle;
-        const msoLineDashStyleMixed: msoDashStyle;
         const msoLineLongDash: msoDashStyle;
         const msoLineLongDashDot: msoDashStyle;
         const msoLineRoundDot: msoDashStyle;
         const msoLineSolid: msoDashStyle;
         const msoLineSquareDot: msoDashStyle;
         const dashArrayDic: {
-            [key: string]: string;
+            [key: string]: number[];
         };
         function toMSODashStyle(value: string): msoDashStyle | null;
         function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void;
-    }
-    namespace msoDashStyleDashArray {
-        const msoLineDash: string;
-        const msoLineDashDot: string;
-        const msoLineDashDotDot: string;
-        const msoLineDashStyleMixed: string;
-        const msoLineLongDash: string;
-        const msoLineLongDashDot: string;
-        const msoLineRoundDot: string;
-        const msoLineSolid: string;
-        const msoLineSquareDot: string;
     }
     type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
     namespace ConnectorPosition {
@@ -62,7 +55,7 @@ declare namespace GraphTableSVG {
     function ToVBAConnectorPosition(shapeType: string, str: ConnectorPosition): number;
     function ToConnectorPosition(str: string | null): ConnectorPosition;
     const VerticalAnchorPropertyName: string;
-    const MaximalRegularIntervalName: string;
+    const PathTextAlignmentName: string;
     type VerticalAnchor = "top" | "middle" | "bottom";
     namespace VerticalAnchor {
         const Top: VerticalAnchor;
@@ -294,7 +287,7 @@ declare namespace GraphTableSVG {
         readonly x2: number;
         readonly y2: number;
         update(): boolean;
-        isMaximalRegularInterval: boolean;
+        pathTextAlignment: pathTextAlighnment;
         readonly objectID: string;
         save(): void;
         static create(graph: Graph, option?: {
@@ -307,6 +300,7 @@ declare namespace GraphTableSVG {
             incomingInsertIndex?: number;
             outcomingInsertIndex?: number;
             text?: string;
+            pathTextAlignment?: pathTextAlighnment;
         }): GraphTableSVG.Edge;
         createVBACode(main: string[], sub: string[][], indexDic: {
             [key: string]: number;
@@ -386,8 +380,6 @@ declare namespace GraphTableSVG {
     namespace TreeArrangement {
         function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void;
         function reverse(graph: Graph, isX: boolean, isY: boolean): void;
-        function average(items: number[]): number;
-        function middle(items: number[]): number;
         function standardTreeArrangement(graph: GraphTableSVG.Graph): void;
         function standardTreeWidthArrangement(graph: GraphTableSVG.Graph): void;
         function Arrangement1(graph: GraphTableSVG.Graph): void;
