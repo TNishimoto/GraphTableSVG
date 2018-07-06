@@ -22,6 +22,9 @@ declare namespace GraphTableSVG {
     type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
     namespace pathTextAlighnment {
         const regularInterval: pathTextAlighnment;
+        const begin: pathTextAlighnment;
+        const end: pathTextAlighnment;
+        const center: pathTextAlighnment;
         function toPathTextAlighnment(value: string): pathTextAlighnment;
     }
     type msoDashStyle = "msoLineDash" | "msoLineDashDot" | "msoLineDashDotDot" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
@@ -825,5 +828,7 @@ declare namespace GraphTableSVG {
         function paddingLeft(str: string, n: number, char: string): string;
         function setGraphTableCSS(cellColor: string, borderColor: string): void;
         function getGraphTableCSS(): HTMLElement | null;
+        function parseUnit(str: string): [number, string];
+        function toPX(str: string): number;
     }
 }

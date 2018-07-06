@@ -22,6 +22,10 @@
     export type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
     export namespace pathTextAlighnment {
         export const regularInterval : pathTextAlighnment = "regularInterval"
+        export const begin : pathTextAlighnment = "begin"
+        export const end : pathTextAlighnment = "end"
+        export const center : pathTextAlighnment = "center"
+
         const typeDic :  { [key: string]: pathTextAlighnment; } = { 
             "none" : "none",
             "begin" : "begin",

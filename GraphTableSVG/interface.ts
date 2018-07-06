@@ -127,7 +127,7 @@ SVGElement.prototype.getPropertyStyleNumberValue = function (name: string): numb
     const item: SVGElement = this;
     const p = item.getPropertyStyleValue(name);
     if(p != null){
-        return Number(p);
+        return GraphTableSVG.Common.toPX(p);
     }else{
         return null;
     }

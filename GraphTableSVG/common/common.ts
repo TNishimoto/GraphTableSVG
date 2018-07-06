@@ -76,5 +76,29 @@
             const item = document.getElementById(CSSName);
             return item;
         }
+
+        export function parseUnit(str : string) : [number, string]{
+            let str1="", str2="";
+            for(let i=0;i<str.length;i++){
+                if(isNaN(<any>str[i])){
+                    str2 += str[i];
+                }else{
+                    str1 += str[i];
+                }
+            }
+            return [Number(str1), str2];
+        }
+        export function toPX(str : string) : number{
+            const [val, unit] = parseUnit(str);
+            if(unit == "px"){
+                return val;
+            } else if(unit == "em"){
+                return val * 16;
+            }
+            else{
+                return val;
+            }
+        }
+
     }
 }

@@ -109,6 +109,9 @@ var GraphTableSVG;
     var pathTextAlighnment;
     (function (pathTextAlighnment) {
         pathTextAlighnment.regularInterval = "regularInterval";
+        pathTextAlighnment.begin = "begin";
+        pathTextAlighnment.end = "end";
+        pathTextAlighnment.center = "center";
         var typeDic = {
             "none": "none",
             "begin": "begin",
@@ -508,7 +511,7 @@ SVGElement.prototype.getPropertyStyleNumberValue = function (name) {
     var item = this;
     var p = item.getPropertyStyleValue(name);
     if (p != null) {
-        return Number(p);
+        return GraphTableSVG.Common.toPX(p);
     }
     else {
         return null;
@@ -1793,8 +1796,30 @@ var GraphTableSVG;
                         this.svgText.textLength.baseVal.value = textPathLen;
                     }
                 }
+                else if (this.pathTextAlignment == GraphTableSVG.pathTextAlighnment.end) {
+                    if (this.svgText.hasAttribute("textLength"))
+                        this.svgText.removeAttribute("textLength");
+                    var box = this.svgText.getBBox();
+                    var pathLen = this.svgPath.getTotalLength();
+                    this.svgTextPath.startOffset.baseVal.value = pathLen - box.width;
+                }
+                else if (this.pathTextAlignment == GraphTableSVG.pathTextAlighnment.center) {
+                    if (this.svgText.hasAttribute("textLength"))
+                        this.svgText.removeAttribute("textLength");
+                    var box = this.svgText.getBBox();
+                    var pathLen = this.svgPath.getTotalLength();
+                    this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width) / 2;
+                }
                 else {
-                    this.svgText.removeAttribute("textLength");
+                    if (this.svgText.hasAttribute("textLength"))
+                        this.svgText.removeAttribute("textLength");
+                }
+                var strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
+                if (strokeWidth != null) {
+                    this.svgText.setAttribute("dy", "-" + strokeWidth);
+                }
+                else {
+                    this.svgText.setAttribute("dy", "0");
                 }
             }
             return false;
@@ -1840,8 +1865,9 @@ var GraphTableSVG;
             }
             if (option.text != undefined)
                 r.svgTextPath.setTextContent(option.text);
-            if (option.pathTextAlignment != undefined)
-                r.pathTextAlignment = option.pathTextAlignment;
+            if (option.pathTextAlignment == undefined)
+                option.pathTextAlignment = GraphTableSVG.pathTextAlighnment.center;
+            r.pathTextAlignment = option.pathTextAlignment;
             return r;
         };
         Edge.prototype.createVBACode = function (main, sub, indexDic) {
@@ -5908,6 +5934,32 @@ var GraphTableSVG;
             return item;
         }
         Common.getGraphTableCSS = getGraphTableCSS;
+        function parseUnit(str) {
+            var str1 = "", str2 = "";
+            for (var i = 0; i < str.length; i++) {
+                if (isNaN(str[i])) {
+                    str2 += str[i];
+                }
+                else {
+                    str1 += str[i];
+                }
+            }
+            return [Number(str1), str2];
+        }
+        Common.parseUnit = parseUnit;
+        function toPX(str) {
+            var _a = parseUnit(str), val = _a[0], unit = _a[1];
+            if (unit == "px") {
+                return val;
+            }
+            else if (unit == "em") {
+                return val * 16;
+            }
+            else {
+                return val;
+            }
+        }
+        Common.toPX = toPX;
     })(Common = GraphTableSVG.Common || (GraphTableSVG.Common = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 //# sourceMappingURL=graph_table_svg.js.map

@@ -424,9 +424,29 @@
                         this.svgText.textLength.baseVal.value = textPathLen;
                     }
 
-                } else {
-                    this.svgText.removeAttribute("textLength");
+                }
+                else if(this.pathTextAlignment == pathTextAlighnment.end){
+                    if(this.svgText.hasAttribute("textLength"))this.svgText.removeAttribute("textLength");
+                    const box = this.svgText.getBBox();
+                    const pathLen = this.svgPath.getTotalLength();
+                    this.svgTextPath.startOffset.baseVal.value = pathLen - box.width;  
+                } 
+                else if(this.pathTextAlignment == pathTextAlighnment.center){
+                    if(this.svgText.hasAttribute("textLength"))this.svgText.removeAttribute("textLength");
+                    const box = this.svgText.getBBox();
+                    const pathLen = this.svgPath.getTotalLength();
+                    this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    
+
+                }
+                else {
+                    if(this.svgText.hasAttribute("textLength"))this.svgText.removeAttribute("textLength");
                     //this.svgText.textLength.baseVal.value = 0;
+                }
+                const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
+                if(strokeWidth != null){
+                    this.svgText.setAttribute("dy", `-${strokeWidth}`);                  
+                }else{
+                    this.svgText.setAttribute("dy", "0");                  
                 }
 
                 /*
@@ -504,7 +524,8 @@
                 graph.connect(option.beginVertex, r, option.endVertex, option);
             }
             if(option.text != undefined)r.svgTextPath.setTextContent(option.text);
-            if(option.pathTextAlignment != undefined) r.pathTextAlignment = option.pathTextAlignment;
+            if(option.pathTextAlignment == undefined) option.pathTextAlignment = pathTextAlighnment.center;
+            r.pathTextAlignment = option.pathTextAlignment;
             return r;
         }
         /**
