@@ -17,9 +17,9 @@
         protected _edges: Edge[] = new Array(0);
         protected _svgGroup: SVGGElement;
         protected _roots: Vertex[] = [];
-        constructor(box: HTMLElement, option : {className?: string} = {}) {
-            if(option.className ==undefined) option.className = null;
-            this._svgGroup = GraphTableSVG.SVG.createGroup(option.className);
+        constructor(box: HTMLElement, option : {graphClassName?: string} = {}) {
+            if(option.graphClassName ==undefined) option.graphClassName = null;
+            this._svgGroup = GraphTableSVG.SVG.createGroup(option.graphClassName);
             box.appendChild(this.svgGroup);
 
             this._svgGroup.setAttribute(Graph.typeName, "graph");
@@ -242,14 +242,14 @@
         }
         /**
          * 与えられた二つの頂点と辺を接続します。
-         * @param beginVertex
-         * @param edge
-         * @param endVertex
-         * @param option
-         * @param option.incomingInsertIndex
-         * @param option.outcomingInsertIndex
-         * @param option.beginConnectorType
-         * @param option.endConnectorType
+         * @param beginVertex 開始節
+         * @param edge 接続する辺
+         * @param endVertex 終了節
+         * @param option 接続オプション
+         * @param option.incomingInsertIndex endVertexのincomingEdgeの配列に今回の辺をどの位置に挿入するか
+         * @param option.outcomingInsertIndex beginVertexのoutcomingEdgeの配列に今回の辺をどの位置に挿入するか
+         * @param option.beginConnectorType beginVertexの接続位置
+         * @param option.endConnectorType endVertexの接続位置
          */
         public connect(beginVertex: Vertex, edge: Edge, endVertex: Vertex, 
             option : {outcomingInsertIndex?: number, incomingInsertIndex?: number,

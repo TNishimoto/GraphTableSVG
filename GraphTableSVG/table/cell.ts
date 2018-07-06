@@ -81,10 +81,10 @@ namespace GraphTableSVG {
             //this.cellY = _py;
             this.setMasterDiffX(0);
             this.setMasterDiffY(0);
-            this._svgBackground = Cell.createCellRectangle(this.defaultBackgroundClass);
+            this._svgBackground = SVG.createRectangle(this.svgGroup, this.defaultBackgroundClass);
             this._svgText = SVG.createText(this.defaultTextClass);
-            this.svgGroup.appendChild(this.svgBackground);
-            SVG.setDefaultValue(this.svgBackground);
+            //this.svgGroup.appendChild(this.svgBackground);
+            //SVG.setDefaultValue(this.svgBackground);
             this.svgGroup.appendChild(this.svgText);
 
             /*
@@ -947,17 +947,20 @@ namespace GraphTableSVG {
          * セルの背景を表すSVGRectElementを作成します。
          * @param className 
          */
-        private static createCellRectangle(className: string | null = null): SVGRectElement {
+        /*
+        private static createCellRectangle(parent : SVGElement, className: string | null = null): SVGRectElement {
             const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            parent.appendChild(rect);
             rect.width.baseVal.value = 30;
             rect.height.baseVal.value = 30;
             if (className == null) {
                 rect.style.fill = "#ffffff";
             } else {
-                return GraphTableSVG.SVG.createRectangle(className);
+                GraphTableSVG.SVG.createRectangle(className);
             }
             return rect;
         }
+        */
         public toPlainText(): string {
             if (this.isMaster) {
                 const textContext = this.svgText.textContent != null ? this.svgText.textContent : "";

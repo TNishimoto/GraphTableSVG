@@ -27,6 +27,7 @@ namespace GraphTableSVG {
             //line1.setAttribute('stroke', 'black');
             return line1;
         }
+        export const msoDashStyleName = "--stroke-style";
         /**
              * SVGPathElementを生成します。
              * @param x
@@ -35,11 +36,16 @@ namespace GraphTableSVG {
              * @param y2
              * @param className
              */
-        export function createPath(x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
+        export function createPath(parent : SVGElement, x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
             const line1 = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            parent.appendChild(line1);
             line1.setAttribute("d", `M ${x} ${y} M ${x2} ${y2}`);
             if (className != null) {
                 line1.setAttribute("class", className)
+                const dashStyle = line1.getPropertyStyleValue(msoDashStyleName);
+                if(dashStyle != null){
+                    msoDashStyle.setStyle(line1, dashStyle);
+                }
             } else {
                 line1.style.stroke = "black";
                 line1.style.fill = "none";
@@ -72,8 +78,9 @@ namespace GraphTableSVG {
          * SVGRectElementを生成します。
          * @param className
          */
-        export function createRectangle(className: string | null = null): SVGRectElement {
+        export function createRectangle(parent : SVGElement, className: string | null = null): SVGRectElement {
             const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            parent.appendChild(rect);
             rect.width.baseVal.value = 30;
             rect.height.baseVal.value = 30;
             if (className == null) {
@@ -81,6 +88,17 @@ namespace GraphTableSVG {
                 rect.style.stroke = "#000000";
             } else {
                 rect.setAttribute("class", className);
+                const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if(dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
+
+                const width = rect.getPropertyStyleNumberValue(SVG.defaultWidthName);
+                if(width != null){
+                    rect.width.baseVal.value = width;
+                }
+                const height = rect.getPropertyStyleNumberValue(SVG.defaultHeightName);
+                if(height != null){
+                    rect.height.baseVal.value = height;
+                }
 
             }
             return rect;
@@ -110,18 +128,18 @@ namespace GraphTableSVG {
             style.fontWeight = null;
             style.fontFamily = null;
         }
-        const defaultRadiusName = "--default-radius";
-        const defaultWidthName = "--default-width";
-        const defaultHeightName = "--default-height";
+        export const defaultRadiusName = "--default-radius";
+        export const defaultWidthName = "--default-width";
+        export const defaultHeightName = "--default-height";
+        export let defaultCircleRadius = 30;
 
         /**
          * SVGCircleElementを生成します。
          * @param className
          */
-
-        export let defaultCircleRadius = 30;
-        export function createCircle(className: string | null = null): SVGCircleElement {
+        export function createCircle(parent : SVGElement, className: string | null = null): SVGCircleElement {
             const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            parent.appendChild(circle);
             circle.r.baseVal.value = defaultCircleRadius;
             if (className == null) {
                 circle.style.stroke = "black";
@@ -129,6 +147,13 @@ namespace GraphTableSVG {
                 circle.style.fill = "#ffffff";
             } else {
                 circle.setAttribute("class", className);
+                const radius = circle.getPropertyStyleNumberValue(SVG.defaultRadiusName);
+                if(radius != null){
+                    circle.r.baseVal.value = radius;
+                }
+
+                const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if(dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
                 //const s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
                 //circle.className = className
                 //console.log("d : " + circle.setAttribute("class", className));
@@ -167,11 +192,14 @@ namespace GraphTableSVG {
             const path = <SVGTextPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
             text.appendChild(path);
 
-
+            if(className == null){
             path.style.fill = "black";
             path.style.fontSize = "14px";
             path.style.fontWeight = "bold";
             path.style.fontFamily = "Yu Gothic";
+            }else{
+                path.setAttribute("class", className);
+            }
             return [text, path];
         }
         function createTextSpans(str: string, className: string | null = null, fontsize: number = 12, fstdx: number | null = null, fstdy: number | null = null): SVGTSpanElement[] {
@@ -278,7 +306,7 @@ namespace GraphTableSVG {
 
         }
 
-
+        /*
         export function setDefaultValue(item: SVGCircleElement | SVGRectElement, style: CSSStyleDeclaration | null = null) {
             const className = item.getAttribute("class");
             if (style != null) {
@@ -299,6 +327,7 @@ namespace GraphTableSVG {
                     }
                 }
             } else {
+                
                 if (className != null) {
                     const cssStyle = getStyleSheet(className);
 
@@ -309,10 +338,12 @@ namespace GraphTableSVG {
                         setDefaultValue(item, computedStyle);
                     }
                 }
+                
             }
 
             
         }
+        */
 
         export function setClass(svg: SVGElement, className: string | null = null) {
             if (className == null) {

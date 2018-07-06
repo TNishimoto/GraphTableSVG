@@ -70,6 +70,8 @@ CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name: string) {
 interface SVGElement {
     getActiveStyle(): CSSStyleDeclaration;
     getPropertyStyleValue(name: string): string | null;
+    getPropertyStyleNumberValue(name: string): number | null;
+    
     getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
     setPropertyStyleValue(name: string, value: string | null): void;
 
@@ -119,6 +121,15 @@ SVGElement.prototype.getPropertyStyleValue = function (name: string): string | n
         }
     } else {
         return p;
+    }
+}
+SVGElement.prototype.getPropertyStyleNumberValue = function (name: string): number | null {
+    const item: SVGElement = this;
+    const p = item.getPropertyStyleValue(name);
+    if(p != null){
+        return Number(p);
+    }else{
+        return null;
     }
 }
 SVGElement.prototype.setPropertyStyleValue = function (name: string, value: string | null) {

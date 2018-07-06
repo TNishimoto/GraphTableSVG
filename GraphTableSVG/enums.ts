@@ -19,6 +19,78 @@
         Auto = 9
     }
     */
+    export type msoDashStyle = "msoLineDash"| "msoLineDashDot" | "msoLineDashDotDot" | "msoLineDashStyleMixed" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
+    export namespace msoDashStyle {
+        export const msoLineDash: msoDashStyle = "msoLineDash"
+        export const msoLineDashDot: msoDashStyle = "msoLineDashDot"
+        export const msoLineDashDotDot: msoDashStyle = "msoLineDashDotDot"
+        export const msoLineDashStyleMixed: msoDashStyle = "msoLineDashStyleMixed"
+        export const msoLineLongDash : msoDashStyle = "msoLineLongDash"
+        export const msoLineLongDashDot: msoDashStyle = "msoLineLongDashDot"
+        export const msoLineRoundDot : msoDashStyle = "msoLineRoundDot"
+        export const msoLineSolid: msoDashStyle = "msoLineSolid"
+        export const msoLineSquareDot : msoDashStyle = "msoLineSquareDot"
+        export const dashArrayDic :  { [key: string]: string; } = { 
+            "msoLineDash" : "6,3",
+            "msoLineDashDot" : "6,3",
+            "msoLineDashDotDot" : "6,3",
+            "msoLineDashStyleMixed" : "6,3",
+            "msoLineLongDash" : "6,3",
+            "msoLineLongDashDot" : "6,3",
+            "msoLineRoundDot" : "6,3",
+            "msoLineSolid" : "0", 
+            "msoLineSquareDot" : "6,3"
+        };
+        const lineCapDic :  { [key: string]: string; } = { 
+            "msoLineDash" : "butt",
+            "msoLineDashDot" : "butt",
+            "msoLineDashDotDot" : "butt",
+            "msoLineDashStyleMixed" : "butt",
+            "msoLineLongDash" : "butt",
+            "msoLineLongDashDot" : "butt",
+            "msoLineRoundDot" : "round",
+            "msoLineSolid" : "butt", 
+            "msoLineSquareDot" : "butt"
+        }
+        const typeDic :  { [key: string]: msoDashStyle; } = { 
+            "msoLineDash" : msoDashStyle.msoLineDash,
+            "msoLineDashDot" : msoDashStyle.msoLineDashDot,
+            "msoLineDashDotDot" : msoDashStyle.msoLineDashDotDot,
+            "msoLineDashStyleMixed" : msoDashStyle.msoLineDashStyleMixed,
+            "msoLineLongDash" : msoDashStyle.msoLineLongDash,
+            "msoLineLongDashDot" : msoDashStyle.msoLineLongDashDot,
+            "msoLineRoundDot" : msoDashStyle.msoLineRoundDot,
+            "msoLineSquareDot" : msoDashStyle.msoLineSquareDot
+        }
+        export function toMSODashStyle(value : string) : msoDashStyle | null {
+            if(value in typeDic){
+                return typeDic[value];
+            }else{
+                return null;
+            }
+        }
+
+        export function setStyle(svgLine : SVGLineElement | SVGPathElement | SVGElement, type : string) : void{
+            if(toMSODashStyle(type) != null){
+                svgLine.setPropertyStyleValue("stroke-dasharray", dashArrayDic[type]);
+                svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
+            }else{
+
+            }
+        }
+    }
+    export namespace msoDashStyleDashArray {
+        export const msoLineDash: string = "6,3"
+        export const msoLineDashDot: string = "6,3"
+        export const msoLineDashDotDot: string = "6,3"
+        export const msoLineDashStyleMixed: string = "6,3"
+        export const msoLineLongDash : string = "6,3"
+        export const msoLineLongDashDot: string = "6,3"
+        export const msoLineRoundDot : string = "6,3"
+        export const msoLineSolid: string = "6,3"
+        export const msoLineSquareDot : string = "6,3"
+    }
+
     export type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
     export namespace ConnectorPosition {
         export const Top: ConnectorPosition = "top"
@@ -30,7 +102,6 @@
         export const Right: ConnectorPosition = "right"
         export const TopRight: ConnectorPosition = "topright"
         export const Auto: ConnectorPosition = "auto"
-
     }
     export function ToVBAConnectorPosition(shapeType: string, str: ConnectorPosition): number {
         if (shapeType == "circle") {

@@ -233,6 +233,14 @@ edge1.markerStartも同様に開始節の方向に矢印を設定できる。
 </comment>
 </xarticle>
 
+<xarticle title="Graph Sample 5 : Class Name" >
+<load path="graph/sample_graph_class.js" />
+<load path="graph/sample_graph_class.css" />
+<load path="images/graph_class.png" />
+<comment>
+<a href="graph/sample_graph_class.html">実行結果</a>
+</comment>
+</xarticle>
 
 
 </body>

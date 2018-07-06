@@ -19,6 +19,34 @@ declare namespace GraphTableSVG {
         Preorder = 0,
         Postorder = 1,
     }
+    type msoDashStyle = "msoLineDash" | "msoLineDashDot" | "msoLineDashDotDot" | "msoLineDashStyleMixed" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
+    namespace msoDashStyle {
+        const msoLineDash: msoDashStyle;
+        const msoLineDashDot: msoDashStyle;
+        const msoLineDashDotDot: msoDashStyle;
+        const msoLineDashStyleMixed: msoDashStyle;
+        const msoLineLongDash: msoDashStyle;
+        const msoLineLongDashDot: msoDashStyle;
+        const msoLineRoundDot: msoDashStyle;
+        const msoLineSolid: msoDashStyle;
+        const msoLineSquareDot: msoDashStyle;
+        const dashArrayDic: {
+            [key: string]: string;
+        };
+        function toMSODashStyle(value: string): msoDashStyle | null;
+        function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void;
+    }
+    namespace msoDashStyleDashArray {
+        const msoLineDash: string;
+        const msoLineDashDot: string;
+        const msoLineDashDotDot: string;
+        const msoLineDashStyleMixed: string;
+        const msoLineLongDash: string;
+        const msoLineLongDashDot: string;
+        const msoLineRoundDot: string;
+        const msoLineSolid: string;
+        const msoLineSquareDot: string;
+    }
     type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
     namespace ConnectorPosition {
         const Top: ConnectorPosition;
@@ -78,6 +106,7 @@ interface CSSStyleDeclaration {
 interface SVGElement {
     getActiveStyle(): CSSStyleDeclaration;
     getPropertyStyleValue(name: string): string | null;
+    getPropertyStyleNumberValue(name: string): number | null;
     getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
     setPropertyStyleValue(name: string, value: string | null): void;
 }
@@ -160,18 +189,21 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     namespace SVG {
         function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
-        function createPath(x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
+        const msoDashStyleName = "--stroke-style";
+        function createPath(parent: SVGElement, x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
         function createText(className?: string | null): SVGTextElement;
-        function createRectangle(className?: string | null): SVGRectElement;
+        function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
         function createGroup(className?: string | null): SVGGElement;
         function resetStyle(style: CSSStyleDeclaration): void;
+        const defaultRadiusName = "--default-radius";
+        const defaultWidthName = "--default-width";
+        const defaultHeightName = "--default-height";
         let defaultCircleRadius: number;
-        function createCircle(className?: string | null): SVGCircleElement;
+        function createCircle(parent: SVGElement, className?: string | null): SVGCircleElement;
         function createMarker(className?: string | null): SVGMarkerElement;
         function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
         function setTextToTextPath(path: SVGTextPathElement, str: string, isLatexMode: boolean): void;
         function setTextToSVGText(path: SVGTextElement, str: string, isLatexMode: boolean): void;
-        function setDefaultValue(item: SVGCircleElement | SVGRectElement, style?: CSSStyleDeclaration | null): void;
         function setClass(svg: SVGElement, className?: string | null): void;
         function setCSSToStyle(svg: HTMLElement): void;
         function setCSSToAllElementStyles(item: HTMLElement | string): void;
@@ -228,6 +260,8 @@ declare namespace GraphTableSVG {
         static readonly endNodeName: string;
         static readonly defaultTextClass: string;
         static readonly controlPointName: string;
+        static readonly markerStartName: string;
+        static readonly markerEndName: string;
         protected _svgTextPath: SVGTextPathElement;
         readonly svgTextPath: SVGTextPathElement;
         tag: any;
@@ -311,7 +345,7 @@ declare namespace GraphTableSVG {
         protected _svgGroup: SVGGElement;
         protected _roots: Vertex[];
         constructor(box: HTMLElement, option?: {
-            className?: string;
+            graphClassName?: string;
         });
         private updateVertices();
         private updateEdges();
@@ -628,7 +662,6 @@ declare namespace GraphTableSVG {
         width: number;
         height: number;
         readonly region: Rectangle;
-        private static createCellRectangle(className?);
         toPlainText(): string;
         update(): void;
         private groupUpdate();

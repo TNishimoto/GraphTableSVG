@@ -9,6 +9,8 @@
         public static readonly endNodeName: string = "data-end-node";
         public static readonly defaultTextClass: string = "--default-text-class";
         public static readonly controlPointName: string = "data-control-point";
+        public static readonly markerStartName: string = "--marker-start";
+        public static readonly markerEndName: string = "--marker-end";
         
         /*
         get svgBezier(): SVGPathElement {
@@ -193,14 +195,21 @@
             this._observer.observe(this.svgGroup, option1);
 
             const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgPath = SVG.createPath(0, 0, 0, 0, p);
-            this.svgGroup.appendChild(this.svgPath);
+            this._svgPath = SVG.createPath(this.svgGroup, 0, 0, 0, 0, p);
+            //this.svgGroup.appendChild(this.svgPath);
             this._svgPath.id = `path-${this.objectID}`;
 
-            [this._svgText, this._svgTextPath] = SVG.createTextPath(null);
+            const textClass = this.svgGroup.getPropertyStyleValue(Edge.defaultTextClass);
+            [this._svgText, this._svgTextPath] = SVG.createTextPath(textClass);
             this.svgGroup.appendChild(this._svgText);
             this._svgText.appendChild(this._svgTextPath);
             this._svgTextPath.href.baseVal = `#${this._svgPath.id}`
+
+            const markerStartName = this.svgGroup.getPropertyStyleValue(Edge.markerStartName);
+            const markerEndName = this.svgGroup.getPropertyStyleValue(Edge.markerEndName);
+
+            if(markerStartName == "true") this.markerStart = GraphTableSVG.Edge.createMark();
+            if(markerEndName == "true") this.markerEnd = GraphTableSVG.Edge.createMark();
 
 
             //this._parent = graph;
@@ -458,8 +467,17 @@
         }
         /**
          * Edgeを作成します。
-         * @param graph
-         * 
+         * @param graph 辺を追加するグラフ
+         * @param option.beginVertex 開始節
+         * @param option.endVertex 終了節
+         * @param option 接続オプション
+         * @param option.incomingInsertIndex endVertexのincomingEdgeの配列に今回の辺をどの位置に挿入するか
+         * @param option.outcomingInsertIndex beginVertexのoutcomingEdgeの配列に今回の辺をどの位置に挿入するか
+         * @param option.beginConnectorType beginVertexの接続位置
+         * @param option.endConnectorType endVertexの接続位置
+         * @param option.className EdgeのsvgGroupのクラス属性名
+         * @param option.surfaceType 未使用
+         * @param option.text Edgeのテキスト
          */
         public static create(graph: Graph, option : {className?: string, surfaceType?: string, 
             beginVertex? : Vertex, endVertex? : Vertex, beginConnectorType?: ConnectorPosition, endConnectorType?: ConnectorPosition, 

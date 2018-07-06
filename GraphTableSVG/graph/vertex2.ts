@@ -15,10 +15,11 @@
          */
         constructor(graph: Graph, params: {className?: string, text? : string, x?: number, y?: number, radius? : number} ) {
             super(graph, params);
-            this._svgCircle = SVG.createCircle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
+            this._svgCircle = SVG.createCircle(this.svgGroup, this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
             if(params.radius != undefined) this._svgCircle.r.baseVal.value = params.radius;
             this.svgGroup.insertBefore(this.svgCircle, this.svgText);
-            SVG.setDefaultValue(this.svgCircle);
+            //SVG.setDefaultValue(this.svgCircle);
+            
         }
         /**
         頂点の幅を返します。
@@ -167,13 +168,13 @@
 
         constructor(graph: Graph, params : { className?: string, text?: string, x?: number, y?: number, width?:number, height? :number } = {} ) {
             super(graph, params);
-            this._svgRectangle = SVG.createRectangle(this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
+            this._svgRectangle = SVG.createRectangle(this.svgGroup, this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
             if(params.width != undefined) this.width = params.width;
             if(params.height != undefined) this.height = params.height;
             
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
 
-            SVG.setDefaultValue(this.svgRectangle);
+            //SVG.setDefaultValue(this.svgRectangle);
 
             this.svgRectangle.x.baseVal.value = -this.width / 2;
             this.svgRectangle.y.baseVal.value = -this.height / 2;

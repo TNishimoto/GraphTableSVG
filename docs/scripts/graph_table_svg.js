@@ -106,6 +106,80 @@ var GraphTableSVG;
         NodeOrder[NodeOrder["Preorder"] = 0] = "Preorder";
         NodeOrder[NodeOrder["Postorder"] = 1] = "Postorder";
     })(NodeOrder = GraphTableSVG.NodeOrder || (GraphTableSVG.NodeOrder = {}));
+    var msoDashStyle;
+    (function (msoDashStyle) {
+        msoDashStyle.msoLineDash = "msoLineDash";
+        msoDashStyle.msoLineDashDot = "msoLineDashDot";
+        msoDashStyle.msoLineDashDotDot = "msoLineDashDotDot";
+        msoDashStyle.msoLineDashStyleMixed = "msoLineDashStyleMixed";
+        msoDashStyle.msoLineLongDash = "msoLineLongDash";
+        msoDashStyle.msoLineLongDashDot = "msoLineLongDashDot";
+        msoDashStyle.msoLineRoundDot = "msoLineRoundDot";
+        msoDashStyle.msoLineSolid = "msoLineSolid";
+        msoDashStyle.msoLineSquareDot = "msoLineSquareDot";
+        msoDashStyle.dashArrayDic = {
+            "msoLineDash": "6,3",
+            "msoLineDashDot": "6,3",
+            "msoLineDashDotDot": "6,3",
+            "msoLineDashStyleMixed": "6,3",
+            "msoLineLongDash": "6,3",
+            "msoLineLongDashDot": "6,3",
+            "msoLineRoundDot": "6,3",
+            "msoLineSolid": "0",
+            "msoLineSquareDot": "6,3"
+        };
+        var lineCapDic = {
+            "msoLineDash": "butt",
+            "msoLineDashDot": "butt",
+            "msoLineDashDotDot": "butt",
+            "msoLineDashStyleMixed": "butt",
+            "msoLineLongDash": "butt",
+            "msoLineLongDashDot": "butt",
+            "msoLineRoundDot": "round",
+            "msoLineSolid": "butt",
+            "msoLineSquareDot": "butt"
+        };
+        var typeDic = {
+            "msoLineDash": msoDashStyle.msoLineDash,
+            "msoLineDashDot": msoDashStyle.msoLineDashDot,
+            "msoLineDashDotDot": msoDashStyle.msoLineDashDotDot,
+            "msoLineDashStyleMixed": msoDashStyle.msoLineDashStyleMixed,
+            "msoLineLongDash": msoDashStyle.msoLineLongDash,
+            "msoLineLongDashDot": msoDashStyle.msoLineLongDashDot,
+            "msoLineRoundDot": msoDashStyle.msoLineRoundDot,
+            "msoLineSquareDot": msoDashStyle.msoLineSquareDot
+        };
+        function toMSODashStyle(value) {
+            if (value in typeDic) {
+                return typeDic[value];
+            }
+            else {
+                return null;
+            }
+        }
+        msoDashStyle.toMSODashStyle = toMSODashStyle;
+        function setStyle(svgLine, type) {
+            if (toMSODashStyle(type) != null) {
+                svgLine.setPropertyStyleValue("stroke-dasharray", msoDashStyle.dashArrayDic[type]);
+                svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
+            }
+            else {
+            }
+        }
+        msoDashStyle.setStyle = setStyle;
+    })(msoDashStyle = GraphTableSVG.msoDashStyle || (GraphTableSVG.msoDashStyle = {}));
+    var msoDashStyleDashArray;
+    (function (msoDashStyleDashArray) {
+        msoDashStyleDashArray.msoLineDash = "6,3";
+        msoDashStyleDashArray.msoLineDashDot = "6,3";
+        msoDashStyleDashArray.msoLineDashDotDot = "6,3";
+        msoDashStyleDashArray.msoLineDashStyleMixed = "6,3";
+        msoDashStyleDashArray.msoLineLongDash = "6,3";
+        msoDashStyleDashArray.msoLineLongDashDot = "6,3";
+        msoDashStyleDashArray.msoLineRoundDot = "6,3";
+        msoDashStyleDashArray.msoLineSolid = "6,3";
+        msoDashStyleDashArray.msoLineSquareDot = "6,3";
+    })(msoDashStyleDashArray = GraphTableSVG.msoDashStyleDashArray || (GraphTableSVG.msoDashStyleDashArray = {}));
     var ConnectorPosition;
     (function (ConnectorPosition) {
         ConnectorPosition.Top = "top";
@@ -416,6 +490,16 @@ SVGElement.prototype.getPropertyStyleValue = function (name) {
     }
     else {
         return p;
+    }
+};
+SVGElement.prototype.getPropertyStyleNumberValue = function (name) {
+    var item = this;
+    var p = item.getPropertyStyleValue(name);
+    if (p != null) {
+        return Number(p);
+    }
+    else {
+        return null;
     }
 };
 SVGElement.prototype.setPropertyStyleValue = function (name, value) {
@@ -793,12 +877,18 @@ var GraphTableSVG;
             return line1;
         }
         SVG.createLine = createLine;
-        function createPath(x, y, x2, y2, className) {
+        SVG.msoDashStyleName = "--stroke-style";
+        function createPath(parent, x, y, x2, y2, className) {
             if (className === void 0) { className = null; }
             var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            parent.appendChild(line1);
             line1.setAttribute("d", "M " + x + " " + y + " M " + x2 + " " + y2);
             if (className != null) {
                 line1.setAttribute("class", className);
+                var dashStyle = line1.getPropertyStyleValue(SVG.msoDashStyleName);
+                if (dashStyle != null) {
+                    GraphTableSVG.msoDashStyle.setStyle(line1, dashStyle);
+                }
             }
             else {
                 line1.style.stroke = "black";
@@ -822,9 +912,10 @@ var GraphTableSVG;
             return _svgText;
         }
         SVG.createText = createText;
-        function createRectangle(className) {
+        function createRectangle(parent, className) {
             if (className === void 0) { className = null; }
             var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            parent.appendChild(rect);
             rect.width.baseVal.value = 30;
             rect.height.baseVal.value = 30;
             if (className == null) {
@@ -833,6 +924,17 @@ var GraphTableSVG;
             }
             else {
                 rect.setAttribute("class", className);
+                var dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if (dashStyle != null)
+                    GraphTableSVG.msoDashStyle.setStyle(rect, dashStyle);
+                var width = rect.getPropertyStyleNumberValue(SVG.defaultWidthName);
+                if (width != null) {
+                    rect.width.baseVal.value = width;
+                }
+                var height = rect.getPropertyStyleNumberValue(SVG.defaultHeightName);
+                if (height != null) {
+                    rect.height.baseVal.value = height;
+                }
             }
             return rect;
         }
@@ -855,13 +957,14 @@ var GraphTableSVG;
             style.fontFamily = null;
         }
         SVG.resetStyle = resetStyle;
-        var defaultRadiusName = "--default-radius";
-        var defaultWidthName = "--default-width";
-        var defaultHeightName = "--default-height";
+        SVG.defaultRadiusName = "--default-radius";
+        SVG.defaultWidthName = "--default-width";
+        SVG.defaultHeightName = "--default-height";
         SVG.defaultCircleRadius = 30;
-        function createCircle(className) {
+        function createCircle(parent, className) {
             if (className === void 0) { className = null; }
             var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            parent.appendChild(circle);
             circle.r.baseVal.value = SVG.defaultCircleRadius;
             if (className == null) {
                 circle.style.stroke = "black";
@@ -870,6 +973,13 @@ var GraphTableSVG;
             }
             else {
                 circle.setAttribute("class", className);
+                var radius = circle.getPropertyStyleNumberValue(SVG.defaultRadiusName);
+                if (radius != null) {
+                    circle.r.baseVal.value = radius;
+                }
+                var dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if (dashStyle != null)
+                    GraphTableSVG.msoDashStyle.setStyle(circle, dashStyle);
             }
             circle.cx.baseVal.value = 0;
             circle.cy.baseVal.value = 0;
@@ -903,10 +1013,15 @@ var GraphTableSVG;
             ;
             var path = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
             text.appendChild(path);
-            path.style.fill = "black";
-            path.style.fontSize = "14px";
-            path.style.fontWeight = "bold";
-            path.style.fontFamily = "Yu Gothic";
+            if (className == null) {
+                path.style.fill = "black";
+                path.style.fontSize = "14px";
+                path.style.fontWeight = "bold";
+                path.style.fontFamily = "Yu Gothic";
+            }
+            else {
+                path.setAttribute("class", className);
+            }
             return [text, path];
         }
         SVG.createTextPath = createTextPath;
@@ -1016,41 +1131,6 @@ var GraphTableSVG;
             });
         }
         SVG.setTextToSVGText = setTextToSVGText;
-        function setDefaultValue(item, style) {
-            if (style === void 0) { style = null; }
-            var className = item.getAttribute("class");
-            if (style != null) {
-                if (item instanceof SVGCircleElement) {
-                    var s = style.getPropertyValue(defaultRadiusName).trim();
-                    if (s.length > 0) {
-                        item.r.baseVal.value = Number(s);
-                    }
-                }
-                else {
-                    var s1 = style.getPropertyValue(defaultWidthName).trim();
-                    if (s1.length > 0) {
-                        item.width.baseVal.value = Number(s1);
-                    }
-                    var s2 = style.getPropertyValue(defaultHeightName).trim();
-                    if (s2.length > 0) {
-                        item.height.baseVal.value = Number(s2);
-                    }
-                }
-            }
-            else {
-                if (className != null) {
-                    var cssStyle = getStyleSheet(className);
-                    if (cssStyle != null) {
-                        setDefaultValue(item, cssStyle);
-                    }
-                    else {
-                        var computedStyle = getComputedStyle(item);
-                        setDefaultValue(item, computedStyle);
-                    }
-                }
-            }
-        }
-        SVG.setDefaultValue = setDefaultValue;
         function setClass(svg, className) {
             if (className === void 0) { className = null; }
             if (className == null) {
@@ -1352,13 +1432,19 @@ var GraphTableSVG;
             var option1 = { attributes: true };
             this._observer.observe(this.svgGroup, option1);
             var p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgPath = GraphTableSVG.SVG.createPath(0, 0, 0, 0, p);
-            this.svgGroup.appendChild(this.svgPath);
+            this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, p);
             this._svgPath.id = "path-" + this.objectID;
-            _a = GraphTableSVG.SVG.createTextPath(null), this._svgText = _a[0], this._svgTextPath = _a[1];
+            var textClass = this.svgGroup.getPropertyStyleValue(Edge.defaultTextClass);
+            _a = GraphTableSVG.SVG.createTextPath(textClass), this._svgText = _a[0], this._svgTextPath = _a[1];
             this.svgGroup.appendChild(this._svgText);
             this._svgText.appendChild(this._svgTextPath);
             this._svgTextPath.href.baseVal = "#" + this._svgPath.id;
+            var markerStartName = this.svgGroup.getPropertyStyleValue(Edge.markerStartName);
+            var markerEndName = this.svgGroup.getPropertyStyleValue(Edge.markerEndName);
+            if (markerStartName == "true")
+                this.markerStart = GraphTableSVG.Edge.createMark();
+            if (markerEndName == "true")
+                this.markerEnd = GraphTableSVG.Edge.createMark();
             var _a;
         }
         Object.defineProperty(Edge.prototype, "svgTextPath", {
@@ -1826,6 +1912,8 @@ var GraphTableSVG;
         Edge.endNodeName = "data-end-node";
         Edge.defaultTextClass = "--default-text-class";
         Edge.controlPointName = "data-control-point";
+        Edge.markerStartName = "--marker-start";
+        Edge.markerEndName = "--marker-end";
         Edge.markerCounter = 0;
         return Edge;
     }());
@@ -1915,9 +2003,9 @@ var GraphTableSVG;
             this._vertices = new Array(0);
             this._edges = new Array(0);
             this._roots = [];
-            if (option.className == undefined)
-                option.className = null;
-            this._svgGroup = GraphTableSVG.SVG.createGroup(option.className);
+            if (option.graphClassName == undefined)
+                option.graphClassName = null;
+            this._svgGroup = GraphTableSVG.SVG.createGroup(option.graphClassName);
             box.appendChild(this.svgGroup);
             this._svgGroup.setAttribute(Graph.typeName, "graph");
         }
@@ -2973,11 +3061,10 @@ var GraphTableSVG;
         __extends(CircleVertex, _super);
         function CircleVertex(graph, params) {
             var _this = _super.call(this, graph, params) || this;
-            _this._svgCircle = GraphTableSVG.SVG.createCircle(_this.svgGroup.getPropertyStyleValue(GraphTableSVG.Vertex.defaultSurfaceClass));
+            _this._svgCircle = GraphTableSVG.SVG.createCircle(_this.svgGroup, _this.svgGroup.getPropertyStyleValue(GraphTableSVG.Vertex.defaultSurfaceClass));
             if (params.radius != undefined)
                 _this._svgCircle.r.baseVal.value = params.radius;
             _this.svgGroup.insertBefore(_this.svgCircle, _this.svgText);
-            GraphTableSVG.SVG.setDefaultValue(_this.svgCircle);
             return _this;
         }
         Object.defineProperty(CircleVertex.prototype, "svgCircle", {
@@ -3125,13 +3212,12 @@ var GraphTableSVG;
         function RectangleVertex(graph, params) {
             if (params === void 0) { params = {}; }
             var _this = _super.call(this, graph, params) || this;
-            _this._svgRectangle = GraphTableSVG.SVG.createRectangle(_this.svgGroup.getPropertyStyleValue(GraphTableSVG.Vertex.defaultSurfaceClass));
+            _this._svgRectangle = GraphTableSVG.SVG.createRectangle(_this.svgGroup, _this.svgGroup.getPropertyStyleValue(GraphTableSVG.Vertex.defaultSurfaceClass));
             if (params.width != undefined)
                 _this.width = params.width;
             if (params.height != undefined)
                 _this.height = params.height;
             _this.svgGroup.insertBefore(_this.svgRectangle, _this.svgText);
-            GraphTableSVG.SVG.setDefaultValue(_this.svgRectangle);
             _this.svgRectangle.x.baseVal.value = -_this.width / 2;
             _this.svgRectangle.y.baseVal.value = -_this.height / 2;
             return _this;
@@ -3401,10 +3487,8 @@ var GraphTableSVG;
             this.svgGroup.setAttribute(Cell.cellYName, "" + _py);
             this.setMasterDiffX(0);
             this.setMasterDiffY(0);
-            this._svgBackground = Cell.createCellRectangle(this.defaultBackgroundClass);
+            this._svgBackground = GraphTableSVG.SVG.createRectangle(this.svgGroup, this.defaultBackgroundClass);
             this._svgText = GraphTableSVG.SVG.createText(this.defaultTextClass);
-            this.svgGroup.appendChild(this.svgBackground);
-            GraphTableSVG.SVG.setDefaultValue(this.svgBackground);
             this.svgGroup.appendChild(this.svgText);
             this.topBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.leftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
@@ -4217,19 +4301,6 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        Cell.createCellRectangle = function (className) {
-            if (className === void 0) { className = null; }
-            var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            rect.width.baseVal.value = 30;
-            rect.height.baseVal.value = 30;
-            if (className == null) {
-                rect.style.fill = "#ffffff";
-            }
-            else {
-                return GraphTableSVG.SVG.createRectangle(className);
-            }
-            return rect;
-        };
         Cell.prototype.toPlainText = function () {
             if (this.isMaster) {
                 var textContext = this.svgText.textContent != null ? this.svgText.textContent : "";
