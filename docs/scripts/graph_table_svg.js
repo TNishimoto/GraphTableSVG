@@ -101,11 +101,11 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    var NodeOrder;
-    (function (NodeOrder) {
-        NodeOrder[NodeOrder["Preorder"] = 0] = "Preorder";
-        NodeOrder[NodeOrder["Postorder"] = 1] = "Postorder";
-    })(NodeOrder = GraphTableSVG.NodeOrder || (GraphTableSVG.NodeOrder = {}));
+    var VertexOrder;
+    (function (VertexOrder) {
+        VertexOrder[VertexOrder["Preorder"] = 0] = "Preorder";
+        VertexOrder[VertexOrder["Postorder"] = 1] = "Postorder";
+    })(VertexOrder = GraphTableSVG.VertexOrder || (GraphTableSVG.VertexOrder = {}));
     var pathTextAlighnment;
     (function (pathTextAlighnment) {
         pathTextAlighnment.regularInterval = "regularInterval";
@@ -625,24 +625,27 @@ SVGPathElement.prototype.getPathLocations = function () {
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var LogicTree = (function () {
-        function LogicTree(item, children, nodeText, edgeLabel) {
-            if (item === void 0) { item = null; }
-            if (children === void 0) { children = []; }
-            if (nodeText === void 0) { nodeText = null; }
-            if (edgeLabel === void 0) { edgeLabel = null; }
-            this.item = item;
-            this.children = children;
-            this.nodeText = null;
-            this.edgeLabel = null;
-            this.nodeClass = null;
-            this.edgeClass = null;
-            this.nodeText = nodeText;
-            this.edgeLabel = edgeLabel;
+        function LogicTree(option) {
+            if (option === void 0) { option = {}; }
+            this.vertexText = null;
+            this.parentEdgeText = null;
+            this.vertexClass = null;
+            this.parentEdgeClass = null;
+            this.children = [];
+            this.item = null;
+            if (option.item != undefined)
+                this.item = option.item;
+            if (option.vertexText != undefined)
+                this.vertexText = option.vertexText;
+            if (option.parentEdgeText != undefined)
+                this.parentEdgeText = option.parentEdgeText;
+            if (option.children != undefined)
+                this.children = option.children;
         }
         LogicTree.prototype.getOrderedNodes = function (order) {
             var r = [];
             var edges = this.children;
-            if (order == GraphTableSVG.NodeOrder.Preorder) {
+            if (order == GraphTableSVG.VertexOrder.Preorder) {
                 r.push(this);
                 edges.forEach(function (v) {
                     if (v != null) {
@@ -652,7 +655,7 @@ var GraphTableSVG;
                     }
                 });
             }
-            else if (order == GraphTableSVG.NodeOrder.Postorder) {
+            else if (order == GraphTableSVG.VertexOrder.Postorder) {
                 edges.forEach(function (v) {
                     if (v != null) {
                         v.getOrderedNodes(order).forEach(function (w) {
@@ -675,7 +678,7 @@ var GraphTableSVG;
             if (right === void 0) { right = null; }
             if (nodeText === void 0) { nodeText = null; }
             if (edgeLabel === void 0) { edgeLabel = null; }
-            var _this = _super.call(this, item, [left, right], nodeText, edgeLabel) || this;
+            var _this = _super.call(this, { item: item, children: [left, right], vertexText: nodeText, parentEdgeText: edgeLabel }) || this;
             _this.item = item;
             return _this;
         }
@@ -2289,7 +2292,7 @@ var GraphTableSVG;
             }
             else {
                 var edges = node.outcomingEdges;
-                if (order == GraphTableSVG.NodeOrder.Preorder) {
+                if (order == GraphTableSVG.VertexOrder.Preorder) {
                     r.push(node);
                     edges.forEach(function (v) {
                         _this.getOrderedVertices(order, v.endVertex).forEach(function (w) {
@@ -2297,7 +2300,7 @@ var GraphTableSVG;
                         });
                     });
                 }
-                else if (order == GraphTableSVG.NodeOrder.Postorder) {
+                else if (order == GraphTableSVG.VertexOrder.Postorder) {
                     edges.forEach(function (v) {
                         _this.getOrderedVertices(order, v.endVertex).forEach(function (w) {
                             r.push(w);
@@ -2373,7 +2376,7 @@ var GraphTableSVG;
     (function (TreeArrangement) {
         function leaveBasedArrangement(forest, xInterval, yInterval) {
             var leafCounter = 0;
-            forest.getOrderedVertices(GraphTableSVG.NodeOrder.Postorder).forEach(function (v) {
+            forest.getOrderedVertices(GraphTableSVG.VertexOrder.Postorder).forEach(function (v) {
                 var x = 0;
                 var y = 0;
                 if (v.isLeaf) {
@@ -2565,13 +2568,13 @@ var GraphTableSVG;
             var _this = this;
             if (parent === void 0) { parent = null; }
             if (isLatexMode === void 0) { isLatexMode = false; }
-            var node = GraphTableSVG.Vertex.create(this, { className: logicNode.nodeClass });
-            if (logicNode.nodeText != null)
-                GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicNode.nodeText, isLatexMode);
+            var node = GraphTableSVG.Vertex.create(this, { className: logicNode.vertexClass });
+            if (logicNode.vertexText != null)
+                GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicNode.vertexText, isLatexMode);
             if (parent != null) {
-                var edge = GraphTableSVG.Edge.create(this, { className: logicNode.edgeClass });
-                if (logicNode.edgeLabel != null) {
-                    edge.svgTextPath.setTextContent(logicNode.edgeLabel, isLatexMode);
+                var edge = GraphTableSVG.Edge.create(this, { className: logicNode.parentEdgeClass });
+                if (logicNode.parentEdgeText != null) {
+                    edge.svgTextPath.setTextContent(logicNode.parentEdgeText, isLatexMode);
                     edge.pathTextAlignment = GraphTableSVG.pathTextAlighnment.regularInterval;
                 }
                 this.connect(parent, edge, node, { beginConnectorType: "bottom", endConnectorType: "top" });
@@ -2607,7 +2610,7 @@ var GraphTableSVG;
         }
         Parse.parseTree = parseTree;
         function parseTreeSub(str, pos) {
-            var node = new GraphTableSVG.LogicTree("");
+            var node = new GraphTableSVG.LogicTree({ item: "" });
             var c = str[pos];
             if (c != '(') {
                 throw Error("Parse Error");
@@ -5316,35 +5319,39 @@ var GraphTableSVG;
                         }
                         if (cellInfo.topBorderClass != null) {
                             var topCellInfo = y > 0 ? table.cells[y - 1][x] : null;
-                            if (topCellInfo != null && topCellInfo.bottomBorderClass != cellInfo.topBorderClass) {
-                                throw Error("Forbidden table[" + y + "][" + x + "].topBorderClass != table[" + (y - 1) + "][" + x + "].bottomBorderClass");
+                            var borderClass = cellInfo.topBorderClass;
+                            if (topCellInfo != null && topCellInfo.bottomBorderClass != null) {
+                                borderClass = topCellInfo.bottomBorderClass;
                             }
                             GraphTableSVG.SVG.resetStyle(cell.topBorder.style);
-                            cell.topBorder.setAttribute("class", cellInfo.topBorderClass);
+                            cell.topBorder.setAttribute("class", borderClass);
                         }
                         if (cellInfo.leftBorderClass != null) {
                             var leftCellInfo = x > 0 ? table.cells[y][x - 1] : null;
-                            if (leftCellInfo != null && leftCellInfo.rightBorderClass != cellInfo.leftBorderClass) {
-                                throw Error("Forbidden table[" + y + "][" + x + "].leftBorderClass != table[" + y + "][" + (x - 1) + "].rightBorderClass");
+                            var borderClass = cellInfo.leftBorderClass;
+                            if (leftCellInfo != null && leftCellInfo.rightBorderClass != null) {
+                                borderClass = leftCellInfo.rightBorderClass;
                             }
                             GraphTableSVG.SVG.resetStyle(cell.leftBorder.style);
-                            cell.leftBorder.setAttribute("class", cellInfo.leftBorderClass);
+                            cell.leftBorder.setAttribute("class", borderClass);
                         }
                         if (cellInfo.rightBorderClass != null) {
                             var rightCellInfo = x + 1 < table.columnCount ? table.cells[y][x + 1] : null;
-                            if (rightCellInfo != null && rightCellInfo.leftBorderClass != cellInfo.rightBorderClass) {
-                                throw Error("Forbidden table[" + y + "][" + x + "].rightBorderClass != table[" + y + "][" + (x + 1) + "].leftBorderClass");
+                            var borderClass = cellInfo.rightBorderClass;
+                            if (rightCellInfo != null && rightCellInfo.leftBorderClass != null) {
+                                borderClass = rightCellInfo.leftBorderClass;
                             }
                             GraphTableSVG.SVG.resetStyle(cell.rightBorder.style);
-                            cell.rightBorder.setAttribute("class", cellInfo.rightBorderClass);
+                            cell.rightBorder.setAttribute("class", borderClass);
                         }
                         if (cellInfo.bottomBorderClass != null) {
                             var bottomCellInfo = y + 1 < table.rowCount ? table.cells[y + 1][x] : null;
-                            if (bottomCellInfo != null && bottomCellInfo.topBorderClass != cellInfo.bottomBorderClass) {
-                                throw Error("Forbidden table[" + y + "][" + x + "].bottomBorderClass != table[" + (y + 1) + "][" + x + "].topBorderClass");
+                            var borderClass = cellInfo.bottomBorderClass;
+                            if (bottomCellInfo != null && bottomCellInfo.topBorderClass != null) {
+                                borderClass = bottomCellInfo.topBorderClass;
                             }
                             GraphTableSVG.SVG.resetStyle(cell.bottomBorder.style);
-                            cell.bottomBorder.setAttribute("class", cellInfo.bottomBorderClass);
+                            cell.bottomBorder.setAttribute("class", borderClass);
                         }
                     }
                 }

@@ -335,37 +335,59 @@ namespace GraphTableSVG {
                         }
                         if (cellInfo.topBorderClass != null) {
                             const topCellInfo = y > 0 ? table.cells[y - 1][x] : null;
-                            if (topCellInfo != null && topCellInfo.bottomBorderClass != cellInfo.topBorderClass) {
-                                throw Error(`Forbidden table[${y}][${x}].topBorderClass != table[${y-1}][${x}].bottomBorderClass`);
+                            let borderClass = cellInfo.topBorderClass;
+                            if(topCellInfo != null && topCellInfo.bottomBorderClass != null){
+                                borderClass = topCellInfo.bottomBorderClass;
                             }
+                            //if (topCellInfo != null && topCellInfo.bottomBorderClass != cellInfo.topBorderClass) {
+                            //    throw Error(`Forbidden table[${y}][${x}].topBorderClass != table[${y-1}][${x}].bottomBorderClass`);
+                            //}
 
                             GraphTableSVG.SVG.resetStyle(cell.topBorder.style);
-                            cell.topBorder.setAttribute("class", cellInfo.topBorderClass);
+                            cell.topBorder.setAttribute("class", borderClass);
                         }
                         if (cellInfo.leftBorderClass != null) {
                             const leftCellInfo = x > 0 ? table.cells[y][x - 1] : null;
+
+                            let borderClass = cellInfo.leftBorderClass;
+                            if(leftCellInfo != null && leftCellInfo.rightBorderClass != null){
+                                borderClass = leftCellInfo.rightBorderClass;
+                            }
+                            /*
                             if (leftCellInfo != null && leftCellInfo.rightBorderClass != cellInfo.leftBorderClass) {
                                 throw Error(`Forbidden table[${y}][${x}].leftBorderClass != table[${y}][${x-1}].rightBorderClass`);
                             }
-
+                            */
                             GraphTableSVG.SVG.resetStyle(cell.leftBorder.style);
-                            cell.leftBorder.setAttribute("class", cellInfo.leftBorderClass);
+                            cell.leftBorder.setAttribute("class", borderClass);
                         }
                         if (cellInfo.rightBorderClass != null) {
                             const rightCellInfo = x + 1 < table.columnCount ? table.cells[y][x + 1] : null;
+                            let borderClass = cellInfo.rightBorderClass;
+                            if(rightCellInfo != null && rightCellInfo.leftBorderClass != null){
+                                borderClass = rightCellInfo.leftBorderClass;
+                            }
+                            /*
                             if (rightCellInfo != null && rightCellInfo.leftBorderClass != cellInfo.rightBorderClass) {
                                 throw Error(`Forbidden table[${y}][${x}].rightBorderClass != table[${y}][${x + 1}].leftBorderClass`);
                             }
+                            */
                             GraphTableSVG.SVG.resetStyle(cell.rightBorder.style);
-                            cell.rightBorder.setAttribute("class", cellInfo.rightBorderClass);
+                            cell.rightBorder.setAttribute("class", borderClass);
                         }
                         if (cellInfo.bottomBorderClass != null) {
                             const bottomCellInfo = y + 1 < table.rowCount ? table.cells[y + 1][x] : null;
+                            let borderClass = cellInfo.bottomBorderClass;
+                            if(bottomCellInfo != null && bottomCellInfo.topBorderClass != null){
+                                borderClass = bottomCellInfo.topBorderClass;
+                            }
+                            /*
                             if (bottomCellInfo != null && bottomCellInfo.topBorderClass != cellInfo.bottomBorderClass) {
                                 throw Error(`Forbidden table[${y}][${x}].bottomBorderClass != table[${y+1}][${x}].topBorderClass`);
                             }
+                            */
                             GraphTableSVG.SVG.resetStyle(cell.bottomBorder.style);
-                            cell.bottomBorder.setAttribute("class", cellInfo.bottomBorderClass);
+                            cell.bottomBorder.setAttribute("class", borderClass);
                         }
 
                     }

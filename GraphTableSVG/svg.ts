@@ -36,7 +36,7 @@ namespace GraphTableSVG {
              * @param y2
              * @param className
              */
-        export function createPath(parent : SVGElement, x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
+        export function createPath(parent : SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
             const line1 = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             parent.appendChild(line1);
             line1.setAttribute("d", `M ${x} ${y} M ${x2} ${y2}`);

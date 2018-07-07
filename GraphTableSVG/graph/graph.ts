@@ -285,7 +285,7 @@
          * @param order
          * @param node
          */
-        public getOrderedVertices(order: NodeOrder, node: Vertex | null = null): Vertex[] {
+        public getOrderedVertices(order: VertexOrder, node: Vertex | null = null): Vertex[] {
             const r: Vertex[] = [];
             if (node == null) {
                 this.roots.forEach((v) => {
@@ -295,7 +295,7 @@
                 });
             } else {
                 const edges = node.outcomingEdges;
-                if (order == NodeOrder.Preorder) {
+                if (order == VertexOrder.Preorder) {
                     r.push(node);
                     edges.forEach((v) => {
                         this.getOrderedVertices(order, v.endVertex).forEach((w) => {
@@ -303,7 +303,7 @@
                         });
                     });
 
-                } else if (order == NodeOrder.Postorder) {
+                } else if (order == VertexOrder.Postorder) {
                     edges.forEach((v) => {
                         this.getOrderedVertices(order, v.endVertex).forEach((w) => {
                             r.push(w);

@@ -3,7 +3,7 @@
     /**
     ノードの並び順です。
     */
-    export enum NodeOrder {
+    export enum VertexOrder {
         Preorder, Postorder
     }
     /*

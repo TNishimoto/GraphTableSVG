@@ -15,7 +15,7 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    enum NodeOrder {
+    enum VertexOrder {
         Preorder = 0,
         Postorder = 1,
     }
@@ -128,14 +128,19 @@ interface SVGPathElement {
 }
 declare namespace GraphTableSVG {
     class LogicTree {
-        item: any;
+        vertexText: string | null;
+        parentEdgeText: string | null;
+        vertexClass: string | null;
+        parentEdgeClass: string | null;
         children: (LogicTree | null)[];
-        nodeText: string | null;
-        edgeLabel: string | null;
-        nodeClass: string | null;
-        edgeClass: string | null;
-        constructor(item?: any, children?: (LogicTree | null)[], nodeText?: string | null, edgeLabel?: string | null);
-        getOrderedNodes(order: NodeOrder): LogicTree[];
+        item: any;
+        constructor(option?: {
+            item?: any;
+            children?: (LogicTree | null)[];
+            vertexText?: string;
+            parentEdgeText?: string;
+        });
+        getOrderedNodes(order: VertexOrder): LogicTree[];
     }
     class BinaryLogicTree extends LogicTree {
         item: any;
@@ -186,7 +191,7 @@ declare namespace GraphTableSVG {
     namespace SVG {
         function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
         const msoDashStyleName = "--stroke-style";
-        function createPath(parent: SVGElement, x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
+        function createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
         function createText(className?: string | null): SVGTextElement;
         function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
         function createGroup(className?: string | null): SVGGElement;
@@ -371,7 +376,7 @@ declare namespace GraphTableSVG {
             beginConnectorType?: GraphTableSVG.ConnectorPosition;
             endConnectorType?: GraphTableSVG.ConnectorPosition;
         }): void;
-        getOrderedVertices(order: NodeOrder, node?: Vertex | null): Vertex[];
+        getOrderedVertices(order: VertexOrder, node?: Vertex | null): Vertex[];
         save(): void;
         static setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null): void;
         createVBACode(id: number): string[];

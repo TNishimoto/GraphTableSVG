@@ -6,7 +6,7 @@
     export namespace TreeArrangement {
         export function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void {
             let leafCounter = 0;
-            forest.getOrderedVertices(NodeOrder.Postorder).forEach((v) => {
+            forest.getOrderedVertices(VertexOrder.Postorder).forEach((v) => {
                 let x = 0;
                 let y = 0;
                 if (v.isLeaf) {

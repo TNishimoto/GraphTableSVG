@@ -242,23 +242,21 @@ edge1.markerStartも同様に開始節の方向に矢印を設定できる。
 </comment>
 </xarticle>
 
-<xarticle title="Graph Sample 5 : Logic Tree" >
-</xarticle>
-
-<xarticle title="Graph Sample 5 : Tree" >
-</xarticle>
-
-<xarticle title="Graph Sample 5 : Alignment" >
-</xarticle>
-
-
-<xarticle title="Graph Sample 5 : 破線" >
+<xarticle title="Graph Sample 5 : 破線とAlignment" >
 <load path="graph/sample_graph_dash_style.js" />
 <load path="images/graph_dash.png" />
 <comment>
 <a href="graph/sample_graph_dash_style.html">実行結果</a>
 </comment>
 </xarticle>
+
+<xarticle title="Graph Sample 5 : Logic Tree" >
+</xarticle>
+
+<xarticle title="Graph Sample 5 : Tree" >
+</xarticle>
+
+
 <xarticle title="Graph Sample 6 : Powerpoint" >
 </xarticle>
 

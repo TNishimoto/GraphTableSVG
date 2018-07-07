@@ -28,13 +28,13 @@ namespace GraphTableSVG {
 
         private createChild<T>(parent: Vertex | null = null, logicNode: LogicTree, isLatexMode: boolean = false) : Vertex {    
 
-            const node = GraphTableSVG.Vertex.create(this, {className : logicNode.nodeClass});
+            const node = GraphTableSVG.Vertex.create(this, {className : logicNode.vertexClass});
             //node.svgText.setTextContent(displayFunction(tree.item), isLatexMode);
-            if (logicNode.nodeText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicNode.nodeText, isLatexMode);
+            if (logicNode.vertexText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicNode.vertexText, isLatexMode);
             if (parent != null) {
-                const edge = GraphTableSVG.Edge.create(this, {className : logicNode.edgeClass});
-                if (logicNode.edgeLabel != null) {
-                    edge.svgTextPath.setTextContent(logicNode.edgeLabel, isLatexMode);
+                const edge = GraphTableSVG.Edge.create(this, {className : logicNode.parentEdgeClass});
+                if (logicNode.parentEdgeText != null) {
+                    edge.svgTextPath.setTextContent(logicNode.parentEdgeText, isLatexMode);
                     edge.pathTextAlignment = pathTextAlighnment.regularInterval;
                     //edge.svgText.setTextContent(tree.edgeLabel, isLatexMode);
                 }
@@ -73,7 +73,7 @@ namespace GraphTableSVG {
         }
         function parseTreeSub(str : string, pos : number) : [GraphTableSVG.LogicTree, number] {
             
-            const node : GraphTableSVG.LogicTree | null = new GraphTableSVG.LogicTree("");
+            const node : GraphTableSVG.LogicTree | null = new GraphTableSVG.LogicTree({ item : "" });
             const c = str[pos];
             if(c != '('){
                 throw Error("Parse Error");

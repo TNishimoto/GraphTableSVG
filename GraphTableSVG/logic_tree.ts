@@ -7,19 +7,23 @@
     */
 
     export class LogicTree {
-        public nodeText: string | null = null
-        public edgeLabel: string | null = null
-        public nodeClass: string | null = null
-        public edgeClass: string | null = null
-
-        constructor(public item: any = null, public children: (LogicTree | null)[] = [], nodeText: string | null = null, edgeLabel: string | null = null) {
-            this.nodeText = nodeText;
-            this.edgeLabel = edgeLabel;
+        public vertexText: string | null = null
+        public parentEdgeText: string | null = null
+        public vertexClass: string | null = null
+        public parentEdgeClass: string | null = null
+        public children : (LogicTree | null)[] = [];
+        public item: any = null;
+        constructor(option : {item?: any, children?: (LogicTree | null)[], 
+            vertexText?: string, parentEdgeText?: string} = {} ) {
+            if(option.item != undefined) this.item = option.item;
+            if(option.vertexText != undefined) this.vertexText = option.vertexText;
+            if(option.parentEdgeText != undefined) this.parentEdgeText = option.parentEdgeText;
+            if(option.children != undefined) this.children = option.children;
         }
-        public getOrderedNodes(order: NodeOrder): LogicTree[] {
+        public getOrderedNodes(order: VertexOrder): LogicTree[] {
             const r: LogicTree[] = [];
             const edges = this.children;
-            if (order == NodeOrder.Preorder) {
+            if (order == VertexOrder.Preorder) {
                 r.push(this);
                 edges.forEach((v) => {
                     if (v != null) {
@@ -29,7 +33,7 @@
                     }
                 });
 
-            } else if (order == NodeOrder.Postorder) {
+            } else if (order == VertexOrder.Postorder) {
                 edges.forEach((v) => {
                     if (v != null) {
                         v.getOrderedNodes(order).forEach((w) => {
@@ -67,7 +71,7 @@
             this.children[1] = value;
         }
         constructor(public item: any = null, left: BinaryLogicTree | null = null, right: BinaryLogicTree | null = null, nodeText: string | null = null, edgeLabel: string | null = null) {
-            super(item, [left, right], nodeText, edgeLabel);
+            super({item : item, children : [left, right], vertexText : nodeText, parentEdgeText : edgeLabel });
         }
         /*
         public toLogicTree(): LogicTree<T> {
