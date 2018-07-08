@@ -392,7 +392,7 @@ declare namespace GraphTableSVG {
         }): void;
         createdNodeCallback: (node: Vertex) => void;
         private _relocateFunction;
-        relocateFunction: (Tree: Graph) => void;
+        relocateFunction: ((Tree: Graph) => void) | null;
         relocate(): void;
     }
 }

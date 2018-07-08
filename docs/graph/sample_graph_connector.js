@@ -5,9 +5,9 @@ window.onload = () => {
 
     const connectorTypes = ["top", "topleft", "left", "bottomleft", "bottom", "bottomright", "right", "topright", "auto"];
     for(let i=0;i<9;i++){
-        const nodeL = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", text:`${connectorTypes[i]}`, x : 100, y : (i+1) * 100, width : 40, height : 40});
-        const nodeC = GraphTableSVG.Vertex.create(graph,{surfaceType: "circle", text:`${connectorTypes[i]}`, x : 200, y : (i+1) * 100, radius : 20});
-        const nodeR = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", text:`${connectorTypes[i]}`, x : 300, y : (i+1) * 100, width : 40, height : 40});
+        const nodeL = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", text:`${connectorTypes[i]}`, x : 100, y : (i+1) * 50, width : 40, height : 40});
+        const nodeC = GraphTableSVG.Vertex.create(graph,{surfaceType: "circle", text:`${connectorTypes[i]}`, x : 200, y : (i+1) * 50, radius : 20});
+        const nodeR = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", text:`${connectorTypes[i]}`, x : 300, y : (i+1) * 50, width : 40, height : 40});
 
         const edgeL = GraphTableSVG.Edge.create(graph);
         edgeL.svgPath.style.stroke="red";

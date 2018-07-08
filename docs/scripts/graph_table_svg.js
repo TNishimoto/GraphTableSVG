@@ -1918,7 +1918,7 @@ var GraphTableSVG;
                     var beg = indexDic[this.beginVertex.objectID];
                     var end = indexDic[this.endVertex.objectID];
                     var begType = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
-                    var endType = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
+                    var endType = GraphTableSVG.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
                     subline.push(" Call EditConnector(edges(" + i + ").ConnectorFormat, nodes(" + beg + "), nodes(" + end + "), " + begType + ", " + endType + ")");
                 }
                 var lineType = GraphTableSVG.msoDashStyle.getLineType(this.svgPath);
@@ -2068,7 +2068,7 @@ var GraphTableSVG;
             this._edges = new Array(0);
             this._roots = [];
             this.createdNodeCallback = function (node) { };
-            this._relocateFunction = function () { };
+            this._relocateFunction = null;
             if (option.graphClassName == undefined)
                 option.graphClassName = null;
             this._svgGroup = GraphTableSVG.SVG.createGroup(option.graphClassName);
@@ -2398,7 +2398,12 @@ var GraphTableSVG;
                         _this.createChildFromLogicTree(null, v, option);
                     }
                 });
-                this.relocate();
+                if (this.relocateFunction == null) {
+                    this.relocateFunction = GraphTableSVG.TreeArrangement.alignVerticeByChildren;
+                }
+                else {
+                    this.relocate();
+                }
             }
             else {
                 this.constructFromLogicTree([roots], option);
@@ -2454,7 +2459,8 @@ var GraphTableSVG;
             configurable: true
         });
         Graph.prototype.relocate = function () {
-            this._relocateFunction(this);
+            if (this._relocateFunction != null)
+                this._relocateFunction(this);
         };
         Graph.idCounter = 0;
         Graph.defaultVertexClass = "--default-vertex-class";

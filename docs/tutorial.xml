@@ -208,6 +208,10 @@ GraphTableSVG.Edge.createでVertexと同じように辺を作成することが�
 </p>
 </comment>
 <load path="images/graph1.png" />
+<load path="images/graph_edge2.png" />
+<comment>
+<p><a href="graph/sample_graph_edge2.html">実行結果</a></p>
+</comment>
 </xarticle>
 
 <xarticle title="Graph Sample 3 : Vertex and Edge" >
@@ -262,6 +266,7 @@ edge1.markerStartも同様に開始節の方向に矢印を設定できる。
 
 <xarticle title="Graph Sample 5 : Logic Tree" >
 <load path="graph/sample_graph_logictree.js" />
+<load path="images/graph_logictree.png" />
 <comment>
 <a href="graph/sample_graph_logictree.html">実行結果</a>
 </comment>

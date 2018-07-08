@@ -560,7 +560,7 @@
                     const beg = indexDic[this.beginVertex.objectID];
                     const end = indexDic[this.endVertex.objectID];
                     const begType: number = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
-                    const endType: number = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
+                    const endType: number = GraphTableSVG.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
                     subline.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
                 }
                 const lineType = msoDashStyle.getLineType(this.svgPath);

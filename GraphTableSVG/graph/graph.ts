@@ -403,12 +403,17 @@
                         this.createChildFromLogicTree(null, v, option);
                     }
                 });
-                this.relocate();
+                if(this.relocateFunction == null){ this.relocateFunction = GraphTableSVG.TreeArrangement.alignVerticeByChildren;
+                }else{
+                    this.relocate();
+                }
+
             } else {
                 this.constructFromLogicTree([roots], option);
             }
             if (option.x != undefined) this.svgGroup.setX(option.x);
             if (option.y != undefined) this.svgGroup.setY(option.y);
+
             //this.roots = roots;
         }
         /**
@@ -455,17 +460,17 @@
         }
 
         public createdNodeCallback = (node: GraphTableSVG.Vertex) => { }
-        private _relocateFunction: (Tree: Graph) => void = ()=>{};
-        public get relocateFunction(): (Tree: Graph) => void {
+        private _relocateFunction: ((Tree: Graph) => void) | null = null;
+        public get relocateFunction(): ((Tree: Graph) => void) | null {
             return this._relocateFunction;
         }
-        public set relocateFunction(func: (Tree: Graph) => void) {
+        public set relocateFunction(func: ((Tree: Graph) => void) | null) {
             this._relocateFunction = func;
             this.relocate();
         }
 
         public relocate() {
-            this._relocateFunction(this);
+            if(this._relocateFunction != null)this._relocateFunction(this);
         }
 
     }

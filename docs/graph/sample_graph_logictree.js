@@ -3,7 +3,7 @@ window.onload = () => {
 
     const node1 = new GraphTableSVG.LogicTree({vertexText : "1"});
     const node2 = new GraphTableSVG.LogicTree({vertexText : "2"});
-    const node3 = new GraphTableSVG.LogicTree({vertexText : "3"});
+    const node3 = new GraphTableSVG.LogicTree({vertexText : "3", parentEdgeText : "ho"});
     const node4 = new GraphTableSVG.LogicTree({vertexText : "4"});
     const node5 = new GraphTableSVG.LogicTree({vertexText : "5"});
     const node6 = new GraphTableSVG.LogicTree({vertexText : "6"});
@@ -16,6 +16,6 @@ window.onload = () => {
 
     const box = document.getElementById('svgbox');
     graph = new GraphTableSVG.Tree(box);
-    graph.constructFromLogicTree(node1, {x : 150, y : 50});
+    graph.constructFromLogicTree(node1, {x : 50, y : 50});
     
 };
