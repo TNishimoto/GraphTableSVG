@@ -4,6 +4,12 @@
     }
 
     export namespace TreeArrangement {
+        /**
+         * 葉が一列に並ぶようにVertexを整列します。
+         * @param forest 
+         * @param xInterval 
+         * @param yInterval 
+         */
         export function alignVerticeByLeaveSub(forest: Graph, xInterval: number, yInterval: number): void {
             let leafCounter = 0;
             forest.getOrderedVertices(VertexOrder.Postorder).forEach((v) => {
@@ -79,7 +85,10 @@
             }
         }
 
-
+        /**
+         * 子Vertexが一列に並ぶようにグラフ内のVertexを整列します。
+         * @param graph 
+         */
         export function alignVerticeByChildren(graph: GraphTableSVG.Graph): void {
             const [xi, yi] = getXYIntervals(graph);
 
@@ -93,7 +102,12 @@
             }
             alignTrees(graph);
         }
-
+        /**
+         * 子Vertexが一列に並ぶようにグラフ内のVertexを整列します。
+         * @param tree 
+         * @param xInterval 
+         * @param yInterval 
+         */
         function alignVerticeByChildrenSub(tree: VirtualSubTree, xInterval: number, yInterval: number): void {
             tree.subTreeRoot.x = 0;
             tree.subTreeRoot.y = 0;
@@ -129,6 +143,10 @@
             }
 
         }
+        /**
+         * グラフ内のVertexからVertex間の水平間隔と垂直間隔を自動で算出します。
+         * @param graph 
+         */
         function computeAutoXYIntervals(graph : GraphTableSVG.Graph) : [number, number]{
             let yMaximalInterval = 30;
             let xMaximalInterval = 30;
@@ -138,12 +156,20 @@
             })
             return [xMaximalInterval * 2, yMaximalInterval * 2];
         }
+        /**
+         * グラフに設定されているVertex間の水平間隔と垂直間隔を算出します。
+         * @param graph 
+         */
         function getXYIntervals(graph : GraphTableSVG.Graph) : [number, number]{
             const [xMaximalInterval, yMaximalInterval] = computeAutoXYIntervals(graph);
             const xi = graph.vertexXInterval != null ? graph.vertexXInterval : xMaximalInterval;
             const yi = graph.vertexYInterval != null ? graph.vertexYInterval : yMaximalInterval;
             return [xi, yi];
         }
+        /**
+         * グラフ内の森を並べます。最初の木が内接する四角形の左上の座標は[0,0]です。
+         * @param graph 
+         */
         function alignTrees(graph: GraphTableSVG.Graph){
             let x = 0;
             graph.roots.forEach((v)=>{
@@ -152,6 +178,10 @@
                 x += region.width;
             });
         }
+        /**
+         * 葉が一列に並ぶようにVertexを整列します。
+         * @param graph 
+         */
         export function alignVerticeByLeave(graph: GraphTableSVG.Graph): void {
             graph.vertices.forEach((v) => { v.x = 0; v.y = 0 });
             const [xi, yi] = getXYIntervals(graph);

@@ -357,7 +357,10 @@
             text.setAttribute('x', x.toString());
         }
 
-
+        /**
+         * このグラフを作成するVBACodeを作成します。
+         * @param id 
+         */
         public createVBACode(id: number): string[] {
             const dic: { [key: string]: number; } = {};
 

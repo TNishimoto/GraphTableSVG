@@ -9,6 +9,8 @@
 <body>
 
 <table_of_contents />
+<xarticle title="はじめに" >
+</xarticle>
 <xarticle title="Table Sample 1 : hello world" >
 <load path="table/sample_table_hello.js" />
 <load path="table/sample_table_hello.html" />
