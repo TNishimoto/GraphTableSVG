@@ -42,6 +42,7 @@ declare namespace GraphTableSVG {
         };
         function toMSODashStyle(value: string): msoDashStyle | null;
         function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void;
+        function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElement): msoDashStyle;
     }
     type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
     namespace ConnectorPosition {
@@ -380,27 +381,34 @@ declare namespace GraphTableSVG {
         save(): void;
         static setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null): void;
         createVBACode(id: number): string[];
+        constructFromLogicTree(roots: LogicTree[] | LogicTree, option?: {
+            x?: number;
+            y?: number;
+            isLatexMode?: boolean;
+        }): void;
+        private createChildFromLogicTree<T>(parent, logicVertex, option?);
+        appendChild(parent: Vertex, child: Vertex, option?: {
+            insertIndex?: number;
+        }): void;
+        createdNodeCallback: (node: Vertex) => void;
+        private _relocateFunction;
+        relocateFunction: (Tree: Graph) => void;
+        relocate(): void;
     }
 }
 declare namespace GraphTableSVG {
     namespace GraphArrangement {
     }
     namespace TreeArrangement {
-        function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void;
+        function alignVerticeByLeaveSub(forest: Graph, xInterval: number, yInterval: number): void;
         function reverse(graph: Graph, isX: boolean, isY: boolean): void;
-        function standardTreeArrangement(graph: GraphTableSVG.Graph): void;
+        function alignVerticeByChildren(graph: GraphTableSVG.Graph): void;
         function standardTreeWidthArrangement(graph: GraphTableSVG.Graph): void;
-        function Arrangement1(graph: GraphTableSVG.Graph): void;
+        function alignVerticeByLeave(graph: GraphTableSVG.Graph): void;
     }
 }
 declare namespace GraphTableSVG {
     class Tree extends Graph {
-        constructFromLogicTree(roots: LogicTree[] | LogicTree, isLatexMode?: boolean): void;
-        private createChild<T>(parent, logicNode, isLatexMode?);
-        createdNodeCallback: (node: Vertex) => void;
-        relocateFunction: (Tree: Graph) => void;
-        relocate(): void;
-        appendChild(parent: Vertex, str: string, insertIndex: number): void;
     }
     namespace Parse {
         function parseTree(str: string): GraphTableSVG.LogicTree;
@@ -470,6 +478,7 @@ declare namespace GraphTableSVG {
             radius?: number;
             width?: number;
             height?: number;
+            isRoot?: boolean;
         }): GraphTableSVG.Vertex;
         insertOutcomingEdge(edge: Edge, insertIndex: number): void;
         removeOutcomingEdge(edge: Edge): void;
@@ -802,7 +811,7 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class SVGToVBA {
-        static create(items: (Graph | Table | SVGPathElement | SVGTextElement)[]): string;
+        static create(items: (Graph | Table | SVGPathElement | SVGTextElement)[] | (Graph | Table | SVGPathElement | SVGTextElement)): string;
         private static createVBACodeOfSVGPath(path, id);
         private static createVBACodeOfTextElement(element, id);
         static cellFunctionCode: string;

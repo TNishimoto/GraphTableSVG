@@ -1,14 +1,14 @@
 ﻿namespace GraphTableSVG {
-    
+
     /**
     グラフを表します。
     */
     export class Graph {
         public static idCounter: number = 0;
         public static readonly defaultVertexClass: string = "--default-vertex-class";
-        public static readonly defaultEdgeClass: string = "--default-edge-class";        
+        public static readonly defaultEdgeClass: string = "--default-edge-class";
         public static readonly vertexXIntervalName: string = "--vertex-x-interval";
-        public static readonly vertexYIntervalName: string = "--vertex-y-interval";        
+        public static readonly vertexYIntervalName: string = "--vertex-y-interval";
 
         public static readonly objectIDName: string = "data-objectID";
         public static readonly typeName: string = "data-type";
@@ -17,8 +17,8 @@
         protected _edges: Edge[] = new Array(0);
         protected _svgGroup: SVGGElement;
         protected _roots: Vertex[] = [];
-        constructor(box: HTMLElement, option : {graphClassName?: string} = {}) {
-            if(option.graphClassName ==undefined) option.graphClassName = null;
+        constructor(box: HTMLElement, option: { graphClassName?: string } = {}) {
+            if (option.graphClassName == undefined) option.graphClassName = null;
             this._svgGroup = GraphTableSVG.SVG.createGroup(option.graphClassName);
             box.appendChild(this.svgGroup);
 
@@ -37,16 +37,16 @@
             this.updateEdges();
         }
 
-        public get x() : number {
+        public get x(): number {
             return this.svgGroup.getX();
         }
-        public set x(value :number) {
+        public set x(value: number) {
             this.svgGroup.setX(value);
         }
-        public get y() : number {
+        public get y(): number {
             return this.svgGroup.getY();
         }
-        public set y(value :number) {
+        public set y(value: number) {
             this.svgGroup.setY(value);
         }
 
@@ -141,12 +141,12 @@
         get edges(): Edge[] {
             return this._edges;
         }
-        
+
         /**
          * 頂点もしくは辺をグラフに追加します。
          * @param item
          */
-        public add(item: Vertex | Edge) : void {
+        public add(item: Vertex | Edge): void {
             if (item instanceof Vertex) {
                 const i = this._vertices.indexOf(item);
                 if (i == -1 && item.graph == this) {
@@ -157,7 +157,7 @@
                 }
 
             } else {
-                
+
                 const i = this._edges.indexOf(item);
                 if (i == -1 && item.graph == this) {
                     this._edges.push(item);
@@ -188,8 +188,8 @@
                 }
             }
         }
-        
-        
+
+
         public clear() {
             while (this.edges.length > 0) {
                 this.remove(this.edges[0]);
@@ -199,7 +199,7 @@
             }
             this._roots = [];
         }
-        
+
         removeGraph(svg: HTMLElement) {
             if (svg.contains(this.svgGroup)) {
                 svg.removeChild(this.svgGroup);
@@ -225,7 +225,7 @@
                     return null;
                 }
             }
-            
+
         }
 
         /**
@@ -251,9 +251,11 @@
          * @param option.beginConnectorType beginVertexの接続位置
          * @param option.endConnectorType endVertexの接続位置
          */
-        public connect(beginVertex: Vertex, edge: Edge, endVertex: Vertex, 
-            option : {outcomingInsertIndex?: number, incomingInsertIndex?: number,
-                beginConnectorType?: GraphTableSVG.ConnectorPosition, endConnectorType?: GraphTableSVG.ConnectorPosition} = {}) {
+        public connect(beginVertex: Vertex, edge: Edge, endVertex: Vertex,
+            option: {
+                outcomingInsertIndex?: number, incomingInsertIndex?: number,
+                beginConnectorType?: GraphTableSVG.ConnectorPosition, endConnectorType?: GraphTableSVG.ConnectorPosition
+            } = {}) {
             const oIndex = option.outcomingInsertIndex == undefined ? beginVertex.outcomingEdges.length : option.outcomingInsertIndex;
             const iIndex = option.incomingInsertIndex == undefined ? endVertex.incomingEdges.length : option.incomingInsertIndex;
             //this._connect(node1, edge, node2);
@@ -271,7 +273,7 @@
                 }
             }
             if (option.beginConnectorType != undefined) edge.beginConnectorType = option.beginConnectorType;
-            if (option.endConnectorType != undefined)edge.endConnectorType = option.endConnectorType;
+            if (option.endConnectorType != undefined) edge.endConnectorType = option.endConnectorType;
             /*
             if (!(node1.id in this.outcomingEdgesDic)) {
                 this.outcomingEdgesDic[node1.id] = [];
@@ -354,7 +356,7 @@
             text.setAttribute('y', y.toString());
             text.setAttribute('x', x.toString());
         }
-        
+
 
         public createVBACode(id: number): string[] {
             const dic: { [key: string]: number; } = {};
@@ -386,10 +388,90 @@
             this.edges.forEach((v) => v.setStyleForPNG());
         }
         */
+
+        /**
+        * LogicTreeから木を構築します。
+        * @param roots 
+        * @param isLatexMode 
+        */
+        public constructFromLogicTree(roots: LogicTree[] | LogicTree, option: { x?: number, y?: number, isLatexMode?: boolean } = {}) {
+            if (option.isLatexMode == undefined) option.isLatexMode = false;
+            if (roots instanceof Array) {
+                this.clear();
+                roots.forEach((v) => {
+                    if (v != null) {
+                        this.createChildFromLogicTree(null, v, option);
+                    }
+                });
+                this.relocate();
+            } else {
+                this.constructFromLogicTree([roots], option);
+            }
+            if (option.x != undefined) this.svgGroup.setX(option.x);
+            if (option.y != undefined) this.svgGroup.setY(option.y);
+            //this.roots = roots;
+        }
+        /**
+         * 入力のVertexを親として、入力のLogicTreeを子とした部分木を作成します。
+         * @param parent 親にするVertex
+         * @param logicVertex 子にするLogicTree
+         * @param option 作成オプション
+         * @returns logicVertexを表すVertex
+         */
+        private createChildFromLogicTree<T>(parent: Vertex | null = null, logicVertex: LogicTree, option: { isLatexMode?: boolean } = {}): Vertex {
+            if (option.isLatexMode == undefined) option.isLatexMode = false;
+
+            const node = GraphTableSVG.Vertex.create(this, { className: logicVertex.vertexClass });
+            //node.svgText.setTextContent(displayFunction(tree.item), isLatexMode);
+            if (logicVertex.vertexText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
+            if (parent != null) {
+                const edge = GraphTableSVG.Edge.create(this, { className: logicVertex.parentEdgeClass });
+                if (logicVertex.parentEdgeText != null) {
+                    edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
+                    edge.pathTextAlignment = pathTextAlighnment.regularInterval;
+                    //edge.svgText.setTextContent(tree.edgeLabel, isLatexMode);
+                }
+                this.connect(parent, edge, node, { beginConnectorType: "bottom", endConnectorType: "top" });
+            } else {
+                this.roots.push(node);
+            }
+            logicVertex.children.forEach((v) => {
+                if (v != null) this.createChildFromLogicTree(node, v, option);
+            });
+            this.createdNodeCallback(node);
+            return node;
+        }
+        /**
+         * 親ノードに子ノードを追加します。
+         * @param parent 
+         * @param child 
+         * @param option 
+         */
+        public appendChild(parent: Vertex, child: Vertex, option: { insertIndex?: number } = {}) {
+            const edge = GraphTableSVG.Edge.create(this);
+            this.connect(parent, edge, child, { beginConnectorType: "bottom", endConnectorType: "top" });
+            this.createdNodeCallback(child);
+            this.relocate();
+        }
+
+        public createdNodeCallback = (node: GraphTableSVG.Vertex) => { }
+        private _relocateFunction: (Tree: Graph) => void = ()=>{};
+        public get relocateFunction(): (Tree: Graph) => void {
+            return this._relocateFunction;
+        }
+        public set relocateFunction(func: (Tree: Graph) => void) {
+            this._relocateFunction = func;
+            this.relocate();
+        }
+
+        public relocate() {
+            this._relocateFunction(this);
+        }
+
     }
-    
 
 
-    
+
+
 
 }

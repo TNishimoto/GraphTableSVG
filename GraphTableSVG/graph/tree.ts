@@ -2,69 +2,8 @@
 namespace GraphTableSVG {
     
     export class Tree extends Graph{
-        //public roots : LogicTree<string>[] = [];
-        //public graph : Graph;
-
-        /*
-        public constructFromStringLogicTree(roots: LogicTree<string>[], isLatexMode: boolean = false) {
-            this.constructFromLogicTree(roots, (v) => v, isLatexMode);
-        }
-        */
-       /**
-        * LogicTreeから木を構築します。
-        * @param roots 
-        * @param isLatexMode 
-        */
-        public constructFromLogicTree(roots: LogicTree[] | LogicTree, isLatexMode: boolean = false) {
-            if (roots instanceof Array){
-                this.clear();
-                roots.forEach((v) => { if (v != null) this.createChild(null, v, isLatexMode) });
-                this.relocate();            
-            } else {
-                this.constructFromLogicTree([roots], isLatexMode);
-            }
-            //this.roots = roots;
-        }
-
-        private createChild<T>(parent: Vertex | null = null, logicNode: LogicTree, isLatexMode: boolean = false) : Vertex {    
-
-            const node = GraphTableSVG.Vertex.create(this, {className : logicNode.vertexClass});
-            //node.svgText.setTextContent(displayFunction(tree.item), isLatexMode);
-            if (logicNode.vertexText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicNode.vertexText, isLatexMode);
-            if (parent != null) {
-                const edge = GraphTableSVG.Edge.create(this, {className : logicNode.parentEdgeClass});
-                if (logicNode.parentEdgeText != null) {
-                    edge.svgTextPath.setTextContent(logicNode.parentEdgeText, isLatexMode);
-                    edge.pathTextAlignment = pathTextAlighnment.regularInterval;
-                    //edge.svgText.setTextContent(tree.edgeLabel, isLatexMode);
-                }
-                this.connect(parent, edge, node, {beginConnectorType : "bottom", endConnectorType : "top"});
-            }else{
-                this.roots.push(node);
-            }
-            logicNode.children.forEach((v) => {
-                if(v != null)this.createChild(node, v, isLatexMode);
-            });
-            this.createdNodeCallback(node);
-            return node;
-        }
-
-
-
-        public createdNodeCallback = (node: GraphTableSVG.Vertex) => { }
-        public relocateFunction: (Tree : Graph) => void = TreeArrangement.Arrangement1;
-        public relocate() {
-            this.relocateFunction(this);
-        }
-
-        public appendChild(parent : Vertex, str : string, insertIndex : number){
-            const node = GraphTableSVG.Vertex.create(this);  
-            const edge = GraphTableSVG.Edge.create(this);
-            
-            this.connect(parent, edge, node, {beginConnectorType : "bottom", endConnectorType : "top"});
-            this.createdNodeCallback(node);
-            this.relocate();
-        }
+        
+        
     }
     export namespace Parse{
         export function parseTree(str : string) : GraphTableSVG.LogicTree {

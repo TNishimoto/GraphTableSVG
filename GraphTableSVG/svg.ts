@@ -49,6 +49,7 @@ namespace GraphTableSVG {
             } else {
                 line1.style.stroke = "black";
                 line1.style.fill = "none";
+                line1.style.strokeWidth = "1pt";
             }
             return line1;
         }
@@ -66,7 +67,7 @@ namespace GraphTableSVG {
                 _svgText.style.fill = "black";
                 _svgText.style.fontSize = "14px";
                 _svgText.style.fontWeight = "bold";
-                _svgText.style.fontFamily = "Yu Gothic";
+                _svgText.style.fontFamily = 'Times New Roman';
             } else {
                 _svgText.setAttribute("class", className);
                 //_svgText.className = className;
@@ -86,6 +87,7 @@ namespace GraphTableSVG {
             if (className == null) {
                 rect.style.fill = "#ffffff";
                 rect.style.stroke = "#000000";
+                rect.style.strokeWidth = "1pt";
             } else {
                 rect.setAttribute("class", className);
                 const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
@@ -131,7 +133,7 @@ namespace GraphTableSVG {
         export const defaultRadiusName = "--default-radius";
         export const defaultWidthName = "--default-width";
         export const defaultHeightName = "--default-height";
-        export let defaultCircleRadius = 30;
+        export let defaultCircleRadius = 15;
 
         /**
          * SVGCircleElementを生成します。
@@ -196,7 +198,7 @@ namespace GraphTableSVG {
             path.style.fill = "black";
             path.style.fontSize = "14px";
             path.style.fontWeight = "bold";
-            path.style.fontFamily = "Yu Gothic";
+            path.style.fontFamily = 'Times New Roman';
             }else{
                 path.setAttribute("class", className);
             }

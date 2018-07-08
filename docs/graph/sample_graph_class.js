@@ -1,6 +1,7 @@
+let graph = null;
 window.onload = () => {
     const box = document.getElementById('svgbox');
-    const graph = new GraphTableSVG.Graph(box, {graphClassName : "graph"});    
+    graph = new GraphTableSVG.Graph(box, {graphClassName : "graph"});    
     
     const node1 = GraphTableSVG.Vertex.create(graph,{x : 100, y : 100, text : "1"});
     const node2 = GraphTableSVG.Vertex.create(graph,{x : 150, y : 200, text : "2"});

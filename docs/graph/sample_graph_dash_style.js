@@ -1,14 +1,15 @@
+let graph = null;
 window.onload = () => {
     const box = document.getElementById('svgbox');
-    const graph = new GraphTableSVG.Graph(box);
+    graph = new GraphTableSVG.Graph(box);
 
     const dashStyles = ["msoLineDash", "msoLineDashDot", "msoLineDashDotDot" , "msoLineLongDash" , "msoLineLongDashDot" , "msoLineRoundDot", "msoLineSolid", "msoLineSquareDot"];
     const alignments = ["begin", "end", "center", "regularInterval"]
     for(let i=0;i<dashStyles.length;i++){
-        const nodeLL = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 100, y : (i+1) * 100});
-        const nodeL = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 400, y : (i+1) * 100});
-        const nodeC = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 700, y : (i+1) * 100});
-        const nodeR = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 1000, y : (i+1) * 100});
+        const nodeLL = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 50, y : (i+1) * 50});
+        const nodeL = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 250, y : (i+1) * 50});
+        const nodeC = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 450, y : (i+1) * 50});
+        const nodeR = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 700, y : (i+1) * 50});
 
         const edgeL = GraphTableSVG.Edge.create(graph, {beginVertex : nodeLL, endVertex : nodeL, text : alignments[i%alignments.length],pathTextAlignment : alignments[i%alignments.length] });
         const edgeC = GraphTableSVG.Edge.create(graph, {beginVertex : nodeL, endVertex : nodeC, text : dashStyles[i]});

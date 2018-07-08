@@ -1,6 +1,7 @@
+let table = null;
 window.onload = () => {
     const box = document.getElementById("svgbox");
-    const table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 5, columnCount: 5, rowHeight : 60, columnWidth : 60 });
+    table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 5, columnCount: 5, rowHeight : 60, columnWidth : 60 });
 
     for(let y=0;y<table.rowCount;y++){
         for(let x=0;x<table.columnCount;x++){

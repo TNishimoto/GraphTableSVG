@@ -250,11 +250,23 @@ edge1.markerStartも同様に開始節の方向に矢印を設定できる。
 </comment>
 </xarticle>
 
-<xarticle title="Graph Sample 5 : Logic Tree" >
+<xarticle title="Graph Sample 5 : Tree" >
+<load path="graph/sample_graph_tree.js" />
+<load path="images/graph_tree_children.png" />
+<load path="images/graph_tree_leave.png" />
+<comment>
+<a href="graph/sample_graph_tree.html">実行結果</a>
+</comment>
 </xarticle>
 
-<xarticle title="Graph Sample 5 : Tree" >
+
+<xarticle title="Graph Sample 5 : Logic Tree" >
+<load path="graph/sample_graph_logictree.js" />
+<comment>
+<a href="graph/sample_graph_logictree.html">実行結果</a>
+</comment>
 </xarticle>
+
 
 
 <xarticle title="Graph Sample 6 : Powerpoint" >

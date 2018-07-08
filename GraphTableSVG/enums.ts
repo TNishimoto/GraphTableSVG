@@ -44,6 +44,7 @@
 
     export type msoDashStyle = "msoLineDash"| "msoLineDashDot" | "msoLineDashDotDot" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
     export namespace msoDashStyle {
+        //export const styleName : string = "--mso-dash-style"
         export const msoLineDash: msoDashStyle = "msoLineDash"
         export const msoLineDashDot: msoDashStyle = "msoLineDashDot"
         export const msoLineDashDotDot: msoDashStyle = "msoLineDashDotDot"
@@ -83,7 +84,8 @@
             "msoLineLongDash" : msoDashStyle.msoLineLongDash,
             "msoLineLongDashDot" : msoDashStyle.msoLineLongDashDot,
             "msoLineRoundDot" : msoDashStyle.msoLineRoundDot,
-            "msoLineSquareDot" : msoDashStyle.msoLineSquareDot
+            "msoLineSquareDot" : msoDashStyle.msoLineSquareDot,
+            "msoLineSolid" : msoDashStyle.msoLineSolid
         }
         export function toMSODashStyle(value : string) : msoDashStyle | null {
             if(value in typeDic){
@@ -105,8 +107,24 @@
                 const width = svgLine.getPropertyStyleNumberValue("stroke-width");
                 svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
                 svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
+                svgLine.setPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName, type);
             }else{
 
+            }
+        }
+        export function getLineType(svgLine : SVGLineElement | SVGPathElement | SVGElement) : msoDashStyle {
+            const typeName = svgLine.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+            if(typeName != null){
+                const type = toMSODashStyle(typeName);
+                if(type != null){
+                    return type;
+                }
+            }
+            const dashArray = svgLine.getPropertyStyleValue("stroke-dasharray");
+            if(dashArray != null){
+                return msoDashStyle.msoLineDash;
+            }else{
+                return msoDashStyle.msoLineSolid;
             }
         }
     }

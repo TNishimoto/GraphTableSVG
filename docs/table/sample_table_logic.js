@@ -1,3 +1,4 @@
+let table = null;
 window.onload = () => {
     const logicTable = new GraphTableSVG.LogicTable({rowCount : 5, columnCount : 4, x : 50, y : 50});
     for(let y=0;y<logicTable.rowCount;y++){
@@ -7,7 +8,7 @@ window.onload = () => {
     }
 
     const box = document.getElementById("svgbox");
-    const table = new GraphTableSVG.Table(box);
+    table = new GraphTableSVG.Table(box);
     table.constructFromLogicTable(logicTable);    
 
     const table2 = new GraphTableSVG.Table(box);

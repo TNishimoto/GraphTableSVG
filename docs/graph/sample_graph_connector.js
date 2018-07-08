@@ -1,6 +1,7 @@
+let graph = null;
 window.onload = () => {
     const box = document.getElementById('svgbox');
-    const graph = new GraphTableSVG.Graph(box);
+    graph = new GraphTableSVG.Graph(box);
 
     const connectorTypes = ["top", "topleft", "left", "bottomleft", "bottom", "bottomright", "right", "topright", "auto"];
     for(let i=0;i<9;i++){

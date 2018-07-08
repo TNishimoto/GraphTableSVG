@@ -563,10 +563,11 @@
                     const endType: number = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
                     subline.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
                 }
+                const lineType = msoDashStyle.getLineType(this.svgPath);
                 const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
                 const strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
                 const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-                subline.push(` Call EditLine(edges(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
+                subline.push(` Call EditLine(edges(${i}).Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
                 if (this.controlPoint.length > 0) {
                     subline.push(` edges(${i}).Adjustments(1) = ${this.svgPath.getTotalLength() / 2}`);
                 }
@@ -585,9 +586,9 @@
          */
         public createVBACodeOfText(shapes: string, result: string[][]): void {
             if (this.svgTextPath.textContent != null && this.graph != null) {
-                const fontSize = parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "12"));
-                const fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
-                const fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
+                const fontSize = parseInt(this.svgTextPath.getPropertyStyleValueWithDefault("font-size", "12"));
+                const fontFamily = VBATranslateFunctions.ToVBAFont(this.svgTextPath.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+                const fontBold = VBATranslateFunctions.ToFontBold(this.svgTextPath.getPropertyStyleValueWithDefault("font-weight", "none"));
 
                 for (let i = 0; i < this.svgTextPath.textContent.length; i++) {
                     const s: string[] = new Array(0);
@@ -596,8 +597,16 @@
                     const width = Math.abs(p2.x - p1.x);
                     const height = Math.abs(p2.y - p1.y);
 
-                    const left = this.graph.svgGroup.getX() + p1.x;
-                    const top = this.graph.svgGroup.getY() + p1.y - (fontSize / 2);
+                    const rad = this.svgTextPath.getRotationOfChar(i);
+                    const diffx = (fontSize* 1/2) * Math.sin((rad/180) * Math.PI);
+                    const diffy = (fontSize*3/8) + ((fontSize*3/8) * Math.cos((rad/180) * Math.PI));
+
+                    const left = this.graph.svgGroup.getX() + p1.x + diffx;
+                    //const top = this.graph.svgGroup.getY() + p1.y - (fontSize / 2);
+                    const top = this.graph.svgGroup.getY() + p1.y - (fontSize * 1 / 4) - diffy ;
+                    
+                    //const top = this.graph.svgGroup.getY() + p1.y - diffy;
+
                     s.push(`With ${shapes}.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${width},${fontSize})`);
                     s.push(`.TextFrame.TextRange.Text = "${this.svgTextPath.textContent[i]}"`);
                     s.push(`.TextFrame.marginLeft = 0`);
@@ -610,7 +619,7 @@
                     s.push(`.IncrementRotation(${this.svgTextPath.getRotationOfChar(i)})`);
                     //s.push(`.IncrementRotation(${this.svgText.transform.baseVal.getItem(0).angle})`);
                     s.push(`End With`);
-
+                    
                     result.push(s);
                 }
             }

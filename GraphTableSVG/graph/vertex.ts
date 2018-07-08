@@ -412,7 +412,8 @@
          * @param option.height VertexがRectangleだったときの縦幅
          */
         public static create(graph: Graph, option: { className?: string, 
-            surfaceType?: string, x?: number, y?: number, text? : string, radius? : number, width? : number, height? :number } = {}): GraphTableSVG.Vertex {
+            surfaceType?: string, x?: number, y?: number, text? : string, 
+            radius? : number, width? : number, height? :number, isRoot? : boolean } = {}): GraphTableSVG.Vertex {
             //public static create(graph: Graph, {className: string | null = null, defaultSurfaceType: string | null = null, x: number = 0, y: number = 0}): GraphTableSVG.Vertex {
 
             if(option.className == undefined)option.className = graph.defaultVertexClass;
@@ -434,6 +435,11 @@
             } else {
                 p = new Vertex(graph, option);
             }
+
+            if(option.isRoot){
+                graph.roots.push(p);
+            }
+
             return p;
         }
         /**
@@ -545,10 +551,11 @@
                 } else {
                     const backColor = VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("fill", "gray"));
                     const lineColor = VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    const lineType = GraphTableSVG.msoDashStyle.getLineType(surface);
                     const strokeWidth = parseInt(surface.getPropertyStyleValueWithDefault("stroke-width", "4"));
                     const visible = surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
                     sub.push([` Call EditVertexShape(nodes(${i}), "${this.objectID}", ${visible}, ${backColor})`]);
-                    sub.push([` Call EditLine(nodes(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`]);
+                    sub.push([` Call EditLine(nodes(${i}).Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`]);
 
                 }
 

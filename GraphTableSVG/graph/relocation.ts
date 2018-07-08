@@ -4,7 +4,7 @@
     }
 
     export namespace TreeArrangement {
-        export function leaveBasedArrangement(forest: Graph, xInterval: number, yInterval: number): void {
+        export function alignVerticeByLeaveSub(forest: Graph, xInterval: number, yInterval: number): void {
             let leafCounter = 0;
             forest.getOrderedVertices(VertexOrder.Postorder).forEach((v) => {
                 let x = 0;
@@ -80,26 +80,21 @@
         }
 
 
-        export function standardTreeArrangement(graph: GraphTableSVG.Graph): void {
-            const xInterval = graph.vertexXInterval;
-            const yInterval = graph.vertexYInterval;
-            if (xInterval != null && yInterval != null) {
+        export function alignVerticeByChildren(graph: GraphTableSVG.Graph): void {
+            const [xi, yi] = getXYIntervals(graph);
 
-                if (graph.rootVertex != null) {
-                    const rootTree = graph.rootVertex.tree;
-                    const [x, y] = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y];
-                    standardTreeArrangementSub(rootTree, xInterval, yInterval);
-                    rootTree.setRootLocation(x, y);
+            if (graph.rootVertex != null) {
+                const rootTree = graph.rootVertex.tree;
+                const [x, y] = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y];
+                alignVerticeByChildrenSub(rootTree, xi, yi);
+                rootTree.setRootLocation(x, y);
 
-                    //graph.update();
-                }
-            } else {
-                throw new Error("The Graph.VertexInterval is not defined.");
+                //graph.update();
             }
-
+            alignTrees(graph);
         }
 
-        function standardTreeArrangementSub(tree: VirtualSubTree, xInterval: number, yInterval: number): void {
+        function alignVerticeByChildrenSub(tree: VirtualSubTree, xInterval: number, yInterval: number): void {
             tree.subTreeRoot.x = 0;
             tree.subTreeRoot.y = 0;
             let leaves = 0;
@@ -111,7 +106,7 @@
 
 
             for (let i = 0; i < children.length; i++) {
-                standardTreeArrangementSub(children[i].tree, xInterval, yInterval);
+                alignVerticeByChildrenSub(children[i].tree, xInterval, yInterval);
                 const w = (children[i].tree.leaves.length * xInterval) / 2;
                 children[i].tree.setRootLocation(x + w, yInterval);
                 x += children[i].tree.leaves.length * xInterval;
@@ -120,35 +115,49 @@
         }
 
         export function standardTreeWidthArrangement(graph: GraphTableSVG.Graph): void {
-            const xInterval = graph.vertexXInterval;
-            const yInterval = graph.vertexYInterval;
-            if (xInterval != null && yInterval != null) {
+            //const xInterval = graph.vertexXInterval;
+            //const yInterval = graph.vertexYInterval;
+            const [xi, yi] = getXYIntervals(graph);
 
-                if (graph.rootVertex != null) {
-                    const rootTree = graph.rootVertex.tree;
-                    const [x, y] = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y];
-                    standardTreeWidthArrangementSub(rootTree, xInterval, yInterval);
-                    rootTree.setRootLocation(x, y);
+            if (graph.rootVertex != null) {
+                const rootTree = graph.rootVertex.tree;
+                const [x, y] = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y];
+                standardTreeWidthArrangementSub(rootTree, xi, yi);
+                rootTree.setRootLocation(x, y);
 
-                    //graph.update();
-                }
-            } else {
-                throw new Error("The Graph.VertexInterval is not defined.");
+                //graph.update();
             }
 
         }
-        export function Arrangement1(graph: GraphTableSVG.Graph): void {
+        function computeAutoXYIntervals(graph : GraphTableSVG.Graph) : [number, number]{
+            let yMaximalInterval = 30;
+            let xMaximalInterval = 30;
+            graph.vertices.forEach((v)=>{
+                if(v.width > xMaximalInterval) xMaximalInterval = v.width;
+                if(v.height > yMaximalInterval) yMaximalInterval = v.height;
+            })
+            return [xMaximalInterval * 2, yMaximalInterval * 2];
+        }
+        function getXYIntervals(graph : GraphTableSVG.Graph) : [number, number]{
+            const [xMaximalInterval, yMaximalInterval] = computeAutoXYIntervals(graph);
+            const xi = graph.vertexXInterval != null ? graph.vertexXInterval : xMaximalInterval;
+            const yi = graph.vertexYInterval != null ? graph.vertexYInterval : yMaximalInterval;
+            return [xi, yi];
+        }
+        function alignTrees(graph: GraphTableSVG.Graph){
+            let x = 0;
+            graph.roots.forEach((v)=>{
+                const region = v.tree.region();
+                v.tree.setRectangleLocation(x, 0);
+                x += region.width;
+            });
+        }
+        export function alignVerticeByLeave(graph: GraphTableSVG.Graph): void {
             graph.vertices.forEach((v) => { v.x = 0; v.y = 0 });
-            const xi = graph.vertexXInterval != null ? graph.vertexXInterval : 30;
-            const yi = graph.vertexYInterval != null ? graph.vertexYInterval : 30;
-            GraphTableSVG.TreeArrangement.leaveBasedArrangement(graph, xi, yi);
+            const [xi, yi] = getXYIntervals(graph);
+            GraphTableSVG.TreeArrangement.alignVerticeByLeaveSub(graph, xi, yi);
             GraphTableSVG.TreeArrangement.reverse(this, false, true);
-            const region = graph.getRegion();
-            if (region.x < 0) graph.svgGroup.setX(-region.x);
-            if (region.y < 0) graph.svgGroup.setY(-region.y);
-            //this.svgGroup.setY(180);
-            //this.svgGroup.setX(30);
-
+            alignTrees(graph);
         }
 
 

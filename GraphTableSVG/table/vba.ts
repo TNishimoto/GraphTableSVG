@@ -1,50 +1,54 @@
 ﻿
 namespace GraphTableSVG {
     export class SVGToVBA {
-        public static create(items: (Graph | Table | SVGPathElement | SVGTextElement)[]): string {
+        public static create(items: (Graph | Table | SVGPathElement | SVGTextElement)[] | (Graph | Table | SVGPathElement | SVGTextElement)): string {
             //const id = 0;
-            const s: string[] = new Array(0);
+            if (items instanceof Array) {
+                const s: string[] = new Array(0);
 
-            s.push(`Sub create()`);
-            s.push(` Dim createdSlide As slide`);
-            s.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
-            for (let i = 0; i < items.length; i++) {
-                s.push(`Call create${i}(createdSlide)`);
-            }
-            s.push(`MsgBox "created"`);
-
-            s.push(`End Sub`);
-
-            for (let i = 0; i < items.length; i++) {
-                const item = items[i];
-                if (item instanceof Table) {
-                    const lines = item.createVBACode(i, "createdSlide");
-                    lines.forEach((v) => s.push(v));
-                } else if (item instanceof Graph) {
-                    const lines = item.createVBACode(i);
-                    lines.forEach((v) => s.push(v));
-                } else if (item instanceof SVGPathElement) {
-                    const lines = SVGToVBA.createVBACodeOfSVGPath(item, i);
-                    lines.forEach((v) => s.push(v));
-
-                } else if (item instanceof SVGTextElement) {
-                    const lines = SVGToVBA.createVBACodeOfTextElement(item, i);
-                    lines.forEach((v) => s.push(v));
-
+                s.push(`Sub create()`);
+                s.push(` Dim createdSlide As slide`);
+                s.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
+                for (let i = 0; i < items.length; i++) {
+                    s.push(`Call create${i}(createdSlide)`);
                 }
+                s.push(`MsgBox "created"`);
+
+                s.push(`End Sub`);
+
+                for (let i = 0; i < items.length; i++) {
+                    const item = items[i];
+                    if (item instanceof Table) {
+                        const lines = item.createVBACode(i, "createdSlide");
+                        lines.forEach((v) => s.push(v));
+                    } else if (item instanceof Graph) {
+                        const lines = item.createVBACode(i);
+                        lines.forEach((v) => s.push(v));
+                    } else if (item instanceof SVGPathElement) {
+                        const lines = SVGToVBA.createVBACodeOfSVGPath(item, i);
+                        lines.forEach((v) => s.push(v));
+
+                    } else if (item instanceof SVGTextElement) {
+                        const lines = SVGToVBA.createVBACodeOfTextElement(item, i);
+                        lines.forEach((v) => s.push(v));
+
+                    }
+                }
+                s.push(SVGToVBA.cellFunctionCode);
+                const r = VBATranslateFunctions.joinLines(s);
+                return r;
+            } else {
+                return SVGToVBA.create([items]);
             }
-            s.push(SVGToVBA.cellFunctionCode);
-            const r = VBATranslateFunctions.joinLines(s);
-            return r;
         }
-        private static createVBACodeOfSVGPath(path: SVGPathElement, id: number) : string[] {
+        private static createVBACodeOfSVGPath(path: SVGPathElement, id: number): string[] {
             const lines = new Array(0);
             const pos = path.getPathLocations();
             lines.push(`Sub create${id}(createdSlide As slide)`);
             lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
-            lines.push(` Dim edges${id}(${pos.length-1}) As Shape`);
+            lines.push(` Dim edges${id}(${pos.length - 1}) As Shape`);
 
-            
+
             for (let i = 0; i < pos.length - 1; i++) {
                 lines.push(` Set edges${id}(${i}) = shapes_.AddConnector(msoConnectorStraight, ${pos[i][0]}, ${pos[i][1]}, ${pos[i + 1][0]}, ${pos[i + 1][1]})`);
                 const lineColor = VBATranslateFunctions.colorToVBA(path.getPropertyStyleValueWithDefault("stroke", "gray"));
@@ -56,7 +60,7 @@ namespace GraphTableSVG {
             lines.push(`End Sub`);
             return lines;
         }
-        private static createVBACodeOfTextElement(element : SVGTextElement, id: number): string[] {
+        private static createVBACodeOfTextElement(element: SVGTextElement, id: number): string[] {
             const lines = new Array(0);
             const sub: string[][] = [];
             lines.push(`Sub create${id}(createdSlide As slide)`);
@@ -214,7 +218,7 @@ End Sub
             }
             return result;
         }
-        public static splitCode(codes: string[][], subArg : string, callArg : string, id: number): [string, string] {
+        public static splitCode(codes: string[][], subArg: string, callArg: string, id: number): [string, string] {
             const functions: string[] = [];
 
             const p = VBATranslateFunctions.grouping80(codes);
@@ -227,7 +231,7 @@ End Sub
             return [VBATranslateFunctions.joinLines(functions), VBATranslateFunctions.joinLines(p)];
         }
 
-        public static ToFontBold(bold : string) : string {
+        public static ToFontBold(bold: string): string {
             if (bold == "bold") {
                 return "msotrue";
             } else {
@@ -324,13 +328,13 @@ End Sub
                         if (f == null) {
                             f = "";
                         }
-                        sub.push([`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${color.r}, ${color.g}, ${color.b}))`]);                        
+                        sub.push([`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${color.r}, ${color.g}, ${color.b}))`]);
                         pos += len;
                     }
-                    
+
                 }
             } else if (item.textContent != null && item.textContent.length > 0) {
-                sub.push([`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}))`]);                        
+                sub.push([`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}))`]);
             }
         }
 
