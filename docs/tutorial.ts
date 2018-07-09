@@ -47,8 +47,13 @@ function parseXML(str : string) : libxmljs.Element {
     const doc = libxmljs.parseXmlString(str);
     return doc.root();
 }
-
-
+/*
+pack.midMacros.elements["p"] = (e : libxmljs.Element, info : Macroup.Setting) =>{
+    MacroupLib.insertFirst(e, "　");
+    //const text = e.text();
+    //(<any>e).text("　" + text);
+}
+*/
 pack.midMacros.elements["xarticle"] = (e : libxmljs.Element, info : Macroup.Setting) =>{
     e.attr({after : "article"});
     e.attr({class:"sample-article"})
@@ -62,6 +67,7 @@ pack.midMacros.elements["xarticle"] = (e : libxmljs.Element, info : Macroup.Sett
 
     nodes.forEach((v)=>{
         if(v.name() == "comment"){
+            MacroupLib.insertFirst(v, "　");
             const sectionNode = new libxmljs.Element(e.doc(), "section", undefined); 
             sectionNode.attr({"ignore-format" : "true", class : "sample-commentary"});
             moveChildren(v, sectionNode);

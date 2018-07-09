@@ -14,6 +14,7 @@ body {
 
 .sample-table-of-contents{
     background-color: palegoldenrod;
+    border: double;
     padding: 10pt;
     width: 800pt;
     margin: 10pt auto;
@@ -21,11 +22,13 @@ body {
 
 .sample-article{
     background-color: palegoldenrod;
+    border: double;
     padding: 10pt;
     width: 800pt;
     margin: 10pt auto;
 }
 .sample-commentary{
-    background-color: darkseagreen;
-    padding: 10pt;    
+    background-color: #CCFF66;
+    padding: 10pt; 
+    margin: 10pt;  
 }

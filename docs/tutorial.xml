@@ -10,26 +10,42 @@
 
 <table_of_contents />
 <xarticle title="はじめに" >
+<comment>
+GraphTableSVGはSVGで表とグラフ（グラフ理論）を描画するライブラリである。
+このチュートリアルは利用者がHTMLとSVGをある程度理解していることを想定して書いている。
+</comment>
+<comment>
+SVG入門の参考として
+<a href="http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo.htm" target="_blank">svg要素の基本的な使い方まとめ</a>を挙げておく。
+</comment>
+<comment>
+このライブラリの<a href="./typedoc/globals.html" target="_blank">リファレンス</a>も挙げておくが、説明不足な部分が多いので注意すること。
+</comment>
+<comment>
+ちなみに、中途半端な実装ではあるがこのライブラリで作成した表やグラフはVBAマクロによってPowerpointの図形に変換することが出来る。
+このチュートリアルの各サンプルにはVBAコードと書かれたボタンが設置されているので、Powerpointを利用している方は試してみるとよい。
+詳細は<a href="#xarticle-8">Table Sample 8 : Powerpointへ出力</a>に書いてある。
+</comment>
 </xarticle>
 <xarticle title="Table Sample 1 : hello world" >
 <load path="table/sample_table_hello.js" />
 <load path="table/sample_table_hello.html" />
 <load path="images/table_hello1.png" />
 <comment>
-<p><a href="table/sample_table_hello.html">実行結果</a></p>
-<p>
-　Table（表）を作成する例。
+<a href="table/sample_table_hello.html">実行結果</a>
+</comment>
+<comment>
+Table（表）を作成する例。
 TableはSVGなのでどのSVG要素内に作成するかをConstructorの引数の第一要素で指定する。
 第二要素はオプションでTableのSVG要素内の位置や行数列数を指定することができる。
 また、前述の通りTableはSVGなので構成要素のプロパティを編集することでTableの中身を編集することができる。
-</p>
-<p>
-　ブラウザのデバッグ機能を用いてTableがSVGでどのように構成されているか見ることも編集することも可能。
-</p>
+</comment>
+<comment>
+ブラウザのデバッグ機能を用いてTableがSVGでどのように構成されているか見ることも編集することも可能。
 </comment>
 <load path="images/table_hello2.png" />
 <comment>
-　Javascript上ではTableは主にGraphTableSVG.TableとGraphTableSVG.Cellクラスで構成されている。
+Javascript上ではTableは主にGraphTableSVG.TableとGraphTableSVG.Cellクラスで構成されている。
 プロパティやメソッドの詳細は下記のリファレンスから確認できる。
 <ol>
 <li><a href="./typedoc/classes/graphtablesvg.table.html" target="_blank">Table</a></li>
@@ -42,28 +58,24 @@ TableはSVGなのでどのSVG要素内に作成するかをConstructorの引数�
 <load path="images/table2.png" />
 <load path="images/table3.png" />
 <comment>
-<p>
-　上の図はTableとCellがどのようなSVG要素で構成されているかを示している。
+上の図はTableとCellがどのようなSVG要素で構成されているかを示している。
 Cellは背景をSVGRectElementで、テキストをSVGTextElementで表しており、それらをSVGGElementでまとめている。
 Tableは各Cellを表すSVGGElementと各枠を表すSVGLineElementをSVGGElementでまとめている。
 これらはブラウザのデバッグ機能で確認できる。
-</p>
-<p>
-　参考のために各SVG要素のリファレンスを貼っておく。
-HTMLのSVG?を日本語で解説しているサイトは少ないが、
-<a href="http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo.htm" target="_blank">svg要素の基本的な使い方まとめ</a>が参考になる。
-</p>
+</comment>
+<comment>
+参考のために各SVG要素のリファレンスを貼っておく。
 <ol>
 <li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGLineElement" target="_blank">SVGLineElement</a></li>
 <li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGTextElement" target="_blank">SVGTextElement</a></li>
 <li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGGElement" target="_blank">SVGGElement</a></li>
 <li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGRectElement" target="_blank">SVGRectElement</a></li>
 </ol>
-<p>
-　下のコードはSVG要素のプロパティを編集してテーブルの見た目を変更する例である。
+</comment>
+<comment>
+下のコードはSVG要素のプロパティを編集してテーブルの見た目を変更する例である。
 SVG要素のスタイル属性を直接編集や、クラス名によるCSSでの設定によって見た目を変更することが出来る。
 <a href="table/sample_table_style.html">実行結果</a>
-</p>
 </comment>
 <load path="table/sample_table_style.js" />
 <load path="table/sample_table_style.css" />
@@ -75,20 +87,18 @@ SVG要素のスタイル属性を直接編集や、クラス名によるCSSで�
 <load path="table/sample_table_style_select.css" />
 <load path="images/table_select_style.png" />
 <comment>
-<p>
-　Tableの各セルや枠にCSSを適用するためには各要素のクラス属性を設定しないといけない。
+Tableの各セルや枠にCSSを適用するためには各要素のクラス属性を設定しないといけない。
 これは面倒なので、TableのCSSからセルや枠のCSSも設定できるようにカスタム属性を追加している。
 --default-cell-classと--default-border-classはそれぞれセルと枠の各クラス属性のデフォルト名を指定する属性である。
 これをtable.svgGroupのスタイルに設定しておくことで、一つずつクラス属性を設定する手間が省ける。
+</comment>
+<comment>
 同様にcell.svgGroupに--default-background-classと--default-text-classを適用することで
 cell.backgroundとcell.svgTextのクラス属性を設定することができる。
 また、Tableのコンストラクタの第二引数にあるtableClassNameからtable.svgGroupのクラス属性を設定することができるので、
 CSSファイルにこれらのカスタム属性を記述しておくことで、コンストラクタとCSSからTableの見た目を一度に設定することが出来る。
-</p>
-<a href="table/sample_table_style_select.html">実行結果</a>
-<p>
-　ただし、この方法では各セルごとにCSSを変更するなどの細かな設定はできないことに注意すること。
-</p>
+（<a href="table/sample_table_style_select.html">実行結果</a>）
+ただし、この方法では各セルごとにCSSを変更するなどの細かな設定はできないことに注意すること。
 </comment>
 </xarticle>
 
@@ -110,13 +120,13 @@ RowクラスとColumnクラスの詳細は下のリファレンスを参照す�
 <load path="table/sample_table_merge.js" />
 <load path="images/table_merge.png" />
 <comment>
-<p><a href="table/sample_table_merge.html">実行結果</a></p>
-<p>
+<a href="table/sample_table_merge.html">実行結果</a>
+</comment>
+<comment>
 隣り合うセルを結合することが出来る。cell.mergeRight()は右のセルと結合、cellmergeBottom()は下のセルと結合する。
 cell.merge(w, h)はそのセルを基準として列セル数w、行セル数hの結合セルを作成する。
 出来上がるセルは必ず矩形でなければならない。そのような結合セルにならない場合はエラーが発生する。
 実際に結合できるかどうかはcell.canMerge(w, h), cell.canMergeRight, cell.canMergeBottomで確認できる。
-</p>
 </comment>
 </xarticle>
 
@@ -125,12 +135,12 @@ cell.merge(w, h)はそのセルを基準として列セル数w、行セル数h�
 <load path="table/sample_table_anchor.css" />
 <load path="images/table_anchor.png" />
 <comment>
-<p><a href="table/sample_table_anchor.html">実行結果</a></p>
-<p>
+<a href="table/sample_table_anchor.html">実行結果</a>
+</comment>
+<comment>
 Powerpointの表のようにセル内のテキスト位置を指定できる。
 垂直方向のテキストの配置位置はcell.verticalAnchorもしくはcell.svgGroupの--vertical-anchor属性で指定できる。
 水平方向のテキストの配置位置はcell.horizontalAnchorもしくはcell.svgGroupの--horizontal-anchor属性で指定できる。
-</p>
 </comment>
 </xarticle>
 
@@ -138,20 +148,20 @@ Powerpointの表のようにセル内のテキスト位置を指定できる。
 <load path="table/sample_table_logic.js" />
 <load path="images/table_logic.png" />
 <comment>
-<p><a href="table/sample_table_logic.html">実行結果</a></p>
-<p>
+<a href="table/sample_table_logic.html">実行結果</a>
+</comment>
+<comment>
 LogicTableクラスから表を作成することが出来る。
 LogicTableクラスはTableクラスから描画関係を取り除いたクラスである。
 よって、Tableクラスを作成する前からどのような表を作るか決まっている場合はLogicTableクラスを通してSVGを構築したほうがコードの見通しがすっきりするかもしれない。
-</p>
 <ol>
 <li><a href="./typedoc/classes/graphtablesvg.logictable.html" target="_blank">LogicTable</a></li>
 <li><a href="./typedoc/classes/graphtablesvg.logiccell.html" target="_blank">LogicCell</a></li>
 </ol>
-<p>
+</comment>
+<comment>
 table.construct(table, option)は文字列の2次元配列tableからSVGを構築する関数である。
 表の装飾にこだわらない場合はこっちから作ったほうが良いかもしれない。
-</p>
 </comment>
 </xarticle>
 
@@ -164,12 +174,12 @@ table.construct(table, option)は文字列の2次元配列tableからSVGを構�
 <load path="images/table_powerpoint3.png" />
 
 <comment>
-<p><a href="table/sample_table_powerpoint.html">実行結果</a></p>
-<p>
+<a href="table/sample_table_powerpoint.html">実行結果</a>
+</comment>
+<comment>
 表をVBAのコードに変換し、Powerpointのマクロとして実行することでスライド上に表を作成することが出来る。
 GraphTableSVG.SVGToVBA.create(tables)はそのようなVBAのコードを作成する関数であるが、作成された表はSVGの表と完全に一致するわけではないので注意。
 あくまで、似たような表を作るだけの関数である。コード変換に対応していないstyle属性が多くあるので、凝った装飾をしているとまず反映されない。
-</p>
 </comment>
 </xarticle>
 
@@ -178,13 +188,13 @@ GraphTableSVG.SVGToVBA.create(tables)はそのようなVBAのコードを作成�
 <load path="graph/sample_graph_hello.js" />
 <load path="images/graph_hello.png" />
 <comment>
-<p><a href="graph/sample_graph_hello.html">実行結果</a></p>
-<p>
+<a href="graph/sample_graph_hello.html">実行結果</a>
+</comment>
+<comment>
 節が一つだけのグラフのHello World。
 表と同じようにコンストラクタにsvg要素を与えてグラフを表すSVGを作成する。このとき指定したsvg要素に空のグラフが作成される。
 Vertex.createは節を作成する関数である。作成した節にはSVGTextElementがあるので、節にテキストを入れることが出来る。
 重要なクラスと関数のリファレンスを以下に列挙する。ただしEdgeクラス、すなわち辺については次の例で説明する。
-</p>
 <ol>
 <li><a href="./typedoc/classes/graphtablesvg.graph.html" target="_blank">Graph</a></li>
 <li><a href="./typedoc/classes/graphtablesvg.vertex.html" target="_blank">Vertex</a></li>
@@ -198,8 +208,9 @@ Vertex.createは節を作成する関数である。作成した節にはSVGText
 <load path="graph/sample_graph_edge.js" />
 <load path="images/graph_edge.png" />
 <comment>
-<p><a href="graph/sample_graph_edge.html">実行結果</a></p>
-<p>
+<a href="graph/sample_graph_edge.html">実行結果</a>
+</comment>
+<comment>
 辺を使って節同士を接続する例。
 GraphTableSVG.Edge.createでVertexと同じように辺を作成することができる。第二引数にあるbeginVertexとendVertexで辺が接続する開始節と終了節を指定することが出来る。
 ここで指定しない場合、辺を作成してもsvg要素上で描画されないので注意すること。
@@ -207,12 +218,11 @@ GraphTableSVG.Edge.createでVertexと同じように辺を作成することが�
 辺に沿ってテキストを設定することができる。create時の第二引数で指定するか、edge1.svgTextPath.setTextContent(text)で指定する。
 ちなみに、節の形は現在、円か四角形のどちらかを選択できる。第二引数でsurfaceType: "rectangle"とすると四角形、それ以外は円形。
 下の図は節や辺を構成しているSVG要素の参考図である。表と同じように直接SVGを編集してスタイルを変更することが可能。
-</p>
 </comment>
 <load path="images/graph1.png" />
 <load path="images/graph_edge2.png" />
 <comment>
-<p><a href="graph/sample_graph_edge2.html">実行結果</a></p>
+<a href="graph/sample_graph_edge2.html">実行結果</a>
 </comment>
 </xarticle>
 
@@ -220,14 +230,14 @@ GraphTableSVG.Edge.createでVertexと同じように辺を作成することが�
 <load path="graph/sample_graph_vertex.js" />
 <load path="images/graph_vertex.png" />
 <comment>
-<p><a href="graph/sample_graph_vertex.html">実行結果</a></p>
-<p>
+<a href="graph/sample_graph_vertex.html">実行結果</a>
+</comment>
+<comment>
 ベジエ曲線のように辺を曲げることが出来る。edge1.controlPointプロパティに点の配列を与えることで制御点を設定することが出来る。ただし、現在設定できる制御点は一つだけなので注意すること。
 edge1.markerEnd = GraphTableSVG.Edge.createMark()とすることで終了節の方向に矢印を設定することができる。
 SVGには矢印用のSVG要素があるのでそれをcreateMark()で作成し、markerEndに設定することで辺の先に矢印のSVG要素が設定される。
 edge1.markerStartも同様に開始節の方向に矢印を設定できる。
 ただし、現在は矢印の細かな設定はできないことに注意すること。
-</p>
 </comment>
 </xarticle>
 
