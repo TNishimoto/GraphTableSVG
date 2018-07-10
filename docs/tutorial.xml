@@ -247,6 +247,10 @@ edge1.markerStartも同様に開始節の方向に矢印を設定できる。
 <comment>
 <a href="graph/sample_graph_connector.html">実行結果</a>
 </comment>
+<comment>
+頂点上の辺の接続位置は選択することが出来る。図形がCircleの場合、真上から45度刻みに8方向選ぶことが出来る。Rectangleの場合は真上から90度刻みに4方向。
+Autoを選択した場合、二点の位置関係から計算した最適な位置を自動で選択する。
+</comment>
 </xarticle>
 
 <xarticle title="Graph Sample 5 : Class Name" >
@@ -256,6 +260,9 @@ edge1.markerStartも同様に開始節の方向に矢印を設定できる。
 <comment>
 <a href="graph/sample_graph_class.html">実行結果</a>
 </comment>
+<comment>
+表の場合と同様に、頂点や辺のsvgGroupに設定したCSSから構成している各種SVG要素のプロパティを設定することが出来る。
+</comment>
 </xarticle>
 
 <xarticle title="Graph Sample 5 : 破線とAlignment" >
@@ -263,6 +270,14 @@ edge1.markerStartも同様に開始節の方向に矢印を設定できる。
 <load path="images/graph_dash.png" />
 <comment>
 <a href="graph/sample_graph_dash_style.html">実行結果</a>
+</comment>
+<comment>
+Edgeの線は点線にすることが出来る。svgTextPathのstroke-dasharrayを編集することで実現できるが、本ライブラリで用意されたGraphTableSVG.msoDashStyle.setStyleで点線の種類を選択することが望ましい。
+setStyleで設定した点線はPowerpoint側で用意された点線に直接変換できるからである。理由はそれだけなのでPowerpointに出力することを想定していない場合はstroke-dasharrayで十分である。
+</comment>
+<comment>
+辺に設定されたテキストの配置位置もpathTextAlignmentプロパティから設定できる。開始頂点側、終了頂点側、辺の中央、そして辺上に均等に配置の四種類を選ぶことが出来る。
+何も選ばない場合は中央配置となる。
 </comment>
 </xarticle>
 
@@ -273,6 +288,19 @@ edge1.markerStartも同様に開始節の方向に矢印を設定できる。
 <comment>
 <a href="graph/sample_graph_tree.html">実行結果</a>
 </comment>
+<comment>
+現在、graphで描画されているのが木である場合に適用できる各頂点の配置関数がライブラリに用意されている。
+GraphTableSVG.TreeArrangement.alignVerticeByChildrenとGraphTableSVG.TreeArrangement.alignVerticeByLeaveである。
+前者は子頂点が同じ高さになるように頂点を配置し、後者は葉頂点が同じ高さになるように配置される。
+このときの各頂点の水平間隔と垂直間隔はgraph.vertexXIntervalとgraph.vertexYIntervalで設定できる。
+</comment>
+<comment>
+graph.relocateFunctionはグラフの配置方法を決定するアロー関数のプロパティである。
+第一引数でgraph自身を受け取る。
+配置方法を決定すると言っても、この関数は(1)relocateFunctionの設定時か、(2)appendChild関数を呼ばれた後か、
+(3)relocate関数を呼ばれた時か、(4)もしくは後述するconstructFromLogicTreeを呼んだ後にしか呼ばれないので明示的に設定しない限りは呼ばれることはないだろう。
+このあたりは設計が煮詰まっていないので今後の実装で変更することもあるかもしれない。
+</comment>
 </xarticle>
 
 
@@ -281,6 +309,11 @@ edge1.markerStartも同様に開始節の方向に矢印を設定できる。
 <load path="images/graph_logictree.png" />
 <comment>
 <a href="graph/sample_graph_logictree.html">実行結果</a>
+</comment>
+<comment>
+LogicTreeはLogicTableと同様に、SVG要素を取り除いて木の形や各頂点や辺の設定プロパティだけで構成されたクラスである。
+SVG要素として構築する前にあらかじめ木の形が決まっているときはこのクラスを通すと設計がすっきりするかもしれない。
+ちなみにLogicGraphはまだ実装されていない。
 </comment>
 </xarticle>
 
