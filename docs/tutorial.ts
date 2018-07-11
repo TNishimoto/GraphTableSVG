@@ -54,6 +54,23 @@ pack.midMacros.elements["p"] = (e : libxmljs.Element, info : Macroup.Setting) =>
     //(<any>e).text("　" + text);
 }
 */
+function tempora(lines : libxmljs.Element[], e : libxmljs.Element) : libxmljs.Element {
+    //MacroupLib.insertFirst(v, "　");
+    const sectionNode = new libxmljs.Element(e.doc(), "section", undefined); 
+    sectionNode.attr({"ignore-format" : "true", class : "sample-commentary"});
+    lines.forEach((w)=>{
+        //console.log(w.text());
+
+        sectionNode.addChild(w);
+        //moveChildren(w, sectionNode);
+
+    })    
+    //console.log("//");
+    lines.splice(0, lines.length);
+
+    return sectionNode;
+
+}
 pack.midMacros.elements["xarticle"] = (e : libxmljs.Element, info : Macroup.Setting) =>{
     e.attr({after : "article"});
     e.attr({class:"sample-article"})
@@ -64,21 +81,37 @@ pack.midMacros.elements["xarticle"] = (e : libxmljs.Element, info : Macroup.Sett
     const title = new libxmljs.Element(e.doc(), "h2", e.attr("title")!.value());
     newNodes.push(title);
 
-
+    const tmp : libxmljs.Element[] = [];
     nodes.forEach((v)=>{
         if(v.name() == "comment"){
+            if(tmp.length > 0) newNodes.push(tempora(tmp, e));
             MacroupLib.insertFirst(v, "　");
             const sectionNode = new libxmljs.Element(e.doc(), "section", undefined); 
             sectionNode.attr({"ignore-format" : "true", class : "sample-commentary"});
             moveChildren(v, sectionNode);
             newNodes.push(sectionNode);
         }else if(v.name() == "load"){
+            if(tmp.length > 0) newNodes.push(tempora(tmp, e));
             newNodes.push(createLoadCode(v, dir));
+        }
+        else if(v.name() == "dbr"){
+            //if(title.text() == "はじめに")console.log(v.text());
+
+            if(tmp.length > 0) newNodes.push(tempora(tmp, e));
+        }
+        else{
+            if(v.text() != "\n"){
+                tmp.push(v);
+            }
         }
     })
 
     clearChildren(e);
-    newNodes.forEach((v)=>e.addChild(v));
+    newNodes.forEach((v)=>{    
+        //if(title.text() == "はじめに")console.log(v.text());
+        e.addChild(v)
+    });
+    //if(title.text() == "はじめに")console.log(e.toString());
 
 }
 pack.midMacros.elements["table_of_contents"]= (e : libxmljs.Element, info : Macroup.Setting) =>{
