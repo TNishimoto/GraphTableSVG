@@ -362,22 +362,26 @@
          * @param id 
          */
         public createVBACode(id: number): string[] {
-            const dic: { [key: string]: number; } = {};
+            const vertexDic: { [key: string]: number; } = {};
+            const edgeDic: { [key: string]: number; } = {};
 
-            this.vertices.forEach((v, i) => dic[v.objectID] = i);
-            this.edges.forEach((v, i) => dic[v.objectID] = i);
+            this.vertices.forEach((v) => v.setIndexDictionaryForVBA(vertexDic,edgeDic));
+            this.edges.forEach((v) => v.setIndexDictionaryForVBA(vertexDic,edgeDic));
+            const vertexSize = Object.keys(vertexDic).length;
+            const edgeSize = Object.keys(edgeDic).length;
+
             const main: string[] = [];
             const sub: string[][] = [];
 
             const lines = new Array(0);
             lines.push(`Sub create${id}(createdSlide As slide)`);
             lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
-            lines.push(` Dim nodes(${this.vertices.length}) As Shape`);
-            lines.push(` Dim edges(${this.edges.length}) As Shape`);
+            lines.push(` Dim nodes(${vertexSize}) As Shape`);
+            lines.push(` Dim edges(${edgeSize}) As Shape`);
 
 
-            this.vertices.forEach((v, i) => v.createVBACode(main, sub, dic));
-            this.edges.forEach((v, i) => v.createVBACode(main, sub, dic));
+            this.vertices.forEach((v, i) => v.createVBACode(main, sub, vertexDic, edgeDic));
+            this.edges.forEach((v, i) => v.createVBACode(main, sub, vertexDic, edgeDic));
             const [x1, y1] = VBATranslateFunctions.splitCode(sub, `shapes_ As Shapes, nodes() As Shape, edges() As Shape`, `shapes_, nodes, edges`, id);
             lines.push(x1);
             lines.push(`End Sub`);

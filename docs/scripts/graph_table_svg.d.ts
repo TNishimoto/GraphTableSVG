@@ -311,7 +311,15 @@ declare namespace GraphTableSVG {
             text?: string;
             pathTextAlignment?: pathTextAlighnment;
         }): GraphTableSVG.Edge;
-        createVBACode(main: string[], sub: string[][], indexDic: {
+        setIndexDictionaryForVBA(vertexDic: {
+            [key: string]: number;
+        }, edgeDic: {
+            [key: string]: number;
+        }): void;
+        VBAConnectorNumber: number;
+        createVBACode(main: string[], sub: string[][], vertexDic: {
+            [key: string]: number;
+        }, edgeDic: {
             [key: string]: number;
         }): void;
         createVBACodeOfText(shapes: string, result: string[][]): void;
@@ -486,7 +494,14 @@ declare namespace GraphTableSVG {
         removeIncomingEdge(edge: Edge): void;
         dispose(): void;
         readonly isDisposed: boolean;
-        createVBACode(main: string[], sub: string[][], indexDic: {
+        setIndexDictionaryForVBA(vertexDic: {
+            [key: string]: number;
+        }, edgeDic: {
+            [key: string]: number;
+        }): void;
+        createVBACode(main: string[], sub: string[][], vertexDic: {
+            [key: string]: number;
+        }, edgeDic: {
             [key: string]: number;
         }): void;
     }
@@ -844,5 +859,6 @@ declare namespace GraphTableSVG {
         function getGraphTableCSS(): HTMLElement | null;
         function parseUnit(str: string): [number, string];
         function toPX(str: string): number;
+        function bezierLocation([px1, py1]: [number, number], [px2, py2]: [number, number], [px3, py3]: [number, number], t: number): [number, number];
     }
 }

@@ -43,13 +43,13 @@
             }
         };
 
-        constructor(graph: Graph, params : {className?: string, text?: string, x?: number, y?: number} = {}) {
-            if(params.className == undefined){
+        constructor(graph: Graph, params: { className?: string, text?: string, x?: number, y?: number } = {}) {
+            if (params.className == undefined) {
                 params.className = graph.defaultVertexClass;
             }
-            if(params.text == undefined) params.text = "";
-            if(params.x == undefined) params.x = 0;
-            if(params.y == undefined) params.y = 0;
+            if (params.text == undefined) params.text = "";
+            if (params.x == undefined) params.x = 0;
+            if (params.y == undefined) params.y = 0;
 
             const g = SVG.createGroup(params.className);
 
@@ -249,11 +249,11 @@
             if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
             if (this.isAutoSizeShapeToFitText) {
                 const box = this.svgText.getBBox();
-                if(this.surface instanceof SVGCircleElement){
+                if (this.surface instanceof SVGCircleElement) {
                     this.width = Math.max(box.width, box.height);
-                }else{
+                } else {
                     this.width = box.width;
-                    this.height = box.height;    
+                    this.height = box.height;
                 }
 
             }
@@ -411,22 +411,24 @@
          * @param option.width VertexがRectangleだったときの横幅
          * @param option.height VertexがRectangleだったときの縦幅
          */
-        public static create(graph: Graph, option: { className?: string, 
-            surfaceType?: string, x?: number, y?: number, text? : string, 
-            radius? : number, width? : number, height? :number, isRoot? : boolean } = {}): GraphTableSVG.Vertex {
+        public static create(graph: Graph, option: {
+            className?: string,
+            surfaceType?: string, x?: number, y?: number, text?: string,
+            radius?: number, width?: number, height?: number, isRoot?: boolean
+        } = {}): GraphTableSVG.Vertex {
             //public static create(graph: Graph, {className: string | null = null, defaultSurfaceType: string | null = null, x: number = 0, y: number = 0}): GraphTableSVG.Vertex {
 
-            if(option.className == undefined)option.className = graph.defaultVertexClass;
+            if (option.className == undefined) option.className = graph.defaultVertexClass;
             const g = SVG.createGroup(option.className);
             graph.svgGroup.appendChild(g);
 
             const gSurfaceType = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
-            if(option.surfaceType == undefined) option.surfaceType = gSurfaceType != null ? gSurfaceType : "circle";
+            if (option.surfaceType == undefined) option.surfaceType = gSurfaceType != null ? gSurfaceType : "circle";
             graph.svgGroup.removeChild(g);
 
-            if(option.x == undefined) option.x = 0;
-            if(option.y == undefined) option.y = 0;
-            if(option.text== undefined) option.text = "";
+            if (option.x == undefined) option.x = 0;
+            if (option.y == undefined) option.y = 0;
+            if (option.text == undefined) option.text = "";
             let p: Vertex;
             if (option.surfaceType == "circle") {
                 p = new CircleVertex(graph, option);
@@ -436,7 +438,7 @@
                 p = new Vertex(graph, option);
             }
 
-            if(option.isRoot){
+            if (option.isRoot) {
                 graph.roots.push(p);
             }
 
@@ -528,16 +530,21 @@
             SVG.setStyleForPNG(this.svgText);
         }
         */
+        public setIndexDictionaryForVBA(vertexDic: { [key: string]: number; }, edgeDic: { [key: string]: number; }) {
+            vertexDic[this.objectID] = Object.keys(vertexDic).length;
+
+        }
+
         /**
          * VBAコードを作成します。
          * @param main 
          * @param sub 
          * @param indexDic 
          */
-        public createVBACode(main: string[], sub: string[][], indexDic: { [key: string]: number; }): void {
+        public createVBACode(main: string[], sub: string[][], vertexDic: { [key: string]: number; }, edgeDic: { [key: string]: number; }): void {
             if (this.graph != null) {
                 //const subline: string[] = [];
-                const i = indexDic[this.objectID];
+                const i = vertexDic[this.objectID];
                 const left = this.graph.svgGroup.getX() + this.x - (this.width / 2);
                 const top = this.graph.svgGroup.getY() + this.y - (this.height / 2);
 
