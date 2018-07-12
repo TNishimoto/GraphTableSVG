@@ -3,11 +3,12 @@ namespace GraphTableSVG {
     export namespace SVG {
         /**
          * SVGLineElementを生成します。
-         * @param x
-         * @param y
-         * @param x2
-         * @param y2
-         * @param className
+         * @param x 開始位置のX座標
+         * @param y 開始位置のY座標
+         * @param x2 終了位置のX座標
+         * @param y2 終了位置のY座標
+         * @param className SVGLineElementのクラス属性名
+         * @returns 生成されたSVGLineElement
          */
         export function createLine(x: number, y: number, x2: number, y2: number, className: string | null = null): SVGLineElement {
             const line1 = <SVGLineElement>document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -30,20 +31,22 @@ namespace GraphTableSVG {
         export const msoDashStyleName = "--stroke-style";
         /**
              * SVGPathElementを生成します。
-             * @param x
-             * @param y
-             * @param x2
-             * @param y2
-             * @param className
+             * @param parent 生成したSVGPathElementを子に追加する要素
+             * @param x 開始位置のX座標
+             * @param y 開始位置のY座標
+             * @param x2 終了位置のX座標
+             * @param y2 終了位置のY座標
+             * @param className SVGPathElementのクラス属性名
+             * @returns 生成されたSVGPathElement
              */
-        export function createPath(parent : SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
+        export function createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
             const line1 = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             parent.appendChild(line1);
             line1.setAttribute("d", `M ${x} ${y} M ${x2} ${y2}`);
             if (className != null) {
                 line1.setAttribute("class", className)
                 const dashStyle = line1.getPropertyStyleValue(msoDashStyleName);
-                if(dashStyle != null){
+                if (dashStyle != null) {
                     msoDashStyle.setStyle(line1, dashStyle);
                 }
             } else {
@@ -53,11 +56,12 @@ namespace GraphTableSVG {
             }
             return line1;
         }
-        
+
 
         /**
          * SVGTextElementを生成します。
-         * @param className
+         * @param className 生成するSVG要素のクラス属性名
+         * @returns 生成されたSVGTextElement
          */
         export function createText(className: string | null = null): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -77,9 +81,11 @@ namespace GraphTableSVG {
 
         /**
          * SVGRectElementを生成します。
-         * @param className
+         * @param parent 生成したSVG要素を子に追加する要素
+         * @param className 生成するSVG要素のクラス属性名
+         * @returns 生成されたSVGRectElement
          */
-        export function createRectangle(parent : SVGElement, className: string | null = null): SVGRectElement {
+        export function createRectangle(parent: SVGElement, className: string | null = null): SVGRectElement {
             const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             parent.appendChild(rect);
             rect.width.baseVal.value = 30;
@@ -91,14 +97,14 @@ namespace GraphTableSVG {
             } else {
                 rect.setAttribute("class", className);
                 const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
-                if(dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
+                if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 
                 const width = rect.getPropertyStyleNumberValue(SVG.defaultWidthName);
-                if(width != null){
+                if (width != null) {
                     rect.width.baseVal.value = width;
                 }
                 const height = rect.getPropertyStyleNumberValue(SVG.defaultHeightName);
-                if(height != null){
+                if (height != null) {
                     rect.height.baseVal.value = height;
                 }
 
@@ -109,7 +115,8 @@ namespace GraphTableSVG {
 
         /**
          * SVGGElementを生成します。
-         * @param className
+         * @param className 生成するSVG要素のクラス属性名
+         * @returns 生成されたSVGGElement
          */
         export function createGroup(className: string | null = null): SVGGElement {
             const g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -120,7 +127,7 @@ namespace GraphTableSVG {
         }
         /**
          * Styleの設定を消去します。
-         * @param style
+         * @param style 消去するStyle
          */
         export function resetStyle(style: CSSStyleDeclaration) {
             style.stroke = null;
@@ -137,9 +144,11 @@ namespace GraphTableSVG {
 
         /**
          * SVGCircleElementを生成します。
-         * @param className
+         * @param parent 生成したSVG要素を子に追加する要素
+         * @param className 生成するSVG要素のクラス属性名
+         * @returns 生成されたSVGCircleElement
          */
-        export function createCircle(parent : SVGElement, className: string | null = null): SVGCircleElement {
+        export function createCircle(parent: SVGElement, className: string | null = null): SVGCircleElement {
             const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             parent.appendChild(circle);
             circle.r.baseVal.value = defaultCircleRadius;
@@ -150,12 +159,12 @@ namespace GraphTableSVG {
             } else {
                 circle.setAttribute("class", className);
                 const radius = circle.getPropertyStyleNumberValue(SVG.defaultRadiusName);
-                if(radius != null){
+                if (radius != null) {
                     circle.r.baseVal.value = radius;
                 }
 
                 const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
-                if(dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
+                if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
                 //const s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
                 //circle.className = className
                 //console.log("d : " + circle.setAttribute("class", className));
@@ -167,6 +176,11 @@ namespace GraphTableSVG {
 
             return circle;
         }
+        /**
+         * Edgeの矢じりとして使うSVGMarkerElementを作成します。
+         * @param className 生成するSVG要素のクラス属性名
+         * @returns 生成されたSVGMarkerElement
+         */
         export function createMarker(className: string | null = null): SVGMarkerElement {
             const marker = <SVGMarkerElement>document.createElementNS('http://www.w3.org/2000/svg', 'marker');
             const poly = <SVGPolygonElement>document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
@@ -189,24 +203,31 @@ namespace GraphTableSVG {
             return marker;
 
         }
+        /**
+         * SVGTextElementを子に持つSVGTextPathElementを作成します。
+         * @param className 生成するSVGTextPathElementのクラス属性名
+         * @returns 生成されたSVGTextElementとSVGTextPathElement
+         */
         export function createTextPath(className: string | null = null): [SVGTextElement, SVGTextPathElement] {
             const text: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');;
             const path = <SVGTextPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
             text.appendChild(path);
 
-            if(className == null){
-            path.style.fill = "black";
-            path.style.fontSize = "14px";
-            path.style.fontWeight = "bold";
-            path.style.fontFamily = 'Times New Roman';
-            }else{
+            if (className == null) {
+                path.style.fill = "black";
+                path.style.fontSize = "14px";
+                path.style.fontWeight = "bold";
+                path.style.fontFamily = 'Times New Roman';
+            } else {
                 path.setAttribute("class", className);
             }
             return [text, path];
         }
-        function createTextSpans(str: string, className: string | null = null, fontsize: number = 12, fstdx: number | null = null, fstdy: number | null = null): SVGTSpanElement[] {
+        
+        function createTextSpans(text: string, className: string | null = null, 
+            fontsize: number = 12, fstdx: number | null = null, fstdy: number | null = null): SVGTSpanElement[] {
             let r: SVGTSpanElement[] = [];
-            str += "_";
+            text += "_";
             //const p: SVGTextElement = this;
             //p.textContent = "";
             //const h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
@@ -216,8 +237,8 @@ namespace GraphTableSVG {
             const char_dy = (1 * fontsize) / 3;
             let lastMode: string = "none";
             const smallFontSize = (2 * fontsize) / 3;
-            for (let i = 0; i < str.length; i++) {
-                const c = str[i];
+            for (let i = 0; i < text.length; i++) {
+                const c = text[i];
                 if (c == "_" || c == "{" || c == "^" || c == "}") {
                     mode += c;
                     if (mode == "_{}") {
@@ -270,27 +291,39 @@ namespace GraphTableSVG {
             return tspan;
         }
 
-        export function setTextToTextPath(path: SVGTextPathElement, str: string, isLatexMode: boolean) {
+        /**
+         * SVGTextPathElementにテキストをセットします。
+         * @param path テキストをセットされるパス
+         * @param text パスに適用するテキスト
+         * @param isLatexMode Latex表記を使用するかどうか 
+         */
+        export function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean) {
             path.textContent = "";
             const fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
             if (isLatexMode) {
-                createTextSpans(str, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
+                createTextSpans(text, null, parseInt(fontSize)).forEach((v) => path.appendChild(v));
             } else {
-                path.appendChild(createSingleTextSpan(str, null));
+                path.appendChild(createSingleTextSpan(text, null));
             }
         }
-        export function setTextToSVGText(path: SVGTextElement, str: string, isLatexMode: boolean) {
-            path.textContent = "";
-            const fontSize = path.getPropertyStyleValueWithDefault("font-size", "12");
+        /**
+         * SVGTextElementにテキストをセットします。
+         * @param svgText テキストをセットされるSVG要素
+         * @param text SVG要素に適用するテキスト
+         * @param isLatexMode Latex表記を使用するかどうか 
+         */
+        export function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexMode: boolean) {
+            svgText.textContent = "";
+            const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "12");
             const fs = parseInt(fontSize);
             let dx = 0;
 
-            str.split("\n").forEach((w) => {
+            text.split("\n").forEach((w) => {
                 let dy = fs;
                 let width = 0;
                 if (isLatexMode) {
                     createTextSpans(w, null, fs, dx, dy).forEach((v) => {
-                        path.appendChild(v)
+                        svgText.appendChild(v)
                         const rect = v.getBoundingClientRect();
                         dx = 0;
                         dy = 0;
@@ -299,7 +332,7 @@ namespace GraphTableSVG {
 
                     dy += fs;
                 } else {
-                    path.appendChild(createSingleTextSpan(w, null));
+                    svgText.appendChild(createSingleTextSpan(w, null));
                 }
                 dx = -width;
             }
@@ -346,7 +379,11 @@ namespace GraphTableSVG {
             
         }
         */
-
+        /**
+         * SVG要素にクラス属性をセットします。
+         * @param svg 適用されるSVG要素
+         * @param className クラス属性名
+         */
         export function setClass(svg: SVGElement, className: string | null = null) {
             if (className == null) {
                 svg.removeAttribute("class");
@@ -355,6 +392,10 @@ namespace GraphTableSVG {
                 svg.setAttribute("class", className);
             }
         }
+        /**
+         * SVG要素のクラス属性名からCSSStyleDeclarationを取得します。
+         * @param svg 取得されるSVG要素
+         */
         function getCSSStyle(svg: HTMLElement): CSSStyleDeclaration | null {
             if (svg.getAttribute("class") == null) {
                 return null;
@@ -363,6 +404,10 @@ namespace GraphTableSVG {
                 return css;
             }
         }
+        /**
+         * SVG要素のクラス属性名から取得できるCSSStyleDeclarationを要素のスタイル属性にセットします。
+         * @param svg 適用されるSVG要素
+         */
         export function setCSSToStyle(svg: HTMLElement) {
             const css = getCSSStyle(svg);
             if (css != null) {
@@ -375,6 +420,10 @@ namespace GraphTableSVG {
                 });
             }
         }
+        /**
+         * 入力のSVG要素とその配下の要素全てにsetCSSToStyleを適用します。
+         * @param item SVG要素もしくはそのid
+         */
         export function setCSSToAllElementStyles(item: HTMLElement | string) {
             if (typeof item == 'string') {
                 const svgBox: HTMLElement | null = document.getElementById(item);
@@ -395,6 +444,10 @@ namespace GraphTableSVG {
         }
         const cssPropertyNames: string[] = ["font-size", "fill", "stroke", "font-family"];
 
+        /**
+         * 未使用。
+         * @param name 
+         */
         export function getStyleSheet(name: string): CSSStyleDeclaration | null {
             const name2 = "." + name;
             for (let i = 0; i < document.styleSheets.length; i++) {
@@ -411,6 +464,7 @@ namespace GraphTableSVG {
             }
             return null;
         }
+        
         /*
         export function setStyleForPNG(svg: SVGElement) {
             const style = getComputedStyle(svg);
