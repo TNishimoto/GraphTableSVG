@@ -114,13 +114,11 @@ Powerpointの表のようにセル内のテキスト位置を指定できる。
 <load path="table/sample_table_logic.js" />
 <load path="images/table_logic.png" />
 <a href="table/sample_table_logic.html">実行結果</a><dbr/>
-LogicTableクラスから表を作成することが出来る。
+<ahref>LogicTable</ahref>クラスから表を作成することが出来る。
 LogicTableクラスはTableクラスから描画関係を取り除いたクラスである。
+<ahref>LogicCell</ahref>を二次元配列に格納しており各LogicCellを編集することでセルの編集をすることができる。
 よって、Tableクラスを作成する前からどのような表を作るか決まっている場合はLogicTableクラスを通してSVGを構築したほうがコードの見通しがすっきりするかもしれない。
-<ol>
-<li><a href="./typedoc/classes/graphtablesvg.logictable.html" target="_blank">LogicTable</a></li>
-<li><a href="./typedoc/classes/graphtablesvg.logiccell.html" target="_blank">LogicCell</a></li>
-</ol><dbr/>
+<dbr/>
 table.construct(table, option)は文字列の2次元配列tableからSVGを構築する関数である。
 表の装飾にこだわらない場合はこっちから作ったほうが良いかもしれない。
 </xarticle>
@@ -214,9 +212,12 @@ setStyleで設定した点線はPowerpoint側で用意された点線に直接�
 <load path="images/graph_tree_leave.png" />
 <a href="graph/sample_graph_tree.html">実行結果</a><dbr/>
 現在、graphで描画されているのが木である場合に適用できる各頂点の配置関数がライブラリに用意されている。
-GraphTableSVG.TreeArrangement.alignVerticeByChildrenとGraphTableSVG.TreeArrangement.alignVerticeByLeaveである。
+<ahref>TreeArrangement.alignVerticeByChildren</ahref>と
+<ahref>TreeArrangement.alignVerticeByLeave</ahref>である。
 前者は子頂点が同じ高さになるように頂点を配置し、後者は葉頂点が同じ高さになるように配置される。
-このときの各頂点の水平間隔と垂直間隔はgraph.vertexXIntervalとgraph.vertexYIntervalで設定できる。<dbr/>
+このときの各頂点の水平間隔と垂直間隔は
+<ahref>graph.vertexXInterval</ahref>と
+<ahref>graph.vertexYInterval</ahref>で設定できる。<dbr/>
 graph.relocateFunctionはグラフの配置方法を決定するアロー関数のプロパティである。
 第一引数でgraph自身を受け取る。
 配置方法を決定すると言っても、この関数は(1)relocateFunctionの設定時か、(2)appendChild関数を呼ばれた後か、
@@ -229,12 +230,13 @@ graph.relocateFunctionはグラフの配置方法を決定するアロー関数�
 <load path="graph/sample_graph_logictree.js" />
 <load path="images/graph_logictree.png" />
 <a href="graph/sample_graph_logictree.html">実行結果</a><dbr/>
-LogicTreeはLogicTableと同様に、SVG要素を取り除いて木の形や各頂点や辺の設定プロパティだけで構成されたクラスである。
+<ahref>LogicTree</ahref>はLogicTableと同様に、SVG要素を取り除いて木の形や各頂点や辺の設定プロパティだけで構成されたクラスである。
 SVG要素として構築する前にあらかじめ木の形が決まっているときはこのクラスを通すと設計がすっきりするかもしれない。
 ちなみにLogicGraphはまだ実装されていない。
 </xarticle>
 
 <xarticle title="Graph Sample 6 : Powerpoint" >
+<ahref>test</ahref>
 </xarticle>
 
 

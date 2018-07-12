@@ -96,11 +96,11 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictree.html#children" class="tsd-kind-icon">children</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictree.html#edgeclass" class="tsd-kind-icon">edge<wbr>Class</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictree.html#edgelabel" class="tsd-kind-icon">edge<wbr>Label</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictree.html#item" class="tsd-kind-icon">item</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictree.html#nodeclass" class="tsd-kind-icon">node<wbr>Class</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictree.html#nodetext" class="tsd-kind-icon">node<wbr>Text</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictree.html#parentedgeclass" class="tsd-kind-icon">parent<wbr>Edge<wbr>Class</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictree.html#parentedgetext" class="tsd-kind-icon">parent<wbr>Edge<wbr>Text</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictree.html#vertexclass" class="tsd-kind-icon">vertex<wbr>Class</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="graphtablesvg.logictree.html#vertextext" class="tsd-kind-icon">vertex<wbr>Text</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -118,28 +118,33 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Logic<wbr>Tree<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span>, children<span class="tsd-signature-symbol">?: </span><a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a><span class="tsd-signature-symbol">[]</span>, nodeText<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, edgeLabel<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Logic<wbr>Tree<span class="tsd-signature-symbol">(</span>option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/e08400f/GraphTableSVG/logic_tree.ts#L13">logic_tree.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/ce8eb41/GraphTableSVG/logic_tree.ts#L15">logic_tree.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> item: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> children: <a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> nodeText: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> edgeLabel: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> option: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> children<span class="tsd-signature-symbol">?: </span><a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a><span class="tsd-signature-symbol">[]</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> item<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> parent<wbr>Edge<wbr>Text<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> vertex<wbr>Text<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a></h4>
@@ -152,60 +157,60 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="children" class="tsd-anchor"></a>
 					<h3>children</h3>
-					<div class="tsd-signature tsd-kind-icon">children<span class="tsd-signature-symbol">:</span> <a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a><span class="tsd-signature-symbol">[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">children<span class="tsd-signature-symbol">:</span> <a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/e08400f/GraphTableSVG/logic_tree.ts#L15">logic_tree.ts:15</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="edgeclass" class="tsd-anchor"></a>
-					<h3>edge<wbr>Class</h3>
-					<div class="tsd-signature tsd-kind-icon">edge<wbr>Class<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/e08400f/GraphTableSVG/logic_tree.ts#L13">logic_tree.ts:13</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="edgelabel" class="tsd-anchor"></a>
-					<h3>edge<wbr>Label</h3>
-					<div class="tsd-signature tsd-kind-icon">edge<wbr>Label<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/e08400f/GraphTableSVG/logic_tree.ts#L11">logic_tree.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/ce8eb41/GraphTableSVG/logic_tree.ts#L14">logic_tree.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="item" class="tsd-anchor"></a>
 					<h3>item</h3>
-					<div class="tsd-signature tsd-kind-icon">item<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<div class="tsd-signature tsd-kind-icon">item<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/e08400f/GraphTableSVG/logic_tree.ts#L15">logic_tree.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/ce8eb41/GraphTableSVG/logic_tree.ts#L15">logic_tree.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="nodeclass" class="tsd-anchor"></a>
-					<h3>node<wbr>Class</h3>
-					<div class="tsd-signature tsd-kind-icon">node<wbr>Class<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
+					<a name="parentedgeclass" class="tsd-anchor"></a>
+					<h3>parent<wbr>Edge<wbr>Class</h3>
+					<div class="tsd-signature tsd-kind-icon">parent<wbr>Edge<wbr>Class<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/e08400f/GraphTableSVG/logic_tree.ts#L12">logic_tree.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/ce8eb41/GraphTableSVG/logic_tree.ts#L13">logic_tree.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="nodetext" class="tsd-anchor"></a>
-					<h3>node<wbr>Text</h3>
-					<div class="tsd-signature tsd-kind-icon">node<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
+					<a name="parentedgetext" class="tsd-anchor"></a>
+					<h3>parent<wbr>Edge<wbr>Text</h3>
+					<div class="tsd-signature tsd-kind-icon">parent<wbr>Edge<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/e08400f/GraphTableSVG/logic_tree.ts#L10">logic_tree.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/ce8eb41/GraphTableSVG/logic_tree.ts#L11">logic_tree.ts:11</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="vertexclass" class="tsd-anchor"></a>
+					<h3>vertex<wbr>Class</h3>
+					<div class="tsd-signature tsd-kind-icon">vertex<wbr>Class<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/ce8eb41/GraphTableSVG/logic_tree.ts#L12">logic_tree.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="vertextext" class="tsd-anchor"></a>
+					<h3>vertex<wbr>Text</h3>
+					<div class="tsd-signature tsd-kind-icon">vertex<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/ce8eb41/GraphTableSVG/logic_tree.ts#L10">logic_tree.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -216,19 +221,19 @@
 					<a name="getorderednodes" class="tsd-anchor"></a>
 					<h3>get<wbr>Ordered<wbr>Nodes</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Ordered<wbr>Nodes<span class="tsd-signature-symbol">(</span>order<span class="tsd-signature-symbol">: </span><a href="../enums/graphtablesvg.nodeorder.html" class="tsd-signature-type">NodeOrder</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Ordered<wbr>Nodes<span class="tsd-signature-symbol">(</span>order<span class="tsd-signature-symbol">: </span><a href="../enums/graphtablesvg.vertexorder.html" class="tsd-signature-type">VertexOrder</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/e08400f/GraphTableSVG/logic_tree.ts#L19">logic_tree.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/ce8eb41/GraphTableSVG/logic_tree.ts#L23">logic_tree.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>order: <a href="../enums/graphtablesvg.nodeorder.html" class="tsd-signature-type">NodeOrder</a></h5>
+									<h5>order: <a href="../enums/graphtablesvg.vertexorder.html" class="tsd-signature-type">VertexOrder</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="graphtablesvg.logictree.html" class="tsd-signature-type">LogicTree</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -276,6 +281,12 @@
 							<li class=" tsd-kind-module tsd-parent-kind-module">
 								<a href="../modules/graphtablesvg.verticalanchor.html">Vertical<wbr>Anchor</a>
 							</li>
+							<li class=" tsd-kind-module tsd-parent-kind-module">
+								<a href="../modules/graphtablesvg.msodashstyle.html">mso<wbr>Dash<wbr>Style</a>
+							</li>
+							<li class=" tsd-kind-module tsd-parent-kind-module">
+								<a href="../modules/graphtablesvg.pathtextalighnment.html">path<wbr>Text<wbr>Alighnment</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -294,19 +305,19 @@
 								<a href="graphtablesvg.logictree.html#children" class="tsd-kind-icon">children</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="graphtablesvg.logictree.html#edgeclass" class="tsd-kind-icon">edge<wbr>Class</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="graphtablesvg.logictree.html#edgelabel" class="tsd-kind-icon">edge<wbr>Label</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="graphtablesvg.logictree.html#item" class="tsd-kind-icon">item</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="graphtablesvg.logictree.html#nodeclass" class="tsd-kind-icon">node<wbr>Class</a>
+								<a href="graphtablesvg.logictree.html#parentedgeclass" class="tsd-kind-icon">parent<wbr>Edge<wbr>Class</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="graphtablesvg.logictree.html#nodetext" class="tsd-kind-icon">node<wbr>Text</a>
+								<a href="graphtablesvg.logictree.html#parentedgetext" class="tsd-kind-icon">parent<wbr>Edge<wbr>Text</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="graphtablesvg.logictree.html#vertexclass" class="tsd-kind-icon">vertex<wbr>Class</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="graphtablesvg.logictree.html#vertextext" class="tsd-kind-icon">vertex<wbr>Text</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="graphtablesvg.logictree.html#getorderednodes" class="tsd-kind-icon">get<wbr>Ordered<wbr>Nodes</a>

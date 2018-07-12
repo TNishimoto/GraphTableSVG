@@ -64,12 +64,46 @@ function tempora(lines : libxmljs.Element[], e : libxmljs.Element) : libxmljs.El
         sectionNode.addChild(w);
         //moveChildren(w, sectionNode);
 
-    })    
+    })
+    MacroupLib.insertFirst(sectionNode, "　");
     //console.log("//");
     lines.splice(0, lines.length);
 
     return sectionNode;
 
+}
+const hrefDic :{ [key: string]: string; }={
+    LogicTree:"./typedoc/classes/graphtablesvg.logictree.html",
+    LogicCell:"./typedoc/classes/graphtablesvg.logiccell.html",
+    LogicTable:"./typedoc/classes/graphtablesvg.logictable.html",
+    "TreeArrangement.alignVerticeByChildren":"./typedoc/modules/graphtablesvg.treearrangement.html#alignverticebychildren",
+    "TreeArrangement.alignVerticeByLeave":"./typedoc/modules/graphtablesvg.treearrangement.html#alignverticebyleave",
+    "graph.vertexXInterval":"./typedoc/classes/graphtablesvg.graph.html#vertexxinterval",
+    "graph.vertexYInterval":"./typedoc/classes/graphtablesvg.graph.html#vertexyinterval"
+}
+function setXMLText(e : libxmljs.Element, text : string){
+    const result = libxmljs.parseXml(text);
+    clearChildren(e);
+    e.addChild(result.root());
+    //result.root().childNodes().forEach((v)=>e.addChild(v));
+}
+function replaceXMLText(e : libxmljs.Element, text : string){
+    const result = libxmljs.parseXml(text);
+    clearChildren(e);
+    e.addPrevSibling(result.root());
+    e.remove();
+    //e.addChild(result.root());
+}
+pack.midMacros.elements["ahref"] = (e : libxmljs.Element, info : Macroup.Setting) => {
+    const name = e.text();
+    if(name in hrefDic){
+        replaceXMLText(e, `<a href="${hrefDic[name]}" target="_blank">${name}</a>`);
+        
+    }else{
+        replaceXMLText(e, `<p style="color:red;font-size:24pt">${name} : No Exist Link!</p>`);
+
+        //(<any>e).text("No Dic!");
+    }
 }
 pack.midMacros.elements["xarticle"] = (e : libxmljs.Element, info : Macroup.Setting) =>{
     e.attr({after : "article"});
@@ -105,6 +139,7 @@ pack.midMacros.elements["xarticle"] = (e : libxmljs.Element, info : Macroup.Sett
             }
         }
     })
+    if(tmp.length > 0) newNodes.push(tempora(tmp, e));
 
     clearChildren(e);
     newNodes.forEach((v)=>{    
