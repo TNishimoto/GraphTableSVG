@@ -223,9 +223,17 @@ namespace GraphTableSVG {
             }
             return [text, path];
         }
-        
+        /**
+         * 入力テキストをLatex表記でパースした結果をSVGTSpanElement配列で返します。
+         * @param text Latex表記のテキスト
+         * @param className 生成したSVGTSpanElementのクラス属性名
+         * @param fontsize 生成したSVGTSpanElementのフォントサイズ
+         * @param dxOfFirstElement 生成した最初のSVGTSpanElementのdx
+         * @param dyOfFirstElement 生成した最初のSVGTSpanElementのdy
+         * @returns 入力テキストをLatex表記でパースした結果をSVGTSpanElement配列
+         */
         function createTextSpans(text: string, className: string | null = null, 
-            fontsize: number = 12, fstdx: number | null = null, fstdy: number | null = null): SVGTSpanElement[] {
+            fontsize: number = 12, dxOfFirstElement: number | null = null, dyOfFirstElement: number | null = null): SVGTSpanElement[] {
             let r: SVGTSpanElement[] = [];
             text += "_";
             //const p: SVGTextElement = this;
@@ -266,8 +274,8 @@ namespace GraphTableSVG {
                         tspan.textContent = tmp;
                         const normaldy = lastMode == "up" ? char_dy : lastMode == "down" ? -char_dy : 0;
                         if (isFst) {
-                            if (fstdx != null) tspan.setAttribute("dx", `${fstdx}`);
-                            if (fstdy != null) tspan.setAttribute("dy", `${fstdy}`);
+                            if (dxOfFirstElement != null) tspan.setAttribute("dx", `${dxOfFirstElement}`);
+                            if (dyOfFirstElement != null) tspan.setAttribute("dy", `${dyOfFirstElement}`);
 
                         } else {
                             tspan.setAttribute("dy", `${normaldy}`);
@@ -284,10 +292,19 @@ namespace GraphTableSVG {
             }
             return r;
         }
-        function createSingleTextSpan(str: string, className: string | null = null): SVGTSpanElement {
+        /**
+         * 入力テキストからSVGTSpanElementを生成します。
+         * @param text SVGTSpanElementのテキスト
+         * @param className SVGTSpanElementのクラス属性名
+         * @returns 生成されるSVGTSpanElement
+         */
+        function createSingleTextSpan(text: string, className: string | null = null): SVGTSpanElement {
             const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-            tspan.textContent = str;
-
+            tspan.textContent = text;
+            
+            if(className != null){
+            tspan.setAttribute("class", className)
+            }
             return tspan;
         }
 

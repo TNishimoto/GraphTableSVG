@@ -99,6 +99,14 @@
                 return val;
             }
         }
+        /**
+         * 二次ベジエ曲線上の座標を計算します。
+         * @param param0 [x,y] ベジエ曲線の開始座標
+         * @param param1 [x,y] ベジエ曲線の制御点
+         * @param param2 [x,y] ベジエ曲線の終了座標
+         * @param t 曲線上の位置 0が曲線の開始座標で1が曲線の終了座標、0.5が曲線の中間点を表します
+         * @returns 指定された座標
+         */
         export function bezierLocation([px1,py1] : [number, number], [px2,py2] : [number, number], [px3,py3] : [number, number], t : number) : [number, number]{
             const x = px1 * (1-t) * (1-t) + 2 * px2 * t *( 1-t) + px3 * t * t; 
             const y = py1 * (1-t) * (1-t) + 2 * py2 * t *( 1-t) + py3 * t * t; 

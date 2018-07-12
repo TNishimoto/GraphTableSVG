@@ -1,6 +1,10 @@
 ﻿namespace GraphTableSVG {
     export namespace GUI {
-        export function createMacroModal(text: string) {
+        /**
+         * マクロ用のモーダルを画面に生成します。
+         * @param vbaCode モーダルに表示する貼り付けるVBAマクロ
+         */
+        export function createMacroModal(vbaCode: string) {
 
             const mainDiv = document.createElement("div");
             mainDiv.id = "macro-modal"
@@ -31,7 +35,7 @@
 
 
             const cnt = <HTMLInputElement>document.getElementById("codeBox");
-            cnt.value = text;
+            cnt.value = vbaCode;
 
             const bgDiv = document.createElement("div");
             document.body.appendChild(bgDiv);
@@ -50,6 +54,9 @@
 
 
         }
+        /**
+         * マクロ用モーダルを取り除きます。
+         */
         export function removeMacroModal() {
 
             const div1 = document.getElementById("macro-modal");
@@ -59,6 +66,9 @@
             if (div2 != null) document.body.removeChild(div2);
 
         }
+        /**
+         * マクロ用モーダルのテキストをクリップボードにコピーしてマクロ用モーダルを取り除きます。
+         */
         export function copyAndCloseMacroModal() {
             const cnt = <HTMLInputElement>document.getElementById("codeBox");
             cnt.select();
@@ -66,6 +76,7 @@
             alert('クリップボードにコピーしました。');
             removeMacroModal();
         }
+
         export function setSVGBoxSize(box: HTMLElement, w: number, h: number): void;
         export function setSVGBoxSize(box: HTMLElement, rect: Rectangle, padding: Padding): void;
         export function setSVGBoxSize(box: HTMLElement, item1: Rectangle | number, item2: Padding | number) {            
@@ -92,6 +103,9 @@
             }
 
         }
+        /**
+         * URLのパラメータを表す連想配列を生成します。
+         */
         export function getURLParameters(): { [key: string]: string; } {
             const arg: { [key: string]: string; } = {};
             const pair = location.search.substring(1).split('&');
@@ -101,6 +115,9 @@
             }
             return arg;
         }
+        /**
+         * URLのパラメータをパースしてHTML内の適切な要素に代入します。
+         */
         export function setURLParametersToHTMLElements() {
             const parameters = getURLParameters();
             Object.keys(parameters).forEach((key) => {
@@ -114,12 +131,19 @@
             }, parameters);
         }
 
-
-        export function getInputText(boxname: string): string {
-            const textbox: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById(boxname);
+        /**
+         * HTMLTextAreaElementのテキストを取得します。
+         * @param elementID HTMLTextAreaElementのID
+         */
+        export function getInputText(elementID: string): string {
+            const textbox: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById(elementID);
             return textbox.value;
         }
 
+        /**
+         * HTMLTextAreaElementを取得します。
+         * @param id HTMLTextAreaElementのID
+         */
         export function getNonNullElementById(id: string): HTMLElement {
             const tmp = document.getElementById(id);
             if (tmp == null) {
