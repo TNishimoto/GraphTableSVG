@@ -5,6 +5,16 @@
 <OUTPUT path="./tutorial.html" remove="" macro="html" />
 <MACRO path="./tutorial.js" remove=""/>
 <stylesheet path="tutorial.css" />
+<ahref key="LogicTree" url="./typedoc/classes/graphtablesvg.logictree.html" />
+<ahref key="LogicCell" url="./typedoc/classes/graphtablesvg.logiccell.html" />
+<ahref key="LogicTable" url="./typedoc/classes/graphtablesvg.logictable.html" />
+<ahref key="TreeArrangement.alignVerticeByChildren" url="./typedoc/modules/graphtablesvg.treearrangement.html#alignverticebychildren" />
+<ahref key="TreeArrangement.alignVerticeByLeave" url="./typedoc/modules/graphtablesvg.treearrangement.html#alignverticebyleave" />
+<ahref key="graph.vertexXInterval" url="./typedoc/classes/graphtablesvg.graph.html#vertexxinterval" />
+<ahref key="graph.vertexYInterval" url="./typedoc/classes/graphtablesvg.graph.html#vertexyinterval" />
+<ahref key="GraphTableSVG.Table" url="./typedoc/classes/graphtablesvg.table.html" />
+<ahref key="GraphTableSVG.Cell" url="./typedoc/classes/graphtablesvg.cell.html" />
+<ahref key="GraphTableSVG.Table.svgGroup" url="./typedoc/classes/graphtablesvg.cell.html" />
 </head>
 <body>
 
@@ -26,26 +36,22 @@ SVG入門の参考として
 <load path="images/table_hello1.png" />
 <a href="table/sample_table_hello.html">実行結果</a><dbr/>
 Table（表）を作成する例。
-TableはSVGなのでどのSVG要素内に作成するかをConstructorの引数の第一要素で指定する。
+<rhref>Table</rhref>は表をSVGで表現するためのクラスで、どのSVG要素内に作成するかを<rhref method="true">Table.constructor</rhref>の引数の第一要素で指定する。
 第二要素はオプションでTableのSVG要素内の位置や行数列数を指定することができる。
-また、前述の通りTableはSVGなので構成要素のプロパティを編集することでTableの中身を編集することができる。<dbr/>
+表内のセルは<rhref>Cell</rhref>クラスで表現されており、これもセルをSVGで表現するためのクラスである。これらのプロパティやメソッドの詳細はリファレンスで確認できる。
+<dbr/>
+前述の通りTableはSVGなので構成要素のプロパティを編集することでTableの中身を編集することができる。
 ブラウザのデバッグ機能を用いてTableがSVGでどのように構成されているか見ることも編集することも可能。
 <load path="images/table_hello2.png" />
-Javascript上ではTableは主にGraphTableSVG.TableとGraphTableSVG.Cellクラスで構成されている。
-プロパティやメソッドの詳細は下記のリファレンスから確認できる。
-<ol>
-<li><a href="./typedoc/classes/graphtablesvg.table.html" target="_blank">Table</a></li>
-<li><a href="./typedoc/classes/graphtablesvg.cell.html" target="_blank">Cell</a></li>
-</ol>
 </xarticle>
 
 <xarticle title="Table Sample 2 : Tableの構成">
-<load path="images/table2.png" />
-<load path="images/table3.png" />
-上の図はTableとCellがどのようなSVG要素で構成されているかを示している。
+下の図はTableとCellがどのようなSVG要素で構成されているかを示している。
 Cellは背景をSVGRectElementで、テキストをSVGTextElementで表しており、それらをSVGGElementでまとめている。
 Tableは各Cellを表すSVGGElementと各枠を表すSVGLineElementをSVGGElementでまとめている。
-これらはブラウザのデバッグ機能で確認できる。<dbr/>
+これらはブラウザのデバッグ機能で確認できる。
+<load path="images/table2.png" />
+<load path="images/table3.png" />
 参考のために各SVG要素のリファレンスを貼っておく。
 <ol>
 <li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGLineElement" target="_blank">SVGLineElement</a></li>
@@ -69,9 +75,9 @@ SVG要素のスタイル属性を直接編集や、クラス名によるCSSで�
 Tableの各セルや枠にCSSを適用するためには各要素のクラス属性を設定しないといけない。
 これは面倒なので、TableのCSSからセルや枠のCSSも設定できるようにカスタム属性を追加している。
 --default-cell-classと--default-border-classはそれぞれセルと枠の各クラス属性のデフォルト名を指定する属性である。
-これをtable.svgGroupのスタイルに設定しておくことで、一つずつクラス属性を設定する手間が省ける。<dbr/>
-同様にcell.svgGroupに--default-background-classと--default-text-classを適用することで
-cell.backgroundとcell.svgTextのクラス属性を設定することができる。
+これを<rhref method="true">Table.svgGroup</rhref>のスタイルに設定しておくことで、一つずつクラス属性を設定する手間が省ける。<dbr/>
+同様に<rhref method="true">Cell.svgGroup</rhref>に--default-background-classと--default-text-classを適用することで
+<rhref method="true">Cell.svgBackground</rhref>と<rhref method="true">Cell.svgText</rhref>のクラス属性を設定することができる。
 また、Tableのコンストラクタの第二引数にあるtableClassNameからtable.svgGroupのクラス属性を設定することができるので、
 CSSファイルにこれらのカスタム属性を記述しておくことで、コンストラクタとCSSからTableの見た目を一度に設定することが出来る。
 （<a href="table/sample_table_style_select.html">実行結果</a>）
@@ -82,22 +88,18 @@ CSSファイルにこれらのカスタム属性を記述しておくことで�
 <load path="table/sample_table_width.js" />
 <load path="images/table_rowcolumn.png" />
 <a href="table/sample_table_width.html">実行結果</a><dbr/>
-各行の高さ、各列の幅はRow,Columnのプロパティから設定できる。
-RowクラスとColumnクラスの詳細は下のリファレンスを参照すること。
-<ol>
-<li><a href="./typedoc/classes/graphtablesvg.row.html" target="_blank">Row</a></li>
-<li><a href="./typedoc/classes/graphtablesvg.column.html" target="_blank">Column</a></li>
-</ol>
+各行の高さ、各列の幅は<rhref method="true">Table.rows</rhref>と<rhref method="true">Table.columns</rhref>のプロパティから設定できる。
+これらは<rhref>Row</rhref>クラスと<rhref>Column</rhref>クラスの配列である。
 </xarticle>
 
 <xarticle title="Table Sample 5 : セルの連結" >
 <load path="table/sample_table_merge.js" />
 <load path="images/table_merge.png" />
 <a href="table/sample_table_merge.html">実行結果</a><dbr/>
-隣り合うセルを結合することが出来る。cell.mergeRight()は右のセルと結合、cellmergeBottom()は下のセルと結合する。
-cell.merge(w, h)はそのセルを基準として列セル数w、行セル数hの結合セルを作成する。
+隣り合うセルを結合することが出来る。<rhref method="true">Cell.mergeRight</rhref>は右のセルと結合、<rhref method="true">Cell.mergeBottom</rhref>は下のセルと結合する。
+<rhref method="true">Cell.merge</rhref>(w, h)はそのセルを基準として列セル数w、行セル数hの結合セルを作成する。
 出来上がるセルは必ず矩形でなければならない。そのような結合セルにならない場合はエラーが発生する。
-実際に結合できるかどうかはcell.canMerge(w, h), cell.canMergeRight, cell.canMergeBottomで確認できる。
+実際に結合できるかどうかは<rhref method="true">Cell.canMerge</rhref>, <rhref method="true">Cell.canMergeRight</rhref>, <rhref method="true">Cell.canMergeBottom</rhref>で確認できる。
 </xarticle>
 
 <xarticle title="Table Sample 6 : テキスト位置の指定" >
@@ -106,20 +108,20 @@ cell.merge(w, h)はそのセルを基準として列セル数w、行セル数h�
 <load path="images/table_anchor.png" />
 <a href="table/sample_table_anchor.html">実行結果</a><dbr/>
 Powerpointの表のようにセル内のテキスト位置を指定できる。
-垂直方向のテキストの配置位置はcell.verticalAnchorもしくはcell.svgGroupの--vertical-anchor属性で指定できる。
-水平方向のテキストの配置位置はcell.horizontalAnchorもしくはcell.svgGroupの--horizontal-anchor属性で指定できる。
+垂直方向のテキストの配置位置は<rhref method="true">Cell.verticalAnchor</rhref>もしくはcell.svgGroupの--vertical-anchor属性で指定できる。
+水平方向のテキストの配置位置は<rhref method="true">Cell.horizontalAnchor</rhref>もしくはcell.svgGroupの--horizontal-anchor属性で指定できる。
 </xarticle>
 
 <xarticle title="Table Sample 7 : Logic Table" >
 <load path="table/sample_table_logic.js" />
 <load path="images/table_logic.png" />
 <a href="table/sample_table_logic.html">実行結果</a><dbr/>
-<ahref>LogicTable</ahref>クラスから表を作成することが出来る。
+<rhref>LogicTable</rhref>クラスから表を作成することが出来る。
 LogicTableクラスはTableクラスから描画関係を取り除いたクラスである。
-<ahref>LogicCell</ahref>を二次元配列に格納しており各LogicCellを編集することでセルの編集をすることができる。
+<rhref>LogicCell</rhref>を二次元配列に格納しており各LogicCellを編集することでセルの編集をすることができる。
 よって、Tableクラスを作成する前からどのような表を作るか決まっている場合はLogicTableクラスを通してSVGを構築したほうがコードの見通しがすっきりするかもしれない。
 <dbr/>
-table.construct(table, option)は文字列の2次元配列tableからSVGを構築する関数である。
+<rhref method="true">Table.construct</rhref>(table, option)は文字列の2次元配列tableからSVGを構築する関数である。
 表の装飾にこだわらない場合はこっちから作ったほうが良いかもしれない。
 </xarticle>
 
