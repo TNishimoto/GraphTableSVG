@@ -105,18 +105,34 @@ pack.midMacros.elements["ahref"] = (e: libxmljs.Element, info: Macroup.Setting) 
 }
 pack.midMacros.elements["rhref"] = (e: libxmljs.Element, info: Macroup.Setting) =>{
     const isMethod = e.attr("method") != null;
+    const isModule = e.attr("module") != null;
+    const isInterface = e.attr("interface") != null;
+
     const text = e.text();
+    let prefix = "";
+    let className = "";
+    if(isModule){
+        prefix = "modules/graphtablesvg.";
+    } else if(isInterface){
+        prefix = "interfaces/";
+    }
+    else{
+        prefix = "classes/graphtablesvg.";
+    }
+
     if(isMethod){
         const texts = text.split(".");
         const methodName = texts[texts.length-1].toLowerCase();
-        let className = "";
         if(texts.length == 2){
             className = texts[0].toLowerCase();
         }
-        replaceXMLText(e, `<a href="./typedoc/classes/graphtablesvg.${className}.html#${methodName}" target="_blank">${text}</a>`);
+        replaceXMLText(e, `<a href="./typedoc/${prefix}${className}.html#${methodName}" target="_blank">${text}</a>`);
     }else{
-        replaceXMLText(e, `<a href="./typedoc/classes/graphtablesvg.${text}.html" target="_blank">${text}</a>`);
+        className = text.toLowerCase();
+
+        replaceXMLText(e, `<a href="./typedoc/${prefix}${className}.html" target="_blank">${text}</a>`);        
     }
+
 }
 pack.midMacros.elements["xarticle"] = (e: libxmljs.Element, info: Macroup.Setting) => {
     e.attr({ after: "article" });

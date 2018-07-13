@@ -5,16 +5,6 @@
 <OUTPUT path="./tutorial.html" remove="" macro="html" />
 <MACRO path="./tutorial.js" remove=""/>
 <stylesheet path="tutorial.css" />
-<ahref key="LogicTree" url="./typedoc/classes/graphtablesvg.logictree.html" />
-<ahref key="LogicCell" url="./typedoc/classes/graphtablesvg.logiccell.html" />
-<ahref key="LogicTable" url="./typedoc/classes/graphtablesvg.logictable.html" />
-<ahref key="TreeArrangement.alignVerticeByChildren" url="./typedoc/modules/graphtablesvg.treearrangement.html#alignverticebychildren" />
-<ahref key="TreeArrangement.alignVerticeByLeave" url="./typedoc/modules/graphtablesvg.treearrangement.html#alignverticebyleave" />
-<ahref key="graph.vertexXInterval" url="./typedoc/classes/graphtablesvg.graph.html#vertexxinterval" />
-<ahref key="graph.vertexYInterval" url="./typedoc/classes/graphtablesvg.graph.html#vertexyinterval" />
-<ahref key="GraphTableSVG.Table" url="./typedoc/classes/graphtablesvg.table.html" />
-<ahref key="GraphTableSVG.Cell" url="./typedoc/classes/graphtablesvg.cell.html" />
-<ahref key="GraphTableSVG.Table.svgGroup" url="./typedoc/classes/graphtablesvg.cell.html" />
 </head>
 <body>
 
@@ -144,26 +134,25 @@ GraphTableSVG.SVGToVBA.create(tables)はそのようなVBAのコードを作成�
 <load path="images/graph_hello.png" />
 <a href="graph/sample_graph_hello.html">実行結果</a><dbr/>
 節が一つだけのグラフのHello World。
-表と同じようにコンストラクタにsvg要素を与えてグラフを表すSVGを作成する。このとき指定したsvg要素に空のグラフが作成される。
-Vertex.createは節を作成する関数である。作成した節にはSVGTextElementがあるので、節にテキストを入れることが出来る。
-重要なクラスと関数のリファレンスを以下に列挙する。ただしEdgeクラス、すなわち辺については次の例で説明する。
-<ol>
-<li><a href="./typedoc/classes/graphtablesvg.graph.html" target="_blank">Graph</a></li>
-<li><a href="./typedoc/classes/graphtablesvg.vertex.html" target="_blank">Vertex</a></li>
-<li><a href="./typedoc/classes/graphtablesvg.edge.html" target="_blank">Edge</a></li>
-<li><a href="./typedoc/classes/graphtablesvg.vertex.html#create" target="_blank">Vertex.create</a></li>
-</ol>
+<rhref>Graph</rhref>クラスはグラフをSVGで表現するためのクラスである。
+表と同じように<rhref method="true">Graph.constructor</rhref>にsvg要素を与えてグラフを表すSVGを作成する。このとき指定したsvg要素に空のグラフが作成される。
+<rhref>Vertex</rhref>クラスは頂点をSVGで表現するためのクラスで、<rhref method="true">Vertex.create</rhref>で頂点を作成する。
+作成した節にはSVGTextElementがあるので、頂点にテキストを入れることが出来る。
 </xarticle>
 
 <xarticle title="Graph Sample 2 : Edge" >
 <load path="graph/sample_graph_edge.js" />
 <load path="images/graph_edge.png" />
 <a href="graph/sample_graph_edge.html">実行結果</a><dbr/>
-辺を使って節同士を接続する例。
-GraphTableSVG.Edge.createでVertexと同じように辺を作成することができる。第二引数にあるbeginVertexとendVertexで辺が接続する開始節と終了節を指定することが出来る。
+辺を使って頂点を接続する例。
+<rhref>Edge</rhref>クラスは辺をSVGで表現するためのクラスである。
+<rhref method="true">Edge.create</rhref>で辺を作成することができる。
+第二引数にあるbeginVertexとendVertexで辺が接続する開始節と終了節を指定することが出来る。
 ここで指定しない場合、辺を作成してもsvg要素上で描画されないので注意すること。
-また、graph.connectで辺の接続先を指定することが出来る。第一引数が開始節、第二引数が接続辺、第三引数が終了節。
-辺に沿ってテキストを設定することができる。create時の第二引数で指定するか、edge1.svgTextPath.setTextContent(text)で指定する。
+また、<rhref method="true">Graph.connect</rhref>で辺の接続先を指定することが出来る。第一引数が開始頂点、第二引数が接続辺、第三引数が終了頂点。
+<dbr/>
+辺に沿ってテキストを設定することができる。create時の第二引数で指定するか、
+<rhref method="true" interface="true">SVGTextPathElement.setTextContent</rhref>で指定する。
 ちなみに、節の形は現在、円か四角形のどちらかを選択できる。第二引数でsurfaceType: "rectangle"とすると四角形、それ以外は円形。
 下の図は節や辺を構成しているSVG要素の参考図である。表と同じように直接SVGを編集してスタイルを変更することが可能。
 <load path="images/graph1.png" />
@@ -175,10 +164,11 @@ GraphTableSVG.Edge.createでVertexと同じように辺を作成することが�
 <load path="graph/sample_graph_vertex.js" />
 <load path="images/graph_vertex.png" />
 <a href="graph/sample_graph_vertex.html">実行結果</a><dbr/>
-ベジエ曲線のように辺を曲げることが出来る。edge1.controlPointプロパティに点の配列を与えることで制御点を設定することが出来る。ただし、現在設定できる制御点は一つだけなので注意すること。
-edge1.markerEnd = GraphTableSVG.Edge.createMark()とすることで終了節の方向に矢印を設定することができる。
+ベジエ曲線のように辺を曲げることが出来る。<rhref method="true">Edge.controlPoint</rhref>プロパティに点の配列を与えることで制御点を設定することが出来る。
+ただし、現在設定できる制御点は一つだけなので注意すること。
+<rhref method="true">Edge.markerEnd</rhref>に<rhref method="true">Edge.createMark</rhref>()をセットすることで終了節の方向に矢印を設定することができる。
 SVGには矢印用のSVG要素があるのでそれをcreateMark()で作成し、markerEndに設定することで辺の先に矢印のSVG要素が設定される。
-edge1.markerStartも同様に開始節の方向に矢印を設定できる。
+<rhref method="true">Edge.markerStart</rhref>も同様に開始節の方向に矢印を設定できる。
 ただし、現在は矢印の細かな設定はできないことに注意すること。<dbr/>
 </xarticle>
 
@@ -214,16 +204,17 @@ setStyleで設定した点線はPowerpoint側で用意された点線に直接�
 <load path="images/graph_tree_leave.png" />
 <a href="graph/sample_graph_tree.html">実行結果</a><dbr/>
 現在、graphで描画されているのが木である場合に適用できる各頂点の配置関数がライブラリに用意されている。
-<ahref>TreeArrangement.alignVerticeByChildren</ahref>と
-<ahref>TreeArrangement.alignVerticeByLeave</ahref>である。
+<rhref module="true" method="true">TreeArrangement.alignVerticeByChildren</rhref>と
+<rhref module="true" method="true">TreeArrangement.alignVerticeByLeave</rhref>である。
 前者は子頂点が同じ高さになるように頂点を配置し、後者は葉頂点が同じ高さになるように配置される。
 このときの各頂点の水平間隔と垂直間隔は
-<ahref>graph.vertexXInterval</ahref>と
-<ahref>graph.vertexYInterval</ahref>で設定できる。<dbr/>
-graph.relocateFunctionはグラフの配置方法を決定するアロー関数のプロパティである。
+<rhref method="true">Graph.vertexXInterval</rhref>と
+<rhref method="true">Graph.vertexYInterval</rhref>で設定できる。<dbr/>
+<rhref method="true">Graph.relocateFunction</rhref>はグラフの配置方法を決定するアロー関数のプロパティである。
 第一引数でgraph自身を受け取る。
-配置方法を決定すると言っても、この関数は(1)relocateFunctionの設定時か、(2)appendChild関数を呼ばれた後か、
-(3)relocate関数を呼ばれた時か、(4)もしくは後述するconstructFromLogicTreeを呼んだ後にしか呼ばれないので明示的に設定しない限りは呼ばれることはないだろう。
+配置方法を決定すると言っても、この関数は(1)relocateFunctionの設定時か、(2)<rhref method="true">Graph.appendChild</rhref>関数を呼ばれた後か、
+(3)<rhref method="true">Graph.relocate</rhref>関数を呼ばれた時か、
+(4)もしくは後述する<rhref method="true">Graph.constructFromLogicTree</rhref>を呼んだ後にしか呼ばれないので明示的に設定しない限りは呼ばれることはないだろう。
 このあたりは設計が煮詰まっていないので今後の実装で変更することもあるかもしれない。
 </xarticle>
 
@@ -232,7 +223,7 @@ graph.relocateFunctionはグラフの配置方法を決定するアロー関数�
 <load path="graph/sample_graph_logictree.js" />
 <load path="images/graph_logictree.png" />
 <a href="graph/sample_graph_logictree.html">実行結果</a><dbr/>
-<ahref>LogicTree</ahref>はLogicTableと同様に、SVG要素を取り除いて木の形や各頂点や辺の設定プロパティだけで構成されたクラスである。
+<rhref>LogicTree</rhref>はLogicTableと同様に、SVG要素を取り除いて木の形や各頂点や辺の設定プロパティだけで構成されたクラスである。
 SVG要素として構築する前にあらかじめ木の形が決まっているときはこのクラスを通すと設計がすっきりするかもしれない。
 ちなみにLogicGraphはまだ実装されていない。
 </xarticle>
