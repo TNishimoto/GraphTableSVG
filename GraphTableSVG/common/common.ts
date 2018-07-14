@@ -1,5 +1,10 @@
 ﻿namespace GraphTableSVG {
     export namespace Common {
+        /**
+         * グラフや表を消去します。
+         * @param svg 
+         * @param items 
+         */
         export function clearGraphTables(svg: HTMLElement, items: (GraphTableSVG.Graph | GraphTableSVG.Table)[]) {
             for (let i = 0; i < items.length; i++) {
                 var item = items[i];
@@ -10,6 +15,10 @@
                 }
             }
         }
+        /**
+         * 入力要素がdocument.bodyの孫であるときに限りTrueを返します。
+         * @param node 判定する要素
+         */
         export function IsDescendantOfBody(node: Node): boolean {
             const parent = node.parentNode;
             if (parent == null) {
@@ -21,7 +30,10 @@
                 return Common.IsDescendantOfBody(parent);
             }
         }
-
+        /**
+         * 領域を取得します。
+         * @param items 
+         */
         export function getRegion(items: (Graph | Table | SVGPathElement | SVGTextElement)[]): Rectangle {
             const rects = items.map((v) => {
                 if (v instanceof Graph) {
@@ -41,11 +53,17 @@
                 return new Rectangle();
             }
         }
-        export function paddingLeft(str: string, n: number, char: string): string {
-            while (str.length < n) {
-                str = char + str;
+        /**
+         * 指定された文字数になるまで指定された文字を左に加えます
+         * @param text 文字を追加する文字列
+         * @param length 計算後のtextの文字数
+         * @param leftChar 左に追加する文字
+         */
+        export function paddingLeft(text: string, length: number, leftChar: string): string {
+            while (text.length < length) {
+                text = leftChar + text;
             }
-            return str;
+            return text;
         }
         const CSSName: string = "___GraphTableCSS";
         export function setGraphTableCSS(cellColor: string, borderColor : string) {
@@ -76,20 +94,27 @@
             const item = document.getElementById(CSSName);
             return item;
         }
-
-        export function parseUnit(str : string) : [number, string]{
+        /**
+         * 単位付きの値を値部分と単位部分に分割します。
+         * @param text 単位付きの値
+         */
+        export function parseUnit(text : string) : [number, string]{
             let str1="", str2="";
-            for(let i=0;i<str.length;i++){
-                if(isNaN(<any>str[i])){
-                    str2 += str[i];
+            for(let i=0;i<text.length;i++){
+                if(isNaN(<any>text[i])){
+                    str2 += text[i];
                 }else{
-                    str1 += str[i];
+                    str1 += text[i];
                 }
             }
             return [Number(str1), str2];
         }
-        export function toPX(str : string) : number{
-            const [val, unit] = parseUnit(str);
+        /**
+         * 入力値をピクセル単位の値に変換します。
+         * @param value 
+         */
+        export function toPX(value : string) : number{
+            const [val, unit] = parseUnit(value);
             if(unit == "px"){
                 return val;
             } else if(unit == "em"){

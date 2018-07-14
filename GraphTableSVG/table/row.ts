@@ -1,4 +1,7 @@
 ﻿namespace GraphTableSVG {
+    /**
+     * 表の行を表現するクラスです。
+     */
     export class Row {
         private readonly table: Table;
         //private readonly _cellY: number;

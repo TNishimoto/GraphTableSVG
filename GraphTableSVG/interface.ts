@@ -1,8 +1,20 @@
 ﻿
 interface SVGGElement {
+    /**
+     * X座標を取得します。
+     */
     getX(): number;
+    /**
+     * X座標を設定します。
+     */
     setX(value: number): void;
+    /**
+     * Y座標を取得します。
+     */
     getY(): number;
+    /**
+     * Y座標を設定します。
+     */
     setY(value: number): void;
 }
 
@@ -139,23 +151,45 @@ SVGElement.prototype.setPropertyStyleValue = function (name: string, value: stri
 }
 
 interface SVGTextElement {
+    /**
+     * X座標を取得します。
+     */
     getX(): number;
+    /**
+     * X座標を設定します。
+     */
     setX(value: number): void;
+    /**
+     * Y座標を取得します。
+     */
     getY(): number;
+    /**
+     * Y座標を設定します。
+     */
     setY(value: number): void;
-    setTextContent(str: string, isLatexMode: boolean): void;
-    setTextContent(str: string): void;
+    /**
+     * SVGTextElementのテキストを設定します。
+     * @param text 設定するテキスト
+     * @param isLatexMode TrueのときLatex表記を使用します。
+     */
+    setTextContent(text: string, isLatexMode: boolean): void;
+    setTextContent(text: string): void;
 }
 interface SVGTextPathElement {
-    setTextContent(str: string, isLatexMode: boolean): void;
-    setTextContent(str: string): void;
+    /**
+     * SVGTextElementのテキストを設定します。
+     * @param text 設定するテキスト
+     * @param isLatexMode TrueのときLatex表記を使用します。
+     */
+    setTextContent(text: string, isLatexMode: boolean): void;
+    setTextContent(text: string): void;
 }
-SVGTextPathElement.prototype.setTextContent = function (str: string, isLatexMode: boolean = false) {
-    GraphTableSVG.SVG.setTextToTextPath(this, str, isLatexMode);
+SVGTextPathElement.prototype.setTextContent = function (text: string, isLatexMode: boolean = false) {
+    GraphTableSVG.SVG.setTextToTextPath(this, text, isLatexMode);
 };
 
-SVGTextElement.prototype.setTextContent = function (str: string, isLatexMode: boolean = false) {
-    GraphTableSVG.SVG.setTextToSVGText(this, str, isLatexMode);    
+SVGTextElement.prototype.setTextContent = function (text: string, isLatexMode: boolean = false) {
+    GraphTableSVG.SVG.setTextToSVGText(this, text, isLatexMode);    
 };
 
 SVGTextElement.prototype.getX = function () {
@@ -191,7 +225,14 @@ SVGTextElement.prototype.setY = function (value: number) {
 };
 
 interface SVGLineElement {
-    setEmphasis(v: boolean) : void;
+    /**
+     * SVGLineElementを強調するかどうかを設定します。
+     * @param b Trueなら強調。Falseなら強調しません。
+     */
+    setEmphasis(b: boolean) : void;
+    /**
+     * SVGLineElementが強調されているときにかぎりTrueを返します。
+     */
     getEmphasis(): boolean;
 
 }
@@ -234,7 +275,14 @@ SVGLineElement.prototype.setEmphasis = function (value: boolean){
 };
 
 interface SVGPathElement {
+    /**
+     * SVGPathElementの位置を設定します。
+     * @param points 
+     */
     setPathLocations(points: [number, number][]) : void;
+    /**
+     * SVGPathElementの位置を取得します。
+     */
     getPathLocations(): [number, number][];
 
 }

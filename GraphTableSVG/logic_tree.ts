@@ -5,7 +5,9 @@
         public nodeText: string | null = null;
     }
     */
-
+    /**
+     * 木構造を表現するクラスです。
+     */
     export class LogicTree {
         public vertexText: string | null = null
         public parentEdgeText: string | null = null
@@ -46,6 +48,9 @@
             return r;
         }
     }
+    /**
+     * 二分木を表現するクラスです。
+     */
     export class BinaryLogicTree extends LogicTree {
         public get left(): BinaryLogicTree | null {
             const left = this.children[0];
@@ -86,6 +91,9 @@
         }
         */
     }
+    /**
+     * セルを表現するクラスです。
+     */
     export class LogicCell {
 
         public text: string | null = null;
@@ -140,6 +148,9 @@
         }
         */
     }
+    /**
+     * 表を表現するクラスです。
+     */
     export class LogicTable {
         public cells: LogicCell[][];
         public columnWidths: (number | null)[];

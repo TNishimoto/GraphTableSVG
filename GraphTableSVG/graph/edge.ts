@@ -1,4 +1,7 @@
 ﻿namespace GraphTableSVG {
+    /**
+     * 辺をSVGで表現するためのクラスです。
+     */
     export class Edge {
         //public static defaultBeginConnectorPosition: string = "--default-begin-connector-position";
         //public static defaultEndConnectorPosition: string = "--default-end-connector-position";
@@ -50,6 +53,10 @@
                 return null;
             }
         }
+        /**
+         * 開始位置の矢印オブジェクトを設定します。
+         * @param value 代入するSVGMarkerElementもしくはNull
+         */
         public set markerStart(value: SVGMarkerElement | null) {
             if (this.svgPath != null) {
                 if (value == null) {
@@ -163,16 +170,6 @@
             return this._svgText;
         }
         
-        /*
-        protected _text: EdgeText | null = null;
-        public get text(): EdgeText | null {
-            return this._text;
-        }
-
-        public set text(value: EdgeText | null) {
-            this._text = value;
-        }
-        */
         constructor(__graph: Graph, g: SVGGElement) {
             this._svgGroup = g;
             this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());

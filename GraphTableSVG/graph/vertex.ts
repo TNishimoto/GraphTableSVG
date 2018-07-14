@@ -1,4 +1,7 @@
 ﻿namespace GraphTableSVG {
+    /**
+     * 頂点をSVGで表現するためのクラスです。
+     */
     export class Vertex {
         //public symbol: symbol = Symbol();
         public static readonly defaultSurfaceType: string = "--default-surface-type";

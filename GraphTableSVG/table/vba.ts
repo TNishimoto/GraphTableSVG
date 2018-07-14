@@ -1,6 +1,10 @@
 ﻿
 namespace GraphTableSVG {
     export class SVGToVBA {
+        /**
+         * 入力要素をPowerpoint上で作成するVBAコードを作成します。
+         * @param items 
+         */
         public static create(items: (Graph | Table | SVGPathElement | SVGTextElement)[] | (Graph | Table | SVGPathElement | SVGTextElement)): string {
             //const id = 0;
             if (items instanceof Array) {

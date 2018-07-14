@@ -1,4 +1,7 @@
 ﻿namespace GraphTableSVG {
+    /**
+     * このクラスは現在使われておりません。
+     */
     export class EdgeText {
 
         private _svgText: SVGTextElement;
@@ -45,17 +48,6 @@
             return [x, y];
         }
 
-        /*
-        public static create(graph: Graph, edge: Edge, text: string): EdgeText {
-            let p = new EdgeText();
-            p._svgText = createText();
-            p.svgText.textContent = text;
-            edge.svgGroup.appendChild(p.svgText);
-            p.parentEdge = edge;
-            edge.text = p;
-            return p;
-        }
-        */
 
         /**
          * 再描画します。

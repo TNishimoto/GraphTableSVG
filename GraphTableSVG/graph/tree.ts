@@ -6,8 +6,12 @@ namespace GraphTableSVG {
         
     }
     export namespace Parse{
-        export function parseTree(str : string) : GraphTableSVG.LogicTree {
-            const [tree, pos] = parseTreeSub(str, 0);
+        /**
+         * 入力文字列をパースしてLogicTreeを構築します。
+         * @param parseText 
+         */
+        export function parseTree(parseText : string) : GraphTableSVG.LogicTree {
+            const [tree, pos] = parseTreeSub(parseText, 0);
             return tree;
         }
         function parseTreeSub(str : string, pos : number) : [GraphTableSVG.LogicTree, number] {
@@ -35,7 +39,10 @@ namespace GraphTableSVG {
         
         
         }
-        
+        /**
+         * 入力木構造を表現する文字列を出力します。
+         * @param tree 文字列に変換する木構造
+         */
         export function getParseString(tree : GraphTableSVG.Vertex) : string {
             let str = "";
             str += "(";

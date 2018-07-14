@@ -23,6 +23,7 @@ function addNextSiblingCode(e : libxmljs.Element, codepaths : string[], dir : st
     }
 }
 */
+
 function createLoadCode(e: libxmljs.Element, dir: string): libxmljs.Element {
     const filePath = e.attr("path").value();
     const ext = path.extname(filePath);
@@ -85,6 +86,11 @@ function replaceXMLText(e: libxmljs.Element, text: string) {
     e.addPrevSibling(result.root());
     e.remove();
     //e.addChild(result.root());
+}
+let increment = 1;
+pack.preMacros.elements["incr"] = (e : Macroup.PremacroArg) => {
+    e.isTagErased = true;
+    e.content = `${increment++}`;
 }
 pack.midMacros.elements["ahref"] = (e: libxmljs.Element, info: Macroup.Setting) => {
     const name1 = e.attr("key");

@@ -20,7 +20,7 @@ SVG入門の参考として
 詳細は<a href="#xarticle-8">Table Sample 8 : Powerpointへ出力</a>に書いてある。<dbr/>
 </xarticle>
 
-<xarticle title="Table Sample 1 : hello world" >
+<xarticle title="Table Sample : hello world" >
 <load path="table/sample_table_hello.js" />
 <load path="table/sample_table_hello.html" />
 <load path="images/table_hello1.png" />
@@ -35,7 +35,7 @@ Table（表）を作成する例。
 <load path="images/table_hello2.png" />
 </xarticle>
 
-<xarticle title="Table Sample 2 : Tableの構成">
+<xarticle title="Table Sample : Tableの構成">
 下の図はTableとCellがどのようなSVG要素で構成されているかを示している。
 Cellは背景をSVGRectElementで、テキストをSVGTextElementで表しており、それらをSVGGElementでまとめている。
 Tableは各Cellを表すSVGGElementと各枠を表すSVGLineElementをSVGGElementでまとめている。
@@ -58,7 +58,7 @@ SVG要素のスタイル属性を直接編集や、クラス名によるCSSで�
 <load path="images/table_style.png" />
 </xarticle>
 
-<xarticle title="Table Sample 3 : デフォルトクラス名の指定" >
+<xarticle title="Table Sample : デフォルトクラス名の指定" >
 <load path="table/sample_table_style_select.js" />
 <load path="table/sample_table_style_select.css" />
 <load path="images/table_select_style.png" />
@@ -74,7 +74,7 @@ CSSファイルにこれらのカスタム属性を記述しておくことで�
 ただし、この方法では各セルごとにCSSを変更するなどの細かな設定はできないことに注意すること。
 </xarticle>
 
-<xarticle title="Table Sample 4 : RowとColumn" >
+<xarticle title="Table Sample : RowとColumn" >
 <load path="table/sample_table_width.js" />
 <load path="images/table_rowcolumn.png" />
 <a href="table/sample_table_width.html">実行結果</a><dbr/>
@@ -82,7 +82,7 @@ CSSファイルにこれらのカスタム属性を記述しておくことで�
 これらは<rhref>Row</rhref>クラスと<rhref>Column</rhref>クラスの配列である。
 </xarticle>
 
-<xarticle title="Table Sample 5 : セルの連結" >
+<xarticle title="Table Sample : セルの連結" >
 <load path="table/sample_table_merge.js" />
 <load path="images/table_merge.png" />
 <a href="table/sample_table_merge.html">実行結果</a><dbr/>
@@ -92,7 +92,7 @@ CSSファイルにこれらのカスタム属性を記述しておくことで�
 実際に結合できるかどうかは<rhref method="true">Cell.canMerge</rhref>, <rhref method="true">Cell.canMergeRight</rhref>, <rhref method="true">Cell.canMergeBottom</rhref>で確認できる。
 </xarticle>
 
-<xarticle title="Table Sample 6 : テキスト位置の指定" >
+<xarticle title="Table Sample : テキスト位置の指定" >
 <load path="table/sample_table_anchor.js" />
 <load path="table/sample_table_anchor.css" />
 <load path="images/table_anchor.png" />
@@ -102,7 +102,7 @@ Powerpointの表のようにセル内のテキスト位置を指定できる。
 水平方向のテキストの配置位置は<rhref method="true">Cell.horizontalAnchor</rhref>もしくはcell.svgGroupの--horizontal-anchor属性で指定できる。
 </xarticle>
 
-<xarticle title="Table Sample 7 : Logic Table" >
+<xarticle title="Table Sample : Logic Table" >
 <load path="table/sample_table_logic.js" />
 <load path="images/table_logic.png" />
 <a href="table/sample_table_logic.html">実行結果</a><dbr/>
@@ -116,7 +116,7 @@ LogicTableクラスはTableクラスから描画関係を取り除いたクラ�
 </xarticle>
 
 
-<xarticle title="Table Sample 8 : Powerpointへ出力" >
+<xarticle title="Table Sample : Powerpointへ出力" >
 <load path="table/sample_table_powerpoint.html" />
 <load path="table/sample_table_powerpoint.js" />
 <load path="images/table_powerpoint1.png" />
@@ -128,51 +128,55 @@ GraphTableSVG.SVGToVBA.create(tables)はそのようなVBAのコードを作成�
 あくまで、似たような表を作るだけの関数である。コード変換に対応していないstyle属性が多くあるので、凝った装飾をしているとまず反映されない。<dbr/>
 </xarticle>
 
-<xarticle title="Graph Sample 1 : Hello World" >
+<xarticle title="Graph Sample : Hello World" >
 <load path="graph/sample_graph_hello.html" />
 <load path="graph/sample_graph_hello.js" />
 <load path="images/graph_hello.png" />
 <a href="graph/sample_graph_hello.html">実行結果</a><dbr/>
-節が一つだけのグラフのHello World。
+頂点が一つだけのグラフのHello World。
 <rhref>Graph</rhref>クラスはグラフをSVGで表現するためのクラスである。
 表と同じように<rhref method="true">Graph.constructor</rhref>にsvg要素を与えてグラフを表すSVGを作成する。このとき指定したsvg要素に空のグラフが作成される。
 <rhref>Vertex</rhref>クラスは頂点をSVGで表現するためのクラスで、<rhref method="true">Vertex.create</rhref>で頂点を作成する。
-作成した節にはSVGTextElementがあるので、頂点にテキストを入れることが出来る。
+作成した頂点にはSVGTextElementがあるので、頂点にテキストを入れることが出来る。
 </xarticle>
 
-<xarticle title="Graph Sample 2 : Edge" >
+<xarticle title="Graph Sample : Edge" >
 <load path="graph/sample_graph_edge.js" />
 <load path="images/graph_edge.png" />
 <a href="graph/sample_graph_edge.html">実行結果</a><dbr/>
 辺を使って頂点を接続する例。
 <rhref>Edge</rhref>クラスは辺をSVGで表現するためのクラスである。
 <rhref method="true">Edge.create</rhref>で辺を作成することができる。
-第二引数にあるbeginVertexとendVertexで辺が接続する開始節と終了節を指定することが出来る。
+第二引数にあるbeginVertexとendVertexで辺が接続する開始頂点と終了頂点を指定することが出来る。
 ここで指定しない場合、辺を作成してもsvg要素上で描画されないので注意すること。
-また、<rhref method="true">Graph.connect</rhref>で辺の接続先を指定することが出来る。第一引数が開始頂点、第二引数が接続辺、第三引数が終了頂点。
+また、<rhref method="true">Graph.connect</rhref>で辺の接続先を指定することが出来る。
 <dbr/>
 辺に沿ってテキストを設定することができる。create時の第二引数で指定するか、
 <rhref method="true" interface="true">SVGTextPathElement.setTextContent</rhref>で指定する。
-ちなみに、節の形は現在、円か四角形のどちらかを選択できる。第二引数でsurfaceType: "rectangle"とすると四角形、それ以外は円形。
-下の図は節や辺を構成しているSVG要素の参考図である。表と同じように直接SVGを編集してスタイルを変更することが可能。
+ちなみに、頂点の形は現在、円か四角形のどちらかを選択できる。第二引数でsurfaceType: "rectangle"とすると四角形、それ以外は円形。
+下の図は頂点や辺を構成しているSVG要素の参考図である。表と同じように直接SVGを編集してスタイルを変更することが可能。
 <load path="images/graph1.png" />
 <load path="images/graph_edge2.png" />
 <a href="graph/sample_graph_edge2.html">実行結果</a>
 </xarticle>
 
-<xarticle title="Graph Sample 3 : Vertex and Edge" >
+<xarticle title="Graph Sample : Vertex and Edge" >
 <load path="graph/sample_graph_vertex.js" />
 <load path="images/graph_vertex.png" />
 <a href="graph/sample_graph_vertex.html">実行結果</a><dbr/>
-ベジエ曲線のように辺を曲げることが出来る。<rhref method="true">Edge.controlPoint</rhref>プロパティに点の配列を与えることで制御点を設定することが出来る。
-ただし、現在設定できる制御点は一つだけなので注意すること。
-<rhref method="true">Edge.markerEnd</rhref>に<rhref method="true">Edge.createMark</rhref>()をセットすることで終了節の方向に矢印を設定することができる。
-SVGには矢印用のSVG要素があるのでそれをcreateMark()で作成し、markerEndに設定することで辺の先に矢印のSVG要素が設定される。
-<rhref method="true">Edge.markerStart</rhref>も同様に開始節の方向に矢印を設定できる。
-ただし、現在は矢印の細かな設定はできないことに注意すること。<dbr/>
+
+辺に二次ベジエ曲線を使用することが出来る。
+<rhref method="true">Edge.controlPoint</rhref>プロパティに点の配列を与えることで二次ベジエ曲線の制御点を設定することが出来る。
+また、制御点を設定したときにかぎり辺を直線でなく二次ベジエ曲線として扱う。<dbr/>
+辺の開始位置と終了位置に矢じりを設定することが出来る。もっとも、これはSVGの仕様であるSVGMarkerElementを使用しているだけである。
+SVGMarkerElementは矢じりのSVGオブジェクトである。
+本ライブラリでは<rhref method="true">Edge.markerEnd</rhref>に
+<rhref method="true">Edge.createMark</rhref>()で生成したSVGMarkerElementインスタンスを設定することで
+終了頂点の方向に矢印を設定することができる。
+同様に<rhref method="true">Edge.markerStart</rhref>は開始頂点の矢じりを設定するプロパティである。
 </xarticle>
 
-<xarticle title="Graph Sample 4 : Connector" >
+<xarticle title="Graph Sample : Connector" >
 <load path="graph/sample_graph_connector.js" />
 <load path="images/graph_connector.png" />
 <a href="graph/sample_graph_connector.html">実行結果</a><dbr/>
@@ -180,7 +184,7 @@ SVGには矢印用のSVG要素があるのでそれをcreateMark()で作成し�
 Autoを選択した場合、二点の位置関係から計算した最適な位置を自動で選択する。
 </xarticle>
 
-<xarticle title="Graph Sample 5 : Class Name" >
+<xarticle title="Graph Sample : Class Name" >
 <load path="graph/sample_graph_class.js" />
 <load path="graph/sample_graph_class.css" />
 <load path="images/graph_class.png" />
@@ -188,7 +192,7 @@ Autoを選択した場合、二点の位置関係から計算した最適な位�
 表の場合と同様に、頂点や辺のsvgGroupに設定したCSSから構成している各種SVG要素のプロパティを設定することが出来る。
 </xarticle>
 
-<xarticle title="Graph Sample 5 : 破線とAlignment" >
+<xarticle title="Graph Sample : 破線とAlignment" >
 <load path="graph/sample_graph_dash_style.js" />
 <load path="images/graph_dash.png" />
 <a href="graph/sample_graph_dash_style.html">実行結果</a><dbr/>
@@ -198,7 +202,7 @@ setStyleで設定した点線はPowerpoint側で用意された点線に直接�
 何も選ばない場合は中央配置となる。
 </xarticle>
 
-<xarticle title="Graph Sample 5 : Tree" >
+<xarticle title="Graph Sample : Tree" >
 <load path="graph/sample_graph_tree.js" />
 <load path="images/graph_tree_children.png" />
 <load path="images/graph_tree_leave.png" />
@@ -219,7 +223,7 @@ setStyleで設定した点線はPowerpoint側で用意された点線に直接�
 </xarticle>
 
 
-<xarticle title="Graph Sample 5 : Logic Tree" >
+<xarticle title="Graph Sample : Logic Tree" >
 <load path="graph/sample_graph_logictree.js" />
 <load path="images/graph_logictree.png" />
 <a href="graph/sample_graph_logictree.html">実行結果</a><dbr/>
@@ -228,8 +232,8 @@ SVG要素として構築する前にあらかじめ木の形が決まってい�
 ちなみにLogicGraphはまだ実装されていない。
 </xarticle>
 
-<xarticle title="Graph Sample 6 : Powerpoint" >
-<ahref>test</ahref>
+<xarticle title="Graph Sample : Powerpoint" >
+グラフもVBAコードを使ってPowerpoint上に作成することが出来る。
 </xarticle>
 
 

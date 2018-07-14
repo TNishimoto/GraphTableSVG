@@ -7,7 +7,9 @@ namespace GraphTableSVG {
     export enum DirectionType2 {
         topLeft = 0, bottomLeft = 1, bottomRight = 2, topRight = 3
     }
-
+    /**
+     * セルをSVGで表現するためのクラスです。
+     */
     export class Cell {
         private static readonly defaultBackgroundClassName: string = "--default-background-class";
         private static readonly defaultTextClass: string = "--default-text-class";
