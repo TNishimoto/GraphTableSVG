@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>hello</title>
+   <OUTPUT path="./tutorial.html" remove="" macro="html"></OUTPUT>
+   <MACRO path="./tutorial.js" remove=""></MACRO>
+   <link rel="stylesheet" href="tutorial.css" type="text/css"/>
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/atelier-sulphurpool.dark.min.css" rel="stylesheet"/>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+   <script>hljs.initHighlightingOnLoad();</script>
+   <meta charset="UTF-8"/>
+</head>
+<body>
+   <div after="div" class="sample-table-of-contents">
+      <h2>目次</h2>
+      <ol>
+         <li>
+            <a href="#xarticle-0">はじめに</a>
+         </li>
+         <li>
+            <a href="#xarticle-1">Table Sample : hello world</a>
+         </li>
+         <li>
+            <a href="#xarticle-2">Table Sample : Tableの構成</a>
+         </li>
+         <li>
+            <a href="#xarticle-3">Table Sample : デフォルトクラス名の指定</a>
+         </li>
+         <li>
+            <a href="#xarticle-4">Table Sample : RowとColumn</a>
+         </li>
+         <li>
+            <a href="#xarticle-5">Table Sample : セルの連結</a>
+         </li>
+         <li>
+            <a href="#xarticle-6">Table Sample : テキスト位置の指定</a>
+         </li>
+         <li>
+            <a href="#xarticle-7">Table Sample : Logic Table</a>
+         </li>
+         <li>
+            <a href="#xarticle-8">Table Sample : Powerpointへ出力</a>
+         </li>
+         <li>
+            <a href="#xarticle-9">Graph Sample : Hello World</a>
+         </li>
+         <li>
+            <a href="#xarticle-10">Graph Sample : Edge</a>
+         </li>
+         <li>
+            <a href="#xarticle-11">Graph Sample : Vertex and Edge</a>
+         </li>
+         <li>
+            <a href="#xarticle-12">Graph Sample : Connector</a>
+         </li>
+         <li>
+            <a href="#xarticle-13">Graph Sample : Class Name</a>
+         </li>
+         <li>
+            <a href="#xarticle-14">Graph Sample : 破線とAlignment</a>
+         </li>
+         <li>
+            <a href="#xarticle-15">Graph Sample : Tree</a>
+         </li>
+         <li>
+            <a href="#xarticle-16">Graph Sample : Logic Tree</a>
+         </li>
+         <li>
+            <a href="#xarticle-17">Graph Sample : Powerpoint</a>
+         </li>
+      </ol>
+   </div>
+   <article title="はじめに" id="xarticle-0" after="article" class="sample-article">
+      <h2>はじめに</h2>
+      <section ignore-format="true" class="sample-commentary">　
+GraphTableSVGはSVGで表とグラフ（グラフ理論）を描画するライブラリである。
+このチュートリアルは利用者がHTMLとSVGをある程度理解していることを想定して書いている。</section>
+      <section ignore-format="true" class="sample-commentary">　
+SVG入門の参考として
+<a href="http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo.htm" target="_blank">svg要素の基本的な使い方まとめ</a>を挙げておく。</section>
+      <section ignore-format="true" class="sample-commentary">　
+このライブラリの<a href="./typedoc/globals.html" target="_blank">リファレンス</a>も挙げておくが、説明不足な部分が多いので注意すること。
+ちなみに、中途半端な実装ではあるがこのライブラリで作成した表やグラフはVBAマクロによってPowerpointの図形に変換することが出来る。
+このチュートリアルの各サンプルにはVBAコードと書かれたボタンが設置されているので、Powerpointを利用している方は試してみるとよい。
+詳細は<a href="#xarticle-8">Table Sample 8 : Powerpointへ出力</a>に書いてある。</section>
+   </article>
+   <article title="Table Sample : hello world" id="xarticle-1" after="article" class="sample-article">
+      <h2>Table Sample : hello world</h2>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_hello.js</h4>
+         <pre><code>let table = null;&#13;
+window.onload = () =&gt; {&#13;
+    /* SVG要素の取得 */&#13;
+    const box = document.getElementById("svgbox");&#13;
+    /* Tableの作成 */&#13;
+    table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 3, columnCount: 3 });&#13;
+    /* X : 2, Y : 1 のセルのテキストを変更 */&#13;
+    table.cells[1][2].svgText.textContent = `Hello World`;&#13;
+};&#13;
+</code></pre>
+      </div>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_hello.html</h4>
+         <pre><code>&lt;!DOCTYPE html&gt;&#13;
+&lt;html&gt;&#13;
+&lt;head&gt;&#13;
+  &lt;meta charset="utf-8" /&gt;&#13;
+  &lt;link rel="stylesheet" href="sample_table.css" type="text/css" /&gt;&#13;
+  &lt;!-- GraphTableSVGの実行に必要なスクリプト --&gt;&#13;
+  &lt;script src="../scripts/graph_table_svg.js"&gt;&lt;/script&gt;&#13;
+  &lt;script src="sample_table_hello.js"&gt;&lt;/script&gt;&#13;
+  &lt;title&gt;Sample&lt;/title&gt;&#13;
+&lt;/head&gt;&#13;
+&lt;body&gt;&#13;
+&lt;button type="button" onclick="GraphTableSVG.GUI.createMacroModal(GraphTableSVG.SVGToVBA.create(table))"&gt;VBACode&lt;/button&gt;&lt;br&gt;&#13;
+&lt;svg viewBox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" style="border:#000000 solid 1px;background:#e9e9e9" /&gt;&#13;
+&#13;
+&lt;/body&gt;&#13;
+&lt;/html&gt;&#13;
+</code></pre>
+      </div>
+      <img src="images/table_hello1.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_hello.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+Table（表）を作成する例。
+<a href="./typedoc/classes/graphtablesvg.table.html" target="_blank">Table</a>は表をSVGで表現するためのクラスで、どのSVG要素内に作成するかを<a href="./typedoc/classes/graphtablesvg.table.html#constructor" target="_blank">Table.constructor</a>の引数の第一要素で指定する。
+第二要素はオプションでTableのSVG要素内の位置や行数列数を指定することができる。
+表内のセルは<a href="./typedoc/classes/graphtablesvg.cell.html" target="_blank">Cell</a>クラスで表現されており、これもセルをSVGで表現するためのクラスである。これらのプロパティやメソッドの詳細はリファレンスで確認できる。
+</section>
+      <section ignore-format="true" class="sample-commentary">　
+前述の通りTableはSVGなので構成要素のプロパティを編集することでTableの中身を編集することができる。
+ブラウザのデバッグ機能を用いてTableがSVGでどのように構成されているか見ることも編集することも可能。
+</section>
+      <img src="images/table_hello2.png" style="max-width:100%"/>
+   </article>
+   <article title="Table Sample : Tableの構成" id="xarticle-2" after="article" class="sample-article">
+      <h2>Table Sample : Tableの構成</h2>
+      <section ignore-format="true" class="sample-commentary">　
+下の図はTableとCellがどのようなSVG要素で構成されているかを示している。
+Cellは背景をSVGRectElementで、テキストをSVGTextElementで表しており、それらをSVGGElementでまとめている。
+Tableは各Cellを表すSVGGElementと各枠を表すSVGLineElementをSVGGElementでまとめている。
+これらはブラウザのデバッグ機能で確認できる。
+</section>
+      <img src="images/table2.png" style="max-width:100%"/>
+      <img src="images/table3.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　
+参考のために各SVG要素のリファレンスを貼っておく。
+<ol>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGLineElement" target="_blank">SVGLineElement</a></li>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGTextElement" target="_blank">SVGTextElement</a></li>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGGElement" target="_blank">SVGGElement</a></li>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/SVGRectElement" target="_blank">SVGRectElement</a></li>
+</ol></section>
+      <section ignore-format="true" class="sample-commentary">　
+下のコードはSVG要素のプロパティを編集してテーブルの見た目を変更する例である。
+SVG要素のスタイル属性を直接編集や、クラス名によるCSSでの設定によって見た目を変更することが出来る。
+<a href="table/sample_table_style.html">実行結果</a></section>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_style.js</h4>
+         <pre><code>let table = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById("svgbox");&#13;
+    table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 5, columnCount: 5 });&#13;
+&#13;
+    /* 各セルのテキストの編集 */&#13;
+    for(let y=0;y&lt;table.rowCount;y++){&#13;
+        for(let x=0;x&lt;table.columnCount;x++){&#13;
+            table.cells[y][x].svgText.textContent = `[${y},${x}]`&#13;
+        }    &#13;
+    }&#13;
+&#13;
+    /* 各セルのスタイルの編集 */&#13;
+    table.cells[3][2].topBorder.style = "stroke:green;stroke-width:4pt";    &#13;
+    table.cells[3][2].svgBackground.style = "fill:aqua";    &#13;
+    table.cells[0][0].svgText.style = "stroke:blue";    &#13;
+&#13;
+    /* SVG要素はクラス名を設定することでスタイルをCSSファイルで設定することが出来る &#13;
+    けれどスタイルに直書きしているとそちらのほうが優先？されるようなので一旦消している。    &#13;
+    */&#13;
+    table.cells[1][2].topBorder.removeAttribute("style");&#13;
+    table.cells[1][2].topBorder.setAttribute("class","border");&#13;
+&#13;
+    table.cells[1][2].svgBackground.removeAttribute("style");&#13;
+    table.cells[1][2].svgBackground.setAttribute("class","background");&#13;
+&#13;
+    table.cells[3][0].svgText.removeAttribute("style");&#13;
+    table.cells[3][0].svgText.setAttribute("class","text");&#13;
+&#13;
+    /*  table.cells[1][1].topBorder.removeAttribute("style");&#13;
+        table.cells[1][1].topBorder.setAttribute("class","border");&#13;
+        と同等&#13;
+    */&#13;
+    GraphTableSVG.SVG.setClass(table.cells[1][1].svgText,"text");&#13;
+&#13;
+};&#13;
+</code></pre>
+      </div>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_style.css</h4>
+         <pre><code>body {&#13;
+    font-family: 'Segoe UI', sans-serif;&#13;
+}&#13;
+&#13;
+.svgbox {&#13;
+    border: #000000 solid 1px;&#13;
+    background: #e9e9e9;&#13;
+}&#13;
+&#13;
+.text {&#13;
+    fill: red;&#13;
+    font-size: 24px;&#13;
+    font-family: 'Times New Roman';&#13;
+    font-weight: bold;&#13;
+}&#13;
+&#13;
+.background {&#13;
+    fill: yellow;&#13;
+}&#13;
+.border {&#13;
+    stroke:red;&#13;
+    stroke-width: 8pt;&#13;
+}</code></pre>
+      </div>
+      <img src="images/table_style.png" style="max-width:100%"/>
+   </article>
+   <article title="Table Sample : デフォルトクラス名の指定" id="xarticle-3" after="article" class="sample-article">
+      <h2>Table Sample : デフォルトクラス名の指定</h2>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_style_select.js</h4>
+         <pre><code>let table = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById("svgbox");&#13;
+    table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 4, columnCount: 5, tableClassName : "table" });&#13;
+&#13;
+    for(let y=0;y&lt;table.rowCount;y++){&#13;
+        for(let x=0;x&lt;table.columnCount;x++){&#13;
+            table.cells[y][x].svgText.textContent = `[${y},${x}]`&#13;
+        }    &#13;
+    }&#13;
+};&#13;
+</code></pre>
+      </div>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_style_select.css</h4>
+         <pre><code>body {&#13;
+    font-family: 'Segoe UI', sans-serif;&#13;
+}&#13;
+&#13;
+.svgbox {&#13;
+    border: #000000 solid 1px;&#13;
+    background: #e9e9e9;&#13;
+}&#13;
+&#13;
+.table{&#13;
+    --default-cell-class : cell;&#13;
+    --default-border-class : border;&#13;
+}&#13;
+.cell{&#13;
+    --default-background-class : background;&#13;
+    --default-text-class : text;&#13;
+}&#13;
+&#13;
+.text {&#13;
+    fill: red;&#13;
+    font-size: 18px;&#13;
+    font-family: 'Times New Roman';&#13;
+    font-weight: bold;&#13;
+}&#13;
+&#13;
+.background {&#13;
+    fill: pink;&#13;
+}&#13;
+.border {&#13;
+    stroke:blue;&#13;
+    stroke-width: 3pt;&#13;
+}&#13;
+</code></pre>
+      </div>
+      <img src="images/table_select_style.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　
+Tableの各セルや枠にCSSを適用するためには各要素のクラス属性を設定しないといけない。
+これは面倒なので、TableのCSSからセルや枠のCSSも設定できるようにカスタム属性を追加している。
+--default-cell-classと--default-border-classはそれぞれセルと枠の各クラス属性のデフォルト名を指定する属性である。
+これを<a href="./typedoc/classes/graphtablesvg.table.html#svggroup" target="_blank">Table.svgGroup</a>のスタイルに設定しておくことで、一つずつクラス属性を設定する手間が省ける。</section>
+      <section ignore-format="true" class="sample-commentary">　
+同様に<a href="./typedoc/classes/graphtablesvg.cell.html#svggroup" target="_blank">Cell.svgGroup</a>に--default-background-classと--default-text-classを適用することで
+<a href="./typedoc/classes/graphtablesvg.cell.html#svgbackground" target="_blank">Cell.svgBackground</a>と<a href="./typedoc/classes/graphtablesvg.cell.html#svgtext" target="_blank">Cell.svgText</a>のクラス属性を設定することができる。
+また、Tableのコンストラクタの第二引数にあるtableClassNameからtable.svgGroupのクラス属性を設定することができるので、
+CSSファイルにこれらのカスタム属性を記述しておくことで、コンストラクタとCSSからTableの見た目を一度に設定することが出来る。
+（<a href="table/sample_table_style_select.html">実行結果</a>）
+ただし、この方法では各セルごとにCSSを変更するなどの細かな設定はできないことに注意すること。
+</section>
+   </article>
+   <article title="Table Sample : RowとColumn" id="xarticle-4" after="article" class="sample-article">
+      <h2>Table Sample : RowとColumn</h2>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_width.js</h4>
+         <pre><code>let table = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById("svgbox");&#13;
+    table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 5, columnCount: 5 });&#13;
+&#13;
+    for(let y=0;y&lt;table.rowCount;y++){&#13;
+        for(let x=0;x&lt;table.columnCount;x++){&#13;
+            table.cells[y][x].svgText.textContent = `[${y},${x}]`&#13;
+        }    &#13;
+    }&#13;
+    table.rows[1].height = 100;&#13;
+    table.columns[1].width = 100;&#13;
+&#13;
+    table.rows[2].height = 0;&#13;
+    table.columns[2].width = 0;&#13;
+};&#13;
+</code></pre>
+      </div>
+      <img src="images/table_rowcolumn.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_width.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+各行の高さ、各列の幅は<a href="./typedoc/classes/graphtablesvg.table.html#rows" target="_blank">Table.rows</a>と<a href="./typedoc/classes/graphtablesvg.table.html#columns" target="_blank">Table.columns</a>のプロパティから設定できる。
+これらは<a href="./typedoc/classes/graphtablesvg.row.html" target="_blank">Row</a>クラスと<a href="./typedoc/classes/graphtablesvg.column.html" target="_blank">Column</a>クラスの配列である。
+</section>
+   </article>
+   <article title="Table Sample : セルの連結" id="xarticle-5" after="article" class="sample-article">
+      <h2>Table Sample : セルの連結</h2>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_merge.js</h4>
+         <pre><code>let table = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById("svgbox");&#13;
+    table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 10, columnCount: 10 });&#13;
+&#13;
+    for(let y=0;y&lt;table.rowCount;y++){&#13;
+        for(let x=0;x&lt;table.columnCount;x++){&#13;
+            table.cells[y][x].svgText.textContent = `[${y},${x}]`&#13;
+        }    &#13;
+    }&#13;
+    &#13;
+    //table.cells[2][2]とtable.cells[2][3]を結合&#13;
+    table.cells[2][2].mergeRight();&#13;
+    //table.cells[0][0]とtable.cells[1][0]を結合&#13;
+    table.cells[0][0].mergeBottom();&#13;
+    //table.cells[5][3]とtable.cells[5][4]を結合&#13;
+    table.cells[5][3].mergeRight();&#13;
+    //table.cells[6][3]とtable.cells[6][4]を結合&#13;
+    table.cells[6][3].mergeRight();&#13;
+    //table.cells[5][3-4]とtable.cells[6][3-4]を結合&#13;
+    table.cells[5][3].mergeBottom();&#13;
+    //Error&#13;
+    //table.cells[5][3].mergeRight();&#13;
+    //table.cells[3-4][6-8]を結合&#13;
+    table.cells[3][6].merge(3,2);&#13;
+&#13;
+};&#13;
+</code></pre>
+      </div>
+      <img src="images/table_merge.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_merge.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+隣り合うセルを結合することが出来る。<a href="./typedoc/classes/graphtablesvg.cell.html#mergeright" target="_blank">Cell.mergeRight</a>は右のセルと結合、<a href="./typedoc/classes/graphtablesvg.cell.html#mergebottom" target="_blank">Cell.mergeBottom</a>は下のセルと結合する。
+<a href="./typedoc/classes/graphtablesvg.cell.html#merge" target="_blank">Cell.merge</a>(w, h)はそのセルを基準として列セル数w、行セル数hの結合セルを作成する。
+出来上がるセルは必ず矩形でなければならない。そのような結合セルにならない場合はエラーが発生する。
+実際に結合できるかどうかは<a href="./typedoc/classes/graphtablesvg.cell.html#canmerge" target="_blank">Cell.canMerge</a>, <a href="./typedoc/classes/graphtablesvg.cell.html#canmergeright" target="_blank">Cell.canMergeRight</a>, <a href="./typedoc/classes/graphtablesvg.cell.html#canmergebottom" target="_blank">Cell.canMergeBottom</a>で確認できる。
+</section>
+   </article>
+   <article title="Table Sample : テキスト位置の指定" id="xarticle-6" after="article" class="sample-article">
+      <h2>Table Sample : テキスト位置の指定</h2>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_anchor.js</h4>
+         <pre><code>let table = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById("svgbox");&#13;
+    table = new GraphTableSVG.Table(box, { x: 50, y: 50, rowCount: 5, columnCount: 5, rowHeight : 60, columnWidth : 60 });&#13;
+&#13;
+    for(let y=0;y&lt;table.rowCount;y++){&#13;
+        for(let x=0;x&lt;table.columnCount;x++){&#13;
+            table.cells[y][x].svgText.textContent = `[${y},${x}]`&#13;
+        }    &#13;
+    }&#13;
+&#13;
+    GraphTableSVG.SVG.setClass(table.cells[1][1].svgGroup, "cell_L");&#13;
+    GraphTableSVG.SVG.setClass(table.cells[1][2].svgGroup, "cell_C");&#13;
+    GraphTableSVG.SVG.setClass(table.cells[1][3].svgGroup, "cell_R");&#13;
+    GraphTableSVG.SVG.setClass(table.cells[2][1].svgGroup, "cell_T");&#13;
+    GraphTableSVG.SVG.setClass(table.cells[2][2].svgGroup, "cell_M");&#13;
+    GraphTableSVG.SVG.setClass(table.cells[2][3].svgGroup, "cell_B");&#13;
+    GraphTableSVG.SVG.setClass(table.cells[3][1].svgGroup, "cell_TL");&#13;
+    GraphTableSVG.SVG.setClass(table.cells[3][2].svgGroup, "cell_MC");&#13;
+    GraphTableSVG.SVG.setClass(table.cells[3][3].svgGroup, "cell_BR");&#13;
+&#13;
+    table.cells[4][1].verticalAnchor = "top";&#13;
+    table.cells[4][2].verticalAnchor = "middle";&#13;
+    table.cells[4][3].verticalAnchor = "bottom";&#13;
+    table.cells[4][1].horizontalAnchor = "right";&#13;
+    table.cells[4][2].horizontalAnchor = "center";&#13;
+    table.cells[4][3].horizontalAnchor = "left";&#13;
+&#13;
+};&#13;
+</code></pre>
+      </div>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_anchor.css</h4>
+         <pre><code>body {&#13;
+    font-family: 'Segoe UI', sans-serif;&#13;
+}&#13;
+&#13;
+.svgbox {&#13;
+    border: #000000 solid 1px;&#13;
+    background: #e9e9e9;&#13;
+}&#13;
+.cell_T{&#13;
+    --vertical-anchor : top;&#13;
+}&#13;
+.cell_M{&#13;
+    --vertical-anchor : middle;&#13;
+}&#13;
+.cell_B{&#13;
+    --vertical-anchor : bottom;&#13;
+}&#13;
+.cell_L{&#13;
+    --horizontal-anchor : left;&#13;
+}&#13;
+.cell_C{&#13;
+    --horizontal-anchor : center;&#13;
+}&#13;
+.cell_R{&#13;
+    --horizontal-anchor : right;&#13;
+}&#13;
+.cell_TL{&#13;
+    --vertical-anchor : top;&#13;
+    --horizontal-anchor : left;&#13;
+}&#13;
+.cell_MC{&#13;
+    --vertical-anchor : middle;&#13;
+    --horizontal-anchor : center;&#13;
+}&#13;
+.cell_BR{&#13;
+    --vertical-anchor : bottom;&#13;
+    --horizontal-anchor : right;&#13;
+}</code></pre>
+      </div>
+      <img src="images/table_anchor.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_anchor.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+Powerpointの表のようにセル内のテキスト位置を指定できる。
+垂直方向のテキストの配置位置は<a href="./typedoc/classes/graphtablesvg.cell.html#verticalanchor" target="_blank">Cell.verticalAnchor</a>もしくはcell.svgGroupの--vertical-anchor属性で指定できる。
+水平方向のテキストの配置位置は<a href="./typedoc/classes/graphtablesvg.cell.html#horizontalanchor" target="_blank">Cell.horizontalAnchor</a>もしくはcell.svgGroupの--horizontal-anchor属性で指定できる。
+</section>
+   </article>
+   <article title="Table Sample : Logic Table" id="xarticle-7" after="article" class="sample-article">
+      <h2>Table Sample : Logic Table</h2>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_logic.js</h4>
+         <pre><code>let table = null;&#13;
+window.onload = () =&gt; {&#13;
+    const logicTable = new GraphTableSVG.LogicTable({rowCount : 5, columnCount : 4, x : 50, y : 50});&#13;
+    for(let y=0;y&lt;logicTable.rowCount;y++){&#13;
+        for(let x=0;x&lt;logicTable.columnCount;x++){&#13;
+            logicTable.cells[y][x].set(`[${y}, ${x}]`);&#13;
+        }    &#13;
+    }&#13;
+&#13;
+    const box = document.getElementById("svgbox");&#13;
+    table = new GraphTableSVG.Table(box);&#13;
+    table.constructFromLogicTable(logicTable);    &#13;
+&#13;
+    const table2 = new GraphTableSVG.Table(box);&#13;
+    table2.construct([["[0,0]","[0,1]","[0,2]"], ["[1,0]","[1,1]","[1,2]"], ["[2,0]","[2,1]","[2,2]"]], {x:250,y:50});&#13;
+};&#13;
+</code></pre>
+      </div>
+      <img src="images/table_logic.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_logic.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　<a href="./typedoc/classes/graphtablesvg.logictable.html" target="_blank">LogicTable</a>クラスから表を作成することが出来る。
+LogicTableクラスはTableクラスから描画関係を取り除いたクラスである。
+<a href="./typedoc/classes/graphtablesvg.logiccell.html" target="_blank">LogicCell</a>を二次元配列に格納しており各LogicCellを編集することでセルの編集をすることができる。
+よって、Tableクラスを作成する前からどのような表を作るか決まっている場合はLogicTableクラスを通してSVGを構築したほうがコードの見通しがすっきりするかもしれない。
+</section>
+      <section ignore-format="true" class="sample-commentary">　<a href="./typedoc/classes/graphtablesvg.table.html#construct" target="_blank">Table.construct</a>(table, option)は文字列の2次元配列tableからSVGを構築する関数である。
+表の装飾にこだわらない場合はこっちから作ったほうが良いかもしれない。
+</section>
+   </article>
+   <article title="Table Sample : Powerpointへ出力" id="xarticle-8" after="article" class="sample-article">
+      <h2>Table Sample : Powerpointへ出力</h2>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_powerpoint.html</h4>
+         <pre><code>&lt;!DOCTYPE html&gt;&#13;
+&lt;html&gt;&#13;
+&lt;head&gt;&#13;
+  &lt;meta charset="utf-8" /&gt;&#13;
+  &lt;link rel="stylesheet" href="sample_table_powerpoint.css" type="text/css" /&gt;&#13;
+  &lt;script src="../scripts/graph_table_svg.js"&gt;&lt;/script&gt;&#13;
+  &lt;script src="sample_table_powerpoint.js"&gt;&lt;/script&gt;&#13;
+  &lt;title&gt;Sample&lt;/title&gt;&#13;
+&lt;/head&gt;&#13;
+&lt;body&gt;&#13;
+&lt;button type="button" onclick="GraphTableSVG.GUI.createMacroModal(GraphTableSVG.SVGToVBA.create(table))"&gt;VBACode&lt;/button&gt;&lt;br&gt;&#13;
+&lt;svg viewBox="0 0 400 400" width="400px" height="400px" id="svgbox" xmlns="http://www.w3.org/2000/svg" style="border:#000000 solid 1px;background:#e9e9e9" /&gt;&#13;
+&#13;
+&lt;/body&gt;&#13;
+&lt;/html&gt;&#13;
+</code></pre>
+      </div>
+      <div class="code-div">
+         <h4 class="code-filename">table/sample_table_powerpoint.js</h4>
+         <pre><code>let table = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById("svgbox");&#13;
+    table = new GraphTableSVG.Table(box);&#13;
+    table.construct([["[0,0]","[0,1]","[0,2]"], ["[1,0]","[1,1]","[1,2]"], ["[2,0]","[2,1]","[2,2]"]], {x:50,y:50});&#13;
+};&#13;
+</code></pre>
+      </div>
+      <img src="images/table_powerpoint1.png" style="max-width:100%"/>
+      <img src="images/table_powerpoint2.png" style="max-width:100%"/>
+      <img src="images/table_powerpoint3.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_powerpoint.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+表をVBAのコードに変換し、Powerpointのマクロとして実行することでスライド上に表を作成することが出来る。
+GraphTableSVG.SVGToVBA.create(tables)はそのようなVBAのコードを作成する関数であるが、作成された表はSVGの表と完全に一致するわけではないので注意。
+あくまで、似たような表を作るだけの関数である。コード変換に対応していないstyle属性が多くあるので、凝った装飾をしているとまず反映されない。</section>
+   </article>
+   <article title="Graph Sample : Hello World" id="xarticle-9" after="article" class="sample-article">
+      <h2>Graph Sample : Hello World</h2>
+      <div class="code-div">
+         <h4 class="code-filename">graph/sample_graph_hello.html</h4>
+         <pre><code>&lt;!DOCTYPE html&gt;&#13;
+&lt;html&gt;&#13;
+&lt;head&gt;&#13;
+    &lt;meta charset="utf-8" /&gt;&#13;
+    &lt;title&gt;Sample&lt;/title&gt;&#13;
+    &lt;link rel="stylesheet" href="sample_graph.css" type="text/css" /&gt;&#13;
+    &lt;script src="../scripts/graph_table_svg.js"&gt;&lt;/script&gt;&#13;
+    &lt;script src="sample_graph_hello.js"&gt;&lt;/script&gt;&#13;
+&lt;/head&gt;&#13;
+&#13;
+&lt;body&gt;&#13;
+    &lt;button type="button" onclick="GraphTableSVG.GUI.createMacroModal(GraphTableSVG.SVGToVBA.create(graph))"&gt;VBACode&lt;/button&gt;&lt;br&gt;&#13;
+    &lt;svg viewBox="0 0 400 200" width="400px" height="200px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox"&gt;&#13;
+    &lt;/svg&gt;&#13;
+&lt;/body&gt;&#13;
+&lt;/html&gt;</code></pre>
+      </div>
+      <div class="code-div">
+         <h4 class="code-filename">graph/sample_graph_hello.js</h4>
+         <pre><code>let graph = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById('svgbox');&#13;
+    /* graphの作成 */&#13;
+    graph = new GraphTableSVG.Graph(box);&#13;
+    /* vertexの作成 */&#13;
+    const vertex = GraphTableSVG.Vertex.create(graph, {x:100, y:100});&#13;
+    vertex.svgText.textContent = "hello world";&#13;
+};</code></pre>
+      </div>
+      <img src="images/graph_hello.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_hello.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+頂点が一つだけのグラフのHello World。
+<a href="./typedoc/classes/graphtablesvg.graph.html" target="_blank">Graph</a>クラスはグラフをSVGで表現するためのクラスである。
+表と同じように<a href="./typedoc/classes/graphtablesvg.graph.html#constructor" target="_blank">Graph.constructor</a>にsvg要素を与えてグラフを表すSVGを作成する。このとき指定したsvg要素に空のグラフが作成される。
+<a href="./typedoc/classes/graphtablesvg.vertex.html" target="_blank">Vertex</a>クラスは頂点をSVGで表現するためのクラスで、<a href="./typedoc/classes/graphtablesvg.vertex.html#create" target="_blank">Vertex.create</a>で頂点を作成する。
+作成した頂点にはSVGTextElementがあるので、頂点にテキストを入れることが出来る。
+</section>
+   </article>
+   <article title="Graph Sample : Edge" id="xarticle-10" after="article" class="sample-article">
+      <h2>Graph Sample : Edge</h2>
+      <div class="code-div">
+         <h4 class="code-filename">graph/sample_graph_edge.js</h4>
+         <pre><code>let graph = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById('svgbox');&#13;
+    graph = new GraphTableSVG.Graph(box);&#13;
+    &#13;
+    const node1 = GraphTableSVG.Vertex.create(graph, {x : 150, y : 100, text : "1", surfaceType: "rectangle"});&#13;
+    const node2 = GraphTableSVG.Vertex.create(graph, {x : 100, y : 200, text : "2"});&#13;
+    const node3 = GraphTableSVG.Vertex.create(graph, {x : 200, y : 200, text : "3"});&#13;
+    const edge1 = GraphTableSVG.Edge.create(graph, {beginVertex : node1, endVertex : node2});&#13;
+    const edge2 = GraphTableSVG.Edge.create(graph, {text : "abcd"});&#13;
+&#13;
+    //辺と節の接続&#13;
+    graph.connect(node1, edge2, node3);&#13;
+&#13;
+    //辺のテキストの設定&#13;
+    edge1.svgTextPath.setTextContent("efgh");&#13;
+};</code></pre>
+      </div>
+      <img src="images/graph_edge.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_edge.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+辺を使って頂点を接続する例。
+<a href="./typedoc/classes/graphtablesvg.edge.html" target="_blank">Edge</a>クラスは辺をSVGで表現するためのクラスである。
+<a href="./typedoc/classes/graphtablesvg.edge.html#create" target="_blank">Edge.create</a>で辺を作成することができる。
+第二引数にあるbeginVertexとendVertexで辺が接続する開始頂点と終了頂点を指定することが出来る。
+ここで指定しない場合、辺を作成してもsvg要素上で描画されないので注意すること。
+また、<a href="./typedoc/classes/graphtablesvg.graph.html#connect" target="_blank">Graph.connect</a>で辺の接続先を指定することが出来る。
+</section>
+      <section ignore-format="true" class="sample-commentary">　
+辺に沿ってテキストを設定することができる。create時の第二引数で指定するか、
+<a href="./typedoc/interfaces/svgtextpathelement.html#settextcontent" target="_blank">SVGTextPathElement.setTextContent</a>で指定する。
+ちなみに、頂点の形は現在、円か四角形のどちらかを選択できる。第二引数でsurfaceType: "rectangle"とすると四角形、それ以外は円形。
+下の図は頂点や辺を構成しているSVG要素の参考図である。表と同じように直接SVGを編集してスタイルを変更することが可能。
+</section>
+      <img src="images/graph1.png" style="max-width:100%"/>
+      <img src="images/graph_edge2.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_edge2.html">実行結果</a></section>
+   </article>
+   <article title="Graph Sample : Vertex and Edge" id="xarticle-11" after="article" class="sample-article">
+      <h2>Graph Sample : Vertex and Edge</h2>
+      <div class="code-div">
+         <h4 class="code-filename">graph/sample_graph_vertex.js</h4>
+         <pre><code>let graph = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById('svgbox');&#13;
+    graph = new GraphTableSVG.Graph(box);    &#13;
+    &#13;
+    const node1 = GraphTableSVG.Vertex.create(graph,{x : 100, y : 100, text : "1"});&#13;
+    const node2 = GraphTableSVG.Vertex.create(graph,{x : 150, y : 200, text : "2"});&#13;
+    const node3 = GraphTableSVG.Vertex.create(graph,{x : 50, y : 200, text : "3"});&#13;
+&#13;
+    const edge1 = GraphTableSVG.Edge.create(graph, {beginVertex : node1, endVertex : node2, text : "abcd"});&#13;
+    const edge2 = GraphTableSVG.Edge.create(graph, {beginVertex : node1, endVertex : node3});&#13;
+&#13;
+    /* x:400, y:200の位置に制御点の設定 */&#13;
+    edge1.controlPoint = [[400, 200]];&#13;
+    /* 終了頂点の方向に矢印を作成　*/&#13;
+    edge1.markerEnd = GraphTableSVG.Edge.createMark();&#13;
+    /* 開始頂点の方向に矢印を作成　*/&#13;
+    edge2.markerStart = GraphTableSVG.Edge.createMark();&#13;
+    &#13;
+};</code></pre>
+      </div>
+      <img src="images/graph_vertex.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_vertex.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+
+辺に二次ベジエ曲線を使用することが出来る。
+<a href="./typedoc/classes/graphtablesvg.edge.html#controlpoint" target="_blank">Edge.controlPoint</a>プロパティに点の配列を与えることで二次ベジエ曲線の制御点を設定することが出来る。
+また、制御点を設定したときにかぎり辺を直線でなく二次ベジエ曲線として扱う。</section>
+      <section ignore-format="true" class="sample-commentary">　
+辺の開始位置と終了位置に矢じりを設定することが出来る。もっとも、これはSVGの仕様であるSVGMarkerElementを使用しているだけである。
+SVGMarkerElementは矢じりのSVGオブジェクトである。
+本ライブラリでは<a href="./typedoc/classes/graphtablesvg.edge.html#markerend" target="_blank">Edge.markerEnd</a>に
+<a href="./typedoc/classes/graphtablesvg.edge.html#createmark" target="_blank">Edge.createMark</a>()で生成したSVGMarkerElementインスタンスを設定することで
+終了頂点の方向に矢印を設定することができる。
+同様に<a href="./typedoc/classes/graphtablesvg.edge.html#markerstart" target="_blank">Edge.markerStart</a>は開始頂点の矢じりを設定するプロパティである。
+</section>
+   </article>
+   <article title="Graph Sample : Connector" id="xarticle-12" after="article" class="sample-article">
+      <h2>Graph Sample : Connector</h2>
+      <div class="code-div">
+         <h4 class="code-filename">graph/sample_graph_connector.js</h4>
+         <pre><code>let graph = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById('svgbox');&#13;
+    graph = new GraphTableSVG.Graph(box);&#13;
+&#13;
+    const connectorTypes = ["top", "topleft", "left", "bottomleft", "bottom", "bottomright", "right", "topright", "auto"];&#13;
+    for(let i=0;i&lt;9;i++){&#13;
+        const nodeL = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", text:`${connectorTypes[i]}`, x : 100, y : (i+1) * 50, width : 40, height : 40});&#13;
+        const nodeC = GraphTableSVG.Vertex.create(graph,{surfaceType: "circle", text:`${connectorTypes[i]}`, x : 200, y : (i+1) * 50, radius : 20});&#13;
+        const nodeR = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", text:`${connectorTypes[i]}`, x : 300, y : (i+1) * 50, width : 40, height : 40});&#13;
+&#13;
+        const edgeL = GraphTableSVG.Edge.create(graph);&#13;
+        edgeL.svgPath.style.stroke="red";&#13;
+        /* 接続位置の設定 */&#13;
+        graph.connect(nodeL, edgeL, nodeC, {beginConnectorType : connectorTypes[i], endConnectorType : connectorTypes[i]});&#13;
+&#13;
+        /* create時にも接続位置の設定が可能 */&#13;
+        const edgeR = GraphTableSVG.Edge.create(graph, {beginVertex : nodeC, endVertex : nodeR, beginConnectorType : connectorTypes[i], endConnectorType : connectorTypes[i]});&#13;
+        edgeR.svgPath.style.stroke="blue";    &#13;
+    }&#13;
+    &#13;
+};</code></pre>
+      </div>
+      <img src="images/graph_connector.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_connector.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+頂点上の辺の接続位置は選択することが出来る。図形がCircleの場合、真上から45度刻みに8方向選ぶことが出来る。Rectangleの場合は真上から90度刻みに4方向。
+Autoを選択した場合、二点の位置関係から計算した最適な位置を自動で選択する。
+</section>
+   </article>
+   <article title="Graph Sample : Class Name" id="xarticle-13" after="article" class="sample-article">
+      <h2>Graph Sample : Class Name</h2>
+      <div class="code-div">
+         <h4 class="code-filename">graph/sample_graph_class.js</h4>
+         <pre><code>let graph = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById('svgbox');&#13;
+    graph = new GraphTableSVG.Graph(box, {graphClassName : "graph"});    &#13;
+    &#13;
+    const node1 = GraphTableSVG.Vertex.create(graph,{x : 100, y : 100, text : "1"});&#13;
+    const node2 = GraphTableSVG.Vertex.create(graph,{x : 150, y : 200, text : "2"});&#13;
+    const node3 = GraphTableSVG.Vertex.create(graph,{x : 50, y : 200, text : "3"});&#13;
+&#13;
+    const edge1 = GraphTableSVG.Edge.create(graph, {beginVertex : node1, endVertex : node2, text : "abcd"});&#13;
+    const edge2 = GraphTableSVG.Edge.create(graph, {beginVertex : node1, endVertex : node3});&#13;
+&#13;
+    &#13;
+};</code></pre>
+      </div>
+      <div class="code-div">
+         <h4 class="code-filename">graph/sample_graph_class.css</h4>
+         <pre><code>body {&#13;
+    font-family: 'Segoe UI', sans-serif;&#13;
+}&#13;
+&#13;
+.svgbox {&#13;
+    border: #000000 solid 1px;&#13;
+    background: #e9e9e9;&#13;
+}&#13;
+.graph{&#13;
+    --default-vertex-class : vertex;&#13;
+    --default-edge-class : edge;&#13;
+}&#13;
+.vertex{&#13;
+    --default-surface-class : surface;&#13;
+    --default-text-class : text-vertex;&#13;
+    --default-surface-type : rectangle;&#13;
+}&#13;
+.surface {&#13;
+    stroke: purple;&#13;
+    fill: pink;&#13;
+    --default-radius : 15;&#13;
+    --stroke-style : msoLineDash;&#13;
+}&#13;
+.edge{&#13;
+    --default-line-class : line;&#13;
+    --default-text-class : text-edge;&#13;
+    --begin-connector-type : bottom;&#13;
+    --end-connector-type : right;&#13;
+    --marker-start : true;&#13;
+    --marker-end : true;&#13;
+}&#13;
+.line{&#13;
+    stroke: blue;&#13;
+    stroke-width: 3pt;&#13;
+    --stroke-style : msoLineSolid;&#13;
+}&#13;
+.text-vertex {&#13;
+    fill: red;&#13;
+    font-size: 18px;&#13;
+}&#13;
+.text-edge {&#13;
+    fill: green;&#13;
+    font-size: 18px;&#13;
+}&#13;
+</code></pre>
+      </div>
+      <img src="images/graph_class.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_class.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+表の場合と同様に、頂点や辺のsvgGroupに設定したCSSから構成している各種SVG要素のプロパティを設定することが出来る。
+</section>
+   </article>
+   <article title="Graph Sample : 破線とAlignment" id="xarticle-14" after="article" class="sample-article">
+      <h2>Graph Sample : 破線とAlignment</h2>
+      <div class="code-div">
+         <h4 class="code-filename">graph/sample_graph_dash_style.js</h4>
+         <pre><code>let graph = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById('svgbox');&#13;
+    graph = new GraphTableSVG.Graph(box);&#13;
+&#13;
+    /* 点線の種類 */&#13;
+    const dashStyles = ["msoLineDash", "msoLineDashDot", "msoLineDashDotDot" , "msoLineLongDash" , "msoLineLongDashDot" , "msoLineRoundDot", "msoLineSolid", "msoLineSquareDot"];&#13;
+    /* 辺上のテキストの配置方法 */&#13;
+    const alignments = ["begin", "end", "center", "regularInterval"]&#13;
+    for(let i=0;i&lt;dashStyles.length;i++){&#13;
+        const nodeLL = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 50, y : (i+1) * 50});&#13;
+        const nodeL = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 250, y : (i+1) * 50});&#13;
+        const nodeC = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 450, y : (i+1) * 50});&#13;
+        const nodeR = GraphTableSVG.Vertex.create(graph,{surfaceType: "rectangle", x : 700, y : (i+1) * 50});&#13;
+&#13;
+        /* pathTextAlignmentで辺のテキストの配置方法を決定 */&#13;
+        const edgeL = GraphTableSVG.Edge.create(graph, {beginVertex : nodeLL, endVertex : nodeL, text : alignments[i%alignments.length],pathTextAlignment : alignments[i%alignments.length] });&#13;
+        &#13;
+        const edgeC = GraphTableSVG.Edge.create(graph, {beginVertex : nodeL, endVertex : nodeC, text : dashStyles[i]});&#13;
+        const edgeR = GraphTableSVG.Edge.create(graph, {beginVertex : nodeC, endVertex : nodeR});&#13;
+&#13;
+        edgeL.svgPath.style.strokeWidth="1px"; &#13;
+        edgeC.svgPath.style.strokeWidth="3px"; &#13;
+        edgeR.svgPath.style.strokeWidth="6px";&#13;
+&#13;
+        /* 点線の設定　*/&#13;
+        GraphTableSVG.msoDashStyle.setStyle(edgeL.svgPath, dashStyles[i]);&#13;
+        GraphTableSVG.msoDashStyle.setStyle(edgeC.svgPath, dashStyles[i]);&#13;
+        GraphTableSVG.msoDashStyle.setStyle(edgeR.svgPath, dashStyles[i]);&#13;
+&#13;
+    }&#13;
+    &#13;
+};</code></pre>
+      </div>
+      <img src="images/graph_dash.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_dash_style.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+Edgeの線は点線にすることが出来る。svgTextPathのstroke-dasharrayを編集することで実現できるが、本ライブラリで用意されたGraphTableSVG.msoDashStyle.setStyleで点線の種類を選択することが望ましい。
+setStyleで設定した点線はPowerpoint側で用意された点線に直接変換できるからである。理由はそれだけなのでPowerpointに出力することを想定していない場合はstroke-dasharrayで十分である。
+辺に設定されたテキストの配置位置もpathTextAlignmentプロパティから設定できる。開始頂点側、終了頂点側、辺の中央、そして辺上に均等に配置の四種類を選ぶことが出来る。
+何も選ばない場合は中央配置となる。
+</section>
+   </article>
+   <article title="Graph Sample : Tree" id="xarticle-15" after="article" class="sample-article">
+      <h2>Graph Sample : Tree</h2>
+      <div class="code-div">
+         <h4 class="code-filename">graph/sample_graph_tree.js</h4>
+         <pre><code>&#13;
+let graph = null;&#13;
+window.onload = () =&gt; {&#13;
+    const box = document.getElementById('svgbox');&#13;
+    graph = new GraphTableSVG.Graph(box);&#13;
+    /* ノードをグラフの根にしたい場合はisRootにTrueを入れるか、graph.roots配列にノードを追加すること */&#13;
+    const node1 = GraphTableSVG.Vertex.create(graph, {text:"1", isRoot : true});&#13;
+    const node2 = GraphTableSVG.Vertex.create(graph, {text:"2"});&#13;
+    const node3 = GraphTableSVG.Vertex.create(graph, {text:"3"});&#13;
+    const node4 = GraphTableSVG.Vertex.create(graph, {text:"4"});&#13;
+    const node5 = GraphTableSVG.Vertex.create(graph, {text:"5"});&#13;
+    const node6 = GraphTableSVG.Vertex.create(graph, {text:"6"});&#13;
+    const node7 = GraphTableSVG.Vertex.create(graph, {text:"7"});&#13;
+    const node8 = GraphTableSVG.Vertex.create(graph, {text:"8"});&#13;
+    const node9 = GraphTableSVG.Vertex.create(graph, {text:"9"});&#13;
+    const node10 = GraphTableSVG.Vertex.create(graph, {text:"10"});&#13;
+    const node11 = GraphTableSVG.Vertex.create(graph, {text:"11"});&#13;
+    const node12 = GraphTableSVG.Vertex.create(graph, {text:"12"});&#13;
+&#13;
+    /* 第一引数のVertexに第二引数のVertexを子として追加する。二点間の辺は自動で作成される */&#13;
+    graph.appendChild(node1, node2);&#13;
+    graph.appendChild(node1, node3);&#13;
+    graph.appendChild(node3, node4);&#13;
+    graph.appendChild(node4, node5);&#13;
+    graph.appendChild(node2, node6);&#13;
+    graph.appendChild(node2, node7);&#13;
+    graph.appendChild(node2, node8);&#13;
+    graph.appendChild(node2, node9);&#13;
+    graph.appendChild(node8, node10);&#13;
+    graph.appendChild(node8, node11);&#13;
+    graph.appendChild(node8, node12);&#13;
+&#13;
+    /* 隣り合う頂点間の水平方向の間隔を設定 */&#13;
+    graph.vertexXInterval = 70;&#13;
+    /* 隣り合う頂点間の垂直方向の間隔を設定 */&#13;
+    graph.vertexYInterval = 70;&#13;
+    /* 木の各頂点の配置方法を選択 */&#13;
+    graph.relocateFunction = GraphTableSVG.TreeArrangement.alignVerticeByLeave;&#13;
+&#13;
+&#13;
+    document.getElementById("childrenButton").onclick = () =&gt; {&#13;
+        graph.relocateFunction = GraphTableSVG.TreeArrangement.alignVerticeByChildren;&#13;
+    };&#13;
+    document.getElementById("leaveButton").onclick = () =&gt; {&#13;
+        graph.relocateFunction = GraphTableSVG.TreeArrangement.alignVerticeByLeave;&#13;
+    };&#13;
+&#13;
+};&#13;
+function XYInterval(px, py){&#13;
+    graph.vertexXInterval += px;&#13;
+    graph.vertexYInterval += py;&#13;
+&#13;
+    if(graph.vertexXInterval &lt; 0) graph.vertexXInterval = 0;&#13;
+    if(graph.vertexYInterval &lt; 0) graph.vertexYInterval = 0;&#13;
+    graph.relocate();&#13;
+}</code></pre>
+      </div>
+      <img src="images/graph_tree_children.png" style="max-width:100%"/>
+      <img src="images/graph_tree_leave.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_tree.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　
+現在、graphで描画されているのが木である場合に適用できる各頂点の配置関数がライブラリに用意されている。
+<a href="./typedoc/modules/graphtablesvg.treearrangement.html#alignverticebychildren" target="_blank">TreeArrangement.alignVerticeByChildren</a>と
+<a href="./typedoc/modules/graphtablesvg.treearrangement.html#alignverticebyleave" target="_blank">TreeArrangement.alignVerticeByLeave</a>である。
+前者は子頂点が同じ高さになるように頂点を配置し、後者は葉頂点が同じ高さになるように配置される。
+このときの各頂点の水平間隔と垂直間隔は
+<a href="./typedoc/classes/graphtablesvg.graph.html#vertexxinterval" target="_blank">Graph.vertexXInterval</a>と
+<a href="./typedoc/classes/graphtablesvg.graph.html#vertexyinterval" target="_blank">Graph.vertexYInterval</a>で設定できる。</section>
+      <section ignore-format="true" class="sample-commentary">　<a href="./typedoc/classes/graphtablesvg.graph.html#relocatefunction" target="_blank">Graph.relocateFunction</a>はグラフの配置方法を決定するアロー関数のプロパティである。
+第一引数でgraph自身を受け取る。
+配置方法を決定すると言っても、この関数は(1)relocateFunctionの設定時か、(2)<a href="./typedoc/classes/graphtablesvg.graph.html#appendchild" target="_blank">Graph.appendChild</a>関数を呼ばれた後か、
+(3)<a href="./typedoc/classes/graphtablesvg.graph.html#relocate" target="_blank">Graph.relocate</a>関数を呼ばれた時か、
+(4)もしくは後述する<a href="./typedoc/classes/graphtablesvg.graph.html#constructfromlogictree" target="_blank">Graph.constructFromLogicTree</a>を呼んだ後にしか呼ばれないので明示的に設定しない限りは呼ばれることはないだろう。
+このあたりは設計が煮詰まっていないので今後の実装で変更することもあるかもしれない。
+</section>
+   </article>
+   <article title="Graph Sample : Logic Tree" id="xarticle-16" after="article" class="sample-article">
+      <h2>Graph Sample : Logic Tree</h2>
+      <div class="code-div">
+         <h4 class="code-filename">graph/sample_graph_logictree.js</h4>
+         <pre><code>let graph = null;&#13;
+window.onload = () =&gt; {&#13;
+&#13;
+    const node1 = new GraphTableSVG.LogicTree({vertexText : "1"});&#13;
+    const node2 = new GraphTableSVG.LogicTree({vertexText : "2"});&#13;
+    const node3 = new GraphTableSVG.LogicTree({vertexText : "3", parentEdgeText : "ho"});&#13;
+    const node4 = new GraphTableSVG.LogicTree({vertexText : "4"});&#13;
+    const node5 = new GraphTableSVG.LogicTree({vertexText : "5"});&#13;
+    const node6 = new GraphTableSVG.LogicTree({vertexText : "6"});&#13;
+&#13;
+    node1.children.push(node2);&#13;
+    node1.children.push(node3);&#13;
+    node3.children.push(node4);&#13;
+    node4.children.push(node5);&#13;
+    node4.children.push(node6);&#13;
+&#13;
+    const box = document.getElementById('svgbox');&#13;
+    graph = new GraphTableSVG.Tree(box);&#13;
+    graph.constructFromLogicTree(node1, {x : 50, y : 50});&#13;
+    &#13;
+};</code></pre>
+      </div>
+      <img src="images/graph_logictree.png" style="max-width:100%"/>
+      <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_logictree.html">実行結果</a></section>
+      <section ignore-format="true" class="sample-commentary">　<a href="./typedoc/classes/graphtablesvg.logictree.html" target="_blank">LogicTree</a>はLogicTableと同様に、SVG要素を取り除いて木の形や各頂点や辺の設定プロパティだけで構成されたクラスである。
+SVG要素として構築する前にあらかじめ木の形が決まっているときはこのクラスを通すと設計がすっきりするかもしれない。
+ちなみにLogicGraphはまだ実装されていない。
+</section>
+   </article>
+   <article title="Graph Sample : Powerpoint" id="xarticle-17" after="article" class="sample-article">
+      <h2>Graph Sample : Powerpoint</h2>
+      <section ignore-format="true" class="sample-commentary">　
+グラフもVBAコードを使ってPowerpoint上に作成することが出来る。
+</section>
+   </article>
+</body>
+</html>
