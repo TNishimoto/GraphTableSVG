@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <html>
 <head>
-<title>hello</title>
+<title>Tutorial</title>
 <OUTPUT path="./tutorial.html" remove="" macro="html" />
 <MACRO path="./tutorial.js" remove=""/>
 <stylesheet path="tutorial.css" />
