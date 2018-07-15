@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="sample_table_anchor.css" type="text/css" />
@@ -7,9 +8,13 @@
   <script src="sample_table_anchor.js"></script>
   <title>Sample</title>
 </head>
+
 <body>
-    <button type="button" onclick="GraphTableSVG.GUI.createMacroModal(GraphTableSVG.SVGToVBA.create(table))">VBACode</button><br>
-<svg viewBox="0 0 400 400" width="400px" height="400px" id="svgbox" xmlns="http://www.w3.org/2000/svg" style="border:#000000 solid 1px;background:#e9e9e9" />
+  <button type="button" onclick="GraphTableSVG.GUI.createMacroModal(GraphTableSVG.SVGToVBA.create(table))">VBA</button>
+  <button type="button" onclick="GraphTableSVG.PNG.createPNGFromSVG('svgbox')">PNG</button>
+  <br>
+  <svg viewBox="0 0 400 400" width="400px" height="400px" id="svgbox" xmlns="http://www.w3.org/2000/svg" style="border:#000000 solid 1px;background:#e9e9e9"></svg>
 
 </body>
+
 </html>

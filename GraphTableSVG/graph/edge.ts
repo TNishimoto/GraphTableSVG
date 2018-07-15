@@ -373,6 +373,24 @@
                 return 0;
             }
         }
+        private removeTextLengthAttribute() : void {
+            if(this.svgText.hasAttribute("textLength")) this.svgText.removeAttribute("textLength");
+            if(this.svgTextPath.hasAttribute("textLength")) this.svgTextPath.removeAttribute("textLength");
+            if(this.svgText.hasAttribute("letter-spacing")) this.svgText.removeAttribute("letter-spacing");
+        }
+        private setRegularInterval(value : number) : void {
+            this.removeTextLengthAttribute();
+            const box = this.svgText.getBBox();
+            const diff = value - box.width;
+            const number = this.svgText.textContent.length;
+            if(number >= 2){
+                const w = diff / (number - 1)
+                this.svgText.setAttribute("letter-spacing", `${w}`);
+            }
+            this.svgText.setAttribute("textLength", `${value}`);
+            this.svgTextPath.setAttribute("textLength", `${value}`);
+            
+        }
 
         /**
          * 再描画します。
@@ -417,26 +435,37 @@
                         const startPos = pathLen / (strLen + 1);
                         let textPathLen = pathLen - (startPos * 2);
                         if (textPathLen <= 0) textPathLen = 5;
-                        this.svgTextPath.startOffset.baseVal.value = startPos;
-                        this.svgText.textLength.baseVal.value = textPathLen;
+                        this.svgTextPath.setAttribute("startOffset", `${startPos}`);
+                        this.setRegularInterval(textPathLen);
+                        //this.svgText.textLength.baseVal.value = textPathLen;
+                        
+                        //this.svgTextPath.textLength.baseVal.value = textPathLen;
+
+                        //this.svgTextPath.setAttribute("lengthAdjust", "spacing");
+                        //this.svgText.setAttribute("lengthAdjust", "spacing");
+
+                        //this.svgText.textLength.baseVal.value = textPathLen;
                     }
 
                 }
                 else if(this.pathTextAlignment == pathTextAlighnment.end){
-                    if(this.svgText.hasAttribute("textLength"))this.svgText.removeAttribute("textLength");
+                    this.removeTextLengthAttribute();
                     const box = this.svgText.getBBox();
                     const pathLen = this.svgPath.getTotalLength();
-                    this.svgTextPath.startOffset.baseVal.value = pathLen - box.width;  
+                    this.svgTextPath.setAttribute("startOffset", `${pathLen - box.width}`);
                 } 
                 else if(this.pathTextAlignment == pathTextAlighnment.center){
-                    if(this.svgText.hasAttribute("textLength"))this.svgText.removeAttribute("textLength");
+                    this.removeTextLengthAttribute();
                     const box = this.svgText.getBBox();
                     const pathLen = this.svgPath.getTotalLength();
-                    this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    
+                    const offset = (pathLen - box.width)/2;
+                    this.svgTextPath.setAttribute("startOffset", `${offset}`);
+                    //こっちだとEdgeではおかしくなる
+                    //this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    
 
                 }
                 else {
-                    if(this.svgText.hasAttribute("textLength"))this.svgText.removeAttribute("textLength");
+                    this.removeTextLengthAttribute();
                     //this.svgText.textLength.baseVal.value = 0;
                 }
                 const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");

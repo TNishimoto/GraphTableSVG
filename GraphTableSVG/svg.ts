@@ -426,17 +426,47 @@ namespace GraphTableSVG {
          * @param svg 適用されるSVG要素
          */
         export function setCSSToStyle(svg: HTMLElement) {
+            cssPropertyNames.forEach((v) => {                    
+                const value = getPropertyStyleValue(svg, v);
+                if (value != null) {
+                    svg.style.setProperty(v, value);
+                }
+            });
+
+            /*
             const css = getCSSStyle(svg);
             if (css != null) {
                 let css2: CSSStyleDeclaration = css;
-                cssPropertyNames.forEach((v) => {
+                cssPropertyNames.forEach((v) => {                    
                     const value = css2.getPropertyValue(v).trim();
                     if (value.length > 0) {
                         svg.style.setProperty(v, value);
                     }
                 });
             }
+            */
         }
+        function getPropertyStyleValue(item : HTMLElement,name: string): string | null {
+            const p = item.style.getPropertyValue(name).trim();
+            if (p.length == 0) {
+                const r = item.getAttribute("class");
+                if (r == null) {
+                    return null;
+                } else {
+                    const css = getCSSStyle(item);
+                    //const css = getComputedStyle(item);
+                    const p2 = css.getPropertyValue(name).trim();
+                    if (p2.length == 0) {
+                        return null;
+                    } else {
+                        return p2;
+                    }
+                }
+            } else {
+                return p;
+            }
+        }
+
         /**
          * 入力のSVG要素とその配下の要素全てにsetCSSToStyleを適用します。
          * @param item SVG要素もしくはそのid
@@ -459,7 +489,7 @@ namespace GraphTableSVG {
                 }
             }
         }
-        const cssPropertyNames: string[] = ["font-size", "fill", "stroke", "font-family"];
+        const cssPropertyNames: string[] = ["font-size", "fill", "stroke", "font-family", "font-weight", "stroke-width", "background", "border", "background-color"];
 
         /**
          * 未使用。

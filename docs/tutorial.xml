@@ -192,14 +192,21 @@ Autoを選択した場合、二点の位置関係から計算した最適な位�
 表の場合と同様に、頂点や辺のsvgGroupに設定したCSSから構成している各種SVG要素のプロパティを設定することが出来る。
 </xarticle>
 
+<xarticle title="Graph Sample : Alignment" >
+<load path="graph/sample_graph_textpath.js" />
+<a href="graph/sample_graph_textpath.html">実行結果</a><dbr/>
+辺に設定されたテキストの配置位置もpathTextAlignmentプロパティから設定できる。
+開始頂点側、終了頂点側、辺の中央、そして辺上に均等に配置の四種類を選ぶことが出来る。
+何も選ばない場合は中央配置となる。
+</xarticle>
+
+
 <xarticle title="Graph Sample : 破線とAlignment" >
 <load path="graph/sample_graph_dash_style.js" />
 <load path="images/graph_dash.png" />
 <a href="graph/sample_graph_dash_style.html">実行結果</a><dbr/>
 Edgeの線は点線にすることが出来る。svgTextPathのstroke-dasharrayを編集することで実現できるが、本ライブラリで用意されたGraphTableSVG.msoDashStyle.setStyleで点線の種類を選択することが望ましい。
 setStyleで設定した点線はPowerpoint側で用意された点線に直接変換できるからである。理由はそれだけなのでPowerpointに出力することを想定していない場合はstroke-dasharrayで十分である。
-辺に設定されたテキストの配置位置もpathTextAlignmentプロパティから設定できる。開始頂点側、終了頂点側、辺の中央、そして辺上に均等に配置の四種類を選ぶことが出来る。
-何も選ばない場合は中央配置となる。
 </xarticle>
 
 <xarticle title="Graph Sample : Tree" >

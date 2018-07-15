@@ -77,7 +77,7 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     namespace GUI {
-        function createMacroModal(text: string): void;
+        function createMacroModal(vbaCode: string): void;
         function removeMacroModal(): void;
         function copyAndCloseMacroModal(): void;
         function setSVGBoxSize(box: HTMLElement, w: number, h: number): void;
@@ -86,7 +86,7 @@ declare namespace GraphTableSVG {
             [key: string]: string;
         };
         function setURLParametersToHTMLElements(): void;
-        function getInputText(boxname: string): string;
+        function getInputText(elementID: string): string;
         function getNonNullElementById(id: string): HTMLElement;
         function observeSVGBox(svgBox: HTMLElement, sizeFunc: () => GraphTableSVG.Rectangle, padding?: GraphTableSVG.Padding): void;
     }
@@ -112,15 +112,15 @@ interface SVGTextElement {
     setX(value: number): void;
     getY(): number;
     setY(value: number): void;
-    setTextContent(str: string, isLatexMode: boolean): void;
-    setTextContent(str: string): void;
+    setTextContent(text: string, isLatexMode: boolean): void;
+    setTextContent(text: string): void;
 }
 interface SVGTextPathElement {
-    setTextContent(str: string, isLatexMode: boolean): void;
-    setTextContent(str: string): void;
+    setTextContent(text: string, isLatexMode: boolean): void;
+    setTextContent(text: string): void;
 }
 interface SVGLineElement {
-    setEmphasis(v: boolean): void;
+    setEmphasis(b: boolean): void;
     getEmphasis(): boolean;
 }
 interface SVGPathElement {
@@ -204,8 +204,8 @@ declare namespace GraphTableSVG {
         function createCircle(parent: SVGElement, className?: string | null): SVGCircleElement;
         function createMarker(className?: string | null): SVGMarkerElement;
         function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
-        function setTextToTextPath(path: SVGTextPathElement, str: string, isLatexMode: boolean): void;
-        function setTextToSVGText(path: SVGTextElement, str: string, isLatexMode: boolean): void;
+        function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean): void;
+        function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexMode: boolean): void;
         function setClass(svg: SVGElement, className?: string | null): void;
         function setCSSToStyle(svg: HTMLElement): void;
         function setCSSToAllElementStyles(item: HTMLElement | string): void;
@@ -295,6 +295,8 @@ declare namespace GraphTableSVG {
         readonly y1: number;
         readonly x2: number;
         readonly y2: number;
+        private removeTextLengthAttribute();
+        private setRegularInterval(value);
         update(): boolean;
         pathTextAlignment: pathTextAlighnment;
         readonly objectID: string;
@@ -419,7 +421,7 @@ declare namespace GraphTableSVG {
     class Tree extends Graph {
     }
     namespace Parse {
-        function parseTree(str: string): GraphTableSVG.LogicTree;
+        function parseTree(parseText: string): GraphTableSVG.LogicTree;
         function getParseString(tree: GraphTableSVG.Vertex): string;
     }
 }
@@ -854,11 +856,16 @@ declare namespace GraphTableSVG {
         function clearGraphTables(svg: HTMLElement, items: (GraphTableSVG.Graph | GraphTableSVG.Table)[]): void;
         function IsDescendantOfBody(node: Node): boolean;
         function getRegion(items: (Graph | Table | SVGPathElement | SVGTextElement)[]): Rectangle;
-        function paddingLeft(str: string, n: number, char: string): string;
+        function paddingLeft(text: string, length: number, leftChar: string): string;
         function setGraphTableCSS(cellColor: string, borderColor: string): void;
         function getGraphTableCSS(): HTMLElement | null;
-        function parseUnit(str: string): [number, string];
-        function toPX(str: string): number;
+        function parseUnit(text: string): [number, string];
+        function toPX(value: string): number;
         function bezierLocation([px1, py1]: [number, number], [px2, py2]: [number, number], [px3, py3]: [number, number], t: number): [number, number];
+    }
+}
+declare namespace GraphTableSVG {
+    namespace PNG {
+        function createPNGFromSVG(id: string): HTMLCanvasElement;
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <title>Sample</title>
@@ -9,14 +10,17 @@
 </head>
 
 <body>
-    <button type="button" id="childrenButton" >Children</button>
+    <button type="button" id="childrenButton">Children</button>
     <button type="button" id="leaveButton">Leave</button>
-    <button type="button" id="xInterval+Button" onclick="XYInterval(10,0)" >X+=10</button>
+    <button type="button" id="xInterval+Button" onclick="XYInterval(10,0)">X+=10</button>
     <button type="button" id="xInterval-Button" onclick="XYInterval(-10,0)">X-=10</button>
     <button type="button" id="yInterval+Button" onclick="XYInterval(0,10)">Y+=10</button>
     <button type="button" id="yInterval-Button" onclick="XYInterval(0,-10)">Y-=10</button>
-    <button type="button" onclick="GraphTableSVG.GUI.createMacroModal(GraphTableSVG.SVGToVBA.create(graph))">VBACode</button><br>
+    <button type="button" onclick="GraphTableSVG.GUI.createMacroModal(GraphTableSVG.SVGToVBA.create(graph))">VBA</button>
+    <button type="button" onclick="GraphTableSVG.PNG.createPNGFromSVG('svgbox')">PNG</button>
+    <br>
     <svg viewBox="0 0 600 500" width="600px" height="500px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
     </svg>
 </body>
+
 </html>
