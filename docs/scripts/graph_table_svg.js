@@ -1025,25 +1025,34 @@ var GraphTableSVG;
             return circle;
         }
         SVG.createCircle = createCircle;
-        function createMarker(className) {
-            if (className === void 0) { className = null; }
+        function createMarker(option) {
+            if (option === void 0) { option = {}; }
             var marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
-            var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-            poly.setAttribute("points", "0,0 0,10 10,5");
-            poly.setAttribute("fill", "red");
+            var poly = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            poly.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
+            if (option.color != undefined) {
+                poly.setPropertyStyleValue("stroke", option.color);
+                marker.setPropertyStyleValue("fill", option.color);
+            }
+            else {
+                poly.setPropertyStyleValue("stroke", "black");
+                marker.setPropertyStyleValue("fill", "black");
+            }
+            poly.setPropertyStyleValue("stroke-width", "1px");
             marker.setAttribute("markerUnits", "userSpaceOnUse");
             marker.setAttribute("markerHeight", "15");
             marker.setAttribute("markerWidth", "15");
-            marker.refX.baseVal.value = 10;
-            marker.refY.baseVal.value = 5;
+            marker.setAttribute("refX", "10");
+            marker.setAttribute("refY", "5");
             marker.setAttribute("preserveAspectRatio", "none");
-            marker.setAttribute("orient", "auto-start-reverse");
+            marker.setAttribute("orient", "auto");
             marker.setAttribute("viewBox", "0 0 10 10");
             marker.appendChild(poly);
-            if (className != null) {
-                marker.setAttribute("class", className);
+            if (option.className != null) {
             }
-            return marker;
+            else {
+            }
+            return [marker, poly];
         }
         SVG.createMarker = createMarker;
         function createTextPath(className) {
@@ -1492,8 +1501,8 @@ var GraphTableSVG;
             this._observer = new MutationObserver(this.observerFunc);
             var option1 = { attributes: true };
             this._observer.observe(this.svgGroup, option1);
-            var p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, p);
+            var lineClass = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
+            this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, lineClass);
             this._svgPath.id = "path-" + this.objectID;
             var textClass = this.svgGroup.getPropertyStyleValue(Edge.defaultTextClass);
             _a = GraphTableSVG.SVG.createTextPath(textClass), this._svgText = _a[0], this._svgTextPath = _a[1];
@@ -1502,10 +1511,12 @@ var GraphTableSVG;
             this._svgTextPath.href.baseVal = "#" + this._svgPath.id;
             var markerStartName = this.svgGroup.getPropertyStyleValue(Edge.markerStartName);
             var markerEndName = this.svgGroup.getPropertyStyleValue(Edge.markerEndName);
+            var edgeColor = this.svgPath.getPropertyStyleValue("stroke");
+            var strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
             if (markerStartName == "true")
-                this.markerStart = GraphTableSVG.Edge.createMark();
+                this.markerStart = GraphTableSVG.Edge.createStartMarker({ color: edgeColor, strokeWidth: strokeWidth });
             if (markerEndName == "true")
-                this.markerEnd = GraphTableSVG.Edge.createMark();
+                this.markerEnd = GraphTableSVG.Edge.createEndMarker({ color: edgeColor, strokeWidth: strokeWidth });
             var _a;
         }
         Object.defineProperty(Edge.prototype, "svgTextPath", {
@@ -1852,7 +1863,7 @@ var GraphTableSVG;
                 }
                 if (this.pathTextAlignment == GraphTableSVG.pathTextAlighnment.regularInterval) {
                     var pathLen = this.svgPath.getTotalLength();
-                    var strLen = this.svgText.textContent == null ? 0 : this.svgText.textContent.length;
+                    var strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
                     if (strLen > 0) {
                         var startPos = pathLen / (strLen + 1);
                         var textPathLen = pathLen - (startPos * 2);
@@ -2048,10 +2059,24 @@ var GraphTableSVG;
                 }
             }
         };
-        Edge.createMark = function () {
-            var marker = GraphTableSVG.SVG.createMarker();
+        Edge.createMark = function (option) {
+            if (option === void 0) { option = {}; }
+            var _a = GraphTableSVG.SVG.createMarker(option), marker = _a[0], path = _a[1];
+            if (option.isEnd != undefined && option.isEnd) {
+                path.setAttribute("transform", "rotate(180,5,5)");
+                marker.setAttribute("refX", "0");
+            }
             marker.id = "marker-" + Edge.markerCounter++;
             return marker;
+        };
+        Edge.createStartMarker = function (option) {
+            if (option === void 0) { option = {}; }
+            var option2 = { className: option.className, strokeWidth: option.strokeWidth, color: option.color, isEnd: true };
+            return this.createMark(option2);
+        };
+        Edge.createEndMarker = function (option) {
+            if (option === void 0) { option = {}; }
+            return this.createMark(option);
         };
         Edge.beginConnectorTypeName = "--begin-connector-type";
         Edge.endConnectorTypeName = "--end-connector-type";

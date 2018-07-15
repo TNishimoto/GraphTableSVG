@@ -181,26 +181,46 @@ namespace GraphTableSVG {
          * @param className 生成するSVG要素のクラス属性名
          * @returns 生成されたSVGMarkerElement
          */
-        export function createMarker(className: string | null = null): SVGMarkerElement {
+        export function createMarker(option : {className?: string, strokeWidth? : string, color? : string} = {}): [SVGMarkerElement, SVGPathElement] {
             const marker = <SVGMarkerElement>document.createElementNS('http://www.w3.org/2000/svg', 'marker');
-            const poly = <SVGPolygonElement>document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-            poly.setAttribute("points", "0,0 0,10 10,5");
-            poly.setAttribute("fill", "red");
+            //const poly = <SVGPolygonElement>document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            const poly = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            poly.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
+            //poly.setAttribute("points", "0,0 0,10 10,5");
+           
+            if(option.color != undefined){
+                poly.setPropertyStyleValue("stroke", option.color);
+                marker.setPropertyStyleValue("fill", option.color);
+
+            }else{
+                poly.setPropertyStyleValue("stroke", "black");
+                marker.setPropertyStyleValue("fill", "black");
+  
+            }
+            poly.setPropertyStyleValue("stroke-width", "1px");
+
             marker.setAttribute("markerUnits", "userSpaceOnUse");
             marker.setAttribute("markerHeight", "15");
             marker.setAttribute("markerWidth", "15");
-            marker.refX.baseVal.value = 10;
-            marker.refY.baseVal.value = 5;
+            marker.setAttribute("refX", "10");
+            marker.setAttribute("refY", "5");
+
+            //marker.refX.baseVal.value = 10;
+            //marker.refY.baseVal.value = 5;
 
             marker.setAttribute("preserveAspectRatio", "none");
-            marker.setAttribute("orient", "auto-start-reverse");
+            marker.setAttribute("orient", "auto");
             marker.setAttribute("viewBox", "0 0 10 10")
+            //marker.setAttribute("stroke-width", "1px");
             marker.appendChild(poly);
 
-            if (className != null) {
-                marker.setAttribute("class", className);
+            if (option.className != null) {
+                //marker.setAttribute("class", option.className);
+                //poly.setAttribute("class", className);
+            }else{
             }
-            return marker;
+
+            return [marker,poly];
 
         }
         /**

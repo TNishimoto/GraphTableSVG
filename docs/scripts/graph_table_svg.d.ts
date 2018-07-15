@@ -202,7 +202,11 @@ declare namespace GraphTableSVG {
         const defaultHeightName = "--default-height";
         let defaultCircleRadius: number;
         function createCircle(parent: SVGElement, className?: string | null): SVGCircleElement;
-        function createMarker(className?: string | null): SVGMarkerElement;
+        function createMarker(option?: {
+            className?: string;
+            strokeWidth?: string;
+            color?: string;
+        }): [SVGMarkerElement, SVGPathElement];
         function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
         function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean): void;
         function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexMode: boolean): void;
@@ -326,7 +330,17 @@ declare namespace GraphTableSVG {
         }): void;
         createVBACodeOfText(shapes: string, result: string[][]): void;
         private static markerCounter;
-        static createMark(): SVGMarkerElement;
+        private static createMark(option?);
+        static createStartMarker(option?: {
+            className?: string;
+            strokeWidth?: string;
+            color?: string;
+        }): SVGMarkerElement;
+        static createEndMarker(option?: {
+            className?: string;
+            strokeWidth?: string;
+            color?: string;
+        }): SVGMarkerElement;
     }
 }
 declare namespace GraphTableSVG {

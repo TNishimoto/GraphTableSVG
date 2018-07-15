@@ -191,8 +191,8 @@
             const option1: MutationObserverInit = { attributes: true };
             this._observer.observe(this.svgGroup, option1);
 
-            const p = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgPath = SVG.createPath(this.svgGroup, 0, 0, 0, 0, p);
+            const lineClass = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
+            this._svgPath = SVG.createPath(this.svgGroup, 0, 0, 0, 0, lineClass);
             //this.svgGroup.appendChild(this.svgPath);
             this._svgPath.id = `path-${this.objectID}`;
 
@@ -205,8 +205,11 @@
             const markerStartName = this.svgGroup.getPropertyStyleValue(Edge.markerStartName);
             const markerEndName = this.svgGroup.getPropertyStyleValue(Edge.markerEndName);
 
-            if(markerStartName == "true") this.markerStart = GraphTableSVG.Edge.createMark();
-            if(markerEndName == "true") this.markerEnd = GraphTableSVG.Edge.createMark();
+            const edgeColor = this.svgPath.getPropertyStyleValue("stroke");
+            const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
+            
+            if(markerStartName == "true") this.markerStart = GraphTableSVG.Edge.createStartMarker({color : edgeColor, strokeWidth : strokeWidth});
+            if(markerEndName == "true") this.markerEnd = GraphTableSVG.Edge.createEndMarker({color : edgeColor, strokeWidth : strokeWidth});
 
 
             //this._parent = graph;
@@ -430,7 +433,7 @@
 
                 if (this.pathTextAlignment == pathTextAlighnment.regularInterval) {
                     const pathLen = this.svgPath.getTotalLength();
-                    const strLen = this.svgText.textContent == null ? 0 : this.svgText.textContent.length;
+                    const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
                     if (strLen > 0) {
                         const startPos = pathLen / (strLen + 1);
                         let textPathLen = pathLen - (startPos * 2);
@@ -742,11 +745,24 @@
         /**
          * 矢印オブジェクトを作成します。
          */
-        public static createMark(): SVGMarkerElement {
-            var marker = GraphTableSVG.SVG.createMarker();
+        private static createMark(option : {className?: string, strokeWidth? : string, color? : string, isEnd?:boolean} = {}): SVGMarkerElement {
+            var [marker, path] = GraphTableSVG.SVG.createMarker(option);
+            if(option.isEnd != undefined && option.isEnd){
+                path.setAttribute("transform", "rotate(180,5,5)");
+                marker.setAttribute("refX", "0");
+            }
             marker.id = `marker-${Edge.markerCounter++}`;
             return marker;
         }
+        public static createStartMarker(option : {className?: string, strokeWidth? : string, color? : string} = {}): SVGMarkerElement {
+            const option2 = {className: option.className, strokeWidth : option.strokeWidth, color : option.color, isEnd : true};
+            return this.createMark(option2);
+
+        }
+        public static createEndMarker(option : {className?: string, strokeWidth? : string, color? : string} = {}): SVGMarkerElement {
+            return this.createMark(option);
+        }
+
         /*
         public setStyleForPNG() {
             SVG.setStyleForPNG(this.svgPath);
