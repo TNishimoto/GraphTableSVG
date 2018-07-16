@@ -1202,13 +1202,28 @@ var GraphTableSVG;
                 return css;
             }
         }
-        function setCSSToStyle(svg) {
-            cssPropertyNames.forEach(function (v) {
-                var value = getPropertyStyleValue(svg, v);
-                if (value != null) {
-                    svg.style.setProperty(v, value);
+        function setCSSToStyle(svg, isComplete) {
+            if (isComplete === void 0) { isComplete = true; }
+            if (isComplete) {
+                var css = getCSSStyle(svg);
+                if (css != null) {
+                    for (var i = 0; i < css.length; i++) {
+                        var name_1 = css.item(i);
+                        var value = css.getPropertyValue(name_1);
+                        if (value.length > 0) {
+                            svg.style.setProperty(name_1, value);
+                        }
+                    }
                 }
-            });
+            }
+            else {
+                cssPropertyNames.forEach(function (v) {
+                    var value = getPropertyStyleValue(svg, v);
+                    if (value != null) {
+                        svg.style.setProperty(v, value);
+                    }
+                });
+            }
         }
         SVG.setCSSToStyle = setCSSToStyle;
         function getPropertyStyleValue(item, name) {
@@ -1233,25 +1248,81 @@ var GraphTableSVG;
                 return p;
             }
         }
-        function setCSSToAllElementStyles(item) {
+        function getAllElementStyleMapSub(item, output, id) {
             if (typeof item == 'string') {
                 var svgBox = document.getElementById(item);
                 if (svgBox != null) {
-                    setCSSToAllElementStyles(svgBox);
+                    getAllElementStyleMapSub(svgBox, output, id);
                 }
             }
             else {
-                setCSSToStyle(item);
+                var style = item.getAttribute("style");
+                output[id++] = style;
                 for (var i = 0; i < item.children.length; i++) {
                     var child = item.children.item(i);
                     if (child != null) {
-                        setCSSToAllElementStyles(child);
+                        id = getAllElementStyleMapSub(child, output, id);
+                    }
+                }
+            }
+            return id;
+        }
+        function getAllElementStyleMap(item) {
+            var dic = {};
+            getAllElementStyleMapSub(item, dic, 0);
+            return dic;
+        }
+        SVG.getAllElementStyleMap = getAllElementStyleMap;
+        function setAllElementStyleMapSub(item, output, id) {
+            if (typeof item == 'string') {
+                var svgBox = document.getElementById(item);
+                if (svgBox != null) {
+                    setAllElementStyleMapSub(svgBox, output, id);
+                }
+            }
+            else {
+                var style = output[id++];
+                if (style == null) {
+                    item.removeAttribute("style");
+                }
+                else {
+                    item.setAttribute("style", style);
+                }
+                for (var i = 0; i < item.children.length; i++) {
+                    var child = item.children.item(i);
+                    if (child != null) {
+                        id = setAllElementStyleMapSub(child, output, id);
+                    }
+                }
+            }
+            return id;
+        }
+        function setAllElementStyleMap(item, dic) {
+            setAllElementStyleMapSub(item, dic, 0);
+        }
+        SVG.setAllElementStyleMap = setAllElementStyleMap;
+        function setCSSToAllElementStyles(item, isComplete) {
+            if (isComplete === void 0) { isComplete = true; }
+            if (typeof item == 'string') {
+                var svgBox = document.getElementById(item);
+                if (svgBox != null) {
+                    setCSSToAllElementStyles(svgBox, isComplete);
+                }
+            }
+            else {
+                setCSSToStyle(item, isComplete);
+                for (var i = 0; i < item.children.length; i++) {
+                    var child = item.children.item(i);
+                    if (child != null) {
+                        setCSSToAllElementStyles(child, isComplete);
                     }
                 }
             }
         }
         SVG.setCSSToAllElementStyles = setCSSToAllElementStyles;
-        var cssPropertyNames = ["font-size", "fill", "stroke", "font-family", "font-weight", "stroke-width", "background", "border", "background-color"];
+        var cssPropertyNames = ["font-size", "fill", "stroke",
+            "font-family", "font-weight", "stroke-width", "background", "border", "background-color", "border-bottom-color", "border-bottom-style", "border-bottom-width",
+            "border-left-color", "border-left-style", "border-left-width", "border-right-color", "border-right-style", "border-right-width", "border-top-color", "border-top-style", "border-top-width"];
         function getStyleSheet(name) {
             var name2 = "." + name;
             for (var i = 0; i < document.styleSheets.length; i++) {
@@ -6176,6 +6247,7 @@ var GraphTableSVG;
             var svgBox = document.getElementById(id);
             if (svgBox == null)
                 throw Error("Error");
+            var styleMap = GraphTableSVG.SVG.getAllElementStyleMap(svgBox);
             GraphTableSVG.SVG.setCSSToAllElementStyles(svgBox);
             var widthAttr = svgBox.getAttribute("width");
             var heightAttr = svgBox.getAttribute("height");
@@ -6209,6 +6281,7 @@ var GraphTableSVG;
                 svgBox.style.removeProperty("height");
                 svgBox.setAttribute("height", heightAttr);
             }
+            GraphTableSVG.SVG.setAllElementStyleMap(svgBox, styleMap);
             return canvas;
         }
         PNG.createPNGFromSVG = createPNGFromSVG;

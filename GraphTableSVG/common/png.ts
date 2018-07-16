@@ -9,6 +9,7 @@ namespace GraphTableSVG {
 
             const svgBox = document.getElementById(id);
             if (svgBox == null) throw Error("Error");
+            const styleMap = GraphTableSVG.SVG.getAllElementStyleMap(svgBox);
             GraphTableSVG.SVG.setCSSToAllElementStyles(svgBox);
 
             const widthAttr = svgBox.getAttribute("width");
@@ -58,6 +59,7 @@ namespace GraphTableSVG {
                 svgBox.setAttribute("height", heightAttr);
             }
 
+            GraphTableSVG.SVG.setAllElementStyleMap(svgBox, styleMap);
             return canvas;
             //return canvas;
         }

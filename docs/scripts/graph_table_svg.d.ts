@@ -211,8 +211,14 @@ declare namespace GraphTableSVG {
         function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean): void;
         function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexMode: boolean): void;
         function setClass(svg: SVGElement, className?: string | null): void;
-        function setCSSToStyle(svg: HTMLElement): void;
-        function setCSSToAllElementStyles(item: HTMLElement | string): void;
+        function setCSSToStyle(svg: HTMLElement, isComplete?: boolean): void;
+        function getAllElementStyleMap(item: HTMLElement | string): {
+            [key: number]: string;
+        };
+        function setAllElementStyleMap(item: HTMLElement | string, dic: {
+            [key: number]: string;
+        }): void;
+        function setCSSToAllElementStyles(item: HTMLElement | string, isComplete?: boolean): void;
         function getStyleSheet(name: string): CSSStyleDeclaration | null;
     }
 }

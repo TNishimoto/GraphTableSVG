@@ -194,14 +194,16 @@ Autoを選択した場合、二点の位置関係から計算した最適な位�
 
 <xarticle title="Graph Sample : Alignment" >
 <load path="graph/sample_graph_textpath.js" />
+<load path="images/graph_textpath.png" />
+
 <a href="graph/sample_graph_textpath.html">実行結果</a><dbr/>
-辺に設定されたテキストの配置位置もpathTextAlignmentプロパティから設定できる。
+辺に設定されたテキストの配置位置も<rhref method="true">Edge.pathTextAlignment</rhref>プロパティから設定できる。
 開始頂点側、終了頂点側、辺の中央、そして辺上に均等に配置の四種類を選ぶことが出来る。
 何も選ばない場合は中央配置となる。
 </xarticle>
 
 
-<xarticle title="Graph Sample : 破線とAlignment" >
+<xarticle title="Graph Sample : 破線" >
 <load path="graph/sample_graph_dash_style.js" />
 <load path="images/graph_dash.png" />
 <a href="graph/sample_graph_dash_style.html">実行結果</a><dbr/>

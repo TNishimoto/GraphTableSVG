@@ -181,21 +181,21 @@ namespace GraphTableSVG {
          * @param className 生成するSVG要素のクラス属性名
          * @returns 生成されたSVGMarkerElement
          */
-        export function createMarker(option : {className?: string, strokeWidth? : string, color? : string} = {}): [SVGMarkerElement, SVGPathElement] {
+        export function createMarker(option: { className?: string, strokeWidth?: string, color?: string } = {}): [SVGMarkerElement, SVGPathElement] {
             const marker = <SVGMarkerElement>document.createElementNS('http://www.w3.org/2000/svg', 'marker');
             //const poly = <SVGPolygonElement>document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
             const poly = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             poly.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
             //poly.setAttribute("points", "0,0 0,10 10,5");
-           
-            if(option.color != undefined){
+
+            if (option.color != undefined) {
                 poly.setPropertyStyleValue("stroke", option.color);
                 marker.setPropertyStyleValue("fill", option.color);
 
-            }else{
+            } else {
                 poly.setPropertyStyleValue("stroke", "black");
                 marker.setPropertyStyleValue("fill", "black");
-  
+
             }
             poly.setPropertyStyleValue("stroke-width", "1px");
 
@@ -217,10 +217,10 @@ namespace GraphTableSVG {
             if (option.className != null) {
                 //marker.setAttribute("class", option.className);
                 //poly.setAttribute("class", className);
-            }else{
+            } else {
             }
 
-            return [marker,poly];
+            return [marker, poly];
 
         }
         /**
@@ -252,7 +252,7 @@ namespace GraphTableSVG {
          * @param dyOfFirstElement 生成した最初のSVGTSpanElementのdy
          * @returns 入力テキストをLatex表記でパースした結果をSVGTSpanElement配列
          */
-        function createTextSpans(text: string, className: string | null = null, 
+        function createTextSpans(text: string, className: string | null = null,
             fontsize: number = 12, dxOfFirstElement: number | null = null, dyOfFirstElement: number | null = null): SVGTSpanElement[] {
             let r: SVGTSpanElement[] = [];
             text += "_";
@@ -321,9 +321,9 @@ namespace GraphTableSVG {
         function createSingleTextSpan(text: string, className: string | null = null): SVGTSpanElement {
             const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
             tspan.textContent = text;
-            
-            if(className != null){
-            tspan.setAttribute("class", className)
+
+            if (className != null) {
+                tspan.setAttribute("class", className)
             }
             return tspan;
         }
@@ -445,13 +445,27 @@ namespace GraphTableSVG {
          * SVG要素のクラス属性名から取得できるCSSStyleDeclarationを要素のスタイル属性にセットします。
          * @param svg 適用されるSVG要素
          */
-        export function setCSSToStyle(svg: HTMLElement) {
-            cssPropertyNames.forEach((v) => {                    
-                const value = getPropertyStyleValue(svg, v);
-                if (value != null) {
-                    svg.style.setProperty(v, value);
+        export function setCSSToStyle(svg: HTMLElement, isComplete: boolean = true) {
+            if (isComplete) {
+                const css: CSSStyleDeclaration = getCSSStyle(svg);
+                if (css != null) {
+                    for (let i = 0; i < css.length; i++) {
+                        const name = css.item(i);
+                        const value = css.getPropertyValue(name);
+                        if (value.length > 0) {
+                            svg.style.setProperty(name, value);
+                        }
+                    }
                 }
-            });
+
+            } else {
+                cssPropertyNames.forEach((v) => {
+                    const value = getPropertyStyleValue(svg, v);
+                    if (value != null) {
+                        svg.style.setProperty(v, value);
+                    }
+                });
+            }
 
             /*
             const css = getCSSStyle(svg);
@@ -466,7 +480,7 @@ namespace GraphTableSVG {
             }
             */
         }
-        function getPropertyStyleValue(item : HTMLElement,name: string): string | null {
+        function getPropertyStyleValue(item: HTMLElement, name: string): string | null {
             const p = item.style.getPropertyValue(name).trim();
             if (p.length == 0) {
                 const r = item.getAttribute("class");
@@ -487,29 +501,87 @@ namespace GraphTableSVG {
             }
         }
 
+        function getAllElementStyleMapSub(item: HTMLElement | string, output : { [key: number]: string | null; }, id : number) : number {
+            if (typeof item == 'string') {
+                const svgBox: HTMLElement | null = document.getElementById(item);
+                if (svgBox != null) {
+                    getAllElementStyleMapSub(svgBox, output, id);
+                }
+            }
+            else {
+                const style = item.getAttribute("style");
+                output[id++] = style;
+                for (let i = 0; i < item.children.length; i++) {
+                    const child = <HTMLElement>item.children.item(i);
+                    if (child != null) {
+                      id = getAllElementStyleMapSub(child, output, id);
+                    }
+                }
+            }
+            return id;
+
+        }
+
+        export function getAllElementStyleMap(item: HTMLElement | string) : { [key: number]: string; } {
+            const dic : { [key: number]: string; } = {}; 
+            getAllElementStyleMapSub(item, dic, 0);
+            return dic;
+        }
+        function setAllElementStyleMapSub(item: HTMLElement | string, output : { [key: number]: string | null; }, id : number) : number {
+            if (typeof item == 'string') {
+                const svgBox: HTMLElement | null = document.getElementById(item);
+                if (svgBox != null) {
+                    setAllElementStyleMapSub(svgBox, output, id);
+                }
+            }
+            else {
+                const style = output[id++];
+                if(style == null){
+                    item.removeAttribute("style");
+                }else{
+                    item.setAttribute("style", style);
+                }
+                for (let i = 0; i < item.children.length; i++) {
+                    const child = <HTMLElement>item.children.item(i);
+                    if (child != null) {
+                      id = setAllElementStyleMapSub(child, output, id);
+                    }
+                }
+            }
+            return id;
+
+        }
+
+        export function setAllElementStyleMap(item: HTMLElement | string, dic : { [key: number]: string; }) {
+            setAllElementStyleMapSub(item, dic, 0);
+        }
+
+
         /**
          * 入力のSVG要素とその配下の要素全てにsetCSSToStyleを適用します。
          * @param item SVG要素もしくはそのid
          */
-        export function setCSSToAllElementStyles(item: HTMLElement | string) {
+        export function setCSSToAllElementStyles(item: HTMLElement | string, isComplete: boolean = true) {
             if (typeof item == 'string') {
                 const svgBox: HTMLElement | null = document.getElementById(item);
                 if (svgBox != null) {
-                    setCSSToAllElementStyles(svgBox);
+                    setCSSToAllElementStyles(svgBox, isComplete);
                 }
             }
             else {
 
-                setCSSToStyle(item);
+                setCSSToStyle(item, isComplete);
                 for (let i = 0; i < item.children.length; i++) {
                     const child = <HTMLElement>item.children.item(i);
                     if (child != null) {
-                        setCSSToAllElementStyles(child);
+                        setCSSToAllElementStyles(child, isComplete);
                     }
                 }
             }
         }
-        const cssPropertyNames: string[] = ["font-size", "fill", "stroke", "font-family", "font-weight", "stroke-width", "background", "border", "background-color"];
+        const cssPropertyNames: string[] = ["font-size", "fill", "stroke",
+            "font-family", "font-weight", "stroke-width", "background", "border", "background-color", "border-bottom-color", "border-bottom-style", "border-bottom-width",
+            "border-left-color", "border-left-style", "border-left-width", "border-right-color", "border-right-style", "border-right-width", "border-top-color", "border-top-style", "border-top-width"];
 
         /**
          * 未使用。
@@ -531,7 +603,7 @@ namespace GraphTableSVG {
             }
             return null;
         }
-        
+
         /*
         export function setStyleForPNG(svg: SVGElement) {
             const style = getComputedStyle(svg);

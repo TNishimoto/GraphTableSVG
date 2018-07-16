@@ -548,14 +548,14 @@
                 type1 != null ? type1 : "line";
                 */
 
-            const r = new Edge(graph, g);
+            const edge = new Edge(graph, g);
             if(option.beginVertex != undefined && option.endVertex != undefined){
-                graph.connect(option.beginVertex, r, option.endVertex, option);
+                graph.connect(option.beginVertex, edge, option.endVertex, option);
             }
-            if(option.text != undefined)r.svgTextPath.setTextContent(option.text);
+            if(option.text != undefined)edge.svgTextPath.setTextContent(option.text);
             if(option.pathTextAlignment == undefined) option.pathTextAlignment = pathTextAlighnment.center;
-            r.pathTextAlignment = option.pathTextAlignment;
-            return r;
+            edge.pathTextAlignment = option.pathTextAlignment;
+            return edge;
         }
         public setIndexDictionaryForVBA(vertexDic: { [key: string]: number; }, edgeDic: { [key: string]: number; }){
             if (this.controlPoint.length == 0) {

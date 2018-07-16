@@ -6,4 +6,6 @@ window.onload = () => {
     // vertexの作成
     const vertex = GraphTableSVG.Vertex.create(graph, {x:100, y:100});
     vertex.svgText.textContent = "hello world";    
+    const css = getComputedStyle(box);
+    console.log(css);
 };
