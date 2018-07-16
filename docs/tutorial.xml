@@ -116,7 +116,7 @@ LogicTableクラスはTableクラスから描画関係を取り除いたクラ�
 </xarticle>
 
 
-<xarticle title="Table Sample : Powerpointへ出力" >
+<xarticle title="Table Sample : Powerpointへ出力とPNG保存について" >
 <load path="table/sample_table_powerpoint.html" />
 <load path="table/sample_table_powerpoint.js" />
 <load path="images/table_powerpoint1.png" />
@@ -126,6 +126,11 @@ LogicTableクラスはTableクラスから描画関係を取り除いたクラ�
 表をVBAのコードに変換し、Powerpointのマクロとして実行することでスライド上に表を作成することが出来る。
 GraphTableSVG.SVGToVBA.create(tables)はそのようなVBAのコードを作成する関数であるが、作成された表はSVGの表と完全に一致するわけではないので注意。
 あくまで、似たような表を作るだけの関数である。コード変換に対応していないstyle属性が多くあるので、凝った装飾をしているとまず反映されない。<dbr/>
+
+SVGをPNG画像に変換して保存することが出来る。<rhref method="true" module="true">PNG.createPNGFromSVG</rhref>関数は入力のSVG要素をPNG画像に変換する。
+使い方はサンプルコードでのPNGボタンのクリックイベントの実装を参照。
+この関数はChromeとEdgeでのみ使用できる。Firefoxでは使えないのでスクリーンショットで我慢すること。
+また、画像生成時に少々時間のかかる処理をしているので、手早くPNG画像を生成したい人はスクリーンショットを使うこと。
 </xarticle>
 
 <xarticle title="Graph Sample : Hello World" >

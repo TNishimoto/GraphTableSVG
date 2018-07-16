@@ -37,7 +37,7 @@
             <a href="#xarticle-7">Table Sample : Logic Table</a>
          </li>
          <li>
-            <a href="#xarticle-8">Table Sample : Powerpointへ出力</a>
+            <a href="#xarticle-8">Table Sample : Powerpointへ出力とPNG保存について</a>
          </li>
          <li>
             <a href="#xarticle-9">Graph Sample : Hello World</a>
@@ -483,8 +483,8 @@ LogicTableクラスはTableクラスから描画関係を取り除いたクラ�
 表の装飾にこだわらない場合はこっちから作ったほうが良いかもしれない。
 </section>
    </article>
-   <article title="Table Sample : Powerpointへ出力" id="xarticle-8" after="article" class="sample-article">
-      <h2>Table Sample : Powerpointへ出力</h2>
+   <article title="Table Sample : Powerpointへ出力とPNG保存について" id="xarticle-8" after="article" class="sample-article">
+      <h2>Table Sample : Powerpointへ出力とPNG保存について</h2>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_powerpoint.html</h4>
          <pre><code>&lt;!DOCTYPE html&gt;&#13;
@@ -527,6 +527,13 @@ window.onload = () =&gt; {&#13;
 表をVBAのコードに変換し、Powerpointのマクロとして実行することでスライド上に表を作成することが出来る。
 GraphTableSVG.SVGToVBA.create(tables)はそのようなVBAのコードを作成する関数であるが、作成された表はSVGの表と完全に一致するわけではないので注意。
 あくまで、似たような表を作るだけの関数である。コード変換に対応していないstyle属性が多くあるので、凝った装飾をしているとまず反映されない。</section>
+      <section ignore-format="true" class="sample-commentary">　
+
+SVGをPNG画像に変換して保存することが出来る。<a href="./typedoc/modules/graphtablesvg.png.html#createpngfromsvg" target="_blank">PNG.createPNGFromSVG</a>関数は入力のSVG要素をPNG画像に変換する。
+使い方はサンプルコードでのPNGボタンのクリックイベントの実装を参照。
+この関数はChromeとEdgeでのみ使用できる。Firefoxでは使えないのでスクリーンショットで我慢すること。
+また、画像生成時に少々時間のかかる処理をしているので、手早くPNG画像を生成したい人はスクリーンショットを使うこと。
+</section>
    </article>
    <article title="Graph Sample : Hello World" id="xarticle-9" after="article" class="sample-article">
       <h2>Graph Sample : Hello World</h2>
