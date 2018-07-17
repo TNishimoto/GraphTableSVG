@@ -17,48 +17,48 @@ var GraphTableSVG;
         var r_value = new Array("F0", "FA", "00", "7F", "F0", "F5", "FF", "00", "FF", "00", "8A", "A5", "DE", "5F", "7F", "D2", "FF", "64", "FF", "DC", "00", "00", "00", "B8", "A9", "00", "BD", "8B", "55", "FF", "99", "8B", "E9", "8F", "48", "2F", "00", "94", "FF", "00", "69", "1E", "B2", "FF", "22", "FF", "DC", "F8", "FF", "DA", "80", "00", "AD", "F0", "FF", "CD", "4B", "FF", "F0", "E6", "FF", "7C", "FF", "AD", "F0", "E0", "FA", "90", "D3", "FF", "FF", "20", "87", "77", "B0", "FF", "00", "32", "FA", "FF", "80", "66", "00", "BA", "93", "3C", "7B", "00", "48", "C7", "19", "F5", "FF", "FF", "FF", "00", "FD", "80", "6B", "FF", "FF", "DA", "EE", "98", "AF", "DB", "FF", "FF", "CD", "FF", "DD", "B0", "80", "FF", "BC", "41", "8B", "FA", "F4", "2E", "FF", "A0", "C0", "87", "6A", "70", "FF", "00", "46", "D2", "00", "D8", "FF", "40", "EE", "F5", "FF", "F5", "FF", "9A");
         var g_value = new Array("F8", "EB", "FF", "FF", "FF", "F5", "E4", "00", "EB", "00", "2B", "2A", "B8", "9E", "FF", "69", "7F", "95", "F8", "14", "FF", "00", "8B", "86", "A9", "64", "B7", "00", "6B", "8C", "32", "00", "96", "BC", "3D", "4F", "CE", "00", "14", "BF", "69", "90", "22", "FA", "8B", "00", "DC", "F8", "D7", "A5", "80", "80", "FF", "FF", "69", "5C", "00", "FF", "E6", "E6", "F0", "FC", "FA", "D8", "80", "FF", "FA", "EE", "D3", "B6", "A0", "B2", "CE", "88", "C4", "FF", "FF", "CD", "F0", "00", "00", "CD", "00", "55", "70", "B3", "68", "FA", "D1", "15", "19", "FF", "E4", "E4", "DE", "00", "F5", "80", "8E", "A5", "45", "70", "E8", "FB", "EE", "70", "EF", "DA", "85", "C0", "A0", "E0", "00", "00", "8F", "69", "45", "80", "A4", "8B", "F5", "52", "C0", "CE", "5A", "80", "FA", "FF", "82", "B4", "80", "BF", "63", "E0", "82", "DE", "FF", "F5", "FF", "CD");
         var b_value = new Array("FF", "D7", "FF", "D4", "FF", "DC", "C4", "00", "CD", "FF", "E2", "2A", "87", "A0", "00", "1E", "50", "ED", "DC", "3C", "FF", "8B", "8B", "0B", "A9", "00", "6B", "8B", "2F", "00", "CC", "00", "7A", "8F", "8B", "4F", "D1", "D3", "93", "FF", "69", "FF", "22", "F0", "22", "FF", "DC", "FF", "00", "20", "80", "00", "2F", "F0", "B4", "5C", "82", "F0", "8C", "FA", "F5", "00", "CD", "E6", "80", "FF", "D2", "90", "D3", "C1", "7A", "AA", "FA", "99", "DE", "E0", "00", "32", "E6", "FF", "00", "AA", "CD", "D3", "DB", "71", "EE", "9A", "CC", "85", "70", "FA", "E1", "B5", "AD", "80", "E6", "00", "23", "00", "00", "D6", "AA", "98", "EE", "93", "D5", "B9", "3F", "CB", "DD", "E6", "80", "00", "8F", "E1", "13", "72", "60", "57", "EE", "2D", "C0", "EB", "CD", "90", "FA", "7F", "B4", "8C", "80", "D8", "47", "D0", "EE", "B3", "FF", "F5", "00", "32");
-        function translateHexCodeFromColorName(str) {
+        function createHexCodeFromColorName(colorName) {
             if (!color_dic) {
                 color_dic = {};
                 for (var i = 0; i < color_name.length; i++) {
                     color_dic[color_name[i]] = i;
                 }
             }
-            if (str in color_dic) {
-                var i = color_dic[str];
+            if (colorName in color_dic) {
+                var i = color_dic[colorName];
                 return r_value[i] + g_value[i] + b_value[i];
             }
             else {
-                return str;
+                return colorName;
             }
         }
-        Color.translateHexCodeFromColorName = translateHexCodeFromColorName;
-        function translateHexCodeFromColorName2(str) {
+        Color.createHexCodeFromColorName = createHexCodeFromColorName;
+        function createHexFromColorName(colorName) {
             if (!color_dic) {
                 color_dic = {};
                 for (var i = 0; i < color_name.length; i++) {
                     color_dic[color_name[i]] = i;
                 }
             }
-            if (str in color_dic) {
-                var i = color_dic[str];
+            if (colorName in color_dic) {
+                var i = color_dic[colorName];
                 return { r: parseInt(r_value[i], 16), g: parseInt(g_value[i], 16), b: parseInt(b_value[i], 16) };
             }
             else {
                 return null;
             }
         }
-        Color.translateHexCodeFromColorName2 = translateHexCodeFromColorName2;
-        function translateRGBCodeFromColorName(str) {
-            str = translateHexCodeFromColorName(str);
-            if (str.substr(0, 3) == "rgb") {
-                return str;
+        Color.createHexFromColorName = createHexFromColorName;
+        function createRGBCodeFromColorName(colorName) {
+            colorName = createHexCodeFromColorName(colorName);
+            if (colorName.substr(0, 3) == "rgb") {
+                return colorName;
             }
             else {
-                if (str.length == 6) {
-                    var r = str.substr(0, 2);
-                    var g = str.substr(2, 2);
-                    var b = str.substr(4, 2);
+                if (colorName.length == 6) {
+                    var r = colorName.substr(0, 2);
+                    var g = colorName.substr(2, 2);
+                    var b = colorName.substr(4, 2);
                     return "rgb(" + parseInt(r, 16) + ", " + parseInt(g, 16) + ", " + parseInt(b, 16) + ")";
                 }
                 else {
@@ -66,9 +66,9 @@ var GraphTableSVG;
                 }
             }
         }
-        Color.translateRGBCodeFromColorName = translateRGBCodeFromColorName;
-        function translateRGBCodeFromColorName2(str) {
-            var v = translateHexCodeFromColorName2(str);
+        Color.createRGBCodeFromColorName = createRGBCodeFromColorName;
+        function createRGBFromColorName(str) {
+            var v = createHexFromColorName(str);
             var def = { r: 80, g: 80, b: 80 };
             if (v != null) {
                 return v;
@@ -96,7 +96,7 @@ var GraphTableSVG;
                 }
             }
         }
-        Color.translateRGBCodeFromColorName2 = translateRGBCodeFromColorName2;
+        Color.createRGBFromColorName = createRGBFromColorName;
     })(Color = GraphTableSVG.Color || (GraphTableSVG.Color = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
@@ -2005,16 +2005,16 @@ var GraphTableSVG;
             option.className = option.className != null ? option.className : graph.defaultVertexClass;
             var g = GraphTableSVG.SVG.createGroup(option.className);
             graph.svgGroup.appendChild(g);
-            var r = new Edge(graph, g);
+            var edge = new Edge(graph, g);
             if (option.beginVertex != undefined && option.endVertex != undefined) {
-                graph.connect(option.beginVertex, r, option.endVertex, option);
+                graph.connect(option.beginVertex, edge, option.endVertex, option);
             }
             if (option.text != undefined)
-                r.svgTextPath.setTextContent(option.text);
+                edge.svgTextPath.setTextContent(option.text);
             if (option.pathTextAlignment == undefined)
                 option.pathTextAlignment = GraphTableSVG.pathTextAlighnment.center;
-            r.pathTextAlignment = option.pathTextAlignment;
-            return r;
+            edge.pathTextAlignment = option.pathTextAlignment;
+            return edge;
         };
         Edge.prototype.setIndexDictionaryForVBA = function (vertexDic, edgeDic) {
             if (this.controlPoint.length == 0) {
@@ -5687,19 +5687,9 @@ var GraphTableSVG;
             for (var y = 0; y < this.rowCount; y++) {
                 for (var x = 0; x < this.columnCount; x++) {
                     var cell = this.cells[y][x];
-                    var color = GraphTableSVG.Color.translateRGBCodeFromColorName2(cell.svgBackground.getPropertyStyleValueWithDefault("fill", "gray"));
+                    var color = GraphTableSVG.Color.createRGBFromColorName(cell.svgBackground.getPropertyStyleValueWithDefault("fill", "gray"));
                     GraphTableSVG.VBATranslateFunctions.TranslateSVGTextElement(lines, this.cells[y][x].svgText, tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Shape.TextFrame.TextRange");
                     lines.push([tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Shape.Fill.ForeColor.RGB = RGB(CInt(" + color.r + "), CInt(" + color.g + "), CInt(" + color.b + "))"]);
-                }
-            }
-            for (var y = 0; y < this.rowCount; y++) {
-                for (var x = 0; x < this.columnCount; x++) {
-                    var cell = this.cells[y][x];
-                    var fontSize = parseInt(cell.svgText.getPropertyStyleValueWithDefault("font-size", "12pt"));
-                    var color = GraphTableSVG.VBATranslateFunctions.colorToVBA(cell.svgText.getPropertyStyleValueWithDefault("fill", "gray"));
-                    var fontFamily = GraphTableSVG.VBATranslateFunctions.ToVBAFont(cell.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
-                    var fontBold = GraphTableSVG.VBATranslateFunctions.ToFontBold(cell.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
-                    lines.push([" Call EditCellFont(" + tableName + ".cell(" + (y + 1) + "," + (x + 1) + ").Shape.TextFrame, " + fontSize + ", \"" + fontFamily + "\", " + color + ", " + fontBold + ")"]);
                 }
             }
             for (var y = 0; y < this.rowCount; y++) {
@@ -5960,7 +5950,7 @@ var GraphTableSVG;
             lines.push("End Sub");
             return lines;
         };
-        SVGToVBA.cellFunctionCode = "\nSub EditTable(table_ As table, cellInfo_() As Variant)\n    Dim x As Integer\n    Dim y As Integer\n    \n    For x = 1 To UBound(cellInfo_, 1)\n        For y = 1 To UBound(cellInfo_, 2)\n         Call EditCell(table_.cell(x, y), CStr(cellInfo_(x, y)(0)))\n        Next\n    Next\nEnd Sub\n\nSub EditCell(cell_ As cell, text_ As String, backColor As Variant)\n    cell_.Shape.TextFrame.TextRange.text = text_\n    cell_.Shape.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant, fontBold As Integer)\n    frame_.TextRange.Font.Size = fontSize\n    frame_.TextRange.Font.name = fontName\n    frame_.TextRange.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    frame_.TextRange.Font.Bold = fontBold\nEnd Sub\n\n\n\n\nSub EditRow(row_ As Row, height As Integer)\n    row_.height = height\nEnd Sub\nSub EditColumn(column_ As Column, width As Integer)\n    column_.width = width\nEnd Sub\n\nSub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, vAnchor As Integer, hAnchor As Integer)\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\n    frame_.VerticalAnchor = vAnchor\n    frame_.TextRange.ParagraphFormat.Alignment = hAnchor\nEnd Sub\n\nSub EditTextRange(range_ As TextRange, text As String)\n    range_.text = text\nEnd Sub\nSub EditTextRangeSub(range_ As TextRange, subBeg As Integer, subLen As Integer, script As String, color As Variant)\n    range_.Characters(subBeg, subLen).Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    If script = \"subscript\" Then\n    range_.Characters(subBeg, subLen).Font.Subscript = True\n    End If\n    If script = \"superscript\" Then\n    range_.Characters(subBeg, subLen).Font.Superscript = True\n    End If\nEnd Sub\n\n\n\nSub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer, transparent As Double)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.weight = weight\n    line_.Transparency = transparent\nEnd Sub\n\nSub EditConnector(connector_ As ConnectorFormat, begShape As Shape, endShape As Shape, begPos As Integer, endPos As Integer)\n    Call connector_.BeginConnect(begShape, begPos)\n    Call connector_.EndConnect(endShape, endPos)\nEnd Sub\n\nSub EditTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, wordWrap As Boolean, autoSize As Integer)\n    frame_.autoSize = autoSize\n    frame_.wordWrap = wordWrap\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\nEnd Sub\n\nSub EditTextEffect(effect_ As TextEffectFormat, fontSize As Double, fontName As String)\n effect_.fontSize = fontSize\n effect_.fontName = fontName\nEnd Sub\n\nSub EditVertexShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\n\nSub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer, visible As Integer)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.dashStyle = dashStyle\n    line_.Transparency = transparent\n    line_.weight = weight\n    line_.visible = visible\nEnd Sub\n\n\n";
+        SVGToVBA.cellFunctionCode = "\nSub EditTable(table_ As table, cellInfo_() As Variant)\n    Dim x As Integer\n    Dim y As Integer\n    \n    For x = 1 To UBound(cellInfo_, 1)\n        For y = 1 To UBound(cellInfo_, 2)\n         Call EditCell(table_.cell(x, y), CStr(cellInfo_(x, y)(0)))\n        Next\n    Next\nEnd Sub\n\nSub EditCell(cell_ As cell, text_ As String, backColor As Variant)\n    cell_.Shape.TextFrame.TextRange.text = text_\n    cell_.Shape.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant, fontBold As Integer)\n    frame_.TextRange.Font.Size = fontSize\n    frame_.TextRange.Font.name = fontName\n    frame_.TextRange.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    frame_.TextRange.Font.Bold = fontBold\nEnd Sub\n\n\n\n\nSub EditRow(row_ As Row, height As Integer)\n    row_.height = height\nEnd Sub\nSub EditColumn(column_ As Column, width As Integer)\n    column_.width = width\nEnd Sub\n\nSub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, vAnchor As Integer, hAnchor As Integer)\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\n    frame_.VerticalAnchor = vAnchor\n    frame_.TextRange.ParagraphFormat.Alignment = hAnchor\nEnd Sub\n\nSub EditTextRange(range_ As TextRange, text As String)\n    range_.text = text\nEnd Sub\nSub EditTextRangeSub(range_ As TextRange, subBeg As Integer, subLen As Integer, script As String, color As Variant, fontName As String, fontSize As Double, fontBold As Integer)\n    range_.Characters(subBeg, subLen).Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    range_.Characters(subBeg, subLen).Font.Size = fontSize\n    range_.Characters(subBeg, subLen).Font.name = fontName\n    range_.Characters(subBeg, subLen).Font.Bold = fontBold\n    If script = \"subscript\" Then\n    range_.Characters(subBeg, subLen).Font.Subscript = True\n    End If\n    If script = \"superscript\" Then\n    range_.Characters(subBeg, subLen).Font.Superscript = True\n    End If\nEnd Sub\n\n\n\nSub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer, transparent As Double)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.weight = weight\n    line_.Transparency = transparent\nEnd Sub\n\nSub EditConnector(connector_ As ConnectorFormat, begShape As Shape, endShape As Shape, begPos As Integer, endPos As Integer)\n    Call connector_.BeginConnect(begShape, begPos)\n    Call connector_.EndConnect(endShape, endPos)\nEnd Sub\n\nSub EditTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, wordWrap As Boolean, autoSize As Integer)\n    frame_.autoSize = autoSize\n    frame_.wordWrap = wordWrap\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\nEnd Sub\n\nSub EditTextEffect(effect_ As TextEffectFormat, fontSize As Double, fontName As String)\n effect_.fontSize = fontSize\n effect_.fontName = fontName\nEnd Sub\n\nSub EditVertexShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\n\nSub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer, visible As Integer)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.dashStyle = dashStyle\n    line_.Transparency = transparent\n    line_.weight = weight\n    line_.visible = visible\nEnd Sub\n\n\n";
         return SVGToVBA;
     }());
     GraphTableSVG.SVGToVBA = SVGToVBA;
@@ -6078,7 +6068,7 @@ var GraphTableSVG;
             return s;
         };
         VBATranslateFunctions.colorToVBA = function (color) {
-            color = GraphTableSVG.Color.translateRGBCodeFromColorName(color);
+            color = GraphTableSVG.Color.createRGBCodeFromColorName(color);
             if (color.indexOf("rgb") != -1) {
                 return color.replace("rgb", "Array");
             }
@@ -6093,25 +6083,34 @@ var GraphTableSVG;
         };
         VBATranslateFunctions.TranslateSVGTextElement = function (sub, item, range) {
             var text = item.textContent == null ? "" : item.textContent;
-            var color = GraphTableSVG.Color.translateRGBCodeFromColorName2(item.getPropertyStyleValueWithDefault("fill", "gray"));
+            var color = GraphTableSVG.Color.createRGBFromColorName(item.getPropertyStyleValueWithDefault("fill", "gray"));
             sub.push([range + ".text = \"" + item.textContent + "\""]);
             if (item.children.length > 0) {
                 var pos = 1;
                 for (var i = 0; i < item.children.length; i++) {
                     var child = item.children.item(i);
                     if (child.textContent != null && child.textContent.length > 0) {
+                        var css = getComputedStyle(child);
+                        var childColor = GraphTableSVG.Color.createRGBFromColorName(css.fill);
+                        var fontName = css.fontFamily;
+                        var fontSize = GraphTableSVG.Common.toPX(css.fontSize);
+                        var fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
                         var len = child.textContent.length;
                         var f = child.getAttribute("data-script");
                         if (f == null) {
                             f = "";
                         }
-                        sub.push(["Call EditTextRangeSub(" + range + "," + pos + ", " + len + ", \"" + f + "\", Array(" + color.r + ", " + color.g + ", " + color.b + "))"]);
+                        sub.push(["Call EditTextRangeSub(" + range + "," + pos + ", " + len + ", \"" + f + "\", Array(" + childColor.r + ", " + childColor.g + ", " + childColor.b + "), " + fontName + ", " + fontSize + ", " + fontBold + " )"]);
                         pos += len;
                     }
                 }
             }
             else if (item.textContent != null && item.textContent.length > 0) {
-                sub.push(["Call EditTextRangeSub(" + range + "," + 1 + ", " + item.textContent.length + ", \"\", Array(" + color.r + ", " + color.g + ", " + color.b + "))"]);
+                var css = getComputedStyle(item);
+                var fontName = css.fontFamily;
+                var fontSize = GraphTableSVG.Common.toPX(css.fontSize);
+                var fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
+                sub.push(["Call EditTextRangeSub(" + range + "," + 1 + ", " + item.textContent.length + ", \"\", Array(" + color.r + ", " + color.g + ", " + color.b + "), " + fontName + ", " + fontSize + ", " + fontBold + " )"]);
             }
         };
         return VBATranslateFunctions;
@@ -6258,7 +6257,7 @@ var GraphTableSVG;
                 svgBox.style.height = heightAttr;
             }
             var img = getImage(svgBox);
-            var canvas = getCanvas(svgBox);
+            var canvas = document.createElement("canvas");
             svgBox.removeAttribute("width");
             svgBox.removeAttribute("height");
             img.onload = function () {
@@ -6296,12 +6295,6 @@ var GraphTableSVG;
                 throw Error("Error");
             }
             return img;
-        }
-        function getCanvas(svgBox) {
-            var svg = "";
-            svg = svgBox.outerHTML;
-            var canvas = document.createElement("canvas");
-            return canvas;
         }
         function saveCanvas(saveType, canvas) {
             var imageType = "image/png";

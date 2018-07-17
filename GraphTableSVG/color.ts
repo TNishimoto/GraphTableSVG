@@ -1,4 +1,7 @@
 ﻿namespace GraphTableSVG {
+    /**
+     * 色に関する名前空間です。
+     */
     export namespace Color {
         const color_name: string[] = new Array("aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige",
             "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue",
@@ -51,7 +54,11 @@
             "13", "72", "60", "57", "EE", "2D", "C0", "EB", "CD", "90", "FA", "7F", "B4", "8C", "80", "D8", "47", "D0", "EE", "B3",
             "FF", "F5", "00", "32")
 
-        export function translateHexCodeFromColorName(str: string): string {
+        /**
+         * 色名から16進コードを生成します。
+         * @param colorName 
+         */
+        export function createHexCodeFromColorName(colorName: string): string {
             if (!color_dic) {
                 color_dic = {};
                 for (let i = 0; i < color_name.length; i++) {
@@ -59,15 +66,19 @@
                 }
             }
 
-            if (str in color_dic) {
-                const i = color_dic[str];
+            if (colorName in color_dic) {
+                const i = color_dic[colorName];
                 return r_value[i] + g_value[i] + b_value[i];
 
             } else {
-                return str;
+                return colorName;
             }
         }
-        export function translateHexCodeFromColorName2(str: string): { r: number, g: number, b: number } | null {
+        /**
+         * 色名を16進表現に変換します。
+         * @param colorName 
+         */
+        export function createHexFromColorName(colorName: string): { r: number, g: number, b: number } | null {
             if (!color_dic) {
                 color_dic = {};
                 for (let i = 0; i < color_name.length; i++) {
@@ -75,8 +86,8 @@
                 }
             }
 
-            if (str in color_dic) {
-                const i = color_dic[str];
+            if (colorName in color_dic) {
+                const i = color_dic[colorName];
                 //return r_value[i] + g_value[i] + b_value[i];
                 return { r: parseInt(r_value[i], 16), g: parseInt(g_value[i], 16), b: parseInt(b_value[i], 16) };
             } else {
@@ -84,23 +95,31 @@
             }
         }
 
-        export function translateRGBCodeFromColorName(str: string): string {
-            str = translateHexCodeFromColorName(str);
-            if (str.substr(0, 3) == "rgb") {
-                return str;
+        /**
+         * 色名をRGBコードに変換します。
+         * @param colorName 
+         */
+        export function createRGBCodeFromColorName(colorName: string): string {
+            colorName = createHexCodeFromColorName(colorName);
+            if (colorName.substr(0, 3) == "rgb") {
+                return colorName;
             } else {
-                if (str.length == 6) {
-                    const r = str.substr(0, 2);
-                    const g = str.substr(2, 2);
-                    const b = str.substr(4, 2);
+                if (colorName.length == 6) {
+                    const r = colorName.substr(0, 2);
+                    const g = colorName.substr(2, 2);
+                    const b = colorName.substr(4, 2);
                     return `rgb(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)})`;
                 } else {
                     return `rgb(${80}, ${80}, ${80})`;
                 }
             }
         }
-        export function translateRGBCodeFromColorName2(str: string): { r: number, g: number, b: number } {
-            const v = translateHexCodeFromColorName2(str);
+        /**
+         * 色名をRGB表現に変換します。
+         * @param str 
+         */
+        export function createRGBFromColorName(str: string): { r: number, g: number, b: number } {
+            const v = createHexFromColorName(str);
             const def = { r: 80, g: 80, b : 80 };
             if (v != null) {
                 return v;

@@ -130,8 +130,11 @@ End Sub
 Sub EditTextRange(range_ As TextRange, text As String)
     range_.text = text
 End Sub
-Sub EditTextRangeSub(range_ As TextRange, subBeg As Integer, subLen As Integer, script As String, color As Variant)
+Sub EditTextRangeSub(range_ As TextRange, subBeg As Integer, subLen As Integer, script As String, color As Variant, fontName As String, fontSize As Double, fontBold As Integer)
     range_.Characters(subBeg, subLen).Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))
+    range_.Characters(subBeg, subLen).Font.Size = fontSize
+    range_.Characters(subBeg, subLen).Font.name = fontName
+    range_.Characters(subBeg, subLen).Font.Bold = fontBold
     If script = "subscript" Then
     range_.Characters(subBeg, subLen).Font.Subscript = True
     End If
@@ -302,7 +305,7 @@ End Sub
         }
 
         public static colorToVBA(color: string): string {
-            color = Color.translateRGBCodeFromColorName(color);
+            color = Color.createRGBCodeFromColorName(color);
             if (color.indexOf("rgb") != -1) {
                 return color.replace("rgb", "Array");
             } else {
@@ -318,7 +321,6 @@ End Sub
         public static TranslateSVGTextElement(sub: string[][], item: SVGTextElement, range: string): void {
 
             const text = item.textContent == null ? "" : item.textContent;
-            const color = Color.translateRGBCodeFromColorName2(item.getPropertyStyleValueWithDefault("fill", "gray"));
 
             sub.push([`${range}.text = "${item.textContent}"`]);
             if (item.children.length > 0) {
@@ -326,19 +328,30 @@ End Sub
                 for (let i = 0; i < item.children.length; i++) {
                     const child = item.children.item(i);
                     if (child.textContent != null && child.textContent.length > 0) {
+                        const css = getComputedStyle(child);
+                        const childColor = Color.createRGBFromColorName(css.fill);
+                        const fontName = css.fontFamily;
+                        const fontSize = Common.toPX(css.fontSize);
+                        const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
                         const len = child.textContent.length;
 
                         let f = child.getAttribute("data-script");
                         if (f == null) {
                             f = "";
                         }
-                        sub.push([`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${color.r}, ${color.g}, ${color.b}))`]);
+                        sub.push([`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${childColor.r}, ${childColor.g}, ${childColor.b}), ${fontName}, ${fontSize}, ${fontBold} )`]);
                         pos += len;
                     }
 
                 }
             } else if (item.textContent != null && item.textContent.length > 0) {
-                sub.push([`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}))`]);
+                const css = getComputedStyle(item);
+                const color = Color.createRGBFromColorName(css.fill);
+                const fontName = css.fontFamily;
+                const fontSize = Common.toPX(css.fontSize);
+                const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
+
+                sub.push([`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}), ${fontName}, ${fontSize}, ${fontBold} )`]);
             }
         }
 

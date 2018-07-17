@@ -1,5 +1,13 @@
 namespace GraphTableSVG {
+    /**
+     * SVGをPNGに変換するための名前空間です。
+     * この名前空間のコードはhttps://st40.xyz/one-run/article/133/を使用しています。
+     */
     export namespace PNG {
+        /**
+         * SVG要素からPNG画像を生成して保存します。
+         * @param id 
+         */
         export function createPNGFromSVG(id: string) {
             const userAgent = window.navigator.userAgent;
             if (userAgent.indexOf("Firefox") != -1) {
@@ -30,7 +38,8 @@ namespace GraphTableSVG {
 
 
             const img = getImage(svgBox);
-            const canvas = getCanvas(svgBox);
+            const canvas = document.createElement("canvas");
+            //const canvas = getCanvas(svgBox);
             //document.body.appendChild(canvas);
             svgBox.removeAttribute("width");
             svgBox.removeAttribute("height");
@@ -63,6 +72,10 @@ namespace GraphTableSVG {
             return canvas;
             //return canvas;
         }
+        /**
+         * svg要素をHTMLImageElementに変換します。
+         * @param svgBox 
+         */
         function getImage(svgBox: HTMLElement): HTMLImageElement {
             let svg = "";
             svg = svgBox.outerHTML;
@@ -71,21 +84,25 @@ namespace GraphTableSVG {
             if (window.btoa) {
                 img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svg)));
                 //console.log(unescape(encodeURIComponent(svg)));
-
             } else {
                 throw Error("Error");
-
             }
 
             return img;
         }
+        /*
         function getCanvas(svgBox: HTMLElement): HTMLCanvasElement {
             var svg = "";
             svg = svgBox.outerHTML;
             var canvas = document.createElement("canvas");
             return canvas;
         }
-        // canvas上のイメージを保存
+        */
+        /**
+         * canvas上のイメージを保存します。
+         * @param saveType 
+         * @param canvas 
+         */
         function saveCanvas(saveType: string, canvas: HTMLCanvasElement) {
             let imageType = "image/png";
             let fileName = "sample.png";
@@ -101,7 +118,10 @@ namespace GraphTableSVG {
             // blobデータをa要素を使ってダウンロード
             saveBlob(blob, fileName);
         }
-        // Base64データをBlobデータに変換
+        /**
+         * Base64データをBlobデータに変換します。
+         * @param base64 
+         */
         function base64toBlob(base64: string) {
             // カンマで分割して以下のようにデータを分ける
             // tmp[0] : データ形式（data:image/png;base64）
@@ -120,6 +140,11 @@ namespace GraphTableSVG {
             const blob = new Blob([buf], { type: mime });
             return blob;
         }
+        /**
+         * Blobデータをダウンロードします。
+         * @param blob 
+         * @param fileName 
+         */
         function saveBlob(blob: Blob, fileName: string) {
             const url = (window.URL || (<any>window).webkitURL);
             // ダウンロード用のURL作成

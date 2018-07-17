@@ -22,3 +22,4 @@ MIT License
 
 ## その他
 Firefox, Chrome, Edgeで動作を確認中。
+PNG画像の生成にはhttps://st40.xyz/one-run/article/133/のコードを使用しました。

@@ -1,13 +1,13 @@
 declare namespace GraphTableSVG {
     namespace Color {
-        function translateHexCodeFromColorName(str: string): string;
-        function translateHexCodeFromColorName2(str: string): {
+        function createHexCodeFromColorName(colorName: string): string;
+        function createHexFromColorName(colorName: string): {
             r: number;
             g: number;
             b: number;
         } | null;
-        function translateRGBCodeFromColorName(str: string): string;
-        function translateRGBCodeFromColorName2(str: string): {
+        function createRGBCodeFromColorName(colorName: string): string;
+        function createRGBFromColorName(str: string): {
             r: number;
             g: number;
             b: number;
