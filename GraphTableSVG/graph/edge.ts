@@ -211,7 +211,9 @@
             if(markerStartName == "true") this.markerStart = GraphTableSVG.Edge.createStartMarker({color : edgeColor, strokeWidth : strokeWidth});
             if(markerEndName == "true") this.markerEnd = GraphTableSVG.Edge.createEndMarker({color : edgeColor, strokeWidth : strokeWidth});
 
-
+            //this.svgPath.setAttribute("data-skip", "1");
+            //this.svgTextPath.setAttribute("data-skip", "1");
+            
             //this._parent = graph;
             /*
             this._beginNode = _beginNode;

@@ -198,12 +198,15 @@ namespace GraphTableSVG {
 
             }
             poly.setPropertyStyleValue("stroke-width", "1px");
+            poly.setAttribute("data-skip", "1");
 
             marker.setAttribute("markerUnits", "userSpaceOnUse");
             marker.setAttribute("markerHeight", "15");
             marker.setAttribute("markerWidth", "15");
             marker.setAttribute("refX", "10");
             marker.setAttribute("refY", "5");
+            marker.setAttribute("data-skip", "1");
+            
 
             //marker.refX.baseVal.value = 10;
             //marker.refY.baseVal.value = 5;
@@ -441,6 +444,7 @@ namespace GraphTableSVG {
                 return css;
             }
         }
+        const exceptionStyleNames = ["marker-start", "marker-mid", "marker-end"];
         /**
          * SVG要素のクラス属性名から取得できるCSSStyleDeclarationを要素のスタイル属性にセットします。
          * @param svg 適用されるSVG要素
@@ -453,7 +457,9 @@ namespace GraphTableSVG {
                         const name = css.item(i);
                         const value = css.getPropertyValue(name);
                         if (value.length > 0) {
-                            svg.style.setProperty(name, value);
+                            if(!exceptionStyleNames.some((v)=>v==name)){
+                                svg.style.setProperty(name, value);
+                            }
                         }
                     }
                 }
@@ -569,8 +575,7 @@ namespace GraphTableSVG {
                 }
             }
             else {
-
-                setCSSToStyle(item, isComplete);
+                if(!item.hasAttribute("data-skip")) setCSSToStyle(item, isComplete);
                 for (let i = 0; i < item.children.length; i++) {
                     const child = <HTMLElement>item.children.item(i);
                     if (child != null) {

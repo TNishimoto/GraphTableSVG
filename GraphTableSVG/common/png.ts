@@ -4,70 +4,53 @@ namespace GraphTableSVG {
      * この名前空間のコードはhttps://st40.xyz/one-run/article/133/を使用しています。
      */
     export namespace PNG {
-        /**
-         * SVG要素からPNG画像を生成して保存します。
-         * @param id 
-         */
-        export function createPNGFromSVG(id: string) {
-            const userAgent = window.navigator.userAgent;
-            if (userAgent.indexOf("Firefox") != -1) {
-                alert(`Firefox is not supported!`);
-                return;
-            }
 
-            const svgBox = document.getElementById(id);
-            if (svgBox == null) throw Error("Error");
-            const styleMap = GraphTableSVG.SVG.getAllElementStyleMap(svgBox);
-            GraphTableSVG.SVG.setCSSToAllElementStyles(svgBox);
-
+        export function setAllElementStyleMap(svgBox: HTMLElement){
             const widthAttr = svgBox.getAttribute("width");
             const heightAttr = svgBox.getAttribute("height");
-
             if(widthAttr != null){
                 svgBox.style.width = widthAttr;
             }
             if(heightAttr != null){
                 svgBox.style.height = heightAttr;
             }
-            /*
-            if (svgBox.getAttribute("width") != null || svgBox.getAttribute("height") != null) {
-                alert("svgbox cannot use width and height tags");
-                return;
-            }
-            */
-
-
-            const img = getImage(svgBox);
+            //svgBox.removeAttribute("width");
+            //svgBox.removeAttribute("height");
+            GraphTableSVG.SVG.setCSSToAllElementStyles(svgBox);
+        }
+        export function createCanvas(img : HTMLImageElement) : HTMLCanvasElement {
             const canvas = document.createElement("canvas");
-            //const canvas = getCanvas(svgBox);
-            //document.body.appendChild(canvas);
-            svgBox.removeAttribute("width");
-            svgBox.removeAttribute("height");
-
-            img.onload = () => {
-                var style = getComputedStyle(svgBox)
-                img.setAttribute("width", style.width);
-                img.setAttribute("height", style.height);
-                canvas.setAttribute("width", style.width);
-                canvas.setAttribute("height", style.height);
+            canvas.setAttribute("width", img.style.width);
+            canvas.setAttribute("height", img.style.height);
+            //canvas.style.height = img.style.height;    
+            return canvas;
+        }
+        export function setSaveEvent(img : HTMLImageElement, canvas : HTMLCanvasElement){
+            img.onload = () => {                
                 const ctx = canvas.getContext("2d");
                 if (ctx == null) throw Error("Error");
                 ctx.drawImage(img, 0, 0);
-                //saveCanvas("png", canvas);
                 saveCanvas("png", canvas);
-                //document.body.removeChild(canvas);
-
-
             }
-            if(widthAttr != null){
-                svgBox.style.removeProperty("width");
-                svgBox.setAttribute("width", widthAttr);
+        }
+        /**
+         * SVG要素からPNG画像を生成して保存します。
+         * @param id 
+         */
+        export function createPNGFromSVG(id: string) : HTMLCanvasElement {
+            const userAgent = window.navigator.userAgent;
+            if (userAgent.indexOf("Firefox") != -1) {
+                alert(`Firefox is not supported!`);
+                return;
             }
-            if(heightAttr != null){
-                svgBox.style.removeProperty("height");
-                svgBox.setAttribute("height", heightAttr);
-            }
+            const svgBox = document.getElementById(id);
+            if (svgBox == null) throw Error("Error");
+            const styleMap = GraphTableSVG.SVG.getAllElementStyleMap(svgBox);
+            setAllElementStyleMap(svgBox);
 
+            const img = getImage(svgBox);
+            const canvas = createCanvas(img);
+            setSaveEvent(img,canvas);
             GraphTableSVG.SVG.setAllElementStyleMap(svgBox, styleMap);
             return canvas;
             //return canvas;
@@ -76,13 +59,13 @@ namespace GraphTableSVG {
          * svg要素をHTMLImageElementに変換します。
          * @param svgBox 
          */
-        function getImage(svgBox: HTMLElement): HTMLImageElement {
-            let svg = "";
-            svg = svgBox.outerHTML;
-
+        export function getImage(svgBox: HTMLElement): HTMLImageElement {
             const img: HTMLImageElement = document.createElement("img");
             if (window.btoa) {
-                img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svg)));
+                img.style.width = svgBox.style.width;
+                img.style.height = svgBox.style.height;
+                img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgBox.outerHTML)));
+
                 //console.log(unescape(encodeURIComponent(svg)));
             } else {
                 throw Error("Error");

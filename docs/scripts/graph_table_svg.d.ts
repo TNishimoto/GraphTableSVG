@@ -886,6 +886,10 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     namespace PNG {
+        function setAllElementStyleMap(svgBox: HTMLElement): void;
+        function createCanvas(img: HTMLImageElement): HTMLCanvasElement;
+        function setSaveEvent(img: HTMLImageElement, canvas: HTMLCanvasElement): void;
         function createPNGFromSVG(id: string): HTMLCanvasElement;
+        function getImage(svgBox: HTMLElement): HTMLImageElement;
     }
 }

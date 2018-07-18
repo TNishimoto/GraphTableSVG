@@ -366,6 +366,8 @@ var GraphTableSVG;
                     if (box.style.width != width || box.style.height != height) {
                         box.style.width = width;
                         box.style.height = height;
+                        box.setAttribute("width", width);
+                        box.setAttribute("height", height);
                         box.setAttribute("viewBox", "0 0 " + item1 + " " + item2);
                     }
                 }
@@ -1039,11 +1041,13 @@ var GraphTableSVG;
                 marker.setPropertyStyleValue("fill", "black");
             }
             poly.setPropertyStyleValue("stroke-width", "1px");
+            poly.setAttribute("data-skip", "1");
             marker.setAttribute("markerUnits", "userSpaceOnUse");
             marker.setAttribute("markerHeight", "15");
             marker.setAttribute("markerWidth", "15");
             marker.setAttribute("refX", "10");
             marker.setAttribute("refY", "5");
+            marker.setAttribute("data-skip", "1");
             marker.setAttribute("preserveAspectRatio", "none");
             marker.setAttribute("orient", "auto");
             marker.setAttribute("viewBox", "0 0 10 10");
@@ -1202,17 +1206,23 @@ var GraphTableSVG;
                 return css;
             }
         }
+        var exceptionStyleNames = ["marker-start", "marker-mid", "marker-end"];
         function setCSSToStyle(svg, isComplete) {
             if (isComplete === void 0) { isComplete = true; }
             if (isComplete) {
                 var css = getCSSStyle(svg);
                 if (css != null) {
-                    for (var i = 0; i < css.length; i++) {
+                    var _loop_1 = function (i) {
                         var name_1 = css.item(i);
                         var value = css.getPropertyValue(name_1);
                         if (value.length > 0) {
-                            svg.style.setProperty(name_1, value);
+                            if (!exceptionStyleNames.some(function (v) { return v == name_1; })) {
+                                svg.style.setProperty(name_1, value);
+                            }
                         }
+                    };
+                    for (var i = 0; i < css.length; i++) {
+                        _loop_1(i);
                     }
                 }
             }
@@ -1310,7 +1320,8 @@ var GraphTableSVG;
                 }
             }
             else {
-                setCSSToStyle(item, isComplete);
+                if (!item.hasAttribute("data-skip"))
+                    setCSSToStyle(item, isComplete);
                 for (var i = 0; i < item.children.length; i++) {
                     var child = item.children.item(i);
                     if (child != null) {
@@ -6083,7 +6094,6 @@ var GraphTableSVG;
         };
         VBATranslateFunctions.TranslateSVGTextElement = function (sub, item, range) {
             var text = item.textContent == null ? "" : item.textContent;
-            var color = GraphTableSVG.Color.createRGBFromColorName(item.getPropertyStyleValueWithDefault("fill", "gray"));
             sub.push([range + ".text = \"" + item.textContent + "\""]);
             if (item.children.length > 0) {
                 var pos = 1;
@@ -6107,6 +6117,7 @@ var GraphTableSVG;
             }
             else if (item.textContent != null && item.textContent.length > 0) {
                 var css = getComputedStyle(item);
+                var color = GraphTableSVG.Color.createRGBFromColorName(css.fill);
                 var fontName = css.fontFamily;
                 var fontSize = GraphTableSVG.Common.toPX(css.fontSize);
                 var fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
@@ -6237,6 +6248,35 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     var PNG;
     (function (PNG) {
+        function setAllElementStyleMap(svgBox) {
+            var widthAttr = svgBox.getAttribute("width");
+            var heightAttr = svgBox.getAttribute("height");
+            if (widthAttr != null) {
+                svgBox.style.width = widthAttr;
+            }
+            if (heightAttr != null) {
+                svgBox.style.height = heightAttr;
+            }
+            GraphTableSVG.SVG.setCSSToAllElementStyles(svgBox);
+        }
+        PNG.setAllElementStyleMap = setAllElementStyleMap;
+        function createCanvas(img) {
+            var canvas = document.createElement("canvas");
+            canvas.setAttribute("width", img.style.width);
+            canvas.setAttribute("height", img.style.height);
+            return canvas;
+        }
+        PNG.createCanvas = createCanvas;
+        function setSaveEvent(img, canvas) {
+            img.onload = function () {
+                var ctx = canvas.getContext("2d");
+                if (ctx == null)
+                    throw Error("Error");
+                ctx.drawImage(img, 0, 0);
+                saveCanvas("png", canvas);
+            };
+        }
+        PNG.setSaveEvent = setSaveEvent;
         function createPNGFromSVG(id) {
             var userAgent = window.navigator.userAgent;
             if (userAgent.indexOf("Firefox") != -1) {
@@ -6247,55 +6287,27 @@ var GraphTableSVG;
             if (svgBox == null)
                 throw Error("Error");
             var styleMap = GraphTableSVG.SVG.getAllElementStyleMap(svgBox);
-            GraphTableSVG.SVG.setCSSToAllElementStyles(svgBox);
-            var widthAttr = svgBox.getAttribute("width");
-            var heightAttr = svgBox.getAttribute("height");
-            if (widthAttr != null) {
-                svgBox.style.width = widthAttr;
-            }
-            if (heightAttr != null) {
-                svgBox.style.height = heightAttr;
-            }
+            setAllElementStyleMap(svgBox);
             var img = getImage(svgBox);
-            var canvas = document.createElement("canvas");
-            svgBox.removeAttribute("width");
-            svgBox.removeAttribute("height");
-            img.onload = function () {
-                var style = getComputedStyle(svgBox);
-                img.setAttribute("width", style.width);
-                img.setAttribute("height", style.height);
-                canvas.setAttribute("width", style.width);
-                canvas.setAttribute("height", style.height);
-                var ctx = canvas.getContext("2d");
-                if (ctx == null)
-                    throw Error("Error");
-                ctx.drawImage(img, 0, 0);
-                saveCanvas("png", canvas);
-            };
-            if (widthAttr != null) {
-                svgBox.style.removeProperty("width");
-                svgBox.setAttribute("width", widthAttr);
-            }
-            if (heightAttr != null) {
-                svgBox.style.removeProperty("height");
-                svgBox.setAttribute("height", heightAttr);
-            }
+            var canvas = createCanvas(img);
+            setSaveEvent(img, canvas);
             GraphTableSVG.SVG.setAllElementStyleMap(svgBox, styleMap);
             return canvas;
         }
         PNG.createPNGFromSVG = createPNGFromSVG;
         function getImage(svgBox) {
-            var svg = "";
-            svg = svgBox.outerHTML;
             var img = document.createElement("img");
             if (window.btoa) {
-                img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svg)));
+                img.style.width = svgBox.style.width;
+                img.style.height = svgBox.style.height;
+                img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgBox.outerHTML)));
             }
             else {
                 throw Error("Error");
             }
             return img;
         }
+        PNG.getImage = getImage;
         function saveCanvas(saveType, canvas) {
             var imageType = "image/png";
             var fileName = "sample.png";

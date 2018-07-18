@@ -97,6 +97,9 @@
                     if (box.style.width != width || box.style.height != height) {
                         box.style.width = width;
                         box.style.height = height;
+                        box.setAttribute("width", width);
+                        box.setAttribute("height", height);
+
                         box.setAttribute(`viewBox`, `0 0 ${item1} ${item2}`);
                     }
                 }
