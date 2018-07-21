@@ -187,7 +187,7 @@ var GraphTableSVG;
         }
         function setStyle(svgLine, type) {
             if (toMSODashStyle(type) != null) {
-                var width = svgLine.getPropertyStyleNumberValue("stroke-width");
+                var width = svgLine.getPropertyStyleNumberValue("stroke-width", null);
                 svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
                 svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
                 svgLine.setPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName, type);
@@ -435,214 +435,6 @@ var GraphTableSVG;
         GUI.observeSVGBox = observeSVGBox;
     })(GUI = GraphTableSVG.GUI || (GraphTableSVG.GUI = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
-SVGGElement.prototype.getX = function () {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
-    }
-    return p.transform.baseVal.getItem(0).matrix.e;
-};
-SVGGElement.prototype.setX = function (value) {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
-    }
-    var a = this.transform.baseVal.getItem(0).matrix.a;
-    var b = this.transform.baseVal.getItem(0).matrix.b;
-    var c = this.transform.baseVal.getItem(0).matrix.c;
-    var d = this.transform.baseVal.getItem(0).matrix.d;
-    var e = value;
-    var f = this.transform.baseVal.getItem(0).matrix.f;
-    p.setAttribute('transform', "matrix(" + a + " " + b + " " + c + " " + d + " " + e + " " + f + ")");
-};
-SVGGElement.prototype.getY = function () {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
-    }
-    return this.transform.baseVal.getItem(0).matrix.f;
-};
-SVGGElement.prototype.setY = function (value) {
-    var p = this;
-    if (p.transform.baseVal.numberOfItems == 0) {
-        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
-    }
-    var a = this.transform.baseVal.getItem(0).matrix.a;
-    var b = this.transform.baseVal.getItem(0).matrix.b;
-    var c = this.transform.baseVal.getItem(0).matrix.c;
-    var d = this.transform.baseVal.getItem(0).matrix.d;
-    var e = this.transform.baseVal.getItem(0).matrix.e;
-    var f = value;
-    p.setAttribute('transform', "matrix(" + a + " " + b + " " + c + " " + d + " " + e + " " + f + ")");
-};
-CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name) {
-    var p = this;
-    var r = p.getPropertyValue(name).trim();
-    if (r.length == 0) {
-        return null;
-    }
-    else {
-        return r;
-    }
-};
-SVGElement.prototype.getActiveStyle = function () {
-    var p = this;
-    var r = p.getAttribute("class");
-    if (r == null) {
-        return p.style;
-    }
-    else {
-        return getComputedStyle(p);
-    }
-};
-SVGElement.prototype.getPropertyStyleValueWithDefault = function (name, defaultValue) {
-    var item = this;
-    var p = item.getPropertyStyleValue(name);
-    if (p == null) {
-        return defaultValue;
-    }
-    else {
-        return p;
-    }
-};
-SVGElement.prototype.getPropertyStyleValue = function (name) {
-    var item = this;
-    var p = item.style.getPropertyValue(name).trim();
-    if (p.length == 0) {
-        var r = item.getAttribute("class");
-        if (r == null) {
-            return null;
-        }
-        else {
-            var css = getComputedStyle(item);
-            var p2 = css.getPropertyValue(name).trim();
-            if (p2.length == 0) {
-                return null;
-            }
-            else {
-                return p2;
-            }
-        }
-    }
-    else {
-        return p;
-    }
-};
-SVGElement.prototype.getPropertyStyleNumberValue = function (name) {
-    var item = this;
-    var p = item.getPropertyStyleValue(name);
-    if (p != null) {
-        return GraphTableSVG.Common.toPX(p);
-    }
-    else {
-        return null;
-    }
-};
-SVGElement.prototype.setPropertyStyleValue = function (name, value) {
-    var item = this;
-    item.style.setProperty(name, value);
-};
-SVGTextPathElement.prototype.setTextContent = function (text, isLatexMode) {
-    if (isLatexMode === void 0) { isLatexMode = false; }
-    GraphTableSVG.SVG.setTextToTextPath(this, text, isLatexMode);
-};
-SVGTextElement.prototype.setTextContent = function (text, isLatexMode) {
-    if (isLatexMode === void 0) { isLatexMode = false; }
-    GraphTableSVG.SVG.setTextToSVGText(this, text, isLatexMode);
-};
-SVGTextElement.prototype.getX = function () {
-    var p = this;
-    if (p.x.baseVal.numberOfItems == 0) {
-        p.setAttribute('x', "0");
-    }
-    return p.x.baseVal.getItem(0).value;
-};
-SVGTextElement.prototype.setX = function (value) {
-    var p = this;
-    if (p.x.baseVal.numberOfItems == 0) {
-        p.setAttribute('x', "0");
-    }
-    p.x.baseVal.getItem(0).value = value;
-};
-SVGTextElement.prototype.getY = function () {
-    var p = this;
-    if (p.y.baseVal.numberOfItems == 0) {
-        p.setAttribute('y', "0");
-    }
-    return p.y.baseVal.getItem(0).value;
-};
-SVGTextElement.prototype.setY = function (value) {
-    var p = this;
-    if (p.y.baseVal.numberOfItems == 0) {
-        p.setAttribute('y', "0");
-    }
-    p.y.baseVal.getItem(0).value = value;
-};
-SVGLineElement.prototype.getEmphasis = function () {
-    var p = this;
-    var emp = p.getAttribute("class");
-    if (emp != null) {
-        return emp == GraphTableSVG.Cell.emphasisBorderClass;
-    }
-    else {
-        return false;
-    }
-};
-SVGLineElement.prototype.setEmphasis = function (value) {
-    if (GraphTableSVG.Common.getGraphTableCSS() == null)
-        GraphTableSVG.Common.setGraphTableCSS("yellow", "red");
-    var p = this;
-    if (p.getEmphasis() && !value) {
-        var tmp = p.getAttribute(GraphTableSVG.Cell.temporaryBorderClass);
-        if (tmp != null) {
-            p.setAttribute("class", tmp);
-            p.removeAttribute(GraphTableSVG.Cell.temporaryBorderClass);
-        }
-        else {
-            p.removeAttribute("class");
-            p.removeAttribute(GraphTableSVG.Cell.temporaryBorderClass);
-        }
-    }
-    else if (!p.getEmphasis() && value) {
-        var lineClass = p.getAttribute("class");
-        p.setAttribute("class", GraphTableSVG.Cell.emphasisBorderClass);
-        if (lineClass != null) {
-            p.setAttribute(GraphTableSVG.Cell.temporaryBorderClass, lineClass);
-        }
-    }
-};
-SVGPathElement.prototype.setPathLocations = function (points) {
-    var p = this;
-    var s = "";
-    for (var i = 0; i < points.length; i++) {
-        s += (i == 0 ? "M" : "L") + " " + points[i][0] + " " + points[i][1] + " ";
-    }
-    p.setAttribute("d", s);
-};
-SVGPathElement.prototype.getPathLocations = function () {
-    var p = this;
-    var info = p.getAttribute("d");
-    if (info == null)
-        return [];
-    var r = [];
-    var pos = [0, 0];
-    var pathType = "";
-    console.log(info.split(" "));
-    info.split(" ").forEach(function (v, i) {
-        if (i % 3 == 0) {
-            pathType = v;
-        }
-        else if (i % 3 == 1) {
-            pos[0] = parseInt(v);
-        }
-        else {
-            pos[1] = parseInt(v);
-            r.push(pos);
-            pos = [0, 0];
-        }
-    });
-    return r;
-};
 var GraphTableSVG;
 (function (GraphTableSVG) {
     var LogicTree = (function () {
@@ -968,11 +760,11 @@ var GraphTableSVG;
                 var dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
                 if (dashStyle != null)
                     GraphTableSVG.msoDashStyle.setStyle(rect, dashStyle);
-                var width = rect.getPropertyStyleNumberValue(SVG.defaultWidthName);
+                var width = rect.getPropertyStyleNumberValue(SVG.defaultWidthName, null);
                 if (width != null) {
                     rect.width.baseVal.value = width;
                 }
-                var height = rect.getPropertyStyleNumberValue(SVG.defaultHeightName);
+                var height = rect.getPropertyStyleNumberValue(SVG.defaultHeightName, null);
                 if (height != null) {
                     rect.height.baseVal.value = height;
                 }
@@ -1014,7 +806,7 @@ var GraphTableSVG;
             }
             else {
                 circle.setAttribute("class", className);
-                var radius = circle.getPropertyStyleNumberValue(SVG.defaultRadiusName);
+                var radius = circle.getPropertyStyleNumberValue(SVG.defaultRadiusName, null);
                 if (radius != null) {
                     circle.r.baseVal.value = radius;
                 }
@@ -1041,13 +833,11 @@ var GraphTableSVG;
                 marker.setPropertyStyleValue("fill", "black");
             }
             poly.setPropertyStyleValue("stroke-width", "1px");
-            poly.setAttribute("data-skip", "1");
             marker.setAttribute("markerUnits", "userSpaceOnUse");
             marker.setAttribute("markerHeight", "15");
             marker.setAttribute("markerWidth", "15");
             marker.setAttribute("refX", "10");
             marker.setAttribute("refY", "5");
-            marker.setAttribute("data-skip", "1");
             marker.setAttribute("preserveAspectRatio", "none");
             marker.setAttribute("orient", "auto");
             marker.setAttribute("viewBox", "0 0 10 10");
@@ -6248,25 +6038,25 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     var PNG;
     (function (PNG) {
-        function setAllElementStyleMap(svgBox) {
-            var widthAttr = svgBox.getAttribute("width");
-            var heightAttr = svgBox.getAttribute("height");
+        function copyCSStoStyle(svg) {
+            var widthAttr = svg.getAttribute("width");
+            var heightAttr = svg.getAttribute("height");
             if (widthAttr != null) {
-                svgBox.style.width = widthAttr;
+                svg.style.width = widthAttr;
             }
             if (heightAttr != null) {
-                svgBox.style.height = heightAttr;
+                svg.style.height = heightAttr;
             }
-            GraphTableSVG.SVG.setCSSToAllElementStyles(svgBox);
+            GraphTableSVG.SVG.setCSSToAllElementStyles(svg);
         }
-        PNG.setAllElementStyleMap = setAllElementStyleMap;
-        function createCanvas(img) {
+        PNG.copyCSStoStyle = copyCSStoStyle;
+        function createCanvasFromImage(img) {
             var canvas = document.createElement("canvas");
             canvas.setAttribute("width", img.style.width);
             canvas.setAttribute("height", img.style.height);
             return canvas;
         }
-        PNG.createCanvas = createCanvas;
+        PNG.createCanvasFromImage = createCanvasFromImage;
         function setSaveEvent(img, canvas) {
             img.onload = function () {
                 var ctx = canvas.getContext("2d");
@@ -6287,9 +6077,9 @@ var GraphTableSVG;
             if (svgBox == null)
                 throw Error("Error");
             var styleMap = GraphTableSVG.SVG.getAllElementStyleMap(svgBox);
-            setAllElementStyleMap(svgBox);
+            copyCSStoStyle(svgBox);
             var img = getImage(svgBox);
-            var canvas = createCanvas(img);
+            var canvas = createCanvasFromImage(img);
             setSaveEvent(img, canvas);
             GraphTableSVG.SVG.setAllElementStyleMap(svgBox, styleMap);
             return canvas;
@@ -6342,4 +6132,320 @@ var GraphTableSVG;
         }
     })(PNG = GraphTableSVG.PNG || (GraphTableSVG.PNG = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var CallOut = (function () {
+        function CallOut(svgbox, option) {
+            if (option === void 0) { option = {}; }
+            this._svgGroup = GraphTableSVG.SVG.createGroup();
+            svgbox.appendChild(this._svgGroup);
+            this._svgPath = GraphTableSVG.SVG.createPath(this._svgGroup, 0, 0, 0, 0);
+            this.width = 100;
+            this.height = 100;
+            if (option.cx != undefined)
+                this.cx = option.cx;
+            if (option.cy != undefined)
+                this.cy = option.cy;
+            this.update();
+        }
+        Object.defineProperty(CallOut.prototype, "svgPath", {
+            get: function () {
+                return this._svgPath;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CallOut.prototype, "svgGroup", {
+            get: function () {
+                return this._svgGroup;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        CallOut.prototype.update = function () {
+            var _x = -(this.width / 2);
+            var _y = -(this.height / 2);
+            this.svgPath.setAttribute("d", "M " + _x + " " + _y + " H " + (_x + this.width) + " V " + (_y + this.height) + " H " + _x + " V " + _y + " z");
+        };
+        Object.defineProperty(CallOut.prototype, "x", {
+            get: function () {
+                return this.cx - (this.width / 2);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CallOut.prototype, "y", {
+            get: function () {
+                return this.cy - (this.height / 2);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CallOut.prototype, "cx", {
+            get: function () {
+                return this.svgGroup.getX();
+            },
+            set: function (value) {
+                if (this.svgGroup.getX() != value) {
+                    this.svgGroup.setX(value);
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CallOut.prototype, "cy", {
+            get: function () {
+                return this.svgGroup.getY();
+            },
+            set: function (value) {
+                if (this.svgGroup.getY() != value) {
+                    this.svgGroup.setY(value);
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CallOut.prototype, "width", {
+            get: function () {
+                return this.svgGroup.getAttributeNumber("data-width", 0);
+            },
+            set: function (value) {
+                this.svgGroup.setAttribute("data-width", value.toString());
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CallOut.prototype, "height", {
+            get: function () {
+                return this.svgGroup.getAttributeNumber("data-height", 0);
+            },
+            set: function (value) {
+                this.svgGroup.setAttribute("data-height", value.toString());
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return CallOut;
+    }());
+    GraphTableSVG.CallOut = CallOut;
+})(GraphTableSVG || (GraphTableSVG = {}));
+CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name) {
+    var p = this;
+    var r = p.getPropertyValue(name).trim();
+    if (r.length == 0) {
+        return null;
+    }
+    else {
+        return r;
+    }
+};
+SVGTextPathElement.prototype.setTextContent = function (text, isLatexMode) {
+    if (isLatexMode === void 0) { isLatexMode = false; }
+    GraphTableSVG.SVG.setTextToTextPath(this, text, isLatexMode);
+};
+SVGLineElement.prototype.getEmphasis = function () {
+    var p = this;
+    var emp = p.getAttribute("class");
+    if (emp != null) {
+        return emp == GraphTableSVG.Cell.emphasisBorderClass;
+    }
+    else {
+        return false;
+    }
+};
+SVGLineElement.prototype.setEmphasis = function (value) {
+    if (GraphTableSVG.Common.getGraphTableCSS() == null)
+        GraphTableSVG.Common.setGraphTableCSS("yellow", "red");
+    var p = this;
+    if (p.getEmphasis() && !value) {
+        var tmp = p.getAttribute(GraphTableSVG.Cell.temporaryBorderClass);
+        if (tmp != null) {
+            p.setAttribute("class", tmp);
+            p.removeAttribute(GraphTableSVG.Cell.temporaryBorderClass);
+        }
+        else {
+            p.removeAttribute("class");
+            p.removeAttribute(GraphTableSVG.Cell.temporaryBorderClass);
+        }
+    }
+    else if (!p.getEmphasis() && value) {
+        var lineClass = p.getAttribute("class");
+        p.setAttribute("class", GraphTableSVG.Cell.emphasisBorderClass);
+        if (lineClass != null) {
+            p.setAttribute(GraphTableSVG.Cell.temporaryBorderClass, lineClass);
+        }
+    }
+};
+SVGPathElement.prototype.setPathLocations = function (points) {
+    var p = this;
+    var s = "";
+    for (var i = 0; i < points.length; i++) {
+        s += (i == 0 ? "M" : "L") + " " + points[i][0] + " " + points[i][1] + " ";
+    }
+    p.setAttribute("d", s);
+};
+SVGPathElement.prototype.getPathLocations = function () {
+    var p = this;
+    var info = p.getAttribute("d");
+    if (info == null)
+        return [];
+    var r = [];
+    var pos = [0, 0];
+    var pathType = "";
+    info.split(" ").forEach(function (v, i) {
+        if (i % 3 == 0) {
+            pathType = v;
+        }
+        else if (i % 3 == 1) {
+            pos[0] = parseInt(v);
+        }
+        else {
+            pos[1] = parseInt(v);
+            r.push(pos);
+            pos = [0, 0];
+        }
+    });
+    return r;
+};
+SVGGElement.prototype.getX = function () {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
+    }
+    return p.transform.baseVal.getItem(0).matrix.e;
+};
+SVGGElement.prototype.setX = function (value) {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
+    }
+    var a = this.transform.baseVal.getItem(0).matrix.a;
+    var b = this.transform.baseVal.getItem(0).matrix.b;
+    var c = this.transform.baseVal.getItem(0).matrix.c;
+    var d = this.transform.baseVal.getItem(0).matrix.d;
+    var e = value;
+    var f = this.transform.baseVal.getItem(0).matrix.f;
+    p.setAttribute('transform', "matrix(" + a + " " + b + " " + c + " " + d + " " + e + " " + f + ")");
+};
+SVGGElement.prototype.getY = function () {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
+    }
+    return this.transform.baseVal.getItem(0).matrix.f;
+};
+SVGGElement.prototype.setY = function (value) {
+    var p = this;
+    if (p.transform.baseVal.numberOfItems == 0) {
+        p.setAttribute('transform', "matrix(1 0 0 1 0 0)");
+    }
+    var a = this.transform.baseVal.getItem(0).matrix.a;
+    var b = this.transform.baseVal.getItem(0).matrix.b;
+    var c = this.transform.baseVal.getItem(0).matrix.c;
+    var d = this.transform.baseVal.getItem(0).matrix.d;
+    var e = this.transform.baseVal.getItem(0).matrix.e;
+    var f = value;
+    p.setAttribute('transform', "matrix(" + a + " " + b + " " + c + " " + d + " " + e + " " + f + ")");
+};
+SVGElement.prototype.getActiveStyle = function () {
+    var p = this;
+    var r = p.getAttribute("class");
+    if (r == null) {
+        return p.style;
+    }
+    else {
+        return getComputedStyle(p);
+    }
+};
+SVGElement.prototype.getAttributeNumber = function (name, defaultValue) {
+    if (defaultValue === void 0) { defaultValue = null; }
+    var item = this;
+    var value = item.getAttribute(name);
+    if (value != null) {
+        return Number(value);
+    }
+    else {
+        return defaultValue;
+    }
+};
+SVGElement.prototype.getPropertyStyleValueWithDefault = function (name, defaultValue) {
+    var item = this;
+    var p = item.getPropertyStyleValue(name);
+    if (p == null) {
+        return defaultValue;
+    }
+    else {
+        return p;
+    }
+};
+SVGElement.prototype.getPropertyStyleValue = function (name) {
+    var item = this;
+    var p = item.style.getPropertyValue(name).trim();
+    if (p.length == 0) {
+        var r = item.getAttribute("class");
+        if (r == null) {
+            return null;
+        }
+        else {
+            var css = getComputedStyle(item);
+            var p2 = css.getPropertyValue(name).trim();
+            if (p2.length == 0) {
+                return null;
+            }
+            else {
+                return p2;
+            }
+        }
+    }
+    else {
+        return p;
+    }
+};
+SVGElement.prototype.getPropertyStyleNumberValue = function (name, defaultValue) {
+    if (defaultValue === void 0) { defaultValue = null; }
+    var item = this;
+    var p = item.getPropertyStyleValue(name);
+    if (p != null) {
+        return GraphTableSVG.Common.toPX(p);
+    }
+    else {
+        return defaultValue;
+    }
+};
+SVGElement.prototype.setPropertyStyleValue = function (name, value) {
+    var item = this;
+    item.style.setProperty(name, value);
+};
+SVGTextElement.prototype.setTextContent = function (text, isLatexMode) {
+    if (isLatexMode === void 0) { isLatexMode = false; }
+    GraphTableSVG.SVG.setTextToSVGText(this, text, isLatexMode);
+};
+SVGTextElement.prototype.getX = function () {
+    var p = this;
+    if (p.x.baseVal.numberOfItems == 0) {
+        p.setAttribute('x', "0");
+    }
+    return p.x.baseVal.getItem(0).value;
+};
+SVGTextElement.prototype.setX = function (value) {
+    var p = this;
+    if (p.x.baseVal.numberOfItems == 0) {
+        p.setAttribute('x', "0");
+    }
+    p.x.baseVal.getItem(0).value = value;
+};
+SVGTextElement.prototype.getY = function () {
+    var p = this;
+    if (p.y.baseVal.numberOfItems == 0) {
+        p.setAttribute('y', "0");
+    }
+    return p.y.baseVal.getItem(0).value;
+};
+SVGTextElement.prototype.setY = function (value) {
+    var p = this;
+    if (p.y.baseVal.numberOfItems == 0) {
+        p.setAttribute('y', "0");
+    }
+    p.y.baseVal.getItem(0).value = value;
+};
 //# sourceMappingURL=graph_table_svg.js.map

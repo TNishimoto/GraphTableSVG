@@ -99,11 +99,11 @@ namespace GraphTableSVG {
                 const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
                 if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 
-                const width = rect.getPropertyStyleNumberValue(SVG.defaultWidthName);
+                const width = rect.getPropertyStyleNumberValue(SVG.defaultWidthName, null);
                 if (width != null) {
                     rect.width.baseVal.value = width;
                 }
-                const height = rect.getPropertyStyleNumberValue(SVG.defaultHeightName);
+                const height = rect.getPropertyStyleNumberValue(SVG.defaultHeightName, null);
                 if (height != null) {
                     rect.height.baseVal.value = height;
                 }
@@ -158,7 +158,7 @@ namespace GraphTableSVG {
                 circle.style.fill = "#ffffff";
             } else {
                 circle.setAttribute("class", className);
-                const radius = circle.getPropertyStyleNumberValue(SVG.defaultRadiusName);
+                const radius = circle.getPropertyStyleNumberValue(SVG.defaultRadiusName, null);
                 if (radius != null) {
                     circle.r.baseVal.value = radius;
                 }
@@ -198,14 +198,14 @@ namespace GraphTableSVG {
 
             }
             poly.setPropertyStyleValue("stroke-width", "1px");
-            poly.setAttribute("data-skip", "1");
+            //poly.setAttribute("data-skip", "1");
 
             marker.setAttribute("markerUnits", "userSpaceOnUse");
             marker.setAttribute("markerHeight", "15");
             marker.setAttribute("markerWidth", "15");
             marker.setAttribute("refX", "10");
             marker.setAttribute("refY", "5");
-            marker.setAttribute("data-skip", "1");
+            //marker.setAttribute("data-skip", "1");
             
 
             //marker.refX.baseVal.value = 10;

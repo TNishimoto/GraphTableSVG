@@ -167,11 +167,6 @@
             if (this.svgGroup.getX() != value) {
                 this.svgGroup.setX(value);
             }
-            /*
-            if (this.graph != null) {
-                this.graph.update();
-            }
-            */
         }
         /**
         このVertexのY座標を返します。

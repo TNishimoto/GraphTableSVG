@@ -13,14 +13,13 @@
         "color.ts",
         "enums.ts",
         "gui.ts",
-        "interface.ts",
         "logic_tree.ts",
         "svg.ts",
         "vline.ts"
 
     ],
     "include": [
-        "graph", "table", "common"
+        "graph", "table", "common", "object", "interface"
     ],
     "exclude": [
         "out"

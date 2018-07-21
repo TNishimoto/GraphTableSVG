@@ -104,7 +104,7 @@
 
         export function setStyle(svgLine : SVGLineElement | SVGPathElement | SVGElement, type : string) : void{
             if(toMSODashStyle(type) != null){
-                const width = svgLine.getPropertyStyleNumberValue("stroke-width");
+                const width = svgLine.getPropertyStyleNumberValue("stroke-width", null);
                 svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
                 svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
                 svgLine.setPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName, type);

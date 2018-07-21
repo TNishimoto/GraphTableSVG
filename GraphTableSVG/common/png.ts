@@ -5,26 +5,39 @@ namespace GraphTableSVG {
      */
     export namespace PNG {
 
-        export function setAllElementStyleMap(svgBox: HTMLElement){
-            const widthAttr = svgBox.getAttribute("width");
-            const heightAttr = svgBox.getAttribute("height");
+        /**
+         * svg要素のCSSをStyle属性に書き込みます。
+         * @param svg 
+         */
+        export function copyCSStoStyle(svg: HTMLElement){
+            const widthAttr = svg.getAttribute("width");
+            const heightAttr = svg.getAttribute("height");
             if(widthAttr != null){
-                svgBox.style.width = widthAttr;
+                svg.style.width = widthAttr;
             }
             if(heightAttr != null){
-                svgBox.style.height = heightAttr;
+                svg.style.height = heightAttr;
             }
             //svgBox.removeAttribute("width");
             //svgBox.removeAttribute("height");
-            GraphTableSVG.SVG.setCSSToAllElementStyles(svgBox);
+            GraphTableSVG.SVG.setCSSToAllElementStyles(svg);
         }
-        export function createCanvas(img : HTMLImageElement) : HTMLCanvasElement {
+        /**
+         * HTMLImageElementからCanvasElementを作成します。
+         * @param img 
+         */
+        export function createCanvasFromImage(img : HTMLImageElement) : HTMLCanvasElement {
             const canvas = document.createElement("canvas");
             canvas.setAttribute("width", img.style.width);
             canvas.setAttribute("height", img.style.height);
             //canvas.style.height = img.style.height;    
             return canvas;
         }
+        /**
+         * HTMLImageElementの画像を保存するイベントを作成します。
+         * @param img 
+         * @param canvas 
+         */
         export function setSaveEvent(img : HTMLImageElement, canvas : HTMLCanvasElement){
             img.onload = () => {                
                 const ctx = canvas.getContext("2d");
@@ -46,10 +59,10 @@ namespace GraphTableSVG {
             const svgBox = document.getElementById(id);
             if (svgBox == null) throw Error("Error");
             const styleMap = GraphTableSVG.SVG.getAllElementStyleMap(svgBox);
-            setAllElementStyleMap(svgBox);
+            copyCSStoStyle(svgBox);
 
             const img = getImage(svgBox);
-            const canvas = createCanvas(img);
+            const canvas = createCanvasFromImage(img);
             setSaveEvent(img,canvas);
             GraphTableSVG.SVG.setAllElementStyleMap(svgBox, styleMap);
             return canvas;

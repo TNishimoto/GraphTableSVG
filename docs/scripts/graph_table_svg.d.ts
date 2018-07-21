@@ -91,42 +91,6 @@ declare namespace GraphTableSVG {
         function observeSVGBox(svgBox: HTMLElement, sizeFunc: () => GraphTableSVG.Rectangle, padding?: GraphTableSVG.Padding): void;
     }
 }
-interface SVGGElement {
-    getX(): number;
-    setX(value: number): void;
-    getY(): number;
-    setY(value: number): void;
-}
-interface CSSStyleDeclaration {
-    tryGetPropertyValue(name: string): string | null;
-}
-interface SVGElement {
-    getActiveStyle(): CSSStyleDeclaration;
-    getPropertyStyleValue(name: string): string | null;
-    getPropertyStyleNumberValue(name: string): number | null;
-    getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
-    setPropertyStyleValue(name: string, value: string | null): void;
-}
-interface SVGTextElement {
-    getX(): number;
-    setX(value: number): void;
-    getY(): number;
-    setY(value: number): void;
-    setTextContent(text: string, isLatexMode: boolean): void;
-    setTextContent(text: string): void;
-}
-interface SVGTextPathElement {
-    setTextContent(text: string, isLatexMode: boolean): void;
-    setTextContent(text: string): void;
-}
-interface SVGLineElement {
-    setEmphasis(b: boolean): void;
-    getEmphasis(): boolean;
-}
-interface SVGPathElement {
-    setPathLocations(points: [number, number][]): void;
-    getPathLocations(): [number, number][];
-}
 declare namespace GraphTableSVG {
     class LogicTree {
         vertexText: string | null;
@@ -886,10 +850,67 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     namespace PNG {
-        function setAllElementStyleMap(svgBox: HTMLElement): void;
-        function createCanvas(img: HTMLImageElement): HTMLCanvasElement;
+        function copyCSStoStyle(svg: HTMLElement): void;
+        function createCanvasFromImage(img: HTMLImageElement): HTMLCanvasElement;
         function setSaveEvent(img: HTMLImageElement, canvas: HTMLCanvasElement): void;
         function createPNGFromSVG(id: string): HTMLCanvasElement;
         function getImage(svgBox: HTMLElement): HTMLImageElement;
     }
+}
+declare namespace GraphTableSVG {
+    class CallOut {
+        private _svgPath;
+        readonly svgPath: SVGPathElement;
+        private _svgGroup;
+        readonly svgGroup: SVGGElement;
+        constructor(svgbox: HTMLElement, option?: {
+            className?: string;
+            cx?: number;
+            cy?: number;
+        });
+        private update();
+        readonly x: number;
+        readonly y: number;
+        cx: number;
+        cy: number;
+        width: number;
+        height: number;
+    }
+}
+interface CSSStyleDeclaration {
+    tryGetPropertyValue(name: string): string | null;
+}
+interface SVGTextPathElement {
+    setTextContent(text: string, isLatexMode: boolean): void;
+    setTextContent(text: string): void;
+}
+interface SVGLineElement {
+    setEmphasis(b: boolean): void;
+    getEmphasis(): boolean;
+}
+interface SVGPathElement {
+    setPathLocations(points: [number, number][]): void;
+    getPathLocations(): [number, number][];
+}
+interface SVGGElement {
+    getX(): number;
+    setX(value: number): void;
+    getY(): number;
+    setY(value: number): void;
+}
+interface SVGElement {
+    getActiveStyle(): CSSStyleDeclaration;
+    getPropertyStyleValue(name: string): string | null;
+    getPropertyStyleNumberValue(name: string, defaultValue: number): number | null;
+    getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
+    setPropertyStyleValue(name: string, value: string | null): void;
+    getAttributeNumber(name: string, defaultValue: number | null): number | null;
+}
+interface SVGTextElement {
+    getX(): number;
+    setX(value: number): void;
+    getY(): number;
+    setY(value: number): void;
+    setTextContent(text: string, isLatexMode: boolean): void;
+    setTextContent(text: string): void;
 }
