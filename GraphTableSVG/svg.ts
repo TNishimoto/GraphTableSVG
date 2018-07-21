@@ -118,11 +118,12 @@ namespace GraphTableSVG {
          * @param className 生成するSVG要素のクラス属性名
          * @returns 生成されたSVGGElement
          */
-        export function createGroup(className: string | null = null): SVGGElement {
+        export function createGroup(parent: HTMLElement | SVGElement | null, className: string | null = null): SVGGElement {
             const g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
             if (className != null) {
                 g.setAttribute("class", className);
             }
+            if(parent != null)parent.appendChild(g);
             return g;
         }
         /**

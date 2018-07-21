@@ -19,8 +19,8 @@
         protected _roots: Vertex[] = [];
         constructor(box: HTMLElement, option: { graphClassName?: string } = {}) {
             if (option.graphClassName == undefined) option.graphClassName = null;
-            this._svgGroup = GraphTableSVG.SVG.createGroup(option.graphClassName);
-            box.appendChild(this.svgGroup);
+            this._svgGroup = GraphTableSVG.SVG.createGroup(box, option.graphClassName);
+            //box.appendChild(this.svgGroup);
 
             this._svgGroup.setAttribute(Graph.typeName, "graph");
 

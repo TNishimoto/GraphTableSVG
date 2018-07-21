@@ -44,6 +44,7 @@ declare namespace GraphTableSVG {
         function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void;
         function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElement): msoDashStyle;
     }
+    type SpeakerPosition = "upleft" | "upright" | "leftup" | "leftdown" | "rightup" | "rightdown" | "downleft" | "downright" | "inner";
     type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
     namespace ConnectorPosition {
         const Top: ConnectorPosition;
@@ -159,7 +160,7 @@ declare namespace GraphTableSVG {
         function createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
         function createText(className?: string | null): SVGTextElement;
         function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
-        function createGroup(className?: string | null): SVGGElement;
+        function createGroup(parent: HTMLElement | SVGElement | null, className?: string | null): SVGGElement;
         function resetStyle(style: CSSStyleDeclaration): void;
         const defaultRadiusName = "--default-radius";
         const defaultWidthName = "--default-width";
@@ -858,24 +859,54 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class CallOut {
-        private _svgPath;
-        readonly svgPath: SVGPathElement;
+    class PPTextBoxShapeBase {
         private _svgGroup;
         readonly svgGroup: SVGGElement;
+        private _svgText;
+        readonly svgText: SVGTextElement;
         constructor(svgbox: HTMLElement, option?: {
             className?: string;
             cx?: number;
             cy?: number;
+            text?: string;
+            isAutoSizeShapeToFitText?: boolean;
         });
-        private update();
-        readonly x: number;
-        readonly y: number;
         cx: number;
         cy: number;
         width: number;
         height: number;
+        readonly x: number;
+        readonly y: number;
+        isAutoSizeShapeToFitText: boolean;
+        protected update(): void;
+        readonly innerRectangle: Rectangle;
     }
+    class CallOut extends PPTextBoxShapeBase implements PPTextboxShape {
+        private _svgPath;
+        readonly svgPath: SVGPathElement;
+        constructor(svgbox: HTMLElement, option?: {
+            className?: string;
+            cx?: number;
+            cy?: number;
+            text?: string;
+            isAutoSizeShapeToFitText?: boolean;
+        });
+        protected update(): void;
+        readonly innerRectangle: Rectangle;
+        speakerX: number;
+        speakerY: number;
+        readonly SpeakerPosition: SpeakerPosition;
+    }
+}
+interface PPTextboxShape {
+    width: number;
+    height: number;
+    readonly svgText: SVGTextElement;
+    readonly svgGroup: SVGGElement;
+    cx: number;
+    cy: number;
+    x: number;
+    y: number;
 }
 interface CSSStyleDeclaration {
     tryGetPropertyValue(name: string): string | null;

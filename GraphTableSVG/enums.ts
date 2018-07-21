@@ -129,6 +129,9 @@
         }
     }
 
+
+    export type SpeakerPosition = "upleft" | "upright" | "leftup" | "leftdown" | "rightup" | "rightdown" | "downleft" | "downright" | "inner";
+
     export type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
     export namespace ConnectorPosition {
         export const Top: ConnectorPosition = "top"

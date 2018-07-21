@@ -84,11 +84,11 @@ namespace GraphTableSVG {
         }
 
         constructor(_table: Table, _x: number, _width : number = 30) {
-            this._svgGroup = SVG.createGroup();
+            this._svgGroup = SVG.createGroup(this.table.svgGroup);
 
             this.table = _table;
 
-            this.table.svgGroup.appendChild(this._svgGroup);
+            //this.table.svgGroup.appendChild(this._svgGroup);
             this.cellX = _x;
             this._svgGroup.setAttribute(Column.rowWidthName, `${_width}`);
             //this.width = this.getMaxWidth();

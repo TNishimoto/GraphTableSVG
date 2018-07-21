@@ -541,8 +541,8 @@
             if(option.className == undefined) option.className = graph.defaultEdgeClass;
             if(option.surfaceType == undefined) option.surfaceType = null;
             option.className = option.className != null ? option.className : graph.defaultVertexClass;
-            const g = SVG.createGroup(option.className);
-            graph.svgGroup.appendChild(g);
+            const g = SVG.createGroup(graph.svgGroup, option.className);
+            //graph.svgGroup.appendChild(g);
 
             /*
             const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);

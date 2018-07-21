@@ -54,7 +54,7 @@
             if (params.x == undefined) params.x = 0;
             if (params.y == undefined) params.y = 0;
 
-            const g = SVG.createGroup(params.className);
+            const g = SVG.createGroup(graph.svgGroup, params.className);
 
             this._svgGroup = g
             //this._svgGroup = GraphTableSVG.createGroup(className);
@@ -417,12 +417,12 @@
             //public static create(graph: Graph, {className: string | null = null, defaultSurfaceType: string | null = null, x: number = 0, y: number = 0}): GraphTableSVG.Vertex {
 
             if (option.className == undefined) option.className = graph.defaultVertexClass;
-            const g = SVG.createGroup(option.className);
-            graph.svgGroup.appendChild(g);
+            const g = SVG.createGroup(graph.svgGroup, option.className);
+            //graph.svgGroup.appendChild(g);
 
             const gSurfaceType = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
             if (option.surfaceType == undefined) option.surfaceType = gSurfaceType != null ? gSurfaceType : "circle";
-            graph.svgGroup.removeChild(g);
+            //graph.svgGroup.removeChild(g);
 
             if (option.x == undefined) option.x = 0;
             if (option.y == undefined) option.y = 0;

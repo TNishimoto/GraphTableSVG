@@ -1,6 +1,13 @@
 ﻿
 interface PPTextboxShape {
-
+    width : number;
+    height : number;
+    readonly svgText : SVGTextElement;
+    readonly svgGroup : SVGGElement;
+    cx : number;
+    cy : number;
+    x : number;
+    y : number;
 }
 
 

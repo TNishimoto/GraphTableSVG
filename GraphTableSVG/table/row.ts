@@ -52,10 +52,9 @@
         }
 
         constructor(_table: Table, _y: number, _height: number = 30) {
-            this._svgGroup = SVG.createGroup();
+            this._svgGroup = SVG.createGroup(this.table.svgGroup);
 
             this.table = _table;
-            this.table.svgGroup.appendChild(this._svgGroup);
 
             this.cellY = _y;
             this._svgGroup.setAttribute(Row.columnHeightName, `${_height}`);

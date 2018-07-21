@@ -71,7 +71,7 @@ namespace GraphTableSVG {
 
 
         constructor(parent: Table, _px: number, _py: number, cellClass: string | null = null, borderClass: string | null = null) {
-            this._svgGroup = SVG.createGroup();
+            this._svgGroup = SVG.createGroup(null);
             this._table = parent;
             this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
             if (cellClass != null) this.svgGroup.setAttribute("class", cellClass);
