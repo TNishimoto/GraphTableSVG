@@ -6412,7 +6412,8 @@ var GraphTableSVG;
             var speakerDiffY = this.speakerY - this.cy;
             var px1 = 0, px2 = 0, py1 = 0, py2 = 0;
             var mes = "";
-            switch (this.SpeakerPosition) {
+            console.log(this.speakerPosition);
+            switch (this.speakerPosition) {
                 case "upleft":
                     px1 = (x1 / 3) * 2;
                     px2 = (x1 / 3) * 1;
@@ -6509,7 +6510,7 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(CallOut.prototype, "SpeakerPosition", {
+        Object.defineProperty(CallOut.prototype, "speakerPosition", {
             get: function () {
                 var speakerDiffX = this.speakerX - this.cx;
                 var speakerDiffY = this.speakerY - this.cy;
@@ -6522,7 +6523,7 @@ var GraphTableSVG;
                 }
                 if (this.speakerX > this.cx) {
                     if (this.speakerY > this.cy) {
-                        var line = new GraphTableSVG.VLine(0, 0, this.height, this.width);
+                        var line = new GraphTableSVG.VLine(0, 0, this.width, this.height);
                         if (line.contains(speakerDiffX, speakerDiffY)) {
                             return "rightdown";
                         }
@@ -6531,7 +6532,7 @@ var GraphTableSVG;
                         }
                     }
                     else {
-                        var line = new GraphTableSVG.VLine(0, 0, -this.height, this.width);
+                        var line = new GraphTableSVG.VLine(0, 0, this.width, -this.height);
                         if (line.contains(speakerDiffX, speakerDiffY)) {
                             return "upright";
                         }
@@ -6542,7 +6543,9 @@ var GraphTableSVG;
                 }
                 else {
                     if (this.speakerY > this.cy) {
-                        var line = new GraphTableSVG.VLine(0, 0, -this.height, this.width);
+                        var line = new GraphTableSVG.VLine(0, 0, this.width, -this.height);
+                        console.log(this.height + " " + this.width);
+                        console.log(speakerDiffX + " " + speakerDiffY + " " + line.slope + " " + line.contains(speakerDiffX, speakerDiffY) + " " + line.getY(speakerDiffX) + " ");
                         if (line.contains(speakerDiffX, speakerDiffY)) {
                             return "leftdown";
                         }
@@ -6551,7 +6554,7 @@ var GraphTableSVG;
                         }
                     }
                     else {
-                        var line = new GraphTableSVG.VLine(0, 0, this.height, this.width);
+                        var line = new GraphTableSVG.VLine(0, 0, this.width, this.height);
                         if (line.contains(speakerDiffX, speakerDiffY)) {
                             return "upleft";
                         }

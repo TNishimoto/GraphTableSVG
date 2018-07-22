@@ -907,7 +907,7 @@ declare namespace GraphTableSVG {
         readonly innerRectangle: Rectangle;
         speakerX: number;
         speakerY: number;
-        readonly SpeakerPosition: SpeakerPosition;
+        readonly speakerPosition: SpeakerPosition;
         createVBACode(id: number): string[];
         private readonly VBAAdjustments;
     }

@@ -202,7 +202,8 @@ namespace GraphTableSVG {
             const speakerDiffY = this.speakerY - this.cy;
             let px1 = 0, px2 = 0, py1 = 0, py2 = 0;
             let mes = "";
-            switch (this.SpeakerPosition) {
+            console.log(this.speakerPosition);
+            switch (this.speakerPosition) {
                 case "upleft":
                     px1 = (x1 / 3) * 2;
                     px2 = (x1 / 3) * 1;
@@ -291,7 +292,7 @@ namespace GraphTableSVG {
 
 
 
-        public get SpeakerPosition(): SpeakerPosition {
+        public get speakerPosition(): SpeakerPosition {
             const speakerDiffX = this.speakerX - this.cx;
             const speakerDiffY = this.speakerY - this.cy;
 
@@ -305,14 +306,14 @@ namespace GraphTableSVG {
 
             if (this.speakerX > this.cx) {
                 if (this.speakerY > this.cy) {
-                    const line = new VLine(0, 0, this.height, this.width);
+                    const line = new VLine(0, 0, this.width, this.height);
                     if (line.contains(speakerDiffX, speakerDiffY)) {
                         return "rightdown";
                     } else {
                         return "downright";
                     }
                 } else {
-                    const line = new VLine(0, 0, -this.height, this.width);
+                    const line = new VLine(0, 0, this.width, -this.height);
                     if (line.contains(speakerDiffX, speakerDiffY)) {
                         return "upright"
                     } else {
@@ -321,7 +322,9 @@ namespace GraphTableSVG {
                 }
             } else {
                 if (this.speakerY > this.cy) {
-                    const line = new VLine(0, 0, -this.height, this.width);
+                    const line = new VLine(0, 0, this.width, -this.height);
+                    console.log(`${this.height} ${this.width}`)
+                    console.log(`${speakerDiffX} ${speakerDiffY} ${line.slope} ${line.contains(speakerDiffX, speakerDiffY)} ${line.getY(speakerDiffX)} `)
                     if (line.contains(speakerDiffX, speakerDiffY)) {
                         return "leftdown";
                     } else {
@@ -329,11 +332,13 @@ namespace GraphTableSVG {
                     }
 
                 } else {
-                    const line = new VLine(0, 0, this.height, this.width);
+                    const line = new VLine(0, 0, this.width, this.height);
                     if (line.contains(speakerDiffX, speakerDiffY)) {
                         return "upleft";
+
                     } else {
                         return "leftup";
+
                     }
                 }
             }
