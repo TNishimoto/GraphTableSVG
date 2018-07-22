@@ -352,6 +352,39 @@
                 x += rect.width - b2.width;
             }
 
+            const marginLeft = text.getMarginLeft();
+            const marginTop = text.getMarginTop();
+            x += marginLeft;
+            y += marginTop;
+
+            text.setAttribute('y', y.toString());
+            text.setAttribute('x', x.toString());
+        }
+        public static setXY2(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null, isAutoSizeShapeToFitText: boolean) {
+
+            let x = rect.x;
+            let y = rect.y;
+            text.setAttribute('x', x.toString());
+            text.setAttribute('y', y.toString());
+
+            const b2 = text.getBBox();
+
+            const dy = b2.y - y;
+            const dx = b2.x - x;
+
+            y -= dy;
+            x -= dx;
+            if (vAnchor == GraphTableSVG.VerticalAnchor.Middle) {
+                y += (rect.height - b2.height) / 2
+            } else if (vAnchor == GraphTableSVG.VerticalAnchor.Bottom) {
+                y += rect.height - b2.height;
+            }
+
+            if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
+                x += (rect.width - b2.width) / 2;
+            } else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
+                x += rect.width - b2.width;
+            }
 
             text.setAttribute('y', y.toString());
             text.setAttribute('x', x.toString());
@@ -365,8 +398,8 @@
             const vertexDic: { [key: string]: number; } = {};
             const edgeDic: { [key: string]: number; } = {};
 
-            this.vertices.forEach((v) => v.setIndexDictionaryForVBA(vertexDic,edgeDic));
-            this.edges.forEach((v) => v.setIndexDictionaryForVBA(vertexDic,edgeDic));
+            this.vertices.forEach((v) => v.setIndexDictionaryForVBA(vertexDic, edgeDic));
+            this.edges.forEach((v) => v.setIndexDictionaryForVBA(vertexDic, edgeDic));
             const vertexSize = Object.keys(vertexDic).length;
             const edgeSize = Object.keys(edgeDic).length;
 
@@ -410,8 +443,9 @@
                         this.createChildFromLogicTree(null, v, option);
                     }
                 });
-                if(this.relocateFunction == null){ this.relocateFunction = GraphTableSVG.TreeArrangement.alignVerticeByChildren;
-                }else{
+                if (this.relocateFunction == null) {
+                this.relocateFunction = GraphTableSVG.TreeArrangement.alignVerticeByChildren;
+                } else {
                     this.relocate();
                 }
 
@@ -477,7 +511,7 @@
         }
 
         public relocate() {
-            if(this._relocateFunction != null)this._relocateFunction(this);
+            if (this._relocateFunction != null) this._relocateFunction(this);
         }
 
     }

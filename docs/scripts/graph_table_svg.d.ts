@@ -375,6 +375,7 @@ declare namespace GraphTableSVG {
         getOrderedVertices(order: VertexOrder, node?: Vertex | null): Vertex[];
         save(): void;
         static setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null): void;
+        static setXY2(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null, isAutoSizeShapeToFitText: boolean): void;
         createVBACode(id: number): string[];
         constructFromLogicTree(roots: LogicTree[] | LogicTree, option?: {
             x?: number;
@@ -812,8 +813,9 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    type VBAObjectType = Graph | Table | SVGPathElement | SVGTextElement | PPTextBoxShapeBase;
     class SVGToVBA {
-        static create(items: (Graph | Table | SVGPathElement | SVGTextElement)[] | (Graph | Table | SVGPathElement | SVGTextElement)): string;
+        static create(items: VBAObjectType[] | VBAObjectType): string;
         private static createVBACodeOfSVGPath(path, id);
         private static createVBACodeOfTextElement(element, id);
         static cellFunctionCode: string;
@@ -834,6 +836,7 @@ declare namespace GraphTableSVG {
         static colorToVBA(color: string): string;
         static ToVBAFont(font: string): string;
         static TranslateSVGTextElement(sub: string[][], item: SVGTextElement, range: string): void;
+        static TranslateSVGTextElement2(item: SVGTextElement, range: string): string[];
     }
 }
 declare namespace GraphTableSVG {
@@ -864,6 +867,13 @@ declare namespace GraphTableSVG {
         readonly svgGroup: SVGGElement;
         private _svgText;
         readonly svgText: SVGTextElement;
+        private _observer;
+        private observerFunc;
+        private static updateAttributes;
+        readonly isLocated: boolean;
+        private _textObserver;
+        protected textObserverFunc: MutationCallback;
+        private static updateTextAttributes;
         constructor(svgbox: HTMLElement, option?: {
             className?: string;
             cx?: number;
@@ -878,8 +888,10 @@ declare namespace GraphTableSVG {
         readonly x: number;
         readonly y: number;
         isAutoSizeShapeToFitText: boolean;
+        private _isUpdating;
         protected update(): void;
         readonly innerRectangle: Rectangle;
+        createVBACode(id: number): string[];
     }
     class CallOut extends PPTextBoxShapeBase implements PPTextboxShape {
         private _svgPath;
@@ -896,6 +908,8 @@ declare namespace GraphTableSVG {
         speakerX: number;
         speakerY: number;
         readonly SpeakerPosition: SpeakerPosition;
+        createVBACode(id: number): string[];
+        private readonly VBAAdjustments;
     }
 }
 interface PPTextboxShape {
@@ -944,4 +958,12 @@ interface SVGTextElement {
     setY(value: number): void;
     setTextContent(text: string, isLatexMode: boolean): void;
     setTextContent(text: string): void;
+    getMarginLeft(): number;
+    setMarginLeft(value: number): void;
+    getMarginTop(): number;
+    setMarginTop(value: number): void;
+    getMarginRight(): number;
+    setMarginRight(value: number): void;
+    getMarginBottom(): number;
+    setMarginBottom(value: number): void;
 }

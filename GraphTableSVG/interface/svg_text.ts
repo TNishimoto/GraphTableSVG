@@ -22,7 +22,50 @@ interface SVGTextElement {
      */
     setTextContent(text: string, isLatexMode: boolean): void;
     setTextContent(text: string): void;
+
+    getMarginLeft() : number;
+    setMarginLeft(value : number) : void;
+    getMarginTop() : number;
+    setMarginTop(value : number) : void;
+    getMarginRight() : number;
+    setMarginRight(value : number) : void;
+    getMarginBottom() : number;
+    setMarginBottom(value : number) : void;
+
 }
+SVGTextElement.prototype.getMarginLeft = function () {
+    const p: SVGTextElement = this;
+    return p.getPropertyStyleNumberValue("--margin-left", 0);
+};
+SVGTextElement.prototype.setMarginLeft = function (value: number) {
+    const p: SVGTextElement = this;    
+    p.setPropertyStyleValue("--margin-left", value.toString());
+};
+SVGTextElement.prototype.getMarginTop = function () {
+    const p: SVGTextElement = this;
+    return p.getPropertyStyleNumberValue("--margin-top", 0);
+};
+SVGTextElement.prototype.setMarginTop = function (value: number) {
+    const p: SVGTextElement = this;    
+    p.setPropertyStyleValue("--margin-top", value.toString());
+};
+SVGTextElement.prototype.getMarginRight = function () {
+    const p: SVGTextElement = this;
+    return p.getPropertyStyleNumberValue("--margin-right", 0);
+};
+SVGTextElement.prototype.setMarginRight = function (value: number) {
+    const p: SVGTextElement = this;    
+    p.setPropertyStyleValue("--margin-right", value.toString());
+};
+SVGTextElement.prototype.getMarginBottom = function () {
+    const p: SVGTextElement = this;
+    return p.getPropertyStyleNumberValue("--margin-bottom", 0);
+};
+SVGTextElement.prototype.setMarginBottom = function (value: number) {
+    const p: SVGTextElement = this;    
+    p.setPropertyStyleValue("--margin-bottom", value.toString());
+};
+
 
 SVGTextElement.prototype.setTextContent = function (text: string, isLatexMode: boolean = false) {
     GraphTableSVG.SVG.setTextToSVGText(this, text, isLatexMode);

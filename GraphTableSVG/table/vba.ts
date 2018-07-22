@@ -1,11 +1,13 @@
 ﻿
 namespace GraphTableSVG {
+    export type VBAObjectType = Graph | Table | SVGPathElement | SVGTextElement | PPTextBoxShapeBase;
     export class SVGToVBA {
+
         /**
          * 入力要素をPowerpoint上で作成するVBAコードを作成します。
          * @param items 
          */
-        public static create(items: (Graph | Table | SVGPathElement | SVGTextElement)[] | (Graph | Table | SVGPathElement | SVGTextElement)): string {
+        public static create(items: VBAObjectType[] | VBAObjectType): string {
             //const id = 0;
             if (items instanceof Array) {
                 const s: string[] = new Array(0);
@@ -36,6 +38,9 @@ namespace GraphTableSVG {
                         const lines = SVGToVBA.createVBACodeOfTextElement(item, i);
                         lines.forEach((v) => s.push(v));
 
+                    } else if(item instanceof PPTextBoxShapeBase){
+                        const lines = item.createVBACode(i);
+                        lines.forEach((v) => s.push(v));
                     }
                 }
                 s.push(SVGToVBA.cellFunctionCode);
@@ -189,6 +194,13 @@ Sub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, tr
     line_.visible = visible
 End Sub
 
+Sub EditCallOut(shape_ As Shape, name As String, visible As Integer, backColor As Variant, adj1 As Double, adj2 As Double)
+    shape_.name = name
+    shape_.Fill.visible = visible
+    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))
+    shape_.Adjustments.Item(1) = adj1
+    shape_.Adjustments.Item(2) = adj2
+End Sub
 
 `
     }
@@ -353,6 +365,44 @@ End Sub
 
                 sub.push([`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}), ${fontName}, ${fontSize}, ${fontBold} )`]);
             }
+        }
+        public static TranslateSVGTextElement2(item: SVGTextElement, range: string): string[] {
+
+            const lines : string[] = [];
+            const text = item.textContent == null ? "" : item.textContent;
+
+            lines.push(`${range}.text = "${item.textContent}"`);
+            if (item.children.length > 0) {
+                let pos = 1;
+                for (let i = 0; i < item.children.length; i++) {
+                    const child = item.children.item(i);
+                    if (child.textContent != null && child.textContent.length > 0) {
+                        const css = getComputedStyle(child);
+                        const childColor = Color.createRGBFromColorName(css.fill);
+                        const fontName = css.fontFamily;
+                        const fontSize = Common.toPX(css.fontSize);
+                        const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
+                        const len = child.textContent.length;
+
+                        let f = child.getAttribute("data-script");
+                        if (f == null) {
+                            f = "";
+                        }
+                        lines.push(`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${childColor.r}, ${childColor.g}, ${childColor.b}), "${fontName}", ${fontSize}, ${fontBold} )`);
+                        pos += len;
+                    }
+
+                }
+            } else if (item.textContent != null && item.textContent.length > 0) {
+                const css = getComputedStyle(item);
+                const color = Color.createRGBFromColorName(css.fill);
+                const fontName = css.fontFamily;
+                const fontSize = Common.toPX(css.fontSize);
+                const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
+
+                lines.push(`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}), "${fontName}", ${fontSize}, ${fontBold} )`);
+            }
+            return lines;
         }
 
         /*
