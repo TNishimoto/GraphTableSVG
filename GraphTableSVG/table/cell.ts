@@ -12,7 +12,6 @@ namespace GraphTableSVG {
      */
     export class Cell {
         private static readonly defaultBackgroundClassName: string = "--default-background-class";
-        private static readonly defaultTextClass: string = "--default-text-class";
         public static readonly emphasisCellClass: string = "___cell-emphasis";
         public static readonly emphasisBorderClass: string = "___border-emphasis";
         public static readonly temporaryBorderClass: string = "___temporary-class";
@@ -371,7 +370,7 @@ namespace GraphTableSVG {
         SVGTextElement生成時に設定するクラス名を返します。
         */
         get defaultTextClass(): string | null {
-            const r = this.svgGroup.getPropertyStyleValue(Cell.defaultTextClass);
+            const r = this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass);
             return r;
         }
         /**

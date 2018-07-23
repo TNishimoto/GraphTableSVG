@@ -1,6 +1,9 @@
 ﻿
 namespace GraphTableSVG {
     export namespace SVG {
+        export const defaultTextClass: string = "--default-text-class";
+        export const defaultPathClass: string = "--default-path-class";
+
         /**
          * SVGLineElementを生成します。
          * @param x 開始位置のX座標

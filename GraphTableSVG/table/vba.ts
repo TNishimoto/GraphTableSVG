@@ -194,12 +194,10 @@ Sub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, tr
     line_.visible = visible
 End Sub
 
-Sub EditCallOut(shape_ As Shape, name As String, visible As Integer, backColor As Variant, adj1 As Double, adj2 As Double)
+Sub EditCallOut(shape_ As Shape, name As String, visible As Integer, backColor As Variant)
     shape_.name = name
     shape_.Fill.visible = visible
     shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))
-    shape_.Adjustments.Item(1) = adj1
-    shape_.Adjustments.Item(2) = adj2
 End Sub
 
 `
@@ -342,7 +340,7 @@ End Sub
                     if (child.textContent != null && child.textContent.length > 0) {
                         const css = getComputedStyle(child);
                         const childColor = Color.createRGBFromColorName(css.fill);
-                        const fontName = css.fontFamily;
+                        const fontName = this.getFont(css);
                         const fontSize = Common.toPX(css.fontSize);
                         const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
                         const len = child.textContent.length;
@@ -351,7 +349,7 @@ End Sub
                         if (f == null) {
                             f = "";
                         }
-                        sub.push([`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${childColor.r}, ${childColor.g}, ${childColor.b}), ${fontName}, ${fontSize}, ${fontBold} )`]);
+                        sub.push([`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${childColor.r}, ${childColor.g}, ${childColor.b}), "${fontName}", ${fontSize}, ${fontBold} )`]);
                         pos += len;
                     }
 
@@ -359,12 +357,24 @@ End Sub
             } else if (item.textContent != null && item.textContent.length > 0) {
                 const css = getComputedStyle(item);
                 const color = Color.createRGBFromColorName(css.fill);
-                const fontName = css.fontFamily;
+                const fontName = this.getFont(css);
                 const fontSize = Common.toPX(css.fontSize);
                 const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
 
-                sub.push([`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}), ${fontName}, ${fontSize}, ${fontBold} )`]);
+                sub.push([`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}), "${fontName}", ${fontSize}, ${fontBold} )`]);
             }
+        }
+        private static getFont(css : CSSStyleDeclaration) : string{
+            const arr = css.fontFamily.split(",");
+            if(arr.length > 0){
+                let name = arr[0];
+                name = name.replace(/\"/g, "");
+                name = name.replace(/\'/g, "");
+                return name;
+            }else{
+                return "";
+            }
+
         }
         public static TranslateSVGTextElement2(item: SVGTextElement, range: string): string[] {
 
@@ -379,7 +389,7 @@ End Sub
                     if (child.textContent != null && child.textContent.length > 0) {
                         const css = getComputedStyle(child);
                         const childColor = Color.createRGBFromColorName(css.fill);
-                        const fontName = css.fontFamily;
+                        const fontName = this.getFont(css);
                         const fontSize = Common.toPX(css.fontSize);
                         const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
                         const len = child.textContent.length;
@@ -396,7 +406,7 @@ End Sub
             } else if (item.textContent != null && item.textContent.length > 0) {
                 const css = getComputedStyle(item);
                 const color = Color.createRGBFromColorName(css.fill);
-                const fontName = css.fontFamily;
+                const fontName = this.getFont(css);
                 const fontSize = Common.toPX(css.fontSize);
                 const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
 

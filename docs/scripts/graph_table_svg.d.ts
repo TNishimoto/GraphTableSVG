@@ -155,6 +155,8 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     namespace SVG {
+        const defaultTextClass: string;
+        const defaultPathClass: string;
         function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
         const msoDashStyleName = "--stroke-style";
         function createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
@@ -223,6 +225,55 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    class PPTextBoxShapeBase {
+        private _svgGroup;
+        readonly svgGroup: SVGGElement;
+        private _svgText;
+        readonly svgText: SVGTextElement;
+        private _observer;
+        private observerFunc;
+        private static updateAttributes;
+        readonly isLocated: boolean;
+        private _textObserver;
+        protected textObserverFunc: MutationCallback;
+        private static updateTextAttributes;
+        constructor(svgbox: HTMLElement, option?: {
+            className?: string;
+            cx?: number;
+            cy?: number;
+            text?: string;
+            isAutoSizeShapeToFitText?: boolean;
+        });
+        cx: number;
+        cy: number;
+        width: number;
+        height: number;
+        readonly x: number;
+        readonly y: number;
+        isAutoSizeShapeToFitText: boolean;
+        private _isUpdating;
+        protected update(): void;
+        readonly innerRectangle: Rectangle;
+        createVBACode(id: number): string[];
+    }
+    class PPPathTextBox extends PPTextBoxShapeBase {
+        private _svgPath;
+        readonly svgPath: SVGPathElement;
+        constructor(svgbox: HTMLElement, option?: {
+            className?: string;
+            cx?: number;
+            cy?: number;
+            text?: string;
+            isAutoSizeShapeToFitText?: boolean;
+        });
+        readonly innerRectangle: Rectangle;
+        protected readonly shape: string;
+        private getVBAEditLine(id);
+        createVBACode(id: number): string[];
+        protected readonly VBAAdjustments: number[];
+    }
+}
+declare namespace GraphTableSVG {
     class AdjacencyMatrix {
         matrix: number[][];
         value: string[];
@@ -235,7 +286,6 @@ declare namespace GraphTableSVG {
         static readonly defaultLineClass: string;
         static readonly beginNodeName: string;
         static readonly endNodeName: string;
-        static readonly defaultTextClass: string;
         static readonly controlPointName: string;
         static readonly markerStartName: string;
         static readonly markerEndName: string;
@@ -414,7 +464,6 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     class Vertex {
         static readonly defaultSurfaceType: string;
-        static readonly defaultTextClass: string;
         static readonly defaultSurfaceClass: string;
         static readonly autoSizeShapeToFitTextName: string;
         private static readonly id_counter;
@@ -566,7 +615,6 @@ declare namespace GraphTableSVG {
     }
     class Cell {
         private static readonly defaultBackgroundClassName;
-        private static readonly defaultTextClass;
         static readonly emphasisCellClass: string;
         static readonly emphasisBorderClass: string;
         static readonly temporaryBorderClass: string;
@@ -836,6 +884,7 @@ declare namespace GraphTableSVG {
         static colorToVBA(color: string): string;
         static ToVBAFont(font: string): string;
         static TranslateSVGTextElement(sub: string[][], item: SVGTextElement, range: string): void;
+        private static getFont(css);
         static TranslateSVGTextElement2(item: SVGTextElement, range: string): string[];
     }
 }
@@ -862,40 +911,7 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class PPTextBoxShapeBase {
-        private _svgGroup;
-        readonly svgGroup: SVGGElement;
-        private _svgText;
-        readonly svgText: SVGTextElement;
-        private _observer;
-        private observerFunc;
-        private static updateAttributes;
-        readonly isLocated: boolean;
-        private _textObserver;
-        protected textObserverFunc: MutationCallback;
-        private static updateTextAttributes;
-        constructor(svgbox: HTMLElement, option?: {
-            className?: string;
-            cx?: number;
-            cy?: number;
-            text?: string;
-            isAutoSizeShapeToFitText?: boolean;
-        });
-        cx: number;
-        cy: number;
-        width: number;
-        height: number;
-        readonly x: number;
-        readonly y: number;
-        isAutoSizeShapeToFitText: boolean;
-        private _isUpdating;
-        protected update(): void;
-        readonly innerRectangle: Rectangle;
-        createVBACode(id: number): string[];
-    }
-    class CallOut extends PPTextBoxShapeBase implements PPTextboxShape {
-        private _svgPath;
-        readonly svgPath: SVGPathElement;
+    class CallOut extends PPPathTextBox implements PPTextboxShape {
         constructor(svgbox: HTMLElement, option?: {
             className?: string;
             cx?: number;
@@ -904,12 +920,11 @@ declare namespace GraphTableSVG {
             isAutoSizeShapeToFitText?: boolean;
         });
         protected update(): void;
-        readonly innerRectangle: Rectangle;
         speakerX: number;
         speakerY: number;
         readonly speakerPosition: SpeakerPosition;
-        createVBACode(id: number): string[];
-        private readonly VBAAdjustments;
+        protected readonly shape: string;
+        protected readonly VBAAdjustments: number[];
     }
 }
 interface PPTextboxShape {

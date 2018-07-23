@@ -10,7 +10,6 @@
         public static readonly defaultLineClass: string = "--default-line-class";
         public static readonly beginNodeName: string = "data-begin-node";
         public static readonly endNodeName: string = "data-end-node";
-        public static readonly defaultTextClass: string = "--default-text-class";
         public static readonly controlPointName: string = "data-control-point";
         public static readonly markerStartName: string = "--marker-start";
         public static readonly markerEndName: string = "--marker-end";
@@ -196,7 +195,7 @@
             //this.svgGroup.appendChild(this.svgPath);
             this._svgPath.id = `path-${this.objectID}`;
 
-            const textClass = this.svgGroup.getPropertyStyleValue(Edge.defaultTextClass);
+            const textClass = this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass);
             [this._svgText, this._svgTextPath] = SVG.createTextPath(textClass);
             this.svgGroup.appendChild(this._svgText);
             this._svgText.appendChild(this._svgTextPath);

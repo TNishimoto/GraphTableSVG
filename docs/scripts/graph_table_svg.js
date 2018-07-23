@@ -692,6 +692,8 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     var SVG;
     (function (SVG) {
+        SVG.defaultTextClass = "--default-text-class";
+        SVG.defaultPathClass = "--default-path-class";
         function createLine(x, y, x2, y2, className) {
             if (className === void 0) { className = null; }
             var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -1338,6 +1340,276 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    var PPTextBoxShapeBase = (function () {
+        function PPTextBoxShapeBase(svgbox, option) {
+            if (option === void 0) { option = {}; }
+            var _this = this;
+            this.observerFunc = function (x) {
+                var b = false;
+                if (!_this.isLocated)
+                    return;
+                var _loop_2 = function (i) {
+                    var p = x[i];
+                    if (PPTextBoxShapeBase.updateAttributes.some(function (v) { return v == p.attributeName; })) {
+                        b = true;
+                    }
+                };
+                for (var i = 0; i < x.length; i++) {
+                    _loop_2(i);
+                }
+                if (b)
+                    _this.update();
+            };
+            this.textObserverFunc = function (x) {
+                if (!_this.isLocated)
+                    return;
+                var b = false;
+                var _loop_3 = function (i) {
+                    var p = x[i];
+                    if (PPTextBoxShapeBase.updateTextAttributes.some(function (v) { return v == p.attributeName; })) {
+                        b = true;
+                    }
+                    if (p.attributeName == null) {
+                        b = true;
+                    }
+                };
+                for (var i = 0; i < x.length; i++) {
+                    _loop_3(i);
+                }
+                if (b)
+                    _this.update();
+            };
+            this._isUpdating = false;
+            this._svgGroup = GraphTableSVG.SVG.createGroup(svgbox, option.className == undefined ? null : option.className);
+            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaultTextClass));
+            this.svgGroup.appendChild(this.svgText);
+            if (option.text != undefined)
+                this.svgText.setTextContent(option.text);
+            if (option.isAutoSizeShapeToFitText != undefined)
+                this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
+            this._observer = new MutationObserver(this.observerFunc);
+            var option1 = { attributes: true };
+            this._observer.observe(this.svgGroup, option1);
+            this._textObserver = new MutationObserver(this.textObserverFunc);
+            var option2 = { childList: true, attributes: true };
+            this._textObserver.observe(this.svgText, option2);
+        }
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "svgGroup", {
+            get: function () {
+                return this._svgGroup;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "svgText", {
+            get: function () {
+                return this._svgText;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "isLocated", {
+            get: function () {
+                return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "cx", {
+            get: function () {
+                return this.svgGroup.getX();
+            },
+            set: function (value) {
+                if (this.svgGroup.getX() != value) {
+                    this.svgGroup.setX(value);
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "cy", {
+            get: function () {
+                return this.svgGroup.getY();
+            },
+            set: function (value) {
+                if (this.svgGroup.getY() != value) {
+                    this.svgGroup.setY(value);
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "width", {
+            get: function () {
+                return this.svgGroup.getAttributeNumber("data-width", 0);
+            },
+            set: function (value) {
+                if (this.width != value)
+                    this.svgGroup.setAttribute("data-width", value.toString());
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "height", {
+            get: function () {
+                return this.svgGroup.getAttributeNumber("data-height", 0);
+            },
+            set: function (value) {
+                if (this.height != value)
+                    this.svgGroup.setAttribute("data-height", value.toString());
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "x", {
+            get: function () {
+                return this.cx - (this.width / 2);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "y", {
+            get: function () {
+                return this.cy - (this.height / 2);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "isAutoSizeShapeToFitText", {
+            get: function () {
+                return this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, "false") == "true";
+            },
+            set: function (value) {
+                this.svgGroup.setPropertyStyleValue(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, value ? "true" : "false");
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPTextBoxShapeBase.prototype.update = function () {
+            this._isUpdating = true;
+            var vAnchor = this.svgGroup.getPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName);
+            if (vAnchor == null)
+                vAnchor = GraphTableSVG.VerticalAnchor.Middle;
+            var hAnchor = this.svgGroup.getPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName);
+            if (hAnchor == null)
+                hAnchor = GraphTableSVG.HorizontalAnchor.Center;
+            if (this.isAutoSizeShapeToFitText) {
+                var box = this.svgText.getBBox();
+                this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
+                this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom();
+            }
+            GraphTableSVG.Graph.setXY2(this.svgText, this.innerRectangle, vAnchor, hAnchor, this.isAutoSizeShapeToFitText);
+            this._isUpdating = false;
+        };
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "innerRectangle", {
+            get: function () {
+                var rect = new GraphTableSVG.Rectangle();
+                rect.width = 0;
+                rect.height = 0;
+                rect.x = 0;
+                rect.y = 0;
+                return rect;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPTextBoxShapeBase.prototype.createVBACode = function (id) {
+            return [];
+        };
+        PPTextBoxShapeBase.updateAttributes = ["transform", "data-speaker-x", "data-speaker-y", "data-width", "data-height"];
+        PPTextBoxShapeBase.updateTextAttributes = ["style"];
+        return PPTextBoxShapeBase;
+    }());
+    GraphTableSVG.PPTextBoxShapeBase = PPTextBoxShapeBase;
+    var PPPathTextBox = (function (_super) {
+        __extends(PPPathTextBox, _super);
+        function PPPathTextBox(svgbox, option) {
+            if (option === void 0) { option = {}; }
+            var _this = _super.call(this, svgbox, option) || this;
+            _this._svgPath = GraphTableSVG.SVG.createPath(_this.svgGroup, 0, 0, 0, 0, _this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaultPathClass));
+            _this.svgGroup.insertBefore(_this.svgPath, _this.svgText);
+            _this.width = 100;
+            _this.height = 100;
+            if (option.cx != undefined)
+                _this.cx = option.cx;
+            if (option.cy != undefined)
+                _this.cy = option.cy;
+            return _this;
+        }
+        Object.defineProperty(PPPathTextBox.prototype, "svgPath", {
+            get: function () {
+                return this._svgPath;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPPathTextBox.prototype, "innerRectangle", {
+            get: function () {
+                var rect = new GraphTableSVG.Rectangle();
+                if (this.isAutoSizeShapeToFitText) {
+                    var b = this.svgText.getBBox();
+                    rect.width = b.width;
+                    rect.height = b.height;
+                    rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
+                    rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+                }
+                else {
+                    rect.width = this.width - this.svgText.getMarginLeft();
+                    rect.height = this.height - this.svgText.getMarginTop();
+                    rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
+                    rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+                }
+                return rect;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPPathTextBox.prototype, "shape", {
+            get: function () {
+                return "NONE";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPPathTextBox.prototype.getVBAEditLine = function (id) {
+            var lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
+            var lineType = GraphTableSVG.msoDashStyle.getLineType(this.svgPath);
+            var strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
+            var visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            return " Call EditLine(obj" + id + ".Line, " + lineColor + ", " + lineType + ", " + 0 + ", " + strokeWidth + ", " + visible + ")";
+        };
+        PPPathTextBox.prototype.createVBACode = function (id) {
+            var lines = [];
+            var backColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("fill", "gray"));
+            var visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            lines.push("Sub create" + id + "(createdSlide As slide)");
+            lines.push(" Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes");
+            lines.push(" Dim obj" + id + " As Shape");
+            lines.push(" Set obj" + id + " = shapes_.AddShape(" + this.shape + ", " + this.x + ", " + this.y + ", " + this.width + ", " + this.height + ")");
+            lines.push(" Call EditTextFrame(obj" + id + ".TextFrame, " + this.svgText.getMarginTop() + ", " + this.svgText.getMarginBottom() + ", " + this.svgText.getMarginLeft() + ", " + this.svgText.getMarginRight() + ", false, ppAutoSizeNone)");
+            GraphTableSVG.VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, "obj" + id + ".TextFrame.TextRange").forEach(function (v) { return lines.push(v); });
+            var adjustments = this.VBAAdjustments;
+            lines.push(this.getVBAEditLine(id));
+            lines.push(" Call EditCallOut(obj" + id + ", \"" + id + "\", " + visible + ", " + backColor + ")");
+            this.VBAAdjustments.forEach(function (v, i) {
+                lines.push(" obj" + id + ".Adjustments.Item(" + (i + 1) + ") = " + v);
+            });
+            lines.push("End Sub");
+            return lines;
+        };
+        Object.defineProperty(PPPathTextBox.prototype, "VBAAdjustments", {
+            get: function () {
+                return [];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return PPPathTextBox;
+    }(PPTextBoxShapeBase));
+    GraphTableSVG.PPPathTextBox = PPPathTextBox;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     var AdjacencyMatrix = (function () {
         function AdjacencyMatrix() {
         }
@@ -1378,7 +1650,7 @@ var GraphTableSVG;
             var lineClass = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
             this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, lineClass);
             this._svgPath.id = "path-" + this.objectID;
-            var textClass = this.svgGroup.getPropertyStyleValue(Edge.defaultTextClass);
+            var textClass = this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaultTextClass);
             _a = GraphTableSVG.SVG.createTextPath(textClass), this._svgText = _a[0], this._svgTextPath = _a[1];
             this.svgGroup.appendChild(this._svgText);
             this._svgText.appendChild(this._svgTextPath);
@@ -1956,7 +2228,6 @@ var GraphTableSVG;
         Edge.defaultLineClass = "--default-line-class";
         Edge.beginNodeName = "data-begin-node";
         Edge.endNodeName = "data-end-node";
-        Edge.defaultTextClass = "--default-text-class";
         Edge.controlPointName = "data-control-point";
         Edge.markerStartName = "--marker-start";
         Edge.markerEndName = "--marker-end";
@@ -2767,7 +3038,7 @@ var GraphTableSVG;
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "vertex");
             this._graph = graph;
             graph.add(this);
-            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(Vertex.defaultTextClass));
+            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaultTextClass));
             this.svgText.textContent = params.text;
             this.svgGroup.appendChild(this.svgText);
             this._observer = new MutationObserver(this.observerFunc);
@@ -3163,7 +3434,6 @@ var GraphTableSVG;
             }
         };
         Vertex.defaultSurfaceType = "--default-surface-type";
-        Vertex.defaultTextClass = "--default-text-class";
         Vertex.defaultSurfaceClass = "--default-surface-class";
         Vertex.autoSizeShapeToFitTextName = "--autosize-shape-to-fit-text";
         Vertex.id_counter = 0;
@@ -3868,7 +4138,7 @@ var GraphTableSVG;
         });
         Object.defineProperty(Cell.prototype, "defaultTextClass", {
             get: function () {
-                var r = this.svgGroup.getPropertyStyleValue(Cell.defaultTextClass);
+                var r = this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaultTextClass);
                 return r;
             },
             enumerable: true,
@@ -4700,7 +4970,6 @@ var GraphTableSVG;
             this.bottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
         };
         Cell.defaultBackgroundClassName = "--default-background-class";
-        Cell.defaultTextClass = "--default-text-class";
         Cell.emphasisCellClass = "___cell-emphasis";
         Cell.emphasisBorderClass = "___border-emphasis";
         Cell.temporaryBorderClass = "___temporary-class";
@@ -5780,7 +6049,7 @@ var GraphTableSVG;
             lines.push("End Sub");
             return lines;
         };
-        SVGToVBA.cellFunctionCode = "\nSub EditTable(table_ As table, cellInfo_() As Variant)\n    Dim x As Integer\n    Dim y As Integer\n    \n    For x = 1 To UBound(cellInfo_, 1)\n        For y = 1 To UBound(cellInfo_, 2)\n         Call EditCell(table_.cell(x, y), CStr(cellInfo_(x, y)(0)))\n        Next\n    Next\nEnd Sub\n\nSub EditCell(cell_ As cell, text_ As String, backColor As Variant)\n    cell_.Shape.TextFrame.TextRange.text = text_\n    cell_.Shape.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant, fontBold As Integer)\n    frame_.TextRange.Font.Size = fontSize\n    frame_.TextRange.Font.name = fontName\n    frame_.TextRange.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    frame_.TextRange.Font.Bold = fontBold\nEnd Sub\n\n\n\n\nSub EditRow(row_ As Row, height As Integer)\n    row_.height = height\nEnd Sub\nSub EditColumn(column_ As Column, width As Integer)\n    column_.width = width\nEnd Sub\n\nSub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, vAnchor As Integer, hAnchor As Integer)\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\n    frame_.VerticalAnchor = vAnchor\n    frame_.TextRange.ParagraphFormat.Alignment = hAnchor\nEnd Sub\n\nSub EditTextRange(range_ As TextRange, text As String)\n    range_.text = text\nEnd Sub\nSub EditTextRangeSub(range_ As TextRange, subBeg As Integer, subLen As Integer, script As String, color As Variant, fontName As String, fontSize As Double, fontBold As Integer)\n    range_.Characters(subBeg, subLen).Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    range_.Characters(subBeg, subLen).Font.Size = fontSize\n    range_.Characters(subBeg, subLen).Font.name = fontName\n    range_.Characters(subBeg, subLen).Font.Bold = fontBold\n    If script = \"subscript\" Then\n    range_.Characters(subBeg, subLen).Font.Subscript = True\n    End If\n    If script = \"superscript\" Then\n    range_.Characters(subBeg, subLen).Font.Superscript = True\n    End If\nEnd Sub\n\n\n\nSub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer, transparent As Double)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.weight = weight\n    line_.Transparency = transparent\nEnd Sub\n\nSub EditConnector(connector_ As ConnectorFormat, begShape As Shape, endShape As Shape, begPos As Integer, endPos As Integer)\n    Call connector_.BeginConnect(begShape, begPos)\n    Call connector_.EndConnect(endShape, endPos)\nEnd Sub\n\nSub EditTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, wordWrap As Boolean, autoSize As Integer)\n    frame_.autoSize = autoSize\n    frame_.wordWrap = wordWrap\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\nEnd Sub\n\nSub EditTextEffect(effect_ As TextEffectFormat, fontSize As Double, fontName As String)\n effect_.fontSize = fontSize\n effect_.fontName = fontName\nEnd Sub\n\nSub EditVertexShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\n\nSub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer, visible As Integer)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.dashStyle = dashStyle\n    line_.Transparency = transparent\n    line_.weight = weight\n    line_.visible = visible\nEnd Sub\n\nSub EditCallOut(shape_ As Shape, name As String, visible As Integer, backColor As Variant, adj1 As Double, adj2 As Double)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\n    shape_.Adjustments.Item(1) = adj1\n    shape_.Adjustments.Item(2) = adj2\nEnd Sub\n\n";
+        SVGToVBA.cellFunctionCode = "\nSub EditTable(table_ As table, cellInfo_() As Variant)\n    Dim x As Integer\n    Dim y As Integer\n    \n    For x = 1 To UBound(cellInfo_, 1)\n        For y = 1 To UBound(cellInfo_, 2)\n         Call EditCell(table_.cell(x, y), CStr(cellInfo_(x, y)(0)))\n        Next\n    Next\nEnd Sub\n\nSub EditCell(cell_ As cell, text_ As String, backColor As Variant)\n    cell_.Shape.TextFrame.TextRange.text = text_\n    cell_.Shape.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant, fontBold As Integer)\n    frame_.TextRange.Font.Size = fontSize\n    frame_.TextRange.Font.name = fontName\n    frame_.TextRange.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    frame_.TextRange.Font.Bold = fontBold\nEnd Sub\n\n\n\n\nSub EditRow(row_ As Row, height As Integer)\n    row_.height = height\nEnd Sub\nSub EditColumn(column_ As Column, width As Integer)\n    column_.width = width\nEnd Sub\n\nSub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, vAnchor As Integer, hAnchor As Integer)\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\n    frame_.VerticalAnchor = vAnchor\n    frame_.TextRange.ParagraphFormat.Alignment = hAnchor\nEnd Sub\n\nSub EditTextRange(range_ As TextRange, text As String)\n    range_.text = text\nEnd Sub\nSub EditTextRangeSub(range_ As TextRange, subBeg As Integer, subLen As Integer, script As String, color As Variant, fontName As String, fontSize As Double, fontBold As Integer)\n    range_.Characters(subBeg, subLen).Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    range_.Characters(subBeg, subLen).Font.Size = fontSize\n    range_.Characters(subBeg, subLen).Font.name = fontName\n    range_.Characters(subBeg, subLen).Font.Bold = fontBold\n    If script = \"subscript\" Then\n    range_.Characters(subBeg, subLen).Font.Subscript = True\n    End If\n    If script = \"superscript\" Then\n    range_.Characters(subBeg, subLen).Font.Superscript = True\n    End If\nEnd Sub\n\n\n\nSub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer, transparent As Double)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.weight = weight\n    line_.Transparency = transparent\nEnd Sub\n\nSub EditConnector(connector_ As ConnectorFormat, begShape As Shape, endShape As Shape, begPos As Integer, endPos As Integer)\n    Call connector_.BeginConnect(begShape, begPos)\n    Call connector_.EndConnect(endShape, endPos)\nEnd Sub\n\nSub EditTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, wordWrap As Boolean, autoSize As Integer)\n    frame_.autoSize = autoSize\n    frame_.wordWrap = wordWrap\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\nEnd Sub\n\nSub EditTextEffect(effect_ As TextEffectFormat, fontSize As Double, fontName As String)\n effect_.fontSize = fontSize\n effect_.fontName = fontName\nEnd Sub\n\nSub EditVertexShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\n\nSub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer, visible As Integer)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.dashStyle = dashStyle\n    line_.Transparency = transparent\n    line_.weight = weight\n    line_.visible = visible\nEnd Sub\n\nSub EditCallOut(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\n\n";
         return SVGToVBA;
     }());
     GraphTableSVG.SVGToVBA = SVGToVBA;
@@ -5921,7 +6190,7 @@ var GraphTableSVG;
                     if (child.textContent != null && child.textContent.length > 0) {
                         var css = getComputedStyle(child);
                         var childColor = GraphTableSVG.Color.createRGBFromColorName(css.fill);
-                        var fontName = css.fontFamily;
+                        var fontName = this.getFont(css);
                         var fontSize = GraphTableSVG.Common.toPX(css.fontSize);
                         var fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
                         var len = child.textContent.length;
@@ -5929,7 +6198,7 @@ var GraphTableSVG;
                         if (f == null) {
                             f = "";
                         }
-                        sub.push(["Call EditTextRangeSub(" + range + "," + pos + ", " + len + ", \"" + f + "\", Array(" + childColor.r + ", " + childColor.g + ", " + childColor.b + "), " + fontName + ", " + fontSize + ", " + fontBold + " )"]);
+                        sub.push(["Call EditTextRangeSub(" + range + "," + pos + ", " + len + ", \"" + f + "\", Array(" + childColor.r + ", " + childColor.g + ", " + childColor.b + "), \"" + fontName + "\", " + fontSize + ", " + fontBold + " )"]);
                         pos += len;
                     }
                 }
@@ -5937,10 +6206,22 @@ var GraphTableSVG;
             else if (item.textContent != null && item.textContent.length > 0) {
                 var css = getComputedStyle(item);
                 var color = GraphTableSVG.Color.createRGBFromColorName(css.fill);
-                var fontName = css.fontFamily;
+                var fontName = this.getFont(css);
                 var fontSize = GraphTableSVG.Common.toPX(css.fontSize);
                 var fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
-                sub.push(["Call EditTextRangeSub(" + range + "," + 1 + ", " + item.textContent.length + ", \"\", Array(" + color.r + ", " + color.g + ", " + color.b + "), " + fontName + ", " + fontSize + ", " + fontBold + " )"]);
+                sub.push(["Call EditTextRangeSub(" + range + "," + 1 + ", " + item.textContent.length + ", \"\", Array(" + color.r + ", " + color.g + ", " + color.b + "), \"" + fontName + "\", " + fontSize + ", " + fontBold + " )"]);
+            }
+        };
+        VBATranslateFunctions.getFont = function (css) {
+            var arr = css.fontFamily.split(",");
+            if (arr.length > 0) {
+                var name_2 = arr[0];
+                name_2 = name_2.replace(/\"/g, "");
+                name_2 = name_2.replace(/\'/g, "");
+                return name_2;
+            }
+            else {
+                return "";
             }
         };
         VBATranslateFunctions.TranslateSVGTextElement2 = function (item, range) {
@@ -5954,7 +6235,7 @@ var GraphTableSVG;
                     if (child.textContent != null && child.textContent.length > 0) {
                         var css = getComputedStyle(child);
                         var childColor = GraphTableSVG.Color.createRGBFromColorName(css.fill);
-                        var fontName = css.fontFamily;
+                        var fontName = this.getFont(css);
                         var fontSize = GraphTableSVG.Common.toPX(css.fontSize);
                         var fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
                         var len = child.textContent.length;
@@ -5970,7 +6251,7 @@ var GraphTableSVG;
             else if (item.textContent != null && item.textContent.length > 0) {
                 var css = getComputedStyle(item);
                 var color = GraphTableSVG.Color.createRGBFromColorName(css.fill);
-                var fontName = css.fontFamily;
+                var fontName = this.getFont(css);
                 var fontSize = GraphTableSVG.Common.toPX(css.fontSize);
                 var fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
                 lines.push("Call EditTextRangeSub(" + range + "," + 1 + ", " + item.textContent.length + ", \"\", Array(" + color.r + ", " + color.g + ", " + color.b + "), \"" + fontName + "\", " + fontSize + ", " + fontBold + " )");
@@ -6197,211 +6478,15 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    var PPTextBoxShapeBase = (function () {
-        function PPTextBoxShapeBase(svgbox, option) {
-            if (option === void 0) { option = {}; }
-            var _this = this;
-            this.observerFunc = function (x) {
-                var b = false;
-                if (!_this.isLocated)
-                    return;
-                var _loop_2 = function (i) {
-                    var p = x[i];
-                    if (PPTextBoxShapeBase.updateAttributes.some(function (v) { return v == p.attributeName; })) {
-                        b = true;
-                    }
-                };
-                for (var i = 0; i < x.length; i++) {
-                    _loop_2(i);
-                }
-                if (b)
-                    _this.update();
-            };
-            this.textObserverFunc = function (x) {
-                if (!_this.isLocated)
-                    return;
-                var b = false;
-                var _loop_3 = function (i) {
-                    var p = x[i];
-                    if (PPTextBoxShapeBase.updateTextAttributes.some(function (v) { return v == p.attributeName; })) {
-                        b = true;
-                    }
-                    if (p.attributeName == null) {
-                        b = true;
-                    }
-                };
-                for (var i = 0; i < x.length; i++) {
-                    _loop_3(i);
-                }
-                if (b)
-                    _this.update();
-            };
-            this._isUpdating = false;
-            this._svgGroup = GraphTableSVG.SVG.createGroup(svgbox);
-            this._svgText = GraphTableSVG.SVG.createText();
-            this.svgGroup.appendChild(this.svgText);
-            if (option.text != undefined)
-                this.svgText.setTextContent(option.text);
-            if (option.isAutoSizeShapeToFitText != undefined)
-                this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
-            this._observer = new MutationObserver(this.observerFunc);
-            var option1 = { attributes: true };
-            this._observer.observe(this.svgGroup, option1);
-            this._textObserver = new MutationObserver(this.textObserverFunc);
-            var option2 = { childList: true, attributes: true };
-            this._textObserver.observe(this.svgText, option2);
-        }
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "svgGroup", {
-            get: function () {
-                return this._svgGroup;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "svgText", {
-            get: function () {
-                return this._svgText;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "isLocated", {
-            get: function () {
-                return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "cx", {
-            get: function () {
-                return this.svgGroup.getX();
-            },
-            set: function (value) {
-                if (this.svgGroup.getX() != value) {
-                    this.svgGroup.setX(value);
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "cy", {
-            get: function () {
-                return this.svgGroup.getY();
-            },
-            set: function (value) {
-                if (this.svgGroup.getY() != value) {
-                    this.svgGroup.setY(value);
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "width", {
-            get: function () {
-                return this.svgGroup.getAttributeNumber("data-width", 0);
-            },
-            set: function (value) {
-                if (this.width != value)
-                    this.svgGroup.setAttribute("data-width", value.toString());
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "height", {
-            get: function () {
-                return this.svgGroup.getAttributeNumber("data-height", 0);
-            },
-            set: function (value) {
-                if (this.height != value)
-                    this.svgGroup.setAttribute("data-height", value.toString());
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "x", {
-            get: function () {
-                return this.cx - (this.width / 2);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "y", {
-            get: function () {
-                return this.cy - (this.height / 2);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "isAutoSizeShapeToFitText", {
-            get: function () {
-                return this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, "false") == "true";
-            },
-            set: function (value) {
-                this.svgGroup.setPropertyStyleValue(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, value ? "true" : "false");
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PPTextBoxShapeBase.prototype.update = function () {
-            this._isUpdating = true;
-            var vAnchor = this.svgGroup.getPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName);
-            if (vAnchor == null)
-                vAnchor = GraphTableSVG.VerticalAnchor.Middle;
-            var hAnchor = this.svgGroup.getPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName);
-            if (hAnchor == null)
-                hAnchor = GraphTableSVG.HorizontalAnchor.Center;
-            if (this.isAutoSizeShapeToFitText) {
-                var box = this.svgText.getBBox();
-                this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
-                this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom();
-            }
-            GraphTableSVG.Graph.setXY2(this.svgText, this.innerRectangle, vAnchor, hAnchor, this.isAutoSizeShapeToFitText);
-            this._isUpdating = false;
-        };
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "innerRectangle", {
-            get: function () {
-                var rect = new GraphTableSVG.Rectangle();
-                rect.width = 0;
-                rect.height = 0;
-                rect.x = 0;
-                rect.y = 0;
-                return rect;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PPTextBoxShapeBase.prototype.createVBACode = function (id) {
-            return [];
-        };
-        PPTextBoxShapeBase.updateAttributes = ["transform", "data-speaker-x", "data-speaker-y", "data-width", "data-height"];
-        PPTextBoxShapeBase.updateTextAttributes = ["style"];
-        return PPTextBoxShapeBase;
-    }());
-    GraphTableSVG.PPTextBoxShapeBase = PPTextBoxShapeBase;
     var CallOut = (function (_super) {
         __extends(CallOut, _super);
         function CallOut(svgbox, option) {
             if (option === void 0) { option = {}; }
             var _this = _super.call(this, svgbox, option) || this;
-            _this._svgPath = GraphTableSVG.SVG.createPath(_this.svgGroup, 0, 0, 0, 0);
-            _this.width = 100;
-            _this.height = 100;
-            if (option.cx != undefined)
-                _this.cx = option.cx;
-            if (option.cy != undefined)
-                _this.cy = option.cy;
             _this.speakerX = _this.cx;
             _this.speakerY = _this.cy;
-            _this.update();
             return _this;
         }
-        Object.defineProperty(CallOut.prototype, "svgPath", {
-            get: function () {
-                return this._svgPath;
-            },
-            enumerable: true,
-            configurable: true
-        });
         CallOut.prototype.update = function () {
             _super.prototype.update.call(this);
             var x1 = -(this.width / 2);
@@ -6412,7 +6497,6 @@ var GraphTableSVG;
             var speakerDiffY = this.speakerY - this.cy;
             var px1 = 0, px2 = 0, py1 = 0, py2 = 0;
             var mes = "";
-            console.log(this.speakerPosition);
             switch (this.speakerPosition) {
                 case "upleft":
                     px1 = (x1 / 3) * 2;
@@ -6467,27 +6551,6 @@ var GraphTableSVG;
                     break;
             }
         };
-        Object.defineProperty(CallOut.prototype, "innerRectangle", {
-            get: function () {
-                var rect = new GraphTableSVG.Rectangle();
-                if (this.isAutoSizeShapeToFitText) {
-                    var b = this.svgText.getBBox();
-                    rect.width = b.width;
-                    rect.height = b.height;
-                    rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
-                    rect.y = (-this.height / 2) + this.svgText.getMarginTop();
-                }
-                else {
-                    rect.width = this.width - this.svgText.getMarginLeft();
-                    rect.height = this.height - this.svgText.getMarginTop();
-                    rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
-                    rect.y = (-this.height / 2) + this.svgText.getMarginTop();
-                }
-                return rect;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(CallOut.prototype, "speakerX", {
             get: function () {
                 return this.svgGroup.getAttributeNumber("data-speaker-x", 0);
@@ -6544,8 +6607,6 @@ var GraphTableSVG;
                 else {
                     if (this.speakerY > this.cy) {
                         var line = new GraphTableSVG.VLine(0, 0, this.width, -this.height);
-                        console.log(this.height + " " + this.width);
-                        console.log(speakerDiffX + " " + speakerDiffY + " " + line.slope + " " + line.contains(speakerDiffX, speakerDiffY) + " " + line.getY(speakerDiffX) + " ");
                         if (line.contains(speakerDiffX, speakerDiffY)) {
                             return "leftdown";
                         }
@@ -6567,28 +6628,13 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        CallOut.prototype.createVBACode = function (id) {
-            var lines = [];
-            var shape = "msoShapeRectangularCallout";
-            var left = this.x;
-            var top = this.y;
-            var backColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("fill", "gray"));
-            var lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
-            var lineType = GraphTableSVG.msoDashStyle.getLineType(this.svgPath);
-            var strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
-            var visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-            lines.push("Sub create" + id + "(createdSlide As slide)");
-            lines.push(" Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes");
-            lines.push(" Dim obj" + id + " As Shape");
-            lines.push(" Set obj" + id + " = shapes_.AddShape(" + shape + ", " + left + ", " + top + ", " + this.width + ", " + this.height + ")");
-            lines.push(" Call EditTextFrame(obj" + id + ".TextFrame, " + this.svgText.getMarginTop() + ", " + this.svgText.getMarginBottom() + ", " + this.svgText.getMarginLeft() + ", " + this.svgText.getMarginRight() + ", false, ppAutoSizeNone)");
-            GraphTableSVG.VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, "obj" + id + ".TextFrame.TextRange").forEach(function (v) { return lines.push(v); });
-            var adjustments = this.VBAAdjustments;
-            lines.push(" Call EditLine(obj" + id + ".Line, " + lineColor + ", " + lineType + ", " + 0 + ", " + strokeWidth + ", " + visible + ")");
-            lines.push(" Call EditCallOut(obj" + id + ", \"" + id + "\", " + visible + ", " + backColor + ", " + adjustments[0] + ", " + adjustments[1] + ")");
-            lines.push("End Sub");
-            return lines;
-        };
+        Object.defineProperty(CallOut.prototype, "shape", {
+            get: function () {
+                return "msoShapeRectangularCallout";
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(CallOut.prototype, "VBAAdjustments", {
             get: function () {
                 var y1 = this.speakerY - this.cy;
@@ -6601,7 +6647,7 @@ var GraphTableSVG;
             configurable: true
         });
         return CallOut;
-    }(PPTextBoxShapeBase));
+    }(GraphTableSVG.PPPathTextBox));
     GraphTableSVG.CallOut = CallOut;
 })(GraphTableSVG || (GraphTableSVG = {}));
 CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name) {

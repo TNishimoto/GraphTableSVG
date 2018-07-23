@@ -5,7 +5,7 @@
     export class Vertex {
         //public symbol: symbol = Symbol();
         public static readonly defaultSurfaceType: string = "--default-surface-type";
-        public static readonly defaultTextClass: string = "--default-text-class";
+        //public static readonly defaultTextClass: string = "--default-text-class";
         public static readonly defaultSurfaceClass: string = "--default-surface-class";
         public static readonly autoSizeShapeToFitTextName: string = "--autosize-shape-to-fit-text"
 
@@ -64,7 +64,7 @@
             graph.add(this);
 
 
-            this._svgText = SVG.createText(this.svgGroup.getPropertyStyleValue(Vertex.defaultTextClass));
+            this._svgText = SVG.createText(this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass));
             this.svgText.textContent = params.text;
             this.svgGroup.appendChild(this.svgText);
 
