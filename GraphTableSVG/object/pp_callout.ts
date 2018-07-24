@@ -157,4 +157,102 @@ namespace GraphTableSVG {
         }
 
     }
+    
+    export class ShapeArrow extends PPPathTextBox {
+
+        public constructor(svgbox: HTMLElement, option: { className?: string, cx?: number, cy?: number, text?: string, isAutoSizeShapeToFitText?: boolean } = {}) {
+            super(svgbox, option);
+            this.height = 100;
+            this.width = 100;
+            this.arrowHeadWidth = 20;
+            this.arrowHeadHeight = 20;
+            this.arrowNeckWidth = 10;
+            this.arrowNeckHeight = 10;
+
+
+        }
+        get arrowNeckWidth(): number {
+            return this.svgGroup.getAttributeNumber("data-arrow-neck-width", 0);
+        }
+        set arrowNeckWidth(value: number) {
+            if (this.arrowNeckWidth != value) this.svgGroup.setAttribute("data-arrow-neck-width", value.toString());
+
+        }
+        get arrowNeckHeight(): number {
+            return this.svgGroup.getAttributeNumber("data-arrow-neck-height", 0);
+        }
+        set arrowNeckHeight(value: number) {
+            if (this.arrowNeckHeight != value) this.svgGroup.setAttribute("data-arrow-neck-height", value.toString());
+
+        }
+        get arrowHeadWidth(): number {
+            return this.svgGroup.getAttributeNumber("data-arrow-head-width", 0);
+        }
+        set arrowHeadWidth(value: number) {
+            if (this.arrowHeadWidth != value) this.svgGroup.setAttribute("data-arrow-head-width", value.toString());
+
+        }
+        get arrowHeadHeight(): number {
+            return this.svgGroup.getAttributeNumber("data-arrow-head-height", 0);
+        }
+        set arrowHeadHeight(value: number) {
+            if (this.arrowHeadHeight != value) this.svgGroup.setAttribute("data-arrow-head-height", value.toString());
+
+        }
+        get direction(): Direction {
+            const r = this.svgGroup.getAttribute("data-direction");
+            if(r == "up"){
+                return "up";
+            }else if(r == "left"){
+                return "left";
+            }else if(r == "right"){
+                return "right";
+            }else{
+                return "down";
+            }
+        }
+        set direction(value: Direction) {
+            if(this.direction != value){
+               this.svgGroup.setAttribute("data-direction", value.toString());
+            }
+        }
+
+        protected update() {
+            super.update();
+            
+            console.log(this.direction);
+            
+            if(this.direction == "up"){
+
+            }else if(this.direction == "left"){
+
+            }else if(this.direction == "right"){
+
+            }else{
+                
+                const x1 = - (this.width / 2);
+                const y1 = - (this.height / 2);
+                const x2 = (this.width / 2);
+                const y2 = (this.height / 2);
+
+                const dx = x1;
+                const dy = y1;
+
+                const boxHeight = this.height - this.arrowNeckHeight - this.arrowHeadWidth;
+                const by = boxHeight + dy;
+
+                let nx1 = - (this.arrowNeckWidth/2)
+                let nx2 = (this.arrowNeckWidth/2)
+                let ny = dy + boxHeight + this.arrowNeckHeight;
+                let cx = 0;
+                
+                let hx1 = - (this.arrowHeadWidth/2)
+                let hx2 = (this.arrowHeadWidth/2)
+                let hy = dy + this.height;
+                const mes = `H ${nx2} V ${ny} H ${hx2} L ${cx} ${hy} L ${hx1} ${ny} H ${nx1} V ${by}`;
+                this.svgPath.setAttribute("d", `M ${x1} ${y1} H ${x2} V ${by} ${mes} H ${x1} V ${y1} z`);
+            }
+        }
+    }
+    
 }

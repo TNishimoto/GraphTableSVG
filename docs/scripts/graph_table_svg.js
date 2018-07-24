@@ -6649,6 +6649,119 @@ var GraphTableSVG;
         return CallOut;
     }(GraphTableSVG.PPPathTextBox));
     GraphTableSVG.CallOut = CallOut;
+    var ShapeArrow = (function (_super) {
+        __extends(ShapeArrow, _super);
+        function ShapeArrow(svgbox, option) {
+            if (option === void 0) { option = {}; }
+            var _this = _super.call(this, svgbox, option) || this;
+            _this.height = 100;
+            _this.width = 100;
+            _this.arrowHeadWidth = 20;
+            _this.arrowHeadHeight = 20;
+            _this.arrowNeckWidth = 10;
+            _this.arrowNeckHeight = 10;
+            return _this;
+        }
+        Object.defineProperty(ShapeArrow.prototype, "arrowNeckWidth", {
+            get: function () {
+                return this.svgGroup.getAttributeNumber("data-arrow-neck-width", 0);
+            },
+            set: function (value) {
+                if (this.arrowNeckWidth != value)
+                    this.svgGroup.setAttribute("data-arrow-neck-width", value.toString());
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ShapeArrow.prototype, "arrowNeckHeight", {
+            get: function () {
+                return this.svgGroup.getAttributeNumber("data-arrow-neck-height", 0);
+            },
+            set: function (value) {
+                if (this.arrowNeckHeight != value)
+                    this.svgGroup.setAttribute("data-arrow-neck-height", value.toString());
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ShapeArrow.prototype, "arrowHeadWidth", {
+            get: function () {
+                return this.svgGroup.getAttributeNumber("data-arrow-head-width", 0);
+            },
+            set: function (value) {
+                if (this.arrowHeadWidth != value)
+                    this.svgGroup.setAttribute("data-arrow-head-width", value.toString());
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ShapeArrow.prototype, "arrowHeadHeight", {
+            get: function () {
+                return this.svgGroup.getAttributeNumber("data-arrow-head-height", 0);
+            },
+            set: function (value) {
+                if (this.arrowHeadHeight != value)
+                    this.svgGroup.setAttribute("data-arrow-head-height", value.toString());
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ShapeArrow.prototype, "direction", {
+            get: function () {
+                var r = this.svgGroup.getAttribute("data-direction");
+                if (r == "up") {
+                    return "up";
+                }
+                else if (r == "left") {
+                    return "left";
+                }
+                else if (r == "right") {
+                    return "right";
+                }
+                else {
+                    return "down";
+                }
+            },
+            set: function (value) {
+                if (this.direction != value) {
+                    this.svgGroup.setAttribute("data-direction", value.toString());
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ShapeArrow.prototype.update = function () {
+            _super.prototype.update.call(this);
+            console.log(this.direction);
+            if (this.direction == "up") {
+            }
+            else if (this.direction == "left") {
+            }
+            else if (this.direction == "right") {
+            }
+            else {
+                var x1 = -(this.width / 2);
+                var y1 = -(this.height / 2);
+                var x2 = (this.width / 2);
+                var y2 = (this.height / 2);
+                var dx = x1;
+                var dy = y1;
+                var boxHeight = this.height - this.arrowNeckHeight - this.arrowHeadWidth;
+                var by = boxHeight + dy;
+                var nx1 = -(this.arrowNeckWidth / 2);
+                var nx2 = (this.arrowNeckWidth / 2);
+                var ny = dy + boxHeight + this.arrowNeckHeight;
+                var cx = 0;
+                var hx1 = -(this.arrowHeadWidth / 2);
+                var hx2 = (this.arrowHeadWidth / 2);
+                var hy = dy + this.height;
+                var mes = "H " + nx2 + " V " + ny + " H " + hx2 + " L " + cx + " " + hy + " L " + hx1 + " " + ny + " H " + nx1 + " V " + by;
+                this.svgPath.setAttribute("d", "M " + x1 + " " + y1 + " H " + x2 + " V " + by + " " + mes + " H " + x1 + " V " + y1 + " z");
+            }
+        };
+        return ShapeArrow;
+    }(GraphTableSVG.PPPathTextBox));
+    GraphTableSVG.ShapeArrow = ShapeArrow;
 })(GraphTableSVG || (GraphTableSVG = {}));
 CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name) {
     var p = this;

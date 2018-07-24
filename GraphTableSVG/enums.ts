@@ -129,6 +129,7 @@
         }
     }
 
+    export type Direction = "up" | "left" | "right" | "down";
 
     export type SpeakerPosition = "upleft" | "upright" | "leftup" | "leftdown" | "rightup" | "rightdown" | "downleft" | "downright" | "inner";
 

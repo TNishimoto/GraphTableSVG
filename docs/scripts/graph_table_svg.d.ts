@@ -44,6 +44,7 @@ declare namespace GraphTableSVG {
         function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void;
         function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElement): msoDashStyle;
     }
+    type Direction = "up" | "left" | "right" | "down";
     type SpeakerPosition = "upleft" | "upright" | "leftup" | "leftdown" | "rightup" | "rightdown" | "downleft" | "downright" | "inner";
     type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
     namespace ConnectorPosition {
@@ -925,6 +926,21 @@ declare namespace GraphTableSVG {
         readonly speakerPosition: SpeakerPosition;
         protected readonly shape: string;
         protected readonly VBAAdjustments: number[];
+    }
+    class ShapeArrow extends PPPathTextBox {
+        constructor(svgbox: HTMLElement, option?: {
+            className?: string;
+            cx?: number;
+            cy?: number;
+            text?: string;
+            isAutoSizeShapeToFitText?: boolean;
+        });
+        arrowNeckWidth: number;
+        arrowNeckHeight: number;
+        arrowHeadWidth: number;
+        arrowHeadHeight: number;
+        direction: Direction;
+        protected update(): void;
     }
 }
 interface PPTextboxShape {
