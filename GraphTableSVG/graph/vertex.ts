@@ -58,7 +58,7 @@
 
             this._svgGroup = g
             //this._svgGroup = GraphTableSVG.createGroup(className);
-            this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
+            this.svgGroup.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "vertex");
             this._graph = graph;
             graph.add(this);
@@ -149,7 +149,7 @@
         このVertexのObjectIDを返します。
         */
         public get objectID(): string {
-            const r = this.svgGroup.getAttribute(Graph.objectIDName);
+            const r = this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
             if (r == null) {
                 throw new Error();
             } else {
@@ -284,7 +284,7 @@
          * @param id
          */
         public containsObjectID(id: string): boolean {
-            return this.svgGroup.getAttribute(Graph.objectIDName) == id;
+            return this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName) == id;
         }
         /**
         Vertexの輪郭を象っているインスタンスを返します。

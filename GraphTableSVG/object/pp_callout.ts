@@ -216,11 +216,34 @@ namespace GraphTableSVG {
                this.svgGroup.setAttribute("data-direction", value.toString());
             }
         }
-
+        get innerRectangle(): Rectangle {
+            const rect = new Rectangle();
+            if (this.isAutoSizeShapeToFitText) {
+                const b = this.svgText.getBBox();
+                rect.width = b.width;
+                rect.height = b.height;
+                rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
+                rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+            } else {
+                rect.width = this.width - this.svgText.getMarginLeft();
+                rect.height = this.boxHeight - this.svgText.getMarginTop();
+                rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
+                rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+            }
+            return rect;
+        }
+        protected get boxHeight(){
+            return this.height - this.arrowNeckHeight - this.arrowHeadWidth;
+        }
+        protected updateToFitText(){
+            
+            const box = this.svgText.getBBox();
+            this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
+            this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom() + this.arrowNeckHeight + this.arrowHeadHeight;
+        }
         protected update() {
             super.update();
             
-            console.log(this.direction);
             
             if(this.direction == "up"){
 
@@ -238,7 +261,7 @@ namespace GraphTableSVG {
                 const dx = x1;
                 const dy = y1;
 
-                const boxHeight = this.height - this.arrowNeckHeight - this.arrowHeadWidth;
+                const boxHeight = this.boxHeight;
                 const by = boxHeight + dy;
 
                 let nx1 = - (this.arrowNeckWidth/2)

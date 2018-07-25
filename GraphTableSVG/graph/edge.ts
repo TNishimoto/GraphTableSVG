@@ -171,7 +171,7 @@
         
         constructor(__graph: Graph, g: SVGGElement) {
             this._svgGroup = g;
-            this.svgGroup.setAttribute(Graph.objectIDName, (Graph.idCounter++).toString());
+            this.svgGroup.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             this.svgGroup.setAttribute(Graph.typeName, "edge");
 
             
@@ -511,7 +511,7 @@
         ObjectIDを返します。
         */
         public get objectID(): string {
-            const r = this.svgGroup.getAttribute(Graph.objectIDName);
+            const r = this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
             if (r == null) {
                 throw new Error();
             } else {

@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+    "target": "ES5",
+    "sourceMap": false,
+    "strictNullChecks": true,
+    "outFile": "./pp.js"    
+    },
+    "files": [
+        "../scripts/graph_table_svg.d.ts",
+        "pp.ts"
+    ]
+}

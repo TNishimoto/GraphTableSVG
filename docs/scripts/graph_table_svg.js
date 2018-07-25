@@ -694,6 +694,8 @@ var GraphTableSVG;
     (function (SVG) {
         SVG.defaultTextClass = "--default-text-class";
         SVG.defaultPathClass = "--default-path-class";
+        SVG.objectIDName = "data-objectID";
+        SVG.idCounter = 0;
         function createLine(x, y, x2, y2, className) {
             if (className === void 0) { className = null; }
             var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -734,6 +736,7 @@ var GraphTableSVG;
         function createText(className) {
             if (className === void 0) { className = null; }
             var _svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            _svgText.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             if (className == null) {
                 _svgText.style.fill = "black";
                 _svgText.style.fontSize = "14px";
@@ -777,6 +780,7 @@ var GraphTableSVG;
         function createGroup(parent, className) {
             if (className === void 0) { className = null; }
             var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             if (className != null) {
                 g.setAttribute("class", className);
             }
@@ -1493,13 +1497,15 @@ var GraphTableSVG;
             var hAnchor = this.svgGroup.getPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName);
             if (hAnchor == null)
                 hAnchor = GraphTableSVG.HorizontalAnchor.Center;
-            if (this.isAutoSizeShapeToFitText) {
-                var box = this.svgText.getBBox();
-                this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
-                this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom();
-            }
+            if (this.isAutoSizeShapeToFitText)
+                this.updateToFitText();
             GraphTableSVG.Graph.setXY2(this.svgText, this.innerRectangle, vAnchor, hAnchor, this.isAutoSizeShapeToFitText);
             this._isUpdating = false;
+        };
+        PPTextBoxShapeBase.prototype.updateToFitText = function () {
+            var box = this.svgText.getBBox();
+            this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
+            this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom();
         };
         Object.defineProperty(PPTextBoxShapeBase.prototype, "innerRectangle", {
             get: function () {
@@ -1515,6 +1521,21 @@ var GraphTableSVG;
         });
         PPTextBoxShapeBase.prototype.createVBACode = function (id) {
             return [];
+        };
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "svgElements", {
+            get: function () {
+                var r = [];
+                r.push(this.svgGroup);
+                r.push(this.svgText);
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPTextBoxShapeBase.prototype.hasDescendant = function (obj) {
+            var ids = this.svgElements.map(function (v) { return v.getAttribute(GraphTableSVG.SVG.objectIDName); }).filter(function (v) { return v != null; });
+            var id = obj.getAttribute(GraphTableSVG.SVG.objectIDName);
+            return ids.some(function (v) { return v == id; });
         };
         PPTextBoxShapeBase.updateAttributes = ["transform", "data-speaker-x", "data-speaker-y", "data-width", "data-height"];
         PPTextBoxShapeBase.updateTextAttributes = ["style"];
@@ -1636,7 +1657,7 @@ var GraphTableSVG;
             this._graph = null;
             this.VBAConnectorNumber = 1;
             this._svgGroup = g;
-            this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.idCounter++).toString());
+            this.svgGroup.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "edge");
             var t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
             var t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
@@ -2058,7 +2079,7 @@ var GraphTableSVG;
         });
         Object.defineProperty(Edge.prototype, "objectID", {
             get: function () {
-                var r = this.svgGroup.getAttribute(GraphTableSVG.Graph.objectIDName);
+                var r = this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
                 if (r == null) {
                     throw new Error();
                 }
@@ -2516,7 +2537,7 @@ var GraphTableSVG;
             return rect;
         };
         Graph.prototype.getObject = function (child) {
-            var id = child.getAttribute(GraphTableSVG.Graph.objectIDName);
+            var id = child.getAttribute(GraphTableSVG.SVG.objectIDName);
             if (id != null) {
                 return this.getObjectByObjectID(id);
             }
@@ -2746,12 +2767,10 @@ var GraphTableSVG;
             if (this._relocateFunction != null)
                 this._relocateFunction(this);
         };
-        Graph.idCounter = 0;
         Graph.defaultVertexClass = "--default-vertex-class";
         Graph.defaultEdgeClass = "--default-edge-class";
         Graph.vertexXIntervalName = "--vertex-x-interval";
         Graph.vertexYIntervalName = "--vertex-y-interval";
-        Graph.objectIDName = "data-objectID";
         Graph.typeName = "data-type";
         return Graph;
     }());
@@ -3034,7 +3053,7 @@ var GraphTableSVG;
                 params.y = 0;
             var g = GraphTableSVG.SVG.createGroup(graph.svgGroup, params.className);
             this._svgGroup = g;
-            this.svgGroup.setAttribute(GraphTableSVG.Graph.objectIDName, (GraphTableSVG.Graph.idCounter++).toString());
+            this.svgGroup.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "vertex");
             this._graph = graph;
             graph.add(this);
@@ -3113,7 +3132,7 @@ var GraphTableSVG;
         });
         Object.defineProperty(Vertex.prototype, "objectID", {
             get: function () {
-                var r = this.svgGroup.getAttribute(GraphTableSVG.Graph.objectIDName);
+                var r = this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
                 if (r == null) {
                     throw new Error();
                 }
@@ -3218,7 +3237,7 @@ var GraphTableSVG;
             configurable: true
         });
         Vertex.prototype.containsObjectID = function (id) {
-            return this.svgGroup.getAttribute(GraphTableSVG.Graph.objectIDName) == id;
+            return this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName) == id;
         };
         Object.defineProperty(Vertex.prototype, "surface", {
             get: function () {
@@ -6730,9 +6749,41 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ShapeArrow.prototype, "innerRectangle", {
+            get: function () {
+                var rect = new GraphTableSVG.Rectangle();
+                if (this.isAutoSizeShapeToFitText) {
+                    var b = this.svgText.getBBox();
+                    rect.width = b.width;
+                    rect.height = b.height;
+                    rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
+                    rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+                }
+                else {
+                    rect.width = this.width - this.svgText.getMarginLeft();
+                    rect.height = this.boxHeight - this.svgText.getMarginTop();
+                    rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
+                    rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+                }
+                return rect;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ShapeArrow.prototype, "boxHeight", {
+            get: function () {
+                return this.height - this.arrowNeckHeight - this.arrowHeadWidth;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ShapeArrow.prototype.updateToFitText = function () {
+            var box = this.svgText.getBBox();
+            this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
+            this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom() + this.arrowNeckHeight + this.arrowHeadHeight;
+        };
         ShapeArrow.prototype.update = function () {
             _super.prototype.update.call(this);
-            console.log(this.direction);
             if (this.direction == "up") {
             }
             else if (this.direction == "left") {
@@ -6746,7 +6797,7 @@ var GraphTableSVG;
                 var y2 = (this.height / 2);
                 var dx = x1;
                 var dy = y1;
-                var boxHeight = this.height - this.arrowNeckHeight - this.arrowHeadWidth;
+                var boxHeight = this.boxHeight;
                 var by = boxHeight + dy;
                 var nx1 = -(this.arrowNeckWidth / 2);
                 var nx2 = (this.arrowNeckWidth / 2);

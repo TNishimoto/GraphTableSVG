@@ -129,15 +129,16 @@ namespace GraphTableSVG {
             if (vAnchor == null) vAnchor = VerticalAnchor.Middle;
             let hAnchor = this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
             if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
-            if (this.isAutoSizeShapeToFitText) {
-                const box = this.svgText.getBBox();
-                this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
-                this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom();
-            }
+            if(this.isAutoSizeShapeToFitText) this.updateToFitText();
             Graph.setXY2(this.svgText, this.innerRectangle, vAnchor, hAnchor, this.isAutoSizeShapeToFitText);
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
 
+        }
+        protected updateToFitText(){
+            const box = this.svgText.getBBox();
+            this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
+            this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom();
         }
         get innerRectangle(): Rectangle {
 
@@ -166,6 +167,17 @@ namespace GraphTableSVG {
         */
         public createVBACode(id: number): string[] {
             return [];
+        }
+        public get svgElements() : SVGElement[]{
+            const r : SVGElement[] = [];
+            r.push(this.svgGroup);
+            r.push(this.svgText);
+            return r;
+        }
+        public hasDescendant(obj: SVGElement): boolean {
+            const ids = this.svgElements.map((v)=>v.getAttribute(GraphTableSVG.SVG.objectIDName)).filter((v)=>v != null);
+            const id = obj.getAttribute(GraphTableSVG.SVG.objectIDName);
+            return ids.some((v)=>v==id);
         }
     }
     

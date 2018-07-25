@@ -3,6 +3,8 @@ namespace GraphTableSVG {
     export namespace SVG {
         export const defaultTextClass: string = "--default-text-class";
         export const defaultPathClass: string = "--default-path-class";
+        export const objectIDName: string = "data-objectID";
+        export let idCounter: number = 0;
 
         /**
          * SVGLineElementを生成します。
@@ -69,6 +71,7 @@ namespace GraphTableSVG {
         export function createText(className: string | null = null): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
+            _svgText.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             //_svgText.style.textAnchor = "middle";
             if (className == null) {
                 _svgText.style.fill = "black";
@@ -123,6 +126,7 @@ namespace GraphTableSVG {
          */
         export function createGroup(parent: HTMLElement | SVGElement | null, className: string | null = null): SVGGElement {
             const g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             if (className != null) {
                 g.setAttribute("class", className);
             }

@@ -14,6 +14,7 @@
                     item.removeTable(svg);
                 }
             }
+            
         }
         /**
          * 入力要素がdocument.bodyの孫であるときに限りTrueを返します。

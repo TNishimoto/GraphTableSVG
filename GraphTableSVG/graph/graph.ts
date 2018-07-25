@@ -4,13 +4,12 @@
     グラフを表します。
     */
     export class Graph {
-        public static idCounter: number = 0;
         public static readonly defaultVertexClass: string = "--default-vertex-class";
         public static readonly defaultEdgeClass: string = "--default-edge-class";
         public static readonly vertexXIntervalName: string = "--vertex-x-interval";
         public static readonly vertexYIntervalName: string = "--vertex-y-interval";
 
-        public static readonly objectIDName: string = "data-objectID";
+        //public static readonly objectIDName: string = "data-objectID";
         public static readonly typeName: string = "data-type";
 
         protected _vertices: Vertex[] = new Array(0);
@@ -215,7 +214,7 @@
             return rect;
         }
         public getObject(child: HTMLElement | SVGElement): Vertex | Edge | null {
-            const id = child.getAttribute(GraphTableSVG.Graph.objectIDName);
+            const id = child.getAttribute(GraphTableSVG.SVG.objectIDName);
             if (id != null) {
                 return this.getObjectByObjectID(id);
             } else {

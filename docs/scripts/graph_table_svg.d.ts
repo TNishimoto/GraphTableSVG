@@ -158,6 +158,8 @@ declare namespace GraphTableSVG {
     namespace SVG {
         const defaultTextClass: string;
         const defaultPathClass: string;
+        const objectIDName: string;
+        let idCounter: number;
         function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
         const msoDashStyleName = "--stroke-style";
         function createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
@@ -254,8 +256,11 @@ declare namespace GraphTableSVG {
         isAutoSizeShapeToFitText: boolean;
         private _isUpdating;
         protected update(): void;
+        protected updateToFitText(): void;
         readonly innerRectangle: Rectangle;
         createVBACode(id: number): string[];
+        readonly svgElements: SVGElement[];
+        hasDescendant(obj: SVGElement): boolean;
     }
     class PPPathTextBox extends PPTextBoxShapeBase {
         private _svgPath;
@@ -382,12 +387,10 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class Graph {
-        static idCounter: number;
         static readonly defaultVertexClass: string;
         static readonly defaultEdgeClass: string;
         static readonly vertexXIntervalName: string;
         static readonly vertexYIntervalName: string;
-        static readonly objectIDName: string;
         static readonly typeName: string;
         protected _vertices: Vertex[];
         protected _edges: Edge[];
@@ -940,6 +943,9 @@ declare namespace GraphTableSVG {
         arrowHeadWidth: number;
         arrowHeadHeight: number;
         direction: Direction;
+        readonly innerRectangle: Rectangle;
+        protected readonly boxHeight: number;
+        protected updateToFitText(): void;
         protected update(): void;
     }
 }
