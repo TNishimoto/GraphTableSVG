@@ -26,3 +26,60 @@ body {
     --default-path-class : path;
 
 }
+.ButtonBox {
+    float: left;
+    margin-left: 10px;
+    /* border: 2px solid black; */
+}
+.clearfix:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+.ContentBox {
+    margin-left: 10px;
+    margin-right: 100px;
+}
+.FooterContent {
+    border: 2px solid black;
+}
+div#footerArea {
+    position: fixed !important;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border: 2px solid black;
+    width: 100%;
+    padding: 5px 0px 10px 5px;
+    /* height: 500px; */
+    background-color: #847d7d;
+    color: #000000;
+    z-index: 10;
+    overflow: auto;
+    /* resize: vertical; */
+    overflow: hidden;
+}
+.button {
+    position: relative;
+    background-color: #1abc9c;
+    float: left;
+    border-radius: 4px;
+    border: 2px solid black;
+    color: #fff;
+    padding: 1px 20px 1px 20px;
+    line-height: 52px;
+    -webkit-transition: none;
+    transition: none;
+    box-shadow: 0 3px 0 #0e8c73;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+}
+
+    .button:hover {
+        background-color: #31c8aa;
+        box-shadow: 0 3px 0 #23a188;
+    }
+
+    .button:active {
+        top: 3px;
+        box-shadow: none;
+    }

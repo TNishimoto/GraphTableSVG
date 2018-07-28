@@ -1395,7 +1395,7 @@ var GraphTableSVG;
             var option1 = { attributes: true };
             this._observer.observe(this.svgGroup, option1);
             this._textObserver = new MutationObserver(this.textObserverFunc);
-            var option2 = { childList: true, attributes: true };
+            var option2 = { childList: true, attributes: true, subtree: true };
             this._textObserver.observe(this.svgText, option2);
         }
         Object.defineProperty(PPTextBoxShapeBase.prototype, "svgGroup", {

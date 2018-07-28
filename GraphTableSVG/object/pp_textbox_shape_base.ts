@@ -60,7 +60,7 @@ namespace GraphTableSVG {
             this._observer.observe(this.svgGroup, option1);
 
             this._textObserver = new MutationObserver(this.textObserverFunc);
-            const option2: MutationObserverInit = { childList: true, attributes: true };
+            const option2: MutationObserverInit = { childList: true, attributes: true, subtree : true };
             this._textObserver.observe(this.svgText, option2);
 
         }

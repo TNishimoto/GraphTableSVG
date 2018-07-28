@@ -1,8 +1,35 @@
-
 const items : GraphTableSVG.VBAObjectType[] = [];
+/*
+interface Window {
+    Vue?: any;
+}
+declare var window: Window
+const Vue = window.Vue
+*/
+
 window.onload = () => {
+
+    const inputBox = <HTMLInputElement>document.getElementById('inputOB');
+    const circle = <HTMLElement>document.getElementById('circle');
+    //const tw = new SimpleTwowayBinding({sourceElement: circle, targetElement: inputBox, watchedTargetAttribute: "value", watchedSourceAttribute: "cx"} )
+    //const tw = new SimpleTwowayBinding({targetElement: inputBox} )
+    const positionFieldSet = <HTMLElement>document.getElementById('position-field');
+    const pg = SimpleTwowayBinding.autoBind({targetElement : positionFieldSet, bindID : "circle"});
     
+    
+
+    //inputBox.setAttribute("value", "hogehgoe");
+    inputBox.value = "hgohgoe";
+    console.log(circle);
+    console.log(inputBox);
+
     const box = <HTMLElement>document.getElementById('svgbox');
+    box.onclick = (e : MouseEvent) =>{
+        circle.setAttribute("cx", e.x.toString());
+        circle.setAttribute("cy", e.y.toString());
+
+    }
+    
     const item1 = new GraphTableSVG.CallOut(box, {cx : 200, cy : 200, text : "hoghogeaaaaaaaaaaaaaa", isAutoSizeShapeToFitText : false, className : "callout"})
     item1.width = 200;
     item1.height =100;
@@ -12,6 +39,9 @@ window.onload = () => {
     const arrow = new GraphTableSVG.ShapeArrow(box, {cx : 100, cy : 100, text : "hoghogeaaaaaaaaaaaaaa", isAutoSizeShapeToFitText : true, className : "callout"})
     arrow.svgGroup.onclick = onObjectClick;
     items.push(arrow);
+
+    //box.onmousemove = mouseMoveEvent
+    
 
 };
 
@@ -27,10 +57,16 @@ function getObject(svg : SVGElement) : GraphTableSVG.VBAObjectType | null{
     return null;
 
 }
-
+let mouseMoveItem : GraphTableSVG.VBAObjectType | null = null;
 function onObjectClick(this : SVGElement,e : MouseEvent) : void {
-    console.log(this);
-
     const p = getObject(this)
-    console.log(p);
+    mouseMoveItem = p;
+}
+function mouseMoveEvent(e : MouseEvent) : void {
+    if(e.buttons == 1 && mouseMoveItem != null){
+        if(mouseMoveItem instanceof GraphTableSVG.PPTextBoxShapeBase){
+            mouseMoveItem.cx = e.x;
+            mouseMoveItem.cy = e.y;
+        }
+    }
 }

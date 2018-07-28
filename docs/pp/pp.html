@@ -18,11 +18,37 @@
     <button type="button" onclick="margin(0,-1)">marginTop-</button>
     <button type="button" onclick="addText()">dadd</button>
     <button type="button" onclick="update()">update</button>
+    <div>
+        <input id="inputOB" type="number" g-bind:s-attr="cx" g-bind:s-id="circle" g-bind:t-attr="value" />
+    </div>
 
-    <br>
+
     <svg viewBox="0 0 500 500" width="500px" height="500px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
         <circle id="circle" cx="100" cy="100" r="10" stroke-width="3" stroke="green" fill="yellow"/>
     </svg>
+    <div id="footerArea">
+        <div class="ContentBox" style="clear:both">
+            <div class="FooterContent" name="footer-button" data-type="footer-content" data-id="0" id="fc3" style="display:none">
+                <fieldset id="position-field">
+                <legend>位置</legend>
+                <span>cx：<input g-bind:s-attr="cx" g-bind:t-attr="value" type="number" size="20"></span>
+                <span>cy：<input g-bind:s-attr="cy" g-bind:t-attr="value" type="number" size="20"></span>
+                <span>r：<input g-bind:s-attr="r" g-bind:t-attr="value" type="number" size="20"></span>
+                <span>stroke-width：<input g-bind:s-attr="stroke-width" g-bind:t-attr="value" type="number" size="20"></span>
+
+            </fieldset>
+            </div>
+            <div class="FooterContent" name="footer-button" data-type="footer-content" data-id="1" id="fc4" style="display:none">
+                サンプル集aaa
+                木の操作aaa
+                出力aaa
+            </div>
+        </div>
+        <div class="ButtonBox clearfix" style="background-color:#808080">
+            <div class="button" name="footer-button" data-type="footer-button" data-id="0" id="fb1"  onclick="FooterButton.call('footer-button',0)">ステータス</div>
+            <div class="button" name="footer-button" data-type="footer-button" data-id="1" id="fb2"  onclick="FooterButton.call('footer-button',1)">test</div>
+        </div>
+    </div>
 </body>
 
 </html>
