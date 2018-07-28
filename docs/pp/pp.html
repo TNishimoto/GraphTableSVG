@@ -16,7 +16,7 @@
     <button type="button" onclick="margin(-1,0)">marginLeft-</button>
     <button type="button" onclick="margin(0,1)">marginTop+</button>
     <button type="button" onclick="margin(0,-1)">marginTop-</button>
-    <button type="button" onclick="addText()">dadd</button>
+    <button type="button" onclick="plus()">dadd</button>
     <button type="button" onclick="update()">update</button>
     <div>
         <input id="inputOB" type="number" g-bind:s-attr="cx" g-bind:s-id="circle" g-bind:t-attr="value" />
@@ -24,7 +24,7 @@
 
 
     <svg viewBox="0 0 500 500" width="500px" height="500px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
-        <circle id="circle" cx="100" cy="100" r="10" stroke-width="3" stroke="green" fill="yellow"/>
+        <circle id="circle" cx="100" cy="100" r="10" stroke="green" style="fill:pink;stroke-width:3pt"/>
     </svg>
     <div id="footerArea">
         <div class="ContentBox" style="clear:both">
@@ -34,7 +34,10 @@
                 <span>cx：<input g-bind:s-attr="cx" g-bind:t-attr="value" type="number" size="20"></span>
                 <span>cy：<input g-bind:s-attr="cy" g-bind:t-attr="value" type="number" size="20"></span>
                 <span>r：<input g-bind:s-attr="r" g-bind:t-attr="value" type="number" size="20"></span>
-                <span>stroke-width：<input g-bind:s-attr="stroke-width" g-bind:t-attr="value" type="number" size="20"></span>
+                <span>stroke-width：<input g-bind:s-attr="style" g-bind:s-style="stroke-width" 
+                    g-bind:s-converter="sconv" g-bind:t-converter="tconv" g-bind:t-attr="value" type="number" size="20"></span>
+
+                <!-- <span>stroke-width：<input g-bind:s-attr="stroke-width" g-bind:t-attr="value" type="number" size="20"></span> -->
 
             </fieldset>
             </div>

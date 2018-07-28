@@ -1,97 +1,38 @@
 
-class SimpleAttributeObserver{
-    element: HTMLElement;
-    watchedAttributeName: string;
-    
-    constructor(obj: { element: HTMLElement, watchedAttribute: string}) {
-        this.element = obj.element;
-        this.watchedAttributeName = obj.watchedAttribute;
-
-        
-        this.element.oninput = this.targetChangeFunc;
-
-        this._sourceObserver = new MutationObserver(this.sourceObserverFunc);
-        const option1: MutationObserverInit = { attributes: true };
-        this._sourceObserver.observe(this.element, option1);
-    }
-    public get watchedAttribute(): string | null {
-        return this.element.getAttribute(this.watchedAttributeName);
-    }
-    public set watchedAttribute(value: string | null) {
-        if (this.watchedAttribute != value) {
-            if (value == null) {
-                this.element.removeAttribute(this.watchedAttributeName);
-            } else {
-                this.element.setAttribute(this.watchedAttributeName, value);
-            }
-        }
-
-        if(this.element.nodeName == "INPUT" && this.watchedAttributeName == "value"){
-            (<any>this.element).value = value;
-        }
-    }
-    private _sourceObserver: MutationObserver;
-    private sourceObserverFunc: MutationCallback = (x: MutationRecord[]) => {        
-        let b = false;
-        for (let i = 0; i < x.length; i++) {
-            const p = x[i];
-            if (p.attributeName == this.watchedAttributeName) {
-                b = true;
-            }
-        }
-        if (b && this.onChanged != null){
-            this.onChanged(this);
-        }
-        
-    };
-    private targetChangeFunc = () => {        
-        if (this.element.nodeName == "INPUT") {
-            const t = <HTMLInputElement>this.element;
-            const value = t.value;
-            this.watchedAttribute = value;
-        }
-    }
-    public onChanged : ((obj? : SimpleAttributeObserver) => void) | null = null;
-}
-
-namespace HTMLFunctions{
-    export function getAncestorAttribute(e : HTMLElement, attr : string) : string | null{
-        if(e.hasAttribute(attr)){
-            return e.getAttribute(attr);
-        }else{
-            if(e.parentElement == null){
-                return null;
-            }else{
-                return getAncestorAttribute(e.parentElement, attr);
-            }
-        }
-    }
-
-    export function getDescendants(e : HTMLElement) : HTMLElement[]{
-        const r : HTMLElement[] = [];
-        r.push(e);
-        for(let i=0;i<e.children.length;i++){
-            const p = e.children.item(i);
-            if(p instanceof HTMLElement){
-            getDescendants(p).forEach((v)=>r.push(v));
-            }
-        }
-        return r;
-    }
-}
+type Converter = (value : string | null) => string;
 
 class SimpleTwowayBinding {
     source: SimpleAttributeObserver;
     target: SimpleAttributeObserver;
-    sourceToTarget : boolean;
-    targetToSource : boolean;
+    get sourceToTarget() : boolean{
+        return this.target.element.getAttribute(SimpleTwowayBinding.sourceToTargetName) == "true";
+    }
+    set sourceToTarget(value : boolean){
+        this.target.element.setAttribute(SimpleTwowayBinding.sourceToTargetName, value ? "true" : "false");
+    }
+
+    get targetToSource() : boolean{
+        return this.target.element.getAttribute(SimpleTwowayBinding.targetToSourceName) == "true";
+    }
+    set targetToSource(value : boolean){
+        this.target.element.setAttribute(SimpleTwowayBinding.targetToSourceName, value ? "true" : "false");
+    }
 
     static readonly bindTargetAttributeName : string = "g-bind:t-attr";
     static readonly bindSourceAttributeName : string = "g-bind:s-attr";
+    static readonly bindSourceStyleName : string = "g-bind:s-style";
+    static readonly bindSourceConverterName : string = "g-bind:s-converter";
+    static readonly bindTargetConverterName : string = "g-bind:t-converter";
+
     static readonly bindSourceID : string = "g-bind:s-id";
-    constructor(obj: { sourceElement?: HTMLElement, targetElement: HTMLElement, watchedTargetAttribute?: string, 
+    static readonly sourceToTargetName : string = "g-source-to-target";
+    static readonly targetToSourceName : string = "g-target-to-source";
+
+    constructor(obj: { sourceElement?: HTMLElement, targetElement: HTMLElement, watchedTargetAttribute?: string,
+        watchedSourceStyle?: string,  sourceValueCongerter? : Converter, targetValueConverter? : Converter, 
         watchedSourceAttribute?: string, sourceToTarget? : boolean, targetToSource? : boolean  }) {
-        
+
+            
         if(obj.watchedSourceAttribute != undefined){
             obj.targetElement.setAttribute(SimpleTwowayBinding.bindSourceAttributeName, obj.watchedSourceAttribute);
         }
@@ -103,6 +44,10 @@ class SimpleTwowayBinding {
         }
         obj.watchedTargetAttribute = obj.targetElement.getAttribute(SimpleTwowayBinding.bindTargetAttributeName)!;
         obj.watchedSourceAttribute = obj.targetElement.getAttribute(SimpleTwowayBinding.bindSourceAttributeName)!;
+        if(obj.targetElement.hasAttribute(SimpleTwowayBinding.bindSourceStyleName)){
+            obj.watchedSourceStyle = obj.targetElement.getAttribute(SimpleTwowayBinding.bindSourceStyleName)!;
+        }
+
         if(obj.watchedTargetAttribute == null){
             throw Error(`No ${SimpleTwowayBinding.bindTargetAttributeName}`);            
         }
@@ -115,31 +60,63 @@ class SimpleTwowayBinding {
             throw Error("No ID!");
         }
         obj.sourceElement = document.getElementById(id)!;
+
         
+
         this.target = new SimpleAttributeObserver({element : obj.targetElement, watchedAttribute : obj.watchedTargetAttribute});
-        this.source = new SimpleAttributeObserver({element : obj.sourceElement, watchedAttribute : obj.watchedSourceAttribute});
+        this.source = new SimpleAttributeObserver({element : obj.sourceElement, watchedAttribute : obj.watchedSourceAttribute, watchedStyleName : obj.watchedSourceStyle});
         
-        this.sourceToTarget = true;
-        this.targetToSource = true;
+        if(!obj.targetElement.hasAttribute(SimpleTwowayBinding.sourceToTargetName)){
+            obj.targetElement.setAttribute(SimpleTwowayBinding.sourceToTargetName, "true");
+        }
+        if(!obj.targetElement.hasAttribute(SimpleTwowayBinding.targetToSourceName)){
+            obj.targetElement.setAttribute(SimpleTwowayBinding.targetToSourceName, "true");
+        }
         if(obj.targetToSource != undefined) this.targetToSource = obj.targetToSource;
         if(obj.sourceToTarget != undefined) this.sourceToTarget = obj.sourceToTarget;
 
         this.source.onChanged = this.sourceChangedFunc;
         this.target.onChanged = this.targetChangedFunc;
 
+        if(this.target.element.hasAttribute(SimpleTwowayBinding.bindTargetConverterName)){
+            const value = this.target.element.getAttribute(SimpleTwowayBinding.bindTargetConverterName)!;
+
+            const p = Function("v", `return ${value}(v)`);
+            console.log(p("23hello"));
+            this.targetValueConverter = <any>Function("v", `return ${value}(v)`);
+        }
+        if(this.target.element.hasAttribute(SimpleTwowayBinding.bindSourceConverterName)){
+            const value = this.target.element.getAttribute(SimpleTwowayBinding.bindSourceConverterName)!;
+            //this.sourceValueConverter = value;
+            this.sourceValueConverter = <any>Function("v", `return ${value}(v)`);
+
+        }
+
+
         this.sourceChangedFunc();
     }
-
-    sourceChangedFunc = () => {
+    //private sourceChangedFunc
+    private sourceChangedFunc = () => {
         if(this.sourceToTarget){
-        this.target.watchedAttribute = this.source.watchedAttribute;
+            if(this.sourceValueConverter != null){
+                this.target.watchedAttributeValue = this.sourceValueConverter(this.source.watchedAttributeValue);
+            }else{
+                this.target.watchedAttributeValue = this.source.watchedAttributeValue;
+            }
         }
     }
-    targetChangedFunc = () => {
+    private targetChangedFunc = () => {
         if(this.targetToSource){
-        this.source.watchedAttribute = this.target.watchedAttribute;
+            if(this.targetValueConverter != null){
+                this.source.watchedAttributeValue = this.targetValueConverter(this.target.watchedAttributeValue);
+            }else{
+                this.source.watchedAttributeValue = this.target.watchedAttributeValue;
+            }
         }
     }
+
+    public sourceValueConverter : Converter | null = null;
+    public targetValueConverter : Converter | null = null;
     dispose() : void{
 
     }

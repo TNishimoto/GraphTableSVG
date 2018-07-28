@@ -17,7 +17,7 @@ window.onload = () => {
     const pg = SimpleTwowayBinding.autoBind({targetElement : positionFieldSet, bindID : "circle"});
     
     
-
+    
     //inputBox.setAttribute("value", "hogehgoe");
     inputBox.value = "hgohgoe";
     console.log(circle);
@@ -44,6 +44,13 @@ window.onload = () => {
     
 
 };
+function sconv(value : string) : string{
+    const [v, unit] = GraphTableSVG.Common.parseUnit(value);
+    return v.toString();
+}
+function tconv(value : string) : string{
+    return `${value}pt`;
+}
 
 function getObject(svg : SVGElement) : GraphTableSVG.VBAObjectType | null{
     for(let i=0;i<items.length;i++){
@@ -69,4 +76,8 @@ function mouseMoveEvent(e : MouseEvent) : void {
             mouseMoveItem.cy = e.y;
         }
     }
+}
+function plus(){
+    const circle = <HTMLElement>document.getElementById('circle');
+    circle.style.strokeWidth = "8pt";
 }

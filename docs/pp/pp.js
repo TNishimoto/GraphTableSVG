@@ -1,7 +1,7 @@
 var SimpleAttributeObserver = /** @class */ (function () {
     function SimpleAttributeObserver(obj) {
         var _this = this;
-        this.sourceObserverFunc = function (x) {
+        this.observerFunc = function (x) {
             var b = false;
             for (var i = 0; i < x.length; i++) {
                 var p = x[i];
@@ -17,28 +17,39 @@ var SimpleAttributeObserver = /** @class */ (function () {
             if (_this.element.nodeName == "INPUT") {
                 var t = _this.element;
                 var value = t.value;
-                _this.watchedAttribute = value;
+                _this.watchedAttributeValue = value;
             }
         };
         this.onChanged = null;
         this.element = obj.element;
         this.watchedAttributeName = obj.watchedAttribute;
+        this.watchedStyleName = obj.watchedStyleName;
         this.element.oninput = this.targetChangeFunc;
-        this._sourceObserver = new MutationObserver(this.sourceObserverFunc);
+        this._observer = new MutationObserver(this.observerFunc);
         var option1 = { attributes: true };
-        this._sourceObserver.observe(this.element, option1);
+        this._observer.observe(this.element, option1);
     }
-    Object.defineProperty(SimpleAttributeObserver.prototype, "watchedAttribute", {
+    Object.defineProperty(SimpleAttributeObserver.prototype, "watchedAttributeValue", {
         get: function () {
-            return this.element.getAttribute(this.watchedAttributeName);
+            if (this.watchedAttributeName == "style" && this.watchedStyleName != undefined) {
+                return this.element.style.getPropertyValue(this.watchedStyleName);
+            }
+            else {
+                return this.element.getAttribute(this.watchedAttributeName);
+            }
         },
         set: function (value) {
-            if (this.watchedAttribute != value) {
-                if (value == null) {
-                    this.element.removeAttribute(this.watchedAttributeName);
+            if (this.watchedAttributeValue != value) {
+                if (this.watchedAttributeName == "style" && this.watchedStyleName != undefined) {
+                    this.element.style.setProperty(this.watchedStyleName, value);
                 }
                 else {
-                    this.element.setAttribute(this.watchedAttributeName, value);
+                    if (value == null) {
+                        this.element.removeAttribute(this.watchedAttributeName);
+                    }
+                    else {
+                        this.element.setAttribute(this.watchedAttributeName, value);
+                    }
                 }
             }
             if (this.element.nodeName == "INPUT" && this.watchedAttributeName == "value") {
@@ -82,16 +93,29 @@ var HTMLFunctions;
 var SimpleTwowayBinding = /** @class */ (function () {
     function SimpleTwowayBinding(obj) {
         var _this = this;
+        //private sourceChangedFunc
         this.sourceChangedFunc = function () {
             if (_this.sourceToTarget) {
-                _this.target.watchedAttribute = _this.source.watchedAttribute;
+                if (_this.sourceValueConverter != null) {
+                    _this.target.watchedAttributeValue = _this.sourceValueConverter(_this.source.watchedAttributeValue);
+                }
+                else {
+                    _this.target.watchedAttributeValue = _this.source.watchedAttributeValue;
+                }
             }
         };
         this.targetChangedFunc = function () {
             if (_this.targetToSource) {
-                _this.source.watchedAttribute = _this.target.watchedAttribute;
+                if (_this.targetValueConverter != null) {
+                    _this.source.watchedAttributeValue = _this.targetValueConverter(_this.target.watchedAttributeValue);
+                }
+                else {
+                    _this.source.watchedAttributeValue = _this.target.watchedAttributeValue;
+                }
             }
         };
+        this.sourceValueConverter = null;
+        this.targetValueConverter = null;
         if (obj.watchedSourceAttribute != undefined) {
             obj.targetElement.setAttribute(SimpleTwowayBinding.bindSourceAttributeName, obj.watchedSourceAttribute);
         }
@@ -103,6 +127,9 @@ var SimpleTwowayBinding = /** @class */ (function () {
         }
         obj.watchedTargetAttribute = obj.targetElement.getAttribute(SimpleTwowayBinding.bindTargetAttributeName);
         obj.watchedSourceAttribute = obj.targetElement.getAttribute(SimpleTwowayBinding.bindSourceAttributeName);
+        if (obj.targetElement.hasAttribute(SimpleTwowayBinding.bindSourceStyleName)) {
+            obj.watchedSourceStyle = obj.targetElement.getAttribute(SimpleTwowayBinding.bindSourceStyleName);
+        }
         if (obj.watchedTargetAttribute == null) {
             throw Error("No " + SimpleTwowayBinding.bindTargetAttributeName);
         }
@@ -115,17 +142,52 @@ var SimpleTwowayBinding = /** @class */ (function () {
         }
         obj.sourceElement = document.getElementById(id);
         this.target = new SimpleAttributeObserver({ element: obj.targetElement, watchedAttribute: obj.watchedTargetAttribute });
-        this.source = new SimpleAttributeObserver({ element: obj.sourceElement, watchedAttribute: obj.watchedSourceAttribute });
-        this.sourceToTarget = true;
-        this.targetToSource = true;
+        this.source = new SimpleAttributeObserver({ element: obj.sourceElement, watchedAttribute: obj.watchedSourceAttribute, watchedStyleName: obj.watchedSourceStyle });
+        if (!obj.targetElement.hasAttribute(SimpleTwowayBinding.sourceToTargetName)) {
+            obj.targetElement.setAttribute(SimpleTwowayBinding.sourceToTargetName, "true");
+        }
+        if (!obj.targetElement.hasAttribute(SimpleTwowayBinding.targetToSourceName)) {
+            obj.targetElement.setAttribute(SimpleTwowayBinding.targetToSourceName, "true");
+        }
         if (obj.targetToSource != undefined)
             this.targetToSource = obj.targetToSource;
         if (obj.sourceToTarget != undefined)
             this.sourceToTarget = obj.sourceToTarget;
         this.source.onChanged = this.sourceChangedFunc;
         this.target.onChanged = this.targetChangedFunc;
+        if (this.target.element.hasAttribute(SimpleTwowayBinding.bindTargetConverterName)) {
+            var value = this.target.element.getAttribute(SimpleTwowayBinding.bindTargetConverterName);
+            var p = Function("v", "return " + value + "(v)");
+            console.log(p("23hello"));
+            this.targetValueConverter = Function("v", "return " + value + "(v)");
+        }
+        if (this.target.element.hasAttribute(SimpleTwowayBinding.bindSourceConverterName)) {
+            var value = this.target.element.getAttribute(SimpleTwowayBinding.bindSourceConverterName);
+            //this.sourceValueConverter = value;
+            this.sourceValueConverter = Function("v", "return " + value + "(v)");
+        }
         this.sourceChangedFunc();
     }
+    Object.defineProperty(SimpleTwowayBinding.prototype, "sourceToTarget", {
+        get: function () {
+            return this.target.element.getAttribute(SimpleTwowayBinding.sourceToTargetName) == "true";
+        },
+        set: function (value) {
+            this.target.element.setAttribute(SimpleTwowayBinding.sourceToTargetName, value ? "true" : "false");
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SimpleTwowayBinding.prototype, "targetToSource", {
+        get: function () {
+            return this.target.element.getAttribute(SimpleTwowayBinding.targetToSourceName) == "true";
+        },
+        set: function (value) {
+            this.target.element.setAttribute(SimpleTwowayBinding.targetToSourceName, value ? "true" : "false");
+        },
+        enumerable: true,
+        configurable: true
+    });
     SimpleTwowayBinding.prototype.dispose = function () {
     };
     SimpleTwowayBinding.isBinderElement = function (e) {
@@ -139,7 +201,12 @@ var SimpleTwowayBinding = /** @class */ (function () {
     };
     SimpleTwowayBinding.bindTargetAttributeName = "g-bind:t-attr";
     SimpleTwowayBinding.bindSourceAttributeName = "g-bind:s-attr";
+    SimpleTwowayBinding.bindSourceStyleName = "g-bind:s-style";
+    SimpleTwowayBinding.bindSourceConverterName = "g-bind:s-converter";
+    SimpleTwowayBinding.bindTargetConverterName = "g-bind:t-converter";
     SimpleTwowayBinding.bindSourceID = "g-bind:s-id";
+    SimpleTwowayBinding.sourceToTargetName = "g-source-to-target";
+    SimpleTwowayBinding.targetToSourceName = "g-target-to-source";
     return SimpleTwowayBinding;
 }());
 var FooterButton = /** @class */ (function () {
@@ -277,6 +344,13 @@ window.onload = function () {
     items.push(arrow);
     //box.onmousemove = mouseMoveEvent
 };
+function sconv(value) {
+    var _a = GraphTableSVG.Common.parseUnit(value), v = _a[0], unit = _a[1];
+    return v.toString();
+}
+function tconv(value) {
+    return value + "pt";
+}
 function getObject(svg) {
     for (var i = 0; i < items.length; i++) {
         var item = items[i];
@@ -300,4 +374,8 @@ function mouseMoveEvent(e) {
             mouseMoveItem.cy = e.y;
         }
     }
+}
+function plus() {
+    var circle = document.getElementById('circle');
+    circle.style.strokeWidth = "8pt";
 }
