@@ -24,7 +24,8 @@ namespace GraphTableSVG {
             }
             if (b) this.update();
         };
-        private static updateAttributes = ["transform", "data-speaker-x", "data-speaker-y", "data-width", "data-height"]
+        private static updateAttributes = ["transform", "data-speaker-x", "data-speaker-y", 
+        "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", "data-arrow-head-width", "data-arrow-head-height"]
         get isLocated(): boolean {
             return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }

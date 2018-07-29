@@ -1,5 +1,5 @@
 
-type Converter = (value : string | null) => string;
+type Converter = (value : string | null, binder? : SimpleTwowayBinding) => string;
 
 class SimpleTwowayBinding {
     source: SimpleAttributeObserver;
@@ -82,13 +82,12 @@ class SimpleTwowayBinding {
             const value = this.target.element.getAttribute(SimpleTwowayBinding.bindTargetConverterName)!;
 
             const p = Function("v", `return ${value}(v)`);
-            console.log(p("23hello"));
-            this.targetValueConverter = <any>Function("v", `return ${value}(v)`);
+            this.targetValueConverter = <any>Function("v", "a", "b", `return ${value}(v, a, b)`);
         }
         if(this.target.element.hasAttribute(SimpleTwowayBinding.bindSourceConverterName)){
             const value = this.target.element.getAttribute(SimpleTwowayBinding.bindSourceConverterName)!;
             //this.sourceValueConverter = value;
-            this.sourceValueConverter = <any>Function("v", `return ${value}(v)`);
+            this.sourceValueConverter = <any>Function("v", "a", "b", `return ${value}(v, a, b)`);
 
         }
 
@@ -99,7 +98,7 @@ class SimpleTwowayBinding {
     private sourceChangedFunc = () => {
         if(this.sourceToTarget){
             if(this.sourceValueConverter != null){
-                this.target.watchedAttributeValue = this.sourceValueConverter(this.source.watchedAttributeValue);
+                this.target.watchedAttributeValue = this.sourceValueConverter(this.source.watchedAttributeValue, this);
             }else{
                 this.target.watchedAttributeValue = this.source.watchedAttributeValue;
             }
@@ -108,7 +107,7 @@ class SimpleTwowayBinding {
     private targetChangedFunc = () => {
         if(this.targetToSource){
             if(this.targetValueConverter != null){
-                this.source.watchedAttributeValue = this.targetValueConverter(this.target.watchedAttributeValue);
+                this.source.watchedAttributeValue = this.targetValueConverter(this.target.watchedAttributeValue, this);
             }else{
                 this.source.watchedAttributeValue = this.target.watchedAttributeValue;
             }
@@ -118,7 +117,8 @@ class SimpleTwowayBinding {
     public sourceValueConverter : Converter | null = null;
     public targetValueConverter : Converter | null = null;
     dispose() : void{
-
+        this.source.dispose();
+        this.target.dispose();
     }
     static isBinderElement(e : HTMLElement) : boolean {
         return e.hasAttribute(SimpleTwowayBinding.bindSourceAttributeName) || e.hasAttribute(SimpleTwowayBinding.bindTargetAttributeName);

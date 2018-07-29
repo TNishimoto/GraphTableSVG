@@ -1537,7 +1537,8 @@ var GraphTableSVG;
             var id = obj.getAttribute(GraphTableSVG.SVG.objectIDName);
             return ids.some(function (v) { return v == id; });
         };
-        PPTextBoxShapeBase.updateAttributes = ["transform", "data-speaker-x", "data-speaker-y", "data-width", "data-height"];
+        PPTextBoxShapeBase.updateAttributes = ["transform", "data-speaker-x", "data-speaker-y",
+            "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", "data-arrow-head-width", "data-arrow-head-height"];
         PPTextBoxShapeBase.updateTextAttributes = ["style"];
         return PPTextBoxShapeBase;
     }());
