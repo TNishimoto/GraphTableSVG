@@ -235,7 +235,7 @@ declare namespace GraphTableSVG {
         readonly svgText: SVGTextElement;
         private _observer;
         private observerFunc;
-        private static updateAttributes;
+        protected updateAttributes: string[];
         readonly isLocated: boolean;
         private _textObserver;
         protected textObserverFunc: MutationCallback;

@@ -7,6 +7,7 @@ namespace GraphTableSVG {
 
             this.speakerX = this.cx;
             this.speakerY = this.cy;
+            
 
         }
         protected update() {
@@ -168,8 +169,9 @@ namespace GraphTableSVG {
             this.arrowHeadHeight = 20;
             this.arrowNeckWidth = 10;
             this.arrowNeckHeight = 10;
+            this.svgGroup.setAttribute("data-direction", "down");
 
-
+            this.updateAttributes.push("data-direction");
         }
         get arrowNeckWidth(): number {
             return this.svgGroup.getAttributeNumber("data-arrow-neck-width", 0);
@@ -230,8 +232,13 @@ namespace GraphTableSVG {
                 rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
                 rect.y = (-this.height / 2) + this.svgText.getMarginTop();
             }
+            if(this.direction == "up") rect.y += this.arrowNeckHeight + this.arrowHeadHeight;
+
             return rect;
         }
+        /**
+         * 矢印部分を除いた図形の高さを表します。
+         */
         protected get boxHeight(){
             return this.height - this.arrowNeckHeight - this.arrowHeadWidth;
         }
@@ -246,10 +253,39 @@ namespace GraphTableSVG {
             
             
             if(this.direction == "up"){
+                const x1 = - (this.width / 2);
+                const y1 = - (this.height / 2);
+                const x2 = (this.width / 2);
+                const y2 = (this.height / 2);
+
+                const bx1 = x1;
+                const by1 = y1 + this.arrowHeadHeight + this.arrowNeckHeight;
+                const bx2 = x2;
+                const by2 = y2;
+
+
+                let nx1 = - (this.arrowNeckWidth/2)
+                let nx2 = (this.arrowNeckWidth/2)
+                let ny = by1 - this.arrowNeckHeight;
+                let cx = 0;
+                
+                let hx1 = - (this.arrowHeadWidth/2)
+                let hx2 = (this.arrowHeadWidth/2)
+                let hy = y1;
+
+                const mes = `H ${nx1} V ${ny} H ${hx1} L ${cx} ${hy} L ${hx2} ${ny} H ${nx2} V ${by1}`;
+                const top = `M ${bx1} ${by1} ${mes} H ${bx2}`;
+
+                const right = `V ${by2}`;
+                const bottom = `H ${bx1}`;
+                const left = `V ${by1}`
+                this.svgPath.setAttribute("d", `${top} ${right} ${bottom} ${left} z`);
 
             }else if(this.direction == "left"){
 
             }else if(this.direction == "right"){
+
+
 
             }else{
                 
@@ -258,22 +294,26 @@ namespace GraphTableSVG {
                 const x2 = (this.width / 2);
                 const y2 = (this.height / 2);
 
-                const dx = x1;
-                const dy = y1;
+                const bx1 = x1;
+                const by1 = y1;
+                const bx2 = x2;
+                const by2 = y2 - this.arrowHeadHeight - this.arrowNeckHeight;
 
-                const boxHeight = this.boxHeight;
-                const by = boxHeight + dy;
+                //const by = boxHeight + dy;
 
                 let nx1 = - (this.arrowNeckWidth/2)
                 let nx2 = (this.arrowNeckWidth/2)
-                let ny = dy + boxHeight + this.arrowNeckHeight;
+                let ny = by2 + this.arrowNeckHeight;
                 let cx = 0;
                 
                 let hx1 = - (this.arrowHeadWidth/2)
                 let hx2 = (this.arrowHeadWidth/2)
-                let hy = dy + this.height;
-                const mes = `H ${nx2} V ${ny} H ${hx2} L ${cx} ${hy} L ${hx1} ${ny} H ${nx1} V ${by}`;
-                this.svgPath.setAttribute("d", `M ${x1} ${y1} H ${x2} V ${by} ${mes} H ${x1} V ${y1} z`);
+                let hy = y2;
+                const top = `M ${bx1} ${by1} H ${bx2}`;
+                const right = `V ${by2}`;
+                const bottom = `H ${nx2} V ${ny} H ${hx2} L ${cx} ${hy} L ${hx1} ${ny} H ${nx1} V ${by2} H ${bx1}`;
+                const left = `V ${by1}`
+                this.svgPath.setAttribute("d", `${top} ${right} ${bottom} ${left} z`);
             }
         }
     }

@@ -1354,7 +1354,7 @@ var GraphTableSVG;
                     return;
                 var _loop_2 = function (i) {
                     var p = x[i];
-                    if (PPTextBoxShapeBase.updateAttributes.some(function (v) { return v == p.attributeName; })) {
+                    if (_this.updateAttributes.some(function (v) { return v == p.attributeName; })) {
                         b = true;
                     }
                 };
@@ -1364,6 +1364,8 @@ var GraphTableSVG;
                 if (b)
                     _this.update();
             };
+            this.updateAttributes = ["transform", "data-speaker-x", "data-speaker-y",
+                "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", "data-arrow-head-width", "data-arrow-head-height"];
             this.textObserverFunc = function (x) {
                 if (!_this.isLocated)
                     return;
@@ -1537,8 +1539,6 @@ var GraphTableSVG;
             var id = obj.getAttribute(GraphTableSVG.SVG.objectIDName);
             return ids.some(function (v) { return v == id; });
         };
-        PPTextBoxShapeBase.updateAttributes = ["transform", "data-speaker-x", "data-speaker-y",
-            "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", "data-arrow-head-width", "data-arrow-head-height"];
         PPTextBoxShapeBase.updateTextAttributes = ["style"];
         return PPTextBoxShapeBase;
     }());
@@ -6680,6 +6680,8 @@ var GraphTableSVG;
             _this.arrowHeadHeight = 20;
             _this.arrowNeckWidth = 10;
             _this.arrowNeckHeight = 10;
+            _this.svgGroup.setAttribute("data-direction", "down");
+            _this.updateAttributes.push("data-direction");
             return _this;
         }
         Object.defineProperty(ShapeArrow.prototype, "arrowNeckWidth", {
@@ -6766,6 +6768,8 @@ var GraphTableSVG;
                     rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
                     rect.y = (-this.height / 2) + this.svgText.getMarginTop();
                 }
+                if (this.direction == "up")
+                    rect.y += this.arrowNeckHeight + this.arrowHeadHeight;
                 return rect;
             },
             enumerable: true,
@@ -6786,6 +6790,27 @@ var GraphTableSVG;
         ShapeArrow.prototype.update = function () {
             _super.prototype.update.call(this);
             if (this.direction == "up") {
+                var x1 = -(this.width / 2);
+                var y1 = -(this.height / 2);
+                var x2 = (this.width / 2);
+                var y2 = (this.height / 2);
+                var bx1 = x1;
+                var by1 = y1 + this.arrowHeadHeight + this.arrowNeckHeight;
+                var bx2 = x2;
+                var by2 = y2;
+                var nx1 = -(this.arrowNeckWidth / 2);
+                var nx2 = (this.arrowNeckWidth / 2);
+                var ny = by1 - this.arrowNeckHeight;
+                var cx = 0;
+                var hx1 = -(this.arrowHeadWidth / 2);
+                var hx2 = (this.arrowHeadWidth / 2);
+                var hy = y1;
+                var mes = "H " + nx1 + " V " + ny + " H " + hx1 + " L " + cx + " " + hy + " L " + hx2 + " " + ny + " H " + nx2 + " V " + by1;
+                var top_3 = "M " + bx1 + " " + by1 + " " + mes + " H " + bx2;
+                var right = "V " + by2;
+                var bottom = "H " + bx1;
+                var left = "V " + by1;
+                this.svgPath.setAttribute("d", top_3 + " " + right + " " + bottom + " " + left + " z");
             }
             else if (this.direction == "left") {
             }
@@ -6796,19 +6821,22 @@ var GraphTableSVG;
                 var y1 = -(this.height / 2);
                 var x2 = (this.width / 2);
                 var y2 = (this.height / 2);
-                var dx = x1;
-                var dy = y1;
-                var boxHeight = this.boxHeight;
-                var by = boxHeight + dy;
+                var bx1 = x1;
+                var by1 = y1;
+                var bx2 = x2;
+                var by2 = y2 - this.arrowHeadHeight - this.arrowNeckHeight;
                 var nx1 = -(this.arrowNeckWidth / 2);
                 var nx2 = (this.arrowNeckWidth / 2);
-                var ny = dy + boxHeight + this.arrowNeckHeight;
+                var ny = by2 + this.arrowNeckHeight;
                 var cx = 0;
                 var hx1 = -(this.arrowHeadWidth / 2);
                 var hx2 = (this.arrowHeadWidth / 2);
-                var hy = dy + this.height;
-                var mes = "H " + nx2 + " V " + ny + " H " + hx2 + " L " + cx + " " + hy + " L " + hx1 + " " + ny + " H " + nx1 + " V " + by;
-                this.svgPath.setAttribute("d", "M " + x1 + " " + y1 + " H " + x2 + " V " + by + " " + mes + " H " + x1 + " V " + y1 + " z");
+                var hy = y2;
+                var top_4 = "M " + bx1 + " " + by1 + " H " + bx2;
+                var right = "V " + by2;
+                var bottom = "H " + nx2 + " V " + ny + " H " + hx2 + " L " + cx + " " + hy + " L " + hx1 + " " + ny + " H " + nx1 + " V " + by2 + " H " + bx1;
+                var left = "V " + by1;
+                this.svgPath.setAttribute("d", top_4 + " " + right + " " + bottom + " " + left + " z");
             }
         };
         return ShapeArrow;

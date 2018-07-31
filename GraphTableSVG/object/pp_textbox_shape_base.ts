@@ -18,13 +18,13 @@ namespace GraphTableSVG {
             if (!this.isLocated) return;
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
-                if (PPTextBoxShapeBase.updateAttributes.some((v) => v == p.attributeName)) {
+                if (this.updateAttributes.some((v) => v == p.attributeName)) {
                     b = true;
                 }
             }
             if (b) this.update();
         };
-        private static updateAttributes = ["transform", "data-speaker-x", "data-speaker-y", 
+        protected updateAttributes = ["transform", "data-speaker-x", "data-speaker-y", 
         "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", "data-arrow-head-width", "data-arrow-head-height"]
         get isLocated(): boolean {
             return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);

@@ -1,6 +1,37 @@
 
 type Converter = (value : string | null, binder? : SimpleTwowayBinding) => string;
 
+namespace AttributeFunctions{
+    export const bindingIf : string = "n-if";
+
+    export function checkIfFunction(e : HTMLElement) : boolean {
+
+        if(e.hasAttribute(bindingIf)){
+
+            const value = e.getAttribute(bindingIf)!;
+
+            const p = Function("v", `return ${value}(v)`);
+            const f = <any>Function("source", "target", `return ${value}(source, target)`);
+            const source = getSourceElement(e);
+            if(source == null) return true;
+            return <boolean>f(source, e);
+        }else{
+            return true;
+        }
+    }
+    export function getSourceElement(e : HTMLElement) : HTMLElement | null {
+        const id = HTMLFunctions.getAncestorAttribute(e,SimpleTwowayBinding.bindSourceID);
+        if(id != null){
+            return document.getElementById(id);
+        }else{
+            return null;
+        }
+    }
+    export function isBinderElement(e : HTMLElement) : boolean {
+        return e.hasAttribute(SimpleTwowayBinding.bindSourceAttributeName) || e.hasAttribute(SimpleTwowayBinding.bindTargetAttributeName);
+    }
+}
+
 class SimpleTwowayBinding {
     source: SimpleAttributeObserver;
     target: SimpleAttributeObserver;
@@ -18,15 +49,16 @@ class SimpleTwowayBinding {
         this.target.element.setAttribute(SimpleTwowayBinding.targetToSourceName, value ? "true" : "false");
     }
 
-    static readonly bindTargetAttributeName : string = "g-bind:t-attr";
-    static readonly bindSourceAttributeName : string = "g-bind:s-attr";
-    static readonly bindSourceStyleName : string = "g-bind:s-style";
-    static readonly bindSourceConverterName : string = "g-bind:s-converter";
-    static readonly bindTargetConverterName : string = "g-bind:t-converter";
+    static readonly bindTargetAttributeName : string = "n-bind:t-attr";
+    static readonly bindSourceAttributeName : string = "n-bind:s-attr";
+    static readonly bindSourceStyleName : string = "n-bind:s-style";
+    static readonly bindSourceConverterName : string = "n-bind:s-converter";
+    static readonly bindTargetConverterName : string = "n-bind:t-converter";
+    static readonly bindTargetConverterValueName : string = "n-bind:t-value";
 
-    static readonly bindSourceID : string = "g-bind:s-id";
-    static readonly sourceToTargetName : string = "g-source-to-target";
-    static readonly targetToSourceName : string = "g-target-to-source";
+    static readonly bindSourceID : string = "n-bind:s-id";
+    static readonly sourceToTargetName : string = "n-source-to-target";
+    static readonly targetToSourceName : string = "n-target-to-source";
 
     constructor(obj: { sourceElement?: HTMLElement, targetElement: HTMLElement, watchedTargetAttribute?: string,
         watchedSourceStyle?: string,  sourceValueCongerter? : Converter, targetValueConverter? : Converter, 
@@ -42,6 +74,11 @@ class SimpleTwowayBinding {
         if(obj.sourceElement != undefined){
             obj.targetElement.setAttribute(SimpleTwowayBinding.bindSourceID, obj.targetElement.getAttribute("id")!);
         }
+        if(!obj.targetElement.hasAttribute(SimpleTwowayBinding.bindTargetAttributeName)){
+            obj.targetElement.setAttribute(SimpleTwowayBinding.bindTargetAttributeName, "value");
+        }
+
+
         obj.watchedTargetAttribute = obj.targetElement.getAttribute(SimpleTwowayBinding.bindTargetAttributeName)!;
         obj.watchedSourceAttribute = obj.targetElement.getAttribute(SimpleTwowayBinding.bindSourceAttributeName)!;
         if(obj.targetElement.hasAttribute(SimpleTwowayBinding.bindSourceStyleName)){
@@ -80,7 +117,6 @@ class SimpleTwowayBinding {
 
         if(this.target.element.hasAttribute(SimpleTwowayBinding.bindTargetConverterName)){
             const value = this.target.element.getAttribute(SimpleTwowayBinding.bindTargetConverterName)!;
-
             const p = Function("v", `return ${value}(v)`);
             this.targetValueConverter = <any>Function("v", "a", "b", `return ${value}(v, a, b)`);
         }
@@ -100,7 +136,11 @@ class SimpleTwowayBinding {
             if(this.sourceValueConverter != null){
                 this.target.watchedAttributeValue = this.sourceValueConverter(this.source.watchedAttributeValue, this);
             }else{
-                this.target.watchedAttributeValue = this.source.watchedAttributeValue;
+                if(this.target.element instanceof HTMLInputElement && this.target.element.type == "radio"){
+                    this.target.element.checked = this.source.watchedAttributeValue == this.target.element.value; 
+                }else{
+                    this.target.watchedAttributeValue = this.source.watchedAttributeValue;
+                }
             }
         }
     }
@@ -109,7 +149,14 @@ class SimpleTwowayBinding {
             if(this.targetValueConverter != null){
                 this.source.watchedAttributeValue = this.targetValueConverter(this.target.watchedAttributeValue, this);
             }else{
-                this.source.watchedAttributeValue = this.target.watchedAttributeValue;
+                if(this.target.element instanceof HTMLInputElement && this.target.element.type == "radio"){
+                    if(this.target.element.checked){
+                        this.source.watchedAttributeValue = this.target.element.value; 
+                    }
+                }else{
+                    this.source.watchedAttributeValue = this.target.watchedAttributeValue;
+                }
+
             }
         }
     }
@@ -120,14 +167,29 @@ class SimpleTwowayBinding {
         this.source.dispose();
         this.target.dispose();
     }
-    static isBinderElement(e : HTMLElement) : boolean {
-        return e.hasAttribute(SimpleTwowayBinding.bindSourceAttributeName) || e.hasAttribute(SimpleTwowayBinding.bindTargetAttributeName);
-    }
+    
 
     static autoBind(obj : {targetElement : HTMLElement, bindID? : string}) : SimpleTwowayBinding[] {
+        const r : SimpleTwowayBinding[] =[];
         if(obj.bindID != undefined){
             obj.targetElement.setAttribute(SimpleTwowayBinding.bindSourceID, obj.bindID);
         }
-        return HTMLFunctions.getDescendants(obj.targetElement).filter((v)=>SimpleTwowayBinding.isBinderElement(v)).map((v)=>new SimpleTwowayBinding({targetElement : v}));
+
+        if(AttributeFunctions.checkIfFunction(obj.targetElement)){
+            obj.targetElement.style.display = "inline";
+
+            if(AttributeFunctions.isBinderElement(obj.targetElement)){
+                const item = new SimpleTwowayBinding({targetElement : obj.targetElement});
+                r.push(item);
+            }else{
+
+            }
+            HTMLFunctions.getChildren(obj.targetElement).forEach((v)=>{
+                this.autoBind({targetElement : v}).forEach((w)=> r.push(w));
+            });
+        }else{
+            obj.targetElement.style.display = "none";
+        }
+        return r;
     }
 }
