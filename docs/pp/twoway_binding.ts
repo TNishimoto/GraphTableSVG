@@ -57,6 +57,8 @@ class SimpleTwowayBinding {
     static readonly bindTargetConverterValueName : string = "n-bind:t-value";
 
     static readonly bindSourceID : string = "n-bind:s-id";
+    static readonly bindSourceXPath : string = "n-bind:s-xpath";
+
     static readonly sourceToTargetName : string = "n-source-to-target";
     static readonly targetToSourceName : string = "n-target-to-source";
 
@@ -91,17 +93,23 @@ class SimpleTwowayBinding {
         if(obj.watchedSourceAttribute == null){
             throw Error(`No ${SimpleTwowayBinding.bindSourceAttributeName}`);            
         }
-
+        /*
         const id = HTMLFunctions.getAncestorAttribute(obj.targetElement,SimpleTwowayBinding.bindSourceID);
         if(id == null){
             throw Error("No ID!");
         }
         obj.sourceElement = document.getElementById(id)!;
+        */
+        const sourceElement = SimpleTwowayBinding.getSourceElement(obj.targetElement);
+        if(sourceElement == null){
+            console.log(obj.targetElement);
+            throw Error("No Source Element!");
+        }
 
         
 
         this.target = new SimpleAttributeObserver({element : obj.targetElement, watchedAttribute : obj.watchedTargetAttribute});
-        this.source = new SimpleAttributeObserver({element : obj.sourceElement, watchedAttribute : obj.watchedSourceAttribute, watchedStyleName : obj.watchedSourceStyle});
+        this.source = new SimpleAttributeObserver({element : sourceElement, watchedAttribute : obj.watchedSourceAttribute, watchedStyleName : obj.watchedSourceStyle});
         
         if(!obj.targetElement.hasAttribute(SimpleTwowayBinding.sourceToTargetName)){
             obj.targetElement.setAttribute(SimpleTwowayBinding.sourceToTargetName, "true");
@@ -176,7 +184,8 @@ class SimpleTwowayBinding {
         }
 
         if(AttributeFunctions.checkIfFunction(obj.targetElement)){
-            obj.targetElement.style.display = "inline";
+            obj.targetElement.style.removeProperty("display");
+            //obj.targetElement.style.display = "inline";
 
             if(AttributeFunctions.isBinderElement(obj.targetElement)){
                 const item = new SimpleTwowayBinding({targetElement : obj.targetElement});
@@ -191,5 +200,25 @@ class SimpleTwowayBinding {
             obj.targetElement.style.display = "none";
         }
         return r;
+    }
+    static getSourceElement(target : HTMLElement) : HTMLElement | null {
+        const id = HTMLFunctions.getAncestorAttribute(target, SimpleTwowayBinding.bindSourceID);
+        const xpath = HTMLFunctions.getAncestorAttribute(target, SimpleTwowayBinding.bindSourceXPath);
+        const idElement = id == null ? null : document.getElementById(id); 
+        const root = idElement == null ? document.body : idElement;
+        if(xpath != null){
+            var result = document.evaluate(xpath, root, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            return <HTMLElement> result.singleNodeValue;
+            /*
+            if(result.singleNodeValue instanceof HTMLElement){
+                return result.singleNodeValue;
+            }else{
+                return null;
+            }
+            */
+
+        }else{
+            return root;
+        }
     }
 }

@@ -1,3 +1,27 @@
+interface SVGElement {
+    
+    getPaddingLeft() : number;
+    getPaddingTop() : number;
+    getPaddingRight() : number;
+    getPaddingBottom() : number;
+}
+SVGElement.prototype.getPaddingTop = function () {
+    const p: SVGTextElement = this;
+    return p.getPropertyStyleNumberValue("--padding-top", 0);
+};
+SVGElement.prototype.getPaddingLeft = function () {
+    const p: SVGTextElement = this;
+    return p.getPropertyStyleNumberValue("--padding-left", 0);
+};
+SVGElement.prototype.getPaddingRight = function () {
+    const p: SVGTextElement = this;
+    return p.getPropertyStyleNumberValue("--padding-right", 0);
+};
+SVGElement.prototype.getPaddingBottom = function () {
+    const p: SVGTextElement = this;
+    return p.getPropertyStyleNumberValue("--padding-bottom", 0);
+};
+
 interface SVGTextElement {
     /**
      * X座標を取得します。
@@ -32,7 +56,12 @@ interface SVGTextElement {
     getMarginBottom() : number;
     setMarginBottom(value : number) : void;
 
+
+
 }
+
+
+
 SVGTextElement.prototype.getMarginLeft = function () {
     const p: SVGTextElement = this;
     return p.getPropertyStyleNumberValue("--margin-left", 0);

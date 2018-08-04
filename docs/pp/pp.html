@@ -30,7 +30,7 @@
         <div class="ContentBox" style="clear:both">
             <div class="FooterContent" name="footer-button" data-type="footer-content" data-id="0" id="fc3" style="display:none">
                 <div id="option-field">
-                <fieldset id="position-field" n-if="optionIf" >
+                <fieldset id="position-field" n-if="optionIf" class="field" >
                     <legend>位置</legend>
                     <span>cx：<input n-bind:s-attr="cx" type="number" size="20"></span>
                     <span>cy：<input n-bind:s-attr="cy" type="number" size="20"></span>
@@ -38,30 +38,46 @@
                     <span>stroke-width：<input n-bind:s-attr="style" n-bind:s-style="stroke-width" 
                     n-bind:s-converter="sconv" n-bind:t-converter="tconv" n-bind:t-attr="value" type="number" size="20"></span>
                 </fieldset>
-                <fieldset id="xy-field" n-if="optionIf">
+                <fieldset id="xy-field" n-if="optionIf" class="field">
                         <legend>xy</legend>
-                        <span>x：<input name="x" n-bind:s-attr="transform" n-bind:s-converter="transformSconv" n-bind:t-converter="transformTconv" type="number" size="10"></span>
-                        <span>y：<input name="y" n-bind:s-attr="transform" n-bind:s-converter="transformSconv" n-bind:t-converter="transformTconv" type="number" size="10"></span>
+                        <span>x：<input name="x" n-bind:s-attr="transform" n-bind:s-converter="transformSconv" n-bind:t-converter="transformTconv" type="number" class="number-inputbox"></span>
+                        <span>y：<input name="y" n-bind:s-attr="transform" n-bind:s-converter="transformSconv" n-bind:t-converter="transformTconv" type="number" class="number-inputbox"></span>
                     </fieldset>
+                <fieldset id="size-field" n-if="optionIf" class="field">
+                        <legend>サイズ</legend>
+                        <span>data-width：<input n-bind:s-attr="data-width" type="number" class="number-inputbox"></span>
+                        <span>data-height：<input n-bind:s-attr="data-height" type="number" class="number-inputbox"></span>
+                </fieldset>
     
-                <fieldset id="arrow-field" n-if="optionIf">
+                <fieldset id="arrow-field" n-if="optionIf" class="field">
                         <legend>矢印</legend>
-                        <span>data-arrow-head-width：<input n-bind:s-attr="data-arrow-head-width" type="number" size="10"></span>
-                        <span>data-arrow-head-height：<input n-bind:s-attr="data-arrow-head-height" type="number" size="10"></span>
-                        <span>data-arrow-neck-width：<input n-bind:s-attr="data-arrow-neck-width" type="number" size="10"></span>
-                        <span>data-arrow-neck-height：<input n-bind:s-attr="data-arrow-neck-height" type="number"></span>                        
+                        <span>data-arrow-head-width：<input n-bind:s-attr="data-arrow-head-width" type="number" class="number-inputbox"></span>
+                        <span>data-arrow-head-height：<input n-bind:s-attr="data-arrow-head-height" type="number" class="number-inputbox"></span>
+                        <span>data-arrow-neck-width：<input n-bind:s-attr="data-arrow-neck-width" type="number" class="number-inputbox"></span>
+                        <span>data-arrow-neck-height：<input n-bind:s-attr="data-arrow-neck-height" type="number" class="number-inputbox"></span>                        
                 </fieldset>
-                <fieldset id="callout-field" n-if="optionIf">
+                <fieldset id="callout-field" n-if="optionIf" class="field">
                         <legend>吹き出し</legend>
-                        <span>data-speaker-x：<input n-bind:s-attr="data-speaker-x" n-bind:t-attr="value" type="number" size="10"></span>
-                        <span>data-speaker-y：<input n-bind:s-attr="data-speaker-y" n-bind:t-attr="value" type="number" size="10"></span>
+                        <span>data-speaker-x：<input n-bind:s-attr="data-speaker-x" n-bind:t-attr="value" type="number" class="number-inputbox"></span>
+                        <span>data-speaker-y：<input n-bind:s-attr="data-speaker-y" n-bind:t-attr="value" type="number" class="number-inputbox"></span>
                 </fieldset>
-                <fieldset id="callout-direction-field" n-if="optionIf">
+                <fieldset id="callout-direction-field" n-if="optionIf" class="field">
                     <legend>方向</legend>
                     <span>上：<input n-bind:s-attr="data-direction" name="direction-button" value="up" type="radio"></span>
-                    <span>右：<input n-bind:s-attr="data-direction" name="direction-button" value="left" type="radio"></span>
-                    <span>左：<input n-bind:s-attr="data-direction" name="direction-button" value="right" type="radio"></span>
+                    <span>右：<input n-bind:s-attr="data-direction" name="direction-button" value="right" type="radio"></span>
+                    <span>左：<input n-bind:s-attr="data-direction" name="direction-button" value="left" type="radio"></span>
                     <span>下：<input n-bind:s-attr="data-direction" name="direction-button" value="down" type="radio"></span>
+                </fieldset>
+                <fieldset id="shrink-field" n-if="optionIf" class="field">
+                    <legend>縮み</legend>
+                    <span>テキストに合わせて図形を縮小する：<input n-bind:s-attr="style" n-bind:s-style="--autosize-shape-to-fit-text" type="checkbox"></span>
+                </fieldset>
+                <fieldset id="margin-field" n-if="optionIf" class="field" n-bind:s-xpath="./*[name()='text']">
+                    <legend>margin</legend>
+                    <span>margin-top：<input n-bind:s-attr="style" n-bind:s-style="--margin-top"  type="number" class="number-inputbox"></span>
+                    <span>margin-left：<input n-bind:s-attr="style" n-bind:s-style="--margin-left" type="number" class="number-inputbox"></span>
+                    <span>margin-right：<input n-bind:s-attr="style" n-bind:s-style="--margin-right" type="number" class="number-inputbox"></span>
+                    <span>margin-bottom：<input n-bind:s-attr="style" n-bind:s-style="--margin-bottom" type="number" class="number-inputbox"></span>                        
                 </fieldset>
 
             </div>

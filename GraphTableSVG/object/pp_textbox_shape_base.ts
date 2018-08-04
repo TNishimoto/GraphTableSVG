@@ -24,8 +24,9 @@ namespace GraphTableSVG {
             }
             if (b) this.update();
         };
-        protected updateAttributes = ["transform", "data-speaker-x", "data-speaker-y", 
-        "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", "data-arrow-head-width", "data-arrow-head-height"]
+        protected updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y", 
+        "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", 
+        "data-arrow-head-width", "data-arrow-head-height"]
         get isLocated(): boolean {
             return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }
@@ -138,9 +139,22 @@ namespace GraphTableSVG {
         }
         protected updateToFitText(){
             const box = this.svgText.getBBox();
-            this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
-            this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom();
+            this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
+            this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;
         }
+        get marginPaddingTop(){
+            return this.svgText.getMarginTop() + this.svgGroup.getPaddingTop();
+        }
+        get marginPaddingLeft(){
+            return this.svgText.getMarginLeft() + this.svgGroup.getPaddingLeft();
+        }
+        get marginPaddingRight(){
+            return this.svgText.getMarginRight() + this.svgGroup.getPaddingRight();
+        }
+        get marginPaddingBottom(){
+            return this.svgText.getMarginBottom() + this.svgGroup.getPaddingBottom();
+        }
+
         get innerRectangle(): Rectangle {
 
 
@@ -207,13 +221,13 @@ namespace GraphTableSVG {
                 const b = this.svgText.getBBox();
                 rect.width = b.width;
                 rect.height = b.height;
-                rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
-                rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+                rect.x = (-this.width / 2) + this.marginPaddingLeft;
+                rect.y = (-this.height / 2) + this.marginPaddingTop;
             } else {
-                rect.width = this.width - this.svgText.getMarginLeft();
-                rect.height = this.height - this.svgText.getMarginTop();
-                rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
-                rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+                rect.width = this.width - this.marginPaddingLeft;
+                rect.height = this.height - this.marginPaddingTop;
+                rect.x = (-this.width / 2) + this.marginPaddingLeft;
+                rect.y = (-this.height / 2) + this.marginPaddingTop;
             }
             return rect;
         }

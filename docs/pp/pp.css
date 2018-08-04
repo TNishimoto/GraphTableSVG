@@ -83,3 +83,10 @@ div#footerArea {
         top: 3px;
         box-shadow: none;
     }
+
+.field{
+    display: inline-block;
+}
+.number-inputbox {
+    width: 60px;
+}

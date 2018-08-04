@@ -42,6 +42,8 @@ window.onload = () => {
     calloutFieldSet = <HTMLElement>document.getElementById('callout-field');
     arrowFieldSet = <HTMLElement>document.getElementById('arrow-field');
 
+    FooterButton.call('footer-button',0);
+
 };
 function sconv(value : string) : string{
     const [v, unit] = GraphTableSVG.Common.parseUnit(value);
@@ -167,6 +169,9 @@ function optionIf(source : HTMLElement, target : HTMLElement) : boolean {
                 case "arrow-field" : return false;
                 case "callout-field" : return true;
                 case "callout-direction-field" : return false;
+                case "shrink-field" : return true;
+                case "size-field" : return true;
+                case "margin-field" : return true;
 
             }
             return false;
@@ -177,6 +182,9 @@ function optionIf(source : HTMLElement, target : HTMLElement) : boolean {
                 case "arrow-field" : return true;
                 case "callout-field" : return false;
                 case "callout-direction-field" : return true;
+                case "shrink-field" : return true;
+                case "size-field" : return true;
+                case "margin-field" : return true;
 
             }
             return false;

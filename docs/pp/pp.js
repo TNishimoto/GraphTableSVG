@@ -15,9 +15,16 @@ var SimpleAttributeObserver = /** @class */ (function () {
         };
         this.targetChangeFunc = function () {
             if (_this.element instanceof HTMLInputElement) {
-                var t = _this.element;
-                var value = t.value;
-                _this.watchedAttributeValue = value;
+                if (_this.element.type == "checkbox") {
+                    var t = _this.element;
+                    var value = t.value;
+                    _this.watchedAttributeValue = _this.element.checked.toString();
+                }
+                else {
+                    var t = _this.element;
+                    var value = t.value;
+                    _this.watchedAttributeValue = value;
+                }
             }
         };
         this.onChanged = null;
@@ -58,6 +65,12 @@ var SimpleAttributeObserver = /** @class */ (function () {
                 }
                 if (this.element.type == "radio" && value != null) {
                     this.element.setAttribute(this.watchedAttributeName, value);
+                }
+                if (this.element.type == "checkbox") {
+                    var b = value == "true" ? true : false;
+                    this.element.setAttribute(this.watchedAttributeName, b.toString());
+                    if (this.element.checked != b)
+                        this.element.checked = b;
                 }
             }
         },
@@ -203,13 +216,20 @@ var SimpleTwowayBinding = /** @class */ (function () {
         if (obj.watchedSourceAttribute == null) {
             throw Error("No " + SimpleTwowayBinding.bindSourceAttributeName);
         }
-        var id = HTMLFunctions.getAncestorAttribute(obj.targetElement, SimpleTwowayBinding.bindSourceID);
-        if (id == null) {
+        /*
+        const id = HTMLFunctions.getAncestorAttribute(obj.targetElement,SimpleTwowayBinding.bindSourceID);
+        if(id == null){
             throw Error("No ID!");
         }
-        obj.sourceElement = document.getElementById(id);
+        obj.sourceElement = document.getElementById(id)!;
+        */
+        var sourceElement = SimpleTwowayBinding.getSourceElement(obj.targetElement);
+        if (sourceElement == null) {
+            console.log(obj.targetElement);
+            throw Error("No Source Element!");
+        }
         this.target = new SimpleAttributeObserver({ element: obj.targetElement, watchedAttribute: obj.watchedTargetAttribute });
-        this.source = new SimpleAttributeObserver({ element: obj.sourceElement, watchedAttribute: obj.watchedSourceAttribute, watchedStyleName: obj.watchedSourceStyle });
+        this.source = new SimpleAttributeObserver({ element: sourceElement, watchedAttribute: obj.watchedSourceAttribute, watchedStyleName: obj.watchedSourceStyle });
         if (!obj.targetElement.hasAttribute(SimpleTwowayBinding.sourceToTargetName)) {
             obj.targetElement.setAttribute(SimpleTwowayBinding.sourceToTargetName, "true");
         }
@@ -265,7 +285,8 @@ var SimpleTwowayBinding = /** @class */ (function () {
             obj.targetElement.setAttribute(SimpleTwowayBinding.bindSourceID, obj.bindID);
         }
         if (AttributeFunctions.checkIfFunction(obj.targetElement)) {
-            obj.targetElement.style.display = "inline";
+            obj.targetElement.style.removeProperty("display");
+            //obj.targetElement.style.display = "inline";
             if (AttributeFunctions.isBinderElement(obj.targetElement)) {
                 var item = new SimpleTwowayBinding({ targetElement: obj.targetElement });
                 r.push(item);
@@ -281,6 +302,26 @@ var SimpleTwowayBinding = /** @class */ (function () {
         }
         return r;
     };
+    SimpleTwowayBinding.getSourceElement = function (target) {
+        var id = HTMLFunctions.getAncestorAttribute(target, SimpleTwowayBinding.bindSourceID);
+        var xpath = HTMLFunctions.getAncestorAttribute(target, SimpleTwowayBinding.bindSourceXPath);
+        var idElement = id == null ? null : document.getElementById(id);
+        var root = idElement == null ? document.body : idElement;
+        if (xpath != null) {
+            var result = document.evaluate(xpath, root, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            return result.singleNodeValue;
+            /*
+            if(result.singleNodeValue instanceof HTMLElement){
+                return result.singleNodeValue;
+            }else{
+                return null;
+            }
+            */
+        }
+        else {
+            return root;
+        }
+    };
     SimpleTwowayBinding.bindTargetAttributeName = "n-bind:t-attr";
     SimpleTwowayBinding.bindSourceAttributeName = "n-bind:s-attr";
     SimpleTwowayBinding.bindSourceStyleName = "n-bind:s-style";
@@ -288,6 +329,7 @@ var SimpleTwowayBinding = /** @class */ (function () {
     SimpleTwowayBinding.bindTargetConverterName = "n-bind:t-converter";
     SimpleTwowayBinding.bindTargetConverterValueName = "n-bind:t-value";
     SimpleTwowayBinding.bindSourceID = "n-bind:s-id";
+    SimpleTwowayBinding.bindSourceXPath = "n-bind:s-xpath";
     SimpleTwowayBinding.sourceToTargetName = "n-source-to-target";
     SimpleTwowayBinding.targetToSourceName = "n-target-to-source";
     return SimpleTwowayBinding;
@@ -427,6 +469,7 @@ window.onload = function () {
     xyFieldSet = document.getElementById('xy-field');
     calloutFieldSet = document.getElementById('callout-field');
     arrowFieldSet = document.getElementById('arrow-field');
+    FooterButton.call('footer-button', 0);
 };
 function sconv(value) {
     var _a = GraphTableSVG.Common.parseUnit(value), v = _a[0], unit = _a[1];
@@ -543,6 +586,9 @@ function optionIf(source, target) {
                 case "arrow-field": return false;
                 case "callout-field": return true;
                 case "callout-direction-field": return false;
+                case "shrink-field": return true;
+                case "size-field": return true;
+                case "margin-field": return true;
             }
             return false;
         }
@@ -553,9 +599,13 @@ function optionIf(source, target) {
                 case "arrow-field": return true;
                 case "callout-field": return false;
                 case "callout-direction-field": return true;
+                case "shrink-field": return true;
+                case "size-field": return true;
+                case "margin-field": return true;
             }
             return false;
         }
     }
     return false;
 }
+//# sourceMappingURL=pp.js.map

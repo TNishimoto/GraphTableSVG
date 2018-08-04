@@ -1364,8 +1364,9 @@ var GraphTableSVG;
                 if (b)
                     _this.update();
             };
-            this.updateAttributes = ["transform", "data-speaker-x", "data-speaker-y",
-                "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", "data-arrow-head-width", "data-arrow-head-height"];
+            this.updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y",
+                "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",
+                "data-arrow-head-width", "data-arrow-head-height"];
             this.textObserverFunc = function (x) {
                 if (!_this.isLocated)
                     return;
@@ -1506,9 +1507,37 @@ var GraphTableSVG;
         };
         PPTextBoxShapeBase.prototype.updateToFitText = function () {
             var box = this.svgText.getBBox();
-            this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
-            this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom();
+            this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
+            this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;
         };
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "marginPaddingTop", {
+            get: function () {
+                return this.svgText.getMarginTop() + this.svgGroup.getPaddingTop();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "marginPaddingLeft", {
+            get: function () {
+                return this.svgText.getMarginLeft() + this.svgGroup.getPaddingLeft();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "marginPaddingRight", {
+            get: function () {
+                return this.svgText.getMarginRight() + this.svgGroup.getPaddingRight();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "marginPaddingBottom", {
+            get: function () {
+                return this.svgText.getMarginBottom() + this.svgGroup.getPaddingBottom();
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(PPTextBoxShapeBase.prototype, "innerRectangle", {
             get: function () {
                 var rect = new GraphTableSVG.Rectangle();
@@ -1572,14 +1601,14 @@ var GraphTableSVG;
                     var b = this.svgText.getBBox();
                     rect.width = b.width;
                     rect.height = b.height;
-                    rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
-                    rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+                    rect.x = (-this.width / 2) + this.marginPaddingLeft;
+                    rect.y = (-this.height / 2) + this.marginPaddingTop;
                 }
                 else {
-                    rect.width = this.width - this.svgText.getMarginLeft();
-                    rect.height = this.height - this.svgText.getMarginTop();
-                    rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
-                    rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+                    rect.width = this.width - this.marginPaddingLeft;
+                    rect.height = this.height - this.marginPaddingTop;
+                    rect.x = (-this.width / 2) + this.marginPaddingLeft;
+                    rect.y = (-this.height / 2) + this.marginPaddingTop;
                 }
                 return rect;
             },
@@ -6759,17 +6788,19 @@ var GraphTableSVG;
                     var b = this.svgText.getBBox();
                     rect.width = b.width;
                     rect.height = b.height;
-                    rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
-                    rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+                    rect.x = (-this.width / 2) + this.marginPaddingLeft;
+                    rect.y = (-this.height / 2) + this.marginPaddingTop;
                 }
                 else {
-                    rect.width = this.width - this.svgText.getMarginLeft();
-                    rect.height = this.boxHeight - this.svgText.getMarginTop();
-                    rect.x = (-this.width / 2) + this.svgText.getMarginLeft();
-                    rect.y = (-this.height / 2) + this.svgText.getMarginTop();
+                    rect.width = this.boxWidth - this.marginPaddingLeft;
+                    rect.height = this.boxHeight - this.marginPaddingTop;
+                    rect.x = (-this.width / 2) + this.marginPaddingLeft;
+                    rect.y = (-this.height / 2) + this.marginPaddingTop;
                 }
                 if (this.direction == "up")
                     rect.y += this.arrowNeckHeight + this.arrowHeadHeight;
+                if (this.direction == "left")
+                    rect.x += this.arrowNeckHeight + this.arrowHeadHeight;
                 return rect;
             },
             enumerable: true,
@@ -6777,15 +6808,38 @@ var GraphTableSVG;
         });
         Object.defineProperty(ShapeArrow.prototype, "boxHeight", {
             get: function () {
-                return this.height - this.arrowNeckHeight - this.arrowHeadWidth;
+                if (this.direction == "up" || this.direction == "down") {
+                    return this.height - this.arrowNeckHeight - this.arrowHeadWidth;
+                }
+                else {
+                    return this.height;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ShapeArrow.prototype, "boxWidth", {
+            get: function () {
+                if (this.direction == "up" || this.direction == "down") {
+                    return this.width;
+                }
+                else {
+                    return this.width - this.arrowNeckHeight - this.arrowHeadWidth;
+                }
             },
             enumerable: true,
             configurable: true
         });
         ShapeArrow.prototype.updateToFitText = function () {
             var box = this.svgText.getBBox();
-            this.width = box.width + this.svgText.getMarginLeft() + this.svgText.getMarginRight();
-            this.height = box.height + this.svgText.getMarginTop() + this.svgText.getMarginBottom() + this.arrowNeckHeight + this.arrowHeadHeight;
+            if (this.direction == "up" || this.direction == "down") {
+                this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
+                this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom + this.arrowNeckHeight + this.arrowHeadHeight;
+            }
+            else {
+                this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight + this.arrowNeckHeight + this.arrowHeadHeight;
+                this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;
+            }
         };
         ShapeArrow.prototype.update = function () {
             _super.prototype.update.call(this);
@@ -6813,8 +6867,48 @@ var GraphTableSVG;
                 this.svgPath.setAttribute("d", top_3 + " " + right + " " + bottom + " " + left + " z");
             }
             else if (this.direction == "left") {
+                var x1 = -(this.width / 2);
+                var y1 = -(this.height / 2);
+                var x2 = (this.width / 2);
+                var y2 = (this.height / 2);
+                var bx1 = x1 + this.arrowHeadHeight + this.arrowNeckHeight;
+                var by1 = y1;
+                var bx2 = x2;
+                var by2 = y2;
+                var ny1 = 0 + (this.arrowNeckWidth / 2);
+                var ny2 = 0 - (this.arrowNeckWidth / 2);
+                var nx = bx1 - this.arrowNeckHeight;
+                var cy = 0;
+                var hy1 = 0 + (this.arrowHeadWidth / 2);
+                var hy2 = 0 - (this.arrowHeadWidth / 2);
+                var hx = x1;
+                var top_4 = "M " + bx1 + " " + by1 + " H " + bx2;
+                var right = "V " + by2;
+                var bottom = "H " + bx1;
+                var left = "V " + ny1 + " H " + nx + " V " + hy1 + " L " + hx + " " + cy + " L " + nx + " " + hy2 + " V " + ny2 + " H " + bx1 + " V " + by1;
+                this.svgPath.setAttribute("d", top_4 + " " + right + " " + bottom + " " + left + " z");
             }
             else if (this.direction == "right") {
+                var x1 = -(this.width / 2);
+                var y1 = -(this.height / 2);
+                var x2 = (this.width / 2);
+                var y2 = (this.height / 2);
+                var bx1 = x1;
+                var by1 = y1;
+                var bx2 = x2 - this.arrowHeadHeight - this.arrowNeckHeight;
+                var by2 = y2;
+                var ny1 = 0 - (this.arrowNeckWidth / 2);
+                var ny2 = 0 + (this.arrowNeckWidth / 2);
+                var nx = bx2 + this.arrowNeckHeight;
+                var cy = 0;
+                var hy1 = 0 - (this.arrowHeadWidth / 2);
+                var hy2 = 0 + (this.arrowHeadWidth / 2);
+                var hx = x2;
+                var top_5 = "M " + bx1 + " " + by1 + " H " + bx2;
+                var right = "V " + ny1 + " H " + nx + " V " + hy1 + " L " + hx + " " + cy + " L " + nx + " " + hy2 + " V " + ny2 + " H " + bx2 + " V " + by2;
+                var bottom = "H " + bx1;
+                var left = "V " + by1;
+                this.svgPath.setAttribute("d", top_5 + " " + right + " " + bottom + " " + left + " z");
             }
             else {
                 var x1 = -(this.width / 2);
@@ -6832,11 +6926,11 @@ var GraphTableSVG;
                 var hx1 = -(this.arrowHeadWidth / 2);
                 var hx2 = (this.arrowHeadWidth / 2);
                 var hy = y2;
-                var top_4 = "M " + bx1 + " " + by1 + " H " + bx2;
+                var top_6 = "M " + bx1 + " " + by1 + " H " + bx2;
                 var right = "V " + by2;
                 var bottom = "H " + nx2 + " V " + ny + " H " + hx2 + " L " + cx + " " + hy + " L " + hx1 + " " + ny + " H " + nx1 + " V " + by2 + " H " + bx1;
                 var left = "V " + by1;
-                this.svgPath.setAttribute("d", top_4 + " " + right + " " + bottom + " " + left + " z");
+                this.svgPath.setAttribute("d", top_6 + " " + right + " " + bottom + " " + left + " z");
             }
         };
         return ShapeArrow;
@@ -7029,6 +7123,22 @@ SVGElement.prototype.getPropertyStyleNumberValue = function (name, defaultValue)
 SVGElement.prototype.setPropertyStyleValue = function (name, value) {
     var item = this;
     item.style.setProperty(name, value);
+};
+SVGElement.prototype.getPaddingTop = function () {
+    var p = this;
+    return p.getPropertyStyleNumberValue("--padding-top", 0);
+};
+SVGElement.prototype.getPaddingLeft = function () {
+    var p = this;
+    return p.getPropertyStyleNumberValue("--padding-left", 0);
+};
+SVGElement.prototype.getPaddingRight = function () {
+    var p = this;
+    return p.getPropertyStyleNumberValue("--padding-right", 0);
+};
+SVGElement.prototype.getPaddingBottom = function () {
+    var p = this;
+    return p.getPropertyStyleNumberValue("--padding-bottom", 0);
 };
 SVGTextElement.prototype.getMarginLeft = function () {
     var p = this;

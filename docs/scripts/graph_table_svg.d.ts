@@ -257,6 +257,10 @@ declare namespace GraphTableSVG {
         private _isUpdating;
         protected update(): void;
         protected updateToFitText(): void;
+        readonly marginPaddingTop: number;
+        readonly marginPaddingLeft: number;
+        readonly marginPaddingRight: number;
+        readonly marginPaddingBottom: number;
         readonly innerRectangle: Rectangle;
         createVBACode(id: number): string[];
         readonly svgElements: SVGElement[];
@@ -945,6 +949,7 @@ declare namespace GraphTableSVG {
         direction: Direction;
         readonly innerRectangle: Rectangle;
         protected readonly boxHeight: number;
+        protected readonly boxWidth: number;
         protected updateToFitText(): void;
         protected update(): void;
     }
@@ -987,6 +992,12 @@ interface SVGElement {
     getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
     setPropertyStyleValue(name: string, value: string | null): void;
     getAttributeNumber(name: string, defaultValue: number | null): number | null;
+}
+interface SVGElement {
+    getPaddingLeft(): number;
+    getPaddingTop(): number;
+    getPaddingRight(): number;
+    getPaddingBottom(): number;
 }
 interface SVGTextElement {
     getX(): number;
