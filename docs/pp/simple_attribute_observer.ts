@@ -81,6 +81,7 @@ class SimpleAttributeObserver{
         this._observer.disconnect();
     }
 }
+/*
 namespace HTMLFunctions{
     export function getAncestorAttribute(e : HTMLElement, attr : string) : string | null{
         if(e.hasAttribute(attr)){
@@ -116,3 +117,4 @@ namespace HTMLFunctions{
         return r;
     }
 }
+*/

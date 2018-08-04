@@ -266,19 +266,43 @@ var GraphTableSVG;
     }
     GraphTableSVG.ToConnectorPosition = ToConnectorPosition;
     GraphTableSVG.VerticalAnchorPropertyName = "--vertical-anchor";
+    GraphTableSVG.HorizontalAnchorPropertyName = "--horizontal-anchor";
     GraphTableSVG.PathTextAlignmentName = "--path-text-alignment";
     var VerticalAnchor;
     (function (VerticalAnchor) {
         VerticalAnchor.Top = "top";
         VerticalAnchor.Middle = "middle";
         VerticalAnchor.Bottom = "bottom";
+        function toVerticalAnchor(value) {
+            if (value == "top") {
+                return "top";
+            }
+            else if (value == "bottom") {
+                return "bottom";
+            }
+            else {
+                return "middle";
+            }
+        }
+        VerticalAnchor.toVerticalAnchor = toVerticalAnchor;
     })(VerticalAnchor = GraphTableSVG.VerticalAnchor || (GraphTableSVG.VerticalAnchor = {}));
-    GraphTableSVG.HorizontalAnchorPropertyName = "--horizontal-anchor";
     var HorizontalAnchor;
     (function (HorizontalAnchor) {
         HorizontalAnchor.Left = "left";
         HorizontalAnchor.Center = "center";
         HorizontalAnchor.Right = "right";
+        function toHorizontalAnchor(value) {
+            if (value == "left") {
+                return "left";
+            }
+            else if (value == "right") {
+                return "right";
+            }
+            else {
+                return "center";
+            }
+        }
+        HorizontalAnchor.toHorizontalAnchor = toHorizontalAnchor;
     })(HorizontalAnchor = GraphTableSVG.HorizontalAnchor || (GraphTableSVG.HorizontalAnchor = {}));
     function parsePXString(item) {
         if (item == null) {
@@ -1344,6 +1368,53 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    function openCustomElement(id) {
+        if (typeof id == "string") {
+            var item = document.getElementById(id);
+            if (item instanceof SVGElement) {
+                return GraphTableSVG.openCustomElement(item);
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            var element = id;
+            var name_2 = element.nodeName;
+            console.log(element);
+            console.log(element.nodeName);
+            switch (name_2) {
+                case "g-callout": return GraphTableSVG.CallOut.openCustomElement(element);
+            }
+            return null;
+        }
+    }
+    GraphTableSVG.openCustomElement = openCustomElement;
+    function openSVG(id) {
+        if (typeof id == "string") {
+            var item = document.getElementById(id);
+            if (item != null && item instanceof SVGSVGElement) {
+                return GraphTableSVG.openSVG(item);
+            }
+            else {
+                return [];
+            }
+        }
+        else {
+            var element = id;
+            var r_1 = [];
+            HTMLFunctions.getChildren(element).forEach(function (v) {
+                console.log(v);
+                console.log(v instanceof SVGElement);
+                if (v instanceof SVGElement) {
+                    var p = GraphTableSVG.openCustomElement(v);
+                    if (p != null)
+                        r_1.push(p);
+                }
+            });
+        }
+    }
+    GraphTableSVG.openSVG = openSVG;
     var PPTextBoxShapeBase = (function () {
         function PPTextBoxShapeBase(svgbox, option) {
             if (option === void 0) { option = {}; }
@@ -1390,6 +1461,7 @@ var GraphTableSVG;
             this._svgGroup = GraphTableSVG.SVG.createGroup(svgbox, option.className == undefined ? null : option.className);
             this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
+            this.svgGroup.setAttribute("data-group-type", this.type);
             if (option.text != undefined)
                 this.svgText.setTextContent(option.text);
             if (option.isAutoSizeShapeToFitText != undefined)
@@ -1418,6 +1490,13 @@ var GraphTableSVG;
         Object.defineProperty(PPTextBoxShapeBase.prototype, "isLocated", {
             get: function () {
                 return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "type", {
+            get: function () {
+                return "PPTextBoxShapeBase";
             },
             enumerable: true,
             configurable: true
@@ -1482,6 +1561,30 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "horizontalAnchor", {
+            get: function () {
+                var b = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.HorizontalAnchorPropertyName, "center");
+                return GraphTableSVG.HorizontalAnchor.toHorizontalAnchor(b);
+            },
+            set: function (value) {
+                if (this.horizontalAnchor != value)
+                    this.svgGroup.setPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName, value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBoxShapeBase.prototype, "verticalAnchor", {
+            get: function () {
+                var b = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.VerticalAnchorPropertyName, "middle");
+                return GraphTableSVG.VerticalAnchor.toVerticalAnchor(b);
+            },
+            set: function (value) {
+                if (this.verticalAnchor != value)
+                    this.svgGroup.setPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName, value);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(PPTextBoxShapeBase.prototype, "isAutoSizeShapeToFitText", {
             get: function () {
                 return this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, "false") == "true";
@@ -1494,15 +1597,9 @@ var GraphTableSVG;
         });
         PPTextBoxShapeBase.prototype.update = function () {
             this._isUpdating = true;
-            var vAnchor = this.svgGroup.getPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName);
-            if (vAnchor == null)
-                vAnchor = GraphTableSVG.VerticalAnchor.Middle;
-            var hAnchor = this.svgGroup.getPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName);
-            if (hAnchor == null)
-                hAnchor = GraphTableSVG.HorizontalAnchor.Center;
             if (this.isAutoSizeShapeToFitText)
                 this.updateToFitText();
-            GraphTableSVG.Graph.setXY2(this.svgText, this.innerRectangle, vAnchor, hAnchor, this.isAutoSizeShapeToFitText);
+            GraphTableSVG.Graph.setXY2(this.svgText, this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
             this._isUpdating = false;
         };
         PPTextBoxShapeBase.prototype.updateToFitText = function () {
@@ -1651,6 +1748,13 @@ var GraphTableSVG;
         Object.defineProperty(PPPathTextBox.prototype, "VBAAdjustments", {
             get: function () {
                 return [];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPPathTextBox.prototype, "type", {
+            get: function () {
+                return "PPPathTextBox";
             },
             enumerable: true,
             configurable: true
@@ -6264,10 +6368,10 @@ var GraphTableSVG;
         VBATranslateFunctions.getFont = function (css) {
             var arr = css.fontFamily.split(",");
             if (arr.length > 0) {
-                var name_2 = arr[0];
-                name_2 = name_2.replace(/\"/g, "");
-                name_2 = name_2.replace(/\'/g, "");
-                return name_2;
+                var name_3 = arr[0];
+                name_3 = name_3.replace(/\"/g, "");
+                name_3 = name_3.replace(/\'/g, "");
+                return name_3;
             }
             else {
                 return "";
@@ -6532,10 +6636,24 @@ var GraphTableSVG;
         function CallOut(svgbox, option) {
             if (option === void 0) { option = {}; }
             var _this = _super.call(this, svgbox, option) || this;
+            console.log(svgbox instanceof HTMLElement);
             _this.speakerX = _this.cx;
             _this.speakerY = _this.cy;
             return _this;
         }
+        CallOut.openCustomElement = function (e) {
+            var parent = e.parentElement;
+            var r = new CallOut(parent, {});
+            e.remove();
+            return r;
+        };
+        Object.defineProperty(CallOut.prototype, "type", {
+            get: function () {
+                return "CallOut";
+            },
+            enumerable: true,
+            configurable: true
+        });
         CallOut.prototype.update = function () {
             _super.prototype.update.call(this);
             var x1 = -(this.width / 2);
@@ -6698,6 +6816,9 @@ var GraphTableSVG;
         return CallOut;
     }(GraphTableSVG.PPPathTextBox));
     GraphTableSVG.CallOut = CallOut;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     var ShapeArrow = (function (_super) {
         __extends(ShapeArrow, _super);
         function ShapeArrow(svgbox, option) {
@@ -6713,6 +6834,13 @@ var GraphTableSVG;
             _this.updateAttributes.push("data-direction");
             return _this;
         }
+        Object.defineProperty(ShapeArrow.prototype, "type", {
+            get: function () {
+                return "ShapeArrow";
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ShapeArrow.prototype, "arrowNeckWidth", {
             get: function () {
                 return this.svgGroup.getAttributeNumber("data-arrow-neck-width", 0);
@@ -6937,6 +7065,46 @@ var GraphTableSVG;
     }(GraphTableSVG.PPPathTextBox));
     GraphTableSVG.ShapeArrow = ShapeArrow;
 })(GraphTableSVG || (GraphTableSVG = {}));
+var HTMLFunctions;
+(function (HTMLFunctions) {
+    function getAncestorAttribute(e, attr) {
+        if (e.hasAttribute(attr)) {
+            return e.getAttribute(attr);
+        }
+        else {
+            if (e.parentElement == null) {
+                return null;
+            }
+            else {
+                return getAncestorAttribute(e.parentElement, attr);
+            }
+        }
+    }
+    HTMLFunctions.getAncestorAttribute = getAncestorAttribute;
+    function getDescendants(e) {
+        var r = [];
+        r.push(e);
+        for (var i = 0; i < e.children.length; i++) {
+            var p = e.children.item(i);
+            if (p instanceof Element) {
+                getDescendants(p).forEach(function (v) { return r.push(v); });
+            }
+        }
+        return r;
+    }
+    HTMLFunctions.getDescendants = getDescendants;
+    function getChildren(e) {
+        var r = [];
+        for (var i = 0; i < e.children.length; i++) {
+            var p = e.children.item(i);
+            if (p instanceof Element) {
+                r.push(p);
+            }
+        }
+        return r;
+    }
+    HTMLFunctions.getChildren = getChildren;
+})(HTMLFunctions || (HTMLFunctions = {}));
 CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name) {
     var p = this;
     var r = p.getPropertyValue(name).trim();

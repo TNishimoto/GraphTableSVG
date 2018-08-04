@@ -82,46 +82,43 @@ var SimpleAttributeObserver = /** @class */ (function () {
     };
     return SimpleAttributeObserver;
 }());
-var HTMLFunctions;
-(function (HTMLFunctions) {
-    function getAncestorAttribute(e, attr) {
-        if (e.hasAttribute(attr)) {
+/*
+namespace HTMLFunctions{
+    export function getAncestorAttribute(e : HTMLElement, attr : string) : string | null{
+        if(e.hasAttribute(attr)){
             return e.getAttribute(attr);
-        }
-        else {
-            if (e.parentElement == null) {
+        }else{
+            if(e.parentElement == null){
                 return null;
-            }
-            else {
+            }else{
                 return getAncestorAttribute(e.parentElement, attr);
             }
         }
     }
-    HTMLFunctions.getAncestorAttribute = getAncestorAttribute;
-    function getDescendants(e) {
-        var r = [];
+
+    export function getDescendants(e : HTMLElement) : HTMLElement[]{
+        const r : HTMLElement[] = [];
         r.push(e);
-        for (var i = 0; i < e.children.length; i++) {
-            var p = e.children.item(i);
-            if (p instanceof HTMLElement) {
-                getDescendants(p).forEach(function (v) { return r.push(v); });
+        for(let i=0;i<e.children.length;i++){
+            const p = e.children.item(i);
+            if(p instanceof HTMLElement){
+            getDescendants(p).forEach((v)=>r.push(v));
             }
         }
         return r;
     }
-    HTMLFunctions.getDescendants = getDescendants;
-    function getChildren(e) {
-        var r = [];
-        for (var i = 0; i < e.children.length; i++) {
-            var p = e.children.item(i);
-            if (p instanceof HTMLElement) {
+    export function getChildren(e : HTMLElement) : HTMLElement[]{
+        const r : HTMLElement[] = [];
+        for(let i=0;i<e.children.length;i++){
+            const p = e.children.item(i);
+            if(p instanceof HTMLElement){
                 r.push(p);
             }
         }
         return r;
     }
-    HTMLFunctions.getChildren = getChildren;
-})(HTMLFunctions || (HTMLFunctions = {}));
+}
+*/ 
 var AttributeFunctions;
 (function (AttributeFunctions) {
     AttributeFunctions.bindingIf = "n-if";
@@ -294,7 +291,9 @@ var SimpleTwowayBinding = /** @class */ (function () {
             else {
             }
             HTMLFunctions.getChildren(obj.targetElement).forEach(function (v) {
-                _this.autoBind({ targetElement: v }).forEach(function (w) { return r.push(w); });
+                if (v instanceof HTMLElement) {
+                    _this.autoBind({ targetElement: v }).forEach(function (w) { return r.push(w); });
+                }
             });
         }
         else {
@@ -454,13 +453,16 @@ window.onload = function () {
 
     }
     */
-    var item1 = new GraphTableSVG.CallOut(box, { cx: 200, cy: 200, text: "hoghogeaaaaaaaaaaaaaa", isAutoSizeShapeToFitText: false, className: "callout" });
+    if (box instanceof SVGSVGElement) {
+        GraphTableSVG.openSVG(box);
+    }
+    var item1 = new GraphTableSVG.CallOut(box, { cx: 200, cy: 200, text: "hoghogeaaaa", isAutoSizeShapeToFitText: false, className: "callout" });
     item1.width = 200;
     item1.height = 100;
     item1.svgGroup.onclick = onObjectClick;
     items.push(item1);
     item1.svgGroup.setAttribute("id", "shape");
-    var arrow = new GraphTableSVG.ShapeArrow(box, { cx: 100, cy: 100, text: "hoghogeaaaaaaaaaaaaaa", isAutoSizeShapeToFitText: true, className: "callout" });
+    var arrow = new GraphTableSVG.ShapeArrow(box, { cx: 100, cy: 100, text: "hoghogeaaaaa", isAutoSizeShapeToFitText: true, className: "callout" });
     arrow.svgGroup.onclick = onObjectClick;
     items.push(arrow);
     arrow.svgGroup.setAttribute("id", "arrowshape");
@@ -589,6 +591,8 @@ function optionIf(source, target) {
                 case "shrink-field": return true;
                 case "size-field": return true;
                 case "margin-field": return true;
+                case "vertical-field": return true;
+                case "horizontal-field": return true;
             }
             return false;
         }
@@ -602,6 +606,8 @@ function optionIf(source, target) {
                 case "shrink-field": return true;
                 case "size-field": return true;
                 case "margin-field": return true;
+                case "vertical-field": return true;
+                case "horizontal-field": return true;
             }
             return false;
         }

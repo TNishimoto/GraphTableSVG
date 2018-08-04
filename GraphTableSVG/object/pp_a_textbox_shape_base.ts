@@ -1,4 +1,49 @@
 namespace GraphTableSVG {
+    export function openCustomElement(id : string | SVGElement) : any {
+        
+        if(typeof id == "string"){
+            const item = document.getElementById(id);
+            if(item instanceof SVGElement){
+                return GraphTableSVG.openCustomElement(item);
+            }else{
+                return null;
+            }
+        }else{
+            const element = id;
+            const name = element.nodeName
+            console.log(element);
+            console.log(element.nodeName);
+
+            switch(name){
+                case "g-callout" : return CallOut.openCustomElement(element);
+            }
+            return null;
+        }
+    }
+    export function openSVG(id : string | SVGSVGElement) : any[] {
+        if(typeof id == "string"){
+            const item = document.getElementById(id);
+            if(item != null && item instanceof SVGSVGElement){
+                return GraphTableSVG.openSVG(item);
+            }else{
+                return [];
+            }
+        }else{
+            const element = id;
+            const r : any[] = [];
+            HTMLFunctions.getChildren(element).forEach((v)=>{
+                console.log(v);
+                console.log(v instanceof SVGElement);
+
+                if(v instanceof SVGElement){
+                    const p = GraphTableSVG.openCustomElement(v);
+                    if(p != null) r.push(p);
+                }
+            });
+
+        }
+    }
+
     export class PPTextBoxShapeBase {
         private _svgGroup: SVGGElement;
         /**
@@ -48,11 +93,16 @@ namespace GraphTableSVG {
 
         };
         private static updateTextAttributes = ["style"]
+        public get type() : string{
+            return "PPTextBoxShapeBase";
+        }
 
         public constructor(svgbox: HTMLElement, option: { className?: string, cx?: number, cy?: number, text?: string, isAutoSizeShapeToFitText?: boolean } = {}) {
             this._svgGroup = SVG.createGroup(svgbox, option.className == undefined ? null : option.className);
             this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
+            this.svgGroup.setAttribute("data-group-type", this.type);
+
             if (option.text != undefined) this.svgText.setTextContent(option.text);
             if (option.isAutoSizeShapeToFitText != undefined) this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
 
@@ -115,6 +165,30 @@ namespace GraphTableSVG {
         public get y(): number {
             return this.cy - (this.height / 2);
         }
+        get horizontalAnchor(): HorizontalAnchor {
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(HorizontalAnchorPropertyName, "center");
+            return HorizontalAnchor.toHorizontalAnchor(b);
+        }
+        /**
+        テキストの水平方向の配置設定を設定します。
+        */
+        set horizontalAnchor(value: HorizontalAnchor) {
+            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(HorizontalAnchorPropertyName, value);
+        }
+        /**
+        テキストの垂直方向の配置設定を返します。
+        */
+        get verticalAnchor(): VerticalAnchor {
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(VerticalAnchorPropertyName, "middle");
+            return VerticalAnchor.toVerticalAnchor(b);
+        }
+        /**
+        テキストの垂直方向の配置設定を設定します。
+        */
+        set verticalAnchor(value: VerticalAnchor) {
+            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(VerticalAnchorPropertyName, value);
+        }
+
         /**
          * このVertexがテキストに合わせてサイズを変える場合Trueを返します。
          */
@@ -127,12 +201,8 @@ namespace GraphTableSVG {
         private _isUpdating: boolean = false;
         protected update() {
             this._isUpdating = true;
-            let vAnchor = this.svgGroup.getPropertyStyleValue(VerticalAnchorPropertyName);
-            if (vAnchor == null) vAnchor = VerticalAnchor.Middle;
-            let hAnchor = this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
-            if (hAnchor == null) hAnchor = HorizontalAnchor.Center;
             if(this.isAutoSizeShapeToFitText) this.updateToFitText();
-            Graph.setXY2(this.svgText, this.innerRectangle, vAnchor, hAnchor, this.isAutoSizeShapeToFitText);
+            Graph.setXY2(this.svgText, this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
 
@@ -267,5 +337,9 @@ namespace GraphTableSVG {
         protected get VBAAdjustments() : number[] {
             return [];
         }
+        public get type() : string{
+            return "PPPathTextBox";
+        }
+
     }
 }

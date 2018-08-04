@@ -16,7 +16,7 @@
         "logic_tree.ts",
         "svg.ts",
         "vline.ts",
-        "object/pp_textbox_shape_base.ts"
+        "object/pp_a_textbox_shape_base.ts"
 
     ],
     "include": [

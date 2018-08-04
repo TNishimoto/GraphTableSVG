@@ -25,6 +25,7 @@
 
     <svg viewBox="0 0 500 500" width="500px" height="500px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
         <circle id="circle" cx="100" cy="100" r="10" stroke="green" style="fill:pink;stroke-width:3pt"/>
+        <g-callout />
     </svg>
     <div id="footerArea">
         <div class="ContentBox" style="clear:both">
@@ -78,6 +79,18 @@
                     <span>margin-left：<input n-bind:s-attr="style" n-bind:s-style="--margin-left" type="number" class="number-inputbox"></span>
                     <span>margin-right：<input n-bind:s-attr="style" n-bind:s-style="--margin-right" type="number" class="number-inputbox"></span>
                     <span>margin-bottom：<input n-bind:s-attr="style" n-bind:s-style="--margin-bottom" type="number" class="number-inputbox"></span>                        
+                </fieldset>
+                <fieldset id="vertical-field" n-if="optionIf" class="field">
+                    <legend>垂直方向</legend>
+                    <span>上：<input n-bind:s-attr="style" n-bind:s-style="--vertical-anchor"  name="vertical-button" value="top" type="radio"></span>
+                    <span>真ん中：<input n-bind:s-attr="style" n-bind:s-style="--vertical-anchor"  name="vertical-button" value="middle" type="radio"></span>
+                    <span>下：<input n-bind:s-attr="style" n-bind:s-style="--vertical-anchor"  name="vertical-button" value="bottom" type="radio"></span>
+                </fieldset>
+                <fieldset id="horizontal-field" n-if="optionIf" class="field">
+                    <legend>水平方向</legend>
+                    <span>左：<input n-bind:s-attr="style" n-bind:s-style="--horizontal-anchor"  name="horizontal-button" value="left" type="radio"></span>
+                    <span>真ん中：<input n-bind:s-attr="style" n-bind:s-style="--horizontal-anchor"  name="horizontal-button" value="center" type="radio"></span>
+                    <span>右：<input n-bind:s-attr="style" n-bind:s-style="--horizontal-anchor"  name="horizontal-button" value="right" type="radio"></span>
                 </fieldset>
 
             </div>

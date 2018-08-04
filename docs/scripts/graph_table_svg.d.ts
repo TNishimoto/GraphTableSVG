@@ -61,19 +61,21 @@ declare namespace GraphTableSVG {
     function ToVBAConnectorPosition(shapeType: string, str: ConnectorPosition): number;
     function ToConnectorPosition(str: string | null): ConnectorPosition;
     const VerticalAnchorPropertyName: string;
+    const HorizontalAnchorPropertyName: string;
     const PathTextAlignmentName: string;
     type VerticalAnchor = "top" | "middle" | "bottom";
     namespace VerticalAnchor {
         const Top: VerticalAnchor;
         const Middle: VerticalAnchor;
         const Bottom: VerticalAnchor;
+        function toVerticalAnchor(value: string): VerticalAnchor;
     }
-    const HorizontalAnchorPropertyName: string;
     type HorizontalAnchor = "left" | "center" | "right";
     namespace HorizontalAnchor {
         const Left: HorizontalAnchor;
         const Center: HorizontalAnchor;
         const Right: HorizontalAnchor;
+        function toHorizontalAnchor(value: string): HorizontalAnchor;
     }
     function parsePXString(item: string | null): number;
 }
@@ -228,6 +230,8 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    function openCustomElement(id: string | SVGElement): any;
+    function openSVG(id: string | SVGSVGElement): any[];
     class PPTextBoxShapeBase {
         private _svgGroup;
         readonly svgGroup: SVGGElement;
@@ -240,6 +244,7 @@ declare namespace GraphTableSVG {
         private _textObserver;
         protected textObserverFunc: MutationCallback;
         private static updateTextAttributes;
+        readonly type: string;
         constructor(svgbox: HTMLElement, option?: {
             className?: string;
             cx?: number;
@@ -253,6 +258,8 @@ declare namespace GraphTableSVG {
         height: number;
         readonly x: number;
         readonly y: number;
+        horizontalAnchor: HorizontalAnchor;
+        verticalAnchor: VerticalAnchor;
         isAutoSizeShapeToFitText: boolean;
         private _isUpdating;
         protected update(): void;
@@ -281,6 +288,7 @@ declare namespace GraphTableSVG {
         private getVBAEditLine(id);
         createVBACode(id: number): string[];
         protected readonly VBAAdjustments: number[];
+        readonly type: string;
     }
 }
 declare namespace GraphTableSVG {
@@ -927,6 +935,8 @@ declare namespace GraphTableSVG {
             text?: string;
             isAutoSizeShapeToFitText?: boolean;
         });
+        static openCustomElement(e: SVGElement): CallOut;
+        readonly type: string;
         protected update(): void;
         speakerX: number;
         speakerY: number;
@@ -934,6 +944,8 @@ declare namespace GraphTableSVG {
         protected readonly shape: string;
         protected readonly VBAAdjustments: number[];
     }
+}
+declare namespace GraphTableSVG {
     class ShapeArrow extends PPPathTextBox {
         constructor(svgbox: HTMLElement, option?: {
             className?: string;
@@ -942,6 +954,7 @@ declare namespace GraphTableSVG {
             text?: string;
             isAutoSizeShapeToFitText?: boolean;
         });
+        readonly type: string;
         arrowNeckWidth: number;
         arrowNeckHeight: number;
         arrowHeadWidth: number;
@@ -953,6 +966,11 @@ declare namespace GraphTableSVG {
         protected updateToFitText(): void;
         protected update(): void;
     }
+}
+declare namespace HTMLFunctions {
+    function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;
+    function getDescendants(e: Element): Element[];
+    function getChildren(e: Element): Element[];
 }
 interface PPTextboxShape {
     width: number;

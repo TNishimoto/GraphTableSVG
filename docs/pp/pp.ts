@@ -20,15 +20,18 @@ window.onload = () => {
 
     }
     */
+    if(box instanceof SVGSVGElement){
+        GraphTableSVG.openSVG(box);
+    }
     
-    const item1 = new GraphTableSVG.CallOut(box, {cx : 200, cy : 200, text : "hoghogeaaaaaaaaaaaaaa", isAutoSizeShapeToFitText : false, className : "callout"})
+    const item1 = new GraphTableSVG.CallOut(box, {cx : 200, cy : 200, text : "hoghogeaaaa", isAutoSizeShapeToFitText : false, className : "callout"})
     item1.width = 200;
     item1.height =100;
     item1.svgGroup.onclick = onObjectClick;
     items.push(item1);
     item1.svgGroup.setAttribute("id", "shape")
 
-    const arrow = new GraphTableSVG.ShapeArrow(box, {cx : 100, cy : 100, text : "hoghogeaaaaaaaaaaaaaa", isAutoSizeShapeToFitText : true, className : "callout"})
+    const arrow = new GraphTableSVG.ShapeArrow(box, {cx : 100, cy : 100, text : "hoghogeaaaaa", isAutoSizeShapeToFitText : true, className : "callout"})
     arrow.svgGroup.onclick = onObjectClick;
     items.push(arrow);
     arrow.svgGroup.setAttribute("id", "arrowshape")
@@ -172,6 +175,8 @@ function optionIf(source : HTMLElement, target : HTMLElement) : boolean {
                 case "shrink-field" : return true;
                 case "size-field" : return true;
                 case "margin-field" : return true;
+                case "vertical-field" : return true;
+                case "horizontal-field" : return true;
 
             }
             return false;
@@ -185,6 +190,8 @@ function optionIf(source : HTMLElement, target : HTMLElement) : boolean {
                 case "shrink-field" : return true;
                 case "size-field" : return true;
                 case "margin-field" : return true;
+                case "vertical-field" : return true;
+                case "horizontal-field" : return true;
 
             }
             return false;

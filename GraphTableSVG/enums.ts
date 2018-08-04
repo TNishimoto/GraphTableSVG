@@ -212,6 +212,7 @@
     }
     */
     export const VerticalAnchorPropertyName: string = "--vertical-anchor";
+    export const HorizontalAnchorPropertyName: string = "--horizontal-anchor";
     export const PathTextAlignmentName: string = "--path-text-alignment";
 
 
@@ -232,10 +233,19 @@
          * 底を表します。
          */
         export const Bottom: VerticalAnchor = "bottom"
+
+        export function toVerticalAnchor(value : string) : VerticalAnchor{
+            if(value == "top"){
+                return "top";
+            }else if(value == "bottom"){
+                return "bottom";
+            }else{
+                return "middle";
+            }
+        }
     }
 
     
-    export const HorizontalAnchorPropertyName: string = "--horizontal-anchor";
     /**
     水平方向の配置位置を表す値です。
     */
@@ -253,6 +263,16 @@
          * 右を表します。
          */
         export const Right: HorizontalAnchor = "right"
+
+        export function toHorizontalAnchor(value : string) : HorizontalAnchor{
+            if(value == "left"){
+                return "left";
+            }else if(value == "right"){
+                return "right";
+            }else{
+                return "center";
+            }
+        }
     }
     export function parsePXString(item: string | null): number {
         if (item == null) {

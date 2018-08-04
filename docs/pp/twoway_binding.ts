@@ -194,7 +194,9 @@ class SimpleTwowayBinding {
 
             }
             HTMLFunctions.getChildren(obj.targetElement).forEach((v)=>{
+                if(v instanceof HTMLElement){
                 this.autoBind({targetElement : v}).forEach((w)=> r.push(w));
+                }
             });
         }else{
             obj.targetElement.style.display = "none";
