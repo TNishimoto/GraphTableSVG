@@ -12,7 +12,7 @@ window.onload = () => {
     //const inputBox = <HTMLInputElement>document.getElementById('inputOB');
     //const circle = <HTMLElement>document.getElementById('circle');
     
-    const box = <HTMLElement>document.getElementById('svgbox');
+    const box : SVGSVGElement = <any>document.getElementById('svgbox');
     /*
     box.onclick = (e : MouseEvent) =>{
         circle.setAttribute("cx", e.x.toString());
@@ -21,20 +21,28 @@ window.onload = () => {
     }
     */
     if(box instanceof SVGSVGElement){
-        GraphTableSVG.openSVG(box);
+        const p = GraphTableSVG.openSVG(box);
+        p.forEach((v)=>{
+            if(v instanceof GraphTableSVG.PPTextBoxShapeBase){
+                v.svgGroup.onclick = onObjectClick;
+                items.push(v);
+            }
+        })
     }
-    
+    /*
     const item1 = new GraphTableSVG.CallOut(box, {cx : 200, cy : 200, text : "hoghogeaaaa", isAutoSizeShapeToFitText : false, className : "callout"})
     item1.width = 200;
     item1.height =100;
     item1.svgGroup.onclick = onObjectClick;
     items.push(item1);
     item1.svgGroup.setAttribute("id", "shape")
-
+    */
+    /*
     const arrow = new GraphTableSVG.ShapeArrow(box, {cx : 100, cy : 100, text : "hoghogeaaaaa", isAutoSizeShapeToFitText : true, className : "callout"})
     arrow.svgGroup.onclick = onObjectClick;
     items.push(arrow);
     arrow.svgGroup.setAttribute("id", "arrowshape")
+    */
 
 
     //box.onmousemove = mouseMoveEvent
@@ -65,6 +73,7 @@ function transformSconv(value : string, binder : SimpleTwowayBinding) : string{
             return source.getY().toString();
         }
     }
+    console.log(source);
     throw Error("error");
 }
 function transformTconv(value : string, binder : SimpleTwowayBinding) : string{
@@ -84,6 +93,7 @@ function transformTconv(value : string, binder : SimpleTwowayBinding) : string{
             return `matrix(${a} ${b} ${c} ${d} ${e} ${f})`;
         }
     }
+    console.log(source);
     throw Error("error");
 }
 
@@ -109,36 +119,22 @@ let arrowFieldSet : HTMLElement;
 let binderObjects : SimpleTwowayBinding[] = [];
 
 function setOption(e : GraphTableSVG.VBAObjectType){
+    console.log("setOption")
+    console.log(e instanceof GraphTableSVG.CallOut);
+
     binderObjects.forEach((v)=>v.dispose());
     binderObjects = [];
     const optionFieldSet = <HTMLElement>document.getElementById('option-field');
 
     if(e instanceof GraphTableSVG.CallOut){
         const id = e.svgGroup.getAttribute("id")!;
-        /*
-        calloutFieldSet.style.display = "inline";
-        positionFieldSet.style.display = "none";
-        arrowFieldSet.style.display = "none";
-        xyFieldSet.style.display = "inline";
-        */
-       SimpleTwowayBinding.autoBind({targetElement : optionFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
-
-        //SimpleTwowayBinding.autoBind({targetElement : xyFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
-        //SimpleTwowayBinding.autoBind({targetElement : calloutFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
-
+        if(id == null) throw Error("No ID");
+        SimpleTwowayBinding.autoBind({targetElement : optionFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
     }else if(e instanceof GraphTableSVG.ShapeArrow){
         const id = e.svgGroup.getAttribute("id")!;
+        if(id == null) throw Error("error");
+
         SimpleTwowayBinding.autoBind({targetElement : optionFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
-
-        /*
-        calloutFieldSet.style.display = "none";
-        positionFieldSet.style.display = "none";
-        arrowFieldSet.style.display = "inline";
-        xyFieldSet.style.display = "inline";
-        */
-
-        //SimpleTwowayBinding.autoBind({targetElement : xyFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
-        //SimpleTwowayBinding.autoBind({targetElement : arrowFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
     }
 
 }

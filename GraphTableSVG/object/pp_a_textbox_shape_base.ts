@@ -1,4 +1,29 @@
 namespace GraphTableSVG {
+    export type TextBoxShapeAttributes = { className?: string, cx?: number, cy?: number, 
+        width? : number, height? : number, text?: string, isAutoSizeShapeToFitText?: boolean }
+
+    export function constructTextBoxShapeAttributes(e : SVGElement, removeAttributes : boolean = false){
+        const r : TextBoxShapeAttributes = {};
+        r.className = e.getAttribute("class")
+        r.cx = e.gtGetAttributeNumber("cx", 0);
+        r.cy = e.gtGetAttributeNumber("cy", 0);
+        r.text = e.getAttribute("text");
+        r.width = e.gtGetAttributeNumber("width", 100);
+        r.height = e.gtGetAttributeNumber("height", 100);
+        r.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false") == "true";
+
+        if(removeAttributes){
+            e.removeAttribute("cx");
+            e.removeAttribute("cy");
+            e.removeAttribute("class");
+            e.removeAttribute("text");
+            e.removeAttribute("width");
+            e.removeAttribute("height");
+            e.style.removeProperty(Vertex.autoSizeShapeToFitTextName);
+        }
+        return r;
+    }
+
     export function openCustomElement(id : string | SVGElement) : any {
         
         if(typeof id == "string"){
@@ -11,11 +36,10 @@ namespace GraphTableSVG {
         }else{
             const element = id;
             const name = element.nodeName
-            console.log(element);
-            console.log(element.nodeName);
-
             switch(name){
                 case "g-callout" : return CallOut.openCustomElement(element);
+                case "g-shapearrow" : return ShapeArrow.openCustomElement(element);
+
             }
             return null;
         }
@@ -32,15 +56,12 @@ namespace GraphTableSVG {
             const element = id;
             const r : any[] = [];
             HTMLFunctions.getChildren(element).forEach((v)=>{
-                console.log(v);
-                console.log(v instanceof SVGElement);
-
                 if(v instanceof SVGElement){
                     const p = GraphTableSVG.openCustomElement(v);
                     if(p != null) r.push(p);
                 }
             });
-
+            return r;
         }
     }
 
@@ -97,7 +118,7 @@ namespace GraphTableSVG {
             return "PPTextBoxShapeBase";
         }
 
-        public constructor(svgbox: HTMLElement, option: { className?: string, cx?: number, cy?: number, text?: string, isAutoSizeShapeToFitText?: boolean } = {}) {
+        public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
             this._svgGroup = SVG.createGroup(svgbox, option.className == undefined ? null : option.className);
             this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
@@ -144,7 +165,7 @@ namespace GraphTableSVG {
         頂点の幅を返します。
         */
         get width(): number {
-            return this.svgGroup.getAttributeNumber("data-width", 0);
+            return this.svgGroup.gtGetAttributeNumber("data-width", 0);
         }
         set width(value: number) {
             if (this.width != value) this.svgGroup.setAttribute("data-width", value.toString());
@@ -154,7 +175,7 @@ namespace GraphTableSVG {
         頂点の高さを返します。
         */
         get height(): number {
-            return this.svgGroup.getAttributeNumber("data-height", 0);
+            return this.svgGroup.gtGetAttributeNumber("data-height", 0);
         }
         set height(value: number) {
             if (this.height != value) this.svgGroup.setAttribute("data-height", value.toString());
@@ -271,7 +292,7 @@ namespace GraphTableSVG {
         public get svgPath(): SVGPathElement {
             return this._svgPath;
         }
-        public constructor(svgbox: HTMLElement, option: { className?: string, cx?: number, cy?: number, text?: string, isAutoSizeShapeToFitText?: boolean } = {}) {
+        public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option);
             this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaultPathClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);

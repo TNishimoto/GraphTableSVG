@@ -1,22 +1,29 @@
 namespace GraphTableSVG {
-    
+
     export class CallOut extends PPPathTextBox implements PPTextboxShape {
 
-        public constructor(svgbox: HTMLElement, option: { className?: string, cx?: number, cy?: number, text?: string, isAutoSizeShapeToFitText?: boolean } = {}) {
+        public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option);
-            console.log(svgbox instanceof HTMLElement)
             this.speakerX = this.cx;
             this.speakerY = this.cy;
-            
+
 
         }
-        static openCustomElement(e : SVGElement) : CallOut {
+        static openCustomElement(e: SVGElement): CallOut {
             const parent = e.parentElement;
-            const r = new CallOut(parent, {});
-            e.remove();
-            return r;
+            if (parent instanceof SVGSVGElement) {
+                const option = GraphTableSVG.constructTextBoxShapeAttributes(e,true);
+                const attrs = e.gtGetAttributes();
+
+                const r = new CallOut(parent, option);
+                attrs.forEach((v)=>r.svgGroup.setAttribute(v.name, v.value));
+                e.remove();
+                return r;
+            } else {
+                throw Error("error!");
+            }
         }
-        public get type() : string{
+        public get type(): string {
             return "CallOut";
         }
 
@@ -88,15 +95,15 @@ namespace GraphTableSVG {
 
             //this.svgPath.setAttribute("d", `M ${x1} ${y1} H ${x1 + this.width} V ${y1 + this.height} H ${x1} V ${y1} z`);
         }
-        
+
         get speakerX(): number {
-            return this.svgGroup.getAttributeNumber("data-speaker-x", 0);
+            return this.svgGroup.gtGetAttributeNumber("data-speaker-x", 0);
         }
         set speakerX(value: number) {
             if (this.speakerX != value) this.svgGroup.setAttribute("data-speaker-x", value.toString());
         }
         get speakerY(): number {
-            return this.svgGroup.getAttributeNumber("data-speaker-y", 0);
+            return this.svgGroup.gtGetAttributeNumber("data-speaker-y", 0);
         }
         set speakerY(value: number) {
             if (this.speakerY != value) this.svgGroup.setAttribute("data-speaker-y", value.toString());
@@ -155,19 +162,19 @@ namespace GraphTableSVG {
             }
 
         }
-        protected get shape() : string{
+        protected get shape(): string {
             return "msoShapeRectangularCallout";
         }
 
-        protected get VBAAdjustments() : number[] {
+        protected get VBAAdjustments(): number[] {
             const y1 = this.speakerY - this.cy;
             const py = y1 / this.height;
             const x1 = this.speakerX - this.cx;
             const px = x1 / this.width;
-            return [px,py];
+            return [px, py];
         }
 
     }
-    
-    
+
+
 }

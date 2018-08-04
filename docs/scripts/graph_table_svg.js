@@ -1368,6 +1368,28 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    function constructTextBoxShapeAttributes(e, removeAttributes) {
+        if (removeAttributes === void 0) { removeAttributes = false; }
+        var r = {};
+        r.className = e.getAttribute("class");
+        r.cx = e.gtGetAttributeNumber("cx", 0);
+        r.cy = e.gtGetAttributeNumber("cy", 0);
+        r.text = e.getAttribute("text");
+        r.width = e.gtGetAttributeNumber("width", 100);
+        r.height = e.gtGetAttributeNumber("height", 100);
+        r.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, "false") == "true";
+        if (removeAttributes) {
+            e.removeAttribute("cx");
+            e.removeAttribute("cy");
+            e.removeAttribute("class");
+            e.removeAttribute("text");
+            e.removeAttribute("width");
+            e.removeAttribute("height");
+            e.style.removeProperty(GraphTableSVG.Vertex.autoSizeShapeToFitTextName);
+        }
+        return r;
+    }
+    GraphTableSVG.constructTextBoxShapeAttributes = constructTextBoxShapeAttributes;
     function openCustomElement(id) {
         if (typeof id == "string") {
             var item = document.getElementById(id);
@@ -1381,10 +1403,9 @@ var GraphTableSVG;
         else {
             var element = id;
             var name_2 = element.nodeName;
-            console.log(element);
-            console.log(element.nodeName);
             switch (name_2) {
                 case "g-callout": return GraphTableSVG.CallOut.openCustomElement(element);
+                case "g-shapearrow": return GraphTableSVG.ShapeArrow.openCustomElement(element);
             }
             return null;
         }
@@ -1404,14 +1425,13 @@ var GraphTableSVG;
             var element = id;
             var r_1 = [];
             HTMLFunctions.getChildren(element).forEach(function (v) {
-                console.log(v);
-                console.log(v instanceof SVGElement);
                 if (v instanceof SVGElement) {
                     var p = GraphTableSVG.openCustomElement(v);
                     if (p != null)
                         r_1.push(p);
                 }
             });
+            return r_1;
         }
     }
     GraphTableSVG.openSVG = openSVG;
@@ -1527,7 +1547,7 @@ var GraphTableSVG;
         });
         Object.defineProperty(PPTextBoxShapeBase.prototype, "width", {
             get: function () {
-                return this.svgGroup.getAttributeNumber("data-width", 0);
+                return this.svgGroup.gtGetAttributeNumber("data-width", 0);
             },
             set: function (value) {
                 if (this.width != value)
@@ -1538,7 +1558,7 @@ var GraphTableSVG;
         });
         Object.defineProperty(PPTextBoxShapeBase.prototype, "height", {
             get: function () {
-                return this.svgGroup.getAttributeNumber("data-height", 0);
+                return this.svgGroup.gtGetAttributeNumber("data-height", 0);
             },
             set: function (value) {
                 if (this.height != value)
@@ -6636,16 +6656,23 @@ var GraphTableSVG;
         function CallOut(svgbox, option) {
             if (option === void 0) { option = {}; }
             var _this = _super.call(this, svgbox, option) || this;
-            console.log(svgbox instanceof HTMLElement);
             _this.speakerX = _this.cx;
             _this.speakerY = _this.cy;
             return _this;
         }
         CallOut.openCustomElement = function (e) {
             var parent = e.parentElement;
-            var r = new CallOut(parent, {});
-            e.remove();
-            return r;
+            if (parent instanceof SVGSVGElement) {
+                var option = GraphTableSVG.constructTextBoxShapeAttributes(e, true);
+                var attrs = e.gtGetAttributes();
+                var r_2 = new CallOut(parent, option);
+                attrs.forEach(function (v) { return r_2.svgGroup.setAttribute(v.name, v.value); });
+                e.remove();
+                return r_2;
+            }
+            else {
+                throw Error("error!");
+            }
         };
         Object.defineProperty(CallOut.prototype, "type", {
             get: function () {
@@ -6720,7 +6747,7 @@ var GraphTableSVG;
         };
         Object.defineProperty(CallOut.prototype, "speakerX", {
             get: function () {
-                return this.svgGroup.getAttributeNumber("data-speaker-x", 0);
+                return this.svgGroup.gtGetAttributeNumber("data-speaker-x", 0);
             },
             set: function (value) {
                 if (this.speakerX != value)
@@ -6731,7 +6758,7 @@ var GraphTableSVG;
         });
         Object.defineProperty(CallOut.prototype, "speakerY", {
             get: function () {
-                return this.svgGroup.getAttributeNumber("data-speaker-y", 0);
+                return this.svgGroup.gtGetAttributeNumber("data-speaker-y", 0);
             },
             set: function (value) {
                 if (this.speakerY != value)
@@ -6834,6 +6861,20 @@ var GraphTableSVG;
             _this.updateAttributes.push("data-direction");
             return _this;
         }
+        ShapeArrow.openCustomElement = function (e) {
+            var parent = e.parentElement;
+            if (parent instanceof SVGSVGElement) {
+                var option = GraphTableSVG.constructTextBoxShapeAttributes(e, true);
+                var attrs = e.gtGetAttributes();
+                var r_3 = new ShapeArrow(parent, option);
+                e.remove();
+                attrs.forEach(function (v) { return r_3.svgGroup.setAttribute(v.name, v.value); });
+                return r_3;
+            }
+            else {
+                throw Error("error!");
+            }
+        };
         Object.defineProperty(ShapeArrow.prototype, "type", {
             get: function () {
                 return "ShapeArrow";
@@ -6843,7 +6884,7 @@ var GraphTableSVG;
         });
         Object.defineProperty(ShapeArrow.prototype, "arrowNeckWidth", {
             get: function () {
-                return this.svgGroup.getAttributeNumber("data-arrow-neck-width", 0);
+                return this.svgGroup.gtGetAttributeNumber("data-arrow-neck-width", 0);
             },
             set: function (value) {
                 if (this.arrowNeckWidth != value)
@@ -6854,7 +6895,7 @@ var GraphTableSVG;
         });
         Object.defineProperty(ShapeArrow.prototype, "arrowNeckHeight", {
             get: function () {
-                return this.svgGroup.getAttributeNumber("data-arrow-neck-height", 0);
+                return this.svgGroup.gtGetAttributeNumber("data-arrow-neck-height", 0);
             },
             set: function (value) {
                 if (this.arrowNeckHeight != value)
@@ -6865,7 +6906,7 @@ var GraphTableSVG;
         });
         Object.defineProperty(ShapeArrow.prototype, "arrowHeadWidth", {
             get: function () {
-                return this.svgGroup.getAttributeNumber("data-arrow-head-width", 0);
+                return this.svgGroup.gtGetAttributeNumber("data-arrow-head-width", 0);
             },
             set: function (value) {
                 if (this.arrowHeadWidth != value)
@@ -6876,7 +6917,7 @@ var GraphTableSVG;
         });
         Object.defineProperty(ShapeArrow.prototype, "arrowHeadHeight", {
             get: function () {
-                return this.svgGroup.getAttributeNumber("data-arrow-head-height", 0);
+                return this.svgGroup.gtGetAttributeNumber("data-arrow-head-height", 0);
             },
             set: function (value) {
                 if (this.arrowHeadHeight != value)
@@ -7223,6 +7264,15 @@ SVGGElement.prototype.setY = function (value) {
     var f = value;
     p.setAttribute('transform', "matrix(" + a + " " + b + " " + c + " " + d + " " + e + " " + f + ")");
 };
+SVGElement.prototype.gtGetAttributes = function () {
+    var p = this;
+    var r = [];
+    for (var i = 0; i < p.attributes.length; i++) {
+        var item = p.attributes.item(i);
+        r.push({ name: item.name, value: item.value });
+    }
+    return r;
+};
 SVGElement.prototype.getActiveStyle = function () {
     var p = this;
     var r = p.getAttribute("class");
@@ -7233,7 +7283,7 @@ SVGElement.prototype.getActiveStyle = function () {
         return getComputedStyle(p);
     }
 };
-SVGElement.prototype.getAttributeNumber = function (name, defaultValue) {
+SVGElement.prototype.gtGetAttributeNumber = function (name, defaultValue) {
     if (defaultValue === void 0) { defaultValue = null; }
     var item = this;
     var value = item.getAttribute(name);

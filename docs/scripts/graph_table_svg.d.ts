@@ -230,6 +230,16 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    type TextBoxShapeAttributes = {
+        className?: string;
+        cx?: number;
+        cy?: number;
+        width?: number;
+        height?: number;
+        text?: string;
+        isAutoSizeShapeToFitText?: boolean;
+    };
+    function constructTextBoxShapeAttributes(e: SVGElement, removeAttributes?: boolean): TextBoxShapeAttributes;
     function openCustomElement(id: string | SVGElement): any;
     function openSVG(id: string | SVGSVGElement): any[];
     class PPTextBoxShapeBase {
@@ -245,13 +255,7 @@ declare namespace GraphTableSVG {
         protected textObserverFunc: MutationCallback;
         private static updateTextAttributes;
         readonly type: string;
-        constructor(svgbox: HTMLElement, option?: {
-            className?: string;
-            cx?: number;
-            cy?: number;
-            text?: string;
-            isAutoSizeShapeToFitText?: boolean;
-        });
+        constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
         cx: number;
         cy: number;
         width: number;
@@ -276,13 +280,7 @@ declare namespace GraphTableSVG {
     class PPPathTextBox extends PPTextBoxShapeBase {
         private _svgPath;
         readonly svgPath: SVGPathElement;
-        constructor(svgbox: HTMLElement, option?: {
-            className?: string;
-            cx?: number;
-            cy?: number;
-            text?: string;
-            isAutoSizeShapeToFitText?: boolean;
-        });
+        constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
         readonly innerRectangle: Rectangle;
         protected readonly shape: string;
         private getVBAEditLine(id);
@@ -928,13 +926,7 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class CallOut extends PPPathTextBox implements PPTextboxShape {
-        constructor(svgbox: HTMLElement, option?: {
-            className?: string;
-            cx?: number;
-            cy?: number;
-            text?: string;
-            isAutoSizeShapeToFitText?: boolean;
-        });
+        constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
         static openCustomElement(e: SVGElement): CallOut;
         readonly type: string;
         protected update(): void;
@@ -947,13 +939,8 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class ShapeArrow extends PPPathTextBox {
-        constructor(svgbox: HTMLElement, option?: {
-            className?: string;
-            cx?: number;
-            cy?: number;
-            text?: string;
-            isAutoSizeShapeToFitText?: boolean;
-        });
+        constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
+        static openCustomElement(e: SVGElement): ShapeArrow;
         readonly type: string;
         arrowNeckWidth: number;
         arrowNeckHeight: number;
@@ -1009,7 +996,11 @@ interface SVGElement {
     getPropertyStyleNumberValue(name: string, defaultValue: number): number | null;
     getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
     setPropertyStyleValue(name: string, value: string | null): void;
-    getAttributeNumber(name: string, defaultValue: number | null): number | null;
+    gtGetAttributeNumber(name: string, defaultValue: number | null): number | null;
+    gtGetAttributes(): {
+        name: string;
+        value: string;
+    }[];
 }
 interface SVGElement {
     getPaddingLeft(): number;

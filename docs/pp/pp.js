@@ -454,18 +454,28 @@ window.onload = function () {
     }
     */
     if (box instanceof SVGSVGElement) {
-        GraphTableSVG.openSVG(box);
+        var p = GraphTableSVG.openSVG(box);
+        p.forEach(function (v) {
+            if (v instanceof GraphTableSVG.PPTextBoxShapeBase) {
+                v.svgGroup.onclick = onObjectClick;
+                items.push(v);
+            }
+        });
     }
-    var item1 = new GraphTableSVG.CallOut(box, { cx: 200, cy: 200, text: "hoghogeaaaa", isAutoSizeShapeToFitText: false, className: "callout" });
+    /*
+    const item1 = new GraphTableSVG.CallOut(box, {cx : 200, cy : 200, text : "hoghogeaaaa", isAutoSizeShapeToFitText : false, className : "callout"})
     item1.width = 200;
-    item1.height = 100;
+    item1.height =100;
     item1.svgGroup.onclick = onObjectClick;
     items.push(item1);
-    item1.svgGroup.setAttribute("id", "shape");
-    var arrow = new GraphTableSVG.ShapeArrow(box, { cx: 100, cy: 100, text: "hoghogeaaaaa", isAutoSizeShapeToFitText: true, className: "callout" });
+    item1.svgGroup.setAttribute("id", "shape")
+    */
+    /*
+    const arrow = new GraphTableSVG.ShapeArrow(box, {cx : 100, cy : 100, text : "hoghogeaaaaa", isAutoSizeShapeToFitText : true, className : "callout"})
     arrow.svgGroup.onclick = onObjectClick;
     items.push(arrow);
-    arrow.svgGroup.setAttribute("id", "arrowshape");
+    arrow.svgGroup.setAttribute("id", "arrowshape")
+    */
     //box.onmousemove = mouseMoveEvent
     positionFieldSet = document.getElementById('position-field');
     xyFieldSet = document.getElementById('xy-field');
@@ -490,6 +500,7 @@ function transformSconv(value, binder) {
             return source.getY().toString();
         }
     }
+    console.log(source);
     throw Error("error");
 }
 function transformTconv(value, binder) {
@@ -510,6 +521,7 @@ function transformTconv(value, binder) {
             return "matrix(" + a + " " + b + " " + c + " " + d + " " + e + " " + f + ")";
         }
     }
+    console.log(source);
     throw Error("error");
 }
 function getObject(svg) {
@@ -530,32 +542,22 @@ var calloutFieldSet;
 var arrowFieldSet;
 var binderObjects = [];
 function setOption(e) {
+    console.log("setOption");
+    console.log(e instanceof GraphTableSVG.CallOut);
     binderObjects.forEach(function (v) { return v.dispose(); });
     binderObjects = [];
     var optionFieldSet = document.getElementById('option-field');
     if (e instanceof GraphTableSVG.CallOut) {
         var id = e.svgGroup.getAttribute("id");
-        /*
-        calloutFieldSet.style.display = "inline";
-        positionFieldSet.style.display = "none";
-        arrowFieldSet.style.display = "none";
-        xyFieldSet.style.display = "inline";
-        */
+        if (id == null)
+            throw Error("No ID");
         SimpleTwowayBinding.autoBind({ targetElement: optionFieldSet, bindID: id }).forEach(function (v) { return binderObjects.push(v); });
-        //SimpleTwowayBinding.autoBind({targetElement : xyFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
-        //SimpleTwowayBinding.autoBind({targetElement : calloutFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
     }
     else if (e instanceof GraphTableSVG.ShapeArrow) {
         var id = e.svgGroup.getAttribute("id");
+        if (id == null)
+            throw Error("error");
         SimpleTwowayBinding.autoBind({ targetElement: optionFieldSet, bindID: id }).forEach(function (v) { return binderObjects.push(v); });
-        /*
-        calloutFieldSet.style.display = "none";
-        positionFieldSet.style.display = "none";
-        arrowFieldSet.style.display = "inline";
-        xyFieldSet.style.display = "inline";
-        */
-        //SimpleTwowayBinding.autoBind({targetElement : xyFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
-        //SimpleTwowayBinding.autoBind({targetElement : arrowFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
     }
 }
 function onObjectClick(e) {

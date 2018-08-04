@@ -5,7 +5,8 @@ interface SVGElement {
 
     getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
     setPropertyStyleValue(name: string, value: string | null): void;
-    getAttributeNumber(name: string, defaultValue: number | null): number | null;
+    gtGetAttributeNumber(name: string, defaultValue: number | null): number | null;
+    gtGetAttributes() : {name : string, value : string}[];
 
     /*
     getX(): number;
@@ -13,6 +14,15 @@ interface SVGElement {
     getY(): number;
     setY(value: number): void;
     */
+}
+SVGElement.prototype.gtGetAttributes = function () {
+    const p: SVGElement = this;
+    const r: {name : string, value : string}[] = [];
+    for(let i=0;i<p.attributes.length;i++){
+        const item = p.attributes.item(i);
+        r.push({name : item.name, value : item.value});
+    }
+    return r;
 }
 SVGElement.prototype.getActiveStyle = function () {
     const p: SVGElement = this;
@@ -23,7 +33,7 @@ SVGElement.prototype.getActiveStyle = function () {
         return getComputedStyle(p);
     }
 }
-SVGElement.prototype.getAttributeNumber = function(name: string, defaultValue: number | null = null): number | null{
+SVGElement.prototype.gtGetAttributeNumber = function(name: string, defaultValue: number | null = null): number | null{
     const item: SVGElement = this;
 
     const value = item.getAttribute(name);
