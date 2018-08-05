@@ -45,6 +45,9 @@ declare namespace GraphTableSVG {
         function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElement): msoDashStyle;
     }
     type Direction = "up" | "left" | "right" | "down";
+    namespace Direction {
+        function toDirection(value: string): Direction;
+    }
     type SpeakerPosition = "upleft" | "upright" | "leftup" | "leftdown" | "rightup" | "rightdown" | "downleft" | "downright" | "inner";
     type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
     namespace ConnectorPosition {
@@ -230,18 +233,6 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    type TextBoxShapeAttributes = {
-        className?: string;
-        cx?: number;
-        cy?: number;
-        width?: number;
-        height?: number;
-        text?: string;
-        isAutoSizeShapeToFitText?: boolean;
-    };
-    function constructTextBoxShapeAttributes(e: SVGElement, removeAttributes?: boolean): TextBoxShapeAttributes;
-    function openCustomElement(id: string | SVGElement): any;
-    function openSVG(id: string | SVGSVGElement): any[];
     class PPTextBoxShapeBase {
         private _svgGroup;
         readonly svgGroup: SVGGElement;
@@ -249,6 +240,7 @@ declare namespace GraphTableSVG {
         readonly svgText: SVGTextElement;
         private _observer;
         private observerFunc;
+        static constructTextBoxShapeAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): TextBoxShapeAttributes;
         protected updateAttributes: string[];
         readonly isLocated: boolean;
         private _textObserver;
@@ -939,7 +931,8 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class ShapeArrowCallout extends PPPathTextBox {
-        constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
+        constructor(svgbox: SVGSVGElement, option?: ShapeArrowCalloutAttributes);
+        static constructShapeArrowCalloutAttributes(e: SVGElement, removeAttributes?: boolean, output?: ShapeArrowCalloutAttributes): ShapeArrowCalloutAttributes;
         static openCustomElement(e: SVGElement): ShapeArrowCallout;
         readonly type: string;
         arrowNeckWidth: number;
@@ -955,6 +948,26 @@ declare namespace GraphTableSVG {
         protected readonly shape: string;
         protected readonly VBAAdjustments: number[];
     }
+}
+declare namespace GraphTableSVG {
+    type TextBoxShapeAttributes = {
+        className?: string;
+        cx?: number;
+        cy?: number;
+        width?: number;
+        height?: number;
+        text?: string;
+        isAutoSizeShapeToFitText?: boolean;
+    };
+    type ShapeArrowCalloutAttributes = TextBoxShapeAttributes & {
+        arrowHeadWidth?: number;
+        arrowHeadHeight?: number;
+        arrowNeckWidth?: number;
+        arrowNeckHeight?: number;
+        direction?: Direction;
+    };
+    function openCustomElement(id: string | SVGElement): any;
+    function openSVG(id: string | SVGSVGElement): any[];
 }
 declare namespace HTMLFunctions {
     function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;

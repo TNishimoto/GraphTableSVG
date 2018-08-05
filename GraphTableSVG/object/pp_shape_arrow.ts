@@ -1,22 +1,41 @@
 namespace GraphTableSVG {
     export class ShapeArrowCallout extends PPPathTextBox {
 
-        public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGSVGElement, option: ShapeArrowCalloutAttributes = {}) {
             super(svgbox, option);
             if (option.height == undefined) this.height = 100;
             if (option.width == undefined) this.width = 100;
-            this.arrowHeadWidth = 20;
-            this.arrowHeadHeight = 20;
-            this.arrowNeckWidth = 10;
-            this.arrowNeckHeight = 10;
-            this.svgGroup.setAttribute("data-direction", "down");
+            this.arrowNeckWidth = option.arrowNeckWidth == undefined ? 10 : option.arrowNeckWidth;
+            this.arrowNeckHeight = option.arrowNeckHeight == undefined ? 10 : option.arrowNeckHeight;
+            this.arrowHeadWidth = option.arrowHeadWidth == undefined ? 20 : option.arrowHeadWidth;
+            this.arrowHeadHeight = option.arrowHeadHeight == undefined ? 20 : option.arrowHeadHeight;
+            this.svgGroup.setAttribute("data-direction", option.direction == undefined ? "down" : option.direction);
 
             this.updateAttributes.push("data-direction");
         }
+        static constructShapeArrowCalloutAttributes(e : SVGElement, removeAttributes : boolean = false, output : ShapeArrowCalloutAttributes = {}) : ShapeArrowCalloutAttributes {        
+            PPTextBoxShapeBase.constructTextBoxShapeAttributes(e, removeAttributes, output);
+            output.arrowNeckWidth = e.gtGetAttributeNumber("arrow-neck-width", 10);
+            output.arrowNeckHeight = e.gtGetAttributeNumber("arrow-neck-height", 10);
+            output.arrowHeadWidth = e.gtGetAttributeNumber("arrow-head-width", 20);
+            output.arrowHeadHeight = e.gtGetAttributeNumber("arrow-head-height", 20);
+            output.direction = Direction.toDirection(e.getAttribute("direction"));
+
+            if(removeAttributes){
+                e.removeAttribute("arrow-neck-width");
+                e.removeAttribute("arrow-neck-height");
+                e.removeAttribute("arrow-head-width");
+                e.removeAttribute("arrow-head-height");
+                e.removeAttribute("direction");
+            }
+
+            return output;
+        }
+
         static openCustomElement(e: SVGElement): ShapeArrowCallout {
             const parent = e.parentElement;
             if (parent instanceof SVGSVGElement) {
-                const option = GraphTableSVG.constructTextBoxShapeAttributes(e, true);
+                const option = ShapeArrowCallout.constructShapeArrowCalloutAttributes(e, true);
                 const attrs = e.gtGetAttributes();
                 const r = new ShapeArrowCallout(parent, option);
                 e.remove();
@@ -59,15 +78,7 @@ namespace GraphTableSVG {
         }
         get direction(): Direction {
             const r = this.svgGroup.getAttribute("data-direction");
-            if (r == "up") {
-                return "up";
-            } else if (r == "left") {
-                return "left";
-            } else if (r == "right") {
-                return "right";
-            } else {
-                return "down";
-            }
+            return Direction.toDirection(r);
         }
         set direction(value: Direction) {
             if (this.direction != value) {

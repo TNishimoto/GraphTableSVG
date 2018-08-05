@@ -130,6 +130,19 @@
     }
 
     export type Direction = "up" | "left" | "right" | "down";
+    export namespace Direction {
+        export function toDirection(value : string) : Direction{
+            if(value == "up"){
+                return "up";
+            }else if(value == "left"){
+                return "left";
+            }else if(value == "right"){
+                return "right";
+            }else{
+                return "down";
+            }
+        }
+    }
 
     export type SpeakerPosition = "upleft" | "upright" | "leftup" | "leftdown" | "rightup" | "rightdown" | "downleft" | "downright" | "inner";
 

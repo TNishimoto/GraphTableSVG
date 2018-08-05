@@ -12,7 +12,7 @@ namespace GraphTableSVG {
         static openCustomElement(e: SVGElement): Callout {
             const parent = e.parentElement;
             if (parent instanceof SVGSVGElement) {
-                const option = GraphTableSVG.constructTextBoxShapeAttributes(e,true);
+                const option = PPTextBoxShapeBase.constructTextBoxShapeAttributes(e,true);
                 const attrs = e.gtGetAttributes();
 
                 const r = new Callout(parent, option);

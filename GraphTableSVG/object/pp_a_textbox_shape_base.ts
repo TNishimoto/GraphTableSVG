@@ -1,70 +1,7 @@
 namespace GraphTableSVG {
-    export type TextBoxShapeAttributes = { className?: string, cx?: number, cy?: number, 
-        width? : number, height? : number, text?: string, isAutoSizeShapeToFitText?: boolean }
 
-    export function constructTextBoxShapeAttributes(e : SVGElement, removeAttributes : boolean = false){
-        const r : TextBoxShapeAttributes = {};
-        r.className = e.getAttribute("class")
-        r.cx = e.gtGetAttributeNumber("cx", 0);
-        r.cy = e.gtGetAttributeNumber("cy", 0);
-        r.text = e.getAttribute("text");
-        r.width = e.gtGetAttributeNumber("width", 100);
-        r.height = e.gtGetAttributeNumber("height", 100);
 
-        r.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false") == "true";
 
-        if(removeAttributes){
-            e.removeAttribute("cx");
-            e.removeAttribute("cy");
-            e.removeAttribute("class");
-            e.removeAttribute("text");
-            e.removeAttribute("width");
-            e.removeAttribute("height");
-            e.style.removeProperty(Vertex.autoSizeShapeToFitTextName);
-        }
-        return r;
-    }
-
-    export function openCustomElement(id : string | SVGElement) : any {
-        
-        if(typeof id == "string"){
-            const item = document.getElementById(id);
-            if(item instanceof SVGElement){
-                return GraphTableSVG.openCustomElement(item);
-            }else{
-                return null;
-            }
-        }else{
-            const element = id;
-            const name = element.nodeName
-            switch(name){
-                case "g-callout" : return Callout.openCustomElement(element);
-                case "g-sarrowcallout" : return ShapeArrowCallout.openCustomElement(element);
-
-            }
-            return null;
-        }
-    }
-    export function openSVG(id : string | SVGSVGElement) : any[] {
-        if(typeof id == "string"){
-            const item = document.getElementById(id);
-            if(item != null && item instanceof SVGSVGElement){
-                return GraphTableSVG.openSVG(item);
-            }else{
-                return [];
-            }
-        }else{
-            const element = id;
-            const r : any[] = [];
-            HTMLFunctions.getChildren(element).forEach((v)=>{
-                if(v instanceof SVGElement){
-                    const p = GraphTableSVG.openCustomElement(v);
-                    if(p != null) r.push(p);
-                }
-            });
-            return r;
-        }
-    }
 
     export class PPTextBoxShapeBase {
         private _svgGroup: SVGGElement;
@@ -91,6 +28,29 @@ namespace GraphTableSVG {
             }
             if (b) this.update();
         };
+        static constructTextBoxShapeAttributes(e : SVGElement, 
+            removeAttributes : boolean = false, output : TextBoxShapeAttributes = {}) : TextBoxShapeAttributes {        
+            output.className = e.getAttribute("class")
+            output.cx = e.gtGetAttributeNumber("cx", 0);
+            output.cy = e.gtGetAttributeNumber("cy", 0);
+            output.text = e.getAttribute("text");
+            output.width = e.gtGetAttributeNumber("width", 100);
+            output.height = e.gtGetAttributeNumber("height", 100);
+    
+            output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false") == "true";
+    
+            if(removeAttributes){
+                e.removeAttribute("cx");
+                e.removeAttribute("cy");
+                e.removeAttribute("class");
+                e.removeAttribute("text");
+                e.removeAttribute("width");
+                e.removeAttribute("height");
+                e.style.removeProperty(Vertex.autoSizeShapeToFitTextName);
+            }
+            return output;
+        }
+
         protected updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y", 
         "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", 
         "data-arrow-head-width", "data-arrow-head-height"]
