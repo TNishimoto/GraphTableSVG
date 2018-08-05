@@ -41,6 +41,9 @@ var SimpleAttributeObserver = /** @class */ (function () {
             if (this.watchedAttributeName == "style" && this.watchedStyleName != undefined) {
                 return this.element.style.getPropertyValue(this.watchedStyleName);
             }
+            else if (this.watchedAttributeName == "@textContent") {
+                return this.element.textContent;
+            }
             else {
                 return this.element.getAttribute(this.watchedAttributeName);
             }
@@ -49,6 +52,14 @@ var SimpleAttributeObserver = /** @class */ (function () {
             if (this.watchedAttributeValue != value) {
                 if (this.watchedAttributeName == "style" && this.watchedStyleName != undefined) {
                     this.element.style.setProperty(this.watchedStyleName, value);
+                }
+                else if (this.watchedAttributeName == "@textContent") {
+                    if (value == null) {
+                        this.element.textContent = "";
+                    }
+                    else {
+                        this.element.textContent = value;
+                    }
                 }
                 else {
                     if (value == null) {
@@ -435,24 +446,8 @@ var FooterButton = /** @class */ (function () {
     return FooterButton;
 }());
 var items = [];
-/*
-interface Window {
-    Vue?: any;
-}
-declare var window: Window
-const Vue = window.Vue
-*/
 window.onload = function () {
-    //const inputBox = <HTMLInputElement>document.getElementById('inputOB');
-    //const circle = <HTMLElement>document.getElementById('circle');
     var box = document.getElementById('svgbox');
-    /*
-    box.onclick = (e : MouseEvent) =>{
-        circle.setAttribute("cx", e.x.toString());
-        circle.setAttribute("cy", e.y.toString());
-
-    }
-    */
     if (box instanceof SVGSVGElement) {
         var p = GraphTableSVG.openSVG(box);
         p.forEach(function (v) {
@@ -462,21 +457,6 @@ window.onload = function () {
             }
         });
     }
-    /*
-    const item1 = new GraphTableSVG.CallOut(box, {cx : 200, cy : 200, text : "hoghogeaaaa", isAutoSizeShapeToFitText : false, className : "callout"})
-    item1.width = 200;
-    item1.height =100;
-    item1.svgGroup.onclick = onObjectClick;
-    items.push(item1);
-    item1.svgGroup.setAttribute("id", "shape")
-    */
-    /*
-    const arrow = new GraphTableSVG.ShapeArrow(box, {cx : 100, cy : 100, text : "hoghogeaaaaa", isAutoSizeShapeToFitText : true, className : "callout"})
-    arrow.svgGroup.onclick = onObjectClick;
-    items.push(arrow);
-    arrow.svgGroup.setAttribute("id", "arrowshape")
-    */
-    //box.onmousemove = mouseMoveEvent
     positionFieldSet = document.getElementById('position-field');
     xyFieldSet = document.getElementById('xy-field');
     calloutFieldSet = document.getElementById('callout-field');
@@ -542,18 +522,16 @@ var calloutFieldSet;
 var arrowFieldSet;
 var binderObjects = [];
 function setOption(e) {
-    console.log("setOption");
-    console.log(e instanceof GraphTableSVG.CallOut);
     binderObjects.forEach(function (v) { return v.dispose(); });
     binderObjects = [];
     var optionFieldSet = document.getElementById('option-field');
-    if (e instanceof GraphTableSVG.CallOut) {
+    if (e instanceof GraphTableSVG.Callout) {
         var id = e.svgGroup.getAttribute("id");
         if (id == null)
             throw Error("No ID");
         SimpleTwowayBinding.autoBind({ targetElement: optionFieldSet, bindID: id }).forEach(function (v) { return binderObjects.push(v); });
     }
-    else if (e instanceof GraphTableSVG.ShapeArrow) {
+    else if (e instanceof GraphTableSVG.ShapeArrowCallout) {
         var id = e.svgGroup.getAttribute("id");
         if (id == null)
             throw Error("error");
@@ -583,7 +561,7 @@ function optionIf(source, target) {
     var id = target.getAttribute("id");
     if (source instanceof SVGElement) {
         var e = getObject(source);
-        if (e instanceof GraphTableSVG.CallOut) {
+        if (e instanceof GraphTableSVG.Callout) {
             switch (id) {
                 case "position-field": return false;
                 case "xy-field": return true;
@@ -595,10 +573,11 @@ function optionIf(source, target) {
                 case "margin-field": return true;
                 case "vertical-field": return true;
                 case "horizontal-field": return true;
+                case "text-field": return true;
             }
             return false;
         }
-        else if (e instanceof GraphTableSVG.ShapeArrow) {
+        else if (e instanceof GraphTableSVG.ShapeArrowCallout) {
             switch (id) {
                 case "position-field": return false;
                 case "xy-field": return true;
@@ -610,6 +589,7 @@ function optionIf(source, target) {
                 case "margin-field": return true;
                 case "vertical-field": return true;
                 case "horizontal-field": return true;
+                case "text-field": return true;
             }
             return false;
         }

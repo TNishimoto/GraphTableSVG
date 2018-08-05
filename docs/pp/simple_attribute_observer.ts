@@ -17,6 +17,9 @@ class SimpleAttributeObserver{
     public get watchedAttributeValue(): string | null {
         if(this.watchedAttributeName == "style" && this.watchedStyleName != undefined){
             return this.element.style.getPropertyValue(this.watchedStyleName);
+        }
+        else if(this.watchedAttributeName == "@textContent"){
+            return this.element.textContent;
         }else{
             return this.element.getAttribute(this.watchedAttributeName);
         }
@@ -25,7 +28,16 @@ class SimpleAttributeObserver{
         if (this.watchedAttributeValue != value) {
             if(this.watchedAttributeName == "style" && this.watchedStyleName != undefined){
                 this.element.style.setProperty(this.watchedStyleName, value);                
-            }else{
+            }
+            else if(this.watchedAttributeName =="@textContent"){
+                if(value == null){
+                    this.element.textContent = "";
+                }else{
+                    this.element.textContent = value;
+                }
+            }
+            else{
+                
                 if (value == null) {
                     this.element.removeAttribute(this.watchedAttributeName);
                 } else {

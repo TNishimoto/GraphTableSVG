@@ -10,23 +10,14 @@
 </head>
 
 <body>
-    <button type="button" onclick="GraphTableSVG.GUI.createMacroModal(GraphTableSVG.SVGToVBA.create(graph))">VBA</button>
+    <button type="button" onclick="GraphTableSVG.GUI.createMacroModal(GraphTableSVG.SVGToVBA.create(items))">VBA</button>
     <button type="button" onclick="GraphTableSVG.PNG.createPNGFromSVG('svgbox')">PNG</button>
-    <button type="button" onclick="margin(1,0)">marginLeft+</button>
-    <button type="button" onclick="margin(-1,0)">marginLeft-</button>
-    <button type="button" onclick="margin(0,1)">marginTop+</button>
-    <button type="button" onclick="margin(0,-1)">marginTop-</button>
-    <button type="button" onclick="plus()">dadd</button>
-    <button type="button" onclick="update()">update</button>
-    <div>
-        <input id="inputOB" type="number" n-bind:s-attr="cx" n-bind:s-id="circle" n-bind:t-attr="value" />
-    </div>
-
+    <button type="button" onclick="update()">update</button><br>
 
     <svg viewBox="0 0 500 500" width="500px" height="500px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
         <circle id="circle" cx="100" cy="100" r="10" stroke="green" style="fill:pink;stroke-width:3pt"/>
-        <g-callout id="shape" class="callout" cx="200" cy="200" text="hello world"/>
-        <g-shapearrow id="shapearrow" class="callout" cx="100" cy="100" text="hello world"/>
+        <g-callout id="shape"  class="callout" cx="200" cy="200" text="hello world"/>
+        <g-sarrowcallout id="shapearrow" class="callout" cx="100" cy="100" text="hello world"/>
 
     </svg>
     <div id="footerArea">
@@ -93,6 +84,10 @@
                     <span>左：<input n-bind:s-attr="style" n-bind:s-style="--horizontal-anchor"  name="horizontal-button" value="left" type="radio"></span>
                     <span>真ん中：<input n-bind:s-attr="style" n-bind:s-style="--horizontal-anchor"  name="horizontal-button" value="center" type="radio"></span>
                     <span>右：<input n-bind:s-attr="style" n-bind:s-style="--horizontal-anchor"  name="horizontal-button" value="right" type="radio"></span>
+                </fieldset>
+                <fieldset id="text-field" n-if="optionIf" class="field" n-bind:s-xpath="./*[name()='text']/*[name()='tspan']">
+                    <legend>テキスト</legend>
+                    <span>テキスト：<input n-bind:s-attr="@textContent" type="text"></span>
                 </fieldset>
 
             </div>

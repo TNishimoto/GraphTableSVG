@@ -1,25 +1,9 @@
 const items : GraphTableSVG.VBAObjectType[] = [];
-/*
-interface Window {
-    Vue?: any;
-}
-declare var window: Window
-const Vue = window.Vue
-*/
 
 window.onload = () => {
 
-    //const inputBox = <HTMLInputElement>document.getElementById('inputOB');
-    //const circle = <HTMLElement>document.getElementById('circle');
     
     const box : SVGSVGElement = <any>document.getElementById('svgbox');
-    /*
-    box.onclick = (e : MouseEvent) =>{
-        circle.setAttribute("cx", e.x.toString());
-        circle.setAttribute("cy", e.y.toString());
-
-    }
-    */
     if(box instanceof SVGSVGElement){
         const p = GraphTableSVG.openSVG(box);
         p.forEach((v)=>{
@@ -29,23 +13,6 @@ window.onload = () => {
             }
         })
     }
-    /*
-    const item1 = new GraphTableSVG.CallOut(box, {cx : 200, cy : 200, text : "hoghogeaaaa", isAutoSizeShapeToFitText : false, className : "callout"})
-    item1.width = 200;
-    item1.height =100;
-    item1.svgGroup.onclick = onObjectClick;
-    items.push(item1);
-    item1.svgGroup.setAttribute("id", "shape")
-    */
-    /*
-    const arrow = new GraphTableSVG.ShapeArrow(box, {cx : 100, cy : 100, text : "hoghogeaaaaa", isAutoSizeShapeToFitText : true, className : "callout"})
-    arrow.svgGroup.onclick = onObjectClick;
-    items.push(arrow);
-    arrow.svgGroup.setAttribute("id", "arrowshape")
-    */
-
-
-    //box.onmousemove = mouseMoveEvent
     
 
     positionFieldSet = <HTMLElement>document.getElementById('position-field');
@@ -119,18 +86,16 @@ let arrowFieldSet : HTMLElement;
 let binderObjects : SimpleTwowayBinding[] = [];
 
 function setOption(e : GraphTableSVG.VBAObjectType){
-    console.log("setOption")
-    console.log(e instanceof GraphTableSVG.CallOut);
 
     binderObjects.forEach((v)=>v.dispose());
     binderObjects = [];
     const optionFieldSet = <HTMLElement>document.getElementById('option-field');
 
-    if(e instanceof GraphTableSVG.CallOut){
+    if(e instanceof GraphTableSVG.Callout){
         const id = e.svgGroup.getAttribute("id")!;
         if(id == null) throw Error("No ID");
         SimpleTwowayBinding.autoBind({targetElement : optionFieldSet, bindID : id}).forEach((v)=>binderObjects.push(v));
-    }else if(e instanceof GraphTableSVG.ShapeArrow){
+    }else if(e instanceof GraphTableSVG.ShapeArrowCallout){
         const id = e.svgGroup.getAttribute("id")!;
         if(id == null) throw Error("error");
 
@@ -161,7 +126,7 @@ function optionIf(source : HTMLElement, target : HTMLElement) : boolean {
     const id = target.getAttribute("id");
     if(source instanceof SVGElement){
         const e = getObject(source);
-        if(e instanceof GraphTableSVG.CallOut){
+        if(e instanceof GraphTableSVG.Callout){
             switch(id){
                 case "position-field" : return false;
                 case "xy-field" : return true;
@@ -173,10 +138,11 @@ function optionIf(source : HTMLElement, target : HTMLElement) : boolean {
                 case "margin-field" : return true;
                 case "vertical-field" : return true;
                 case "horizontal-field" : return true;
+                case "text-field" : return true;
 
             }
             return false;
-        }else if(e instanceof GraphTableSVG.ShapeArrow){
+        }else if(e instanceof GraphTableSVG.ShapeArrowCallout){
             switch(id){
                 case "position-field" : return false;
                 case "xy-field" : return true;
@@ -188,6 +154,7 @@ function optionIf(source : HTMLElement, target : HTMLElement) : boolean {
                 case "margin-field" : return true;
                 case "vertical-field" : return true;
                 case "horizontal-field" : return true;
+                case "text-field" : return true;
 
             }
             return false;

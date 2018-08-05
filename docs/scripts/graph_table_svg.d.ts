@@ -925,9 +925,9 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class CallOut extends PPPathTextBox implements PPTextboxShape {
+    class Callout extends PPPathTextBox implements PPTextboxShape {
         constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
-        static openCustomElement(e: SVGElement): CallOut;
+        static openCustomElement(e: SVGElement): Callout;
         readonly type: string;
         protected update(): void;
         speakerX: number;
@@ -938,9 +938,9 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class ShapeArrow extends PPPathTextBox {
+    class ShapeArrowCallout extends PPPathTextBox {
         constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
-        static openCustomElement(e: SVGElement): ShapeArrow;
+        static openCustomElement(e: SVGElement): ShapeArrowCallout;
         readonly type: string;
         arrowNeckWidth: number;
         arrowNeckHeight: number;
@@ -952,6 +952,8 @@ declare namespace GraphTableSVG {
         protected readonly boxWidth: number;
         protected updateToFitText(): void;
         protected update(): void;
+        protected readonly shape: string;
+        protected readonly VBAAdjustments: number[];
     }
 }
 declare namespace HTMLFunctions {

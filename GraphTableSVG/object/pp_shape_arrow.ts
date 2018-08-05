@@ -1,10 +1,10 @@
 namespace GraphTableSVG {
-    export class ShapeArrow extends PPPathTextBox {
+    export class ShapeArrowCallout extends PPPathTextBox {
 
         public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option);
-            this.height = 100;
-            this.width = 100;
+            if (option.height == undefined) this.height = 100;
+            if (option.width == undefined) this.width = 100;
             this.arrowHeadWidth = 20;
             this.arrowHeadHeight = 20;
             this.arrowNeckWidth = 10;
@@ -13,20 +13,20 @@ namespace GraphTableSVG {
 
             this.updateAttributes.push("data-direction");
         }
-        static openCustomElement(e: SVGElement): ShapeArrow {
+        static openCustomElement(e: SVGElement): ShapeArrowCallout {
             const parent = e.parentElement;
             if (parent instanceof SVGSVGElement) {
-                const option = GraphTableSVG.constructTextBoxShapeAttributes(e,true);
+                const option = GraphTableSVG.constructTextBoxShapeAttributes(e, true);
                 const attrs = e.gtGetAttributes();
-                const r = new ShapeArrow(parent, option);                
+                const r = new ShapeArrowCallout(parent, option);
                 e.remove();
-                attrs.forEach((v)=>r.svgGroup.setAttribute(v.name, v.value));
+                attrs.forEach((v) => r.svgGroup.setAttribute(v.name, v.value));
                 return r;
             } else {
                 throw Error("error!");
             }
         }
-        public get type() : string{
+        public get type(): string {
             return "ShapeArrow";
         }
         get arrowNeckWidth(): number {
@@ -240,5 +240,48 @@ namespace GraphTableSVG {
                 this.svgPath.setAttribute("d", `${top} ${right} ${bottom} ${left} z`);
             }
         }
+        protected get shape(): string {
+            switch (this.direction) {
+                case "up": return "msoShapeUpArrowCallout";
+                case "left": return "msoShapeLeftArrowCallout";
+                case "right": return "msoShapeRightArrowCallout";
+                case "down": return "msoShapeDownArrowCallout";
+            }
+            return "msoShapeDownArrowCallout";
+        }
+        /**
+         * VBAコードでのこの図形を表すShape図形のVBAAdjustmentsプロパティを表します。
+         * 第一要素は矢印の首の幅（）
+         * 第二要素は矢印の頭の幅
+         * @returns VBAAdjustments値の配列。
+         */
+        protected get VBAAdjustments(): number[] {
+            if (this.direction == "up") {
+                const neckWidthRatio = this.arrowNeckWidth / this.width;
+                const headWidthRatio = this.arrowHeadWidth / (this.height * 2);
+                const headHeightRatio = this.arrowHeadHeight / this.height;
+                const boxHeightRatio = this.boxHeight / this.height;
+                return [neckWidthRatio, headWidthRatio, headHeightRatio, boxHeightRatio];
+            } else if (this.direction == "right") {
+                const neckWidthRatio = this.arrowNeckWidth / this.height;
+                const headWidthRatio = this.arrowHeadWidth / (this.height * 2);
+                const headHeightRatio = this.arrowHeadHeight / this.height;
+                const boxWidthRatio = this.boxWidth / this.width;
+                return [neckWidthRatio, headWidthRatio, headHeightRatio, boxWidthRatio];
+            } else if (this.direction == "left") {
+                const neckWidthRatio = this.arrowNeckWidth / this.height;
+                const headWidthRatio = this.arrowHeadWidth / (this.height * 2);
+                const headHeightRatio = this.arrowHeadHeight / this.height;
+                const boxWidthRatio = this.boxWidth / this.width;
+                return [neckWidthRatio, headWidthRatio, headHeightRatio, boxWidthRatio];
+            }else{
+                const neckWidthRatio = this.arrowNeckWidth / this.height;
+                const headWidthRatio = this.arrowHeadWidth / (this.height * 2);
+                const headHeightRatio = this.arrowHeadHeight / this.height;
+                const boxHeightRatio = this.boxHeight / this.height;
+                return [neckWidthRatio, headWidthRatio, headHeightRatio, boxHeightRatio];
+            }
+        }
+
     }
 }

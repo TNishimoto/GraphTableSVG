@@ -10,6 +10,7 @@ namespace GraphTableSVG {
         r.text = e.getAttribute("text");
         r.width = e.gtGetAttributeNumber("width", 100);
         r.height = e.gtGetAttributeNumber("height", 100);
+
         r.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false") == "true";
 
         if(removeAttributes){
@@ -37,8 +38,8 @@ namespace GraphTableSVG {
             const element = id;
             const name = element.nodeName
             switch(name){
-                case "g-callout" : return CallOut.openCustomElement(element);
-                case "g-shapearrow" : return ShapeArrow.openCustomElement(element);
+                case "g-callout" : return Callout.openCustomElement(element);
+                case "g-sarrowcallout" : return ShapeArrowCallout.openCustomElement(element);
 
             }
             return null;
@@ -297,9 +298,8 @@ namespace GraphTableSVG {
             this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaultPathClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
             
-
-            this.width = 100;
-            this.height = 100;
+            if(option.width != undefined) this.width = option.width;
+            if(option.height != undefined) this.height = option.height;
 
             if (option.cx != undefined) this.cx = option.cx;
             if (option.cy != undefined) this.cy = option.cy;
@@ -332,6 +332,10 @@ namespace GraphTableSVG {
             const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
             return ` Call EditLine(obj${id}.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`;
         }
+        /**
+         * 
+         * @param id 
+         */
         public createVBACode(id: number): string[] {
             const lines : string[] = [];
             const backColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("fill", "gray"));
@@ -342,9 +346,9 @@ namespace GraphTableSVG {
             lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
             lines.push(` Dim obj${id} As Shape`);
             lines.push(` Set obj${id} = shapes_.AddShape(${this.shape}, ${this.x}, ${this.y}, ${this.width}, ${this.height})`);
-            lines.push(` Call EditTextFrame(obj${id}.TextFrame, ${this.svgText.getMarginTop()}, ${this.svgText.getMarginBottom()}, ${this.svgText.getMarginLeft()}, ${this.svgText.getMarginRight()}, false, ppAutoSizeNone)`);
+            lines.push(` Call EditTextFrame(obj${id}.TextFrame, ${this.marginPaddingTop}, ${this.marginPaddingBottom}, ${this.marginPaddingLeft}, ${this.marginPaddingRight}, false, ppAutoSizeNone)`);
             VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, `obj${id}.TextFrame.TextRange`).forEach((v)=>lines.push(v));
-            const adjustments = this.VBAAdjustments;
+            //const adjustments = this.VBAAdjustments;
             lines.push(this.getVBAEditLine(id));
 
             lines.push(` Call EditCallOut(obj${id}, "${id}", ${visible}, ${backColor})`)
@@ -355,6 +359,9 @@ namespace GraphTableSVG {
             //sub.push([` Call EditTextEffect(nodes(${i}).TextEffect, ${fontSize}, "${fontFamily}")`]);
             return lines;
         }
+        /**
+         * VBAコードでのこの図形を表すShape図形のVBAAdjustmentsプロパティを表します。
+         */
         protected get VBAAdjustments() : number[] {
             return [];
         }

@@ -1,6 +1,6 @@
 namespace GraphTableSVG {
 
-    export class CallOut extends PPPathTextBox implements PPTextboxShape {
+    export class Callout extends PPPathTextBox implements PPTextboxShape {
 
         public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option);
@@ -9,13 +9,13 @@ namespace GraphTableSVG {
 
 
         }
-        static openCustomElement(e: SVGElement): CallOut {
+        static openCustomElement(e: SVGElement): Callout {
             const parent = e.parentElement;
             if (parent instanceof SVGSVGElement) {
                 const option = GraphTableSVG.constructTextBoxShapeAttributes(e,true);
                 const attrs = e.gtGetAttributes();
 
-                const r = new CallOut(parent, option);
+                const r = new Callout(parent, option);
                 attrs.forEach((v)=>r.svgGroup.setAttribute(v.name, v.value));
                 e.remove();
                 return r;
@@ -163,6 +163,7 @@ namespace GraphTableSVG {
 
         }
         protected get shape(): string {
+
             return "msoShapeRectangularCallout";
         }
 
