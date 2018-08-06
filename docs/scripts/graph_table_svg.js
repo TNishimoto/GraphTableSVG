@@ -1458,7 +1458,7 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        PPTextBoxShapeBase.constructTextBoxShapeAttributes = function (e, removeAttributes, output) {
+        PPTextBoxShapeBase.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
             if (output === void 0) { output = {}; }
             output.className = e.getAttribute("class");
@@ -1661,100 +1661,6 @@ var GraphTableSVG;
         return PPTextBoxShapeBase;
     }());
     GraphTableSVG.PPTextBoxShapeBase = PPTextBoxShapeBase;
-    var PPPathTextBox = (function (_super) {
-        __extends(PPPathTextBox, _super);
-        function PPPathTextBox(svgbox, option) {
-            if (option === void 0) { option = {}; }
-            var _this = _super.call(this, svgbox, option) || this;
-            _this._svgPath = GraphTableSVG.SVG.createPath(_this.svgGroup, 0, 0, 0, 0, _this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaultPathClass));
-            _this.svgGroup.insertBefore(_this.svgPath, _this.svgText);
-            if (option.width != undefined)
-                _this.width = option.width;
-            if (option.height != undefined)
-                _this.height = option.height;
-            if (option.cx != undefined)
-                _this.cx = option.cx;
-            if (option.cy != undefined)
-                _this.cy = option.cy;
-            return _this;
-        }
-        Object.defineProperty(PPPathTextBox.prototype, "svgPath", {
-            get: function () {
-                return this._svgPath;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPPathTextBox.prototype, "innerRectangle", {
-            get: function () {
-                var rect = new GraphTableSVG.Rectangle();
-                if (this.isAutoSizeShapeToFitText) {
-                    var b = this.svgText.getBBox();
-                    rect.width = b.width;
-                    rect.height = b.height;
-                    rect.x = (-this.width / 2) + this.marginPaddingLeft;
-                    rect.y = (-this.height / 2) + this.marginPaddingTop;
-                }
-                else {
-                    rect.width = this.width - this.marginPaddingLeft;
-                    rect.height = this.height - this.marginPaddingTop;
-                    rect.x = (-this.width / 2) + this.marginPaddingLeft;
-                    rect.y = (-this.height / 2) + this.marginPaddingTop;
-                }
-                return rect;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPPathTextBox.prototype, "shape", {
-            get: function () {
-                return "NONE";
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PPPathTextBox.prototype.getVBAEditLine = function (id) {
-            var lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
-            var lineType = GraphTableSVG.msoDashStyle.getLineType(this.svgPath);
-            var strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
-            var visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-            return " Call EditLine(obj" + id + ".Line, " + lineColor + ", " + lineType + ", " + 0 + ", " + strokeWidth + ", " + visible + ")";
-        };
-        PPPathTextBox.prototype.createVBACode = function (id) {
-            var lines = [];
-            var backColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("fill", "gray"));
-            var visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-            lines.push("Sub create" + id + "(createdSlide As slide)");
-            lines.push(" Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes");
-            lines.push(" Dim obj" + id + " As Shape");
-            lines.push(" Set obj" + id + " = shapes_.AddShape(" + this.shape + ", " + this.x + ", " + this.y + ", " + this.width + ", " + this.height + ")");
-            lines.push(" Call EditTextFrame(obj" + id + ".TextFrame, " + this.marginPaddingTop + ", " + this.marginPaddingBottom + ", " + this.marginPaddingLeft + ", " + this.marginPaddingRight + ", false, ppAutoSizeNone)");
-            GraphTableSVG.VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, "obj" + id + ".TextFrame.TextRange").forEach(function (v) { return lines.push(v); });
-            lines.push(this.getVBAEditLine(id));
-            lines.push(" Call EditCallOut(obj" + id + ", \"" + id + "\", " + visible + ", " + backColor + ")");
-            this.VBAAdjustments.forEach(function (v, i) {
-                lines.push(" obj" + id + ".Adjustments.Item(" + (i + 1) + ") = " + v);
-            });
-            lines.push("End Sub");
-            return lines;
-        };
-        Object.defineProperty(PPPathTextBox.prototype, "VBAAdjustments", {
-            get: function () {
-                return [];
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPPathTextBox.prototype, "type", {
-            get: function () {
-                return "PPPathTextBox";
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return PPPathTextBox;
-    }(PPTextBoxShapeBase));
-    GraphTableSVG.PPPathTextBox = PPPathTextBox;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -6195,7 +6101,7 @@ var GraphTableSVG;
             lines.push("End Sub");
             return lines;
         };
-        SVGToVBA.cellFunctionCode = "\nSub EditTable(table_ As table, cellInfo_() As Variant)\n    Dim x As Integer\n    Dim y As Integer\n    \n    For x = 1 To UBound(cellInfo_, 1)\n        For y = 1 To UBound(cellInfo_, 2)\n         Call EditCell(table_.cell(x, y), CStr(cellInfo_(x, y)(0)))\n        Next\n    Next\nEnd Sub\n\nSub EditCell(cell_ As cell, text_ As String, backColor As Variant)\n    cell_.Shape.TextFrame.TextRange.text = text_\n    cell_.Shape.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant, fontBold As Integer)\n    frame_.TextRange.Font.Size = fontSize\n    frame_.TextRange.Font.name = fontName\n    frame_.TextRange.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    frame_.TextRange.Font.Bold = fontBold\nEnd Sub\n\n\n\n\nSub EditRow(row_ As Row, height As Integer)\n    row_.height = height\nEnd Sub\nSub EditColumn(column_ As Column, width As Integer)\n    column_.width = width\nEnd Sub\n\nSub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, vAnchor As Integer, hAnchor As Integer)\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\n    frame_.VerticalAnchor = vAnchor\n    frame_.TextRange.ParagraphFormat.Alignment = hAnchor\nEnd Sub\n\nSub EditTextRange(range_ As TextRange, text As String)\n    range_.text = text\nEnd Sub\nSub EditTextRangeSub(range_ As TextRange, subBeg As Integer, subLen As Integer, script As String, color As Variant, fontName As String, fontSize As Double, fontBold As Integer)\n    range_.Characters(subBeg, subLen).Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    range_.Characters(subBeg, subLen).Font.Size = fontSize\n    range_.Characters(subBeg, subLen).Font.name = fontName\n    range_.Characters(subBeg, subLen).Font.Bold = fontBold\n    If script = \"subscript\" Then\n    range_.Characters(subBeg, subLen).Font.Subscript = True\n    End If\n    If script = \"superscript\" Then\n    range_.Characters(subBeg, subLen).Font.Superscript = True\n    End If\nEnd Sub\n\n\n\nSub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer, transparent As Double)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.weight = weight\n    line_.Transparency = transparent\nEnd Sub\n\nSub EditConnector(connector_ As ConnectorFormat, begShape As Shape, endShape As Shape, begPos As Integer, endPos As Integer)\n    Call connector_.BeginConnect(begShape, begPos)\n    Call connector_.EndConnect(endShape, endPos)\nEnd Sub\n\nSub EditTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, wordWrap As Boolean, autoSize As Integer)\n    frame_.autoSize = autoSize\n    frame_.wordWrap = wordWrap\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\nEnd Sub\n\nSub EditTextEffect(effect_ As TextEffectFormat, fontSize As Double, fontName As String)\n effect_.fontSize = fontSize\n effect_.fontName = fontName\nEnd Sub\n\nSub EditVertexShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\n\nSub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer, visible As Integer)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.dashStyle = dashStyle\n    line_.Transparency = transparent\n    line_.weight = weight\n    line_.visible = visible\nEnd Sub\n\nSub EditCallOut(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\n\n";
+        SVGToVBA.cellFunctionCode = "\nSub EditTable(table_ As table, cellInfo_() As Variant)\n    Dim x As Integer\n    Dim y As Integer\n    \n    For x = 1 To UBound(cellInfo_, 1)\n        For y = 1 To UBound(cellInfo_, 2)\n         Call EditCell(table_.cell(x, y), CStr(cellInfo_(x, y)(0)))\n        Next\n    Next\nEnd Sub\n\nSub EditCell(cell_ As cell, text_ As String, backColor As Variant)\n    cell_.Shape.TextFrame.TextRange.text = text_\n    cell_.Shape.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant, fontBold As Integer)\n    frame_.TextRange.Font.Size = fontSize\n    frame_.TextRange.Font.name = fontName\n    frame_.TextRange.Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    frame_.TextRange.Font.Bold = fontBold\nEnd Sub\n\n\n\n\nSub EditRow(row_ As Row, height As Integer)\n    row_.height = height\nEnd Sub\nSub EditColumn(column_ As Column, width As Integer)\n    column_.width = width\nEnd Sub\n\nSub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, vAnchor As Integer, hAnchor As Integer)\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\n    frame_.VerticalAnchor = vAnchor\n    frame_.TextRange.ParagraphFormat.Alignment = hAnchor\nEnd Sub\n\nSub EditTextRange(range_ As TextRange, text As String)\n    range_.text = text\nEnd Sub\nSub EditTextRangeSub(range_ As TextRange, subBeg As Integer, subLen As Integer, script As String, color As Variant, fontName As String, fontSize As Double, fontBold As Integer)\n    range_.Characters(subBeg, subLen).Font.color.RGB = RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))\n    range_.Characters(subBeg, subLen).Font.Size = fontSize\n    range_.Characters(subBeg, subLen).Font.name = fontName\n    range_.Characters(subBeg, subLen).Font.Bold = fontBold\n    If script = \"subscript\" Then\n    range_.Characters(subBeg, subLen).Font.Subscript = True\n    End If\n    If script = \"superscript\" Then\n    range_.Characters(subBeg, subLen).Font.Superscript = True\n    End If\nEnd Sub\n\n\n\nSub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\nSub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer, transparent As Double)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.weight = weight\n    line_.Transparency = transparent\nEnd Sub\n\nSub EditConnector(connector_ As ConnectorFormat, begShape As Shape, endShape As Shape, begPos As Integer, endPos As Integer)\n    Call connector_.BeginConnect(begShape, begPos)\n    Call connector_.EndConnect(endShape, endPos)\nEnd Sub\n\nSub EditTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, wordWrap As Boolean, autoSize As Integer)\n    frame_.autoSize = autoSize\n    frame_.wordWrap = wordWrap\n    frame_.marginLeft = marginLeft\n    frame_.marginRight = marginRight\n    frame_.marginTop = marginTop\n    frame_.marginBottom = marginBottom\nEnd Sub\nSub EditAnchor(frame_ As TextFrame, vAnchor As Integer, hAnchor As Integer)\n    frame_.VerticalAnchor = vAnchor\n    frame_.TextRange.ParagraphFormat.Alignment = hAnchor\nEnd Sub\n\nSub EditTextEffect(effect_ As TextEffectFormat, fontSize As Double, fontName As String)\n effect_.fontSize = fontSize\n effect_.fontName = fontName\nEnd Sub\n\nSub EditVertexShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\n\nSub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer, visible As Integer)\n    line_.foreColor.RGB = RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))\n    line_.dashStyle = dashStyle\n    line_.Transparency = transparent\n    line_.weight = weight\n    line_.visible = visible\nEnd Sub\n\nSub EditCallOut(shape_ As Shape, name As String, visible As Integer, backColor As Variant)\n    shape_.name = name\n    shape_.Fill.visible = visible\n    shape_.Fill.ForeColor.RGB = RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))\nEnd Sub\n\n";
         return SVGToVBA;
     }());
     GraphTableSVG.SVGToVBA = SVGToVBA;
@@ -6624,19 +6530,131 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    var PPPathTextBox = (function (_super) {
+        __extends(PPPathTextBox, _super);
+        function PPPathTextBox(svgbox, option) {
+            if (option === void 0) { option = {}; }
+            var _this = _super.call(this, svgbox, option) || this;
+            _this._svgPath = GraphTableSVG.SVG.createPath(_this.svgGroup, 0, 0, 0, 0, _this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaultPathClass));
+            _this.svgGroup.insertBefore(_this.svgPath, _this.svgText);
+            if (option.width != undefined)
+                _this.width = option.width;
+            if (option.height != undefined)
+                _this.height = option.height;
+            if (option.cx != undefined)
+                _this.cx = option.cx;
+            if (option.cy != undefined)
+                _this.cy = option.cy;
+            return _this;
+        }
+        Object.defineProperty(PPPathTextBox.prototype, "svgPath", {
+            get: function () {
+                return this._svgPath;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPPathTextBox.prototype, "innerRectangle", {
+            get: function () {
+                var rect = new GraphTableSVG.Rectangle();
+                if (this.isAutoSizeShapeToFitText) {
+                    var b = this.svgText.getBBox();
+                    rect.width = b.width;
+                    rect.height = b.height;
+                    rect.x = (-this.width / 2) + this.marginPaddingLeft;
+                    rect.y = (-this.height / 2) + this.marginPaddingTop;
+                }
+                else {
+                    rect.width = this.width - this.marginPaddingLeft;
+                    rect.height = this.height - this.marginPaddingTop;
+                    rect.x = (-this.width / 2) + this.marginPaddingLeft;
+                    rect.y = (-this.height / 2) + this.marginPaddingTop;
+                }
+                return rect;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPPathTextBox.prototype, "shape", {
+            get: function () {
+                return "NONE";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPPathTextBox.prototype.getVBAEditLine = function (id) {
+            var lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
+            var lineType = GraphTableSVG.msoDashStyle.getLineType(this.svgPath);
+            var strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
+            var visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            return " Call EditLine(obj" + id + ".Line, " + lineColor + ", " + lineType + ", " + 0 + ", " + strokeWidth + ", " + visible + ")";
+        };
+        PPPathTextBox.prototype.createVBACode = function (id) {
+            var lines = [];
+            var backColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("fill", "gray"));
+            var visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            var vAnchor = GraphTableSVG.VBATranslateFunctions.ToVerticalAnchor(this.verticalAnchor);
+            var hAnchor = GraphTableSVG.VBATranslateFunctions.ToHorizontalAnchor(this.horizontalAnchor);
+            lines.push("Sub create" + id + "(createdSlide As slide)");
+            lines.push(" Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes");
+            lines.push(" Dim obj" + id + " As Shape");
+            lines.push(" Set obj" + id + " = shapes_.AddShape(" + this.shape + ", " + this.x + ", " + this.y + ", " + this.width + ", " + this.height + ")");
+            lines.push(" Call EditTextFrame(obj" + id + ".TextFrame, " + this.marginPaddingTop + ", " + this.marginPaddingBottom + ", " + this.marginPaddingLeft + ", " + this.marginPaddingRight + ", false, ppAutoSizeNone)");
+            lines.push(" Call EditAnchor(obj" + id + ".TextFrame, " + vAnchor + ", " + hAnchor + ")");
+            GraphTableSVG.VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, "obj" + id + ".TextFrame.TextRange").forEach(function (v) { return lines.push(v); });
+            lines.push(this.getVBAEditLine(id));
+            lines.push(" Call EditCallOut(obj" + id + ", \"" + id + "\", " + visible + ", " + backColor + ")");
+            this.VBAAdjustments.forEach(function (v, i) {
+                lines.push(" obj" + id + ".Adjustments.Item(" + (i + 1) + ") = " + v);
+            });
+            lines.push("End Sub");
+            return lines;
+        };
+        Object.defineProperty(PPPathTextBox.prototype, "VBAAdjustments", {
+            get: function () {
+                return [];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPPathTextBox.prototype, "type", {
+            get: function () {
+                return "PPPathTextBox";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return PPPathTextBox;
+    }(GraphTableSVG.PPTextBoxShapeBase));
+    GraphTableSVG.PPPathTextBox = PPPathTextBox;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     var Callout = (function (_super) {
         __extends(Callout, _super);
         function Callout(svgbox, option) {
             if (option === void 0) { option = {}; }
             var _this = _super.call(this, svgbox, option) || this;
-            _this.speakerX = _this.cx;
-            _this.speakerY = _this.cy;
+            _this.speakerX = option.speakerX == undefined ? 0 : option.speakerX;
+            _this.speakerY = option.speakerY == undefined ? 0 : option.speakerY;
             return _this;
         }
+        Callout.constructAttributes = function (e, removeAttributes, output) {
+            if (removeAttributes === void 0) { removeAttributes = false; }
+            if (output === void 0) { output = {}; }
+            GraphTableSVG.PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
+            output.speakerX = e.gtGetAttributeNumber("speaker-x", 200);
+            output.speakerY = e.gtGetAttributeNumber("speaker-y", 200);
+            if (removeAttributes) {
+                e.removeAttribute("speaker-x");
+                e.removeAttribute("speaker-y");
+            }
+            return output;
+        };
         Callout.openCustomElement = function (e) {
             var parent = e.parentElement;
             if (parent instanceof SVGSVGElement) {
-                var option = GraphTableSVG.PPTextBoxShapeBase.constructTextBoxShapeAttributes(e, true);
+                var option = Callout.constructAttributes(e, true);
                 var attrs = e.gtGetAttributes();
                 var r_1 = new Callout(parent, option);
                 attrs.forEach(function (v) { return r_1.svgGroup.setAttribute(v.name, v.value); });
@@ -6836,10 +6854,10 @@ var GraphTableSVG;
             _this.updateAttributes.push("data-direction");
             return _this;
         }
-        ShapeArrowCallout.constructShapeArrowCalloutAttributes = function (e, removeAttributes, output) {
+        ShapeArrowCallout.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
             if (output === void 0) { output = {}; }
-            GraphTableSVG.PPTextBoxShapeBase.constructTextBoxShapeAttributes(e, removeAttributes, output);
+            GraphTableSVG.PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
             output.arrowNeckWidth = e.gtGetAttributeNumber("arrow-neck-width", 10);
             output.arrowNeckHeight = e.gtGetAttributeNumber("arrow-neck-height", 10);
             output.arrowHeadWidth = e.gtGetAttributeNumber("arrow-head-width", 20);
@@ -6857,7 +6875,7 @@ var GraphTableSVG;
         ShapeArrowCallout.openCustomElement = function (e) {
             var parent = e.parentElement;
             if (parent instanceof SVGSVGElement) {
-                var option = ShapeArrowCallout.constructShapeArrowCalloutAttributes(e, true);
+                var option = ShapeArrowCallout.constructAttributes(e, true);
                 var attrs = e.gtGetAttributes();
                 var r_2 = new ShapeArrowCallout(parent, option);
                 e.remove();
@@ -7100,7 +7118,7 @@ var GraphTableSVG;
         Object.defineProperty(ShapeArrowCallout.prototype, "VBAAdjustments", {
             get: function () {
                 if (this.direction == "up") {
-                    var neckWidthRatio = this.arrowNeckWidth / this.width;
+                    var neckWidthRatio = this.arrowNeckWidth / this.height;
                     var headWidthRatio = this.arrowHeadWidth / (this.height * 2);
                     var headHeightRatio = this.arrowHeadHeight / this.height;
                     var boxHeightRatio = this.boxHeight / this.height;

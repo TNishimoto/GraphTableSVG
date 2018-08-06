@@ -15,6 +15,11 @@ namespace GraphTableSVG {
         arrowNeckHeight? : number,
         direction? : Direction 
     }
+    export type CalloutAttributes = TextBoxShapeAttributes & {
+        speakerX? : number,
+        speakerY? : number,
+    }
+
     /*
     export namespace ShapeAttributes{
         export function constructTextBoxShapeAttributes(e : SVGElement, 

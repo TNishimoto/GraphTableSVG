@@ -174,6 +174,10 @@ Sub EditTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Doub
     frame_.marginTop = marginTop
     frame_.marginBottom = marginBottom
 End Sub
+Sub EditAnchor(frame_ As TextFrame, vAnchor As Integer, hAnchor As Integer)
+    frame_.VerticalAnchor = vAnchor
+    frame_.TextRange.ParagraphFormat.Alignment = hAnchor
+End Sub
 
 Sub EditTextEffect(effect_ As TextEffectFormat, fontSize As Double, fontName As String)
  effect_.fontSize = fontSize

@@ -14,12 +14,12 @@ window.onload = () => {
         })
     }
     
-
+    /*
     positionFieldSet = <HTMLElement>document.getElementById('position-field');
     xyFieldSet = <HTMLElement>document.getElementById('xy-field');
     calloutFieldSet = <HTMLElement>document.getElementById('callout-field');
     arrowFieldSet = <HTMLElement>document.getElementById('arrow-field');
-
+    */
     FooterButton.call('footer-button',0);
 
 };
@@ -78,11 +78,12 @@ function getObject(svg : SVGElement) : GraphTableSVG.VBAObjectType | null{
 
 }
 let mouseMoveItem : GraphTableSVG.VBAObjectType | null = null;
-
+/*
 let positionFieldSet : HTMLElement;
 let xyFieldSet : HTMLElement;
 let calloutFieldSet : HTMLElement;
 let arrowFieldSet : HTMLElement;
+*/
 let binderObjects : SimpleTwowayBinding[] = [];
 
 function setOption(e : GraphTableSVG.VBAObjectType){

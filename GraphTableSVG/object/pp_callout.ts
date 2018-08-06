@@ -2,17 +2,30 @@ namespace GraphTableSVG {
 
     export class Callout extends PPPathTextBox implements PPTextboxShape {
 
-        public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGSVGElement, option: CalloutAttributes = {}) {
             super(svgbox, option);
-            this.speakerX = this.cx;
-            this.speakerY = this.cy;
+            this.speakerX = option.speakerX == undefined ? 0 : option.speakerX;
+            this.speakerY = option.speakerY == undefined ? 0 : option.speakerY;
 
 
         }
+        static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : CalloutAttributes = {}) : CalloutAttributes {        
+            PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
+            output.speakerX = e.gtGetAttributeNumber("speaker-x", 200);
+            output.speakerY = e.gtGetAttributeNumber("speaker-y", 200);
+
+            if(removeAttributes){
+                e.removeAttribute("speaker-x");
+                e.removeAttribute("speaker-y");
+            }
+
+            return output;
+        }
+
         static openCustomElement(e: SVGElement): Callout {
             const parent = e.parentElement;
             if (parent instanceof SVGSVGElement) {
-                const option = PPTextBoxShapeBase.constructTextBoxShapeAttributes(e,true);
+                const option = Callout.constructAttributes(e,true);
                 const attrs = e.gtGetAttributes();
 
                 const r = new Callout(parent, option);

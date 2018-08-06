@@ -240,7 +240,7 @@ declare namespace GraphTableSVG {
         readonly svgText: SVGTextElement;
         private _observer;
         private observerFunc;
-        static constructTextBoxShapeAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): TextBoxShapeAttributes;
+        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): TextBoxShapeAttributes;
         protected updateAttributes: string[];
         readonly isLocated: boolean;
         private _textObserver;
@@ -268,17 +268,6 @@ declare namespace GraphTableSVG {
         createVBACode(id: number): string[];
         readonly svgElements: SVGElement[];
         hasDescendant(obj: SVGElement): boolean;
-    }
-    class PPPathTextBox extends PPTextBoxShapeBase {
-        private _svgPath;
-        readonly svgPath: SVGPathElement;
-        constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
-        readonly innerRectangle: Rectangle;
-        protected readonly shape: string;
-        private getVBAEditLine(id);
-        createVBACode(id: number): string[];
-        protected readonly VBAAdjustments: number[];
-        readonly type: string;
     }
 }
 declare namespace GraphTableSVG {
@@ -917,8 +906,22 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class Callout extends PPPathTextBox implements PPTextboxShape {
+    class PPPathTextBox extends PPTextBoxShapeBase {
+        private _svgPath;
+        readonly svgPath: SVGPathElement;
         constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
+        readonly innerRectangle: Rectangle;
+        protected readonly shape: string;
+        private getVBAEditLine(id);
+        createVBACode(id: number): string[];
+        protected readonly VBAAdjustments: number[];
+        readonly type: string;
+    }
+}
+declare namespace GraphTableSVG {
+    class Callout extends PPPathTextBox implements PPTextboxShape {
+        constructor(svgbox: SVGSVGElement, option?: CalloutAttributes);
+        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: CalloutAttributes): CalloutAttributes;
         static openCustomElement(e: SVGElement): Callout;
         readonly type: string;
         protected update(): void;
@@ -932,7 +935,7 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     class ShapeArrowCallout extends PPPathTextBox {
         constructor(svgbox: SVGSVGElement, option?: ShapeArrowCalloutAttributes);
-        static constructShapeArrowCalloutAttributes(e: SVGElement, removeAttributes?: boolean, output?: ShapeArrowCalloutAttributes): ShapeArrowCalloutAttributes;
+        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: ShapeArrowCalloutAttributes): ShapeArrowCalloutAttributes;
         static openCustomElement(e: SVGElement): ShapeArrowCallout;
         readonly type: string;
         arrowNeckWidth: number;
@@ -965,6 +968,10 @@ declare namespace GraphTableSVG {
         arrowNeckWidth?: number;
         arrowNeckHeight?: number;
         direction?: Direction;
+    };
+    type CalloutAttributes = TextBoxShapeAttributes & {
+        speakerX?: number;
+        speakerY?: number;
     };
     function openCustomElement(id: string | SVGElement): any;
     function openSVG(id: string | SVGSVGElement): any[];
