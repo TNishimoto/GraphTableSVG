@@ -243,6 +243,38 @@ namespace GraphTableSVG {
             const id = obj.getAttribute(GraphTableSVG.SVG.objectIDName);
             return ids.some((v)=>v==id);
         }
+
+        /**
+         * 接続部分のXY座標を返します。
+         * @param type
+         * @param x
+         * @param y
+         */
+        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+            return [this.x, this.y];
+        }
+        /**
+         * 与えられた位置から伸びた辺に対応する接続位置を返します。
+         * @param type 
+         * @param x 
+         * @param y 
+         */
+        public getConnectorType(type: ConnectorPosition, x: number, y: number): ConnectorPosition {
+            if (type == ConnectorPosition.Auto) {
+                return this.getAutoPosition(x, y);
+            } else {
+                return type;
+            }
+        }
+        /**
+         * 与えられた位置から伸びた辺に対応する接続位置がAutoだったときの実際の接続位置を返します。
+         * @param x 
+         * @param y 
+         */
+        protected getAutoPosition(x: number, y: number): ConnectorPosition {
+            return ConnectorPosition.Top;
+
+        }
     }
     
     

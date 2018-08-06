@@ -184,6 +184,34 @@ namespace GraphTableSVG {
 
             return circle;
         }
+        export function createEllipse(parent: SVGElement, className: string | null = null): SVGEllipseElement {
+            const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+            parent.appendChild(circle);
+            circle.rx.baseVal.value = defaultCircleRadius;
+            circle.ry.baseVal.value = defaultCircleRadius;
+
+            if (className == null) {
+                circle.style.stroke = "black";
+                circle.style.strokeWidth = "1pt";
+                circle.style.fill = "#ffffff";
+            } else {
+                circle.setAttribute("class", className);
+                const radius = circle.getPropertyStyleNumberValue(SVG.defaultRadiusName, null);
+                if (radius != null) {
+                    circle.rx.baseVal.value = radius;
+                    circle.ry.baseVal.value = radius;
+                }
+
+                const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
+            }
+            circle.cx.baseVal.value = 0;
+            circle.cy.baseVal.value = 0;
+
+            return circle;
+        }
+
+
         /**
          * Edgeの矢じりとして使うSVGMarkerElementを作成します。
          * @param className 生成するSVG要素のクラス属性名

@@ -60,13 +60,33 @@ namespace GraphTableSVG {
             }
         }else{
             const element = id;
-            const name = element.nodeName
-            switch(name){
-                case "g-callout" : return Callout.openCustomElement(element);
-                case "g-sarrowcallout" : return ShapeArrowCallout.openCustomElement(element);
+            const type = ShapeObjectType.toShapeObjectType(element.nodeName);
+            return createCustomElement(element, type);
+        }
+    }
+    function createCustomElement(e: SVGElement, type : ShapeObjectType): PPTextBoxShapeBase {
+        const parent = e.parentElement;
+        if (parent instanceof SVGSVGElement) {
+            let r : PPTextBoxShapeBase;
 
+            if(type == ShapeObjectType.Callout){
+                const option = Callout.constructAttributes(e,true);
+                r = new Callout(parent, option);
+            }else if(type == ShapeObjectType.ShapeArrowCallout){
+                const option = ShapeArrowCallout.constructAttributes(e, true);
+                r = new ShapeArrowCallout(parent, option);    
+            }else if(type == ShapeObjectType.Ellipse){
+                const option = PPTextBoxShapeBase.constructAttributes(e, true);
+                r = new PPEllipse(parent, option);    
+            }else{
+                return null;
             }
-            return null;
+            const attrs = e.gtGetAttributes();
+            e.remove();
+            attrs.forEach((v) => r.svgGroup.setAttribute(v.name, v.value));
+            return r;
+        } else {
+            throw Error("error!");
         }
     }
     export function openSVG(id : string | SVGSVGElement) : any[] {

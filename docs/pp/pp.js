@@ -457,10 +457,12 @@ window.onload = function () {
             }
         });
     }
-    positionFieldSet = document.getElementById('position-field');
-    xyFieldSet = document.getElementById('xy-field');
-    calloutFieldSet = document.getElementById('callout-field');
-    arrowFieldSet = document.getElementById('arrow-field');
+    /*
+    positionFieldSet = <HTMLElement>document.getElementById('position-field');
+    xyFieldSet = <HTMLElement>document.getElementById('xy-field');
+    calloutFieldSet = <HTMLElement>document.getElementById('callout-field');
+    arrowFieldSet = <HTMLElement>document.getElementById('arrow-field');
+    */
     FooterButton.call('footer-button', 0);
 };
 function sconv(value) {
@@ -516,10 +518,12 @@ function getObject(svg) {
     return null;
 }
 var mouseMoveItem = null;
-var positionFieldSet;
-var xyFieldSet;
-var calloutFieldSet;
-var arrowFieldSet;
+/*
+let positionFieldSet : HTMLElement;
+let xyFieldSet : HTMLElement;
+let calloutFieldSet : HTMLElement;
+let arrowFieldSet : HTMLElement;
+*/
 var binderObjects = [];
 function setOption(e) {
     binderObjects.forEach(function (v) { return v.dispose(); });

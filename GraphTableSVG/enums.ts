@@ -1,5 +1,5 @@
 ﻿namespace GraphTableSVG {
-    
+
     /**
     ノードの並び順です。
     */
@@ -19,111 +19,128 @@
         Auto = 9
     }
     */
+    export type ShapeObjectType = "g-callout" | "g-sarrowcallout" | "g-ellipse";
+    export namespace ShapeObjectType {
+        export const Callout: ShapeObjectType = "g-callout"
+        export const ShapeArrowCallout: ShapeObjectType = "g-sarrowcallout"
+        export const Ellipse: ShapeObjectType = "g-ellipse"
+
+        export function toShapeObjectType(value : string) : ShapeObjectType | null {
+            switch(value){
+                case ShapeObjectType.Callout : return ShapeObjectType.Callout;
+                case ShapeObjectType.ShapeArrowCallout : return ShapeObjectType.ShapeArrowCallout;
+                case ShapeObjectType.Ellipse : return ShapeObjectType.Ellipse;
+
+                default : return null;
+            }
+        }
+    }
+
     export type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
     export namespace pathTextAlighnment {
-        export const regularInterval : pathTextAlighnment = "regularInterval"
-        export const begin : pathTextAlighnment = "begin"
-        export const end : pathTextAlighnment = "end"
-        export const center : pathTextAlighnment = "center"
+        export const regularInterval: pathTextAlighnment = "regularInterval"
+        export const begin: pathTextAlighnment = "begin"
+        export const end: pathTextAlighnment = "end"
+        export const center: pathTextAlighnment = "center"
 
-        const typeDic :  { [key: string]: pathTextAlighnment; } = { 
-            "none" : "none",
-            "begin" : "begin",
-            "end" : "end",
-            "center" : "center",
-            "regularInterval" : "regularInterval",
+        const typeDic: { [key: string]: pathTextAlighnment; } = {
+            "none": "none",
+            "begin": "begin",
+            "end": "end",
+            "center": "center",
+            "regularInterval": "regularInterval",
         }
-        export function toPathTextAlighnment(value : string) : pathTextAlighnment {
-            if(value in typeDic){
+        export function toPathTextAlighnment(value: string): pathTextAlighnment {
+            if (value in typeDic) {
                 return typeDic[value];
-            }else{
+            } else {
                 return "none";
             }
         }
     }
 
-    export type msoDashStyle = "msoLineDash"| "msoLineDashDot" | "msoLineDashDotDot" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
+    export type msoDashStyle = "msoLineDash" | "msoLineDashDot" | "msoLineDashDotDot" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
     export namespace msoDashStyle {
         //export const styleName : string = "--mso-dash-style"
         export const msoLineDash: msoDashStyle = "msoLineDash"
         export const msoLineDashDot: msoDashStyle = "msoLineDashDot"
         export const msoLineDashDotDot: msoDashStyle = "msoLineDashDotDot"
         //export const msoLineDashStyleMixed: msoDashStyle = "msoLineDashStyleMixed"
-        export const msoLineLongDash : msoDashStyle = "msoLineLongDash"
+        export const msoLineLongDash: msoDashStyle = "msoLineLongDash"
         export const msoLineLongDashDot: msoDashStyle = "msoLineLongDashDot"
-        export const msoLineRoundDot : msoDashStyle = "msoLineRoundDot"
+        export const msoLineRoundDot: msoDashStyle = "msoLineRoundDot"
         export const msoLineSolid: msoDashStyle = "msoLineSolid"
-        export const msoLineSquareDot : msoDashStyle = "msoLineSquareDot"
-        export const dashArrayDic :  { [key: string]: number[]; } = { 
-            "msoLineDash" : [4, 3],
-            "msoLineDashDot" : [4, 3, 1, 3],
-            "msoLineDashDotDot" : [3, 1, 1, 1, 1, 1],
+        export const msoLineSquareDot: msoDashStyle = "msoLineSquareDot"
+        export const dashArrayDic: { [key: string]: number[]; } = {
+            "msoLineDash": [4, 3],
+            "msoLineDashDot": [4, 3, 1, 3],
+            "msoLineDashDotDot": [3, 1, 1, 1, 1, 1],
             //"msoLineDashStyleMixed" : "6,3",
-            "msoLineLongDash" : [9, 3],
-            "msoLineLongDashDot" : [9, 3, 1, 3],
-            "msoLineRoundDot" : [0.25, 2],
-            "msoLineSolid" : [], 
-            "msoLineSquareDot" : [1, 1]
+            "msoLineLongDash": [9, 3],
+            "msoLineLongDashDot": [9, 3, 1, 3],
+            "msoLineRoundDot": [0.25, 2],
+            "msoLineSolid": [],
+            "msoLineSquareDot": [1, 1]
         };
-        const lineCapDic :  { [key: string]: string; } = { 
-            "msoLineDash" : "butt",
-            "msoLineDashDot" : "butt",
-            "msoLineDashDotDot" : "butt",
+        const lineCapDic: { [key: string]: string; } = {
+            "msoLineDash": "butt",
+            "msoLineDashDot": "butt",
+            "msoLineDashDotDot": "butt",
             //"msoLineDashStyleMixed" : "butt",
-            "msoLineLongDash" : "butt",
-            "msoLineLongDashDot" : "butt",
-            "msoLineRoundDot" : "round",
-            "msoLineSolid" : "butt", 
-            "msoLineSquareDot" : "butt"
+            "msoLineLongDash": "butt",
+            "msoLineLongDashDot": "butt",
+            "msoLineRoundDot": "round",
+            "msoLineSolid": "butt",
+            "msoLineSquareDot": "butt"
         }
-        const typeDic :  { [key: string]: msoDashStyle; } = { 
-            "msoLineDash" : msoDashStyle.msoLineDash,
-            "msoLineDashDot" : msoDashStyle.msoLineDashDot,
-            "msoLineDashDotDot" : msoDashStyle.msoLineDashDotDot,
+        const typeDic: { [key: string]: msoDashStyle; } = {
+            "msoLineDash": msoDashStyle.msoLineDash,
+            "msoLineDashDot": msoDashStyle.msoLineDashDot,
+            "msoLineDashDotDot": msoDashStyle.msoLineDashDotDot,
             //"msoLineDashStyleMixed" : msoDashStyle.msoLineDashStyleMixed,
-            "msoLineLongDash" : msoDashStyle.msoLineLongDash,
-            "msoLineLongDashDot" : msoDashStyle.msoLineLongDashDot,
-            "msoLineRoundDot" : msoDashStyle.msoLineRoundDot,
-            "msoLineSquareDot" : msoDashStyle.msoLineSquareDot,
-            "msoLineSolid" : msoDashStyle.msoLineSolid
+            "msoLineLongDash": msoDashStyle.msoLineLongDash,
+            "msoLineLongDashDot": msoDashStyle.msoLineLongDashDot,
+            "msoLineRoundDot": msoDashStyle.msoLineRoundDot,
+            "msoLineSquareDot": msoDashStyle.msoLineSquareDot,
+            "msoLineSolid": msoDashStyle.msoLineSolid
         }
-        export function toMSODashStyle(value : string) : msoDashStyle | null {
-            if(value in typeDic){
+        export function toMSODashStyle(value: string): msoDashStyle | null {
+            if (value in typeDic) {
                 return typeDic[value];
-            }else{
+            } else {
                 return null;
             }
         }
-        function computeDashArray(type : msoDashStyle, width : number) : string {
+        function computeDashArray(type: msoDashStyle, width: number): string {
             const r = [];
-            for(let i=0;i<dashArrayDic[type].length;i++){
+            for (let i = 0; i < dashArrayDic[type].length; i++) {
                 r.push(dashArrayDic[type][i] * width);
             }
             return r.join(",");
         }
 
-        export function setStyle(svgLine : SVGLineElement | SVGPathElement | SVGElement, type : string) : void{
-            if(toMSODashStyle(type) != null){
+        export function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void {
+            if (toMSODashStyle(type) != null) {
                 const width = svgLine.getPropertyStyleNumberValue("stroke-width", null);
                 svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
                 svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
                 svgLine.setPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName, type);
-            }else{
+            } else {
 
             }
         }
-        export function getLineType(svgLine : SVGLineElement | SVGPathElement | SVGElement) : msoDashStyle {
+        export function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElement): msoDashStyle {
             const typeName = svgLine.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
-            if(typeName != null){
+            if (typeName != null) {
                 const type = toMSODashStyle(typeName);
-                if(type != null){
+                if (type != null) {
                     return type;
                 }
             }
             const dashArray = svgLine.getPropertyStyleValue("stroke-dasharray");
-            if(dashArray != null){
+            if (dashArray != null) {
                 return msoDashStyle.msoLineDash;
-            }else{
+            } else {
                 return msoDashStyle.msoLineSolid;
             }
         }
@@ -131,14 +148,14 @@
 
     export type Direction = "up" | "left" | "right" | "down";
     export namespace Direction {
-        export function toDirection(value : string) : Direction{
-            if(value == "up"){
+        export function toDirection(value: string): Direction {
+            if (value == "up") {
                 return "up";
-            }else if(value == "left"){
+            } else if (value == "left") {
                 return "left";
-            }else if(value == "right"){
+            } else if (value == "right") {
                 return "right";
-            }else{
+            } else {
                 return "down";
             }
         }
@@ -186,7 +203,7 @@
             return 1;
         }
     }
-    
+
     export function ToConnectorPosition(str: string | null): ConnectorPosition {
         if (str == null) {
             return ConnectorPosition.Auto;
@@ -247,18 +264,18 @@
          */
         export const Bottom: VerticalAnchor = "bottom"
 
-        export function toVerticalAnchor(value : string) : VerticalAnchor{
-            if(value == "top"){
+        export function toVerticalAnchor(value: string): VerticalAnchor {
+            if (value == "top") {
                 return "top";
-            }else if(value == "bottom"){
+            } else if (value == "bottom") {
                 return "bottom";
-            }else{
+            } else {
                 return "middle";
             }
         }
     }
 
-    
+
     /**
     水平方向の配置位置を表す値です。
     */
@@ -272,17 +289,17 @@
          * 中央を表します。
          */
         export const Center: HorizontalAnchor = "center"
-         /**
-         * 右を表します。
-         */
+        /**
+        * 右を表します。
+        */
         export const Right: HorizontalAnchor = "right"
 
-        export function toHorizontalAnchor(value : string) : HorizontalAnchor{
-            if(value == "left"){
+        export function toHorizontalAnchor(value: string): HorizontalAnchor {
+            if (value == "left") {
                 return "left";
-            }else if(value == "right"){
+            } else if (value == "right") {
                 return "right";
-            }else{
+            } else {
                 return "center";
             }
         }
@@ -299,5 +316,5 @@
         }
     }
 
-    
+
 }

@@ -19,6 +19,13 @@ declare namespace GraphTableSVG {
         Preorder = 0,
         Postorder = 1,
     }
+    type ShapeObjectType = "g-callout" | "g-sarrowcallout" | "g-ellipse";
+    namespace ShapeObjectType {
+        const Callout: ShapeObjectType;
+        const ShapeArrowCallout: ShapeObjectType;
+        const Ellipse: ShapeObjectType;
+        function toShapeObjectType(value: string): ShapeObjectType | null;
+    }
     type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
     namespace pathTextAlighnment {
         const regularInterval: pathTextAlighnment;
@@ -177,6 +184,7 @@ declare namespace GraphTableSVG {
         const defaultHeightName = "--default-height";
         let defaultCircleRadius: number;
         function createCircle(parent: SVGElement, className?: string | null): SVGCircleElement;
+        function createEllipse(parent: SVGElement, className?: string | null): SVGEllipseElement;
         function createMarker(option?: {
             className?: string;
             strokeWidth?: string;
@@ -268,6 +276,9 @@ declare namespace GraphTableSVG {
         createVBACode(id: number): string[];
         readonly svgElements: SVGElement[];
         hasDescendant(obj: SVGElement): boolean;
+        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
+        getConnectorType(type: ConnectorPosition, x: number, y: number): ConnectorPosition;
+        protected getAutoPosition(x: number, y: number): ConnectorPosition;
     }
 }
 declare namespace GraphTableSVG {
@@ -930,6 +941,17 @@ declare namespace GraphTableSVG {
         readonly speakerPosition: SpeakerPosition;
         protected readonly shape: string;
         protected readonly VBAAdjustments: number[];
+    }
+}
+declare namespace GraphTableSVG {
+    class PPEllipse extends PPTextBoxShapeBase {
+        private _svgEllipse;
+        readonly svgEllipse: SVGEllipseElement;
+        constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
+        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): CalloutAttributes;
+        readonly innerRectangle: Rectangle;
+        width: number;
+        height: number;
     }
 }
 declare namespace GraphTableSVG {
