@@ -256,15 +256,7 @@
 
             }
             Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
-            /*
-            if (this.surface != null) {
-                this.surface.setX(-this.width / 2);
-                this.surface.setY(-this.height / 2);
 
-
-                console.log(`${this.surface.getX()} ${this.surface.getY()}`);
-            }
-            */
             this.incomingEdges.forEach((v) => v.update());
             this.outcomingEdges.forEach((v) => v.update());
         }

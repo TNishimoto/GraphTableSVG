@@ -19,11 +19,13 @@ declare namespace GraphTableSVG {
         Preorder = 0,
         Postorder = 1,
     }
-    type ShapeObjectType = "g-callout" | "g-sarrowcallout" | "g-ellipse";
+    type ShapeObjectType = "g-callout" | "g-sarrowcallout" | "g-ellipse" | "g-rect" | "g-line";
     namespace ShapeObjectType {
         const Callout: ShapeObjectType;
         const ShapeArrowCallout: ShapeObjectType;
         const Ellipse: ShapeObjectType;
+        const Rect: ShapeObjectType;
+        const Line: ShapeObjectType;
         function toShapeObjectType(value: string): ShapeObjectType | null;
     }
     type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
@@ -170,6 +172,7 @@ declare namespace GraphTableSVG {
     namespace SVG {
         const defaultTextClass: string;
         const defaultPathClass: string;
+        const defaulSurfaceClass: string;
         const objectIDName: string;
         let idCounter: number;
         function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
@@ -248,14 +251,17 @@ declare namespace GraphTableSVG {
         readonly svgText: SVGTextElement;
         private _observer;
         private observerFunc;
+        readonly surface: SVGElement;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): TextBoxShapeAttributes;
         protected updateAttributes: string[];
+        protected surfaceAttributes: string[];
         readonly isLocated: boolean;
         private _textObserver;
         protected textObserverFunc: MutationCallback;
         private static updateTextAttributes;
         readonly type: string;
-        constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
+        constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
+        protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
         cx: number;
         cy: number;
         width: number;
@@ -267,6 +273,7 @@ declare namespace GraphTableSVG {
         isAutoSizeShapeToFitText: boolean;
         private _isUpdating;
         protected update(): void;
+        protected updateSurface(): void;
         protected updateToFitText(): void;
         readonly marginPaddingTop: number;
         readonly marginPaddingLeft: number;
@@ -276,6 +283,8 @@ declare namespace GraphTableSVG {
         createVBACode(id: number): string[];
         readonly svgElements: SVGElement[];
         hasDescendant(obj: SVGElement): boolean;
+    }
+    class PPVertexBase extends PPTextBoxShapeBase {
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         getConnectorType(type: ConnectorPosition, x: number, y: number): ConnectorPosition;
         protected getAutoPosition(x: number, y: number): ConnectorPosition;
@@ -917,12 +926,14 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class PPPathTextBox extends PPTextBoxShapeBase {
+    class PPPathTextBox extends PPVertexBase {
         private _svgPath;
         readonly svgPath: SVGPathElement;
         constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
+        protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
         readonly innerRectangle: Rectangle;
         protected readonly shape: string;
+        readonly surface: SVGElement;
         private getVBAEditLine(id);
         createVBACode(id: number): string[];
         protected readonly VBAAdjustments: number[];
@@ -930,7 +941,7 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class Callout extends PPPathTextBox implements PPTextboxShape {
+    class Callout extends PPPathTextBox {
         constructor(svgbox: SVGSVGElement, option?: CalloutAttributes);
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: CalloutAttributes): CalloutAttributes;
         static openCustomElement(e: SVGElement): Callout;
@@ -944,14 +955,93 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class PPEllipse extends PPTextBoxShapeBase {
+    class PPEdge extends PPTextBoxShapeBase {
+        protected _svgTextPath: SVGTextPathElement;
+        readonly svgTextPath: SVGTextPathElement;
+        tag: any;
+        markerStart: SVGMarkerElement | null;
+        markerEnd: SVGMarkerElement | null;
+        controlPoint: [number, number][];
+        strokeDasharray: string | null;
+        readonly lineColor: string | null;
+        private _beginVertex;
+        private _endVertex;
+        protected _svgPath: SVGPathElement;
+        readonly svgPath: SVGPathElement;
+        protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
+        constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
+        beginConnectorType: ConnectorPosition;
+        endConnectorType: ConnectorPosition;
+        beginVertex: Vertex | null;
+        endVertex: Vertex | null;
+        dispose(): void;
+        readonly x1: number;
+        readonly y1: number;
+        readonly x2: number;
+        readonly y2: number;
+        private removeTextLengthAttribute();
+        private setRegularInterval(value);
+        update(): boolean;
+        pathTextAlignment: pathTextAlighnment;
+        readonly objectID: string;
+        save(): void;
+        static create(graph: Graph, option?: {
+            className?: string;
+            surfaceType?: string;
+            beginVertex?: Vertex;
+            endVertex?: Vertex;
+            beginConnectorType?: ConnectorPosition;
+            endConnectorType?: ConnectorPosition;
+            incomingInsertIndex?: number;
+            outcomingInsertIndex?: number;
+            text?: string;
+            pathTextAlignment?: pathTextAlighnment;
+        }): GraphTableSVG.Edge;
+        setIndexDictionaryForVBA(vertexDic: {
+            [key: string]: number;
+        }, edgeDic: {
+            [key: string]: number;
+        }): void;
+        VBAConnectorNumber: number;
+        private static markerCounter;
+        private static createMark(option?);
+        static createStartMarker(option?: {
+            className?: string;
+            strokeWidth?: string;
+            color?: string;
+        }): SVGMarkerElement;
+        static createEndMarker(option?: {
+            className?: string;
+            strokeWidth?: string;
+            color?: string;
+        }): SVGMarkerElement;
+    }
+}
+declare namespace GraphTableSVG {
+    class PPEllipse extends PPVertexBase {
         private _svgEllipse;
         readonly svgEllipse: SVGEllipseElement;
-        constructor(svgbox: SVGSVGElement, option?: TextBoxShapeAttributes);
+        readonly surface: SVGElement;
+        constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
+        protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): CalloutAttributes;
         readonly innerRectangle: Rectangle;
         width: number;
         height: number;
+    }
+}
+declare namespace GraphTableSVG {
+    class PPRectangle extends PPVertexBase {
+        private _svgRectangle;
+        readonly svgRectangle: SVGRectElement;
+        readonly surface: SVGElement;
+        constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
+        protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
+        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): CalloutAttributes;
+        readonly innerRectangle: Rectangle;
+        width: number;
+        height: number;
+        protected updateSurface(): void;
     }
 }
 declare namespace GraphTableSVG {

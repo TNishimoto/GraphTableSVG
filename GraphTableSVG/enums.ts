@@ -19,17 +19,21 @@
         Auto = 9
     }
     */
-    export type ShapeObjectType = "g-callout" | "g-sarrowcallout" | "g-ellipse";
+    export type ShapeObjectType = "g-callout" | "g-sarrowcallout" | "g-ellipse" | "g-rect" | "g-line";
     export namespace ShapeObjectType {
         export const Callout: ShapeObjectType = "g-callout"
         export const ShapeArrowCallout: ShapeObjectType = "g-sarrowcallout"
         export const Ellipse: ShapeObjectType = "g-ellipse"
+        export const Rect: ShapeObjectType = "g-rect"
+        export const Line: ShapeObjectType = "g-line"
 
         export function toShapeObjectType(value : string) : ShapeObjectType | null {
             switch(value){
                 case ShapeObjectType.Callout : return ShapeObjectType.Callout;
                 case ShapeObjectType.ShapeArrowCallout : return ShapeObjectType.ShapeArrowCallout;
                 case ShapeObjectType.Ellipse : return ShapeObjectType.Ellipse;
+                case ShapeObjectType.Rect : return ShapeObjectType.Rect;
+                case ShapeObjectType.Line : return ShapeObjectType.Line;
 
                 default : return null;
             }

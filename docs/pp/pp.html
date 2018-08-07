@@ -14,11 +14,13 @@
     <button type="button" onclick="GraphTableSVG.PNG.createPNGFromSVG('svgbox')">PNG</button>
     <button type="button" onclick="update()">update</button><br>
 
-    <svg viewBox="0 0 500 500" width="500px" height="500px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
+    <svg viewBox="0 0 800 800" width="800px" height="800px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
         <circle id="circle" cx="100" cy="100" r="10" stroke="green" style="fill:pink;stroke-width:3pt"/>
         <g-callout id="shape"  class="callout" cx="200" cy="200" speaker-x="100" speaker-y="200" text="hello world"/>
         <g-sarrowcallout id="shapearrow" class="callout" cx="100" cy="300" text="hello world" direction="right"/>
         <g-ellipse id="ellipse" class="callout" cx="300" cy="100" text="hello world" />
+        <g-rect id="rect" class="callout" cx="500" cy="500" text="hello world" />
+        <g-line id="line" class="callout" cx="500" cy="500" text="hello world" />
 
     </svg>
     <div id="footerArea">

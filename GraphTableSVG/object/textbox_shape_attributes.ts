@@ -78,7 +78,14 @@ namespace GraphTableSVG {
             }else if(type == ShapeObjectType.Ellipse){
                 const option = PPTextBoxShapeBase.constructAttributes(e, true);
                 r = new PPEllipse(parent, option);    
-            }else{
+            }else if(type == ShapeObjectType.Rect){
+                const option = PPTextBoxShapeBase.constructAttributes(e, true);
+                r = new PPRectangle(parent, option);    
+            }else if(type == ShapeObjectType.Line){
+                const option = PPTextBoxShapeBase.constructAttributes(e, true);
+                r = <any>new PPEdge(parent);    
+            }
+            else{
                 return null;
             }
             const attrs = e.gtGetAttributes();

@@ -1,22 +1,20 @@
 namespace GraphTableSVG {
-    export class PPPathTextBox extends PPTextBoxShapeBase {
+    export class PPPathTextBox extends PPVertexBase {
         private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {
             return this._svgPath;
         }
         public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
-            super(svgbox, option);
-            this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaultPathClass));
-            this.svgGroup.insertBefore(this.svgPath, this.svgText);
+            super(svgbox, option);            
 
-            if (option.width != undefined) this.width = option.width;
-            if (option.height != undefined) this.height = option.height;
-
-            if (option.cx != undefined) this.cx = option.cx;
-            if (option.cy != undefined) this.cy = option.cy;
 
             //this.update();
         }
+        protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
+            this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
+            this.svgGroup.insertBefore(this.svgPath, this.svgText);
+        }
+
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
             if (this.isAutoSizeShapeToFitText) {
@@ -35,6 +33,9 @@ namespace GraphTableSVG {
         }
         protected get shape(): string {
             return "NONE";
+        }
+        public get surface() : SVGElement {
+            return this.svgPath;
         }
         private getVBAEditLine(id: number): string {
             const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));

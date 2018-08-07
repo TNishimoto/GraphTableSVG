@@ -1,14 +1,12 @@
 namespace GraphTableSVG {
 
-    export class Callout extends PPPathTextBox implements PPTextboxShape {
-
+    export class Callout extends PPPathTextBox {
         public constructor(svgbox: SVGSVGElement, option: CalloutAttributes = {}) {
             super(svgbox, option);
             this.speakerX = option.speakerX == undefined ? 0 : option.speakerX;
             this.speakerY = option.speakerY == undefined ? 0 : option.speakerY;
-
-
         }
+
         static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : CalloutAttributes = {}) : CalloutAttributes {        
             PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
             output.speakerX = e.gtGetAttributeNumber("speaker-x", 200);

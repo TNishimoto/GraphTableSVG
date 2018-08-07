@@ -1,22 +1,22 @@
 namespace GraphTableSVG {
-    export class PPEllipse extends PPTextBoxShapeBase {
+    export class PPEllipse extends PPVertexBase {
         private _svgEllipse: SVGEllipseElement;
         public get svgEllipse(): SVGEllipseElement {
             return this._svgEllipse;
         }
-        public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
-
-            super(svgbox, option);
-            this._svgEllipse = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(Vertex.defaultSurfaceClass));
-            this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
-
-
-            if (option.width != undefined) this.width = option.width;
-            if (option.height != undefined) this.height = option.height;
-            if (option.cx != undefined) this.cx = option.cx;
-            if (option.cy != undefined) this.cy = option.cy;
-
+        public get surface() : SVGElement {
+            return this.svgEllipse;
         }
+
+        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {
+            super(svgbox, option);
+            //this.update();
+        }
+        protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
+            this._svgEllipse = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
+            this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
+        }
+
         static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): CalloutAttributes {
             PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
 

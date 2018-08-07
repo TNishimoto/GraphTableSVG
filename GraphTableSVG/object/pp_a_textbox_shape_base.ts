@@ -19,12 +19,16 @@ namespace GraphTableSVG {
             if (!this.isLocated) return;
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
+                //console.log(this.svgGroup.id + "/"+p.attributeName);
                 if (this.updateAttributes.some((v) => v == p.attributeName)) {
                     b = true;
                 }
             }
             if (b) this.update();
         };
+        public get surface() : SVGElement {
+            return undefined;
+        }
         static constructAttributes(e : SVGElement, 
             removeAttributes : boolean = false, output : TextBoxShapeAttributes = {}) : TextBoxShapeAttributes {        
             output.className = e.getAttribute("class")
@@ -51,6 +55,8 @@ namespace GraphTableSVG {
         protected updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y", 
         "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", 
         "data-arrow-head-width", "data-arrow-head-height"]
+
+        protected surfaceAttributes : string[] = [];
         get isLocated(): boolean {
             return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }
@@ -76,23 +82,39 @@ namespace GraphTableSVG {
             return "PPTextBoxShapeBase";
         }
 
-        public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {
             this._svgGroup = SVG.createGroup(svgbox, option.className == undefined ? null : option.className);
             this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
             this.svgGroup.setAttribute("data-group-type", this.type);
-
-            if (option.text != undefined) this.svgText.setTextContent(option.text);
-            if (option.isAutoSizeShapeToFitText != undefined) this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
+            this.createSurface(svgbox, option);
 
             this._observer = new MutationObserver(this.observerFunc);
-            const option1: MutationObserverInit = { attributes: true };
-
+            const option1: MutationObserverInit = { attributes: true, childList : true, subtree : true };
             this._observer.observe(this.svgGroup, option1);
 
             this._textObserver = new MutationObserver(this.textObserverFunc);
             const option2: MutationObserverInit = { childList: true, attributes: true, subtree : true };
             this._textObserver.observe(this.svgText, option2);
+
+            if(this.surface != undefined){
+
+            }
+
+
+            if (option.text != undefined) this.svgText.setTextContent(option.text);
+            if (option.isAutoSizeShapeToFitText != undefined) this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
+            
+            if (option.width != undefined) this.width = option.width;
+            if (option.height != undefined) this.height = option.height;
+
+            if (option.cx != undefined) this.cx = option.cx;
+            if (option.cy != undefined) this.cy = option.cy;
+
+
+        }
+
+        protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
 
         }
 
@@ -181,9 +203,13 @@ namespace GraphTableSVG {
         protected update() {
             this._isUpdating = true;
             if(this.isAutoSizeShapeToFitText) this.updateToFitText();
+            this.updateSurface();
             Graph.setXY2(this.svgText, this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
+        }
+        
+        protected updateSurface(){
 
         }
         protected updateToFitText(){
@@ -244,7 +270,11 @@ namespace GraphTableSVG {
             return ids.some((v)=>v==id);
         }
 
-        /**
+       
+    }
+    
+    export class PPVertexBase extends PPTextBoxShapeBase {
+         /**
          * 接続部分のXY座標を返します。
          * @param type
          * @param x

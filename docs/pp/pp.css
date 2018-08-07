@@ -23,7 +23,7 @@ body {
 
 .callout {
     --default-text-class : text;
-    --default-path-class : path;
+    --default-surface-class : path;
 
 }
 .ButtonBox {

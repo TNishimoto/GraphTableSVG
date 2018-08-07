@@ -387,6 +387,7 @@
 
             text.setAttribute('y', y.toString());
             text.setAttribute('x', x.toString());
+            console.log(x+ "/" + y);
         }
 
         /**

@@ -3,6 +3,8 @@ namespace GraphTableSVG {
     export namespace SVG {
         export const defaultTextClass: string = "--default-text-class";
         export const defaultPathClass: string = "--default-path-class";
+        export const defaulSurfaceClass: string = "--default-surface-class";
+
         export const objectIDName: string = "data-objectID";
         export let idCounter: number = 0;
 
@@ -47,7 +49,7 @@ namespace GraphTableSVG {
         export function createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
             const line1 = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             parent.appendChild(line1);
-            line1.setAttribute("d", `M ${x} ${y} M ${x2} ${y2}`);
+            line1.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
             if (className != null) {
                 line1.setAttribute("class", className)
                 const dashStyle = line1.getPropertyStyleValue(msoDashStyleName);
