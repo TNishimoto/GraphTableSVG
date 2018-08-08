@@ -4,7 +4,7 @@ namespace GraphTableSVG {
         public get svgPath(): SVGPathElement {
             return this._svgPath;
         }
-        public constructor(svgbox: SVGSVGElement, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option);            
 
 

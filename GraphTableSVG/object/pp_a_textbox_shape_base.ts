@@ -12,6 +12,15 @@ namespace GraphTableSVG {
         public get svgText(): SVGTextElement {
             return this._svgText;
         }
+        private static objectIDCounter = 0;
+        private static objectDic : { [key: string]: PPTextBoxShapeBase ; } = {};
+        public static getObjectFromObjectID(id : string){
+            return this.objectDic[id];
+        }
+        public static setObjectFromObjectID(id : string, obj : PPTextBoxShapeBase){
+            this.objectDic[id] = obj;
+        }
+
         private _observer: MutationObserver;
         private observerFunc: MutationCallback = (x: MutationRecord[]) => {
 
@@ -26,21 +35,32 @@ namespace GraphTableSVG {
             }
             if (b) this.update();
         };
-        public get surface() : SVGElement {
+        public get surface(): SVGElement {
             return undefined;
         }
-        static constructAttributes(e : SVGElement, 
-            removeAttributes : boolean = false, output : TextBoxShapeAttributes = {}) : TextBoxShapeAttributes {        
+        /**
+        このVertexのObjectIDを返します。
+        */
+        public get objectID(): string {
+            const r = this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
+            if (r == null) {
+                throw new Error();
+            } else {
+                return r;
+            }
+        }
+        static constructAttributes(e: SVGElement,
+            removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): TextBoxShapeAttributes {
             output.className = e.getAttribute("class")
             output.cx = e.gtGetAttributeNumber("cx", 0);
             output.cy = e.gtGetAttributeNumber("cy", 0);
             output.text = e.getAttribute("text");
             output.width = e.gtGetAttributeNumber("width", 100);
             output.height = e.gtGetAttributeNumber("height", 100);
-    
+
             output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false") == "true";
-    
-            if(removeAttributes){
+
+            if (removeAttributes) {
                 e.removeAttribute("cx");
                 e.removeAttribute("cy");
                 e.removeAttribute("class");
@@ -52,11 +72,11 @@ namespace GraphTableSVG {
             return output;
         }
 
-        protected updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y", 
-        "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height", 
-        "data-arrow-head-width", "data-arrow-head-height"]
+        protected updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y",
+            "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",
+            "data-arrow-head-width", "data-arrow-head-height"]
 
-        protected surfaceAttributes : string[] = [];
+        protected surfaceAttributes: string[] = [];
         get isLocated(): boolean {
             return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }
@@ -78,33 +98,37 @@ namespace GraphTableSVG {
 
         };
         private static updateTextAttributes = ["style"]
-        public get type() : string{
+        public get type(): string {
             return "PPTextBoxShapeBase";
         }
 
-        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {            
             this._svgGroup = SVG.createGroup(svgbox, option.className == undefined ? null : option.className);
+            const objID = PPTextBoxShapeBase.objectIDCounter++;
+            this.svgGroup.setAttribute("objectID", objID.toString());
+
+
             this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
             this.svgGroup.setAttribute("data-group-type", this.type);
             this.createSurface(svgbox, option);
 
             this._observer = new MutationObserver(this.observerFunc);
-            const option1: MutationObserverInit = { attributes: true, childList : true, subtree : true };
+            const option1: MutationObserverInit = { attributes: true, childList: true, subtree: true };
             this._observer.observe(this.svgGroup, option1);
 
             this._textObserver = new MutationObserver(this.textObserverFunc);
-            const option2: MutationObserverInit = { childList: true, attributes: true, subtree : true };
+            const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
             this._textObserver.observe(this.svgText, option2);
 
-            if(this.surface != undefined){
+            if (this.surface != undefined) {
 
             }
 
 
             if (option.text != undefined) this.svgText.setTextContent(option.text);
             if (option.isAutoSizeShapeToFitText != undefined) this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
-            
+
             if (option.width != undefined) this.width = option.width;
             if (option.height != undefined) this.height = option.height;
 
@@ -114,7 +138,7 @@ namespace GraphTableSVG {
 
         }
 
-        protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
+        protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
 
         }
 
@@ -202,31 +226,31 @@ namespace GraphTableSVG {
         private _isUpdating: boolean = false;
         protected update() {
             this._isUpdating = true;
-            if(this.isAutoSizeShapeToFitText) this.updateToFitText();
+            if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();
             Graph.setXY2(this.svgText, this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
         }
-        
-        protected updateSurface(){
+
+        protected updateSurface() {
 
         }
-        protected updateToFitText(){
+        protected updateToFitText() {
             const box = this.svgText.getBBox();
             this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
             this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;
         }
-        get marginPaddingTop(){
+        get marginPaddingTop() {
             return this.svgText.getMarginTop() + this.svgGroup.getPaddingTop();
         }
-        get marginPaddingLeft(){
+        get marginPaddingLeft() {
             return this.svgText.getMarginLeft() + this.svgGroup.getPaddingLeft();
         }
-        get marginPaddingRight(){
+        get marginPaddingRight() {
             return this.svgText.getMarginRight() + this.svgGroup.getPaddingRight();
         }
-        get marginPaddingBottom(){
+        get marginPaddingBottom() {
             return this.svgText.getMarginBottom() + this.svgGroup.getPaddingBottom();
         }
 
@@ -258,28 +282,28 @@ namespace GraphTableSVG {
         public createVBACode(id: number): string[] {
             return [];
         }
-        public get svgElements() : SVGElement[]{
-            const r : SVGElement[] = [];
+        public get svgElements(): SVGElement[] {
+            const r: SVGElement[] = [];
             r.push(this.svgGroup);
             r.push(this.svgText);
             return r;
         }
         public hasDescendant(obj: SVGElement): boolean {
-            const ids = this.svgElements.map((v)=>v.getAttribute(GraphTableSVG.SVG.objectIDName)).filter((v)=>v != null);
+            const ids = this.svgElements.map((v) => v.getAttribute(GraphTableSVG.SVG.objectIDName)).filter((v) => v != null);
             const id = obj.getAttribute(GraphTableSVG.SVG.objectIDName);
-            return ids.some((v)=>v==id);
+            return ids.some((v) => v == id);
         }
 
-       
+
     }
-    
+
     export class PPVertexBase extends PPTextBoxShapeBase {
-         /**
-         * 接続部分のXY座標を返します。
-         * @param type
-         * @param x
-         * @param y
-         */
+        /**
+        * 接続部分のXY座標を返します。
+        * @param type
+        * @param x
+        * @param y
+        */
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
             return [this.x, this.y];
         }
@@ -306,6 +330,6 @@ namespace GraphTableSVG {
 
         }
     }
-    
-    
+
+
 }

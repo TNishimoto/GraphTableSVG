@@ -19,6 +19,14 @@ namespace GraphTableSVG {
         speakerX? : number,
         speakerY? : number,
     }
+    export type PPEdgeAttributes = TextBoxShapeAttributes & {
+        startMarker? : boolean,
+        endMarker? : boolean, 
+        x1? :number,
+        x2? : number,
+        y1? : number,
+        y2? : number
+    }
 
     /*
     export namespace ShapeAttributes{
@@ -82,8 +90,8 @@ namespace GraphTableSVG {
                 const option = PPTextBoxShapeBase.constructAttributes(e, true);
                 r = new PPRectangle(parent, option);    
             }else if(type == ShapeObjectType.Line){
-                const option = PPTextBoxShapeBase.constructAttributes(e, true);
-                r = <any>new PPEdge(parent);    
+                const option = PPEdge.constructAttributes(e, true);
+                r = <any>new PPEdge(parent, option);    
             }
             else{
                 return null;

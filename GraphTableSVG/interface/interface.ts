@@ -1,4 +1,4 @@
-﻿
+﻿/*
 interface PPTextboxShape {
     width : number;
     height : number;
@@ -9,6 +9,7 @@ interface PPTextboxShape {
     x : number;
     y : number;
 }
+*/
 
 
 interface CSSStyleDeclaration {
