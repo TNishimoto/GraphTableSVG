@@ -178,57 +178,59 @@
         export const Right: ConnectorPosition = "right"
         export const TopRight: ConnectorPosition = "topright"
         export const Auto: ConnectorPosition = "auto"
-    }
-    export function ToVBAConnectorPosition(shapeType: string, str: ConnectorPosition): number {
-        if (shapeType == "circle") {
-            switch (str) {
-                case "top": return 1;
-                case "topleft": return 2;
-                case "left": return 3;
-                case "bottomleft": return 4;
-                case "bottom": return 5;
-                case "bottomright": return 6;
-                case "right": return 7;
-                case "topright": return 8;
-                case "auto": return 9;
-                default: return 1;
+        export function ToConnectorPosition(str: string | null): ConnectorPosition {
+            if (str == null) {
+                return ConnectorPosition.Auto;
+            } else {
+                return <ConnectorPosition>str;
+                /*
+                switch (str) {
+                    case "top": return ConnectorPosition.Top;
+                    case "topleft": return ConnectorPosition.TopLeft;
+                    case "left": return ConnectorPosition.Left;
+                    case "bottomleft": return ConnectorPosition.BottomLeft;
+                    case "bottom": return ConnectorPosition.Bottom;
+                    case "bottomright": return ConnectorPosition.BottomRight;
+                    case "right": return ConnectorPosition.Right;
+                    case "topright": return ConnectorPosition.TopRight;
+                    case "auto": return ConnectorPosition.Auto;
+                    default: return ConnectorPosition.Auto;
+                }
+                */
             }
-        } else if (shapeType == "rectangle") {
-            switch (str) {
-                case "top": return 1;
-                case "left": return 2;
-                case "bottom": return 3;
-                case "right": return 4;
-                case "auto": return 9;
-                default: return 1;
+        }
+        export function ToVBAConnectorPosition(shapeType: string, str: ConnectorPosition): number {
+            if (shapeType == "circle") {
+                switch (str) {
+                    case "top": return 1;
+                    case "topleft": return 2;
+                    case "left": return 3;
+                    case "bottomleft": return 4;
+                    case "bottom": return 5;
+                    case "bottomright": return 6;
+                    case "right": return 7;
+                    case "topright": return 8;
+                    case "auto": return 9;
+                    default: return 1;
+                }
+            } else if (shapeType == "rectangle") {
+                switch (str) {
+                    case "top": return 1;
+                    case "left": return 2;
+                    case "bottom": return 3;
+                    case "right": return 4;
+                    case "auto": return 9;
+                    default: return 1;
+                }
+    
+            } else {
+                return 1;
             }
-
-        } else {
-            return 1;
         }
     }
+    
 
-    export function ToConnectorPosition(str: string | null): ConnectorPosition {
-        if (str == null) {
-            return ConnectorPosition.Auto;
-        } else {
-            return <ConnectorPosition>str;
-            /*
-            switch (str) {
-                case "top": return ConnectorPosition.Top;
-                case "topleft": return ConnectorPosition.TopLeft;
-                case "left": return ConnectorPosition.Left;
-                case "bottomleft": return ConnectorPosition.BottomLeft;
-                case "bottom": return ConnectorPosition.Bottom;
-                case "bottomright": return ConnectorPosition.BottomRight;
-                case "right": return ConnectorPosition.Right;
-                case "topright": return ConnectorPosition.TopRight;
-                case "auto": return ConnectorPosition.Auto;
-                default: return ConnectorPosition.Auto;
-            }
-            */
-        }
-    }
+    
     /*
     export function ToStrFromConnectorPosition(position: OldConnectorPosition): string {
         switch (position) {

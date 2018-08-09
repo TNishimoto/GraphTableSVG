@@ -262,46 +262,46 @@ var GraphTableSVG;
         ConnectorPosition.Right = "right";
         ConnectorPosition.TopRight = "topright";
         ConnectorPosition.Auto = "auto";
+        function ToConnectorPosition(str) {
+            if (str == null) {
+                return ConnectorPosition.Auto;
+            }
+            else {
+                return str;
+            }
+        }
+        ConnectorPosition.ToConnectorPosition = ToConnectorPosition;
+        function ToVBAConnectorPosition(shapeType, str) {
+            if (shapeType == "circle") {
+                switch (str) {
+                    case "top": return 1;
+                    case "topleft": return 2;
+                    case "left": return 3;
+                    case "bottomleft": return 4;
+                    case "bottom": return 5;
+                    case "bottomright": return 6;
+                    case "right": return 7;
+                    case "topright": return 8;
+                    case "auto": return 9;
+                    default: return 1;
+                }
+            }
+            else if (shapeType == "rectangle") {
+                switch (str) {
+                    case "top": return 1;
+                    case "left": return 2;
+                    case "bottom": return 3;
+                    case "right": return 4;
+                    case "auto": return 9;
+                    default: return 1;
+                }
+            }
+            else {
+                return 1;
+            }
+        }
+        ConnectorPosition.ToVBAConnectorPosition = ToVBAConnectorPosition;
     })(ConnectorPosition = GraphTableSVG.ConnectorPosition || (GraphTableSVG.ConnectorPosition = {}));
-    function ToVBAConnectorPosition(shapeType, str) {
-        if (shapeType == "circle") {
-            switch (str) {
-                case "top": return 1;
-                case "topleft": return 2;
-                case "left": return 3;
-                case "bottomleft": return 4;
-                case "bottom": return 5;
-                case "bottomright": return 6;
-                case "right": return 7;
-                case "topright": return 8;
-                case "auto": return 9;
-                default: return 1;
-            }
-        }
-        else if (shapeType == "rectangle") {
-            switch (str) {
-                case "top": return 1;
-                case "left": return 2;
-                case "bottom": return 3;
-                case "right": return 4;
-                case "auto": return 9;
-                default: return 1;
-            }
-        }
-        else {
-            return 1;
-        }
-    }
-    GraphTableSVG.ToVBAConnectorPosition = ToVBAConnectorPosition;
-    function ToConnectorPosition(str) {
-        if (str == null) {
-            return ConnectorPosition.Auto;
-        }
-        else {
-            return str;
-        }
-    }
-    GraphTableSVG.ToConnectorPosition = ToConnectorPosition;
     GraphTableSVG.VerticalAnchorPropertyName = "--vertical-anchor";
     GraphTableSVG.HorizontalAnchorPropertyName = "--horizontal-anchor";
     GraphTableSVG.PathTextAlignmentName = "--path-text-alignment";
@@ -1829,8 +1829,8 @@ var GraphTableSVG;
             this.svgGroup.setAttribute(GraphTableSVG.Graph.typeName, "edge");
             var t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
             var t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
-            this.beginConnectorType = GraphTableSVG.ToConnectorPosition(t1);
-            this.endConnectorType = GraphTableSVG.ToConnectorPosition(t2);
+            this.beginConnectorType = GraphTableSVG.ConnectorPosition.ToConnectorPosition(t1);
+            this.endConnectorType = GraphTableSVG.ConnectorPosition.ToConnectorPosition(t2);
             this._graph = __graph;
             this._graph.add(this);
             this._observer = new MutationObserver(this.observerFunc);
@@ -2314,8 +2314,8 @@ var GraphTableSVG;
                         }
                         var beg = vertexDic[this.beginVertex.objectID];
                         var end = vertexDic[this.endVertex.objectID];
-                        var begType = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
-                        var endType = GraphTableSVG.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
+                        var begType = GraphTableSVG.ConnectorPosition.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
+                        var endType = GraphTableSVG.ConnectorPosition.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
                         subline_1.push(" Call EditConnector(edges(" + i + ").ConnectorFormat, nodes(" + beg + "), nodes(" + end + "), " + begType + ", " + endType + ")");
                     }
                 }
@@ -2332,8 +2332,8 @@ var GraphTableSVG;
                         var end = j == this.VBAConnectorNumber ? vertexDic[this.endVertex.objectID] : vertexDic[this.objectID + "_" + j];
                         lineArr.push(edgeID);
                         subline_1.push(" Set edges(" + edgeID + ") = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)");
-                        var begType = j == 0 ? GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
-                        var endType = j == this.VBAConnectorNumber ? GraphTableSVG.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y)) : 1;
+                        var begType = j == 0 ? GraphTableSVG.ConnectorPosition.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
+                        var endType = j == this.VBAConnectorNumber ? GraphTableSVG.ConnectorPosition.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y)) : 1;
                         subline_1.push(" Call EditConnector(edges(" + edgeID + ").ConnectorFormat, nodes(" + beg + "), nodes(" + end + "), " + begType + ", " + endType + ")");
                     }
                     var edgeBeginID = edgeDic[this.objectID + "_" + 0];
@@ -7004,6 +7004,8 @@ var GraphTableSVG;
                     _this.endVertex = obj;
                 }
             }
+            _this.beginConnectorType = option.beginConnectorType == undefined ? GraphTableSVG.ConnectorPosition.Auto : option.beginConnectorType;
+            _this.endConnectorType = option.endConnectorType == undefined ? GraphTableSVG.ConnectorPosition.Auto : option.endConnectorType;
             _this.update();
             return _this;
         }
@@ -7117,6 +7119,8 @@ var GraphTableSVG;
             output.y2 = e.gtGetAttributeNumber("y2", 300);
             output.beginVertexID = e.getAttribute("begin-vertex");
             output.endVertexID = e.getAttribute("end-vertex");
+            output.beginConnectorType = GraphTableSVG.ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("begin-connector", "auto"));
+            output.endConnectorType = GraphTableSVG.ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("end-connector", "auto"));
             output.startMarker = e.gtGetAttribute("start-marker", "false") == "true";
             output.endMarker = e.gtGetAttribute("end-marker", "false") == "true";
             if (removeAttributes) {
@@ -7128,6 +7132,8 @@ var GraphTableSVG;
                 e.removeAttribute("end-marker");
                 e.removeAttribute("begin-vertex");
                 e.removeAttribute("end-vertex");
+                e.removeAttribute("begin-connector");
+                e.removeAttribute("end-connector");
             }
             return output;
         };
@@ -7576,6 +7582,45 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(PPEllipse.prototype, "rx", {
+            get: function () {
+                return this.svgEllipse.rx.baseVal.value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPEllipse.prototype, "ry", {
+            get: function () {
+                return this.svgEllipse.ry.baseVal.value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPEllipse.prototype.getLocation = function (type, x, y) {
+            var centerX = (Math.sqrt(2) / 2) * this.svgEllipse.rx.baseVal.value;
+            var centerY = (Math.sqrt(2) / 2) * this.svgEllipse.ry.baseVal.value;
+            switch (type) {
+                case GraphTableSVG.ConnectorPosition.Top:
+                    return [this.cx, this.cy - this.ry];
+                case GraphTableSVG.ConnectorPosition.TopRight:
+                    return [this.cx + centerX, this.cy - centerY];
+                case GraphTableSVG.ConnectorPosition.Right:
+                    return [this.cx + this.rx, this.cy];
+                case GraphTableSVG.ConnectorPosition.BottomRight:
+                    return [this.cx + centerX, this.cy + centerY];
+                case GraphTableSVG.ConnectorPosition.Bottom:
+                    return [this.cx, this.cy + this.ry];
+                case GraphTableSVG.ConnectorPosition.BottomLeft:
+                    return [this.cx - centerX, this.cy + centerY];
+                case GraphTableSVG.ConnectorPosition.Left:
+                    return [this.cx - this.rx, this.cy];
+                case GraphTableSVG.ConnectorPosition.TopLeft:
+                    return [this.cx - centerX, this.cy - centerY];
+                default:
+                    var autoType = this.getAutoPosition(x, y);
+                    return this.getLocation(autoType, x, y);
+            }
+        };
         return PPEllipse;
     }(GraphTableSVG.PPVertexBase));
     GraphTableSVG.PPEllipse = PPEllipse;

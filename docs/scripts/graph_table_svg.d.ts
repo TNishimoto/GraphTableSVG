@@ -69,9 +69,9 @@ declare namespace GraphTableSVG {
         const Right: ConnectorPosition;
         const TopRight: ConnectorPosition;
         const Auto: ConnectorPosition;
+        function ToConnectorPosition(str: string | null): ConnectorPosition;
+        function ToVBAConnectorPosition(shapeType: string, str: ConnectorPosition): number;
     }
-    function ToVBAConnectorPosition(shapeType: string, str: ConnectorPosition): number;
-    function ToConnectorPosition(str: string | null): ConnectorPosition;
     const VerticalAnchorPropertyName: string;
     const HorizontalAnchorPropertyName: string;
     const PathTextAlignmentName: string;
@@ -1036,6 +1036,9 @@ declare namespace GraphTableSVG {
         readonly innerRectangle: Rectangle;
         width: number;
         height: number;
+        readonly rx: number;
+        readonly ry: number;
+        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
     }
 }
 declare namespace GraphTableSVG {
@@ -1102,6 +1105,8 @@ declare namespace GraphTableSVG {
         y2?: number;
         beginVertexID?: string;
         endVertexID?: string;
+        beginConnectorType?: ConnectorPosition;
+        endConnectorType?: ConnectorPosition;
     };
     function openCustomElement(id: string | SVGElement): any;
     function openSVG(id: string | SVGSVGElement): any[];

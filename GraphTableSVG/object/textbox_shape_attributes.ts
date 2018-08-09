@@ -27,7 +27,11 @@ namespace GraphTableSVG {
         y1? : number,
         y2? : number, 
         beginVertexID? : string,
-        endVertexID? : string
+        endVertexID? : string,
+        beginConnectorType?: ConnectorPosition, 
+        endConnectorType?: ConnectorPosition,
+        beginVertex? : PPVertexBase,
+        endVertex? : PPVertexBase
     }
 
     /*

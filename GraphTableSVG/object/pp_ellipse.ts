@@ -55,6 +55,40 @@ namespace GraphTableSVG {
             const _ry = value/2;
             if (this.height != value) this.svgEllipse.setAttribute("ry", _ry.toString());
         }
+        get rx() : number{
+            return this.svgEllipse.rx.baseVal.value;
+        }
+        get ry() : number{
+            return this.svgEllipse.ry.baseVal.value;
+        }
+
+        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+
+            const centerX = (Math.sqrt(2) / 2) * this.svgEllipse.rx.baseVal.value;
+            const centerY = (Math.sqrt(2) / 2) * this.svgEllipse.ry.baseVal.value;
+
+            switch (type) {
+                case ConnectorPosition.Top:
+                    return [this.cx, this.cy - this.ry];
+                case ConnectorPosition.TopRight:
+                    return [this.cx + centerX, this.cy - centerY];
+                case ConnectorPosition.Right:
+                    return [this.cx + this.rx, this.cy];
+                case ConnectorPosition.BottomRight:
+                    return [this.cx + centerX, this.cy + centerY];
+                case ConnectorPosition.Bottom:
+                    return [this.cx, this.cy + this.ry];
+                case ConnectorPosition.BottomLeft:
+                    return [this.cx - centerX, this.cy + centerY];
+                case ConnectorPosition.Left:
+                    return [this.cx - this.rx, this.cy];
+                case ConnectorPosition.TopLeft:
+                    return [this.cx - centerX, this.cy - centerY];
+                default:
+                    const autoType = this.getAutoPosition(x, y);
+                    return this.getLocation(autoType, x, y);
+            }
+        }
     }
     /*
     export type EllipseAttributes = TextBoxShapeAttributes & {

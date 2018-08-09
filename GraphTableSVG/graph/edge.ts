@@ -179,8 +179,8 @@
             const t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
             const t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
 
-            this.beginConnectorType = ToConnectorPosition(t1);
-            this.endConnectorType = ToConnectorPosition(t2);
+            this.beginConnectorType = ConnectorPosition.ToConnectorPosition(t1);
+            this.endConnectorType = ConnectorPosition.ToConnectorPosition(t2);
 
             this._graph = __graph;
             this._graph.add(this);
@@ -603,8 +603,8 @@
     
                         const beg = vertexDic[this.beginVertex.objectID];
                         const end = vertexDic[this.endVertex.objectID];
-                        const begType: number = GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
-                        const endType: number = GraphTableSVG.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
+                        const begType: number = ConnectorPosition.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
+                        const endType: number = ConnectorPosition.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
                         subline.push(` Call EditConnector(edges(${i}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
                     }
                 } else if (this.controlPoint.length > 0) {
@@ -629,8 +629,8 @@
 
                         subline.push(` Set edges(${edgeID}) = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
 
-                        const begType: number = j == 0 ? GraphTableSVG.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
-                        const endType: number = j == this.VBAConnectorNumber ? GraphTableSVG.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y)) : 1;
+                        const begType: number = j == 0 ? ConnectorPosition.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
+                        const endType: number = j == this.VBAConnectorNumber ? ConnectorPosition.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y)) : 1;
                         subline.push(` Call EditConnector(edges(${edgeID}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
 
                     }

@@ -135,6 +135,8 @@ namespace GraphTableSVG {
             output.y2 = e.gtGetAttributeNumber("y2", 300);
             output.beginVertexID = e.getAttribute("begin-vertex");
             output.endVertexID = e.getAttribute("end-vertex");
+            output.beginConnectorType = ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("begin-connector", "auto"));
+            output.endConnectorType = ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("end-connector", "auto"));
 
             output.startMarker = e.gtGetAttribute("start-marker", "false") == "true";
             output.endMarker = e.gtGetAttribute("end-marker", "false") == "true";
@@ -147,8 +149,9 @@ namespace GraphTableSVG {
                 e.removeAttribute("start-marker");
                 e.removeAttribute("end-marker");
                 e.removeAttribute("begin-vertex");
-
                 e.removeAttribute("end-vertex");
+                e.removeAttribute("begin-connector");
+                e.removeAttribute("end-connector");
 
             }
 
@@ -213,6 +216,9 @@ namespace GraphTableSVG {
                 this.endVertex = obj;
                 }
             }
+            this.beginConnectorType = option.beginConnectorType == undefined ? ConnectorPosition.Auto : option.beginConnectorType;
+            this.endConnectorType = option.endConnectorType == undefined ? ConnectorPosition.Auto : option.endConnectorType;
+
             this.update();
 
         }
@@ -221,11 +227,7 @@ namespace GraphTableSVG {
         */
         get beginConnectorType(): ConnectorPosition {
             const p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
-            if (p == null) {
-                return ConnectorPosition.Auto;
-            } else {
-                return <ConnectorPosition>p;
-            }
+            return ConnectorPosition.ToConnectorPosition(p);
         }
         /**
         開始接点の接続位置を設定します。
@@ -239,11 +241,7 @@ namespace GraphTableSVG {
         */
         get endConnectorType(): ConnectorPosition {
             const p = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
-            if (p == null) {
-                return ConnectorPosition.Auto;
-            } else {
-                return <ConnectorPosition>p;
-            }
+            return ConnectorPosition.ToConnectorPosition(p);
         }
         /**
         終了接点の接続位置を設定します。

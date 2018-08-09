@@ -39,7 +39,6 @@ namespace GraphTableSVG {
             if (!this.isLocated) return;
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
-                //console.log(this.svgGroup.id + "/"+p.attributeName);
                 if (this.updateAttributes.some((v) => v == p.attributeName)) {
                     b = true;
                 }
