@@ -133,6 +133,9 @@ namespace GraphTableSVG {
             output.x2 = e.gtGetAttributeNumber("x2", 300);
             output.y1 = e.gtGetAttributeNumber("y1", 0);
             output.y2 = e.gtGetAttributeNumber("y2", 300);
+            output.beginVertexID = e.getAttribute("begin-vertex");
+            output.endVertexID = e.getAttribute("end-vertex");
+
             output.startMarker = e.gtGetAttribute("start-marker", "false") == "true";
             output.endMarker = e.gtGetAttribute("end-marker", "false") == "true";
 
@@ -143,6 +146,9 @@ namespace GraphTableSVG {
                 e.removeAttribute("y2");
                 e.removeAttribute("start-marker");
                 e.removeAttribute("end-marker");
+                e.removeAttribute("begin-vertex");
+
+                e.removeAttribute("end-vertex");
 
             }
 
@@ -192,6 +198,23 @@ namespace GraphTableSVG {
             const x2 = option.x2 == undefined ? 300 : option.x2;
             const y2 = option.y2 == undefined ? 300 : option.y2;
             this.pathPoints = [[x1, y1], [x2, y2]];
+
+
+            if(option.beginVertexID != null){
+                const obj = PPTextBoxShapeBase.getObjectFromID(option.beginVertexID);
+
+                if(obj instanceof PPVertexBase){
+                this.beginVertex = obj;
+                }
+            }
+            if(option.endVertexID != null){
+                const obj = PPTextBoxShapeBase.getObjectFromID(option.endVertexID);
+                if(obj instanceof PPVertexBase){
+                this.endVertex = obj;
+                }
+            }
+            this.update();
+
         }
         /**
         開始接点の接続位置を返します。
@@ -243,48 +266,63 @@ namespace GraphTableSVG {
             this.svgGroup.setAttribute(Edge.endNodeName, v == null ? null : v);
         }
 
+        private removeVertexEvent(vertex : PPTextBoxShapeBase){
+            vertex.svgGroup.removeEventListener(PPTextBoxShapeBase.ConnectPositionChangedEventName, this.pUpdateFunc);
+        }
+        private addVertexEvent(vertex : PPTextBoxShapeBase){
+            vertex.svgGroup.addEventListener(PPTextBoxShapeBase.ConnectPositionChangedEventName, this.pUpdateFunc);
+        }
+        private pUpdateFunc = () => this.update();
+
         /**
         開始接点を返します。
         */
-        get beginVertex(): PPTextBoxShapeBase | null {
+        get beginVertex(): PPVertexBase | null {
             if (this.beginVertexID == null) {
                 return null;
             } else {
-                return PPTextBoxShapeBase.getObjectFromObjectID(this.beginVertexID);
+                return <PPVertexBase>PPTextBoxShapeBase.getObjectFromObjectID(this.beginVertexID);
             }
         }
         /**
         開始接点を設定します。
         */
-        set beginVertex(value: PPTextBoxShapeBase | null) {
+        set beginVertex(value: PPVertexBase | null) {
+            if(this.beginVertex != null) this.removeVertexEvent(this.beginVertex);
+
             if (value == null) {
                 this.beginVertexID = null;
             } else {
                 this.beginVertexID = value.objectID;
             }
 
+            if(this.beginVertex != null) this.addVertexEvent(this.beginVertex);
             this.update();
 
         }
         /**
         終了接点を返します。
         */
-        get endVertex(): PPTextBoxShapeBase | null {
+        get endVertex(): PPVertexBase | null {
             if (this.endVertexID == null) {
                 return null;
             } else {
-                return PPTextBoxShapeBase.getObjectFromObjectID(this.endVertexID);
+                return <PPVertexBase>PPTextBoxShapeBase.getObjectFromObjectID(this.endVertexID);
             }
         }
         /**
         終了接点を設定します。
         */
-        set endVertex(value: PPTextBoxShapeBase | null) {
+        set endVertex(value: PPVertexBase | null) {
+            if(this.endVertex != null) this.removeVertexEvent(this.endVertex);
+
             if (value == null) {
                 this.endVertexID = null;
             } else {
                 this.endVertexID = value.objectID;
             }
+
+            if(this.endVertex != null) this.addVertexEvent(this.endVertex);
 
             this.update();
 
@@ -377,8 +415,12 @@ namespace GraphTableSVG {
             const d = this.svgPath.getAttribute("d").split(" ");
             let i = 0;
             const r: [number, number][] = [];
+
             while (i < d.length) {
                 if (d[i] == "M") {
+                    r.push([Number(d[i + 1]), Number(d[i + 2])]);
+                    i += 3;
+                }else if(d[i] == "L"){
                     r.push([Number(d[i + 1]), Number(d[i + 2])]);
                     i += 3;
                 } else if (d[i] == "Q") {
@@ -386,9 +428,17 @@ namespace GraphTableSVG {
                     r.push([Number(d[i + 3]), Number(d[i + 4])]);
                     i += 5;
                 } else {
-                    throw Error("error");
+
+                    throw Error("path points parse error");
                 }
             }
+            /*
+            if(r.length == 0){
+                r.push([0, 0]);
+                r.push([0, 0]);
+            }
+            */
+
             return r;
         }
         private set pathPoints(points: [number, number][]) {
@@ -403,9 +453,13 @@ namespace GraphTableSVG {
                 const [x2, y2] = points[2];
                 const [cx1, cy1] = points[1];
                 path = `M ${x1} ${y1} Q ${cx1} ${cy1} ${x2} ${y2}`
-            } else {
-
+            } else if(points.length == 1){
+                throw Error("path points ivnalid error");
             }
+             else {
+                path = `M ${0} ${0} L ${0} ${0}`
+            }
+
             const prevPath = this.svgPath.getAttribute("d");
             if (prevPath == null || path != prevPath) {
                 this.svgPath.setAttribute("d", path);
@@ -415,6 +469,41 @@ namespace GraphTableSVG {
          * 再描画します。
          */
         public update(): boolean {
+            const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
+            const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];
+
+            const [x1, y1] = this.beginVertex != null ? this.beginVertex.getLocation(this.beginConnectorType, cx2, cy2) : [cx1,cy1];
+            const [x2, y2] = this.endVertex != null ? this.endVertex.getLocation(this.endConnectorType, cx1, cy1) : [cx2, cy2];
+            /*
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+            */
+            const points: [number, number][] = this.pathPoints;
+
+            points[0] = [x1, y1];
+            points[points.length -1] = [x2, y2];
+            this.pathPoints = points;
+            /*
+            let path = "";
+            if (points.length == 0) {
+                path = `M ${x1} ${y1} L ${x2} ${y2}`
+            } else if (points.length == 1) {
+                const [cx1, cy1] = points[0];
+                path = `M ${x1} ${y1} Q ${cx1} ${cy1} ${x2} ${y2}`
+            } else {
+
+            }
+                        const prevPath = this.svgPath.getAttribute("d");
+            if (prevPath == null || path != prevPath) {
+                this.svgPath.setAttribute("d", path);
+            }
+
+            */
+
+
+
             if (this.markerStart != null) {
                 var node = <SVGPolygonElement>this.markerStart.firstChild;
                 if (this.lineColor != null) {
@@ -428,24 +517,12 @@ namespace GraphTableSVG {
                 }
             }
 
+
             if (this.beginVertex != null && this.endVertex != null) {
                 //const [x, y] = [this.svgText.getX(), this.svgText.getY()];
 
-                const points: [number, number][] = this.controlPoint;
-                let path = "";
-                if (points.length == 0) {
-                    path = `M ${this.x1} ${this.y1} L ${this.x2} ${this.y2}`
-                } else if (points.length == 1) {
-                    const [cx1, cy1] = points[0];
-                    path = `M ${this.x1} ${this.y1} Q ${cx1} ${cy1} ${this.x2} ${this.y2}`
-                } else {
 
-                }
 
-                const prevPath = this.svgPath.getAttribute("d");
-                if (prevPath == null || path != prevPath) {
-                    this.svgPath.setAttribute("d", path);
-                }
 
                 if (this.pathTextAlignment == pathTextAlighnment.regularInterval) {
                     const pathLen = this.svgPath.getTotalLength();

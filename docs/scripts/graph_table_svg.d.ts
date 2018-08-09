@@ -249,6 +249,10 @@ declare namespace GraphTableSVG {
         readonly svgGroup: SVGGElement;
         private _svgText;
         readonly svgText: SVGTextElement;
+        private static objectDic;
+        static getObjectFromObjectID(id: string): PPTextBoxShapeBase;
+        static setObjectFromObjectID(obj: PPTextBoxShapeBase): void;
+        static getObjectFromID(id: string): PPTextBoxShapeBase | null;
         private _observer;
         private observerFunc;
         readonly surface: SVGElement;
@@ -261,6 +265,8 @@ declare namespace GraphTableSVG {
         protected textObserverFunc: MutationCallback;
         private static updateTextAttributes;
         readonly type: string;
+        static ConnectPositionChangedEventName: string;
+        protected dispatchConnectPositionChangedEvent(): void;
         constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
         protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
         cx: number;
@@ -964,14 +970,17 @@ declare namespace GraphTableSVG {
         markerEnd: SVGMarkerElement | null;
         controlPoint: [number, number][];
         readonly lineColor: string | null;
-        private _beginVertex;
-        private _endVertex;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: PPEdgeAttributes): PPEdgeAttributes;
         constructor(svgbox: SVGElement, option?: PPEdgeAttributes);
         beginConnectorType: ConnectorPosition;
         endConnectorType: ConnectorPosition;
-        beginVertex: Vertex | null;
-        endVertex: Vertex | null;
+        private beginVertexID;
+        private endVertexID;
+        private removeVertexEvent(vertex);
+        private addVertexEvent(vertex);
+        private pUpdateFunc;
+        beginVertex: PPVertexBase | null;
+        endVertex: PPVertexBase | null;
         dispose(): void;
         x1: number;
         y1: number;
@@ -979,8 +988,7 @@ declare namespace GraphTableSVG {
         y2: number;
         private removeTextLengthAttribute();
         private setRegularInterval(value);
-        private parsePoints();
-        private setPoints(points);
+        private pathPoints;
         update(): boolean;
         pathTextAlignment: pathTextAlighnment;
         readonly objectID: string;
@@ -1092,6 +1100,8 @@ declare namespace GraphTableSVG {
         x2?: number;
         y1?: number;
         y2?: number;
+        beginVertexID?: string;
+        endVertexID?: string;
     };
     function openCustomElement(id: string | SVGElement): any;
     function openSVG(id: string | SVGSVGElement): any[];
@@ -1100,16 +1110,6 @@ declare namespace HTMLFunctions {
     function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;
     function getDescendants(e: Element): Element[];
     function getChildren(e: Element): Element[];
-}
-interface PPTextboxShape {
-    width: number;
-    height: number;
-    readonly svgText: SVGTextElement;
-    readonly svgGroup: SVGGElement;
-    cx: number;
-    cy: number;
-    x: number;
-    y: number;
 }
 interface CSSStyleDeclaration {
     tryGetPropertyValue(name: string): string | null;

@@ -12,13 +12,24 @@ namespace GraphTableSVG {
         public get svgText(): SVGTextElement {
             return this._svgText;
         }
-        private static objectIDCounter = 0;
+        //private static objectIDCounter = 0;
         private static objectDic : { [key: string]: PPTextBoxShapeBase ; } = {};
-        public static getObjectFromObjectID(id : string){
+        public static getObjectFromObjectID(id : string) : PPTextBoxShapeBase {
             return this.objectDic[id];
         }
-        public static setObjectFromObjectID(id : string, obj : PPTextBoxShapeBase){
+        public static setObjectFromObjectID(obj : PPTextBoxShapeBase){
+            const id = obj.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
             this.objectDic[id] = obj;
+        }
+        public static getObjectFromID(id : string) : PPTextBoxShapeBase | null {
+
+
+            for (let key in this.objectDic) {
+                if(this.objectDic[key].svgGroup.id == id){
+                    return this.objectDic[key];
+                }
+              }
+            return null;
         }
 
         private _observer: MutationObserver;
@@ -31,6 +42,10 @@ namespace GraphTableSVG {
                 //console.log(this.svgGroup.id + "/"+p.attributeName);
                 if (this.updateAttributes.some((v) => v == p.attributeName)) {
                     b = true;
+                }
+
+                if(p.attributeName == "transform"){
+                    this.dispatchConnectPositionChangedEvent();
                 }
             }
             if (b) this.update();
@@ -101,17 +116,26 @@ namespace GraphTableSVG {
         public get type(): string {
             return "PPTextBoxShapeBase";
         }
-
+        public static ConnectPositionChangedEventName = "connect_position_changed";
+        protected dispatchConnectPositionChangedEvent() : void{
+            if(this.surface != null){
+                var event = document.createEvent("HTMLEvents");
+                event.initEvent(PPTextBoxShapeBase.ConnectPositionChangedEventName, true, true) 
+                this.surface.dispatchEvent(event);
+            }
+        }
         public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {            
             this._svgGroup = SVG.createGroup(svgbox, option.className == undefined ? null : option.className);
-            const objID = PPTextBoxShapeBase.objectIDCounter++;
-            this.svgGroup.setAttribute("objectID", objID.toString());
+            //const objID = PPTextBoxShapeBase.objectIDCounter++;
+            //this.svgGroup.setAttribute("objectID", objID.toString());
+            PPTextBoxShapeBase.setObjectFromObjectID(this);
 
 
             this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
             this.svgGroup.setAttribute("data-group-type", this.type);
             this.createSurface(svgbox, option);
+
 
             this._observer = new MutationObserver(this.observerFunc);
             const option1: MutationObserverInit = { attributes: true, childList: true, subtree: true };
@@ -294,6 +318,7 @@ namespace GraphTableSVG {
             return ids.some((v) => v == id);
         }
 
+        
 
     }
 
@@ -305,8 +330,9 @@ namespace GraphTableSVG {
         * @param y
         */
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
-            return [this.x, this.y];
+            return [this.cx, this.cy];
         }
+
         /**
          * 与えられた位置から伸びた辺に対応する接続位置を返します。
          * @param type 
