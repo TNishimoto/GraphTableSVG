@@ -1,6 +1,24 @@
 namespace GraphTableSVG {
 
-    export class PPTextBoxShapeBase {
+    export class SVGGroupBase {
+        private static objectDic: { [key: string]: SVGGroupBase; } = {};
+        public static getObjectFromObjectID(id: string): SVGGroupBase {
+            return this.objectDic[id];
+        }
+        public static setObjectFromObjectID(obj: SVGGroupBase) {
+            const id = obj.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
+            this.objectDic[id] = obj;
+        }
+        public static getObjectFromID(id: string): SVGGroupBase | null {
+
+
+            for (let key in this.objectDic) {
+                if (this.objectDic[key].svgGroup.id == id) {
+                    return this.objectDic[key];
+                }
+            }
+            return null;
+        }
         private _svgGroup: SVGGElement;
         /**
         セルを表しているSVGGElementを返します。
@@ -8,29 +26,91 @@ namespace GraphTableSVG {
         public get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
+        get isLocated(): boolean {
+            return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
+        }
+        /**
+    このVertexのX座標を返します。
+    */
+        public get cx(): number {
+            return this.svgGroup.getX();
+        }
+        public set cx(value: number) {
+            if (this.svgGroup.getX() != value) {
+                this.svgGroup.setX(value);
+            }
+        }
+        /**
+        このVertexのY座標を返します。
+        */
+        public get cy(): number {
+            return this.svgGroup.getY();
+        }
+        public set cy(value: number) {
+            if (this.svgGroup.getY() != value) {
+                this.svgGroup.setY(value);
+            }
+        }
+        /**
+頂点の幅を返します。
+*/
+        get width(): number {
+            return this.svgGroup.gtGetAttributeNumber("data-width", 0);
+        }
+        set width(value: number) {
+            if (this.width != value) this.svgGroup.setAttribute("data-width", value.toString());
+
+        }
+        /**
+        頂点の高さを返します。
+        */
+        get height(): number {
+            return this.svgGroup.gtGetAttributeNumber("data-height", 0);
+        }
+        set height(value: number) {
+            if (this.height != value) this.svgGroup.setAttribute("data-height", value.toString());
+        }
+        public get x(): number {
+            return this.cx - (this.width / 2);
+        }
+        public get y(): number {
+            return this.cy - (this.height / 2);
+        }
+        public get type(): string {
+            return "PPTextBoxShapeBase";
+        }
+        protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
+
+        }
+        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {
+            this._svgGroup = SVG.createGroup(svgbox, option.className == undefined ? null : option.className);
+            //const objID = PPTextBoxShapeBase.objectIDCounter++;
+            //this.svgGroup.setAttribute("objectID", objID.toString());
+            SVGGroupBase.setObjectFromObjectID(this);
+
+            this.svgGroup.setAttribute("data-group-type", this.type);
+            this.createSurface(svgbox, option);
+
+
+
+
+            if (option.width != undefined) this.width = option.width;
+            if (option.height != undefined) this.height = option.height;
+
+            if (option.cx != undefined) this.cx = option.cx;
+            if (option.cy != undefined) this.cy = option.cy;
+
+
+        }
+    }
+    export class PPTextBoxShapeBase extends SVGGroupBase {
         private _svgText: SVGTextElement;
         public get svgText(): SVGTextElement {
             return this._svgText;
         }
         //private static objectIDCounter = 0;
-        private static objectDic : { [key: string]: PPTextBoxShapeBase ; } = {};
-        public static getObjectFromObjectID(id : string) : PPTextBoxShapeBase {
-            return this.objectDic[id];
-        }
-        public static setObjectFromObjectID(obj : PPTextBoxShapeBase){
-            const id = obj.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
-            this.objectDic[id] = obj;
-        }
-        public static getObjectFromID(id : string) : PPTextBoxShapeBase | null {
 
 
-            for (let key in this.objectDic) {
-                if(this.objectDic[key].svgGroup.id == id){
-                    return this.objectDic[key];
-                }
-              }
-            return null;
-        }
 
         private _observer: MutationObserver;
         private observerFunc: MutationCallback = (x: MutationRecord[]) => {
@@ -43,7 +123,7 @@ namespace GraphTableSVG {
                     b = true;
                 }
 
-                if(p.attributeName == "transform"){
+                if (p.attributeName == "transform") {
                     this.dispatchConnectPositionChangedEvent();
                 }
             }
@@ -91,9 +171,7 @@ namespace GraphTableSVG {
             "data-arrow-head-width", "data-arrow-head-height"]
 
         protected surfaceAttributes: string[] = [];
-        get isLocated(): boolean {
-            return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
-        }
+
         private _textObserver: MutationObserver;
         protected textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
             if (!this.isLocated) return;
@@ -112,28 +190,21 @@ namespace GraphTableSVG {
 
         };
         private static updateTextAttributes = ["style"]
-        public get type(): string {
-            return "PPTextBoxShapeBase";
-        }
+
         public static ConnectPositionChangedEventName = "connect_position_changed";
-        protected dispatchConnectPositionChangedEvent() : void{
-            if(this.surface != null){
+        protected dispatchConnectPositionChangedEvent(): void {
+            if (this.surface != null) {
                 var event = document.createEvent("HTMLEvents");
-                event.initEvent(PPTextBoxShapeBase.ConnectPositionChangedEventName, true, true) 
+                event.initEvent(PPTextBoxShapeBase.ConnectPositionChangedEventName, true, true)
                 this.surface.dispatchEvent(event);
             }
         }
-        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {            
-            this._svgGroup = SVG.createGroup(svgbox, option.className == undefined ? null : option.className);
-            //const objID = PPTextBoxShapeBase.objectIDCounter++;
-            //this.svgGroup.setAttribute("objectID", objID.toString());
-            PPTextBoxShapeBase.setObjectFromObjectID(this);
+        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {
+            super(svgbox, option)
 
 
             this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
-            this.svgGroup.setAttribute("data-group-type", this.type);
-            this.createSurface(svgbox, option);
 
 
             this._observer = new MutationObserver(this.observerFunc);
@@ -144,75 +215,18 @@ namespace GraphTableSVG {
             const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
             this._textObserver.observe(this.svgText, option2);
 
-            if (this.surface != undefined) {
-
-            }
-
-
             if (option.text != undefined) this.svgText.setTextContent(option.text);
             if (option.isAutoSizeShapeToFitText != undefined) this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
 
-            if (option.width != undefined) this.width = option.width;
-            if (option.height != undefined) this.height = option.height;
-
-            if (option.cx != undefined) this.cx = option.cx;
-            if (option.cy != undefined) this.cy = option.cy;
 
 
         }
 
-        protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
 
-        }
 
-        /**
-        このVertexのX座標を返します。
-        */
-        public get cx(): number {
-            return this.svgGroup.getX();
-        }
-        public set cx(value: number) {
-            if (this.svgGroup.getX() != value) {
-                this.svgGroup.setX(value);
-            }
-        }
-        /**
-        このVertexのY座標を返します。
-        */
-        public get cy(): number {
-            return this.svgGroup.getY();
-        }
-        public set cy(value: number) {
-            if (this.svgGroup.getY() != value) {
-                this.svgGroup.setY(value);
-            }
-        }
 
-        /**
-        頂点の幅を返します。
-        */
-        get width(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-width", 0);
-        }
-        set width(value: number) {
-            if (this.width != value) this.svgGroup.setAttribute("data-width", value.toString());
 
-        }
-        /**
-        頂点の高さを返します。
-        */
-        get height(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-height", 0);
-        }
-        set height(value: number) {
-            if (this.height != value) this.svgGroup.setAttribute("data-height", value.toString());
-        }
-        public get x(): number {
-            return this.cx - (this.width / 2);
-        }
-        public get y(): number {
-            return this.cy - (this.height / 2);
-        }
+
         get horizontalAnchor(): HorizontalAnchor {
             const b = this.svgGroup.getPropertyStyleValueWithDefault(HorizontalAnchorPropertyName, "center");
             return HorizontalAnchor.toHorizontalAnchor(b);
@@ -317,7 +331,7 @@ namespace GraphTableSVG {
             return ids.some((v) => v == id);
         }
 
-        
+
 
     }
 

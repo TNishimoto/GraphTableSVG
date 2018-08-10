@@ -1,7 +1,7 @@
 namespace GraphTableSVG {
     export class ShapeArrowCallout extends PPPathTextBox {
 
-        public constructor(svgbox: SVGSVGElement, option: ShapeArrowCalloutAttributes = {}) {
+        public constructor(svgbox: SVGElement, option: ShapeArrowCalloutAttributes = {}) {
             super(svgbox, option);
             if (option.height == undefined) this.height = 100;
             if (option.width == undefined) this.width = 100;
@@ -293,6 +293,59 @@ namespace GraphTableSVG {
                 return [neckWidthRatio, headWidthRatio, headHeightRatio, boxHeightRatio];
             }
         }
+/**
+         * 接続部分の座標を返します。
+         * @param type
+         * @param x
+         * @param y
+         */
+        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+            const wr = this.width / 2;
+            const hr = this.height / 2;
 
+
+            switch (type) {
+                case ConnectorPosition.Top:
+                    return [this.x, this.y - hr];
+                case ConnectorPosition.TopRight:
+                case ConnectorPosition.Right:
+                case ConnectorPosition.BottomRight:
+                    return [this.x + wr, this.y];
+                case ConnectorPosition.Bottom:
+                    return [this.x, this.y + hr];
+                case ConnectorPosition.BottomLeft:
+                case ConnectorPosition.Left:
+                case ConnectorPosition.TopLeft:
+                    return [this.x - wr, this.y];
+                default:
+                    const autoType = this.getAutoPosition(x, y);
+                    return this.getLocation(autoType, x, y);
+            }
+        }
+        protected getAutoPosition(x: number, y: number): ConnectorPosition {
+            const wr = this.width / 2;
+            const hr = this.height / 2;
+
+            const line1 = new VLine(this.x, this.y, this.x + wr, this.y + hr);
+            const line2 = new VLine(this.x, this.y, this.x + wr, this.y - hr);
+
+            const b1 = line1.contains(x, y);
+            const b2 = line2.contains(x, y);
+
+            if (b1) {
+                if (b2) {
+                    return ConnectorPosition.Top;
+                } else {
+                    return ConnectorPosition.Right;
+                }
+            } else {
+                if (b2) {
+                    return ConnectorPosition.Left;
+                } else {
+                    return ConnectorPosition.Bottom;
+                }
+            }
+
+        }
     }
 }

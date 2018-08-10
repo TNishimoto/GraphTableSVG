@@ -19,13 +19,14 @@ declare namespace GraphTableSVG {
         Preorder = 0,
         Postorder = 1,
     }
-    type ShapeObjectType = "g-callout" | "g-sarrowcallout" | "g-ellipse" | "g-rect" | "g-line";
+    type ShapeObjectType = "g-callout" | "g-sarrowcallout" | "g-ellipse" | "g-rect" | "g-line" | "g-graph";
     namespace ShapeObjectType {
         const Callout: ShapeObjectType;
         const ShapeArrowCallout: ShapeObjectType;
         const Ellipse: ShapeObjectType;
         const Rect: ShapeObjectType;
         const Line: ShapeObjectType;
+        const Graph: ShapeObjectType;
         function toShapeObjectType(value: string): ShapeObjectType | null;
     }
     type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
@@ -244,15 +245,27 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class PPTextBoxShapeBase {
+    class SVGGroupBase {
+        private static objectDic;
+        static getObjectFromObjectID(id: string): SVGGroupBase;
+        static setObjectFromObjectID(obj: SVGGroupBase): void;
+        static getObjectFromID(id: string): SVGGroupBase | null;
         private _svgGroup;
         readonly svgGroup: SVGGElement;
+        readonly isLocated: boolean;
+        cx: number;
+        cy: number;
+        width: number;
+        height: number;
+        readonly x: number;
+        readonly y: number;
+        readonly type: string;
+        protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
+        constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
+    }
+    class PPTextBoxShapeBase extends SVGGroupBase {
         private _svgText;
         readonly svgText: SVGTextElement;
-        private static objectDic;
-        static getObjectFromObjectID(id: string): PPTextBoxShapeBase;
-        static setObjectFromObjectID(obj: PPTextBoxShapeBase): void;
-        static getObjectFromID(id: string): PPTextBoxShapeBase | null;
         private _observer;
         private observerFunc;
         readonly surface: SVGElement;
@@ -260,21 +273,12 @@ declare namespace GraphTableSVG {
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): TextBoxShapeAttributes;
         protected updateAttributes: string[];
         protected surfaceAttributes: string[];
-        readonly isLocated: boolean;
         private _textObserver;
         protected textObserverFunc: MutationCallback;
         private static updateTextAttributes;
-        readonly type: string;
         static ConnectPositionChangedEventName: string;
         protected dispatchConnectPositionChangedEvent(): void;
         constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
-        protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
-        cx: number;
-        cy: number;
-        width: number;
-        height: number;
-        readonly x: number;
-        readonly y: number;
         horizontalAnchor: HorizontalAnchor;
         verticalAnchor: VerticalAnchor;
         isAutoSizeShapeToFitText: boolean;
@@ -949,7 +953,7 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class Callout extends PPPathTextBox {
-        constructor(svgbox: SVGSVGElement, option?: CalloutAttributes);
+        constructor(svgbox: SVGElement, option?: CalloutAttributes);
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: CalloutAttributes): CalloutAttributes;
         static openCustomElement(e: SVGElement): Callout;
         readonly type: string;
@@ -959,6 +963,8 @@ declare namespace GraphTableSVG {
         readonly speakerPosition: SpeakerPosition;
         protected readonly shape: string;
         protected readonly VBAAdjustments: number[];
+        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
+        protected getAutoPosition(x: number, y: number): ConnectorPosition;
     }
 }
 declare namespace GraphTableSVG {
@@ -1039,6 +1045,20 @@ declare namespace GraphTableSVG {
         readonly rx: number;
         readonly ry: number;
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
+        protected getAutoPosition(x: number, y: number): ConnectorPosition;
+    }
+}
+declare namespace GraphTableSVG {
+    class PPGraph extends SVGGroupBase {
+        static readonly defaultVertexClass: string;
+        static readonly defaultEdgeClass: string;
+        static readonly vertexXIntervalName: string;
+        static readonly vertexYIntervalName: string;
+        static readonly typeName: string;
+        protected _vertices: PPVertexBase[];
+        protected _edges: PPEdge[];
+        protected _roots: PPVertexBase[];
+        constructor(box: SVGElement, option?: TextBoxShapeAttributes);
     }
 }
 declare namespace GraphTableSVG {
@@ -1053,11 +1073,13 @@ declare namespace GraphTableSVG {
         width: number;
         height: number;
         protected updateSurface(): void;
+        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
+        protected getAutoPosition(x: number, y: number): ConnectorPosition;
     }
 }
 declare namespace GraphTableSVG {
     class ShapeArrowCallout extends PPPathTextBox {
-        constructor(svgbox: SVGSVGElement, option?: ShapeArrowCalloutAttributes);
+        constructor(svgbox: SVGElement, option?: ShapeArrowCalloutAttributes);
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: ShapeArrowCalloutAttributes): ShapeArrowCalloutAttributes;
         static openCustomElement(e: SVGElement): ShapeArrowCallout;
         readonly type: string;
@@ -1073,6 +1095,8 @@ declare namespace GraphTableSVG {
         protected update(): void;
         protected readonly shape: string;
         protected readonly VBAAdjustments: number[];
+        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
+        protected getAutoPosition(x: number, y: number): ConnectorPosition;
     }
 }
 declare namespace GraphTableSVG {
@@ -1107,9 +1131,11 @@ declare namespace GraphTableSVG {
         endVertexID?: string;
         beginConnectorType?: ConnectorPosition;
         endConnectorType?: ConnectorPosition;
+        beginVertex?: PPVertexBase;
+        endVertex?: PPVertexBase;
     };
     function openCustomElement(id: string | SVGElement): any;
-    function openSVG(id: string | SVGSVGElement): any[];
+    function openSVG(id: string | SVGElement, output?: any[]): any[];
 }
 declare namespace HTMLFunctions {
     function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;

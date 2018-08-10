@@ -515,7 +515,7 @@ namespace GraphTableSVG {
                 }
             }
 
-
+            /*
             if (this.beginVertex != null && this.endVertex != null) {
                 //const [x, y] = [this.svgText.getX(), this.svgText.getY()];
 
@@ -531,14 +531,6 @@ namespace GraphTableSVG {
                         if (textPathLen <= 0) textPathLen = 5;
                         this.svgTextPath.setAttribute("startOffset", `${startPos}`);
                         this.setRegularInterval(textPathLen);
-                        //this.svgText.textLength.baseVal.value = textPathLen;
-
-                        //this.svgTextPath.textLength.baseVal.value = textPathLen;
-
-                        //this.svgTextPath.setAttribute("lengthAdjust", "spacing");
-                        //this.svgText.setAttribute("lengthAdjust", "spacing");
-
-                        //this.svgText.textLength.baseVal.value = textPathLen;
                     }
 
                 }
@@ -569,13 +561,8 @@ namespace GraphTableSVG {
                     this.svgText.setAttribute("dy", "0");
                 }
 
-                /*
-                if (this.text != null) {
-                    this.text.update();
-                }
-                */
             }
-
+            */
             return false;
         }
         /**

@@ -89,6 +89,29 @@ namespace GraphTableSVG {
                     return this.getLocation(autoType, x, y);
             }
         }
+        protected getAutoPosition(x: number, y: number): ConnectorPosition {
+            const radius = this.rx;
+            const r = (Math.sqrt(2) / 2) * radius;
+            const line1 = new VLine(this.x, this.y, this.x + r, this.y + r);
+            const line2 = new VLine(this.x, this.y, this.x + r, this.y - r);
+
+            const b1 = line1.contains(x, y);
+            const b2 = line2.contains(x, y);
+
+            if (b1) {
+                if (b2) {
+                    return ConnectorPosition.Top;
+                } else {
+                    return ConnectorPosition.Right;
+                }
+            } else {
+                if (b2) {
+                    return ConnectorPosition.Left;
+                } else {
+                    return ConnectorPosition.Bottom;
+                }
+            }
+        }
     }
     /*
     export type EllipseAttributes = TextBoxShapeAttributes & {

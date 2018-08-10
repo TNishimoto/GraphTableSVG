@@ -1,37 +1,37 @@
 namespace GraphTableSVG {
-    export type TextBoxShapeAttributes = { 
-        className?: string, 
-        cx?: number, 
-        cy?: number, 
-        width? : number, 
-        height? : number, 
-        text?: string, 
-        isAutoSizeShapeToFitText?: boolean 
+    export type TextBoxShapeAttributes = {
+        className?: string,
+        cx?: number,
+        cy?: number,
+        width?: number,
+        height?: number,
+        text?: string,
+        isAutoSizeShapeToFitText?: boolean
     }
     export type ShapeArrowCalloutAttributes = TextBoxShapeAttributes & {
-        arrowHeadWidth? : number,
-        arrowHeadHeight? : number,
-        arrowNeckWidth? : number,
-        arrowNeckHeight? : number,
-        direction? : Direction 
+        arrowHeadWidth?: number,
+        arrowHeadHeight?: number,
+        arrowNeckWidth?: number,
+        arrowNeckHeight?: number,
+        direction?: Direction
     }
     export type CalloutAttributes = TextBoxShapeAttributes & {
-        speakerX? : number,
-        speakerY? : number,
+        speakerX?: number,
+        speakerY?: number,
     }
     export type PPEdgeAttributes = TextBoxShapeAttributes & {
-        startMarker? : boolean,
-        endMarker? : boolean, 
-        x1? :number,
-        x2? : number,
-        y1? : number,
-        y2? : number, 
-        beginVertexID? : string,
-        endVertexID? : string,
-        beginConnectorType?: ConnectorPosition, 
+        startMarker?: boolean,
+        endMarker?: boolean,
+        x1?: number,
+        x2?: number,
+        y1?: number,
+        y2?: number,
+        beginVertexID?: string,
+        endVertexID?: string,
+        beginConnectorType?: ConnectorPosition,
         endConnectorType?: ConnectorPosition,
-        beginVertex? : PPVertexBase,
-        endVertex? : PPVertexBase
+        beginVertex?: PPVertexBase,
+        endVertex?: PPVertexBase
     }
 
     /*
@@ -63,46 +63,51 @@ namespace GraphTableSVG {
     */
 
 
-    export function openCustomElement(id : string | SVGElement) : any {
-        
-        if(typeof id == "string"){
+    export function openCustomElement(id: string | SVGElement): any {
+
+        if (typeof id == "string") {
             const item = document.getElementById(id);
-            if(item instanceof SVGElement){
+            if (item instanceof SVGElement) {
                 return GraphTableSVG.openCustomElement(item);
-            }else{
+            } else {
                 return null;
             }
-        }else{
+        } else {
             const element = id;
             const type = ShapeObjectType.toShapeObjectType(element.nodeName);
             return createCustomElement(element, type);
         }
     }
-    function createCustomElement(e: SVGElement, type : ShapeObjectType): PPTextBoxShapeBase {
+    function createCustomElement(e: SVGElement, type: ShapeObjectType): PPTextBoxShapeBase {
         const parent = e.parentElement;
-        if (parent instanceof SVGSVGElement) {
-            let r : PPTextBoxShapeBase;
+        if (parent instanceof SVGElement) {
+            let r: PPTextBoxShapeBase;
 
-            if(type == ShapeObjectType.Callout){
-                const option = Callout.constructAttributes(e,true);
+            if (type == ShapeObjectType.Callout) {
+                const option = Callout.constructAttributes(e, true);
                 r = new Callout(parent, option);
-            }else if(type == ShapeObjectType.ShapeArrowCallout){
+            } else if (type == ShapeObjectType.ShapeArrowCallout) {
                 const option = ShapeArrowCallout.constructAttributes(e, true);
-                r = new ShapeArrowCallout(parent, option);    
-            }else if(type == ShapeObjectType.Ellipse){
+                r = new ShapeArrowCallout(parent, option);
+            } else if (type == ShapeObjectType.Ellipse) {
                 const option = PPTextBoxShapeBase.constructAttributes(e, true);
-                r = new PPEllipse(parent, option);    
-            }else if(type == ShapeObjectType.Rect){
+                r = new PPEllipse(parent, option);
+            } else if (type == ShapeObjectType.Rect) {
                 const option = PPTextBoxShapeBase.constructAttributes(e, true);
-                r = new PPRectangle(parent, option);    
-            }else if(type == ShapeObjectType.Line){
+                r = new PPRectangle(parent, option);
+            } else if (type == ShapeObjectType.Line) {
                 const option = PPEdge.constructAttributes(e, true);
-                r = <any>new PPEdge(parent, option);    
+                r = <any>new PPEdge(parent, option);
+            } else if (type == ShapeObjectType.Graph) {
+                const option = PPTextBoxShapeBase.constructAttributes(e, true);
+                r = <any>new PPGraph(parent, option);
             }
-            else{
+            else {
                 return null;
             }
             const attrs = e.gtGetAttributes();
+            HTMLFunctions.getChildren(e).forEach((v) => r.svgGroup.appendChild(v));
+
             e.remove();
             attrs.forEach((v) => r.svgGroup.setAttribute(v.name, v.value));
             return r;
@@ -110,24 +115,32 @@ namespace GraphTableSVG {
             throw Error("error!");
         }
     }
-    export function openSVG(id : string | SVGSVGElement) : any[] {
-        if(typeof id == "string"){
+    export function openSVG(id: string | SVGElement, output: any[] = []): any[] {
+        if (typeof id == "string") {
             const item = document.getElementById(id);
-            if(item != null && item instanceof SVGSVGElement){
-                return GraphTableSVG.openSVG(item);
-            }else{
+            if (item != null && item instanceof SVGSVGElement) {
+                return GraphTableSVG.openSVG(item, output);
+            } else {
                 return [];
             }
-        }else{
+        } else {
             const element = id;
-            const r : any[] = [];
-            HTMLFunctions.getChildren(element).forEach((v)=>{
-                if(v instanceof SVGElement){
-                    const p = GraphTableSVG.openCustomElement(v);
-                    if(p != null) r.push(p);
-                }
-            });
-            return r;
+            while (true) {
+                let b = false;
+                HTMLFunctions.getChildren(element).forEach((v) => {
+                    if (v instanceof SVGElement) {
+                        const p = GraphTableSVG.openCustomElement(v);
+                        if (p != null){
+                            output.push(p);
+                            b = true;
+                        }else{
+                            openSVG(v, output);
+                        }
+                    }
+                });
+                if(!b) break;
+            }
+            return output;
         }
     }
 }
