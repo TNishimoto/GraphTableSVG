@@ -299,6 +299,12 @@ declare namespace GraphTableSVG {
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         getConnectorType(type: ConnectorPosition, x: number, y: number): ConnectorPosition;
         protected getAutoPosition(x: number, y: number): ConnectorPosition;
+        readonly outcomingEdges: PPEdge[];
+        readonly incomingEdges: PPEdge[];
+        insertOutcomingEdge(edge: PPEdge, insertIndex?: number): void;
+        removeOutcomingEdge(edge: PPEdge): void;
+        insertIncomingEdge(edge: PPEdge, insertIndex?: number): void;
+        removeIncomingEdge(edge: PPEdge): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -968,9 +974,15 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class PPEdge extends PPPathTextBox {
+    class PPEdge extends PPTextBoxShapeBase {
+        private _svgPath;
+        readonly svgPath: SVGPathElement;
         protected _svgTextPath: SVGTextPathElement;
         readonly svgTextPath: SVGTextPathElement;
+        protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
+        protected readonly shape: string;
+        readonly type: string;
+        readonly surface: SVGElement;
         tag: any;
         markerStart: SVGMarkerElement | null;
         markerEnd: SVGMarkerElement | null;
@@ -1055,8 +1067,8 @@ declare namespace GraphTableSVG {
         static readonly vertexXIntervalName: string;
         static readonly vertexYIntervalName: string;
         static readonly typeName: string;
-        protected _vertices: PPVertexBase[];
-        protected _edges: PPEdge[];
+        readonly vertices: PPVertexBase[];
+        readonly edges: PPEdge[];
         protected _roots: PPVertexBase[];
         constructor(box: SVGElement, option?: TextBoxShapeAttributes);
     }

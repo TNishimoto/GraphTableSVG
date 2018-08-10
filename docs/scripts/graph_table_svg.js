@@ -1794,6 +1794,81 @@ var GraphTableSVG;
         PPVertexBase.prototype.getAutoPosition = function (x, y) {
             return GraphTableSVG.ConnectorPosition.Top;
         };
+        Object.defineProperty(PPVertexBase.prototype, "outcomingEdges", {
+            get: function () {
+                var p = JSON.parse(this.svgGroup.gtGetAttribute("outcoming-edges", "[]"));
+                var p2 = p.map(function (v) { return SVGGroupBase.getObjectFromObjectID(v.toString()); });
+                return p2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPVertexBase.prototype, "incomingEdges", {
+            get: function () {
+                var p = JSON.parse(this.svgGroup.gtGetAttribute("incoming-edges", "[]"));
+                var p2 = p.map(function (v) { return SVGGroupBase.getObjectFromObjectID(v.toString()); });
+                return p2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPVertexBase.prototype.insertOutcomingEdge = function (edge, insertIndex) {
+            if (insertIndex === void 0) { insertIndex = this.outcomingEdges.length; }
+            var p = this.outcomingEdges.indexOf(edge);
+            if (p != -1) {
+                throw new Error();
+            }
+            else {
+                var edges = this.outcomingEdges;
+                edges.splice(insertIndex, 0, edge);
+                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
+                console.log("Incom " + edges.length + " / " + newEdges);
+                this.svgGroup.setAttribute("outcoming-edges", newEdges);
+                if (edge.beginVertex != this) {
+                    edge.beginVertex = this;
+                }
+            }
+        };
+        PPVertexBase.prototype.removeOutcomingEdge = function (edge) {
+            var p = this.outcomingEdges.indexOf(edge);
+            if (p != null) {
+                var edges = this.outcomingEdges;
+                edges.splice(p, 1);
+                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
+                this.svgGroup.setAttribute("outcoming-edges", newEdges);
+                if (edge.beginVertex == this) {
+                    edge.beginVertex = null;
+                }
+            }
+        };
+        PPVertexBase.prototype.insertIncomingEdge = function (edge, insertIndex) {
+            if (insertIndex === void 0) { insertIndex = this.incomingEdges.length; }
+            var p = this.incomingEdges.indexOf(edge);
+            if (p != -1) {
+                throw new Error();
+            }
+            else {
+                var edges = this.incomingEdges;
+                edges.splice(insertIndex, 0, edge);
+                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
+                this.svgGroup.setAttribute("incoming-edges", newEdges);
+                if (edge.endVertex != this) {
+                    edge.endVertex = this;
+                }
+            }
+        };
+        PPVertexBase.prototype.removeIncomingEdge = function (edge) {
+            var p = this.incomingEdges.indexOf(edge);
+            if (p != null) {
+                var edges = this.incomingEdges;
+                edges.splice(p, 1);
+                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
+                this.svgGroup.setAttribute("incoming-edges", newEdges);
+                if (edge.endVertex == this) {
+                    edge.endVertex = null;
+                }
+            }
+        };
         return PPVertexBase;
     }(PPTextBoxShapeBase));
     GraphTableSVG.PPVertexBase = PPVertexBase;
@@ -7055,9 +7130,42 @@ var GraphTableSVG;
             _this.update();
             return _this;
         }
+        Object.defineProperty(PPEdge.prototype, "svgPath", {
+            get: function () {
+                return this._svgPath;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(PPEdge.prototype, "svgTextPath", {
             get: function () {
                 return this._svgTextPath;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPEdge.prototype.createSurface = function (svgbox, option) {
+            if (option === void 0) { option = {}; }
+            this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaulSurfaceClass));
+            this.svgGroup.insertBefore(this.svgPath, this.svgText);
+        };
+        Object.defineProperty(PPEdge.prototype, "shape", {
+            get: function () {
+                return "NONE";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPEdge.prototype, "type", {
+            get: function () {
+                return "PPEdge";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPEdge.prototype, "surface", {
+            get: function () {
+                return this.svgPath;
             },
             enumerable: true,
             configurable: true
@@ -7241,16 +7349,22 @@ var GraphTableSVG;
                 }
             },
             set: function (value) {
-                if (this.beginVertex != null)
+                if (this.beginVertex != null) {
                     this.removeVertexEvent(this.beginVertex);
+                    if (this.beginVertex.outcomingEdges.indexOf(this) != -1) {
+                        this.beginVertex.removeOutcomingEdge(this);
+                    }
+                }
                 if (value == null) {
                     this.beginVertexID = null;
                 }
                 else {
                     this.beginVertexID = value.objectID;
-                }
-                if (this.beginVertex != null)
                     this.addVertexEvent(this.beginVertex);
+                    if (this.beginVertex.outcomingEdges.indexOf(this) == -1) {
+                        this.beginVertex.insertOutcomingEdge(this);
+                    }
+                }
                 this.update();
             },
             enumerable: true,
@@ -7266,16 +7380,22 @@ var GraphTableSVG;
                 }
             },
             set: function (value) {
-                if (this.endVertex != null)
+                if (this.endVertex != null) {
                     this.removeVertexEvent(this.endVertex);
+                    if (this.endVertex.incomingEdges.indexOf(this) != -1) {
+                        this.endVertex.removeIncomingEdge(this);
+                    }
+                }
                 if (value == null) {
                     this.endVertexID = null;
                 }
                 else {
                     this.endVertexID = value.objectID;
-                }
-                if (this.endVertex != null)
                     this.addVertexEvent(this.endVertex);
+                    if (this.endVertex.incomingEdges.indexOf(this) == -1) {
+                        this.endVertex.insertIncomingEdge(this);
+                    }
+                }
                 this.update();
             },
             enumerable: true,
@@ -7509,7 +7629,7 @@ var GraphTableSVG;
         };
         PPEdge.markerCounter = 0;
         return PPEdge;
-    }(GraphTableSVG.PPPathTextBox));
+    }(GraphTableSVG.PPTextBoxShapeBase));
     GraphTableSVG.PPEdge = PPEdge;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
@@ -7655,11 +7775,39 @@ var GraphTableSVG;
         function PPGraph(box, option) {
             if (option === void 0) { option = {}; }
             var _this = _super.call(this, box, option) || this;
-            _this._vertices = new Array(0);
-            _this._edges = new Array(0);
             _this._roots = [];
             return _this;
         }
+        Object.defineProperty(PPGraph.prototype, "vertices", {
+            get: function () {
+                var _this = this;
+                var r = [];
+                HTMLFunctions.getChildren(this.svgGroup).filter(function (v) { return v.hasAttribute(GraphTableSVG.SVG.objectIDName); }).forEach(function (v) {
+                    var item = GraphTableSVG.SVGGroupBase.getObjectFromObjectID(_this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName));
+                    if (item instanceof GraphTableSVG.PPVertexBase) {
+                        r.push(item);
+                    }
+                });
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPGraph.prototype, "edges", {
+            get: function () {
+                var _this = this;
+                var r = [];
+                HTMLFunctions.getChildren(this.svgGroup).filter(function (v) { return v.hasAttribute(GraphTableSVG.SVG.objectIDName); }).forEach(function (v) {
+                    var item = GraphTableSVG.SVGGroupBase.getObjectFromObjectID(_this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName));
+                    if (item instanceof GraphTableSVG.PPEdge) {
+                        r.push(item);
+                    }
+                });
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
         PPGraph.defaultVertexClass = "--default-vertex-class";
         PPGraph.defaultEdgeClass = "--default-edge-class";
         PPGraph.vertexXIntervalName = "--vertex-x-interval";

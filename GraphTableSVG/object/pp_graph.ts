@@ -12,13 +12,35 @@ namespace GraphTableSVG {
         //public static readonly objectIDName: string = "data-objectID";
         public static readonly typeName: string = "data-type";
 
-        protected _vertices: PPVertexBase[] = new Array(0);
-        protected _edges: PPEdge[] = new Array(0);
+        
+        public get vertices() : PPVertexBase[]{
+            const r : PPVertexBase[] = [];
+            HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(GraphTableSVG.SVG.objectIDName)).forEach((v)=>{
+                const item = SVGGroupBase.getObjectFromObjectID(this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName))
+                if(item instanceof PPVertexBase){
+                    r.push(item);
+                }
+            })
+            return r;
+        }
+        public get edges() : PPEdge[]{
+            const r : PPEdge[] = [];
+            HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(GraphTableSVG.SVG.objectIDName)).forEach((v)=>{
+                const item = SVGGroupBase.getObjectFromObjectID(this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName))
+                if(item instanceof PPEdge){
+                    r.push(item);
+                }
+            })
+            return r;
+        }
+        
         protected _roots: PPVertexBase[] = [];
         constructor(box: SVGElement, option: TextBoxShapeAttributes = {}) {
             super(box, option)
 
         }
+
+
 
     }
 

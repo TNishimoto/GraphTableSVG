@@ -2,10 +2,27 @@ namespace GraphTableSVG {
     /**
      * 辺をSVGで表現するためのクラスです。
      */
-    export class PPEdge extends PPPathTextBox {
+    export class PPEdge extends PPTextBoxShapeBase {
+        private _svgPath: SVGPathElement;
+        public get svgPath(): SVGPathElement {
+            return this._svgPath;
+        }
         protected _svgTextPath: SVGTextPathElement;
         public get svgTextPath(): SVGTextPathElement {
             return this._svgTextPath;
+        }
+        protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
+            this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
+            this.svgGroup.insertBefore(this.svgPath, this.svgText);
+        }
+        protected get shape(): string {
+            return "NONE";
+        }
+        public get type(): string {
+            return "PPEdge";
+        }
+        public get surface() : SVGElement {
+            return this.svgPath;
         }
         public tag: any;
         /**
@@ -286,15 +303,24 @@ namespace GraphTableSVG {
         開始接点を設定します。
         */
         set beginVertex(value: PPVertexBase | null) {
-            if(this.beginVertex != null) this.removeVertexEvent(this.beginVertex);
+            if(this.beginVertex != null){
+                 this.removeVertexEvent(this.beginVertex);
+                 if(this.beginVertex.outcomingEdges.indexOf(this) != -1){
+                     this.beginVertex.removeOutcomingEdge(this);
+                 }
+            }
 
             if (value == null) {
                 this.beginVertexID = null;
             } else {
                 this.beginVertexID = value.objectID;
+                this.addVertexEvent(this.beginVertex);
+                if(this.beginVertex.outcomingEdges.indexOf(this) == -1){
+                    this.beginVertex.insertOutcomingEdge(this);
+                }
+
             }
 
-            if(this.beginVertex != null) this.addVertexEvent(this.beginVertex);
             this.update();
 
         }
@@ -312,15 +338,24 @@ namespace GraphTableSVG {
         終了接点を設定します。
         */
         set endVertex(value: PPVertexBase | null) {
-            if(this.endVertex != null) this.removeVertexEvent(this.endVertex);
+            if(this.endVertex != null){
+                this.removeVertexEvent(this.endVertex);
+                if(this.endVertex.incomingEdges.indexOf(this) != -1){
+                    this.endVertex.removeIncomingEdge(this);
+                }
+           }
+
 
             if (value == null) {
                 this.endVertexID = null;
             } else {
                 this.endVertexID = value.objectID;
-            }
+                this.addVertexEvent(this.endVertex);
+                if(this.endVertex.incomingEdges.indexOf(this) == -1){
+                    this.endVertex.insertIncomingEdge(this);
+                }
 
-            if(this.endVertex != null) this.addVertexEvent(this.endVertex);
+            }
 
             this.update();
 
