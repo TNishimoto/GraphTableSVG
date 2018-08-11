@@ -8,7 +8,7 @@ namespace GraphTableSVG {
             return this.svgRectangle;
         }
 
-        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option);
             this.updateAttributes.push("width");
             this.updateAttributes.push("height");
@@ -63,59 +63,59 @@ namespace GraphTableSVG {
 
         }
 /**
-         * 接続部分の座標を返します。
-         * @param type
-         * @param x
-         * @param y
-         */
-        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
-            const wr = this.width / 2;
-            const hr = this.height / 2;
+        * 接続部分の座標を返します。
+        * @param type
+        * @param x
+        * @param y
+        */
+       public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+        const wr = this.width / 2;
+        const hr = this.height / 2;
 
 
-            switch (type) {
-                case ConnectorPosition.Top:
-                    return [this.x, this.y - hr];
-                case ConnectorPosition.TopRight:
-                case ConnectorPosition.Right:
-                case ConnectorPosition.BottomRight:
-                    return [this.x + wr, this.y];
-                case ConnectorPosition.Bottom:
-                    return [this.x, this.y + hr];
-                case ConnectorPosition.BottomLeft:
-                case ConnectorPosition.Left:
-                case ConnectorPosition.TopLeft:
-                    return [this.x - wr, this.y];
-                default:
-                    const autoType = this.getAutoPosition(x, y);
-                    return this.getLocation(autoType, x, y);
-            }
+        switch (type) {
+            case ConnectorPosition.Top:
+                return [this.cx, this.cy - hr];
+            case ConnectorPosition.TopRight:
+            case ConnectorPosition.Right:
+            case ConnectorPosition.BottomRight:
+                return [this.cx + wr, this.cy];
+            case ConnectorPosition.Bottom:
+                return [this.cx, this.cy + hr];
+            case ConnectorPosition.BottomLeft:
+            case ConnectorPosition.Left:
+            case ConnectorPosition.TopLeft:
+                return [this.cx - wr, this.cy];
+            default:
+                const autoType = this.getAutoPosition(x, y);
+                return this.getLocation(autoType, x, y);
         }
-        protected getAutoPosition(x: number, y: number): ConnectorPosition {
-            const wr = this.width / 2;
-            const hr = this.height / 2;
+    }
+    protected getAutoPosition(x: number, y: number): ConnectorPosition {
+        const wr = this.width / 2;
+        const hr = this.height / 2;
 
-            const line1 = new VLine(this.x, this.y, this.x + wr, this.y + hr);
-            const line2 = new VLine(this.x, this.y, this.x + wr, this.y - hr);
+        const line1 = new VLine(this.cx, this.cy, this.cx + wr, this.cy + hr);
+        const line2 = new VLine(this.cx, this.cy, this.cx + wr, this.cy - hr);
 
-            const b1 = line1.contains(x, y);
-            const b2 = line2.contains(x, y);
+        const b1 = line1.contains(x, y);
+        const b2 = line2.contains(x, y);
 
-            if (b1) {
-                if (b2) {
-                    return ConnectorPosition.Top;
-                } else {
-                    return ConnectorPosition.Right;
-                }
+        if (b1) {
+            if (b2) {
+                return ConnectorPosition.Top;
             } else {
-                if (b2) {
-                    return ConnectorPosition.Left;
-                } else {
-                    return ConnectorPosition.Bottom;
-                }
+                return ConnectorPosition.Right;
             }
-
+        } else {
+            if (b2) {
+                return ConnectorPosition.Left;
+            } else {
+                return ConnectorPosition.Bottom;
+            }
         }
+
+    }
 
     }
 }

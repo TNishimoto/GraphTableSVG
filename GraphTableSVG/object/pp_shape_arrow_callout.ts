@@ -1,7 +1,7 @@
 namespace GraphTableSVG {
     export class ShapeArrowCallout extends PPPathTextBox {
 
-        public constructor(svgbox: SVGElement, option: ShapeArrowCalloutAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: ShapeArrowCalloutAttributes = {}) {
             super(svgbox, option);
             if (option.height == undefined) this.height = 100;
             if (option.width == undefined) this.width = 100;

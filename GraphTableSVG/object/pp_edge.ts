@@ -150,8 +150,8 @@ namespace GraphTableSVG {
             output.x2 = e.gtGetAttributeNumber("x2", 300);
             output.y1 = e.gtGetAttributeNumber("y1", 0);
             output.y2 = e.gtGetAttributeNumber("y2", 300);
-            output.beginVertexID = e.getAttribute("begin-vertex");
-            output.endVertexID = e.getAttribute("end-vertex");
+            output.beginVertex = e.getAttribute("begin-vertex");
+            output.endVertex = e.getAttribute("end-vertex");
             output.beginConnectorType = ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("begin-connector", "auto"));
             output.endConnectorType = ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("end-connector", "auto"));
 
@@ -174,11 +174,20 @@ namespace GraphTableSVG {
 
             return output;
         }
-        constructor(svgbox: SVGElement, option: PPEdgeAttributes = {}) {
+        constructor(svgbox: SVGElement | string, option: PPEdgeAttributes = {}) {
             super(svgbox, option);
             //this._svgGroup = SVG.createGroup(svgbox);
 
+            this.svgText.textContent="";
+            const textClass = this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass);
+            this._svgTextPath = SVG.createTextPath2(textClass);            
+            this.svgPath.id = `path-${this.objectID}`;
 
+            this.svgText.appendChild(this._svgTextPath);
+            this._svgTextPath.href.baseVal = `#${this._svgPath.id}`
+            if(option.text != undefined){
+                this.svgTextPath.setTextContent(option.text);
+            }
 
             /*
             const t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
@@ -191,10 +200,6 @@ namespace GraphTableSVG {
             const option1: MutationObserverInit = { attributes: true };
             this._observer.observe(this.svgGroup, option1);
 
-            const lineClass = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
-            this._svgPath = SVG.createPath(this.svgGroup, 0, 0, 0, 0, lineClass);
-            //this.svgGroup.appendChild(this.svgPath);
-            this._svgPath.id = `path-${this.objectID}`;
 
             const textClass = this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass);
             [this._svgText, this._svgTextPath] = SVG.createTextPath(textClass);
@@ -220,21 +225,24 @@ namespace GraphTableSVG {
             this.pathPoints = [[x1, y1], [x2, y2]];
 
 
-            if(option.beginVertexID != null){
-                const obj = PPTextBoxShapeBase.getObjectFromID(option.beginVertexID);
-
+            if(option.beginVertex != null){
+                const obj = option.beginVertex instanceof PPVertexBase ? option.beginVertex :  PPTextBoxShapeBase.getObjectFromID(option.beginVertex);
                 if(obj instanceof PPVertexBase){
                 this.beginVertex = obj;
-                }
             }
-            if(option.endVertexID != null){
-                const obj = PPTextBoxShapeBase.getObjectFromID(option.endVertexID);
+            }
+            if(option.endVertex != null){
+                const obj = option.endVertex instanceof PPVertexBase ? option.endVertex :  PPTextBoxShapeBase.getObjectFromID(option.endVertex);
+
+                //const obj = PPTextBoxShapeBase.getObjectFromID(option.endVertexID);
                 if(obj instanceof PPVertexBase){
                 this.endVertex = obj;
                 }
             }
             this.beginConnectorType = option.beginConnectorType == undefined ? ConnectorPosition.Auto : option.beginConnectorType;
             this.endConnectorType = option.endConnectorType == undefined ? ConnectorPosition.Auto : option.endConnectorType;
+
+            this.pathTextAlignment = option.pathTextAlignment != undefined ? option.pathTextAlignment : pathTextAlighnment.center;
 
             this.update();
 
@@ -550,54 +558,46 @@ namespace GraphTableSVG {
                 }
             }
 
-            /*
-            if (this.beginVertex != null && this.endVertex != null) {
-                //const [x, y] = [this.svgText.getX(), this.svgText.getY()];
-
-
-
-
-                if (this.pathTextAlignment == pathTextAlighnment.regularInterval) {
-                    const pathLen = this.svgPath.getTotalLength();
-                    const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
-                    if (strLen > 0) {
-                        const startPos = pathLen / (strLen + 1);
-                        let textPathLen = pathLen - (startPos * 2);
-                        if (textPathLen <= 0) textPathLen = 5;
-                        this.svgTextPath.setAttribute("startOffset", `${startPos}`);
-                        this.setRegularInterval(textPathLen);
-                    }
-
-                }
-                else if (this.pathTextAlignment == pathTextAlighnment.end) {
-                    this.removeTextLengthAttribute();
-                    const box = this.svgText.getBBox();
-                    const pathLen = this.svgPath.getTotalLength();
-                    this.svgTextPath.setAttribute("startOffset", `${pathLen - box.width}`);
-                }
-                else if (this.pathTextAlignment == pathTextAlighnment.center) {
-                    this.removeTextLengthAttribute();
-                    const box = this.svgText.getBBox();
-                    const pathLen = this.svgPath.getTotalLength();
-                    const offset = (pathLen - box.width) / 2;
-                    this.svgTextPath.setAttribute("startOffset", `${offset}`);
-                    //こっちだとEdgeではおかしくなる
-                    //this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    
-
-                }
-                else {
-                    this.removeTextLengthAttribute();
-                    //this.svgText.textLength.baseVal.value = 0;
-                }
-                const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
-                if (strokeWidth != null) {
-                    this.svgText.setAttribute("dy", `-${strokeWidth}`);
-                } else {
-                    this.svgText.setAttribute("dy", "0");
+            
+            if (this.pathTextAlignment == pathTextAlighnment.regularInterval) {
+                const pathLen = this.svgPath.getTotalLength();
+                const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
+                if (strLen > 0) {
+                    const startPos = pathLen / (strLen + 1);
+                    let textPathLen = pathLen - (startPos * 2);
+                    if (textPathLen <= 0) textPathLen = 5;
+                    this.svgTextPath.setAttribute("startOffset", `${startPos}`);
+                    this.setRegularInterval(textPathLen);
                 }
 
             }
-            */
+            else if (this.pathTextAlignment == pathTextAlighnment.end) {
+                this.removeTextLengthAttribute();
+                const box = this.svgText.getBBox();
+                const pathLen = this.svgPath.getTotalLength();
+                this.svgTextPath.setAttribute("startOffset", `${pathLen - box.width}`);
+            }
+            else if (this.pathTextAlignment == pathTextAlighnment.center) {
+                this.removeTextLengthAttribute();
+                const box = this.svgText.getBBox();
+                const pathLen = this.svgPath.getTotalLength();
+                const offset = (pathLen - box.width) / 2;
+                this.svgTextPath.setAttribute("startOffset", `${offset}`);
+                //こっちだとEdgeではおかしくなる
+                //this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    
+
+            }
+            else {
+                this.removeTextLengthAttribute();
+                //this.svgText.textLength.baseVal.value = 0;
+            }
+            const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
+            if (strokeWidth != null) {
+                this.svgText.setAttribute("dy", `-${strokeWidth}`);
+            } else {
+                this.svgText.setAttribute("dy", "0");
+            }
+            
             return false;
         }
         /**

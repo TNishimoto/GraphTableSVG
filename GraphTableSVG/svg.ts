@@ -284,6 +284,27 @@ namespace GraphTableSVG {
             }
             return [text, path];
         }
+
+                /**
+         * SVGTextElementを子に持つSVGTextPathElementを作成します。
+         * @param className 生成するSVGTextPathElementのクラス属性名
+         * @returns 生成されたSVGTextElementとSVGTextPathElement
+         */
+        export function createTextPath2(className: string | null = null): SVGTextPathElement {
+            const path = <SVGTextPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+
+            if (className == null) {
+                path.style.fill = "black";
+                path.style.fontSize = "14px";
+                path.style.fontWeight = "bold";
+                path.style.fontFamily = 'Times New Roman';
+            } else {
+                path.setAttribute("class", className);
+            }
+            return path;
+        }
+
+
         /**
          * 入力テキストをLatex表記でパースした結果をSVGTSpanElement配列で返します。
          * @param text Latex表記のテキスト

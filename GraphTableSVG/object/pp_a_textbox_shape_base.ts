@@ -82,16 +82,19 @@ namespace GraphTableSVG {
         protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
 
         }
-        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {
-            this._svgGroup = SVG.createGroup(svgbox, option.className == undefined ? null : option.className);
+        public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
+            let parentElement : SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
+
+            this._svgGroup = SVG.createGroup(parentElement, option.className == undefined ? null : option.className);
             //const objID = PPTextBoxShapeBase.objectIDCounter++;
             //this.svgGroup.setAttribute("objectID", objID.toString());
             SVGGroupBase.setObjectFromObjectID(this);
 
             this.svgGroup.setAttribute("data-group-type", this.type);
-            this.createSurface(svgbox, option);
+            this.createSurface(parentElement, option);
 
 
+            if (option.id != undefined) this.svgGroup.id = option.id;
 
 
             if (option.width != undefined) this.width = option.width;
@@ -101,6 +104,18 @@ namespace GraphTableSVG {
             if (option.cy != undefined) this.cy = option.cy;
 
 
+        }
+        /**
+         * この頂点を廃棄します。廃棄された頂点はグラフから取り除かれます。
+         */
+        public dispose() {
+        }
+        /**
+        この頂点が廃棄されていたらTrueを返します。
+        */
+        get isDisposed(): boolean {
+            return false;
+            //return this.graph == null;
         }
     }
     export class PPTextBoxShapeBase extends SVGGroupBase {
@@ -199,7 +214,7 @@ namespace GraphTableSVG {
                 this.surface.dispatchEvent(event);
             }
         }
-        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option)
 
 
@@ -479,6 +494,17 @@ namespace GraphTableSVG {
                 }
             }
         }
+        public dispose() {
+            while (this.incomingEdges.length > 0) {
+                this.removeIncomingEdge(this.incomingEdges[0]);
+            }
+
+            while (this.outcomingEdges.length > 0) {
+                this.removeOutcomingEdge(this.outcomingEdges[0]);
+            }
+
+        }
+
     }
 
 

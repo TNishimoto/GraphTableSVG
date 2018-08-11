@@ -8,7 +8,7 @@ namespace GraphTableSVG {
             return this.svgEllipse;
         }
 
-        public constructor(svgbox: SVGElement, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option);
             //this.update();
         }

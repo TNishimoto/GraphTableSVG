@@ -6,7 +6,8 @@ namespace GraphTableSVG {
         width?: number,
         height?: number,
         text?: string,
-        isAutoSizeShapeToFitText?: boolean
+        isAutoSizeShapeToFitText?: boolean,
+        id? : string
     }
     export type ShapeArrowCalloutAttributes = TextBoxShapeAttributes & {
         arrowHeadWidth?: number,
@@ -26,12 +27,17 @@ namespace GraphTableSVG {
         x2?: number,
         y1?: number,
         y2?: number,
-        beginVertexID?: string,
-        endVertexID?: string,
         beginConnectorType?: ConnectorPosition,
         endConnectorType?: ConnectorPosition,
-        beginVertex?: PPVertexBase,
-        endVertex?: PPVertexBase
+        beginVertex?: PPVertexBase | string,
+        endVertex?: PPVertexBase | string,
+        pathTextAlignment? : pathTextAlighnment
+    }
+    export type ConnectOption = {
+        outcomingInsertIndex?: number, 
+        incomingInsertIndex?: number,
+        beginConnectorType?: GraphTableSVG.ConnectorPosition, 
+        endConnectorType?: GraphTableSVG.ConnectorPosition
     }
 
     /*
@@ -141,6 +147,25 @@ namespace GraphTableSVG {
                 if(!b) break;
             }
             return output;
+        }
+    }
+    export function createShape(parent : SVGElement | string | SVGGroupBase, type : ShapeObjectType, option : any) : SVGGroupBase {
+        let _parent : SVGElement;
+        if(parent instanceof SVGGroupBase){
+            _parent = parent.svgGroup;
+        }else if(parent instanceof SVGElement){
+
+        }else{
+            _parent = <any>document.getElementById(parent);
+        }
+
+        switch(type){
+            case ShapeObjectType.Callout : return new Callout(_parent, option);
+            case ShapeObjectType.ShapeArrowCallout : return new ShapeArrowCallout(_parent, option);
+            case ShapeObjectType.Ellipse : return new PPEllipse(_parent, option);
+            case ShapeObjectType.Rect : return new PPRectangle(_parent, option);
+            case ShapeObjectType.Line : return new PPEdge(_parent, option);
+            case ShapeObjectType.Graph : return new PPGraph(_parent, option);
         }
     }
 }

@@ -195,6 +195,7 @@ declare namespace GraphTableSVG {
             color?: string;
         }): [SVGMarkerElement, SVGPathElement];
         function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
+        function createTextPath2(className?: string | null): SVGTextPathElement;
         function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean): void;
         function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexMode: boolean): void;
         function setClass(svg: SVGElement, className?: string | null): void;
@@ -261,7 +262,9 @@ declare namespace GraphTableSVG {
         readonly y: number;
         readonly type: string;
         protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
-        constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
+        constructor(svgbox: SVGElement | string, option?: TextBoxShapeAttributes);
+        dispose(): void;
+        readonly isDisposed: boolean;
     }
     class PPTextBoxShapeBase extends SVGGroupBase {
         private _svgText;
@@ -278,7 +281,7 @@ declare namespace GraphTableSVG {
         private static updateTextAttributes;
         static ConnectPositionChangedEventName: string;
         protected dispatchConnectPositionChangedEvent(): void;
-        constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
+        constructor(svgbox: SVGElement | string, option?: TextBoxShapeAttributes);
         horizontalAnchor: HorizontalAnchor;
         verticalAnchor: VerticalAnchor;
         isAutoSizeShapeToFitText: boolean;
@@ -305,6 +308,7 @@ declare namespace GraphTableSVG {
         removeOutcomingEdge(edge: PPEdge): void;
         insertIncomingEdge(edge: PPEdge, insertIndex?: number): void;
         removeIncomingEdge(edge: PPEdge): void;
+        dispose(): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -946,7 +950,7 @@ declare namespace GraphTableSVG {
     class PPPathTextBox extends PPVertexBase {
         private _svgPath;
         readonly svgPath: SVGPathElement;
-        constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
+        constructor(svgbox: SVGElement | string, option?: TextBoxShapeAttributes);
         protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
         readonly innerRectangle: Rectangle;
         protected readonly shape: string;
@@ -955,11 +959,13 @@ declare namespace GraphTableSVG {
         createVBACode(id: number): string[];
         protected readonly VBAAdjustments: number[];
         readonly type: string;
+        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
+        protected getAutoPosition(x: number, y: number): ConnectorPosition;
     }
 }
 declare namespace GraphTableSVG {
     class Callout extends PPPathTextBox {
-        constructor(svgbox: SVGElement, option?: CalloutAttributes);
+        constructor(svgbox: SVGElement | string, option?: CalloutAttributes);
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: CalloutAttributes): CalloutAttributes;
         static openCustomElement(e: SVGElement): Callout;
         readonly type: string;
@@ -969,8 +975,6 @@ declare namespace GraphTableSVG {
         readonly speakerPosition: SpeakerPosition;
         protected readonly shape: string;
         protected readonly VBAAdjustments: number[];
-        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
-        protected getAutoPosition(x: number, y: number): ConnectorPosition;
     }
 }
 declare namespace GraphTableSVG {
@@ -989,7 +993,7 @@ declare namespace GraphTableSVG {
         controlPoint: [number, number][];
         readonly lineColor: string | null;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: PPEdgeAttributes): PPEdgeAttributes;
-        constructor(svgbox: SVGElement, option?: PPEdgeAttributes);
+        constructor(svgbox: SVGElement | string, option?: PPEdgeAttributes);
         beginConnectorType: ConnectorPosition;
         endConnectorType: ConnectorPosition;
         private beginVertexID;
@@ -1048,7 +1052,7 @@ declare namespace GraphTableSVG {
         private _svgEllipse;
         readonly svgEllipse: SVGEllipseElement;
         readonly surface: SVGElement;
-        constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
+        constructor(svgbox: SVGElement | string, option?: TextBoxShapeAttributes);
         protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): CalloutAttributes;
         readonly innerRectangle: Rectangle;
@@ -1069,8 +1073,19 @@ declare namespace GraphTableSVG {
         static readonly typeName: string;
         readonly vertices: PPVertexBase[];
         readonly edges: PPEdge[];
+        readonly roots: PPVertexBase[];
         protected _roots: PPVertexBase[];
-        constructor(box: SVGElement, option?: TextBoxShapeAttributes);
+        constructor(box: SVGElement | string, option?: TextBoxShapeAttributes);
+        vertexXInterval: number | null;
+        vertexYInterval: number | null;
+        defaultVertexClass: string | null;
+        defaultEdgeClass: string | null;
+        readonly rootVertex: PPVertexBase | null;
+        add(item: PPVertexBase | PPEdge): void;
+        remove(item: PPVertexBase | PPEdge): void;
+        clear(): void;
+        connect(beginVertex: PPVertexBase, edge: PPEdge, endVertex: PPVertexBase, option?: ConnectOption): void;
+        getOrderedVertices(order: VertexOrder, node?: PPVertexBase | null): PPVertexBase[];
     }
 }
 declare namespace GraphTableSVG {
@@ -1078,7 +1093,7 @@ declare namespace GraphTableSVG {
         private _svgRectangle;
         readonly svgRectangle: SVGRectElement;
         readonly surface: SVGElement;
-        constructor(svgbox: SVGElement, option?: TextBoxShapeAttributes);
+        constructor(svgbox: SVGElement | string, option?: TextBoxShapeAttributes);
         protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): CalloutAttributes;
         readonly innerRectangle: Rectangle;
@@ -1091,7 +1106,7 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class ShapeArrowCallout extends PPPathTextBox {
-        constructor(svgbox: SVGElement, option?: ShapeArrowCalloutAttributes);
+        constructor(svgbox: SVGElement | string, option?: ShapeArrowCalloutAttributes);
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: ShapeArrowCalloutAttributes): ShapeArrowCalloutAttributes;
         static openCustomElement(e: SVGElement): ShapeArrowCallout;
         readonly type: string;
@@ -1120,6 +1135,7 @@ declare namespace GraphTableSVG {
         height?: number;
         text?: string;
         isAutoSizeShapeToFitText?: boolean;
+        id?: string;
     };
     type ShapeArrowCalloutAttributes = TextBoxShapeAttributes & {
         arrowHeadWidth?: number;
@@ -1139,15 +1155,21 @@ declare namespace GraphTableSVG {
         x2?: number;
         y1?: number;
         y2?: number;
-        beginVertexID?: string;
-        endVertexID?: string;
         beginConnectorType?: ConnectorPosition;
         endConnectorType?: ConnectorPosition;
-        beginVertex?: PPVertexBase;
-        endVertex?: PPVertexBase;
+        beginVertex?: PPVertexBase | string;
+        endVertex?: PPVertexBase | string;
+        pathTextAlignment?: pathTextAlighnment;
+    };
+    type ConnectOption = {
+        outcomingInsertIndex?: number;
+        incomingInsertIndex?: number;
+        beginConnectorType?: GraphTableSVG.ConnectorPosition;
+        endConnectorType?: GraphTableSVG.ConnectorPosition;
     };
     function openCustomElement(id: string | SVGElement): any;
     function openSVG(id: string | SVGElement, output?: any[]): any[];
+    function createShape(parent: SVGElement | string | SVGGroupBase, type: ShapeObjectType, option: any): SVGGroupBase;
 }
 declare namespace HTMLFunctions {
     function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;
