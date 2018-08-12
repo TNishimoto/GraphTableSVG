@@ -22,7 +22,7 @@ body {
     --stroke-style : msoLineDash;
 }
 .edge{
-    --default-line-class : line;
+    --default-path-class : line;
     --default-text-class : text-edge;
     --begin-connector-type : bottom;
     --end-connector-type : right;

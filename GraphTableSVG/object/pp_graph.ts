@@ -3,7 +3,7 @@ namespace GraphTableSVG {
     /**
     グラフを表します。
     */
-    export class PPGraph extends SVGGroupBase {
+    export class PPGraph extends PPObject {
         public static readonly defaultVertexClass: string = "--default-vertex-class";
         public static readonly defaultEdgeClass: string = "--default-edge-class";
         public static readonly vertexXIntervalName: string = "--vertex-x-interval";
@@ -13,11 +13,11 @@ namespace GraphTableSVG {
         public static readonly typeName: string = "data-type";
 
 
-        public get vertices(): PPVertexBase[] {
-            const r: PPVertexBase[] = [];
+        public get vertices(): PPVertex[] {
+            const r: PPVertex[] = [];
             HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(GraphTableSVG.SVG.objectIDName)).forEach((v) => {
-                const item = SVGGroupBase.getObjectFromObjectID(this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName))
-                if (item instanceof PPVertexBase) {
+                const item = PPObject.getObjectFromObjectID(v.getAttribute(GraphTableSVG.SVG.objectIDName))
+                if (item instanceof PPVertex) {
                     r.push(item);
                 }
             })
@@ -26,18 +26,18 @@ namespace GraphTableSVG {
         public get edges(): PPEdge[] {
             const r: PPEdge[] = [];
             HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(GraphTableSVG.SVG.objectIDName)).forEach((v) => {
-                const item = SVGGroupBase.getObjectFromObjectID(this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName))
+                const item = PPObject.getObjectFromObjectID(v.getAttribute(GraphTableSVG.SVG.objectIDName))
                 if (item instanceof PPEdge) {
                     r.push(item);
                 }
             })
             return r;
         }
-        public get roots(): PPVertexBase[] {
+        public get roots(): PPVertex[] {
             return this.vertices.filter((v) => v.incomingEdges.length == 0);
         }
 
-        protected _roots: PPVertexBase[] = [];
+        protected _roots: PPVertex[] = [];
         constructor(box: SVGElement | string, option: TextBoxShapeAttributes = {}) {
             super(box, option)
 
@@ -93,7 +93,7 @@ namespace GraphTableSVG {
         /**
         根を返します。
         */
-        get rootVertex(): PPVertexBase | null {
+        get rootVertex(): PPVertex | null {
             if (this.roots.length == 0) {
                 return null;
             } else {
@@ -105,8 +105,8 @@ namespace GraphTableSVG {
          * 頂点もしくは辺をグラフに追加します。
          * @param item
          */
-        public add(item: PPVertexBase | PPEdge): void {
-            if (item instanceof PPVertexBase) {
+        public add(item: PPVertex | PPEdge): void {
+            if (item instanceof PPVertex) {
                 this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
             } else {
                 this.svgGroup.appendChild(item.svgGroup);
@@ -116,7 +116,7 @@ namespace GraphTableSVG {
          * 頂点もしくは辺を削除します。
          * @param item
          */
-        public remove(item: PPVertexBase | PPEdge): void {
+        public remove(item: PPVertex | PPEdge): void {
             this.svgGroup.removeChild(item.svgGroup);
             item.dispose();
         }
@@ -139,7 +139,7 @@ namespace GraphTableSVG {
                 * @param option.beginConnectorType beginVertexの接続位置
                 * @param option.endConnectorType endVertexの接続位置
                 */
-        public connect(beginVertex: PPVertexBase, edge: PPEdge, endVertex: PPVertexBase, option: ConnectOption = {}) {
+        public connect(beginVertex: PPVertex, edge: PPEdge, endVertex: PPVertex, option: ConnectOption = {}) {
             const oIndex = option.outcomingInsertIndex == undefined ? beginVertex.outcomingEdges.length : option.outcomingInsertIndex;
             const iIndex = option.incomingInsertIndex == undefined ? endVertex.incomingEdges.length : option.incomingInsertIndex;
             //this._connect(node1, edge, node2);
@@ -159,8 +159,8 @@ namespace GraphTableSVG {
             if (option.beginConnectorType != undefined) edge.beginConnectorType = option.beginConnectorType;
             if (option.endConnectorType != undefined) edge.endConnectorType = option.endConnectorType;
         }
-        public getOrderedVertices(order: VertexOrder, node: PPVertexBase | null = null): PPVertexBase[] {
-            const r: PPVertexBase[] = [];
+        public getOrderedVertices(order: VertexOrder, node: PPVertex | null = null): PPVertex[] {
+            const r: PPVertex[] = [];
             if (node == null) {
                 this.roots.forEach((v) => {
                     this.getOrderedVertices(order, v).forEach((w) => {

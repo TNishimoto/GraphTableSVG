@@ -8,7 +8,7 @@ namespace GraphTableSVG {
         }
 
         static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : CalloutAttributes = {}) : CalloutAttributes {        
-            PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
+            PPTextBox.constructAttributes(e, removeAttributes, output);
             output.speakerX = e.gtGetAttributeNumber("speaker-x", 200);
             output.speakerY = e.gtGetAttributeNumber("speaker-y", 200);
 

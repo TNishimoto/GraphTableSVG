@@ -14,7 +14,7 @@ namespace GraphTableSVG {
             this.updateAttributes.push("data-direction");
         }
         static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : ShapeArrowCalloutAttributes = {}) : ShapeArrowCalloutAttributes {        
-            PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
+            PPTextBox.constructAttributes(e, removeAttributes, output);
             output.arrowNeckWidth = e.gtGetAttributeNumber("arrow-neck-width", 10);
             output.arrowNeckHeight = e.gtGetAttributeNumber("arrow-neck-height", 10);
             output.arrowHeadWidth = e.gtGetAttributeNumber("arrow-head-width", 20);

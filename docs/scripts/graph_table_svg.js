@@ -774,6 +774,12 @@ var GraphTableSVG;
             var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             parent.appendChild(line1);
             line1.setAttribute("d", "M " + x + " " + y + " L " + x2 + " " + y2);
+            if (parent instanceof SVGElement) {
+                var _className = parent.getPropertyStyleValue(SVG.defaultPathClass);
+                if (className == null) {
+                    className = _className;
+                }
+            }
             if (className != null) {
                 line1.setAttribute("class", className);
                 var dashStyle = line1.getPropertyStyleValue(SVG.msoDashStyleName);
@@ -1442,12 +1448,13 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    var SVGGroupBase = (function () {
-        function SVGGroupBase(svgbox, option) {
+    var PPObject = (function () {
+        function PPObject(svgbox, option) {
             if (option === void 0) { option = {}; }
             var parentElement = svgbox instanceof SVGElement ? svgbox : document.getElementById(svgbox);
-            this._svgGroup = GraphTableSVG.SVG.createGroup(parentElement, option.className == undefined ? null : option.className);
-            SVGGroupBase.setObjectFromObjectID(this);
+            this._svgGroup = GraphTableSVG.SVG.createGroup(parentElement, option.class == undefined ? null : option.class);
+            this.setClassNameOfSVGGroup();
+            PPObject.setObjectFromObjectID(this);
             this.svgGroup.setAttribute("data-group-type", this.type);
             this.createSurface(parentElement, option);
             if (option.id != undefined)
@@ -1461,14 +1468,14 @@ var GraphTableSVG;
             if (option.cy != undefined)
                 this.cy = option.cy;
         }
-        SVGGroupBase.getObjectFromObjectID = function (id) {
+        PPObject.getObjectFromObjectID = function (id) {
             return this.objectDic[id];
         };
-        SVGGroupBase.setObjectFromObjectID = function (obj) {
-            var id = obj.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
+        PPObject.setObjectFromObjectID = function (obj) {
+            var id = obj.objectID;
             this.objectDic[id] = obj;
         };
-        SVGGroupBase.getObjectFromID = function (id) {
+        PPObject.getObjectFromID = function (id) {
             for (var key in this.objectDic) {
                 if (this.objectDic[key].svgGroup.id == id) {
                     return this.objectDic[key];
@@ -1476,21 +1483,21 @@ var GraphTableSVG;
             }
             return null;
         };
-        Object.defineProperty(SVGGroupBase.prototype, "svgGroup", {
+        Object.defineProperty(PPObject.prototype, "svgGroup", {
             get: function () {
                 return this._svgGroup;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(SVGGroupBase.prototype, "isLocated", {
+        Object.defineProperty(PPObject.prototype, "isLocated", {
             get: function () {
                 return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(SVGGroupBase.prototype, "cx", {
+        Object.defineProperty(PPObject.prototype, "cx", {
             get: function () {
                 return this.svgGroup.getX();
             },
@@ -1502,7 +1509,7 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(SVGGroupBase.prototype, "cy", {
+        Object.defineProperty(PPObject.prototype, "cy", {
             get: function () {
                 return this.svgGroup.getY();
             },
@@ -1514,7 +1521,7 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(SVGGroupBase.prototype, "width", {
+        Object.defineProperty(PPObject.prototype, "width", {
             get: function () {
                 return this.svgGroup.gtGetAttributeNumber("data-width", 0);
             },
@@ -1525,7 +1532,7 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(SVGGroupBase.prototype, "height", {
+        Object.defineProperty(PPObject.prototype, "height", {
             get: function () {
                 return this.svgGroup.gtGetAttributeNumber("data-height", 0);
             },
@@ -1536,120 +1543,42 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(SVGGroupBase.prototype, "x", {
+        Object.defineProperty(PPObject.prototype, "x", {
             get: function () {
                 return this.cx - (this.width / 2);
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(SVGGroupBase.prototype, "y", {
+        Object.defineProperty(PPObject.prototype, "y", {
             get: function () {
                 return this.cy - (this.height / 2);
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(SVGGroupBase.prototype, "type", {
+        Object.defineProperty(PPObject.prototype, "type", {
             get: function () {
                 return "PPTextBoxShapeBase";
             },
             enumerable: true,
             configurable: true
         });
-        SVGGroupBase.prototype.createSurface = function (svgbox, option) {
+        PPObject.prototype.createSurface = function (svgbox, option) {
             if (option === void 0) { option = {}; }
         };
-        SVGGroupBase.prototype.dispose = function () {
+        PPObject.prototype.setClassNameOfSVGGroup = function () {
         };
-        Object.defineProperty(SVGGroupBase.prototype, "isDisposed", {
+        PPObject.prototype.dispose = function () {
+        };
+        Object.defineProperty(PPObject.prototype, "isDisposed", {
             get: function () {
                 return false;
             },
             enumerable: true,
             configurable: true
         });
-        SVGGroupBase.objectDic = {};
-        return SVGGroupBase;
-    }());
-    GraphTableSVG.SVGGroupBase = SVGGroupBase;
-    var PPTextBoxShapeBase = (function (_super) {
-        __extends(PPTextBoxShapeBase, _super);
-        function PPTextBoxShapeBase(svgbox, option) {
-            if (option === void 0) { option = {}; }
-            var _this = _super.call(this, svgbox, option) || this;
-            _this.observerFunc = function (x) {
-                var b = false;
-                if (!_this.isLocated)
-                    return;
-                var _loop_2 = function (i) {
-                    var p = x[i];
-                    if (_this.updateAttributes.some(function (v) { return v == p.attributeName; })) {
-                        b = true;
-                    }
-                    if (p.attributeName == "transform") {
-                        _this.dispatchConnectPositionChangedEvent();
-                    }
-                };
-                for (var i = 0; i < x.length; i++) {
-                    _loop_2(i);
-                }
-                if (b)
-                    _this.update();
-            };
-            _this.updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y",
-                "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",
-                "data-arrow-head-width", "data-arrow-head-height"];
-            _this.surfaceAttributes = [];
-            _this.textObserverFunc = function (x) {
-                if (!_this.isLocated)
-                    return;
-                var b = false;
-                var _loop_3 = function (i) {
-                    var p = x[i];
-                    if (PPTextBoxShapeBase.updateTextAttributes.some(function (v) { return v == p.attributeName; })) {
-                        b = true;
-                    }
-                    if (p.attributeName == null) {
-                        b = true;
-                    }
-                };
-                for (var i = 0; i < x.length; i++) {
-                    _loop_3(i);
-                }
-                if (b)
-                    _this.update();
-            };
-            _this._isUpdating = false;
-            _this._svgText = GraphTableSVG.SVG.createText(_this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaultTextClass));
-            _this.svgGroup.appendChild(_this.svgText);
-            _this._observer = new MutationObserver(_this.observerFunc);
-            var option1 = { attributes: true, childList: true, subtree: true };
-            _this._observer.observe(_this.svgGroup, option1);
-            _this._textObserver = new MutationObserver(_this.textObserverFunc);
-            var option2 = { childList: true, attributes: true, subtree: true };
-            _this._textObserver.observe(_this.svgText, option2);
-            if (option.text != undefined)
-                _this.svgText.setTextContent(option.text);
-            if (option.isAutoSizeShapeToFitText != undefined)
-                _this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
-            return _this;
-        }
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "svgText", {
-            get: function () {
-                return this._svgText;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "surface", {
-            get: function () {
-                return undefined;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "objectID", {
+        Object.defineProperty(PPObject.prototype, "objectID", {
             get: function () {
                 var r = this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
                 if (r == null) {
@@ -1662,251 +1591,10 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        PPTextBoxShapeBase.constructAttributes = function (e, removeAttributes, output) {
-            if (removeAttributes === void 0) { removeAttributes = false; }
-            if (output === void 0) { output = {}; }
-            output.className = e.getAttribute("class");
-            output.cx = e.gtGetAttributeNumber("cx", 0);
-            output.cy = e.gtGetAttributeNumber("cy", 0);
-            output.text = e.getAttribute("text");
-            output.width = e.gtGetAttributeNumber("width", 100);
-            output.height = e.gtGetAttributeNumber("height", 100);
-            output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, "false") == "true";
-            if (removeAttributes) {
-                e.removeAttribute("cx");
-                e.removeAttribute("cy");
-                e.removeAttribute("class");
-                e.removeAttribute("text");
-                e.removeAttribute("width");
-                e.removeAttribute("height");
-                e.style.removeProperty(GraphTableSVG.Vertex.autoSizeShapeToFitTextName);
-            }
-            return output;
-        };
-        PPTextBoxShapeBase.prototype.dispatchConnectPositionChangedEvent = function () {
-            if (this.surface != null) {
-                var event = document.createEvent("HTMLEvents");
-                event.initEvent(PPTextBoxShapeBase.ConnectPositionChangedEventName, true, true);
-                this.surface.dispatchEvent(event);
-            }
-        };
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "horizontalAnchor", {
-            get: function () {
-                var b = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.HorizontalAnchorPropertyName, "center");
-                return GraphTableSVG.HorizontalAnchor.toHorizontalAnchor(b);
-            },
-            set: function (value) {
-                if (this.horizontalAnchor != value)
-                    this.svgGroup.setPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName, value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "verticalAnchor", {
-            get: function () {
-                var b = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.VerticalAnchorPropertyName, "middle");
-                return GraphTableSVG.VerticalAnchor.toVerticalAnchor(b);
-            },
-            set: function (value) {
-                if (this.verticalAnchor != value)
-                    this.svgGroup.setPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName, value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "isAutoSizeShapeToFitText", {
-            get: function () {
-                return this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, "false") == "true";
-            },
-            set: function (value) {
-                this.svgGroup.setPropertyStyleValue(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, value ? "true" : "false");
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PPTextBoxShapeBase.prototype.update = function () {
-            this._isUpdating = true;
-            if (this.isAutoSizeShapeToFitText)
-                this.updateToFitText();
-            this.updateSurface();
-            GraphTableSVG.Graph.setXY2(this.svgText, this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
-            this._isUpdating = false;
-        };
-        PPTextBoxShapeBase.prototype.updateSurface = function () {
-        };
-        PPTextBoxShapeBase.prototype.updateToFitText = function () {
-            var box = this.svgText.getBBox();
-            this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
-            this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;
-        };
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "marginPaddingTop", {
-            get: function () {
-                return this.svgText.getMarginTop() + this.svgGroup.getPaddingTop();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "marginPaddingLeft", {
-            get: function () {
-                return this.svgText.getMarginLeft() + this.svgGroup.getPaddingLeft();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "marginPaddingRight", {
-            get: function () {
-                return this.svgText.getMarginRight() + this.svgGroup.getPaddingRight();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "marginPaddingBottom", {
-            get: function () {
-                return this.svgText.getMarginBottom() + this.svgGroup.getPaddingBottom();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "innerRectangle", {
-            get: function () {
-                var rect = new GraphTableSVG.Rectangle();
-                rect.width = 0;
-                rect.height = 0;
-                rect.x = 0;
-                rect.y = 0;
-                return rect;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PPTextBoxShapeBase.prototype.createVBACode = function (id) {
-            return [];
-        };
-        Object.defineProperty(PPTextBoxShapeBase.prototype, "svgElements", {
-            get: function () {
-                var r = [];
-                r.push(this.svgGroup);
-                r.push(this.svgText);
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PPTextBoxShapeBase.prototype.hasDescendant = function (obj) {
-            var ids = this.svgElements.map(function (v) { return v.getAttribute(GraphTableSVG.SVG.objectIDName); }).filter(function (v) { return v != null; });
-            var id = obj.getAttribute(GraphTableSVG.SVG.objectIDName);
-            return ids.some(function (v) { return v == id; });
-        };
-        PPTextBoxShapeBase.updateTextAttributes = ["style"];
-        PPTextBoxShapeBase.ConnectPositionChangedEventName = "connect_position_changed";
-        return PPTextBoxShapeBase;
-    }(SVGGroupBase));
-    GraphTableSVG.PPTextBoxShapeBase = PPTextBoxShapeBase;
-    var PPVertexBase = (function (_super) {
-        __extends(PPVertexBase, _super);
-        function PPVertexBase() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        PPVertexBase.prototype.getLocation = function (type, x, y) {
-            return [this.cx, this.cy];
-        };
-        PPVertexBase.prototype.getConnectorType = function (type, x, y) {
-            if (type == GraphTableSVG.ConnectorPosition.Auto) {
-                return this.getAutoPosition(x, y);
-            }
-            else {
-                return type;
-            }
-        };
-        PPVertexBase.prototype.getAutoPosition = function (x, y) {
-            return GraphTableSVG.ConnectorPosition.Top;
-        };
-        Object.defineProperty(PPVertexBase.prototype, "outcomingEdges", {
-            get: function () {
-                var p = JSON.parse(this.svgGroup.gtGetAttribute("outcoming-edges", "[]"));
-                var p2 = p.map(function (v) { return SVGGroupBase.getObjectFromObjectID(v.toString()); });
-                return p2;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PPVertexBase.prototype, "incomingEdges", {
-            get: function () {
-                var p = JSON.parse(this.svgGroup.gtGetAttribute("incoming-edges", "[]"));
-                var p2 = p.map(function (v) { return SVGGroupBase.getObjectFromObjectID(v.toString()); });
-                return p2;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PPVertexBase.prototype.insertOutcomingEdge = function (edge, insertIndex) {
-            if (insertIndex === void 0) { insertIndex = this.outcomingEdges.length; }
-            var p = this.outcomingEdges.indexOf(edge);
-            if (p != -1) {
-                throw new Error();
-            }
-            else {
-                var edges = this.outcomingEdges;
-                edges.splice(insertIndex, 0, edge);
-                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
-                console.log("Incom " + edges.length + " / " + newEdges);
-                this.svgGroup.setAttribute("outcoming-edges", newEdges);
-                if (edge.beginVertex != this) {
-                    edge.beginVertex = this;
-                }
-            }
-        };
-        PPVertexBase.prototype.removeOutcomingEdge = function (edge) {
-            var p = this.outcomingEdges.indexOf(edge);
-            if (p != null) {
-                var edges = this.outcomingEdges;
-                edges.splice(p, 1);
-                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
-                this.svgGroup.setAttribute("outcoming-edges", newEdges);
-                if (edge.beginVertex == this) {
-                    edge.beginVertex = null;
-                }
-            }
-        };
-        PPVertexBase.prototype.insertIncomingEdge = function (edge, insertIndex) {
-            if (insertIndex === void 0) { insertIndex = this.incomingEdges.length; }
-            var p = this.incomingEdges.indexOf(edge);
-            if (p != -1) {
-                throw new Error();
-            }
-            else {
-                var edges = this.incomingEdges;
-                edges.splice(insertIndex, 0, edge);
-                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
-                this.svgGroup.setAttribute("incoming-edges", newEdges);
-                if (edge.endVertex != this) {
-                    edge.endVertex = this;
-                }
-            }
-        };
-        PPVertexBase.prototype.removeIncomingEdge = function (edge) {
-            var p = this.incomingEdges.indexOf(edge);
-            if (p != null) {
-                var edges = this.incomingEdges;
-                edges.splice(p, 1);
-                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
-                this.svgGroup.setAttribute("incoming-edges", newEdges);
-                if (edge.endVertex == this) {
-                    edge.endVertex = null;
-                }
-            }
-        };
-        PPVertexBase.prototype.dispose = function () {
-            while (this.incomingEdges.length > 0) {
-                this.removeIncomingEdge(this.incomingEdges[0]);
-            }
-            while (this.outcomingEdges.length > 0) {
-                this.removeOutcomingEdge(this.outcomingEdges[0]);
-            }
-        };
-        return PPVertexBase;
-    }(PPTextBoxShapeBase));
-    GraphTableSVG.PPVertexBase = PPVertexBase;
+        PPObject.objectDic = {};
+        return PPObject;
+    }());
+    GraphTableSVG.PPObject = PPObject;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -6302,7 +5990,7 @@ var GraphTableSVG;
                         var lines = SVGToVBA.createVBACodeOfTextElement(item, i);
                         lines.forEach(function (v) { return s_1.push(v); });
                     }
-                    else if (item instanceof GraphTableSVG.PPTextBoxShapeBase) {
+                    else if (item instanceof GraphTableSVG.PPTextBox) {
                         var lines = item.createVBACode(i);
                         lines.forEach(function (v) { return s_1.push(v); });
                     }
@@ -6777,6 +6465,341 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    var PPTextBox = (function (_super) {
+        __extends(PPTextBox, _super);
+        function PPTextBox(svgbox, option) {
+            if (option === void 0) { option = {}; }
+            var _this = _super.call(this, svgbox, option) || this;
+            _this.observerFunc = function (x) {
+                var b = false;
+                if (!_this.isLocated)
+                    return;
+                var _loop_2 = function (i) {
+                    var p = x[i];
+                    if (_this.updateAttributes.some(function (v) { return v == p.attributeName; })) {
+                        b = true;
+                    }
+                    if (p.attributeName == "transform") {
+                        _this.dispatchConnectPositionChangedEvent();
+                    }
+                };
+                for (var i = 0; i < x.length; i++) {
+                    _loop_2(i);
+                }
+                if (b)
+                    _this.update();
+            };
+            _this.updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y",
+                "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",
+                "data-arrow-head-width", "data-arrow-head-height"];
+            _this.surfaceAttributes = [];
+            _this.textObserverFunc = function (x) {
+                if (!_this.isLocated)
+                    return;
+                var b = false;
+                var _loop_3 = function (i) {
+                    var p = x[i];
+                    if (PPTextBox.updateTextAttributes.some(function (v) { return v == p.attributeName; })) {
+                        b = true;
+                    }
+                    if (p.attributeName == null) {
+                        b = true;
+                    }
+                };
+                for (var i = 0; i < x.length; i++) {
+                    _loop_3(i);
+                }
+                if (b)
+                    _this.update();
+            };
+            _this._isUpdating = false;
+            _this._svgText = GraphTableSVG.SVG.createText(_this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaultTextClass));
+            _this.svgGroup.appendChild(_this.svgText);
+            _this._observer = new MutationObserver(_this.observerFunc);
+            var option1 = { attributes: true, childList: true, subtree: true };
+            _this._observer.observe(_this.svgGroup, option1);
+            _this._textObserver = new MutationObserver(_this.textObserverFunc);
+            var option2 = { childList: true, attributes: true, subtree: true };
+            _this._textObserver.observe(_this.svgText, option2);
+            if (option.text != undefined)
+                _this.svgText.setTextContent(option.text);
+            if (option.isAutoSizeShapeToFitText != undefined)
+                _this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
+            return _this;
+        }
+        Object.defineProperty(PPTextBox.prototype, "svgText", {
+            get: function () {
+                return this._svgText;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBox.prototype, "surface", {
+            get: function () {
+                return undefined;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPTextBox.constructAttributes = function (e, removeAttributes, output) {
+            if (removeAttributes === void 0) { removeAttributes = false; }
+            if (output === void 0) { output = {}; }
+            output.class = e.getAttribute("class");
+            output.cx = e.gtGetAttributeNumber("cx", 0);
+            output.cy = e.gtGetAttributeNumber("cy", 0);
+            output.text = e.getAttribute("text");
+            output.width = e.gtGetAttributeNumber("width", 100);
+            output.height = e.gtGetAttributeNumber("height", 100);
+            output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, "false") == "true";
+            if (removeAttributes) {
+                e.removeAttribute("cx");
+                e.removeAttribute("cy");
+                e.removeAttribute("class");
+                e.removeAttribute("text");
+                e.removeAttribute("width");
+                e.removeAttribute("height");
+                e.style.removeProperty(GraphTableSVG.Vertex.autoSizeShapeToFitTextName);
+            }
+            return output;
+        };
+        PPTextBox.prototype.dispatchConnectPositionChangedEvent = function () {
+            if (this.surface != null) {
+                var event = document.createEvent("HTMLEvents");
+                event.initEvent(PPTextBox.ConnectPositionChangedEventName, true, true);
+                this.surface.dispatchEvent(event);
+            }
+        };
+        Object.defineProperty(PPTextBox.prototype, "horizontalAnchor", {
+            get: function () {
+                var b = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.HorizontalAnchorPropertyName, "center");
+                return GraphTableSVG.HorizontalAnchor.toHorizontalAnchor(b);
+            },
+            set: function (value) {
+                if (this.horizontalAnchor != value)
+                    this.svgGroup.setPropertyStyleValue(GraphTableSVG.HorizontalAnchorPropertyName, value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBox.prototype, "verticalAnchor", {
+            get: function () {
+                var b = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.VerticalAnchorPropertyName, "middle");
+                return GraphTableSVG.VerticalAnchor.toVerticalAnchor(b);
+            },
+            set: function (value) {
+                if (this.verticalAnchor != value)
+                    this.svgGroup.setPropertyStyleValue(GraphTableSVG.VerticalAnchorPropertyName, value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBox.prototype, "isAutoSizeShapeToFitText", {
+            get: function () {
+                return this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, "false") == "true";
+            },
+            set: function (value) {
+                this.svgGroup.setPropertyStyleValue(GraphTableSVG.Vertex.autoSizeShapeToFitTextName, value ? "true" : "false");
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPTextBox.prototype.update = function () {
+            this._isUpdating = true;
+            if (this.isAutoSizeShapeToFitText)
+                this.updateToFitText();
+            this.updateSurface();
+            GraphTableSVG.Graph.setXY2(this.svgText, this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+            this._isUpdating = false;
+        };
+        PPTextBox.prototype.updateSurface = function () {
+        };
+        PPTextBox.prototype.updateToFitText = function () {
+            var box = this.svgText.getBBox();
+            this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
+            this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;
+        };
+        Object.defineProperty(PPTextBox.prototype, "marginPaddingTop", {
+            get: function () {
+                return this.svgText.getMarginTop() + this.svgGroup.getPaddingTop();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBox.prototype, "marginPaddingLeft", {
+            get: function () {
+                return this.svgText.getMarginLeft() + this.svgGroup.getPaddingLeft();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBox.prototype, "marginPaddingRight", {
+            get: function () {
+                return this.svgText.getMarginRight() + this.svgGroup.getPaddingRight();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBox.prototype, "marginPaddingBottom", {
+            get: function () {
+                return this.svgText.getMarginBottom() + this.svgGroup.getPaddingBottom();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPTextBox.prototype, "innerRectangle", {
+            get: function () {
+                var rect = new GraphTableSVG.Rectangle();
+                rect.width = 0;
+                rect.height = 0;
+                rect.x = 0;
+                rect.y = 0;
+                return rect;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPTextBox.prototype.createVBACode = function (id) {
+            return [];
+        };
+        Object.defineProperty(PPTextBox.prototype, "svgElements", {
+            get: function () {
+                var r = [];
+                r.push(this.svgGroup);
+                r.push(this.svgText);
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPTextBox.prototype.hasDescendant = function (obj) {
+            var ids = this.svgElements.map(function (v) { return v.getAttribute(GraphTableSVG.SVG.objectIDName); }).filter(function (v) { return v != null; });
+            var id = obj.getAttribute(GraphTableSVG.SVG.objectIDName);
+            return ids.some(function (v) { return v == id; });
+        };
+        PPTextBox.updateTextAttributes = ["style"];
+        PPTextBox.ConnectPositionChangedEventName = "connect_position_changed";
+        return PPTextBox;
+    }(GraphTableSVG.PPObject));
+    GraphTableSVG.PPTextBox = PPTextBox;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var PPVertex = (function (_super) {
+        __extends(PPVertex, _super);
+        function PPVertex() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        PPVertex.prototype.setClassNameOfSVGGroup = function () {
+            var parent = this.svgGroup.parentElement;
+            if (parent instanceof SVGElement) {
+                var className = parent.getPropertyStyleValue(GraphTableSVG.PPGraph.defaultVertexClass);
+                if (className != null) {
+                    this.svgGroup.setAttribute("class", className);
+                }
+            }
+        };
+        PPVertex.prototype.getLocation = function (type, x, y) {
+            return [this.cx, this.cy];
+        };
+        PPVertex.prototype.getConnectorType = function (type, x, y) {
+            if (type == GraphTableSVG.ConnectorPosition.Auto) {
+                return this.getAutoPosition(x, y);
+            }
+            else {
+                return type;
+            }
+        };
+        PPVertex.prototype.getAutoPosition = function (x, y) {
+            return GraphTableSVG.ConnectorPosition.Top;
+        };
+        Object.defineProperty(PPVertex.prototype, "outcomingEdges", {
+            get: function () {
+                var p = JSON.parse(this.svgGroup.gtGetAttribute("outcoming-edges", "[]"));
+                var p2 = p.map(function (v) { return GraphTableSVG.PPObject.getObjectFromObjectID(v.toString()); });
+                return p2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPVertex.prototype, "incomingEdges", {
+            get: function () {
+                var p = JSON.parse(this.svgGroup.gtGetAttribute("incoming-edges", "[]"));
+                var p2 = p.map(function (v) { return GraphTableSVG.PPObject.getObjectFromObjectID(v.toString()); });
+                return p2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPVertex.prototype.insertOutcomingEdge = function (edge, insertIndex) {
+            if (insertIndex === void 0) { insertIndex = this.outcomingEdges.length; }
+            var p = this.outcomingEdges.indexOf(edge);
+            if (p != -1) {
+                throw new Error();
+            }
+            else {
+                var edges = this.outcomingEdges;
+                edges.splice(insertIndex, 0, edge);
+                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
+                this.svgGroup.setAttribute("outcoming-edges", newEdges);
+                if (edge.beginVertex != this) {
+                    edge.beginVertex = this;
+                }
+            }
+        };
+        PPVertex.prototype.removeOutcomingEdge = function (edge) {
+            var p = this.outcomingEdges.indexOf(edge);
+            if (p != null) {
+                var edges = this.outcomingEdges;
+                edges.splice(p, 1);
+                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
+                this.svgGroup.setAttribute("outcoming-edges", newEdges);
+                if (edge.beginVertex == this) {
+                    edge.beginVertex = null;
+                }
+            }
+        };
+        PPVertex.prototype.insertIncomingEdge = function (edge, insertIndex) {
+            if (insertIndex === void 0) { insertIndex = this.incomingEdges.length; }
+            var p = this.incomingEdges.indexOf(edge);
+            if (p != -1) {
+                throw new Error();
+            }
+            else {
+                var edges = this.incomingEdges;
+                edges.splice(insertIndex, 0, edge);
+                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
+                this.svgGroup.setAttribute("incoming-edges", newEdges);
+                if (edge.endVertex != this) {
+                    edge.endVertex = this;
+                }
+            }
+        };
+        PPVertex.prototype.removeIncomingEdge = function (edge) {
+            var p = this.incomingEdges.indexOf(edge);
+            if (p != null) {
+                var edges = this.incomingEdges;
+                edges.splice(p, 1);
+                var newEdges = JSON.stringify(edges.map(function (v) { return Number(v.objectID); }));
+                this.svgGroup.setAttribute("incoming-edges", newEdges);
+                if (edge.endVertex == this) {
+                    edge.endVertex = null;
+                }
+            }
+        };
+        PPVertex.prototype.dispose = function () {
+            while (this.incomingEdges.length > 0) {
+                this.removeIncomingEdge(this.incomingEdges[0]);
+            }
+            while (this.outcomingEdges.length > 0) {
+                this.removeOutcomingEdge(this.outcomingEdges[0]);
+            }
+        };
+        return PPVertex;
+    }(GraphTableSVG.PPTextBox));
+    GraphTableSVG.PPVertex = PPVertex;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     var PPPathTextBox = (function (_super) {
         __extends(PPPathTextBox, _super);
         function PPPathTextBox(svgbox, option) {
@@ -6918,7 +6941,7 @@ var GraphTableSVG;
             }
         };
         return PPPathTextBox;
-    }(GraphTableSVG.PPVertexBase));
+    }(GraphTableSVG.PPVertex));
     GraphTableSVG.PPPathTextBox = PPPathTextBox;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
@@ -6935,7 +6958,7 @@ var GraphTableSVG;
         Callout.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
             if (output === void 0) { output = {}; }
-            GraphTableSVG.PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
+            GraphTableSVG.PPTextBox.constructAttributes(e, removeAttributes, output);
             output.speakerX = e.gtGetAttributeNumber("speaker-x", 200);
             output.speakerY = e.gtGetAttributeNumber("speaker-y", 200);
             if (removeAttributes) {
@@ -7148,6 +7171,12 @@ var GraphTableSVG;
             }
             var edgeColor = _this.svgPath.getPropertyStyleValue("stroke");
             var strokeWidth = _this.svgPath.getPropertyStyleValue("stroke-width");
+            var markerStartName = _this.svgGroup.getPropertyStyleValue(GraphTableSVG.Edge.markerStartName);
+            var markerEndName = _this.svgGroup.getPropertyStyleValue(GraphTableSVG.Edge.markerEndName);
+            if (option.startMarker == undefined && markerStartName != null)
+                option.startMarker = markerStartName == "true";
+            if (option.endMarker == undefined && markerEndName != null)
+                option.endMarker = markerEndName == "true";
             if (option.startMarker)
                 _this.markerStart = GraphTableSVG.Edge.createStartMarker({ color: edgeColor, strokeWidth: strokeWidth });
             if (option.endMarker)
@@ -7158,14 +7187,14 @@ var GraphTableSVG;
             var y2 = option.y2 == undefined ? 300 : option.y2;
             _this.pathPoints = [[x1, y1], [x2, y2]];
             if (option.beginVertex != null) {
-                var obj = option.beginVertex instanceof GraphTableSVG.PPVertexBase ? option.beginVertex : GraphTableSVG.PPTextBoxShapeBase.getObjectFromID(option.beginVertex);
-                if (obj instanceof GraphTableSVG.PPVertexBase) {
+                var obj = option.beginVertex instanceof GraphTableSVG.PPVertex ? option.beginVertex : GraphTableSVG.PPTextBox.getObjectFromID(option.beginVertex);
+                if (obj instanceof GraphTableSVG.PPVertex) {
                     _this.beginVertex = obj;
                 }
             }
             if (option.endVertex != null) {
-                var obj = option.endVertex instanceof GraphTableSVG.PPVertexBase ? option.endVertex : GraphTableSVG.PPTextBoxShapeBase.getObjectFromID(option.endVertex);
-                if (obj instanceof GraphTableSVG.PPVertexBase) {
+                var obj = option.endVertex instanceof GraphTableSVG.PPVertex ? option.endVertex : GraphTableSVG.PPTextBox.getObjectFromID(option.endVertex);
+                if (obj instanceof GraphTableSVG.PPVertex) {
                     _this.endVertex = obj;
                 }
             }
@@ -7175,6 +7204,15 @@ var GraphTableSVG;
             _this.update();
             return _this;
         }
+        PPEdge.prototype.setClassNameOfSVGGroup = function () {
+            var parent = this.svgGroup.parentElement;
+            if (parent instanceof SVGElement) {
+                var className = parent.getPropertyStyleValue(GraphTableSVG.PPGraph.defaultEdgeClass);
+                if (className != null) {
+                    this.svgGroup.setAttribute("class", className);
+                }
+            }
+        };
         Object.defineProperty(PPEdge.prototype, "svgPath", {
             get: function () {
                 return this._svgPath;
@@ -7279,19 +7317,16 @@ var GraphTableSVG;
         });
         Object.defineProperty(PPEdge.prototype, "controlPoint", {
             get: function () {
-                var str = this.svgPath.getAttribute(GraphTableSVG.Edge.controlPointName);
-                if (str != null) {
-                    var p = JSON.parse(str);
-                    return p;
-                }
-                else {
-                    this.controlPoint = [];
-                    return [];
-                }
+                var r = this.pathPoints;
+                r.shift().pop();
+                return r;
             },
             set: function (value) {
-                var str = JSON.stringify(value);
-                this.svgPath.setAttribute(GraphTableSVG.Edge.controlPointName, str);
+                var fst = [this.x1, this.y1];
+                var lst = [this.x2, this.y2];
+                value.unshift(fst);
+                value.push(lst);
+                this.pathPoints = value;
             },
             enumerable: true,
             configurable: true
@@ -7311,7 +7346,7 @@ var GraphTableSVG;
         PPEdge.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
             if (output === void 0) { output = {}; }
-            GraphTableSVG.PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
+            GraphTableSVG.PPTextBox.constructAttributes(e, removeAttributes, output);
             output.x1 = e.gtGetAttributeNumber("x1", 0);
             output.x2 = e.gtGetAttributeNumber("x2", 300);
             output.y1 = e.gtGetAttributeNumber("y1", 0);
@@ -7379,10 +7414,10 @@ var GraphTableSVG;
             configurable: true
         });
         PPEdge.prototype.removeVertexEvent = function (vertex) {
-            vertex.svgGroup.removeEventListener(GraphTableSVG.PPTextBoxShapeBase.ConnectPositionChangedEventName, this.pUpdateFunc);
+            vertex.svgGroup.removeEventListener(GraphTableSVG.PPTextBox.ConnectPositionChangedEventName, this.pUpdateFunc);
         };
         PPEdge.prototype.addVertexEvent = function (vertex) {
-            vertex.svgGroup.addEventListener(GraphTableSVG.PPTextBoxShapeBase.ConnectPositionChangedEventName, this.pUpdateFunc);
+            vertex.svgGroup.addEventListener(GraphTableSVG.PPTextBox.ConnectPositionChangedEventName, this.pUpdateFunc);
         };
         Object.defineProperty(PPEdge.prototype, "beginVertex", {
             get: function () {
@@ -7390,7 +7425,7 @@ var GraphTableSVG;
                     return null;
                 }
                 else {
-                    return GraphTableSVG.PPTextBoxShapeBase.getObjectFromObjectID(this.beginVertexID);
+                    return GraphTableSVG.PPTextBox.getObjectFromObjectID(this.beginVertexID);
                 }
             },
             set: function (value) {
@@ -7421,7 +7456,7 @@ var GraphTableSVG;
                     return null;
                 }
                 else {
-                    return GraphTableSVG.PPTextBoxShapeBase.getObjectFromObjectID(this.endVertexID);
+                    return GraphTableSVG.PPTextBox.getObjectFromObjectID(this.endVertexID);
                 }
             },
             set: function (value) {
@@ -7641,19 +7676,6 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(PPEdge.prototype, "objectID", {
-            get: function () {
-                var r = this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
-                if (r == null) {
-                    throw new Error();
-                }
-                else {
-                    return r;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
         PPEdge.prototype.save = function () {
         };
         PPEdge.create = function (graph, option) {
@@ -7709,7 +7731,7 @@ var GraphTableSVG;
         };
         PPEdge.markerCounter = 0;
         return PPEdge;
-    }(GraphTableSVG.PPTextBoxShapeBase));
+    }(GraphTableSVG.PPTextBox));
     GraphTableSVG.PPEdge = PPEdge;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
@@ -7742,7 +7764,7 @@ var GraphTableSVG;
         PPEllipse.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
             if (output === void 0) { output = {}; }
-            GraphTableSVG.PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
+            GraphTableSVG.PPTextBox.constructAttributes(e, removeAttributes, output);
             return output;
         };
         Object.defineProperty(PPEllipse.prototype, "innerRectangle", {
@@ -7845,7 +7867,7 @@ var GraphTableSVG;
             }
         };
         return PPEllipse;
-    }(GraphTableSVG.PPVertexBase));
+    }(GraphTableSVG.PPVertex));
     GraphTableSVG.PPEllipse = PPEllipse;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
@@ -7860,11 +7882,10 @@ var GraphTableSVG;
         }
         Object.defineProperty(PPGraph.prototype, "vertices", {
             get: function () {
-                var _this = this;
                 var r = [];
                 HTMLFunctions.getChildren(this.svgGroup).filter(function (v) { return v.hasAttribute(GraphTableSVG.SVG.objectIDName); }).forEach(function (v) {
-                    var item = GraphTableSVG.SVGGroupBase.getObjectFromObjectID(_this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName));
-                    if (item instanceof GraphTableSVG.PPVertexBase) {
+                    var item = GraphTableSVG.PPObject.getObjectFromObjectID(v.getAttribute(GraphTableSVG.SVG.objectIDName));
+                    if (item instanceof GraphTableSVG.PPVertex) {
                         r.push(item);
                     }
                 });
@@ -7875,10 +7896,9 @@ var GraphTableSVG;
         });
         Object.defineProperty(PPGraph.prototype, "edges", {
             get: function () {
-                var _this = this;
                 var r = [];
                 HTMLFunctions.getChildren(this.svgGroup).filter(function (v) { return v.hasAttribute(GraphTableSVG.SVG.objectIDName); }).forEach(function (v) {
-                    var item = GraphTableSVG.SVGGroupBase.getObjectFromObjectID(_this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName));
+                    var item = GraphTableSVG.PPObject.getObjectFromObjectID(v.getAttribute(GraphTableSVG.SVG.objectIDName));
                     if (item instanceof GraphTableSVG.PPEdge) {
                         r.push(item);
                     }
@@ -7960,7 +7980,7 @@ var GraphTableSVG;
             configurable: true
         });
         PPGraph.prototype.add = function (item) {
-            if (item instanceof GraphTableSVG.PPVertexBase) {
+            if (item instanceof GraphTableSVG.PPVertex) {
                 this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
             }
             else {
@@ -8038,7 +8058,7 @@ var GraphTableSVG;
         PPGraph.vertexYIntervalName = "--vertex-y-interval";
         PPGraph.typeName = "data-type";
         return PPGraph;
-    }(GraphTableSVG.SVGGroupBase));
+    }(GraphTableSVG.PPObject));
     GraphTableSVG.PPGraph = PPGraph;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
@@ -8075,7 +8095,7 @@ var GraphTableSVG;
         PPRectangle.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
             if (output === void 0) { output = {}; }
-            GraphTableSVG.PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
+            GraphTableSVG.PPTextBox.constructAttributes(e, removeAttributes, output);
             return output;
         };
         Object.defineProperty(PPRectangle.prototype, "innerRectangle", {
@@ -8162,7 +8182,7 @@ var GraphTableSVG;
             }
         };
         return PPRectangle;
-    }(GraphTableSVG.PPVertexBase));
+    }(GraphTableSVG.PPVertex));
     GraphTableSVG.PPRectangle = PPRectangle;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
@@ -8187,7 +8207,7 @@ var GraphTableSVG;
         ShapeArrowCallout.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
             if (output === void 0) { output = {}; }
-            GraphTableSVG.PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
+            GraphTableSVG.PPTextBox.constructAttributes(e, removeAttributes, output);
             output.arrowNeckWidth = e.gtGetAttributeNumber("arrow-neck-width", 10);
             output.arrowNeckHeight = e.gtGetAttributeNumber("arrow-neck-height", 10);
             output.arrowHeadWidth = e.gtGetAttributeNumber("arrow-head-width", 20);
@@ -8560,11 +8580,11 @@ var GraphTableSVG;
                 r_3 = new GraphTableSVG.ShapeArrowCallout(parent, option);
             }
             else if (type == GraphTableSVG.ShapeObjectType.Ellipse) {
-                var option = GraphTableSVG.PPTextBoxShapeBase.constructAttributes(e, true);
+                var option = GraphTableSVG.PPTextBox.constructAttributes(e, true);
                 r_3 = new GraphTableSVG.PPEllipse(parent, option);
             }
             else if (type == GraphTableSVG.ShapeObjectType.Rect) {
-                var option = GraphTableSVG.PPTextBoxShapeBase.constructAttributes(e, true);
+                var option = GraphTableSVG.PPTextBox.constructAttributes(e, true);
                 r_3 = new GraphTableSVG.PPRectangle(parent, option);
             }
             else if (type == GraphTableSVG.ShapeObjectType.Line) {
@@ -8572,7 +8592,7 @@ var GraphTableSVG;
                 r_3 = new GraphTableSVG.PPEdge(parent, option);
             }
             else if (type == GraphTableSVG.ShapeObjectType.Graph) {
-                var option = GraphTableSVG.PPTextBoxShapeBase.constructAttributes(e, true);
+                var option = GraphTableSVG.PPTextBox.constructAttributes(e, true);
                 r_3 = new GraphTableSVG.PPGraph(parent, option);
             }
             else {
@@ -8629,7 +8649,7 @@ var GraphTableSVG;
     GraphTableSVG.openSVG = openSVG;
     function createShape(parent, type, option) {
         var _parent;
-        if (parent instanceof GraphTableSVG.SVGGroupBase) {
+        if (parent instanceof GraphTableSVG.PPObject) {
             _parent = parent.svgGroup;
         }
         else if (parent instanceof SVGElement) {

@@ -1,14 +1,15 @@
 let graph = null;
 window.onload = () => {
-    const box = document.getElementById('svgbox');
-    graph = new GraphTableSVG.Graph(box);    
+    graph = GraphTableSVG.createShape('svgbox', 'g-graph');
     
-    const node1 = GraphTableSVG.Vertex.create(graph,{x : 100, y : 100, text : "1"});
-    const node2 = GraphTableSVG.Vertex.create(graph,{x : 150, y : 200, text : "2"});
-    const node3 = GraphTableSVG.Vertex.create(graph,{x : 50, y : 200, text : "3"});
+    const vertex1 = GraphTableSVG.createShape(graph, 'g-ellipse', {cx : 100, cy : 100, text : "1", id:"vertex1"});
+    const vertex2 = GraphTableSVG.createShape(graph, 'g-ellipse', {cx : 150, cy : 200, text : "2", id:"vertex2"});
+    const vertex3 = GraphTableSVG.createShape(graph, 'g-ellipse', {cx : 50, cy : 200, text : "3", id:"vertex3"});;
 
-    const edge1 = GraphTableSVG.Edge.create(graph, {beginVertex : node1, endVertex : node2, text : "abcd"});
-    const edge2 = GraphTableSVG.Edge.create(graph, {beginVertex : node1, endVertex : node3});
+
+    const edge1 = GraphTableSVG.createShape(graph, 'g-line', {beginVertex : vertex1, endVertex : vertex2, text : "abcd" });
+    const edge2 = GraphTableSVG.createShape(graph, 'g-line', {beginVertex : vertex1, endVertex : vertex3 });
+
 
     /* x:400, y:200の位置に制御点の設定 */
     edge1.controlPoint = [[400, 200]];

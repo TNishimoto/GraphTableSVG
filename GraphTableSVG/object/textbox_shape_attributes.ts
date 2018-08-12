@@ -1,13 +1,16 @@
 namespace GraphTableSVG {
-    export type TextBoxShapeAttributes = {
-        className?: string,
+    export type PPObjectAttributes = {
+        class?: string,
         cx?: number,
         cy?: number,
         width?: number,
         height?: number,
-        text?: string,
-        isAutoSizeShapeToFitText?: boolean,
         id? : string
+    }
+
+    export type TextBoxShapeAttributes = PPObjectAttributes & {
+        text?: string,
+        isAutoSizeShapeToFitText?: boolean
     }
     export type ShapeArrowCalloutAttributes = TextBoxShapeAttributes & {
         arrowHeadWidth?: number,
@@ -29,8 +32,8 @@ namespace GraphTableSVG {
         y2?: number,
         beginConnectorType?: ConnectorPosition,
         endConnectorType?: ConnectorPosition,
-        beginVertex?: PPVertexBase | string,
-        endVertex?: PPVertexBase | string,
+        beginVertex?: PPVertex | string,
+        endVertex?: PPVertex | string,
         pathTextAlignment? : pathTextAlighnment
     }
     export type ConnectOption = {
@@ -84,10 +87,10 @@ namespace GraphTableSVG {
             return createCustomElement(element, type);
         }
     }
-    function createCustomElement(e: SVGElement, type: ShapeObjectType): PPTextBoxShapeBase {
+    function createCustomElement(e: SVGElement, type: ShapeObjectType): PPTextBox {
         const parent = e.parentElement;
         if (parent instanceof SVGElement) {
-            let r: PPTextBoxShapeBase;
+            let r: PPTextBox;
 
             if (type == ShapeObjectType.Callout) {
                 const option = Callout.constructAttributes(e, true);
@@ -96,16 +99,16 @@ namespace GraphTableSVG {
                 const option = ShapeArrowCallout.constructAttributes(e, true);
                 r = new ShapeArrowCallout(parent, option);
             } else if (type == ShapeObjectType.Ellipse) {
-                const option = PPTextBoxShapeBase.constructAttributes(e, true);
+                const option = PPTextBox.constructAttributes(e, true);
                 r = new PPEllipse(parent, option);
             } else if (type == ShapeObjectType.Rect) {
-                const option = PPTextBoxShapeBase.constructAttributes(e, true);
+                const option = PPTextBox.constructAttributes(e, true);
                 r = new PPRectangle(parent, option);
             } else if (type == ShapeObjectType.Line) {
                 const option = PPEdge.constructAttributes(e, true);
                 r = <any>new PPEdge(parent, option);
             } else if (type == ShapeObjectType.Graph) {
-                const option = PPTextBoxShapeBase.constructAttributes(e, true);
+                const option = PPTextBox.constructAttributes(e, true);
                 r = <any>new PPGraph(parent, option);
             }
             else {
@@ -149,9 +152,9 @@ namespace GraphTableSVG {
             return output;
         }
     }
-    export function createShape(parent : SVGElement | string | SVGGroupBase, type : ShapeObjectType, option : any) : SVGGroupBase {
+    export function createShape(parent : SVGElement | string | PPObject, type : ShapeObjectType, option : any) : PPObject {
         let _parent : SVGElement;
-        if(parent instanceof SVGGroupBase){
+        if(parent instanceof PPObject){
             _parent = parent.svgGroup;
         }else if(parent instanceof SVGElement){
 

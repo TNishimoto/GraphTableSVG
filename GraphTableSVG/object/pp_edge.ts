@@ -2,7 +2,17 @@ namespace GraphTableSVG {
     /**
      * 辺をSVGで表現するためのクラスです。
      */
-    export class PPEdge extends PPTextBoxShapeBase {
+    export class PPEdge extends PPTextBox {
+        protected setClassNameOfSVGGroup(){
+            const parent = this.svgGroup.parentElement;
+            if(parent instanceof SVGElement){
+                const className = parent.getPropertyStyleValue(GraphTableSVG.PPGraph.defaultEdgeClass);
+                if(className != null){
+                    this.svgGroup.setAttribute("class", className);
+                }
+            }
+        }
+
         private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {
             return this._svgPath;
@@ -88,19 +98,16 @@ namespace GraphTableSVG {
          * 辺の制御点を返します。
          */
         public get controlPoint(): [number, number][] {
-
-            const str = this.svgPath.getAttribute(Edge.controlPointName);
-            if (str != null) {
-                const p: [number, number][] = JSON.parse(str);
-                return p;
-            } else {
-                this.controlPoint = [];
-                return [];
-            }
+            const r = this.pathPoints
+            r.shift().pop();
+            return r;
         }
         public set controlPoint(value: [number, number][]) {
-            const str = JSON.stringify(value);
-            this.svgPath.setAttribute(Edge.controlPointName, str);
+            const fst : [number, number] = [this.x1, this.y1];
+            const lst : [number, number] = [this.x2, this.y2];
+            value.unshift(fst);
+            value.push(lst);
+            this.pathPoints = value;
         }
 
         /**
@@ -145,7 +152,7 @@ namespace GraphTableSVG {
         }
         */
         static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: PPEdgeAttributes = {}): PPEdgeAttributes {
-            PPTextBoxShapeBase.constructAttributes(e, removeAttributes, output);
+            PPTextBox.constructAttributes(e, removeAttributes, output);
             output.x1 = e.gtGetAttributeNumber("x1", 0);
             output.x2 = e.gtGetAttributeNumber("x2", 300);
             output.y1 = e.gtGetAttributeNumber("y1", 0);
@@ -209,12 +216,15 @@ namespace GraphTableSVG {
             */
 
             //if(option.x1 != undefined) this.x1 = option.x1;
-            //const markerStartName = this.svgGroup.getPropertyStyleValue(Edge.markerStartName);
-            //const markerEndName = this.svgGroup.getPropertyStyleValue(Edge.markerEndName);
 
             const edgeColor = this.svgPath.getPropertyStyleValue("stroke");
             const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
 
+            const markerStartName = this.svgGroup.getPropertyStyleValue(Edge.markerStartName);
+            const markerEndName = this.svgGroup.getPropertyStyleValue(Edge.markerEndName);
+
+            if(option.startMarker == undefined && markerStartName != null) option.startMarker = markerStartName == "true";
+            if(option.endMarker == undefined && markerEndName != null) option.endMarker = markerEndName == "true";
             if (option.startMarker) this.markerStart = GraphTableSVG.Edge.createStartMarker({ color: edgeColor, strokeWidth: strokeWidth });
             if (option.endMarker) this.markerEnd = GraphTableSVG.Edge.createEndMarker({ color: edgeColor, strokeWidth: strokeWidth });
 
@@ -226,16 +236,16 @@ namespace GraphTableSVG {
 
 
             if(option.beginVertex != null){
-                const obj = option.beginVertex instanceof PPVertexBase ? option.beginVertex :  PPTextBoxShapeBase.getObjectFromID(option.beginVertex);
-                if(obj instanceof PPVertexBase){
+                const obj = option.beginVertex instanceof PPVertex ? option.beginVertex :  PPTextBox.getObjectFromID(option.beginVertex);
+                if(obj instanceof PPVertex){
                 this.beginVertex = obj;
             }
             }
             if(option.endVertex != null){
-                const obj = option.endVertex instanceof PPVertexBase ? option.endVertex :  PPTextBoxShapeBase.getObjectFromID(option.endVertex);
+                const obj = option.endVertex instanceof PPVertex ? option.endVertex :  PPTextBox.getObjectFromID(option.endVertex);
 
                 //const obj = PPTextBoxShapeBase.getObjectFromID(option.endVertexID);
-                if(obj instanceof PPVertexBase){
+                if(obj instanceof PPVertex){
                 this.endVertex = obj;
                 }
             }
@@ -289,28 +299,28 @@ namespace GraphTableSVG {
             this.svgGroup.setAttribute(Edge.endNodeName, v == null ? null : v);
         }
 
-        private removeVertexEvent(vertex : PPTextBoxShapeBase){
-            vertex.svgGroup.removeEventListener(PPTextBoxShapeBase.ConnectPositionChangedEventName, this.pUpdateFunc);
+        private removeVertexEvent(vertex : PPTextBox){
+            vertex.svgGroup.removeEventListener(PPTextBox.ConnectPositionChangedEventName, this.pUpdateFunc);
         }
-        private addVertexEvent(vertex : PPTextBoxShapeBase){
-            vertex.svgGroup.addEventListener(PPTextBoxShapeBase.ConnectPositionChangedEventName, this.pUpdateFunc);
+        private addVertexEvent(vertex : PPTextBox){
+            vertex.svgGroup.addEventListener(PPTextBox.ConnectPositionChangedEventName, this.pUpdateFunc);
         }
         private pUpdateFunc = () => this.update();
 
         /**
         開始接点を返します。
         */
-        get beginVertex(): PPVertexBase | null {
+        get beginVertex(): PPVertex | null {
             if (this.beginVertexID == null) {
                 return null;
             } else {
-                return <PPVertexBase>PPTextBoxShapeBase.getObjectFromObjectID(this.beginVertexID);
+                return <PPVertex>PPTextBox.getObjectFromObjectID(this.beginVertexID);
             }
         }
         /**
         開始接点を設定します。
         */
-        set beginVertex(value: PPVertexBase | null) {
+        set beginVertex(value: PPVertex | null) {
             if(this.beginVertex != null){
                  this.removeVertexEvent(this.beginVertex);
                  if(this.beginVertex.outcomingEdges.indexOf(this) != -1){
@@ -335,17 +345,17 @@ namespace GraphTableSVG {
         /**
         終了接点を返します。
         */
-        get endVertex(): PPVertexBase | null {
+        get endVertex(): PPVertex | null {
             if (this.endVertexID == null) {
                 return null;
             } else {
-                return <PPVertexBase>PPTextBoxShapeBase.getObjectFromObjectID(this.endVertexID);
+                return <PPVertex>PPTextBox.getObjectFromObjectID(this.endVertexID);
             }
         }
         /**
         終了接点を設定します。
         */
-        set endVertex(value: PPVertexBase | null) {
+        set endVertex(value: PPVertex | null) {
             if(this.endVertex != null){
                 this.removeVertexEvent(this.endVertex);
                 if(this.endVertex.incomingEdges.indexOf(this) != -1){
@@ -619,17 +629,6 @@ namespace GraphTableSVG {
             */
         }
 
-        /**
-        ObjectIDを返します。
-        */
-        public get objectID(): string {
-            const r = this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
-            if (r == null) {
-                throw new Error();
-            } else {
-                return r;
-            }
-        }
         public save() {
         }
         /**

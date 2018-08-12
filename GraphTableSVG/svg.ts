@@ -50,6 +50,14 @@ namespace GraphTableSVG {
             const line1 = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             parent.appendChild(line1);
             line1.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
+
+            if(parent instanceof SVGElement){
+                const _className = parent.getPropertyStyleValue(SVG.defaultPathClass);
+                if(className == null){
+                    className = _className;
+                }
+            }
+
             if (className != null) {
                 line1.setAttribute("class", className)
                 const dashStyle = line1.getPropertyStyleValue(msoDashStyleName);
