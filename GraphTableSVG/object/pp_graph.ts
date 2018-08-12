@@ -188,6 +188,32 @@ namespace GraphTableSVG {
             }
             return r;
         }
+
+        /**
+         * 親ノードに子ノードを追加します。
+         * @param parent 
+         * @param child 
+         * @param option 
+         */
+        public appendChild(parent: PPVertex, child: PPVertex, option: { insertIndex?: number } = {}) {
+            const edge: PPEdge = <any>GraphTableSVG.createShape(this, 'g-line');
+            this.connect(parent, edge, child, { beginConnectorType: "bottom", endConnectorType: "top" });
+            //this.createdNodeCallback(child);
+            this.relocate();
+        }
+        private _relocateFunction: ((Tree: PPGraph) => void) | null = null;
+        public get relocateFunction(): ((Tree: PPGraph) => void) | null {
+            return this._relocateFunction;
+        }
+        public set relocateFunction(func: ((Tree: PPGraph) => void) | null) {
+            this._relocateFunction = func;
+            this.relocate();
+        }
+
+        public relocate() {
+            if (this._relocateFunction != null) this._relocateFunction(this);
+        }
+
     }
 
 

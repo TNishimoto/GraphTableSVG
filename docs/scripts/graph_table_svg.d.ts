@@ -950,6 +950,14 @@ declare namespace GraphTableSVG {
         insertIncomingEdge(edge: PPEdge, insertIndex?: number): void;
         removeIncomingEdge(edge: PPEdge): void;
         dispose(): void;
+        getParents(): PPVertex[];
+        readonly parentEdge: PPEdge | null;
+        readonly parent: PPVertex | null;
+        readonly isNoParent: boolean;
+        readonly children: PPVertex[];
+        readonly isLeaf: boolean;
+        readonly tree: PPVirtualSubTree;
+        readonly region: Rectangle;
     }
 }
 declare namespace GraphTableSVG {
@@ -1092,6 +1100,12 @@ declare namespace GraphTableSVG {
         clear(): void;
         connect(beginVertex: PPVertex, edge: PPEdge, endVertex: PPVertex, option?: ConnectOption): void;
         getOrderedVertices(order: VertexOrder, node?: PPVertex | null): PPVertex[];
+        appendChild(parent: PPVertex, child: PPVertex, option?: {
+            insertIndex?: number;
+        }): void;
+        private _relocateFunction;
+        relocateFunction: ((Tree: PPGraph) => void) | null;
+        relocate(): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -1108,6 +1122,15 @@ declare namespace GraphTableSVG {
         protected updateSurface(): void;
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         protected getAutoPosition(x: number, y: number): ConnectorPosition;
+    }
+}
+declare namespace GraphTableSVG {
+    namespace PPTreeArrangement {
+        function alignVerticeByLeaveSub(forest: PPGraph, xInterval: number, yInterval: number): void;
+        function reverse(graph: PPGraph, isX: boolean, isY: boolean): void;
+        function alignVerticeByChildren(graph: PPGraph): void;
+        function standardTreeWidthArrangement(graph: PPGraph): void;
+        function alignVerticeByLeave(graph: PPGraph): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -1130,6 +1153,22 @@ declare namespace GraphTableSVG {
         protected readonly VBAAdjustments: number[];
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         protected getAutoPosition(x: number, y: number): ConnectorPosition;
+    }
+}
+declare namespace GraphTableSVG {
+    class PPVirtualSubTree {
+        subTreeRoot: PPVertex;
+        constructor(_root: PPVertex);
+        readonly children: PPVertex[];
+        readonly parentEdge: PPEdge | null;
+        getSubtree(result?: PPVertex[]): PPVertex[];
+        getHeight(): number;
+        region(): Rectangle;
+        readonly mostLeftLeave: PPVertex;
+        addOffset(_x: number, _y: number): void;
+        setRectangleLocation(_x: number, _y: number): void;
+        setRootLocation(_x: number, _y: number): void;
+        readonly leaves: PPVertex[];
     }
 }
 declare namespace GraphTableSVG {
@@ -1177,7 +1216,7 @@ declare namespace GraphTableSVG {
     };
     function openCustomElement(id: string | SVGElement): any;
     function openSVG(id: string | SVGElement, output?: any[]): any[];
-    function createShape(parent: SVGElement | string | PPObject, type: ShapeObjectType, option: any): PPObject;
+    function createShape(parent: SVGElement | string | PPObject, type: ShapeObjectType, option?: any): PPObject;
 }
 declare namespace HTMLFunctions {
     function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;

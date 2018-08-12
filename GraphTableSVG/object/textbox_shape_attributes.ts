@@ -152,7 +152,7 @@ namespace GraphTableSVG {
             return output;
         }
     }
-    export function createShape(parent : SVGElement | string | PPObject, type : ShapeObjectType, option : any) : PPObject {
+    export function createShape(parent : SVGElement | string | PPObject, type : ShapeObjectType, option : any = {}) : PPObject {
         let _parent : SVGElement;
         if(parent instanceof PPObject){
             _parent = parent.svgGroup;

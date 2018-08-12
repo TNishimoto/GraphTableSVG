@@ -6794,6 +6794,73 @@ var GraphTableSVG;
                 this.removeOutcomingEdge(this.outcomingEdges[0]);
             }
         };
+        PPVertex.prototype.getParents = function () {
+            return this.incomingEdges.filter(function (v) { return v.beginVertex != null; }).map(function (v) { return v.beginVertex; });
+        };
+        Object.defineProperty(PPVertex.prototype, "parentEdge", {
+            get: function () {
+                if (this.incomingEdges.length == 0) {
+                    return null;
+                }
+                else {
+                    return this.incomingEdges[0];
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPVertex.prototype, "parent", {
+            get: function () {
+                if (this.parentEdge == null) {
+                    return null;
+                }
+                else {
+                    return this.parentEdge.beginVertex;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPVertex.prototype, "isNoParent", {
+            get: function () {
+                return this.parent == null;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPVertex.prototype, "children", {
+            get: function () {
+                return this.outcomingEdges.filter(function (v) { return v.endVertex != null; }).map(function (v) { return v.endVertex; });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPVertex.prototype, "isLeaf", {
+            get: function () {
+                return this.outcomingEdges.length == 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPVertex.prototype, "tree", {
+            get: function () {
+                return new GraphTableSVG.PPVirtualSubTree(this);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPVertex.prototype, "region", {
+            get: function () {
+                var p = new GraphTableSVG.Rectangle();
+                p.x = this.cx - (this.width / 2);
+                p.y = this.cy - (this.height / 2);
+                p.width = this.width;
+                p.height = this.height;
+                return p;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return PPVertex;
     }(GraphTableSVG.PPTextBox));
     GraphTableSVG.PPVertex = PPVertex;
@@ -7878,6 +7945,7 @@ var GraphTableSVG;
             if (option === void 0) { option = {}; }
             var _this = _super.call(this, box, option) || this;
             _this._roots = [];
+            _this._relocateFunction = null;
             return _this;
         }
         Object.defineProperty(PPGraph.prototype, "vertices", {
@@ -8052,6 +8120,27 @@ var GraphTableSVG;
             }
             return r;
         };
+        PPGraph.prototype.appendChild = function (parent, child, option) {
+            if (option === void 0) { option = {}; }
+            var edge = GraphTableSVG.createShape(this, 'g-line');
+            this.connect(parent, edge, child, { beginConnectorType: "bottom", endConnectorType: "top" });
+            this.relocate();
+        };
+        Object.defineProperty(PPGraph.prototype, "relocateFunction", {
+            get: function () {
+                return this._relocateFunction;
+            },
+            set: function (func) {
+                this._relocateFunction = func;
+                this.relocate();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPGraph.prototype.relocate = function () {
+            if (this._relocateFunction != null)
+                this._relocateFunction(this);
+        };
         PPGraph.defaultVertexClass = "--default-vertex-class";
         PPGraph.defaultEdgeClass = "--default-edge-class";
         PPGraph.vertexXIntervalName = "--vertex-x-interval";
@@ -8184,6 +8273,186 @@ var GraphTableSVG;
         return PPRectangle;
     }(GraphTableSVG.PPVertex));
     GraphTableSVG.PPRectangle = PPRectangle;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var PPTreeArrangement;
+    (function (PPTreeArrangement) {
+        function alignVerticeByLeaveSub(forest, xInterval, yInterval) {
+            var leafCounter = 0;
+            forest.getOrderedVertices(GraphTableSVG.VertexOrder.Postorder).forEach(function (v) {
+                var x = 0;
+                var y = 0;
+                if (v.isLeaf) {
+                    x = leafCounter * xInterval;
+                    leafCounter++;
+                }
+                else {
+                    v.children.forEach(function (w) {
+                        x += w.cx;
+                        if (y < w.cy)
+                            y = w.cy;
+                    });
+                    x = x / v.children.length;
+                    y += yInterval;
+                }
+                v.cx = x;
+                v.cy = y;
+            });
+        }
+        PPTreeArrangement.alignVerticeByLeaveSub = alignVerticeByLeaveSub;
+        function reverse(graph, isX, isY) {
+            if (graph.vertices.length > 0) {
+                if (isY) {
+                    var midY_2 = middle(graph.vertices.map(function (v) { return v.cy; }));
+                    graph.vertices.forEach(function (v) {
+                        if (v.cy < midY_2) {
+                            v.cy += 2 * (midY_2 - v.cy);
+                        }
+                        else {
+                            v.cy -= 2 * (v.cy - midY_2);
+                        }
+                    });
+                }
+                if (isX) {
+                    var midX_2 = middle(graph.vertices.map(function (v) { return v.cx; }));
+                    graph.vertices.forEach(function (v) {
+                        if (v.cx < midX_2) {
+                            v.cx += 2 * (midX_2 - v.cx);
+                        }
+                        else {
+                            v.cx -= 2 * (v.cx - midX_2);
+                        }
+                    });
+                }
+            }
+        }
+        PPTreeArrangement.reverse = reverse;
+        function average(items) {
+            if (items.length > 0) {
+                var y_2 = 0;
+                items.forEach(function (v) {
+                    y_2 += v;
+                });
+                return y_2 / items.length;
+            }
+            else {
+                throw new Error();
+            }
+        }
+        function middle(items) {
+            if (items.length > 0) {
+                var min_2 = items[0];
+                var max_3 = items[0];
+                items.forEach(function (w) {
+                    if (min_2 > w)
+                        min_2 = w;
+                    if (max_3 < w)
+                        max_3 = w;
+                });
+                return (min_2 + max_3) / 2;
+            }
+            else {
+                throw new Error();
+            }
+        }
+        function alignVerticeByChildren(graph) {
+            var _a = getXYIntervals(graph), xi = _a[0], yi = _a[1];
+            if (graph.rootVertex != null) {
+                var rootTree = graph.rootVertex.tree;
+                var _b = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y], x = _b[0], y = _b[1];
+                alignVerticeByChildrenSub(rootTree, xi, yi);
+                rootTree.setRootLocation(x, y);
+            }
+            alignTrees(graph);
+        }
+        PPTreeArrangement.alignVerticeByChildren = alignVerticeByChildren;
+        function alignVerticeByChildrenSub(tree, xInterval, yInterval) {
+            tree.subTreeRoot.cx = 0;
+            tree.subTreeRoot.cy = 0;
+            var leaves = 0;
+            var children = tree.children;
+            var leaveSizeWidthHalf = (tree.leaves.length * xInterval) / 2;
+            var x = -leaveSizeWidthHalf;
+            for (var i = 0; i < children.length; i++) {
+                alignVerticeByChildrenSub(children[i].tree, xInterval, yInterval);
+                var w = (children[i].tree.leaves.length * xInterval) / 2;
+                children[i].tree.setRootLocation(x + w, yInterval);
+                x += children[i].tree.leaves.length * xInterval;
+            }
+        }
+        function standardTreeWidthArrangement(graph) {
+            var _a = getXYIntervals(graph), xi = _a[0], yi = _a[1];
+            if (graph.rootVertex != null) {
+                var rootTree = graph.rootVertex.tree;
+                var _b = [rootTree.subTreeRoot.cx, rootTree.subTreeRoot.cy], x = _b[0], y = _b[1];
+                standardTreeWidthArrangementSub(rootTree, xi, yi);
+                rootTree.setRootLocation(x, y);
+            }
+        }
+        PPTreeArrangement.standardTreeWidthArrangement = standardTreeWidthArrangement;
+        function computeAutoXYIntervals(graph) {
+            var yMaximalInterval = 30;
+            var xMaximalInterval = 30;
+            graph.vertices.forEach(function (v) {
+                if (v.width > xMaximalInterval)
+                    xMaximalInterval = v.width;
+                if (v.height > yMaximalInterval)
+                    yMaximalInterval = v.height;
+            });
+            return [xMaximalInterval * 2, yMaximalInterval * 2];
+        }
+        function getXYIntervals(graph) {
+            var _a = computeAutoXYIntervals(graph), xMaximalInterval = _a[0], yMaximalInterval = _a[1];
+            var xi = graph.vertexXInterval != null ? graph.vertexXInterval : xMaximalInterval;
+            var yi = graph.vertexYInterval != null ? graph.vertexYInterval : yMaximalInterval;
+            return [xi, yi];
+        }
+        function alignTrees(graph) {
+            var x = 0;
+            graph.roots.forEach(function (v) {
+                var region = v.tree.region();
+                v.tree.setRectangleLocation(x, 0);
+                x += region.width;
+            });
+        }
+        function alignVerticeByLeave(graph) {
+            graph.vertices.forEach(function (v) { v.cx = 0; v.cy = 0; });
+            var _a = getXYIntervals(graph), xi = _a[0], yi = _a[1];
+            alignVerticeByLeaveSub(graph, xi, yi);
+            reverse(this, false, true);
+            alignTrees(graph);
+        }
+        PPTreeArrangement.alignVerticeByLeave = alignVerticeByLeave;
+        function standardTreeWidthArrangementSub(tree, xInterval, yInterval) {
+            tree.subTreeRoot.cx = 0;
+            tree.subTreeRoot.cy = 0;
+            var centerX = 0;
+            var children = tree.children;
+            var x = 0;
+            if (children.length == 1) {
+                tree.subTreeRoot.cx = children[0].cx;
+                standardTreeWidthArrangementSub(children[0].tree, xInterval, yInterval);
+                children[0].tree.setRootLocation(children[0].x, yInterval);
+            }
+            else if (children.length == 0) {
+            }
+            else {
+                for (var i = 0; i < children.length; i++) {
+                    standardTreeWidthArrangementSub(children[i].tree, xInterval, yInterval);
+                    var rect = children[i].tree.region();
+                    var diffX = children[i].cx - rect.x;
+                    children[i].tree.setRootLocation(x + diffX, yInterval);
+                    x += rect.width + xInterval;
+                    if (i < children.length - 1) {
+                        centerX += x - (xInterval / 2);
+                    }
+                }
+                centerX = centerX / (children.length - 1);
+                tree.subTreeRoot.cx = centerX;
+            }
+        }
+    })(PPTreeArrangement = GraphTableSVG.PPTreeArrangement || (GraphTableSVG.PPTreeArrangement = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -8550,6 +8819,122 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    var PPVirtualSubTree = (function () {
+        function PPVirtualSubTree(_root) {
+            this.subTreeRoot = _root;
+        }
+        Object.defineProperty(PPVirtualSubTree.prototype, "children", {
+            get: function () {
+                var p = this;
+                return this.subTreeRoot.children.map(function (x, i, arr) {
+                    return x;
+                });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PPVirtualSubTree.prototype, "parentEdge", {
+            get: function () {
+                return this.subTreeRoot.parentEdge;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPVirtualSubTree.prototype.getSubtree = function (result) {
+            if (result === void 0) { result = []; }
+            result.push(this.subTreeRoot);
+            var children = this.children;
+            if (children.length == 0) {
+                return result;
+            }
+            else {
+                children.forEach(function (x, i, arr) {
+                    x.tree.getSubtree(result);
+                });
+                return result;
+            }
+        };
+        PPVirtualSubTree.prototype.getHeight = function () {
+            var children = this.children;
+            if (children.length == 0) {
+                return 1;
+            }
+            else {
+                var max_4 = 0;
+                children.forEach(function (x, i, arr) {
+                    if (max_4 < x.tree.getHeight())
+                        max_4 = x.tree.getHeight();
+                });
+                return max_4 + 1;
+            }
+        };
+        PPVirtualSubTree.prototype.region = function () {
+            var p = this.getSubtree();
+            var minX = this.subTreeRoot.x;
+            var maxX = this.subTreeRoot.x;
+            var minY = this.subTreeRoot.y;
+            var maxY = this.subTreeRoot.y;
+            p.forEach(function (x, i, arr) {
+                var rect = x.region;
+                if (minX > rect.x)
+                    minX = rect.x;
+                if (maxX < rect.right)
+                    maxX = rect.right;
+                if (minY > rect.y)
+                    minY = rect.y;
+                if (maxY < rect.bottom)
+                    maxY = rect.bottom;
+            });
+            var result = new GraphTableSVG.Rectangle();
+            result.x = minX;
+            result.y = minY;
+            result.width = maxX - minX;
+            result.height = maxY - minY;
+            return result;
+        };
+        Object.defineProperty(PPVirtualSubTree.prototype, "mostLeftLeave", {
+            get: function () {
+                return this.leaves[0];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PPVirtualSubTree.prototype.addOffset = function (_x, _y) {
+            this.getSubtree().forEach(function (x, i, arr) {
+                x.cx += _x;
+                x.cy += _y;
+            });
+        };
+        PPVirtualSubTree.prototype.setRectangleLocation = function (_x, _y) {
+            var x = this.mostLeftLeave.region.x;
+            var y = this.subTreeRoot.region.y;
+            var diffX = _x - x;
+            var diffY = _y - y;
+            this.addOffset(diffX, diffY);
+        };
+        PPVirtualSubTree.prototype.setRootLocation = function (_x, _y) {
+            var x = this.subTreeRoot.cx;
+            var y = this.subTreeRoot.cy;
+            var diffX = _x - x;
+            var diffY = _y - y;
+            this.addOffset(diffX, diffY);
+        };
+        Object.defineProperty(PPVirtualSubTree.prototype, "leaves", {
+            get: function () {
+                var p = this;
+                return this.getSubtree().filter(function (x, i, arr) {
+                    return x.outcomingEdges.length == 0;
+                });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return PPVirtualSubTree;
+    }());
+    GraphTableSVG.PPVirtualSubTree = PPVirtualSubTree;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     function openCustomElement(id) {
         if (typeof id == "string") {
             var item = document.getElementById(id);
@@ -8648,6 +9033,7 @@ var GraphTableSVG;
     }
     GraphTableSVG.openSVG = openSVG;
     function createShape(parent, type, option) {
+        if (option === void 0) { option = {}; }
         var _parent;
         if (parent instanceof GraphTableSVG.PPObject) {
             _parent = parent.svgGroup;

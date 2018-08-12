@@ -1,11 +1,11 @@
 namespace GraphTableSVG {
-    
+
     export class PPVertex extends PPTextBox {
-        protected setClassNameOfSVGGroup(){
+        protected setClassNameOfSVGGroup() {
             const parent = this.svgGroup.parentElement;
-            if(parent instanceof SVGElement){
+            if (parent instanceof SVGElement) {
                 const className = parent.getPropertyStyleValue(GraphTableSVG.PPGraph.defaultVertexClass);
-                if(className != null){
+                if (className != null) {
                     this.svgGroup.setAttribute("class", className);
                 }
             }
@@ -163,7 +163,69 @@ namespace GraphTableSVG {
             }
 
         }
+        /**
+        * 親Vertex配列を返します。
+        */
+        public getParents(): PPVertex[] {
+            return this.incomingEdges.filter((v) => v.beginVertex != null).map((v) => <PPVertex>v.beginVertex);
+        }
+        /**
+        親との間の辺を返します。
+        */
+        get parentEdge(): PPEdge | null {
+            if (this.incomingEdges.length == 0) {
+                return null;
+            } else {
+                return this.incomingEdges[0];
+            }
+        }
+        /**
+        このVertexの親を返します。
+        */
+        get parent(): PPVertex | null {
+            if (this.parentEdge == null) {
+                return null;
+            } else {
+                return this.parentEdge.beginVertex;
+            }
+        }
+        /**
+        このVertexに親がいないときTrueを返します。
+        */
+        get isNoParent(): boolean {
+            return this.parent == null;
+        }
 
+        /**
+        出辺配列を返します。
+        */
+        public get children(): PPVertex[] {
+            return this.outcomingEdges.filter((v) => v.endVertex != null).map((v) => <PPVertex>v.endVertex);
+        }
+
+        /**
+        このVertexが葉のときTrueを返します。
+        */
+        get isLeaf(): boolean {
+            return this.outcomingEdges.length == 0;
+        }
+        /**
+         * このVertexを頂点とする仮想部分木を作成します。
+         */
+        get tree(): PPVirtualSubTree {
+            return new PPVirtualSubTree(this);
+        }
+        /**
+        このVertexの領域を返します。
+        */
+        get region(): Rectangle {
+            const p = new Rectangle();
+            p.x = this.cx - (this.width / 2);
+            p.y = this.cy - (this.height / 2);
+            p.width = this.width;
+            p.height = this.height;
+            return p;
+        }
     }
 
 }
