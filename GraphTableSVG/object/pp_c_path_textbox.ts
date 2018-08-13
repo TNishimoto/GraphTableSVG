@@ -1,8 +1,8 @@
 namespace GraphTableSVG {
     export class PPPathTextBox extends PPVertex {
-        private _svgPath: SVGPathElement;
+        //private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {
-            return this._svgPath;
+            return <SVGPathElement>this.surface;
         }
         public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option);
@@ -11,7 +11,7 @@ namespace GraphTableSVG {
             //this.update();
         }
         protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
-            this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
+            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
 
@@ -33,9 +33,6 @@ namespace GraphTableSVG {
         }
         protected get shape(): string {
             return "NONE";
-        }
-        public get surface(): SVGElement {
-            return this.svgPath;
         }
         private getVBAEditLine(id: number): string {
             const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));

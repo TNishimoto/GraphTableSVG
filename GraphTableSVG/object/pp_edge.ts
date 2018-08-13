@@ -13,16 +13,16 @@ namespace GraphTableSVG {
             }
         }
 
-        private _svgPath: SVGPathElement;
+        //private _svgPath: SVGPathElement | null;
         public get svgPath(): SVGPathElement {
-            return this._svgPath;
+            return <SVGPathElement>this.surface;
         }
         protected _svgTextPath: SVGTextPathElement;
         public get svgTextPath(): SVGTextPathElement {
             return this._svgTextPath;
         }
         protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
-            this._svgPath = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
+            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         protected get shape(): string {
@@ -31,9 +31,11 @@ namespace GraphTableSVG {
         public get type(): string {
             return "PPEdge";
         }
+        /*
         public get surface() : SVGElement {
             return this.svgPath;
         }
+        */
         public tag: any;
         /**
          * 開始位置の矢印オブジェクトを返します。
@@ -99,7 +101,8 @@ namespace GraphTableSVG {
          */
         public get controlPoint(): [number, number][] {
             const r = this.pathPoints
-            r.shift().pop();
+            r.shift()
+            r.pop();
             return r;
         }
         public set controlPoint(value: [number, number][]) {
@@ -153,12 +156,12 @@ namespace GraphTableSVG {
         */
         static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: PPEdgeAttributes = {}): PPEdgeAttributes {
             PPTextBox.constructAttributes(e, removeAttributes, output);
-            output.x1 = e.gtGetAttributeNumber("x1", 0);
-            output.x2 = e.gtGetAttributeNumber("x2", 300);
-            output.y1 = e.gtGetAttributeNumber("y1", 0);
-            output.y2 = e.gtGetAttributeNumber("y2", 300);
-            output.beginVertex = e.getAttribute("begin-vertex");
-            output.endVertex = e.getAttribute("end-vertex");
+            output.x1 = e.gtGetAttributeNumberWithoutNull("x1", 0);
+            output.x2 = e.gtGetAttributeNumberWithoutNull("x2", 300);
+            output.y1 = e.gtGetAttributeNumberWithoutNull("y1", 0);
+            output.y2 = e.gtGetAttributeNumberWithoutNull("y2", 300);
+            if(e.hasAttribute("begin-vertex")) output.beginVertex = <string>e.getAttribute("begin-vertex");
+            if(e.hasAttribute("end-vertex"))output.endVertex = <string>e.getAttribute("end-vertex");
             output.beginConnectorType = ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("begin-connector", "auto"));
             output.endConnectorType = ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("end-connector", "auto"));
 
@@ -191,7 +194,7 @@ namespace GraphTableSVG {
             this.svgPath.id = `path-${this.objectID}`;
 
             this.svgText.appendChild(this._svgTextPath);
-            this._svgTextPath.href.baseVal = `#${this._svgPath.id}`
+            this._svgTextPath.href.baseVal = `#${this.svgPath.id}`
             if(option.text != undefined){
                 this.svgTextPath.setTextContent(option.text);
             }
@@ -218,15 +221,17 @@ namespace GraphTableSVG {
             //if(option.x1 != undefined) this.x1 = option.x1;
 
             const edgeColor = this.svgPath.getPropertyStyleValue("stroke");
+            const edgeColor2 = edgeColor == null ? undefined : edgeColor;
             const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
+            const strokeWidth2 = strokeWidth == null ? undefined : strokeWidth;
 
             const markerStartName = this.svgGroup.getPropertyStyleValue(Edge.markerStartName);
             const markerEndName = this.svgGroup.getPropertyStyleValue(Edge.markerEndName);
 
             if(option.startMarker == undefined && markerStartName != null) option.startMarker = markerStartName == "true";
             if(option.endMarker == undefined && markerEndName != null) option.endMarker = markerEndName == "true";
-            if (option.startMarker) this.markerStart = GraphTableSVG.Edge.createStartMarker({ color: edgeColor, strokeWidth: strokeWidth });
-            if (option.endMarker) this.markerEnd = GraphTableSVG.Edge.createEndMarker({ color: edgeColor, strokeWidth: strokeWidth });
+            if (option.startMarker) this.markerStart = GraphTableSVG.Edge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+            if (option.endMarker) this.markerEnd = GraphTableSVG.Edge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
             const x1 = option.x1 == undefined ? 0 : option.x1;
             const y1 = option.y1 == undefined ? 0 : option.y1;
@@ -289,14 +294,22 @@ namespace GraphTableSVG {
             return this.svgGroup.getAttribute(Edge.beginNodeName);
         }
         private set beginVertexID(v: string | null) {
-            this.svgGroup.setAttribute(Edge.beginNodeName, v);
+            if(v == null){
+                this.svgGroup.removeAttribute(Edge.beginNodeName);
+            }else{
+                this.svgGroup.setAttribute(Edge.beginNodeName, v);
+            }
         }
 
         private get endVertexID(): string | null {
             return this.svgGroup.getAttribute(Edge.endNodeName);
         }
         private set endVertexID(v: string | null) {
-            this.svgGroup.setAttribute(Edge.endNodeName, v == null ? null : v);
+            if(v == null){
+                this.svgGroup.removeAttribute(Edge.endNodeName);
+            }else{
+                this.svgGroup.setAttribute(Edge.endNodeName, v);
+            }
         }
 
         private removeVertexEvent(vertex : PPTextBox){
@@ -332,6 +345,7 @@ namespace GraphTableSVG {
                 this.beginVertexID = null;
             } else {
                 this.beginVertexID = value.objectID;
+                if(this.beginVertex == null) throw Error("error");
                 this.addVertexEvent(this.beginVertex);
                 if(this.beginVertex.outcomingEdges.indexOf(this) == -1){
                     this.beginVertex.insertOutcomingEdge(this);
@@ -368,6 +382,7 @@ namespace GraphTableSVG {
                 this.endVertexID = null;
             } else {
                 this.endVertexID = value.objectID;
+                if(this.endVertex == null) throw Error("error");
                 this.addVertexEvent(this.endVertex);
                 if(this.endVertex.incomingEdges.indexOf(this) == -1){
                     this.endVertex.insertIncomingEdge(this);
@@ -453,7 +468,7 @@ namespace GraphTableSVG {
             this.removeTextLengthAttribute();
             const box = this.svgText.getBBox();
             const diff = value - box.width;
-            const number = this.svgText.textContent.length;
+            const number = this.svgText.textContent != null ? this.svgText.textContent.length : 0;
             if (number >= 2) {
                 const w = diff / (number - 1)
                 this.svgText.setAttribute("letter-spacing", `${w}`);
@@ -463,7 +478,9 @@ namespace GraphTableSVG {
 
         }
         private get pathPoints(): [number, number][] {
-            const d = this.svgPath.getAttribute("d").split(" ");
+            const dAttr = this.svgPath.getAttribute("d");
+            if(dAttr == null) throw Error("error");
+            const d = dAttr.split(" ");
             let i = 0;
             const r: [number, number][] = [];
 
@@ -650,9 +667,14 @@ namespace GraphTableSVG {
             beginVertex?: Vertex, endVertex?: Vertex, beginConnectorType?: ConnectorPosition, endConnectorType?: ConnectorPosition,
             incomingInsertIndex?: number, outcomingInsertIndex?: number, text?: string, pathTextAlignment?: pathTextAlighnment
         } = {}): GraphTableSVG.Edge {
-            if (option.className == undefined) option.className = graph.defaultEdgeClass;
-            if (option.surfaceType == undefined) option.surfaceType = null;
-            option.className = option.className != null ? option.className : graph.defaultVertexClass;
+            if (option.className == undefined && graph.defaultEdgeClass != null) option.className = graph.defaultEdgeClass;
+            //if (option.surfaceType == undefined) option.surfaceType = null;
+            if(option.className != null){
+                option.className = option.className;
+            }else if(graph.defaultVertexClass != null){
+                option.className = graph.defaultVertexClass;
+
+            }
             const g = SVG.createGroup(graph.svgGroup, option.className);
             //graph.svgGroup.appendChild(g);
 

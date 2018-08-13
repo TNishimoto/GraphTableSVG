@@ -15,11 +15,12 @@ namespace GraphTableSVG {
         }
         static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : ShapeArrowCalloutAttributes = {}) : ShapeArrowCalloutAttributes {        
             PPTextBox.constructAttributes(e, removeAttributes, output);
-            output.arrowNeckWidth = e.gtGetAttributeNumber("arrow-neck-width", 10);
-            output.arrowNeckHeight = e.gtGetAttributeNumber("arrow-neck-height", 10);
-            output.arrowHeadWidth = e.gtGetAttributeNumber("arrow-head-width", 20);
-            output.arrowHeadHeight = e.gtGetAttributeNumber("arrow-head-height", 20);
-            output.direction = Direction.toDirection(e.getAttribute("direction"));
+            output.arrowNeckWidth = e.gtGetAttributeNumberWithoutNull("arrow-neck-width", 10);
+            output.arrowNeckHeight = e.gtGetAttributeNumberWithoutNull("arrow-neck-height", 10);
+            output.arrowHeadWidth = e.gtGetAttributeNumberWithoutNull("arrow-head-width", 20);
+            output.arrowHeadHeight = e.gtGetAttributeNumberWithoutNull("arrow-head-height", 20);
+            const p = <string>e.gtGetAttribute("direction", "");
+            output.direction = Direction.toDirection(p);
 
             if(removeAttributes){
                 e.removeAttribute("arrow-neck-width");
@@ -49,28 +50,28 @@ namespace GraphTableSVG {
             return "ShapeArrow";
         }
         get arrowNeckWidth(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-arrow-neck-width", 0);
+            return this.svgGroup.gtGetAttributeNumberWithoutNull("data-arrow-neck-width", 0);
         }
         set arrowNeckWidth(value: number) {
             if (this.arrowNeckWidth != value) this.svgGroup.setAttribute("data-arrow-neck-width", value.toString());
 
         }
         get arrowNeckHeight(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-arrow-neck-height", 0);
+            return this.svgGroup.gtGetAttributeNumberWithoutNull("data-arrow-neck-height", 0);
         }
         set arrowNeckHeight(value: number) {
             if (this.arrowNeckHeight != value) this.svgGroup.setAttribute("data-arrow-neck-height", value.toString());
 
         }
         get arrowHeadWidth(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-arrow-head-width", 0);
+            return this.svgGroup.gtGetAttributeNumberWithoutNull("data-arrow-head-width", 0);
         }
         set arrowHeadWidth(value: number) {
             if (this.arrowHeadWidth != value) this.svgGroup.setAttribute("data-arrow-head-width", value.toString());
 
         }
         get arrowHeadHeight(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-arrow-head-height", 0);
+            return this.svgGroup.gtGetAttributeNumberWithoutNull("data-arrow-head-height", 0);
         }
         set arrowHeadHeight(value: number) {
             if (this.arrowHeadHeight != value) this.svgGroup.setAttribute("data-arrow-head-height", value.toString());

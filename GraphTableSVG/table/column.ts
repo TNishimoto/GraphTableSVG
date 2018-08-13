@@ -84,9 +84,9 @@ namespace GraphTableSVG {
         }
 
         constructor(_table: Table, _x: number, _width : number = 30) {
+            this.table = _table;
             this._svgGroup = SVG.createGroup(this.table.svgGroup);
 
-            this.table = _table;
 
             //this.table.svgGroup.appendChild(this._svgGroup);
             this.cellX = _x;

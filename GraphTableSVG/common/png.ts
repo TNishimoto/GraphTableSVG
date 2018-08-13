@@ -28,8 +28,10 @@ namespace GraphTableSVG {
          */
         export function createCanvasFromImage(img : HTMLImageElement) : HTMLCanvasElement {
             const canvas = document.createElement("canvas");
+            if(img.style.width != null && img.style.height != null){
             canvas.setAttribute("width", img.style.width);
             canvas.setAttribute("height", img.style.height);
+            }
             //canvas.style.height = img.style.height;    
             return canvas;
         }
@@ -54,7 +56,7 @@ namespace GraphTableSVG {
             const userAgent = window.navigator.userAgent;
             if (userAgent.indexOf("Firefox") != -1) {
                 alert(`Firefox is not supported!`);
-                return;
+                throw Error("not supported error");
             }
             const svgBox = document.getElementById(id);
             if (svgBox == null) throw Error("Error");

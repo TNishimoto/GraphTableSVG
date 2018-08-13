@@ -101,11 +101,11 @@
             "msoLineSquareDot": msoDashStyle.msoLineSquareDot,
             "msoLineSolid": msoDashStyle.msoLineSolid
         }
-        export function toMSODashStyle(value: string): msoDashStyle | null {
+        export function toMSODashStyle(value: string): msoDashStyle {
             if (value in typeDic) {
                 return typeDic[value];
             } else {
-                return null;
+                return msoLineSolid;
             }
         }
         function computeDashArray(type: msoDashStyle, width: number): string {
@@ -118,7 +118,7 @@
 
         export function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void {
             if (toMSODashStyle(type) != null) {
-                const width = svgLine.getPropertyStyleNumberValue("stroke-width", null);
+                const width = <number>svgLine.getPropertyStyleNumberValue("stroke-width", 2);
                 svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
                 svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
                 svgLine.setPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName, type);
@@ -145,7 +145,7 @@
 
     export type Direction = "up" | "left" | "right" | "down";
     export namespace Direction {
-        export function toDirection(value: string): Direction {
+        export function toDirection(value: string | null): Direction {
             if (value == "up") {
                 return "up";
             } else if (value == "left") {

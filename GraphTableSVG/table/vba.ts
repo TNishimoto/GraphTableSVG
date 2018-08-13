@@ -343,9 +343,9 @@ End Sub
                     const child = item.children.item(i);
                     if (child.textContent != null && child.textContent.length > 0) {
                         const css = getComputedStyle(child);
-                        const childColor = Color.createRGBFromColorName(css.fill);
+                        const childColor = Color.createRGBFromColorName(css.fill == null ? "black" : css.fill);
                         const fontName = this.getFont(css);
-                        const fontSize = Common.toPX(css.fontSize);
+                        const fontSize = Common.toPX(css.fontSize == null ? "14pt" : css.fontSize);
                         const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
                         const len = child.textContent.length;
 
@@ -359,7 +359,12 @@ End Sub
 
                 }
             } else if (item.textContent != null && item.textContent.length > 0) {
+
                 const css = getComputedStyle(item);
+                if(css.fontSize == null) throw Error("error");
+                if(css.fill == null) throw Error("error");
+
+
                 const color = Color.createRGBFromColorName(css.fill);
                 const fontName = this.getFont(css);
                 const fontSize = Common.toPX(css.fontSize);
@@ -369,6 +374,7 @@ End Sub
             }
         }
         private static getFont(css : CSSStyleDeclaration) : string{
+            if(css.fontFamily == null) throw Error("error");
             const arr = css.fontFamily.split(",");
             if(arr.length > 0){
                 let name = arr[0];
@@ -392,6 +398,9 @@ End Sub
                     const child = item.children.item(i);
                     if (child.textContent != null && child.textContent.length > 0) {
                         const css = getComputedStyle(child);
+                        if(css.fontSize == null) throw Error("error");
+                        if(css.fill == null) throw Error("error");
+
                         const childColor = Color.createRGBFromColorName(css.fill);
                         const fontName = this.getFont(css);
                         const fontSize = Common.toPX(css.fontSize);
@@ -408,7 +417,10 @@ End Sub
 
                 }
             } else if (item.textContent != null && item.textContent.length > 0) {
-                const css = getComputedStyle(item);
+                const css = getComputedStyle(item);                
+                if(css.fontSize == null) throw Error("error");
+                if(css.fill == null) throw Error("error");
+
                 const color = Color.createRGBFromColorName(css.fill);
                 const fontName = this.getFont(css);
                 const fontSize = Common.toPX(css.fontSize);

@@ -48,7 +48,7 @@ namespace GraphTableSVG {
         入辺配列を返します。
         */
         get outcomingEdges(): PPEdge[] {
-            const p = <number[]>JSON.parse(this.svgGroup.gtGetAttribute("outcoming-edges", "[]"));
+            const p = <number[]>JSON.parse(<string>this.svgGroup.gtGetAttribute("outcoming-edges", "[]"));
             const p2 = p.map((v) => PPObject.getObjectFromObjectID(v.toString()));
             return <PPEdge[]>p2;
         }
@@ -64,7 +64,7 @@ namespace GraphTableSVG {
         出辺配列を返します。
         */
         get incomingEdges(): PPEdge[] {
-            const p = <number[]>JSON.parse(this.svgGroup.gtGetAttribute("incoming-edges", "[]"));
+            const p = <number[]>JSON.parse(<string>this.svgGroup.gtGetAttribute("incoming-edges", "[]"));
             const p2 = p.map((v) => PPObject.getObjectFromObjectID(v.toString()));
             return <PPEdge[]>p2;
 

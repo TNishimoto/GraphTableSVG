@@ -19,6 +19,7 @@ namespace GraphTableSVG {
             }
             return null;
         }
+        protected _surface : SVGElement | null = null;
         private _svgGroup: SVGGElement;
         /**
         セルを表しているSVGGElementを返します。
@@ -29,6 +30,10 @@ namespace GraphTableSVG {
         get isLocated(): boolean {
             return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }
+        public get surface(): SVGElement | null {
+            return this._surface;
+        }
+
         /**
     このVertexのX座標を返します。
     */

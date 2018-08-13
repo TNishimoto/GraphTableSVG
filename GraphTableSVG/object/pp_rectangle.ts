@@ -1,11 +1,7 @@
 namespace GraphTableSVG {
     export class PPRectangle extends PPVertex  {
-        private _svgRectangle: SVGRectElement;
         public get svgRectangle(): SVGRectElement {
-            return this._svgRectangle;
-        }
-        public get surface() : SVGElement {
-            return this.svgRectangle;
+            return <SVGRectElement>this._surface;
         }
 
         public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
@@ -16,7 +12,7 @@ namespace GraphTableSVG {
             this.update();
         }
         protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
-            this._svgRectangle = SVG.createRectangle(this.svgGroup, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
+            this._surface = SVG.createRectangle(this.svgGroup, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
         }
 

@@ -140,6 +140,7 @@ namespace GraphTableSVG {
                 * @param option.endConnectorType endVertexの接続位置
                 */
         public connect(beginVertex: PPVertex, edge: PPEdge, endVertex: PPVertex, option: ConnectOption = {}) {
+
             const oIndex = option.outcomingInsertIndex == undefined ? beginVertex.outcomingEdges.length : option.outcomingInsertIndex;
             const iIndex = option.incomingInsertIndex == undefined ? endVertex.incomingEdges.length : option.incomingInsertIndex;
             //this._connect(node1, edge, node2);
@@ -214,6 +215,63 @@ namespace GraphTableSVG {
             if (this._relocateFunction != null) this._relocateFunction(this);
         }
 
+        /**
+        * LogicTreeから木を構築します。
+        * @param roots 
+        * @param isLatexMode 
+        */
+        public constructFromLogicTree(roots: LogicTree[] | LogicTree, option: { x?: number, y?: number, isLatexMode?: boolean } = {}) {
+            if (option.isLatexMode == undefined) option.isLatexMode = false;
+            if (roots instanceof Array) {
+                this.clear();
+                roots.forEach((v) => {
+                    if (v != null) {
+                        this.createChildFromLogicTree(null, v, option);
+                    }
+                });
+                if (this.relocateFunction == null) {
+                this.relocateFunction = GraphTableSVG.PPTreeArrangement.alignVerticeByChildren;
+                } else {
+                    this.relocate();
+                }
+
+            } else {
+                this.constructFromLogicTree([roots], option);
+            }
+            if (option.x != undefined) this.svgGroup.setX(option.x);
+            if (option.y != undefined) this.svgGroup.setY(option.y);
+
+            //this.roots = roots;
+        }
+        /**
+         * 入力のVertexを親として、入力のLogicTreeを子とした部分木を作成します。
+         * @param parent 親にするVertex
+         * @param logicVertex 子にするLogicTree
+         * @param option 作成オプション
+         * @returns logicVertexを表すVertex
+         */
+        private createChildFromLogicTree<T>(parent: PPVertex | null = null, logicVertex: LogicTree, option: { isLatexMode?: boolean } = {}): PPVertex {
+            if (option.isLatexMode == undefined) option.isLatexMode = false;
+            
+            const node : PPVertex = <any>GraphTableSVG.createShape(this, 'g-ellipse', { class: logicVertex.vertexClass });
+            if (logicVertex.vertexText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
+            if (parent != null) {
+                const edge : PPEdge = <any>GraphTableSVG.createShape(this, 'g-line', { class: logicVertex.parentEdgeClass });
+                if (logicVertex.parentEdgeText != null) {
+                    edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
+                    edge.pathTextAlignment = pathTextAlighnment.regularInterval;
+                    //edge.svgText.setTextContent(tree.edgeLabel, isLatexMode);
+                }
+                this.connect(parent, edge, node, { beginConnectorType: "bottom", endConnectorType: "top" });
+            } else {
+                this.roots.push(node);
+            }
+            logicVertex.children.forEach((v) => {
+                if (v != null) this.createChildFromLogicTree(node, v, option);
+            });
+            //this.createdNodeCallback(node);
+            return node;
+        }
     }
 
 

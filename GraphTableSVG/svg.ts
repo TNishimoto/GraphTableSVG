@@ -518,7 +518,7 @@ namespace GraphTableSVG {
          */
         export function setCSSToStyle(svg: HTMLElement, isComplete: boolean = true) {
             if (isComplete) {
-                const css: CSSStyleDeclaration = getCSSStyle(svg);
+                const css: CSSStyleDeclaration | null = getCSSStyle(svg);
                 if (css != null) {
                     for (let i = 0; i < css.length; i++) {
                         const name = css.item(i);
@@ -561,6 +561,7 @@ namespace GraphTableSVG {
                     return null;
                 } else {
                     const css = getCSSStyle(item);
+                    if(css == null) throw Error("error");
                     //const css = getComputedStyle(item);
                     const p2 = css.getPropertyValue(name).trim();
                     if (p2.length == 0) {

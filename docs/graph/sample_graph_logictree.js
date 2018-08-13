@@ -14,8 +14,7 @@ window.onload = () => {
     node4.children.push(node5);
     node4.children.push(node6);
 
-    const box = document.getElementById('svgbox');
-    graph = new GraphTableSVG.Tree(box);
+    graph = GraphTableSVG.createShape('svgbox', 'g-graph');
     graph.constructFromLogicTree(node1, {x : 50, y : 50});
     
 };

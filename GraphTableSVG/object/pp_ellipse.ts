@@ -1,11 +1,7 @@
 namespace GraphTableSVG {
     export class PPEllipse extends PPVertex {
-        private _svgEllipse: SVGEllipseElement;
         public get svgEllipse(): SVGEllipseElement {
-            return this._svgEllipse;
-        }
-        public get surface() : SVGElement {
-            return this.svgEllipse;
+            return <SVGEllipseElement>this._surface;
         }
 
         public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
@@ -13,7 +9,7 @@ namespace GraphTableSVG {
             //this.update();
         }
         protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
-            this._svgEllipse = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
+            this._surface = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
         }
 

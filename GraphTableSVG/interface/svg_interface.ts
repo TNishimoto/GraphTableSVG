@@ -1,11 +1,13 @@
 interface SVGElement {
     getActiveStyle(): CSSStyleDeclaration;
     getPropertyStyleValue(name: string): string | null;
-    getPropertyStyleNumberValue(name: string, defaultValue: number): number | null;
+    getPropertyStyleNumberValue(name: string, defaultValue: number | null): number | null;
 
     getPropertyStyleValueWithDefault(name: string, defaultValue: string): string;
     setPropertyStyleValue(name: string, value: string | null): void;
     gtGetAttributeNumber(name: string, defaultValue: number | null): number | null;
+    gtGetAttributeNumberWithoutNull(name: string, defaultValue: number): number;
+
     gtGetAttribute(name: string, defaultValue: string | null): string | null;
 
     gtGetAttributes() : {name : string, value : string}[];
@@ -33,7 +35,9 @@ SVGElement.prototype.gtGetAttributes = function () {
     const r: {name : string, value : string}[] = [];
     for(let i=0;i<p.attributes.length;i++){
         const item = p.attributes.item(i);
-        r.push({name : item.name, value : item.value});
+        if(item != null){
+            r.push({name : item.name, value : item.value});
+        }
     }
     return r;
 }
@@ -47,6 +51,16 @@ SVGElement.prototype.getActiveStyle = function () {
     }
 }
 SVGElement.prototype.gtGetAttributeNumber = function(name: string, defaultValue: number | null = null): number | null{
+    const item: SVGElement = this;
+
+    const value = item.getAttribute(name);
+    if (value != null) {
+        return Number(value);
+    } else {
+        return defaultValue;
+    }
+}
+SVGElement.prototype.gtGetAttributeNumberWithoutNull = function(name: string, defaultValue: number = 0): number{
     const item: SVGElement = this;
 
     const value = item.getAttribute(name);

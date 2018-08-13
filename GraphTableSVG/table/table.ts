@@ -293,10 +293,10 @@ namespace GraphTableSVG {
             [this.x, this.y] = [option.x, option.y];
 
             if(option.rowHeight != undefined){
-                this.rows.forEach((v)=>v.height = option.rowHeight);
+                this.rows.forEach((v)=>v.height = <number>option.rowHeight);
             }
             if(option.columnWidth != undefined){
-                this.columns.forEach((v)=>v.width = option.columnWidth);
+                this.columns.forEach((v)=>v.width = <number>option.columnWidth);
             }
 
 
@@ -448,14 +448,14 @@ namespace GraphTableSVG {
 
             table.forEach((v, y) => {
                 v.forEach((str, x) => {
-                    this.cells[y][x].svgText.setTextContent(str, option.isLatexMode);
+                    this.cells[y][x].svgText.setTextContent(str, <boolean>option.isLatexMode);
                 })
             })
             if(option.rowHeight != undefined){
-                this.rows.forEach((v)=>v.height = option.rowHeight);
+                this.rows.forEach((v)=>v.height = <number>option.rowHeight);
             }
             if(option.columnWidth != undefined){
-                this.columns.forEach((v)=>v.width = option.columnWidth);
+                this.columns.forEach((v)=>v.width = <number>option.columnWidth);
             }
 
         }

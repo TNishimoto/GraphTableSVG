@@ -25,18 +25,15 @@ namespace GraphTableSVG {
             }
             if (b) this.update();
         };
-        public get surface(): SVGElement {
-            return undefined;
-        }
-
+        
         static constructAttributes(e: SVGElement,
             removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): TextBoxShapeAttributes {
-            output.class = e.getAttribute("class")
-            output.cx = e.gtGetAttributeNumber("cx", 0);
-            output.cy = e.gtGetAttributeNumber("cy", 0);
-            output.text = e.getAttribute("text");
-            output.width = e.gtGetAttributeNumber("width", 100);
-            output.height = e.gtGetAttributeNumber("height", 100);
+            if(e.hasAttribute("class"))output.class = <string>e.getAttribute("class")
+            output.cx = e.gtGetAttributeNumberWithoutNull("cx", 0);
+            output.cy = e.gtGetAttributeNumberWithoutNull("cy", 0);
+            if(e.hasAttribute("text"))output.text = <string>e.getAttribute("text");
+            output.width = e.gtGetAttributeNumberWithoutNull("width", 100);
+            output.height = e.gtGetAttributeNumberWithoutNull("height", 100);
 
             output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false") == "true";
 
@@ -87,7 +84,6 @@ namespace GraphTableSVG {
         }
         public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option)
-
 
             this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);

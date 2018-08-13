@@ -84,10 +84,12 @@ namespace GraphTableSVG {
         } else {
             const element = id;
             const type = ShapeObjectType.toShapeObjectType(element.nodeName);
-            return createCustomElement(element, type);
+            if(type != null){
+                return createCustomElement(element, type);
+            }
         }
     }
-    function createCustomElement(e: SVGElement, type: ShapeObjectType): PPTextBox {
+    function createCustomElement(e: SVGElement, type: ShapeObjectType): PPTextBox | null {
         const parent = e.parentElement;
         if (parent instanceof SVGElement) {
             let r: PPTextBox;
@@ -157,7 +159,7 @@ namespace GraphTableSVG {
         if(parent instanceof PPObject){
             _parent = parent.svgGroup;
         }else if(parent instanceof SVGElement){
-
+            _parent = parent;
         }else{
             _parent = <any>document.getElementById(parent);
         }
@@ -170,5 +172,6 @@ namespace GraphTableSVG {
             case ShapeObjectType.Line : return new PPEdge(_parent, option);
             case ShapeObjectType.Graph : return new PPGraph(_parent, option);
         }
+        throw Error("error");
     }
 }
