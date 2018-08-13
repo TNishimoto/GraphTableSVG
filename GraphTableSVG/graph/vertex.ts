@@ -2,7 +2,7 @@
     /**
      * 頂点をSVGで表現するためのクラスです。
      */
-    export class Vertex {
+    export class ObsoleteVertex {
         //public symbol: symbol = Symbol();
         public static readonly defaultSurfaceType: string = "--default-surface-type";
         //public static readonly defaultTextClass: string = "--default-text-class";
@@ -13,9 +13,9 @@
 
 
 
-        private _graph: Graph | null = null;
-        protected _outcomingEdges: Edge[] = [];
-        protected _incomingEdges: Edge[] = [];
+        private _graph: ObsoleteGraph | null = null;
+        protected _outcomingEdges: ObsoleteEdge[] = [];
+        protected _incomingEdges: ObsoleteEdge[] = [];
         public tag: any;
 
         private _svgGroup: SVGGElement;
@@ -46,7 +46,7 @@
             }
         };
 
-        constructor(graph: Graph, params: { className?: string, text?: string, x?: number, y?: number } = {}) {
+        constructor(graph: ObsoleteGraph, params: { className?: string, text?: string, x?: number, y?: number } = {}) {
             if (params.className == undefined) {
                 params.className = graph.defaultVertexClass;
             }
@@ -59,7 +59,7 @@
             this._svgGroup = g
             //this._svgGroup = GraphTableSVG.createGroup(className);
             this.svgGroup.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
-            this.svgGroup.setAttribute(Graph.typeName, "vertex");
+            this.svgGroup.setAttribute(ObsoleteGraph.typeName, "vertex");
             this._graph = graph;
             graph.add(this);
 
@@ -93,7 +93,7 @@
         /**
         所属しているグラフを返します。
         */
-        get graph(): Graph | null {
+        get graph(): ObsoleteGraph | null {
             return this._graph;
         }
 
@@ -115,13 +115,13 @@
         /**
         入辺配列を返します。
         */
-        get outcomingEdges(): Edge[] {
+        get outcomingEdges(): ObsoleteEdge[] {
             return this._outcomingEdges;
         }
         /**
         出辺配列を返します。
         */
-        get incomingEdges(): Edge[] {
+        get incomingEdges(): ObsoleteEdge[] {
             return this._incomingEdges;
         }
 
@@ -255,7 +255,7 @@
                 }
 
             }
-            Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
+            ObsoleteGraph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
 
             this.incomingEdges.forEach((v) => v.update());
             this.outcomingEdges.forEach((v) => v.update());
@@ -287,13 +287,13 @@
         /**
          * 親Vertex配列を返します。
          */
-        public getParents(): Vertex[] {
-            return this.incomingEdges.filter((v) => v.beginVertex != null).map((v) => <Vertex>v.beginVertex);
+        public getParents(): ObsoleteVertex[] {
+            return this.incomingEdges.filter((v) => v.beginVertex != null).map((v) => <ObsoleteVertex>v.beginVertex);
         }
         /**
         親との間の辺を返します。
         */
-        get parentEdge(): Edge | null {
+        get parentEdge(): ObsoleteEdge | null {
             if (this.incomingEdges.length == 0) {
                 return null;
             } else {
@@ -306,7 +306,7 @@
          */
         get isAutoSizeShapeToFitText(): boolean {
             if (this.surface != null) {
-                var v = this.surface.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false");
+                var v = this.surface.getPropertyStyleValueWithDefault(ObsoleteVertex.autoSizeShapeToFitTextName, "false");
                 return v == "true";
             } else {
                 return false;
@@ -314,7 +314,7 @@
         }
         set isAutoSizeShapeToFitText(value: boolean) {
             if (this.surface != null) {
-                this.surface.setPropertyStyleValue(Vertex.autoSizeShapeToFitTextName, value ? "true" : "false");
+                this.surface.setPropertyStyleValue(ObsoleteVertex.autoSizeShapeToFitTextName, value ? "true" : "false");
                 /*
                 if (this.isAutoSizeShapeToFitText != value) {
                     throw new Error("Value Error");
@@ -326,7 +326,7 @@
         /**
         このVertexの親を返します。
         */
-        get parent(): Vertex | null {
+        get parent(): ObsoleteVertex | null {
             if (this.parentEdge == null) {
                 return null;
             } else {
@@ -343,8 +343,8 @@
         /**
         出辺配列を返します。
         */
-        public get children(): Vertex[] {
-            return this.outcomingEdges.filter((v) => v.endVertex != null).map((v) => <Vertex>v.endVertex);
+        public get children(): ObsoleteVertex[] {
+            return this.outcomingEdges.filter((v) => v.endVertex != null).map((v) => <ObsoleteVertex>v.endVertex);
         }
 
         /**
@@ -357,8 +357,8 @@
         /**
         このVertexの根を返します。
         */
-        get firstNoParent(): Vertex {
-            let p: Vertex = this;
+        get firstNoParent(): ObsoleteVertex {
+            let p: ObsoleteVertex = this;
             let parent = p.parent;
             while (parent != null) {
                 p = parent;
@@ -369,8 +369,8 @@
         /**
          * このVertexを頂点とする仮想部分木を作成します。
          */
-        get tree(): VirtualSubTree {
-            return new VirtualSubTree(this);
+        get tree(): ObsoleteVirtualSubTree {
+            return new ObsoleteVirtualSubTree(this);
         }
 
 
@@ -401,31 +401,31 @@
          * @param option.width VertexがRectangleだったときの横幅
          * @param option.height VertexがRectangleだったときの縦幅
          */
-        public static create(graph: Graph, option: {
+        public static create(graph: ObsoleteGraph, option: {
             className?: string,
             surfaceType?: string, x?: number, y?: number, text?: string,
             radius?: number, width?: number, height?: number, isRoot?: boolean
-        } = {}): GraphTableSVG.Vertex {
+        } = {}): GraphTableSVG.ObsoleteVertex {
             //public static create(graph: Graph, {className: string | null = null, defaultSurfaceType: string | null = null, x: number = 0, y: number = 0}): GraphTableSVG.Vertex {
 
             if (option.className == undefined) option.className = graph.defaultVertexClass;
             const g = SVG.createGroup(graph.svgGroup, option.className);
             //graph.svgGroup.appendChild(g);
 
-            const gSurfaceType = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
+            const gSurfaceType = g.getPropertyStyleValue(ObsoleteVertex.defaultSurfaceType);
             if (option.surfaceType == undefined) option.surfaceType = gSurfaceType != null ? gSurfaceType : "circle";
             //graph.svgGroup.removeChild(g);
 
             if (option.x == undefined) option.x = 0;
             if (option.y == undefined) option.y = 0;
             if (option.text == undefined) option.text = "";
-            let p: Vertex;
+            let p: ObsoleteVertex;
             if (option.surfaceType == "circle") {
-                p = new CircleVertex(graph, option);
+                p = new ObsoleteCircleVertex(graph, option);
             } else if (option.surfaceType == "rectangle") {
-                p = new RectangleVertex(graph, option);
+                p = new ObsoleteRectangleVertex(graph, option);
             } else {
-                p = new Vertex(graph, option);
+                p = new ObsoleteVertex(graph, option);
             }
 
             if (option.isRoot) {
@@ -439,7 +439,7 @@
          * @param edge
          * @param insertIndex
          */
-        public insertOutcomingEdge(edge: Edge, insertIndex: number) {
+        public insertOutcomingEdge(edge: ObsoleteEdge, insertIndex: number) {
             const p = this.outcomingEdges.indexOf(edge);
             if (p != -1) {
                 throw new Error();
@@ -457,7 +457,7 @@
          * 出辺を削除します。
          * @param edge
          */
-        public removeOutcomingEdge(edge: Edge) {
+        public removeOutcomingEdge(edge: ObsoleteEdge) {
             const p = this.outcomingEdges.indexOf(edge);
             if (p != null) {
                 this.outcomingEdges.splice(p, 1);
@@ -469,7 +469,7 @@
          * @param edge
          * @param insertIndex
          */
-        public insertIncomingEdge(edge: Edge, insertIndex: number) {
+        public insertIncomingEdge(edge: ObsoleteEdge, insertIndex: number) {
             const p = this.incomingEdges.indexOf(edge);
             if (p != -1) {
                 throw new Error();
@@ -482,7 +482,7 @@
          * 入辺を削除します。
          * @param edge
          */
-        public removeIncomingEdge(edge: Edge) {
+        public removeIncomingEdge(edge: ObsoleteEdge) {
             const p = this.incomingEdges.indexOf(edge);
             if (p != null) {
                 this.incomingEdges.splice(p, 1);

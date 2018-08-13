@@ -3,7 +3,7 @@
     /**
     グラフを表します。
     */
-    export class Graph {
+    export class ObsoleteGraph {
         public static readonly defaultVertexClass: string = "--default-vertex-class";
         public static readonly defaultEdgeClass: string = "--default-edge-class";
         public static readonly vertexXIntervalName: string = "--vertex-x-interval";
@@ -12,16 +12,16 @@
         //public static readonly objectIDName: string = "data-objectID";
         public static readonly typeName: string = "data-type";
 
-        protected _vertices: Vertex[] = new Array(0);
-        protected _edges: Edge[] = new Array(0);
+        protected _vertices: ObsoleteVertex[] = new Array(0);
+        protected _edges: ObsoleteEdge[] = new Array(0);
         protected _svgGroup: SVGGElement;
-        protected _roots: Vertex[] = [];
+        protected _roots: ObsoleteVertex[] = [];
         constructor(box: HTMLElement, option: { graphClassName?: string } = {}) {
             if (option.graphClassName == undefined) option.graphClassName = null;
             this._svgGroup = GraphTableSVG.SVG.createGroup(box, option.graphClassName);
             //box.appendChild(this.svgGroup);
 
-            this._svgGroup.setAttribute(Graph.typeName, "graph");
+            this._svgGroup.setAttribute(ObsoleteGraph.typeName, "graph");
 
         }
         private updateVertices(): void {
@@ -50,7 +50,7 @@
         }
 
         public get vertexXInterval(): number | null {
-            const v = this.svgGroup.getPropertyStyleValue(Graph.vertexXIntervalName);
+            const v = this.svgGroup.getPropertyStyleValue(ObsoleteGraph.vertexXIntervalName);
             if (v == null) {
                 return null;
             } else {
@@ -58,10 +58,10 @@
             }
         }
         public set vertexXInterval(value: number | null) {
-            this.svgGroup.setPropertyStyleValue(Graph.vertexXIntervalName, value == null ? null : value.toString());
+            this.svgGroup.setPropertyStyleValue(ObsoleteGraph.vertexXIntervalName, value == null ? null : value.toString());
         }
         public get vertexYInterval(): number | null {
-            const v = this.svgGroup.getPropertyStyleValue(Graph.vertexYIntervalName);
+            const v = this.svgGroup.getPropertyStyleValue(ObsoleteGraph.vertexYIntervalName);
             if (v == null) {
                 return null;
             } else {
@@ -69,38 +69,38 @@
             }
         }
         public set vertexYInterval(value: number | null) {
-            this.svgGroup.setPropertyStyleValue(Graph.vertexYIntervalName, value == null ? null : value.toString());
+            this.svgGroup.setPropertyStyleValue(ObsoleteGraph.vertexYIntervalName, value == null ? null : value.toString());
         }
 
         /**
         Vertexインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
         */
         get defaultVertexClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(Graph.defaultVertexClass);
+            return this.svgGroup.getPropertyStyleValue(ObsoleteGraph.defaultVertexClass);
         }
         /**
         Vertexインスタンスの生成時のクラス名を設定します。
         */
         set defaultVertexClass(value: string | null) {
-            this.svgGroup.setPropertyStyleValue(Graph.defaultVertexClass, value);
+            this.svgGroup.setPropertyStyleValue(ObsoleteGraph.defaultVertexClass, value);
         }
 
         /**
         Edgeインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
         */
         get defaultEdgeClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(Graph.defaultEdgeClass);
+            return this.svgGroup.getPropertyStyleValue(ObsoleteGraph.defaultEdgeClass);
         }
         /**
         Edgeインスタンスの生成時のクラス名を設定します。
         */
         set defaultEdgeClass(value: string | null) {
-            this.svgGroup.setPropertyStyleValue(Graph.defaultEdgeClass, value);
+            this.svgGroup.setPropertyStyleValue(ObsoleteGraph.defaultEdgeClass, value);
         }
         /**
         根を返します。
         */
-        get rootVertex(): Vertex | null {
+        get rootVertex(): ObsoleteVertex | null {
             if (this.roots.length == 0) {
                 return null;
             } else {
@@ -110,7 +110,7 @@
         /**
         根を設定します。
         */
-        set rootVertex(value: Vertex | null) {
+        set rootVertex(value: ObsoleteVertex | null) {
             this._roots = [];
             if (value != null) {
                 this.roots.push(value);
@@ -119,7 +119,7 @@
         /**
         根の配列を返します。
         */
-        get roots(): Vertex[] {
+        get roots(): ObsoleteVertex[] {
             return this._roots;
         }
         /**
@@ -131,13 +131,13 @@
         /**
         グラフの頂点を全て返します。
         */
-        get vertices(): Vertex[] {
+        get vertices(): ObsoleteVertex[] {
             return this._vertices;
         }
         /**
         グラフの辺を全て返します。
         */
-        get edges(): Edge[] {
+        get edges(): ObsoleteEdge[] {
             return this._edges;
         }
 
@@ -145,8 +145,8 @@
          * 頂点もしくは辺をグラフに追加します。
          * @param item
          */
-        public add(item: Vertex | Edge): void {
-            if (item instanceof Vertex) {
+        public add(item: ObsoleteVertex | ObsoleteEdge): void {
+            if (item instanceof ObsoleteVertex) {
                 const i = this._vertices.indexOf(item);
                 if (i == -1 && item.graph == this) {
                     this._vertices.push(item);
@@ -170,8 +170,8 @@
          * 頂点もしくは辺を削除します。
          * @param item
          */
-        public remove(item: Vertex | Edge): void {
-            if (item instanceof Vertex) {
+        public remove(item: ObsoleteVertex | ObsoleteEdge): void {
+            if (item instanceof ObsoleteVertex) {
                 const p = this.vertices.indexOf(item);
                 if (p != -1) {
                     this._vertices.splice(p, 1);
@@ -213,7 +213,7 @@
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
             return rect;
         }
-        public getObject(child: HTMLElement | SVGElement): Vertex | Edge | null {
+        public getObject(child: HTMLElement | SVGElement): ObsoleteVertex | ObsoleteEdge | null {
             const id = child.getAttribute(GraphTableSVG.SVG.objectIDName);
             if (id != null) {
                 return this.getObjectByObjectID(id);
@@ -231,7 +231,7 @@
          * ObjectIDから頂点もしくは辺を返します。
          * @param id
          */
-        public getObjectByObjectID(id: string): Vertex | Edge | null {
+        public getObjectByObjectID(id: string): ObsoleteVertex | ObsoleteEdge | null {
             for (let i = 0; i < this.vertices.length; i++) {
                 if (this.vertices[i].containsObjectID(id)) {
                     return this.vertices[i];
@@ -250,7 +250,7 @@
          * @param option.beginConnectorType beginVertexの接続位置
          * @param option.endConnectorType endVertexの接続位置
          */
-        public connect(beginVertex: Vertex, edge: Edge, endVertex: Vertex,
+        public connect(beginVertex: ObsoleteVertex, edge: ObsoleteEdge, endVertex: ObsoleteVertex,
             option: {
                 outcomingInsertIndex?: number, incomingInsertIndex?: number,
                 beginConnectorType?: GraphTableSVG.ConnectorPosition, endConnectorType?: GraphTableSVG.ConnectorPosition
@@ -286,8 +286,8 @@
          * @param order
          * @param node
          */
-        public getOrderedVertices(order: VertexOrder, node: Vertex | null = null): Vertex[] {
-            const r: Vertex[] = [];
+        public getOrderedVertices(order: VertexOrder, node: ObsoleteVertex | null = null): ObsoleteVertex[] {
+            const r: ObsoleteVertex[] = [];
             if (node == null) {
                 this.roots.forEach((v) => {
                     this.getOrderedVertices(order, v).forEach((w) => {
@@ -444,7 +444,7 @@
                     }
                 });
                 if (this.relocateFunction == null) {
-                this.relocateFunction = GraphTableSVG.TreeArrangement.alignVerticeByChildren;
+                this.relocateFunction = GraphTableSVG.ObsoleteTreeArrangement.alignVerticeByChildren;
                 } else {
                     this.relocate();
                 }
@@ -464,14 +464,14 @@
          * @param option 作成オプション
          * @returns logicVertexを表すVertex
          */
-        private createChildFromLogicTree<T>(parent: Vertex | null = null, logicVertex: LogicTree, option: { isLatexMode?: boolean } = {}): Vertex {
+        private createChildFromLogicTree<T>(parent: ObsoleteVertex | null = null, logicVertex: LogicTree, option: { isLatexMode?: boolean } = {}): ObsoleteVertex {
             if (option.isLatexMode == undefined) option.isLatexMode = false;
 
-            const node = GraphTableSVG.Vertex.create(this, { className: logicVertex.vertexClass });
+            const node = GraphTableSVG.ObsoleteVertex.create(this, { className: logicVertex.vertexClass });
             //node.svgText.setTextContent(displayFunction(tree.item), isLatexMode);
             if (logicVertex.vertexText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
             if (parent != null) {
-                const edge = GraphTableSVG.Edge.create(this, { className: logicVertex.parentEdgeClass });
+                const edge = GraphTableSVG.ObsoleteEdge.create(this, { className: logicVertex.parentEdgeClass });
                 if (logicVertex.parentEdgeText != null) {
                     edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
                     edge.pathTextAlignment = pathTextAlighnment.regularInterval;
@@ -493,19 +493,19 @@
          * @param child 
          * @param option 
          */
-        public appendChild(parent: Vertex, child: Vertex, option: { insertIndex?: number } = {}) {
-            const edge = GraphTableSVG.Edge.create(this);
+        public appendChild(parent: ObsoleteVertex, child: ObsoleteVertex, option: { insertIndex?: number } = {}) {
+            const edge = GraphTableSVG.ObsoleteEdge.create(this);
             this.connect(parent, edge, child, { beginConnectorType: "bottom", endConnectorType: "top" });
             this.createdNodeCallback(child);
             this.relocate();
         }
 
-        public createdNodeCallback = (node: GraphTableSVG.Vertex) => { }
-        private _relocateFunction: ((Tree: Graph) => void) | null = null;
-        public get relocateFunction(): ((Tree: Graph) => void) | null {
+        public createdNodeCallback = (node: GraphTableSVG.ObsoleteVertex) => { }
+        private _relocateFunction: ((Tree: ObsoleteGraph) => void) | null = null;
+        public get relocateFunction(): ((Tree: ObsoleteGraph) => void) | null {
             return this._relocateFunction;
         }
-        public set relocateFunction(func: ((Tree: Graph) => void) | null) {
+        public set relocateFunction(func: ((Tree: ObsoleteGraph) => void) | null) {
             this._relocateFunction = func;
             this.relocate();
         }

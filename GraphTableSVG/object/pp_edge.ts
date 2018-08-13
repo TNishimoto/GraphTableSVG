@@ -225,13 +225,13 @@ namespace GraphTableSVG {
             const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
             const strokeWidth2 = strokeWidth == null ? undefined : strokeWidth;
 
-            const markerStartName = this.svgGroup.getPropertyStyleValue(Edge.markerStartName);
-            const markerEndName = this.svgGroup.getPropertyStyleValue(Edge.markerEndName);
+            const markerStartName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.markerStartName);
+            const markerEndName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.markerEndName);
 
             if(option.startMarker == undefined && markerStartName != null) option.startMarker = markerStartName == "true";
             if(option.endMarker == undefined && markerEndName != null) option.endMarker = markerEndName == "true";
-            if (option.startMarker) this.markerStart = GraphTableSVG.Edge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
-            if (option.endMarker) this.markerEnd = GraphTableSVG.Edge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+            if (option.startMarker) this.markerStart = GraphTableSVG.ObsoleteEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+            if (option.endMarker) this.markerEnd = GraphTableSVG.ObsoleteEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
             const x1 = option.x1 == undefined ? 0 : option.x1;
             const y1 = option.y1 == undefined ? 0 : option.y1;
@@ -266,49 +266,49 @@ namespace GraphTableSVG {
         開始接点の接続位置を返します。
         */
         get beginConnectorType(): ConnectorPosition {
-            const p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
+            const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.beginConnectorTypeName);
             return ConnectorPosition.ToConnectorPosition(p);
         }
         /**
         開始接点の接続位置を設定します。
         */
         set beginConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(Edge.beginConnectorTypeName, value)
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.beginConnectorTypeName, value)
             //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
         /**
         終了接点の接続位置を返します。
         */
         get endConnectorType(): ConnectorPosition {
-            const p = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
+            const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.endConnectorTypeName);
             return ConnectorPosition.ToConnectorPosition(p);
         }
         /**
         終了接点の接続位置を設定します。
         */
         set endConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(Edge.endConnectorTypeName, value)
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.endConnectorTypeName, value)
         }
 
         private get beginVertexID(): string | null {
-            return this.svgGroup.getAttribute(Edge.beginNodeName);
+            return this.svgGroup.getAttribute(CustomAttributeNames.beginNodeName);
         }
         private set beginVertexID(v: string | null) {
             if(v == null){
-                this.svgGroup.removeAttribute(Edge.beginNodeName);
+                this.svgGroup.removeAttribute(CustomAttributeNames.beginNodeName);
             }else{
-                this.svgGroup.setAttribute(Edge.beginNodeName, v);
+                this.svgGroup.setAttribute(CustomAttributeNames.beginNodeName, v);
             }
         }
 
         private get endVertexID(): string | null {
-            return this.svgGroup.getAttribute(Edge.endNodeName);
+            return this.svgGroup.getAttribute(CustomAttributeNames.endNodeName);
         }
         private set endVertexID(v: string | null) {
             if(v == null){
-                this.svgGroup.removeAttribute(Edge.endNodeName);
+                this.svgGroup.removeAttribute(CustomAttributeNames.endNodeName);
             }else{
-                this.svgGroup.setAttribute(Edge.endNodeName, v);
+                this.svgGroup.setAttribute(CustomAttributeNames.endNodeName, v);
             }
         }
 
@@ -615,6 +615,7 @@ namespace GraphTableSVG {
 
             }
             else {
+                this.svgTextPath.setAttribute("startOffset", `${0}`);
                 this.removeTextLengthAttribute();
                 //this.svgText.textLength.baseVal.value = 0;
             }
@@ -647,51 +648,6 @@ namespace GraphTableSVG {
         }
 
         public save() {
-        }
-        /**
-         * Edgeを作成します。
-         * @param graph 辺を追加するグラフ
-         * @param option.beginVertex 開始節
-         * @param option.endVertex 終了節
-         * @param option 接続オプション
-         * @param option.incomingInsertIndex endVertexのincomingEdgeの配列に今回の辺をどの位置に挿入するか
-         * @param option.outcomingInsertIndex beginVertexのoutcomingEdgeの配列に今回の辺をどの位置に挿入するか
-         * @param option.beginConnectorType beginVertexの接続位置
-         * @param option.endConnectorType endVertexの接続位置
-         * @param option.className EdgeのsvgGroupのクラス属性名
-         * @param option.surfaceType 未使用
-         * @param option.text Edgeのテキスト
-         */
-        public static create(graph: Graph, option: {
-            className?: string, surfaceType?: string,
-            beginVertex?: Vertex, endVertex?: Vertex, beginConnectorType?: ConnectorPosition, endConnectorType?: ConnectorPosition,
-            incomingInsertIndex?: number, outcomingInsertIndex?: number, text?: string, pathTextAlignment?: pathTextAlighnment
-        } = {}): GraphTableSVG.Edge {
-            if (option.className == undefined && graph.defaultEdgeClass != null) option.className = graph.defaultEdgeClass;
-            //if (option.surfaceType == undefined) option.surfaceType = null;
-            if(option.className != null){
-                option.className = option.className;
-            }else if(graph.defaultVertexClass != null){
-                option.className = graph.defaultVertexClass;
-
-            }
-            const g = SVG.createGroup(graph.svgGroup, option.className);
-            //graph.svgGroup.appendChild(g);
-
-            /*
-            const type1 = g.getPropertyStyleValue(Vertex.defaultSurfaceType);
-            const type = params.surfaceType != null ? params.surfaceType :
-                type1 != null ? type1 : "line";
-                */
-
-            const edge = new Edge(graph, g);
-            if (option.beginVertex != undefined && option.endVertex != undefined) {
-                graph.connect(option.beginVertex, edge, option.endVertex, option);
-            }
-            if (option.text != undefined) edge.svgTextPath.setTextContent(option.text);
-            if (option.pathTextAlignment == undefined) option.pathTextAlignment = pathTextAlighnment.center;
-            edge.pathTextAlignment = option.pathTextAlignment;
-            return edge;
         }
         public setIndexDictionaryForVBA(vertexDic: { [key: string]: number; }, edgeDic: { [key: string]: number; }) {
             if (this.controlPoint.length == 0) {

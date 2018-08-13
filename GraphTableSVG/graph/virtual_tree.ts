@@ -1,14 +1,14 @@
 ﻿namespace GraphTableSVG {
-    export class VirtualSubTree {
-        subTreeRoot: Vertex;
+    export class ObsoleteVirtualSubTree {
+        subTreeRoot: ObsoleteVertex;
 
-        constructor(_root: Vertex) {
+        constructor(_root: ObsoleteVertex) {
             this.subTreeRoot = _root;
         }
         /**
          * 根の子ノードの配列を返します。
          */
-        get children(): Vertex[] {
+        get children(): ObsoleteVertex[] {
             const p = this;
             return this.subTreeRoot.children.map(function (x, i, arr) {
                 return x;
@@ -18,7 +18,7 @@
         /**
          * 根の親との間の辺を返します。
          */
-        get parentEdge(): Edge | null {
+        get parentEdge(): ObsoleteEdge | null {
             return this.subTreeRoot.parentEdge;
         }
         
@@ -26,7 +26,7 @@
          * この木の中の全てのVertexを返します。
          * @param result 
          */
-        public getSubtree(result: Vertex[] = []): Vertex[] {
+        public getSubtree(result: ObsoleteVertex[] = []): ObsoleteVertex[] {
             result.push(this.subTreeRoot);
 
             const children = this.children;
@@ -85,7 +85,7 @@
         /**
          * 一番左の葉を返します。
          */
-        public get mostLeftLeave(): Vertex {
+        public get mostLeftLeave(): ObsoleteVertex {
             return this.leaves[0];
         }
 
@@ -119,7 +119,7 @@
         /**
          * 葉の配列を返します。
          */
-        get leaves(): Vertex[] {
+        get leaves(): ObsoleteVertex[] {
             const p = this;
             return this.getSubtree().filter(function (x, i, arr) {
                 return x.outcomingEdges.length == 0;

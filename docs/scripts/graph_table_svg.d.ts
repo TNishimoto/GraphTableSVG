@@ -278,7 +278,7 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class Edge {
+    class ObsoleteEdge {
         static readonly beginConnectorTypeName: string;
         static readonly endConnectorTypeName: string;
         static readonly defaultLineClass: string;
@@ -306,12 +306,12 @@ declare namespace GraphTableSVG {
         readonly svgPath: SVGPathElement;
         protected _svgText: SVGTextElement;
         readonly svgText: SVGTextElement;
-        constructor(__graph: Graph, g: SVGGElement);
+        constructor(__graph: ObsoleteGraph, g: SVGGElement);
         beginConnectorType: ConnectorPosition;
         endConnectorType: ConnectorPosition;
-        beginVertex: Vertex | null;
-        endVertex: Vertex | null;
-        readonly graph: Graph | null;
+        beginVertex: ObsoleteVertex | null;
+        endVertex: ObsoleteVertex | null;
+        readonly graph: ObsoleteGraph | null;
         dispose(): void;
         readonly isDisposed: boolean;
         readonly x1: number;
@@ -324,18 +324,18 @@ declare namespace GraphTableSVG {
         pathTextAlignment: pathTextAlighnment;
         readonly objectID: string;
         save(): void;
-        static create(graph: Graph, option?: {
+        static create(graph: ObsoleteGraph, option?: {
             className?: string;
             surfaceType?: string;
-            beginVertex?: Vertex;
-            endVertex?: Vertex;
+            beginVertex?: ObsoleteVertex;
+            endVertex?: ObsoleteVertex;
             beginConnectorType?: ConnectorPosition;
             endConnectorType?: ConnectorPosition;
             incomingInsertIndex?: number;
             outcomingInsertIndex?: number;
             text?: string;
             pathTextAlignment?: pathTextAlighnment;
-        }): GraphTableSVG.Edge;
+        }): GraphTableSVG.ObsoleteEdge;
         setIndexDictionaryForVBA(vertexDic: {
             [key: string]: number;
         }, edgeDic: {
@@ -367,8 +367,8 @@ declare namespace GraphTableSVG {
         private _svgText;
         readonly svgText: SVGTextElement;
         private _edge;
-        readonly edge: Edge;
-        constructor(graph: Graph, edge: Edge, text: string);
+        readonly edge: ObsoleteEdge;
+        constructor(graph: ObsoleteGraph, edge: ObsoleteEdge, text: string);
         readonly x: number;
         readonly y: number;
         private getCenterPosition();
@@ -378,16 +378,16 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class Graph {
+    class ObsoleteGraph {
         static readonly defaultVertexClass: string;
         static readonly defaultEdgeClass: string;
         static readonly vertexXIntervalName: string;
         static readonly vertexYIntervalName: string;
         static readonly typeName: string;
-        protected _vertices: Vertex[];
-        protected _edges: Edge[];
+        protected _vertices: ObsoleteVertex[];
+        protected _edges: ObsoleteEdge[];
         protected _svgGroup: SVGGElement;
-        protected _roots: Vertex[];
+        protected _roots: ObsoleteVertex[];
         constructor(box: HTMLElement, option?: {
             graphClassName?: string;
         });
@@ -400,25 +400,25 @@ declare namespace GraphTableSVG {
         vertexYInterval: number | null;
         defaultVertexClass: string | null;
         defaultEdgeClass: string | null;
-        rootVertex: Vertex | null;
-        readonly roots: Vertex[];
+        rootVertex: ObsoleteVertex | null;
+        readonly roots: ObsoleteVertex[];
         readonly svgGroup: SVGGElement;
-        readonly vertices: Vertex[];
-        readonly edges: Edge[];
-        add(item: Vertex | Edge): void;
-        remove(item: Vertex | Edge): void;
+        readonly vertices: ObsoleteVertex[];
+        readonly edges: ObsoleteEdge[];
+        add(item: ObsoleteVertex | ObsoleteEdge): void;
+        remove(item: ObsoleteVertex | ObsoleteEdge): void;
         clear(): void;
         removeGraph(svg: HTMLElement): void;
         getRegion(): Rectangle;
-        getObject(child: HTMLElement | SVGElement): Vertex | Edge | null;
-        getObjectByObjectID(id: string): Vertex | Edge | null;
-        connect(beginVertex: Vertex, edge: Edge, endVertex: Vertex, option?: {
+        getObject(child: HTMLElement | SVGElement): ObsoleteVertex | ObsoleteEdge | null;
+        getObjectByObjectID(id: string): ObsoleteVertex | ObsoleteEdge | null;
+        connect(beginVertex: ObsoleteVertex, edge: ObsoleteEdge, endVertex: ObsoleteVertex, option?: {
             outcomingInsertIndex?: number;
             incomingInsertIndex?: number;
             beginConnectorType?: GraphTableSVG.ConnectorPosition;
             endConnectorType?: GraphTableSVG.ConnectorPosition;
         }): void;
-        getOrderedVertices(order: VertexOrder, node?: Vertex | null): Vertex[];
+        getOrderedVertices(order: VertexOrder, node?: ObsoleteVertex | null): ObsoleteVertex[];
         save(): void;
         static setXY(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null): void;
         static setXY2(text: SVGTextElement, rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null, isAutoSizeShapeToFitText: boolean): void;
@@ -429,43 +429,43 @@ declare namespace GraphTableSVG {
             isLatexMode?: boolean;
         }): void;
         private createChildFromLogicTree<T>(parent, logicVertex, option?);
-        appendChild(parent: Vertex, child: Vertex, option?: {
+        appendChild(parent: ObsoleteVertex, child: ObsoleteVertex, option?: {
             insertIndex?: number;
         }): void;
-        createdNodeCallback: (node: Vertex) => void;
+        createdNodeCallback: (node: ObsoleteVertex) => void;
         private _relocateFunction;
-        relocateFunction: ((Tree: Graph) => void) | null;
+        relocateFunction: ((Tree: ObsoleteGraph) => void) | null;
         relocate(): void;
     }
 }
 declare namespace GraphTableSVG {
     namespace GraphArrangement {
     }
-    namespace TreeArrangement {
-        function alignVerticeByLeaveSub(forest: Graph, xInterval: number, yInterval: number): void;
-        function reverse(graph: Graph, isX: boolean, isY: boolean): void;
-        function alignVerticeByChildren(graph: GraphTableSVG.Graph): void;
-        function standardTreeWidthArrangement(graph: GraphTableSVG.Graph): void;
-        function alignVerticeByLeave(graph: GraphTableSVG.Graph): void;
+    namespace ObsoleteTreeArrangement {
+        function alignVerticeByLeaveSub(forest: ObsoleteGraph, xInterval: number, yInterval: number): void;
+        function reverse(graph: ObsoleteGraph, isX: boolean, isY: boolean): void;
+        function alignVerticeByChildren(graph: GraphTableSVG.ObsoleteGraph): void;
+        function standardTreeWidthArrangement(graph: GraphTableSVG.ObsoleteGraph): void;
+        function alignVerticeByLeave(graph: GraphTableSVG.ObsoleteGraph): void;
     }
 }
 declare namespace GraphTableSVG {
-    class Tree extends Graph {
+    class Tree extends ObsoleteGraph {
     }
     namespace Parse {
         function parseTree(parseText: string): GraphTableSVG.LogicTree;
-        function getParseString(tree: GraphTableSVG.Vertex): string;
+        function getParseString(tree: GraphTableSVG.ObsoleteVertex): string;
     }
 }
 declare namespace GraphTableSVG {
-    class Vertex {
+    class ObsoleteVertex {
         static readonly defaultSurfaceType: string;
         static readonly defaultSurfaceClass: string;
         static readonly autoSizeShapeToFitTextName: string;
         private static readonly id_counter;
         private _graph;
-        protected _outcomingEdges: Edge[];
-        protected _incomingEdges: Edge[];
+        protected _outcomingEdges: ObsoleteEdge[];
+        protected _incomingEdges: ObsoleteEdge[];
         tag: any;
         private _svgGroup;
         private _observer;
@@ -473,18 +473,18 @@ declare namespace GraphTableSVG {
         readonly shapeType: string;
         private _textObserver;
         protected textObserverFunc: MutationCallback;
-        constructor(graph: Graph, params?: {
+        constructor(graph: ObsoleteGraph, params?: {
             className?: string;
             text?: string;
             x?: number;
             y?: number;
         });
-        readonly graph: Graph | null;
+        readonly graph: ObsoleteGraph | null;
         readonly svgGroup: SVGGElement;
         private _svgText;
         readonly svgText: SVGTextElement;
-        readonly outcomingEdges: Edge[];
-        readonly incomingEdges: Edge[];
+        readonly outcomingEdges: ObsoleteEdge[];
+        readonly incomingEdges: ObsoleteEdge[];
         readonly innerRectangle: Rectangle;
         readonly isLocated: boolean;
         readonly objectID: string;
@@ -500,17 +500,17 @@ declare namespace GraphTableSVG {
         readonly region: Rectangle;
         containsObjectID(id: string): boolean;
         readonly surface: SVGElement | null;
-        getParents(): Vertex[];
-        readonly parentEdge: Edge | null;
+        getParents(): ObsoleteVertex[];
+        readonly parentEdge: ObsoleteEdge | null;
         isAutoSizeShapeToFitText: boolean;
-        readonly parent: Vertex | null;
+        readonly parent: ObsoleteVertex | null;
         readonly isNoParent: boolean;
-        readonly children: Vertex[];
+        readonly children: ObsoleteVertex[];
         readonly isLeaf: boolean;
-        readonly firstNoParent: Vertex;
-        readonly tree: VirtualSubTree;
+        readonly firstNoParent: ObsoleteVertex;
+        readonly tree: ObsoleteVirtualSubTree;
         save(): void;
-        static create(graph: Graph, option?: {
+        static create(graph: ObsoleteGraph, option?: {
             className?: string;
             surfaceType?: string;
             x?: number;
@@ -520,11 +520,11 @@ declare namespace GraphTableSVG {
             width?: number;
             height?: number;
             isRoot?: boolean;
-        }): GraphTableSVG.Vertex;
-        insertOutcomingEdge(edge: Edge, insertIndex: number): void;
-        removeOutcomingEdge(edge: Edge): void;
-        insertIncomingEdge(edge: Edge, insertIndex: number): void;
-        removeIncomingEdge(edge: Edge): void;
+        }): GraphTableSVG.ObsoleteVertex;
+        insertOutcomingEdge(edge: ObsoleteEdge, insertIndex: number): void;
+        removeOutcomingEdge(edge: ObsoleteEdge): void;
+        insertIncomingEdge(edge: ObsoleteEdge, insertIndex: number): void;
+        removeIncomingEdge(edge: ObsoleteEdge): void;
         dispose(): void;
         readonly isDisposed: boolean;
         setIndexDictionaryForVBA(vertexDic: {
@@ -540,10 +540,10 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class CircleVertex extends GraphTableSVG.Vertex {
+    class ObsoleteCircleVertex extends GraphTableSVG.ObsoleteVertex {
         private _svgCircle;
         readonly svgCircle: SVGCircleElement;
-        constructor(graph: Graph, params: {
+        constructor(graph: ObsoleteGraph, params: {
             className?: string;
             text?: string;
             x?: number;
@@ -559,11 +559,11 @@ declare namespace GraphTableSVG {
         private getRadian(x, y);
         protected getAutoPosition(x: number, y: number): ConnectorPosition;
     }
-    class RectangleVertex extends GraphTableSVG.Vertex {
+    class ObsoleteRectangleVertex extends GraphTableSVG.ObsoleteVertex {
         private _svgRectangle;
         readonly svgRectangle: SVGRectElement;
         readonly shapeType: string;
-        constructor(graph: Graph, params?: {
+        constructor(graph: ObsoleteGraph, params?: {
             className?: string;
             text?: string;
             x?: number;
@@ -581,19 +581,19 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class VirtualSubTree {
-        subTreeRoot: Vertex;
-        constructor(_root: Vertex);
-        readonly children: Vertex[];
-        readonly parentEdge: Edge | null;
-        getSubtree(result?: Vertex[]): Vertex[];
+    class ObsoleteVirtualSubTree {
+        subTreeRoot: ObsoleteVertex;
+        constructor(_root: ObsoleteVertex);
+        readonly children: ObsoleteVertex[];
+        readonly parentEdge: ObsoleteEdge | null;
+        getSubtree(result?: ObsoleteVertex[]): ObsoleteVertex[];
         getHeight(): number;
         region(): Rectangle;
-        readonly mostLeftLeave: Vertex;
+        readonly mostLeftLeave: ObsoleteVertex;
         addOffset(_x: number, _y: number): void;
         setRectangleLocation(_x: number, _y: number): void;
         setRootLocation(_x: number, _y: number): void;
-        readonly leaves: Vertex[];
+        readonly leaves: ObsoleteVertex[];
     }
 }
 declare namespace GraphTableSVG {
@@ -857,7 +857,7 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    type VBAObjectType = Graph | Table | SVGPathElement | SVGTextElement | PPTextBox;
+    type VBAObjectType = ObsoleteGraph | Table | SVGPathElement | SVGTextElement | PPTextBox;
     class SVGToVBA {
         static create(items: VBAObjectType[] | VBAObjectType): string;
         private static createVBACodeOfSVGPath(path, id);
@@ -886,9 +886,9 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     namespace Common {
-        function clearGraphTables(svg: HTMLElement, items: (GraphTableSVG.Graph | GraphTableSVG.Table)[]): void;
+        function clearGraphTables(svg: HTMLElement, items: (GraphTableSVG.ObsoleteGraph | GraphTableSVG.Table)[]): void;
         function IsDescendantOfBody(node: Node): boolean;
-        function getRegion(items: (Graph | Table | SVGPathElement | SVGTextElement)[]): Rectangle;
+        function getRegion(items: (ObsoleteGraph | Table | SVGPathElement | SVGTextElement)[]): Rectangle;
         function paddingLeft(text: string, length: number, leftChar: string): string;
         function setGraphTableCSS(cellColor: string, borderColor: string): void;
         function getGraphTableCSS(): HTMLElement | null;
@@ -1026,18 +1026,6 @@ declare namespace GraphTableSVG {
         update(): boolean;
         pathTextAlignment: pathTextAlighnment;
         save(): void;
-        static create(graph: Graph, option?: {
-            className?: string;
-            surfaceType?: string;
-            beginVertex?: Vertex;
-            endVertex?: Vertex;
-            beginConnectorType?: ConnectorPosition;
-            endConnectorType?: ConnectorPosition;
-            incomingInsertIndex?: number;
-            outcomingInsertIndex?: number;
-            text?: string;
-            pathTextAlignment?: pathTextAlighnment;
-        }): GraphTableSVG.Edge;
         setIndexDictionaryForVBA(vertexDic: {
             [key: string]: number;
         }, edgeDic: {
@@ -1171,6 +1159,21 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    namespace CustomAttributeNames {
+        const autoSizeShapeToFitTextName: string;
+        const beginConnectorTypeName: string;
+        const endConnectorTypeName: string;
+        const defaultLineClass: string;
+        const beginNodeName: string;
+        const endNodeName: string;
+        const controlPointName: string;
+        const markerStartName: string;
+        const markerEndName: string;
+        const defaultVertexClass: string;
+        const defaultEdgeClass: string;
+        const vertexXIntervalName: string;
+        const vertexYIntervalName: string;
+    }
     type PPObjectAttributes = {
         class?: string;
         cx?: number;

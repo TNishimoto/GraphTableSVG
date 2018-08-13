@@ -11,14 +11,14 @@
         public get svgText(): SVGTextElement {
             return this._svgText;
         }
-        private _edge: Edge;
+        private _edge: ObsoleteEdge;
         /**
         所属している辺を返します。
         */
-        public get edge(): Edge {
+        public get edge(): ObsoleteEdge {
             return this._edge;
         }
-        constructor(graph: Graph, edge: Edge, text: string) {
+        constructor(graph: ObsoleteGraph, edge: ObsoleteEdge, text: string) {
             this._svgText = SVG.createText();
             this.svgText.textContent = text;
             edge.svgGroup.appendChild(this.svgText);

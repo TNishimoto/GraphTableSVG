@@ -2,7 +2,7 @@
     /**
      * 辺をSVGで表現するためのクラスです。
      */
-    export class Edge {
+    export class ObsoleteEdge {
         //public static defaultBeginConnectorPosition: string = "--default-begin-connector-position";
         //public static defaultEndConnectorPosition: string = "--default-end-connector-position";
         public static readonly beginConnectorTypeName: string = "--begin-connector-type";
@@ -99,7 +99,7 @@
          */
         public get controlPoint(): [number, number][] {
 
-            const str = this.svgPath.getAttribute(Edge.controlPointName);
+            const str = this.svgPath.getAttribute(ObsoleteEdge.controlPointName);
             if (str != null) {
                 const p: [number, number][]= JSON.parse(str);
                 return p;
@@ -110,7 +110,7 @@
         }        
         public set controlPoint(value: [number, number][]) {
             const str = JSON.stringify(value);
-            this.svgPath.setAttribute(Edge.controlPointName, str);
+            this.svgPath.setAttribute(ObsoleteEdge.controlPointName, str);
         }
 
         /**
@@ -143,9 +143,9 @@
                 return null;
             }
         }
-        private _beginVertex: Vertex | null = null;
-        private _endVertex: Vertex | null = null;
-        private _graph: Graph | null = null;
+        private _beginVertex: ObsoleteVertex | null = null;
+        private _endVertex: ObsoleteVertex | null = null;
+        private _graph: ObsoleteGraph | null = null;
         private _svgGroup: SVGGElement;
         /**
          * この辺をまとめているSVGGElementを返します。
@@ -169,15 +169,15 @@
             return this._svgText;
         }
         
-        constructor(__graph: Graph, g: SVGGElement) {
+        constructor(__graph: ObsoleteGraph, g: SVGGElement) {
             this._svgGroup = g;
             this.svgGroup.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
-            this.svgGroup.setAttribute(Graph.typeName, "edge");
+            this.svgGroup.setAttribute(ObsoleteGraph.typeName, "edge");
 
             
 
-            const t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
-            const t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
+            const t1 = this.svgGroup.getPropertyStyleValue(ObsoleteEdge.beginConnectorTypeName);
+            const t2 = this.svgGroup.getPropertyStyleValue(ObsoleteEdge.endConnectorTypeName);
 
             this.beginConnectorType = ConnectorPosition.ToConnectorPosition(t1);
             this.endConnectorType = ConnectorPosition.ToConnectorPosition(t2);
@@ -190,7 +190,7 @@
             const option1: MutationObserverInit = { attributes: true };
             this._observer.observe(this.svgGroup, option1);
 
-            const lineClass = this.svgGroup.getPropertyStyleValue(Edge.defaultLineClass);
+            const lineClass = this.svgGroup.getPropertyStyleValue(ObsoleteEdge.defaultLineClass);
             this._svgPath = SVG.createPath(this.svgGroup, 0, 0, 0, 0, lineClass);
             //this.svgGroup.appendChild(this.svgPath);
             this._svgPath.id = `path-${this.objectID}`;
@@ -201,14 +201,14 @@
             this._svgText.appendChild(this._svgTextPath);
             this._svgTextPath.href.baseVal = `#${this._svgPath.id}`
 
-            const markerStartName = this.svgGroup.getPropertyStyleValue(Edge.markerStartName);
-            const markerEndName = this.svgGroup.getPropertyStyleValue(Edge.markerEndName);
+            const markerStartName = this.svgGroup.getPropertyStyleValue(ObsoleteEdge.markerStartName);
+            const markerEndName = this.svgGroup.getPropertyStyleValue(ObsoleteEdge.markerEndName);
 
             const edgeColor = this.svgPath.getPropertyStyleValue("stroke");
             const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
             
-            if(markerStartName == "true") this.markerStart = GraphTableSVG.Edge.createStartMarker({color : edgeColor, strokeWidth : strokeWidth});
-            if(markerEndName == "true") this.markerEnd = GraphTableSVG.Edge.createEndMarker({color : edgeColor, strokeWidth : strokeWidth});
+            if(markerStartName == "true") this.markerStart = GraphTableSVG.ObsoleteEdge.createStartMarker({color : edgeColor, strokeWidth : strokeWidth});
+            if(markerEndName == "true") this.markerEnd = GraphTableSVG.ObsoleteEdge.createEndMarker({color : edgeColor, strokeWidth : strokeWidth});
 
             //this.svgPath.setAttribute("data-skip", "1");
             //this.svgTextPath.setAttribute("data-skip", "1");
@@ -223,7 +223,7 @@
         開始接点の接続位置を返します。
         */
         get beginConnectorType(): ConnectorPosition {
-            const p = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
+            const p = this.svgGroup.getPropertyStyleValue(ObsoleteEdge.beginConnectorTypeName);
             if (p == null) {
                 return ConnectorPosition.Auto;
             } else {
@@ -234,14 +234,14 @@
         開始接点の接続位置を設定します。
         */
         set beginConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(Edge.beginConnectorTypeName, value)
+            this.svgGroup.setPropertyStyleValue(ObsoleteEdge.beginConnectorTypeName, value)
             //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
         /**
         終了接点の接続位置を返します。
         */
         get endConnectorType(): ConnectorPosition {
-            const p = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
+            const p = this.svgGroup.getPropertyStyleValue(ObsoleteEdge.endConnectorTypeName);
             if (p == null) {
                 return ConnectorPosition.Auto;
             } else {
@@ -252,25 +252,25 @@
         終了接点の接続位置を設定します。
         */
         set endConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(Edge.endConnectorTypeName, value)
+            this.svgGroup.setPropertyStyleValue(ObsoleteEdge.endConnectorTypeName, value)
         }
 
         /**
         開始接点を返します。
         */
-        get beginVertex(): Vertex | null {
+        get beginVertex(): ObsoleteVertex | null {
             return this._beginVertex;
         }
         /**
         開始接点を設定します。
         */
-        set beginVertex(value: Vertex | null) {
+        set beginVertex(value: ObsoleteVertex | null) {
             const prev = this._beginVertex;
             this._beginVertex = value;
             if (value != null) {
-                this.svgGroup.setAttribute(Edge.beginNodeName, value.objectID);
+                this.svgGroup.setAttribute(ObsoleteEdge.beginNodeName, value.objectID);
             } else {
-                this.svgGroup.removeAttribute(Edge.beginNodeName);
+                this.svgGroup.removeAttribute(ObsoleteEdge.beginNodeName);
             }
 
             if (prev != null) {
@@ -283,20 +283,20 @@
         /**
         終了接点を返します。
         */
-        get endVertex(): Vertex | null {
+        get endVertex(): ObsoleteVertex | null {
             return this._endVertex;
         }
         /**
         終了接点を設定します。
         */
-        set endVertex(value: Vertex | null) {
+        set endVertex(value: ObsoleteVertex | null) {
             const prev = this._endVertex;
 
             this._endVertex = value;
             if (value != null) {
-                this.svgGroup.setAttribute(Edge.endNodeName, value.objectID);
+                this.svgGroup.setAttribute(ObsoleteEdge.endNodeName, value.objectID);
             } else {
-                this.svgGroup.removeAttribute(Edge.endNodeName);
+                this.svgGroup.removeAttribute(ObsoleteEdge.endNodeName);
             }
 
             if (prev != null) {
@@ -309,7 +309,7 @@
         /**
         所属しているグラフを返します。
         */
-        get graph(): Graph | null {
+        get graph(): ObsoleteGraph | null {
             return this._graph;
         }
         /**
@@ -534,9 +534,9 @@
          * @param option.surfaceType 未使用
          * @param option.text Edgeのテキスト
          */
-        public static create(graph: Graph, option : {className?: string, surfaceType?: string, 
-            beginVertex? : Vertex, endVertex? : Vertex, beginConnectorType?: ConnectorPosition, endConnectorType?: ConnectorPosition, 
-            incomingInsertIndex?: number, outcomingInsertIndex?: number, text? : string, pathTextAlignment? : pathTextAlighnment } = {}): GraphTableSVG.Edge {
+        public static create(graph: ObsoleteGraph, option : {className?: string, surfaceType?: string, 
+            beginVertex? : ObsoleteVertex, endVertex? : ObsoleteVertex, beginConnectorType?: ConnectorPosition, endConnectorType?: ConnectorPosition, 
+            incomingInsertIndex?: number, outcomingInsertIndex?: number, text? : string, pathTextAlignment? : pathTextAlighnment } = {}): GraphTableSVG.ObsoleteEdge {
             if(option.className == undefined) option.className = graph.defaultEdgeClass;
             if(option.surfaceType == undefined) option.surfaceType = null;
             option.className = option.className != null ? option.className : graph.defaultVertexClass;
@@ -549,7 +549,7 @@
                 type1 != null ? type1 : "line";
                 */
 
-            const edge = new Edge(graph, g);
+            const edge = new ObsoleteEdge(graph, g);
             if(option.beginVertex != undefined && option.endVertex != undefined){
                 graph.connect(option.beginVertex, edge, option.endVertex, option);
             }
@@ -752,7 +752,7 @@
                 path.setAttribute("transform", "rotate(180,5,5)");
                 marker.setAttribute("refX", "0");
             }
-            marker.id = `marker-${Edge.markerCounter++}`;
+            marker.id = `marker-${ObsoleteEdge.markerCounter++}`;
             return marker;
         }
         public static createStartMarker(option : {className?: string, strokeWidth? : string, color? : string} = {}): SVGMarkerElement {

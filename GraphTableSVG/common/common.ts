@@ -5,10 +5,10 @@
          * @param svg 
          * @param items 
          */
-        export function clearGraphTables(svg: HTMLElement, items: (GraphTableSVG.Graph | GraphTableSVG.Table)[]) {
+        export function clearGraphTables(svg: HTMLElement, items: (GraphTableSVG.ObsoleteGraph | GraphTableSVG.Table)[]) {
             for (let i = 0; i < items.length; i++) {
                 var item = items[i];
-                if (item instanceof GraphTableSVG.Graph) {
+                if (item instanceof GraphTableSVG.ObsoleteGraph) {
                     item.removeGraph(svg);
                 } else if (item instanceof GraphTableSVG.Table) {
                     item.removeTable(svg);
@@ -35,9 +35,9 @@
          * 領域を取得します。
          * @param items 
          */
-        export function getRegion(items: (Graph | Table | SVGPathElement | SVGTextElement)[]): Rectangle {
+        export function getRegion(items: (ObsoleteGraph | Table | SVGPathElement | SVGTextElement)[]): Rectangle {
             const rects = items.map((v) => {
-                if (v instanceof Graph) {
+                if (v instanceof ObsoleteGraph) {
                     return v.getRegion();
                 } else if (v instanceof Table) {
                     return v.getRegion();

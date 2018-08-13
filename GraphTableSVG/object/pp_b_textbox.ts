@@ -35,7 +35,7 @@ namespace GraphTableSVG {
             output.width = e.gtGetAttributeNumberWithoutNull("width", 100);
             output.height = e.gtGetAttributeNumberWithoutNull("height", 100);
 
-            output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false") == "true";
+            output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(CustomAttributeNames.autoSizeShapeToFitTextName, "false") == "true";
 
             if (removeAttributes) {
                 e.removeAttribute("cx");
@@ -44,7 +44,7 @@ namespace GraphTableSVG {
                 e.removeAttribute("text");
                 e.removeAttribute("width");
                 e.removeAttribute("height");
-                e.style.removeProperty(Vertex.autoSizeShapeToFitTextName);
+                e.style.removeProperty(CustomAttributeNames.autoSizeShapeToFitTextName);
             }
             return output;
         }
@@ -137,17 +137,17 @@ namespace GraphTableSVG {
          * このVertexがテキストに合わせてサイズを変える場合Trueを返します。
          */
         get isAutoSizeShapeToFitText(): boolean {
-            return this.svgGroup.getPropertyStyleValueWithDefault(Vertex.autoSizeShapeToFitTextName, "false") == "true";
+            return this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.autoSizeShapeToFitTextName, "false") == "true";
         }
         set isAutoSizeShapeToFitText(value: boolean) {
-            this.svgGroup.setPropertyStyleValue(Vertex.autoSizeShapeToFitTextName, value ? "true" : "false");
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.autoSizeShapeToFitTextName, value ? "true" : "false");
         }
         private _isUpdating: boolean = false;
         protected update() {
             this._isUpdating = true;
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();
-            Graph.setXY2(this.svgText, this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+            ObsoleteGraph.setXY2(this.svgText, this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
         }

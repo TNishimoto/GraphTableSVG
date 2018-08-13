@@ -1,4 +1,20 @@
 namespace GraphTableSVG {
+    export namespace CustomAttributeNames{
+        export const autoSizeShapeToFitTextName: string = "--autosize-shape-to-fit-text"
+        export const beginConnectorTypeName: string = "--begin-connector-type";
+        export const endConnectorTypeName: string = "--end-connector-type";
+        export const defaultLineClass: string = "--default-line-class";
+        export const beginNodeName: string = "data-begin-node";
+        export const endNodeName: string = "data-end-node";
+        export const controlPointName: string = "data-control-point";
+        export const markerStartName: string = "--marker-start";
+        export const markerEndName: string = "--marker-end";
+        export const defaultVertexClass: string = "--default-vertex-class";
+        export const defaultEdgeClass: string = "--default-edge-class";
+        export const vertexXIntervalName: string = "--vertex-x-interval";
+        export const vertexYIntervalName: string = "--vertex-y-interval";
+    }
+
     export type PPObjectAttributes = {
         class?: string,
         cx?: number,
