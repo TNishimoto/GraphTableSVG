@@ -273,6 +273,17 @@ namespace GraphTableSVG {
             //this.createdNodeCallback(node);
             return node;
         }
+        
+        public createVBACode(id: number): string[] {            
+            const r : string[] = [];
+            this.vertices.forEach((v)=>v.createVBACode(id++).forEach((w)=>r.push(w)));
+            this.edges.forEach((v)=>v.createVBACode(id++).forEach((w)=>r.push(w)));
+            return r;
+        }
+        
+        public get VBAObjectNum() : number{
+            return this.vertices.length + this.edges.length;
+        }
     }
 
 

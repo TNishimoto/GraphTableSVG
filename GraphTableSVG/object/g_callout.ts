@@ -173,8 +173,7 @@ namespace GraphTableSVG {
             }
 
         }
-        protected get shape(): string {
-
+        public get shape(): string {
             return "msoShapeRectangularCallout";
         }
 

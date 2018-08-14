@@ -108,7 +108,45 @@ namespace GraphTableSVG {
                 }
             }
         }
+        
+        public get shape(): string {
+            return "msoShapeOval";
+        }
+        /*
+        public createVBACode(id: number): string[] {
+            const r: string[] = [];
+            const left = this.cx - (this.width / 2);
+            const top = this.cy - (this.height / 2);
+            
+            const surface = this.surface;
+            const shape = surface instanceof SVGRectElement ? "msoShapeRectangle" : "msoShapeOval";
+            r.push(`Sub create${id}(createdSlide As slide)`);
+            r.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
+            r.push(` Dim obj As Shape`);
+            r.push(` Set obj = shapes_.AddShape(${shape}, ${left}, ${top}, ${this.width}, ${this.height})`);
+            
+            const backColor = VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("fill", "gray"));
+            const lineColor = VBATranslateFunctions.colorToVBA(surface.getPropertyStyleValueWithDefault("stroke", "gray"));
+            const lineType = GraphTableSVG.msoDashStyle.getLineType(surface);
+            const strokeWidth = parseInt(surface.getPropertyStyleValueWithDefault("stroke-width", "4"));
+            const visible = surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            r.push(` Call EditVertexShape(obj, "${this.objectID}", ${visible}, ${backColor})`);
+            r.push(` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
+        
+            const fontSize = parseInt(this.svgText.getPropertyStyleValueWithDefault("font-size", "24"));
+            const fontFamily = VBATranslateFunctions.ToVBAFont(this.svgText.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+            const fontBold = VBATranslateFunctions.ToFontBold(this.svgText.getPropertyStyleValueWithDefault("font-weight", "none"));
+            r.push(` Call EditTextFrame(obj.TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeNone)`);
+            VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, `obj.TextFrame.TextRange`).forEach((v)=>r.push(v));
+            //sub.push(` Call EditTextRange(nodes(${i}).TextFrame.TextRange, ${VBATranslateFunctions.createStringFunction(text)}, ${0}, ${0}, ${VBATranslateFunctions.colorToVBA(color)})`);
+            r.push(` Call EditTextEffect(obj.TextEffect, ${fontSize}, "${fontFamily}")`);
+            
+            r.push(`End Sub`);
+            return r;
+        }
+        */
     }
+
     /*
     export type EllipseAttributes = TextBoxShapeAttributes & {
         speakerX? : number,

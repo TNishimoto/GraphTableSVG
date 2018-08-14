@@ -252,7 +252,7 @@ namespace GraphTableSVG {
                 this.svgPath.setAttribute("d", `${top} ${right} ${bottom} ${left} z`);
             }
         }
-        protected get shape(): string {
+        public get shape(): string {
             switch (this.direction) {
                 case "up": return "msoShapeUpArrowCallout";
                 case "left": return "msoShapeLeftArrowCallout";

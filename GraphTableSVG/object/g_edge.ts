@@ -3,11 +3,11 @@ namespace GraphTableSVG {
      * 辺をSVGで表現するためのクラスです。
      */
     export class GEdge extends GTextBox {
-        protected setClassNameOfSVGGroup(){
+        protected setClassNameOfSVGGroup() {
             const parent = this.svgGroup.parentElement;
-            if(parent instanceof SVGElement){
+            if (parent instanceof SVGElement) {
                 const className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.defaultEdgeClass);
-                if(className != null){
+                if (className != null) {
                     this.svgGroup.setAttribute("class", className);
                 }
             }
@@ -21,12 +21,9 @@ namespace GraphTableSVG {
         public get svgTextPath(): SVGTextPathElement {
             return this._svgTextPath;
         }
-        protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
+        protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
             this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
-        }
-        protected get shape(): string {
-            return "NONE";
         }
         public get type(): string {
             return "PPEdge";
@@ -106,8 +103,8 @@ namespace GraphTableSVG {
             return r;
         }
         public set controlPoint(value: [number, number][]) {
-            const fst : [number, number] = [this.x1, this.y1];
-            const lst : [number, number] = [this.x2, this.y2];
+            const fst: [number, number] = [this.x1, this.y1];
+            const lst: [number, number] = [this.x2, this.y2];
             value.unshift(fst);
             value.push(lst);
             this.pathPoints = value;
@@ -160,8 +157,8 @@ namespace GraphTableSVG {
             output.x2 = e.gtGetAttributeNumberWithoutNull("x2", 300);
             output.y1 = e.gtGetAttributeNumberWithoutNull("y1", 0);
             output.y2 = e.gtGetAttributeNumberWithoutNull("y2", 300);
-            if(e.hasAttribute("begin-vertex")) output.beginVertex = <string>e.getAttribute("begin-vertex");
-            if(e.hasAttribute("end-vertex"))output.endVertex = <string>e.getAttribute("end-vertex");
+            if (e.hasAttribute("begin-vertex")) output.beginVertex = <string>e.getAttribute("begin-vertex");
+            if (e.hasAttribute("end-vertex")) output.endVertex = <string>e.getAttribute("end-vertex");
             output.beginConnectorType = ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("begin-connector", "auto"));
             output.endConnectorType = ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("end-connector", "auto"));
 
@@ -188,14 +185,14 @@ namespace GraphTableSVG {
             super(svgbox, option);
             //this._svgGroup = SVG.createGroup(svgbox);
 
-            this.svgText.textContent="";
+            this.svgText.textContent = "";
             const textClass = this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass);
-            this._svgTextPath = SVG.createTextPath2(textClass);            
+            this._svgTextPath = SVG.createTextPath2(textClass);
             this.svgPath.id = `path-${this.objectID}`;
 
             this.svgText.appendChild(this._svgTextPath);
             this._svgTextPath.href.baseVal = `#${this.svgPath.id}`
-            if(option.text != undefined){
+            if (option.text != undefined) {
                 this.svgTextPath.setTextContent(option.text);
             }
 
@@ -228,8 +225,8 @@ namespace GraphTableSVG {
             const markerStartName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.markerStartName);
             const markerEndName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.markerEndName);
 
-            if(option.startMarker == undefined && markerStartName != null) option.startMarker = markerStartName == "true";
-            if(option.endMarker == undefined && markerEndName != null) option.endMarker = markerEndName == "true";
+            if (option.startMarker == undefined && markerStartName != null) option.startMarker = markerStartName == "true";
+            if (option.endMarker == undefined && markerEndName != null) option.endMarker = markerEndName == "true";
             if (option.startMarker) this.markerStart = GraphTableSVG.ObsoleteEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
             if (option.endMarker) this.markerEnd = GraphTableSVG.ObsoleteEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
@@ -240,18 +237,18 @@ namespace GraphTableSVG {
             this.pathPoints = [[x1, y1], [x2, y2]];
 
 
-            if(option.beginVertex != null){
-                const obj = option.beginVertex instanceof GVertex ? option.beginVertex :  GTextBox.getObjectFromID(option.beginVertex);
-                if(obj instanceof GVertex){
-                this.beginVertex = obj;
+            if (option.beginVertex != null) {
+                const obj = option.beginVertex instanceof GVertex ? option.beginVertex : GTextBox.getObjectFromID(option.beginVertex);
+                if (obj instanceof GVertex) {
+                    this.beginVertex = obj;
+                }
             }
-            }
-            if(option.endVertex != null){
-                const obj = option.endVertex instanceof GVertex ? option.endVertex :  GTextBox.getObjectFromID(option.endVertex);
+            if (option.endVertex != null) {
+                const obj = option.endVertex instanceof GVertex ? option.endVertex : GTextBox.getObjectFromID(option.endVertex);
 
                 //const obj = PPTextBoxShapeBase.getObjectFromID(option.endVertexID);
-                if(obj instanceof GVertex){
-                this.endVertex = obj;
+                if (obj instanceof GVertex) {
+                    this.endVertex = obj;
                 }
             }
             this.beginConnectorType = option.beginConnectorType == undefined ? ConnectorPosition.Auto : option.beginConnectorType;
@@ -294,9 +291,9 @@ namespace GraphTableSVG {
             return this.svgGroup.getAttribute(CustomAttributeNames.beginNodeName);
         }
         private set beginVertexID(v: string | null) {
-            if(v == null){
+            if (v == null) {
                 this.svgGroup.removeAttribute(CustomAttributeNames.beginNodeName);
-            }else{
+            } else {
                 this.svgGroup.setAttribute(CustomAttributeNames.beginNodeName, v);
             }
         }
@@ -305,17 +302,17 @@ namespace GraphTableSVG {
             return this.svgGroup.getAttribute(CustomAttributeNames.endNodeName);
         }
         private set endVertexID(v: string | null) {
-            if(v == null){
+            if (v == null) {
                 this.svgGroup.removeAttribute(CustomAttributeNames.endNodeName);
-            }else{
+            } else {
                 this.svgGroup.setAttribute(CustomAttributeNames.endNodeName, v);
             }
         }
 
-        private removeVertexEvent(vertex : GTextBox){
+        private removeVertexEvent(vertex: GTextBox) {
             vertex.svgGroup.removeEventListener(GTextBox.ConnectPositionChangedEventName, this.pUpdateFunc);
         }
-        private addVertexEvent(vertex : GTextBox){
+        private addVertexEvent(vertex: GTextBox) {
             vertex.svgGroup.addEventListener(GTextBox.ConnectPositionChangedEventName, this.pUpdateFunc);
         }
         private pUpdateFunc = () => this.update();
@@ -334,20 +331,20 @@ namespace GraphTableSVG {
         開始接点を設定します。
         */
         set beginVertex(value: GVertex | null) {
-            if(this.beginVertex != null){
-                 this.removeVertexEvent(this.beginVertex);
-                 if(this.beginVertex.outcomingEdges.indexOf(this) != -1){
-                     this.beginVertex.removeOutcomingEdge(this);
-                 }
+            if (this.beginVertex != null) {
+                this.removeVertexEvent(this.beginVertex);
+                if (this.beginVertex.outcomingEdges.indexOf(this) != -1) {
+                    this.beginVertex.removeOutcomingEdge(this);
+                }
             }
 
             if (value == null) {
                 this.beginVertexID = null;
             } else {
                 this.beginVertexID = value.objectID;
-                if(this.beginVertex == null) throw Error("error");
+                if (this.beginVertex == null) throw Error("error");
                 this.addVertexEvent(this.beginVertex);
-                if(this.beginVertex.outcomingEdges.indexOf(this) == -1){
+                if (this.beginVertex.outcomingEdges.indexOf(this) == -1) {
                     this.beginVertex.insertOutcomingEdge(this);
                 }
 
@@ -370,21 +367,21 @@ namespace GraphTableSVG {
         終了接点を設定します。
         */
         set endVertex(value: GVertex | null) {
-            if(this.endVertex != null){
+            if (this.endVertex != null) {
                 this.removeVertexEvent(this.endVertex);
-                if(this.endVertex.incomingEdges.indexOf(this) != -1){
+                if (this.endVertex.incomingEdges.indexOf(this) != -1) {
                     this.endVertex.removeIncomingEdge(this);
                 }
-           }
+            }
 
 
             if (value == null) {
                 this.endVertexID = null;
             } else {
                 this.endVertexID = value.objectID;
-                if(this.endVertex == null) throw Error("error");
+                if (this.endVertex == null) throw Error("error");
                 this.addVertexEvent(this.endVertex);
-                if(this.endVertex.incomingEdges.indexOf(this) == -1){
+                if (this.endVertex.incomingEdges.indexOf(this) == -1) {
                     this.endVertex.insertIncomingEdge(this);
                 }
 
@@ -479,7 +476,7 @@ namespace GraphTableSVG {
         }
         private get pathPoints(): [number, number][] {
             const dAttr = this.svgPath.getAttribute("d");
-            if(dAttr == null) throw Error("error");
+            if (dAttr == null) throw Error("error");
             const d = dAttr.split(" ");
             let i = 0;
             const r: [number, number][] = [];
@@ -488,7 +485,7 @@ namespace GraphTableSVG {
                 if (d[i] == "M") {
                     r.push([Number(d[i + 1]), Number(d[i + 2])]);
                     i += 3;
-                }else if(d[i] == "L"){
+                } else if (d[i] == "L") {
                     r.push([Number(d[i + 1]), Number(d[i + 2])]);
                     i += 3;
                 } else if (d[i] == "Q") {
@@ -521,10 +518,10 @@ namespace GraphTableSVG {
                 const [x2, y2] = points[2];
                 const [cx1, cy1] = points[1];
                 path = `M ${x1} ${y1} Q ${cx1} ${cy1} ${x2} ${y2}`
-            } else if(points.length == 1){
+            } else if (points.length == 1) {
                 throw Error("path points ivnalid error");
             }
-             else {
+            else {
                 path = `M ${0} ${0} L ${0} ${0}`
             }
 
@@ -540,7 +537,7 @@ namespace GraphTableSVG {
             const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
             const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];
 
-            const [x1, y1] = this.beginVertex != null ? this.beginVertex.getLocation(this.beginConnectorType, cx2, cy2) : [cx1,cy1];
+            const [x1, y1] = this.beginVertex != null ? this.beginVertex.getLocation(this.beginConnectorType, cx2, cy2) : [cx1, cy1];
             const [x2, y2] = this.endVertex != null ? this.endVertex.getLocation(this.endConnectorType, cx1, cy1) : [cx2, cy2];
             /*
             this.x1 = x1;
@@ -551,7 +548,7 @@ namespace GraphTableSVG {
             const points: [number, number][] = this.pathPoints;
 
             points[0] = [x1, y1];
-            points[points.length -1] = [x2, y2];
+            points[points.length - 1] = [x2, y2];
             this.pathPoints = points;
             /*
             let path = "";
@@ -585,7 +582,7 @@ namespace GraphTableSVG {
                 }
             }
 
-            
+
             if (this.pathTextAlignment == pathTextAlighnment.regularInterval) {
                 const pathLen = this.svgPath.getTotalLength();
                 const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
@@ -625,7 +622,7 @@ namespace GraphTableSVG {
             } else {
                 this.svgText.setAttribute("dy", "0");
             }
-            
+
             return false;
         }
         /**
@@ -697,6 +694,145 @@ namespace GraphTableSVG {
 
         }
         */
+       
+        public get shape(): string {
+            return "msoConnectorStraight";
+        }
+        public createVBACode(id: number): string[] {
+            const lineArr: number[] = [];
+            const r: string[] = [];
+            r.push(`Sub create${id}(createdSlide As slide)`);
+            r.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
+            r.push(` Dim obj As Shape`);
+
+            if (this.controlPoint.length == 0) {
+                r.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+                if (this.beginVertex != null && this.endVertex != null) {
+                    if (this.markerStart != null) {
+                        r.push(` obj.Line.BeginArrowheadLength = msoArrowheadLong`);
+                        r.push(` obj.Line.BeginArrowheadStyle = msoArrowheadTriangle`);
+                        r.push(` obj.Line.BeginArrowheadWidth = msoArrowheadWide`);
+                    }
+                    if (this.markerEnd != null) {
+                        r.push(` obj.Line.EndArrowheadLength = msoArrowheadLong`);
+                        r.push(` obj.Line.EndArrowheadStyle = msoArrowheadTriangle`);
+                        r.push(` obj.Line.EndArrowheadWidth = msoArrowheadWide`);
+                    }
+
+                    const begType: number = ConnectorPosition.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
+                    const endType: number = ConnectorPosition.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
+                    r.push(` Call EditConnector(obj.ConnectorFormat, shapes_("${this.beginVertex.objectID}"), shapes_("${this.endVertex.objectID}"), ${begType}, ${endType})`)
+                }
+            } else if (this.controlPoint.length > 0) {
+                /*
+                //subline.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+                //lineArr.push(i);
+
+                for (let j = 0; j < this.VBAConnectorNumber; j++) {
+                    const t = (j + 1) / (this.VBAConnectorNumber + 1);
+                    const centerPoint = Common.bezierLocation([this.x1, this.y1], this.controlPoint[0], [this.x2, this.y2], t);
+                    const vertexID = vertexDic[`${this.objectID}_${j}`];
+                    subline.push(`Set nodes(${vertexID}) = shapes_.AddShape(msoShapeOval, ${centerPoint[0]}, ${centerPoint[1]}, 0, 0)`);
+                }
+
+
+                for (let j = 0; j <= this.VBAConnectorNumber; j++) {
+                    //const centerPoint = Common.bezierLocation([this.x1, this.y1], this.controlPoint[0], [this.x2, this.y2], 0.5);
+                    const edgeID = edgeDic[`${this.objectID}_${j}`];
+                    const beg = j == 0 ? vertexDic[this.beginVertex.objectID] : vertexDic[`${this.objectID}_${j - 1}`];
+                    const end = j == this.VBAConnectorNumber ? vertexDic[this.endVertex.objectID] : vertexDic[`${this.objectID}_${j}`];
+                    lineArr.push(edgeID);
+
+                    subline.push(` Set edges(${edgeID}) = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+
+                    const begType: number = j == 0 ? ConnectorPosition.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
+                    const endType: number = j == this.VBAConnectorNumber ? ConnectorPosition.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y)) : 1;
+                    subline.push(` Call EditConnector(edges(${edgeID}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
+
+                }
+                const edgeBeginID = edgeDic[`${this.objectID}_${0}`];
+                const edgeEndID = edgeDic[`${this.objectID}_${this.VBAConnectorNumber}`];
+
+                if (this.beginVertex != null && this.endVertex != null) {
+                    if (this.markerStart != null) {
+                        subline.push(` edges(${edgeBeginID}).Line.BeginArrowheadLength = msoArrowheadLong`);
+                        subline.push(` edges(${edgeBeginID}).Line.BeginArrowheadStyle = msoArrowheadTriangle`);
+                        subline.push(` edges(${edgeBeginID}).Line.BeginArrowheadWidth = msoArrowheadWide`);
+                    }
+                    if (this.markerEnd != null) {
+                        subline.push(` edges(${edgeEndID}).Line.EndArrowheadLength = msoArrowheadLong`);
+                        subline.push(` edges(${edgeEndID}).Line.EndArrowheadStyle = msoArrowheadTriangle`);
+                        subline.push(` edges(${edgeEndID}).Line.EndArrowheadWidth = msoArrowheadWide`);
+                    }
+
+                }
+                */
+            }
+
+            /*
+            lineArr.forEach((v) => {
+                const lineType = msoDashStyle.getLineType(this.svgPath);
+                const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
+                const strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                subline.push(` Call EditLine(edges(${v}).Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
+            });
+            */
+
+
+
+            //subline.forEach((v) => sub.push([v]));
+
+            this.createVBACodeOfText("shapes_").forEach((v)=>r.push(v));
+            
+            r.push(`End Sub`);
+            return r;
+        }
+        
+        /**
+         * VBAコードを作成します。
+         * @param shapes 
+         * @param result 
+         */
+        public createVBACodeOfText(shapes: string): string[] {
+            const r : string[] = [];
+            const fontSize = parseInt(this.svgTextPath.getPropertyStyleValueWithDefault("font-size", "12"));
+            const fontFamily = VBATranslateFunctions.ToVBAFont(this.svgTextPath.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+            const fontBold = VBATranslateFunctions.ToFontBold(this.svgTextPath.getPropertyStyleValueWithDefault("font-weight", "none"));
+
+            for (let i = 0; i < this.svgTextPath.textContent.length; i++) {
+                const s: string[] = new Array(0);
+                const p1 = this.svgTextPath.getStartPositionOfChar(i);
+                const p2 = this.svgTextPath.getEndPositionOfChar(i);
+                const width = Math.abs(p2.x - p1.x);
+                const height = Math.abs(p2.y - p1.y);
+
+                const rad = this.svgTextPath.getRotationOfChar(i);
+                const diffx = (fontSize* 1/2) * Math.sin((rad/180) * Math.PI);
+                const diffy = (fontSize*3/8) + ((fontSize*3/8) * Math.cos((rad/180) * Math.PI));
+
+                const left = p1.x + diffx;
+                //const top = this.graph.svgGroup.getY() + p1.y - (fontSize / 2);
+                const top = p1.y - (fontSize * 1 / 4) - diffy ;
+                
+                //const top = this.graph.svgGroup.getY() + p1.y - diffy;
+
+                s.push(`With ${shapes}.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${width},${fontSize})`);
+                s.push(`.TextFrame.TextRange.Text = "${this.svgTextPath.textContent[i]}"`);
+                s.push(`.TextFrame.marginLeft = 0`);
+                s.push(`.TextFrame.marginRight = 0`);
+                s.push(`.TextFrame.marginTop = 0`);
+                s.push(`.TextFrame.marginBottom = 0`);
+                s.push(`.TextFrame.TextRange.Font.Size = ${fontSize}`);
+                s.push(`.TextFrame.TextRange.Font.name = "${fontFamily}"`);
+                s.push(`.TextFrame.TextRange.Font.Bold = ${fontBold}`);
+                s.push(`.IncrementRotation(${this.svgTextPath.getRotationOfChar(i)})`);
+                //s.push(`.IncrementRotation(${this.svgText.transform.baseVal.getItem(0).angle})`);
+                s.push(`End With`);
+                s.forEach((v)=>r.push(v));
+            }
+            return r;
+        }
     }
 
 }

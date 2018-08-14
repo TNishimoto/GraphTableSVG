@@ -220,6 +220,35 @@
                 return 1;
             }
         }
+        export function ToVBAConnectorPosition2(shapeType: string, str: ConnectorPosition): number {
+            if (shapeType == "msoShapeOval") {
+                switch (str) {
+                    case "top": return 1;
+                    case "topleft": return 2;
+                    case "left": return 3;
+                    case "bottomleft": return 4;
+                    case "bottom": return 5;
+                    case "bottomright": return 6;
+                    case "right": return 7;
+                    case "topright": return 8;
+                    case "auto": return 9;
+                    default: return 1;
+                }
+            } else if (shapeType == "msoShapeRectangle") {
+                switch (str) {
+                    case "top": return 1;
+                    case "left": return 2;
+                    case "bottom": return 3;
+                    case "right": return 4;
+                    case "auto": return 9;
+                    default: return 1;
+                }
+    
+            } else {
+                return 1;
+            }
+        }
+
     }
     
 

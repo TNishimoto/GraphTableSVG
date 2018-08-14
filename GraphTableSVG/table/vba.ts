@@ -10,37 +10,47 @@ namespace GraphTableSVG {
         public static create(items: VBAObjectType[] | VBAObjectType): string {
             //const id = 0;
             if (items instanceof Array) {
+                const count = GraphTableSVG.SVGToVBA.count(items);
                 const s: string[] = new Array(0);
 
                 s.push(`Sub create()`);
                 s.push(` Dim createdSlide As slide`);
                 s.push(` Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)`);
-                for (let i = 0; i < items.length; i++) {
+                for (let i = 0; i < count; i++) {
                     s.push(`Call create${i}(createdSlide)`);
                 }
                 s.push(`MsgBox "created"`);
 
                 s.push(`End Sub`);
 
+                let id = 0;
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
                     if (item instanceof Table) {
-                        const lines = item.createVBACode(i, "createdSlide");
+                        const lines = item.createVBACode(id++, "createdSlide");
                         lines.forEach((v) => s.push(v));
+                        id++;
                     } else if (item instanceof ObsoleteGraph) {
-                        const lines = item.createVBACode(i);
+                        const lines = item.createVBACode(id++);
                         lines.forEach((v) => s.push(v));
+                        id++;
                     } else if (item instanceof SVGPathElement) {
-                        const lines = SVGToVBA.createVBACodeOfSVGPath(item, i);
+                        const lines = SVGToVBA.createVBACodeOfSVGPath(item, id++);
                         lines.forEach((v) => s.push(v));
+                        id++;
 
                     } else if (item instanceof SVGTextElement) {
-                        const lines = SVGToVBA.createVBACodeOfTextElement(item, i);
+                        const lines = SVGToVBA.createVBACodeOfTextElement(item, id++);
                         lines.forEach((v) => s.push(v));
-
-                    } else if(item instanceof GTextBox){
-                        const lines = item.createVBACode(i);
+                        id++;
+                    } else if(item instanceof GGraph){
+                        const lines = item.createVBACode(id);
                         lines.forEach((v) => s.push(v));
+                        id += item.VBAObjectNum;
+                    } else if(item instanceof GObject){
+                        const lines = item.createVBACode(id);
+                        lines.forEach((v) => s.push(v));
+                        id += item.VBAObjectNum;
                     }
                 }
                 s.push(SVGToVBA.cellFunctionCode);
@@ -48,6 +58,31 @@ namespace GraphTableSVG {
                 return r;
             } else {
                 return SVGToVBA.create([items]);
+            }
+        }
+        public static count(items: VBAObjectType[] | VBAObjectType): number {
+            //const id = 0;
+            if (items instanceof Array) {
+                let c = 0;
+                for (let i = 0; i < items.length; i++) {
+                    const item = items[i];
+                    if (item instanceof Table) {
+                        c++;
+                    } else if (item instanceof ObsoleteGraph) {
+                        c++;
+                    } else if (item instanceof SVGPathElement) {
+                        c++;
+                    } else if (item instanceof SVGTextElement) {
+                        c++;
+                    } else if(item instanceof GGraph){
+                        c += item.VBAObjectNum;
+                    } else if(item instanceof GObject){
+                        c += item.VBAObjectNum;
+                    }
+                }
+                return c;
+            } else {
+                return SVGToVBA.count([items]);
             }
         }
         private static createVBACodeOfSVGPath(path: SVGPathElement, id: number): string[] {

@@ -226,6 +226,54 @@ namespace GraphTableSVG {
             p.height = this.height;
             return p;
         }
+        public get shape(): string {
+            return "NONE";
+        }
+/**
+         * 
+         * @param id 
+         */
+        public createVBACode(id: number): string[] {
+            const lines: string[] = [];
+            const backColor = VBATranslateFunctions.colorToVBA(this.surface.getPropertyStyleValueWithDefault("fill", "gray"));
+            const visible = this.surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+
+            const vAnchor = VBATranslateFunctions.ToVerticalAnchor(this.verticalAnchor);
+            const hAnchor = VBATranslateFunctions.ToHorizontalAnchor(this.horizontalAnchor);
+
+
+            lines.push(`Sub create${id}(createdSlide As slide)`);
+            lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
+            lines.push(` Dim obj As Shape`);
+            lines.push(` Set obj = shapes_.AddShape(${this.shape}, ${this.x}, ${this.y}, ${this.width}, ${this.height})`);
+            lines.push(` Call EditTextFrame(obj.TextFrame, ${this.marginPaddingTop}, ${this.marginPaddingBottom}, ${this.marginPaddingLeft}, ${this.marginPaddingRight}, false, ppAutoSizeNone)`);
+            lines.push(` Call EditAnchor(obj.TextFrame, ${vAnchor}, ${hAnchor})`);
+
+            VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, `obj.TextFrame.TextRange`).forEach((v) => lines.push(v));
+            //const adjustments = this.VBAAdjustments;
+            lines.push(this.getVBAEditLine());
+
+            lines.push(` Call EditCallOut(obj, "${this.objectID}", ${visible}, ${backColor})`)
+            this.VBAAdjustments.forEach((v, i) => {
+                lines.push(` obj.Adjustments.Item(${i + 1}) = ${v}`);
+            })
+            lines.push(`End Sub`);
+            //sub.push([` Call EditTextEffect(nodes(${i}).TextEffect, ${fontSize}, "${fontFamily}")`]);
+            return lines;
+        }
+        /**
+         * VBAコードでのこの図形を表すShape図形のVBAAdjustmentsプロパティを表します。
+         */
+        protected get VBAAdjustments(): number[] {
+            return [];
+        }
+        private getVBAEditLine(): string {
+            const lineColor = VBATranslateFunctions.colorToVBA(this.surface.getPropertyStyleValueWithDefault("stroke", "gray"));
+            const lineType = GraphTableSVG.msoDashStyle.getLineType(this.surface);
+            const strokeWidth = parseInt(this.surface.getPropertyStyleValueWithDefault("stroke-width", "4"));
+            const visible = this.surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            return ` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`;
+        }
     }
 
 }

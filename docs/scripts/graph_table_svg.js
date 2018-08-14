@@ -295,6 +295,36 @@ var GraphTableSVG;
             }
         }
         ConnectorPosition.ToVBAConnectorPosition = ToVBAConnectorPosition;
+        function ToVBAConnectorPosition2(shapeType, str) {
+            if (shapeType == "msoShapeOval") {
+                switch (str) {
+                    case "top": return 1;
+                    case "topleft": return 2;
+                    case "left": return 3;
+                    case "bottomleft": return 4;
+                    case "bottom": return 5;
+                    case "bottomright": return 6;
+                    case "right": return 7;
+                    case "topright": return 8;
+                    case "auto": return 9;
+                    default: return 1;
+                }
+            }
+            else if (shapeType == "msoShapeRectangle") {
+                switch (str) {
+                    case "top": return 1;
+                    case "left": return 2;
+                    case "bottom": return 3;
+                    case "right": return 4;
+                    case "auto": return 9;
+                    default: return 1;
+                }
+            }
+            else {
+                return 1;
+            }
+        }
+        ConnectorPosition.ToVBAConnectorPosition2 = ToVBAConnectorPosition2;
     })(ConnectorPosition = GraphTableSVG.ConnectorPosition || (GraphTableSVG.ConnectorPosition = {}));
     GraphTableSVG.VerticalAnchorPropertyName = "--vertical-anchor";
     GraphTableSVG.HorizontalAnchorPropertyName = "--horizontal-anchor";
@@ -5815,36 +5845,48 @@ var GraphTableSVG;
         }
         SVGToVBA.create = function (items) {
             if (items instanceof Array) {
+                var count = GraphTableSVG.SVGToVBA.count(items);
                 var s_1 = new Array(0);
                 s_1.push("Sub create()");
                 s_1.push(" Dim createdSlide As slide");
                 s_1.push(" Set createdSlide = ActivePresentation.Slides.Add(1, ppLayoutBlank)");
-                for (var i = 0; i < items.length; i++) {
+                for (var i = 0; i < count; i++) {
                     s_1.push("Call create" + i + "(createdSlide)");
                 }
                 s_1.push("MsgBox \"created\"");
                 s_1.push("End Sub");
+                var id = 0;
                 for (var i = 0; i < items.length; i++) {
                     var item = items[i];
                     if (item instanceof GraphTableSVG.Table) {
-                        var lines = item.createVBACode(i, "createdSlide");
+                        var lines = item.createVBACode(id++, "createdSlide");
                         lines.forEach(function (v) { return s_1.push(v); });
+                        id++;
                     }
                     else if (item instanceof GraphTableSVG.ObsoleteGraph) {
-                        var lines = item.createVBACode(i);
+                        var lines = item.createVBACode(id++);
                         lines.forEach(function (v) { return s_1.push(v); });
+                        id++;
                     }
                     else if (item instanceof SVGPathElement) {
-                        var lines = SVGToVBA.createVBACodeOfSVGPath(item, i);
+                        var lines = SVGToVBA.createVBACodeOfSVGPath(item, id++);
                         lines.forEach(function (v) { return s_1.push(v); });
+                        id++;
                     }
                     else if (item instanceof SVGTextElement) {
-                        var lines = SVGToVBA.createVBACodeOfTextElement(item, i);
+                        var lines = SVGToVBA.createVBACodeOfTextElement(item, id++);
                         lines.forEach(function (v) { return s_1.push(v); });
+                        id++;
                     }
-                    else if (item instanceof GraphTableSVG.GTextBox) {
-                        var lines = item.createVBACode(i);
+                    else if (item instanceof GraphTableSVG.GGraph) {
+                        var lines = item.createVBACode(id);
                         lines.forEach(function (v) { return s_1.push(v); });
+                        id += item.VBAObjectNum;
+                    }
+                    else if (item instanceof GraphTableSVG.GObject) {
+                        var lines = item.createVBACode(id);
+                        lines.forEach(function (v) { return s_1.push(v); });
+                        id += item.VBAObjectNum;
                     }
                 }
                 s_1.push(SVGToVBA.cellFunctionCode);
@@ -5853,6 +5895,36 @@ var GraphTableSVG;
             }
             else {
                 return SVGToVBA.create([items]);
+            }
+        };
+        SVGToVBA.count = function (items) {
+            if (items instanceof Array) {
+                var c = 0;
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    if (item instanceof GraphTableSVG.Table) {
+                        c++;
+                    }
+                    else if (item instanceof GraphTableSVG.ObsoleteGraph) {
+                        c++;
+                    }
+                    else if (item instanceof SVGPathElement) {
+                        c++;
+                    }
+                    else if (item instanceof SVGTextElement) {
+                        c++;
+                    }
+                    else if (item instanceof GraphTableSVG.GGraph) {
+                        c += item.VBAObjectNum;
+                    }
+                    else if (item instanceof GraphTableSVG.GObject) {
+                        c += item.VBAObjectNum;
+                    }
+                }
+                return c;
+            }
+            else {
+                return SVGToVBA.count([items]);
             }
         };
         SVGToVBA.createVBACodeOfSVGPath = function (path, id) {
@@ -6484,6 +6556,19 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        GObject.prototype.createVBACode = function (id) {
+            var lines = [];
+            lines.push("Sub create" + id + "(createdSlide As slide)");
+            lines.push("End Sub");
+            return lines;
+        };
+        Object.defineProperty(GObject.prototype, "VBAObjectNum", {
+            get: function () {
+                return 1;
+            },
+            enumerable: true,
+            configurable: true
+        });
         GObject.objectDic = {};
         return GObject;
     }());
@@ -6679,9 +6764,6 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
-        GTextBox.prototype.createVBACode = function (id) {
-            return [];
-        };
         Object.defineProperty(GTextBox.prototype, "svgElements", {
             get: function () {
                 var r = [];
@@ -6882,6 +6964,48 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(GVertex.prototype, "shape", {
+            get: function () {
+                return "NONE";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        GVertex.prototype.createVBACode = function (id) {
+            var lines = [];
+            var backColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.surface.getPropertyStyleValueWithDefault("fill", "gray"));
+            var visible = this.surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            var vAnchor = GraphTableSVG.VBATranslateFunctions.ToVerticalAnchor(this.verticalAnchor);
+            var hAnchor = GraphTableSVG.VBATranslateFunctions.ToHorizontalAnchor(this.horizontalAnchor);
+            lines.push("Sub create" + id + "(createdSlide As slide)");
+            lines.push(" Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes");
+            lines.push(" Dim obj As Shape");
+            lines.push(" Set obj = shapes_.AddShape(" + this.shape + ", " + this.x + ", " + this.y + ", " + this.width + ", " + this.height + ")");
+            lines.push(" Call EditTextFrame(obj.TextFrame, " + this.marginPaddingTop + ", " + this.marginPaddingBottom + ", " + this.marginPaddingLeft + ", " + this.marginPaddingRight + ", false, ppAutoSizeNone)");
+            lines.push(" Call EditAnchor(obj.TextFrame, " + vAnchor + ", " + hAnchor + ")");
+            GraphTableSVG.VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, "obj.TextFrame.TextRange").forEach(function (v) { return lines.push(v); });
+            lines.push(this.getVBAEditLine());
+            lines.push(" Call EditCallOut(obj, \"" + this.objectID + "\", " + visible + ", " + backColor + ")");
+            this.VBAAdjustments.forEach(function (v, i) {
+                lines.push(" obj.Adjustments.Item(" + (i + 1) + ") = " + v);
+            });
+            lines.push("End Sub");
+            return lines;
+        };
+        Object.defineProperty(GVertex.prototype, "VBAAdjustments", {
+            get: function () {
+                return [];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        GVertex.prototype.getVBAEditLine = function () {
+            var lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.surface.getPropertyStyleValueWithDefault("stroke", "gray"));
+            var lineType = GraphTableSVG.msoDashStyle.getLineType(this.surface);
+            var strokeWidth = parseInt(this.surface.getPropertyStyleValueWithDefault("stroke-width", "4"));
+            var visible = this.surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            return " Call EditLine(obj.Line, " + lineColor + ", " + lineType + ", " + 0 + ", " + strokeWidth + ", " + visible + ")";
+        };
         return GVertex;
     }(GraphTableSVG.GTextBox));
     GraphTableSVG.GVertex = GVertex;
@@ -6923,48 +7047,6 @@ var GraphTableSVG;
                     rect.y = (-this.height / 2) + this.marginPaddingTop;
                 }
                 return rect;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(GPathTextBox.prototype, "shape", {
-            get: function () {
-                return "NONE";
-            },
-            enumerable: true,
-            configurable: true
-        });
-        GPathTextBox.prototype.getVBAEditLine = function (id) {
-            var lineColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
-            var lineType = GraphTableSVG.msoDashStyle.getLineType(this.svgPath);
-            var strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
-            var visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-            return " Call EditLine(obj" + id + ".Line, " + lineColor + ", " + lineType + ", " + 0 + ", " + strokeWidth + ", " + visible + ")";
-        };
-        GPathTextBox.prototype.createVBACode = function (id) {
-            var lines = [];
-            var backColor = GraphTableSVG.VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("fill", "gray"));
-            var visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-            var vAnchor = GraphTableSVG.VBATranslateFunctions.ToVerticalAnchor(this.verticalAnchor);
-            var hAnchor = GraphTableSVG.VBATranslateFunctions.ToHorizontalAnchor(this.horizontalAnchor);
-            lines.push("Sub create" + id + "(createdSlide As slide)");
-            lines.push(" Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes");
-            lines.push(" Dim obj" + id + " As Shape");
-            lines.push(" Set obj" + id + " = shapes_.AddShape(" + this.shape + ", " + this.x + ", " + this.y + ", " + this.width + ", " + this.height + ")");
-            lines.push(" Call EditTextFrame(obj" + id + ".TextFrame, " + this.marginPaddingTop + ", " + this.marginPaddingBottom + ", " + this.marginPaddingLeft + ", " + this.marginPaddingRight + ", false, ppAutoSizeNone)");
-            lines.push(" Call EditAnchor(obj" + id + ".TextFrame, " + vAnchor + ", " + hAnchor + ")");
-            GraphTableSVG.VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, "obj" + id + ".TextFrame.TextRange").forEach(function (v) { return lines.push(v); });
-            lines.push(this.getVBAEditLine(id));
-            lines.push(" Call EditCallOut(obj" + id + ", \"" + id + "\", " + visible + ", " + backColor + ")");
-            this.VBAAdjustments.forEach(function (v, i) {
-                lines.push(" obj" + id + ".Adjustments.Item(" + (i + 1) + ") = " + v);
-            });
-            lines.push("End Sub");
-            return lines;
-        };
-        Object.defineProperty(GPathTextBox.prototype, "VBAAdjustments", {
-            get: function () {
-                return [];
             },
             enumerable: true,
             configurable: true
@@ -7315,13 +7397,6 @@ var GraphTableSVG;
             this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(GraphTableSVG.SVG.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         };
-        Object.defineProperty(GEdge.prototype, "shape", {
-            get: function () {
-                return "NONE";
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(GEdge.prototype, "type", {
             get: function () {
                 return "PPEdge";
@@ -7807,6 +7882,74 @@ var GraphTableSVG;
             if (option === void 0) { option = {}; }
             return this.createMark(option);
         };
+        Object.defineProperty(GEdge.prototype, "shape", {
+            get: function () {
+                return "msoConnectorStraight";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        GEdge.prototype.createVBACode = function (id) {
+            var lineArr = [];
+            var r = [];
+            r.push("Sub create" + id + "(createdSlide As slide)");
+            r.push(" Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes");
+            r.push(" Dim obj As Shape");
+            if (this.controlPoint.length == 0) {
+                r.push(" Set obj = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)");
+                if (this.beginVertex != null && this.endVertex != null) {
+                    if (this.markerStart != null) {
+                        r.push(" obj.Line.BeginArrowheadLength = msoArrowheadLong");
+                        r.push(" obj.Line.BeginArrowheadStyle = msoArrowheadTriangle");
+                        r.push(" obj.Line.BeginArrowheadWidth = msoArrowheadWide");
+                    }
+                    if (this.markerEnd != null) {
+                        r.push(" obj.Line.EndArrowheadLength = msoArrowheadLong");
+                        r.push(" obj.Line.EndArrowheadStyle = msoArrowheadTriangle");
+                        r.push(" obj.Line.EndArrowheadWidth = msoArrowheadWide");
+                    }
+                    var begType = GraphTableSVG.ConnectorPosition.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
+                    var endType = GraphTableSVG.ConnectorPosition.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
+                    r.push(" Call EditConnector(obj.ConnectorFormat, shapes_(\"" + this.beginVertex.objectID + "\"), shapes_(\"" + this.endVertex.objectID + "\"), " + begType + ", " + endType + ")");
+                }
+            }
+            else if (this.controlPoint.length > 0) {
+            }
+            this.createVBACodeOfText("shapes_").forEach(function (v) { return r.push(v); });
+            r.push("End Sub");
+            return r;
+        };
+        GEdge.prototype.createVBACodeOfText = function (shapes) {
+            var r = [];
+            var fontSize = parseInt(this.svgTextPath.getPropertyStyleValueWithDefault("font-size", "12"));
+            var fontFamily = GraphTableSVG.VBATranslateFunctions.ToVBAFont(this.svgTextPath.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
+            var fontBold = GraphTableSVG.VBATranslateFunctions.ToFontBold(this.svgTextPath.getPropertyStyleValueWithDefault("font-weight", "none"));
+            for (var i = 0; i < this.svgTextPath.textContent.length; i++) {
+                var s = new Array(0);
+                var p1 = this.svgTextPath.getStartPositionOfChar(i);
+                var p2 = this.svgTextPath.getEndPositionOfChar(i);
+                var width = Math.abs(p2.x - p1.x);
+                var height = Math.abs(p2.y - p1.y);
+                var rad = this.svgTextPath.getRotationOfChar(i);
+                var diffx = (fontSize * 1 / 2) * Math.sin((rad / 180) * Math.PI);
+                var diffy = (fontSize * 3 / 8) + ((fontSize * 3 / 8) * Math.cos((rad / 180) * Math.PI));
+                var left = p1.x + diffx;
+                var top_3 = p1.y - (fontSize * 1 / 4) - diffy;
+                s.push("With " + shapes + ".AddTextBox(msoTextOrientationHorizontal, " + left + ", " + top_3 + "," + width + "," + fontSize + ")");
+                s.push(".TextFrame.TextRange.Text = \"" + this.svgTextPath.textContent[i] + "\"");
+                s.push(".TextFrame.marginLeft = 0");
+                s.push(".TextFrame.marginRight = 0");
+                s.push(".TextFrame.marginTop = 0");
+                s.push(".TextFrame.marginBottom = 0");
+                s.push(".TextFrame.TextRange.Font.Size = " + fontSize);
+                s.push(".TextFrame.TextRange.Font.name = \"" + fontFamily + "\"");
+                s.push(".TextFrame.TextRange.Font.Bold = " + fontBold);
+                s.push(".IncrementRotation(" + this.svgTextPath.getRotationOfChar(i) + ")");
+                s.push("End With");
+                s.forEach(function (v) { return r.push(v); });
+            }
+            return r;
+        };
         GEdge.markerCounter = 0;
         return GEdge;
     }(GraphTableSVG.GTextBox));
@@ -7937,6 +8080,13 @@ var GraphTableSVG;
                 }
             }
         };
+        Object.defineProperty(GEllipse.prototype, "shape", {
+            get: function () {
+                return "msoShapeOval";
+            },
+            enumerable: true,
+            configurable: true
+        });
         return GEllipse;
     }(GraphTableSVG.GVertex));
     GraphTableSVG.GEllipse = GEllipse;
@@ -8198,6 +8348,19 @@ var GraphTableSVG;
             });
             return node;
         };
+        GGraph.prototype.createVBACode = function (id) {
+            var r = [];
+            this.vertices.forEach(function (v) { return v.createVBACode(id++).forEach(function (w) { return r.push(w); }); });
+            this.edges.forEach(function (v) { return v.createVBACode(id++).forEach(function (w) { return r.push(w); }); });
+            return r;
+        };
+        Object.defineProperty(GGraph.prototype, "VBAObjectNum", {
+            get: function () {
+                return this.vertices.length + this.edges.length;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return GGraph;
     }(GraphTableSVG.GObject));
     GraphTableSVG.GGraph = GGraph;
@@ -8315,6 +8478,13 @@ var GraphTableSVG;
                 }
             }
         };
+        Object.defineProperty(GRect.prototype, "shape", {
+            get: function () {
+                return "msoShapeRectangle";
+            },
+            enumerable: true,
+            configurable: true
+        });
         return GRect;
     }(GraphTableSVG.GVertex));
     GraphTableSVG.GRect = GRect;
@@ -8694,11 +8864,11 @@ var GraphTableSVG;
                 var hx2 = (this.arrowHeadWidth / 2);
                 var hy = y1;
                 var mes = "H " + nx1 + " V " + ny + " H " + hx1 + " L " + cx + " " + hy + " L " + hx2 + " " + ny + " H " + nx2 + " V " + by1;
-                var top_3 = "M " + bx1 + " " + by1 + " " + mes + " H " + bx2;
+                var top_4 = "M " + bx1 + " " + by1 + " " + mes + " H " + bx2;
                 var right = "V " + by2;
                 var bottom = "H " + bx1;
                 var left = "V " + by1;
-                this.svgPath.setAttribute("d", top_3 + " " + right + " " + bottom + " " + left + " z");
+                this.svgPath.setAttribute("d", top_4 + " " + right + " " + bottom + " " + left + " z");
             }
             else if (this.direction == "left") {
                 var x1 = -(this.width / 2);
@@ -8716,11 +8886,11 @@ var GraphTableSVG;
                 var hy1 = 0 + (this.arrowHeadWidth / 2);
                 var hy2 = 0 - (this.arrowHeadWidth / 2);
                 var hx = x1;
-                var top_4 = "M " + bx1 + " " + by1 + " H " + bx2;
+                var top_5 = "M " + bx1 + " " + by1 + " H " + bx2;
                 var right = "V " + by2;
                 var bottom = "H " + bx1;
                 var left = "V " + ny1 + " H " + nx + " V " + hy1 + " L " + hx + " " + cy + " L " + nx + " " + hy2 + " V " + ny2 + " H " + bx1 + " V " + by1;
-                this.svgPath.setAttribute("d", top_4 + " " + right + " " + bottom + " " + left + " z");
+                this.svgPath.setAttribute("d", top_5 + " " + right + " " + bottom + " " + left + " z");
             }
             else if (this.direction == "right") {
                 var x1 = -(this.width / 2);
@@ -8738,11 +8908,11 @@ var GraphTableSVG;
                 var hy1 = 0 - (this.arrowHeadWidth / 2);
                 var hy2 = 0 + (this.arrowHeadWidth / 2);
                 var hx = x2;
-                var top_5 = "M " + bx1 + " " + by1 + " H " + bx2;
+                var top_6 = "M " + bx1 + " " + by1 + " H " + bx2;
                 var right = "V " + ny1 + " H " + nx + " V " + hy1 + " L " + hx + " " + cy + " L " + nx + " " + hy2 + " V " + ny2 + " H " + bx2 + " V " + by2;
                 var bottom = "H " + bx1;
                 var left = "V " + by1;
-                this.svgPath.setAttribute("d", top_5 + " " + right + " " + bottom + " " + left + " z");
+                this.svgPath.setAttribute("d", top_6 + " " + right + " " + bottom + " " + left + " z");
             }
             else {
                 var x1 = -(this.width / 2);
@@ -8760,11 +8930,11 @@ var GraphTableSVG;
                 var hx1 = -(this.arrowHeadWidth / 2);
                 var hx2 = (this.arrowHeadWidth / 2);
                 var hy = y2;
-                var top_6 = "M " + bx1 + " " + by1 + " H " + bx2;
+                var top_7 = "M " + bx1 + " " + by1 + " H " + bx2;
                 var right = "V " + by2;
                 var bottom = "H " + nx2 + " V " + ny + " H " + hx2 + " L " + cx + " " + hy + " L " + hx1 + " " + ny + " H " + nx1 + " V " + by2 + " H " + bx1;
                 var left = "V " + by1;
-                this.svgPath.setAttribute("d", top_6 + " " + right + " " + bottom + " " + left + " z");
+                this.svgPath.setAttribute("d", top_7 + " " + right + " " + bottom + " " + left + " z");
             }
         };
         Object.defineProperty(ShapeArrowCallout.prototype, "shape", {

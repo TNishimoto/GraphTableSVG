@@ -138,5 +138,15 @@ namespace GraphTableSVG {
                 return r;
             }
         }
+        
+        public createVBACode(id: number): string[] {
+            const lines: string[] = [];
+            lines.push(`Sub create${id}(createdSlide As slide)`);
+            lines.push(`End Sub`);
+            return lines;
+        }
+        public get VBAObjectNum() : number{
+            return 1;
+        }
     }
 }

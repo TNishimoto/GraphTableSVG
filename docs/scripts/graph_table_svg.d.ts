@@ -72,6 +72,7 @@ declare namespace GraphTableSVG {
         const Auto: ConnectorPosition;
         function ToConnectorPosition(str: string | null): ConnectorPosition;
         function ToVBAConnectorPosition(shapeType: string, str: ConnectorPosition): number;
+        function ToVBAConnectorPosition2(shapeType: string, str: ConnectorPosition): number;
     }
     const VerticalAnchorPropertyName: string;
     const HorizontalAnchorPropertyName: string;
@@ -834,6 +835,7 @@ declare namespace GraphTableSVG {
     type VBAObjectType = ObsoleteGraph | Table | SVGPathElement | SVGTextElement | GTextBox;
     class SVGToVBA {
         static create(items: VBAObjectType[] | VBAObjectType): string;
+        static count(items: VBAObjectType[] | VBAObjectType): number;
         private static createVBACodeOfSVGPath(path, id);
         private static createVBACodeOfTextElement(element, id);
         static cellFunctionCode: string;
@@ -904,6 +906,8 @@ declare namespace GraphTableSVG {
         dispose(): void;
         readonly isDisposed: boolean;
         readonly objectID: string;
+        createVBACode(id: number): string[];
+        readonly VBAObjectNum: number;
     }
 }
 declare namespace GraphTableSVG {
@@ -933,7 +937,6 @@ declare namespace GraphTableSVG {
         readonly marginPaddingRight: number;
         readonly marginPaddingBottom: number;
         readonly innerRectangle: Rectangle;
-        createVBACode(id: number): string[];
         readonly svgElements: SVGElement[];
         hasDescendant(obj: SVGElement): boolean;
     }
@@ -959,6 +962,10 @@ declare namespace GraphTableSVG {
         readonly isLeaf: boolean;
         readonly tree: PPVirtualSubTree;
         readonly region: Rectangle;
+        readonly shape: string;
+        createVBACode(id: number): string[];
+        protected readonly VBAAdjustments: number[];
+        private getVBAEditLine();
     }
 }
 declare namespace GraphTableSVG {
@@ -967,10 +974,6 @@ declare namespace GraphTableSVG {
         constructor(svgbox: SVGElement | string, option?: TextBoxShapeAttributes);
         protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
         readonly innerRectangle: Rectangle;
-        protected readonly shape: string;
-        private getVBAEditLine(id);
-        createVBACode(id: number): string[];
-        protected readonly VBAAdjustments: number[];
         readonly type: string;
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         protected getAutoPosition(x: number, y: number): ConnectorPosition;
@@ -986,7 +989,7 @@ declare namespace GraphTableSVG {
         speakerX: number;
         speakerY: number;
         readonly speakerPosition: SpeakerPosition;
-        protected readonly shape: string;
+        readonly shape: string;
         protected readonly VBAAdjustments: number[];
     }
 }
@@ -997,7 +1000,6 @@ declare namespace GraphTableSVG {
         protected _svgTextPath: SVGTextPathElement;
         readonly svgTextPath: SVGTextPathElement;
         protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
-        protected readonly shape: string;
         readonly type: string;
         tag: any;
         markerStart: SVGMarkerElement | null;
@@ -1044,6 +1046,9 @@ declare namespace GraphTableSVG {
             strokeWidth?: string;
             color?: string;
         }): SVGMarkerElement;
+        readonly shape: string;
+        createVBACode(id: number): string[];
+        createVBACodeOfText(shapes: string): string[];
     }
 }
 declare namespace GraphTableSVG {
@@ -1059,6 +1064,7 @@ declare namespace GraphTableSVG {
         readonly ry: number;
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         protected getAutoPosition(x: number, y: number): ConnectorPosition;
+        readonly shape: string;
     }
 }
 declare namespace GraphTableSVG {
@@ -1090,6 +1096,8 @@ declare namespace GraphTableSVG {
             isLatexMode?: boolean;
         }): void;
         private createChildFromLogicTree<T>(parent, logicVertex, option?);
+        createVBACode(id: number): string[];
+        readonly VBAObjectNum: number;
     }
 }
 declare namespace GraphTableSVG {
@@ -1104,6 +1112,7 @@ declare namespace GraphTableSVG {
         protected updateSurface(): void;
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         protected getAutoPosition(x: number, y: number): ConnectorPosition;
+        readonly shape: string;
     }
 }
 declare namespace GraphTableSVG {
@@ -1131,7 +1140,7 @@ declare namespace GraphTableSVG {
         protected readonly boxWidth: number;
         protected updateToFitText(): void;
         protected update(): void;
-        protected readonly shape: string;
+        readonly shape: string;
         protected readonly VBAAdjustments: number[];
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         protected getAutoPosition(x: number, y: number): ConnectorPosition;

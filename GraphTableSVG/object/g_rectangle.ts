@@ -1,5 +1,5 @@
 namespace GraphTableSVG {
-    export class GRect extends GVertex  {
+    export class GRect extends GVertex {
         public get svgRectangle(): SVGRectElement {
             return <SVGRectElement>this._surface;
         }
@@ -11,7 +11,7 @@ namespace GraphTableSVG {
 
             this.update();
         }
-        protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
+        protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
             this._surface = SVG.createRectangle(this.svgGroup, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
         }
@@ -29,8 +29,8 @@ namespace GraphTableSVG {
             const rect = new Rectangle();
             rect.width = this.width;
             rect.height = this.height;
-            rect.x = -this.width/2;
-            rect.y = -this.height/2;
+            rect.x = -this.width / 2;
+            rect.y = -this.height / 2;
             return rect;
         }
         /**
@@ -53,65 +53,68 @@ namespace GraphTableSVG {
             if (this.height != value) this.svgRectangle.setAttribute("height", value.toString());
         }
 
-        protected updateSurface(){
-            this.svgRectangle.x.baseVal.value = -this.width/2;
-            this.svgRectangle.y.baseVal.value = -this.height/2;
+        protected updateSurface() {
+            this.svgRectangle.x.baseVal.value = -this.width / 2;
+            this.svgRectangle.y.baseVal.value = -this.height / 2;
 
         }
-/**
-        * 接続部分の座標を返します。
-        * @param type
-        * @param x
-        * @param y
-        */
-       public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
-        const wr = this.width / 2;
-        const hr = this.height / 2;
+        /**
+                * 接続部分の座標を返します。
+                * @param type
+                * @param x
+                * @param y
+                */
+        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+            const wr = this.width / 2;
+            const hr = this.height / 2;
 
 
-        switch (type) {
-            case ConnectorPosition.Top:
-                return [this.cx, this.cy - hr];
-            case ConnectorPosition.TopRight:
-            case ConnectorPosition.Right:
-            case ConnectorPosition.BottomRight:
-                return [this.cx + wr, this.cy];
-            case ConnectorPosition.Bottom:
-                return [this.cx, this.cy + hr];
-            case ConnectorPosition.BottomLeft:
-            case ConnectorPosition.Left:
-            case ConnectorPosition.TopLeft:
-                return [this.cx - wr, this.cy];
-            default:
-                const autoType = this.getAutoPosition(x, y);
-                return this.getLocation(autoType, x, y);
-        }
-    }
-    protected getAutoPosition(x: number, y: number): ConnectorPosition {
-        const wr = this.width / 2;
-        const hr = this.height / 2;
-
-        const line1 = new VLine(this.cx, this.cy, this.cx + wr, this.cy + hr);
-        const line2 = new VLine(this.cx, this.cy, this.cx + wr, this.cy - hr);
-
-        const b1 = line1.contains(x, y);
-        const b2 = line2.contains(x, y);
-
-        if (b1) {
-            if (b2) {
-                return ConnectorPosition.Top;
-            } else {
-                return ConnectorPosition.Right;
-            }
-        } else {
-            if (b2) {
-                return ConnectorPosition.Left;
-            } else {
-                return ConnectorPosition.Bottom;
+            switch (type) {
+                case ConnectorPosition.Top:
+                    return [this.cx, this.cy - hr];
+                case ConnectorPosition.TopRight:
+                case ConnectorPosition.Right:
+                case ConnectorPosition.BottomRight:
+                    return [this.cx + wr, this.cy];
+                case ConnectorPosition.Bottom:
+                    return [this.cx, this.cy + hr];
+                case ConnectorPosition.BottomLeft:
+                case ConnectorPosition.Left:
+                case ConnectorPosition.TopLeft:
+                    return [this.cx - wr, this.cy];
+                default:
+                    const autoType = this.getAutoPosition(x, y);
+                    return this.getLocation(autoType, x, y);
             }
         }
+        protected getAutoPosition(x: number, y: number): ConnectorPosition {
+            const wr = this.width / 2;
+            const hr = this.height / 2;
 
-    }
+            const line1 = new VLine(this.cx, this.cy, this.cx + wr, this.cy + hr);
+            const line2 = new VLine(this.cx, this.cy, this.cx + wr, this.cy - hr);
 
+            const b1 = line1.contains(x, y);
+            const b2 = line2.contains(x, y);
+
+            if (b1) {
+                if (b2) {
+                    return ConnectorPosition.Top;
+                } else {
+                    return ConnectorPosition.Right;
+                }
+            } else {
+                if (b2) {
+                    return ConnectorPosition.Left;
+                } else {
+                    return ConnectorPosition.Bottom;
+                }
+            }
+
+        }
+        
+        public get shape(): string {
+            return "msoShapeRectangle";
+        }
     }
 }

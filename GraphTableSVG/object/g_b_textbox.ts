@@ -198,9 +198,6 @@ namespace GraphTableSVG {
             this.svgText.setPropertyStyleValue("--margin-top", value.toString());
         }
         */
-        public createVBACode(id: number): string[] {
-            return [];
-        }
         public get svgElements(): SVGElement[] {
             const r: SVGElement[] = [];
             r.push(this.svgGroup);
