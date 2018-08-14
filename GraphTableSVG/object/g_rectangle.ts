@@ -1,5 +1,5 @@
 namespace GraphTableSVG {
-    export class PPRectangle extends PPVertex  {
+    export class GRect extends GVertex  {
         public get svgRectangle(): SVGRectElement {
             return <SVGRectElement>this._surface;
         }
@@ -17,7 +17,7 @@ namespace GraphTableSVG {
         }
 
         static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): CalloutAttributes {
-            PPTextBox.constructAttributes(e, removeAttributes, output);
+            GTextBox.constructAttributes(e, removeAttributes, output);
 
 
             return output;

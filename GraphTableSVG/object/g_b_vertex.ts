@@ -1,10 +1,10 @@
 namespace GraphTableSVG {
 
-    export class PPVertex extends PPTextBox {
+    export class GVertex extends GTextBox {
         protected setClassNameOfSVGGroup() {
             const parent = this.svgGroup.parentElement;
             if (parent instanceof SVGElement) {
-                const className = parent.getPropertyStyleValue(GraphTableSVG.PPGraph.defaultVertexClass);
+                const className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.defaultVertexClass);
                 if (className != null) {
                     this.svgGroup.setAttribute("class", className);
                 }
@@ -47,10 +47,10 @@ namespace GraphTableSVG {
         /**
         入辺配列を返します。
         */
-        get outcomingEdges(): PPEdge[] {
+        get outcomingEdges(): GEdge[] {
             const p = <number[]>JSON.parse(<string>this.svgGroup.gtGetAttribute("outcoming-edges", "[]"));
-            const p2 = p.map((v) => PPObject.getObjectFromObjectID(v.toString()));
-            return <PPEdge[]>p2;
+            const p2 = p.map((v) => GObject.getObjectFromObjectID(v.toString()));
+            return <GEdge[]>p2;
         }
 
         /*
@@ -63,10 +63,10 @@ namespace GraphTableSVG {
         /**
         出辺配列を返します。
         */
-        get incomingEdges(): PPEdge[] {
+        get incomingEdges(): GEdge[] {
             const p = <number[]>JSON.parse(<string>this.svgGroup.gtGetAttribute("incoming-edges", "[]"));
-            const p2 = p.map((v) => PPObject.getObjectFromObjectID(v.toString()));
-            return <PPEdge[]>p2;
+            const p2 = p.map((v) => GObject.getObjectFromObjectID(v.toString()));
+            return <GEdge[]>p2;
 
         }
         /*
@@ -81,7 +81,7 @@ namespace GraphTableSVG {
          * @param edge
          * @param insertIndex
          */
-        public insertOutcomingEdge(edge: PPEdge, insertIndex: number = this.outcomingEdges.length) {
+        public insertOutcomingEdge(edge: GEdge, insertIndex: number = this.outcomingEdges.length) {
             const p = this.outcomingEdges.indexOf(edge);
             if (p != -1) {
                 throw new Error();
@@ -101,7 +101,7 @@ namespace GraphTableSVG {
          * 出辺を削除します。
          * @param edge
          */
-        public removeOutcomingEdge(edge: PPEdge) {
+        public removeOutcomingEdge(edge: GEdge) {
             const p = this.outcomingEdges.indexOf(edge);
             if (p != null) {
                 const edges = this.outcomingEdges;
@@ -120,7 +120,7 @@ namespace GraphTableSVG {
         * @param edge
         * @param insertIndex
         */
-        public insertIncomingEdge(edge: PPEdge, insertIndex: number = this.incomingEdges.length) {
+        public insertIncomingEdge(edge: GEdge, insertIndex: number = this.incomingEdges.length) {
             const p = this.incomingEdges.indexOf(edge);
             if (p != -1) {
                 throw new Error();
@@ -139,7 +139,7 @@ namespace GraphTableSVG {
          * 入辺を削除します。
          * @param edge
          */
-        public removeIncomingEdge(edge: PPEdge) {
+        public removeIncomingEdge(edge: GEdge) {
             const p = this.incomingEdges.indexOf(edge);
             if (p != null) {
                 const edges = this.incomingEdges;
@@ -166,13 +166,13 @@ namespace GraphTableSVG {
         /**
         * 親Vertex配列を返します。
         */
-        public getParents(): PPVertex[] {
-            return this.incomingEdges.filter((v) => v.beginVertex != null).map((v) => <PPVertex>v.beginVertex);
+        public getParents(): GVertex[] {
+            return this.incomingEdges.filter((v) => v.beginVertex != null).map((v) => <GVertex>v.beginVertex);
         }
         /**
         親との間の辺を返します。
         */
-        get parentEdge(): PPEdge | null {
+        get parentEdge(): GEdge | null {
             if (this.incomingEdges.length == 0) {
                 return null;
             } else {
@@ -182,7 +182,7 @@ namespace GraphTableSVG {
         /**
         このVertexの親を返します。
         */
-        get parent(): PPVertex | null {
+        get parent(): GVertex | null {
             if (this.parentEdge == null) {
                 return null;
             } else {
@@ -199,8 +199,8 @@ namespace GraphTableSVG {
         /**
         出辺配列を返します。
         */
-        public get children(): PPVertex[] {
-            return this.outcomingEdges.filter((v) => v.endVertex != null).map((v) => <PPVertex>v.endVertex);
+        public get children(): GVertex[] {
+            return this.outcomingEdges.filter((v) => v.endVertex != null).map((v) => <GVertex>v.endVertex);
         }
 
         /**

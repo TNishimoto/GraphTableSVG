@@ -7,7 +7,7 @@ namespace GraphTableSVG {
          * @param xInterval 
          * @param yInterval 
          */
-        export function alignVerticeByLeaveSub(forest: PPGraph, xInterval: number, yInterval: number): void {
+        export function alignVerticeByLeaveSub(forest: GGraph, xInterval: number, yInterval: number): void {
             let leafCounter = 0;
             forest.getOrderedVertices(VertexOrder.Postorder).forEach((v) => {
                 let x = 0;
@@ -29,7 +29,7 @@ namespace GraphTableSVG {
                 v.cy = y;
             });
         }
-        export function reverse(graph: PPGraph, isX: boolean, isY: boolean) {
+        export function reverse(graph: GGraph, isX: boolean, isY: boolean) {
             if (graph.vertices.length > 0) {
                 if (isY) {
                     const midY = middle(graph.vertices.map((v) => v.cy));
@@ -86,7 +86,7 @@ namespace GraphTableSVG {
          * 子Vertexが一列に並ぶようにグラフ内のVertexを整列します。
          * @param graph 
          */
-        export function alignVerticeByChildren(graph: PPGraph): void {
+        export function alignVerticeByChildren(graph: GGraph): void {
             const [xi, yi] = getXYIntervals(graph);
 
             if (graph.rootVertex != null) {
@@ -125,7 +125,7 @@ namespace GraphTableSVG {
 
         }
 
-        export function standardTreeWidthArrangement(graph: PPGraph): void {
+        export function standardTreeWidthArrangement(graph: GGraph): void {
             //const xInterval = graph.vertexXInterval;
             //const yInterval = graph.vertexYInterval;
             const [xi, yi] = getXYIntervals(graph);
@@ -144,7 +144,7 @@ namespace GraphTableSVG {
          * グラフ内のVertexからVertex間の水平間隔と垂直間隔を自動で算出します。
          * @param graph 
          */
-        function computeAutoXYIntervals(graph : PPGraph) : [number, number]{
+        function computeAutoXYIntervals(graph : GGraph) : [number, number]{
             let yMaximalInterval = 30;
             let xMaximalInterval = 30;
             graph.vertices.forEach((v)=>{
@@ -157,7 +157,7 @@ namespace GraphTableSVG {
          * グラフに設定されているVertex間の水平間隔と垂直間隔を算出します。
          * @param graph 
          */
-        function getXYIntervals(graph : PPGraph) : [number, number]{
+        function getXYIntervals(graph : GGraph) : [number, number]{
             const [xMaximalInterval, yMaximalInterval] = computeAutoXYIntervals(graph);
             const xi = graph.vertexXInterval != null ? graph.vertexXInterval : xMaximalInterval;
             const yi = graph.vertexYInterval != null ? graph.vertexYInterval : yMaximalInterval;
@@ -167,7 +167,7 @@ namespace GraphTableSVG {
          * グラフ内の森を並べます。最初の木が内接する四角形の左上の座標は[0,0]です。
          * @param graph 
          */
-        function alignTrees(graph: PPGraph){
+        function alignTrees(graph: GGraph){
             let x = 0;
             graph.roots.forEach((v)=>{
                 const region = v.tree.region();
@@ -179,7 +179,7 @@ namespace GraphTableSVG {
          * 葉が一列に並ぶようにVertexを整列します。
          * @param graph 
          */
-        export function alignVerticeByLeave(graph: PPGraph): void {
+        export function alignVerticeByLeave(graph: GGraph): void {
             graph.vertices.forEach((v) => { v.cx = 0; v.cy = 0 });
             const [xi, yi] = getXYIntervals(graph);
             alignVerticeByLeaveSub(graph, xi, yi);

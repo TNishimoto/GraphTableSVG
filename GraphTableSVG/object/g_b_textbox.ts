@@ -1,6 +1,6 @@
 namespace GraphTableSVG {
 
-    export class PPTextBox extends PPObject {
+    export class GTextBox extends GObject {
         private _svgText: SVGTextElement;
         public get svgText(): SVGTextElement {
             return this._svgText;
@@ -62,7 +62,7 @@ namespace GraphTableSVG {
 
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
-                if (PPTextBox.updateTextAttributes.some((v) => v == p.attributeName)) {
+                if (GTextBox.updateTextAttributes.some((v) => v == p.attributeName)) {
                     b = true;
                 }
                 if (p.attributeName == null) {
@@ -78,7 +78,7 @@ namespace GraphTableSVG {
         protected dispatchConnectPositionChangedEvent(): void {
             if (this.surface != null) {
                 var event = document.createEvent("HTMLEvents");
-                event.initEvent(PPTextBox.ConnectPositionChangedEventName, true, true)
+                event.initEvent(GTextBox.ConnectPositionChangedEventName, true, true)
                 this.surface.dispatchEvent(event);
             }
         }
@@ -147,7 +147,7 @@ namespace GraphTableSVG {
             this._isUpdating = true;
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();
-            ObsoleteGraph.setXY2(this.svgText, this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+            this.svgText.gtSetXY(this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
         }

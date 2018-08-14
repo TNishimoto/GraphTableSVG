@@ -1,6 +1,6 @@
 ﻿
 namespace GraphTableSVG {
-    export type VBAObjectType = ObsoleteGraph | Table | SVGPathElement | SVGTextElement | PPTextBox;
+    export type VBAObjectType = ObsoleteGraph | Table | SVGPathElement | SVGTextElement | GTextBox;
     export class SVGToVBA {
 
         /**
@@ -38,7 +38,7 @@ namespace GraphTableSVG {
                         const lines = SVGToVBA.createVBACodeOfTextElement(item, i);
                         lines.forEach((v) => s.push(v));
 
-                    } else if(item instanceof PPTextBox){
+                    } else if(item instanceof GTextBox){
                         const lines = item.createVBACode(i);
                         lines.forEach((v) => s.push(v));
                     }

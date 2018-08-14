@@ -1,5 +1,5 @@
 namespace GraphTableSVG {
-    export class PPEllipse extends PPVertex {
+    export class GEllipse extends GVertex {
         public get svgEllipse(): SVGEllipseElement {
             return <SVGEllipseElement>this._surface;
         }
@@ -14,7 +14,7 @@ namespace GraphTableSVG {
         }
 
         static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): CalloutAttributes {
-            PPTextBox.constructAttributes(e, removeAttributes, output);
+            GTextBox.constructAttributes(e, removeAttributes, output);
 
 
             return output;

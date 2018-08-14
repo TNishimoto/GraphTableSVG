@@ -4,6 +4,7 @@ interface SVGElement {
     getPaddingTop() : number;
     getPaddingRight() : number;
     getPaddingBottom() : number;
+
 }
 SVGElement.prototype.getPaddingTop = function () {
     const p: SVGTextElement = this;
@@ -55,9 +56,38 @@ interface SVGTextElement {
     setMarginRight(value : number) : void;
     getMarginBottom() : number;
     setMarginBottom(value : number) : void;
+    gtSetXY(rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null, isAutoSizeShapeToFitText: boolean) : void;
 
 
+}
+SVGTextElement.prototype.gtSetXY = function (rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null, isAutoSizeShapeToFitText: boolean) {
+    const text : SVGTextElement = this;
+    let x = rect.x;
+    let y = rect.y;
+    text.setAttribute('x', x.toString());
+    text.setAttribute('y', y.toString());
 
+    const b2 = text.getBBox();
+
+    const dy = b2.y - y;
+    const dx = b2.x - x;
+
+    y -= dy;
+    x -= dx;
+    if (vAnchor == GraphTableSVG.VerticalAnchor.Middle) {
+        y += (rect.height - b2.height) / 2
+    } else if (vAnchor == GraphTableSVG.VerticalAnchor.Bottom) {
+        y += rect.height - b2.height;
+    }
+
+    if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
+        x += (rect.width - b2.width) / 2;
+    } else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
+        x += rect.width - b2.width;
+    }
+
+    text.setAttribute('y', y.toString());
+    text.setAttribute('x', x.toString());
 }
 
 

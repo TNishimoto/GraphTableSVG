@@ -1,5 +1,5 @@
 namespace GraphTableSVG {
-    export class ShapeArrowCallout extends PPPathTextBox {
+    export class ShapeArrowCallout extends GPathTextBox {
 
         public constructor(svgbox: SVGElement | string, option: ShapeArrowCalloutAttributes = {}) {
             super(svgbox, option);
@@ -14,7 +14,7 @@ namespace GraphTableSVG {
             this.updateAttributes.push("data-direction");
         }
         static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : ShapeArrowCalloutAttributes = {}) : ShapeArrowCalloutAttributes {        
-            PPTextBox.constructAttributes(e, removeAttributes, output);
+            GTextBox.constructAttributes(e, removeAttributes, output);
             output.arrowNeckWidth = e.gtGetAttributeNumberWithoutNull("arrow-neck-width", 10);
             output.arrowNeckHeight = e.gtGetAttributeNumberWithoutNull("arrow-neck-height", 10);
             output.arrowHeadWidth = e.gtGetAttributeNumberWithoutNull("arrow-head-width", 20);

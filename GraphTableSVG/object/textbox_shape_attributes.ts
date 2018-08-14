@@ -48,8 +48,8 @@ namespace GraphTableSVG {
         y2?: number,
         beginConnectorType?: ConnectorPosition,
         endConnectorType?: ConnectorPosition,
-        beginVertex?: PPVertex | string,
-        endVertex?: PPVertex | string,
+        beginVertex?: GVertex | string,
+        endVertex?: GVertex | string,
         pathTextAlignment? : pathTextAlighnment
     }
     export type ConnectOption = {
@@ -105,29 +105,29 @@ namespace GraphTableSVG {
             }
         }
     }
-    function createCustomElement(e: SVGElement, type: ShapeObjectType): PPTextBox | null {
+    function createCustomElement(e: SVGElement, type: ShapeObjectType): GTextBox | null {
         const parent = e.parentElement;
         if (parent instanceof SVGElement) {
-            let r: PPTextBox;
+            let r: GTextBox;
 
             if (type == ShapeObjectType.Callout) {
-                const option = Callout.constructAttributes(e, true);
-                r = new Callout(parent, option);
+                const option = GCallout.constructAttributes(e, true);
+                r = new GCallout(parent, option);
             } else if (type == ShapeObjectType.ShapeArrowCallout) {
                 const option = ShapeArrowCallout.constructAttributes(e, true);
                 r = new ShapeArrowCallout(parent, option);
             } else if (type == ShapeObjectType.Ellipse) {
-                const option = PPTextBox.constructAttributes(e, true);
-                r = new PPEllipse(parent, option);
+                const option = GTextBox.constructAttributes(e, true);
+                r = new GEllipse(parent, option);
             } else if (type == ShapeObjectType.Rect) {
-                const option = PPTextBox.constructAttributes(e, true);
-                r = new PPRectangle(parent, option);
+                const option = GTextBox.constructAttributes(e, true);
+                r = new GRect(parent, option);
             } else if (type == ShapeObjectType.Line) {
-                const option = PPEdge.constructAttributes(e, true);
-                r = <any>new PPEdge(parent, option);
+                const option = GEdge.constructAttributes(e, true);
+                r = <any>new GEdge(parent, option);
             } else if (type == ShapeObjectType.Graph) {
-                const option = PPTextBox.constructAttributes(e, true);
-                r = <any>new PPGraph(parent, option);
+                const option = GTextBox.constructAttributes(e, true);
+                r = <any>new GGraph(parent, option);
             }
             else {
                 return null;
@@ -170,9 +170,9 @@ namespace GraphTableSVG {
             return output;
         }
     }
-    export function createShape(parent : SVGElement | string | PPObject, type : ShapeObjectType, option : any = {}) : PPObject {
+    export function createShape(parent : SVGElement | string | GObject, type : ShapeObjectType, option : any = {}) : GObject {
         let _parent : SVGElement;
-        if(parent instanceof PPObject){
+        if(parent instanceof GObject){
             _parent = parent.svgGroup;
         }else if(parent instanceof SVGElement){
             _parent = parent;
@@ -181,12 +181,12 @@ namespace GraphTableSVG {
         }
 
         switch(type){
-            case ShapeObjectType.Callout : return new Callout(_parent, option);
+            case ShapeObjectType.Callout : return new GCallout(_parent, option);
             case ShapeObjectType.ShapeArrowCallout : return new ShapeArrowCallout(_parent, option);
-            case ShapeObjectType.Ellipse : return new PPEllipse(_parent, option);
-            case ShapeObjectType.Rect : return new PPRectangle(_parent, option);
-            case ShapeObjectType.Line : return new PPEdge(_parent, option);
-            case ShapeObjectType.Graph : return new PPGraph(_parent, option);
+            case ShapeObjectType.Ellipse : return new GEllipse(_parent, option);
+            case ShapeObjectType.Rect : return new GRect(_parent, option);
+            case ShapeObjectType.Line : return new GEdge(_parent, option);
+            case ShapeObjectType.Graph : return new GGraph(_parent, option);
         }
         throw Error("error");
     }

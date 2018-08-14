@@ -1,14 +1,14 @@
 namespace GraphTableSVG {
     export class PPVirtualSubTree {
-        subTreeRoot: PPVertex;
+        subTreeRoot: GVertex;
 
-        constructor(_root: PPVertex) {
+        constructor(_root: GVertex) {
             this.subTreeRoot = _root;
         }
         /**
          * 根の子ノードの配列を返します。
          */
-        get children(): PPVertex[] {
+        get children(): GVertex[] {
             const p = this;
             return this.subTreeRoot.children.map(function (x, i, arr) {
                 return x;
@@ -18,7 +18,7 @@ namespace GraphTableSVG {
         /**
          * 根の親との間の辺を返します。
          */
-        get parentEdge(): PPEdge | null {
+        get parentEdge(): GEdge | null {
             return this.subTreeRoot.parentEdge;
         }
         
@@ -26,7 +26,7 @@ namespace GraphTableSVG {
          * この木の中の全てのVertexを返します。
          * @param result 
          */
-        public getSubtree(result: PPVertex[] = []): PPVertex[] {
+        public getSubtree(result: GVertex[] = []): GVertex[] {
             result.push(this.subTreeRoot);
 
             const children = this.children;
@@ -85,7 +85,7 @@ namespace GraphTableSVG {
         /**
          * 一番左の葉を返します。
          */
-        public get mostLeftLeave(): PPVertex {
+        public get mostLeftLeave(): GVertex {
             return this.leaves[0];
         }
 
@@ -119,7 +119,7 @@ namespace GraphTableSVG {
         /**
          * 葉の配列を返します。
          */
-        get leaves(): PPVertex[] {
+        get leaves(): GVertex[] {
             const p = this;
             return this.getSubtree().filter(function (x, i, arr) {
                 return x.outcomingEdges.length == 0;

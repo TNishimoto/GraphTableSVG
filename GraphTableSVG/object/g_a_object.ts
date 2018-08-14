@@ -1,15 +1,15 @@
 namespace GraphTableSVG {
 
-    export class PPObject {
-        private static objectDic: { [key: string]: PPObject; } = {};
-        public static getObjectFromObjectID(id: string): PPObject {
+    export class GObject {
+        private static objectDic: { [key: string]: GObject; } = {};
+        public static getObjectFromObjectID(id: string): GObject {
             return this.objectDic[id];
         }
-        public static setObjectFromObjectID(obj: PPObject) {
+        public static setObjectFromObjectID(obj: GObject) {
             const id = obj.objectID;
             this.objectDic[id] = obj;
         }
-        public static getObjectFromID(id: string): PPObject | null {
+        public static getObjectFromID(id: string): GObject | null {
 
 
             for (let key in this.objectDic) {
@@ -98,7 +98,7 @@ namespace GraphTableSVG {
 
             //const objID = PPTextBoxShapeBase.objectIDCounter++;
             //this.svgGroup.setAttribute("objectID", objID.toString());
-            PPObject.setObjectFromObjectID(this);
+            GObject.setObjectFromObjectID(this);
 
             this.svgGroup.setAttribute("data-group-type", this.type);
             this.createSurface(parentElement, option);

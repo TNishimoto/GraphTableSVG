@@ -1,6 +1,6 @@
 namespace GraphTableSVG {
 
-    export class Callout extends PPPathTextBox {
+    export class GCallout extends GPathTextBox {
         public constructor(svgbox: SVGElement | string, option: CalloutAttributes = {}) {
             super(svgbox, option);
             this.speakerX = option.speakerX == undefined ? 0 : option.speakerX;
@@ -8,7 +8,7 @@ namespace GraphTableSVG {
         }
 
         static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : CalloutAttributes = {}) : CalloutAttributes {        
-            PPTextBox.constructAttributes(e, removeAttributes, output);
+            GTextBox.constructAttributes(e, removeAttributes, output);
             output.speakerX = e.gtGetAttributeNumber("speaker-x", 200);
             output.speakerY = e.gtGetAttributeNumber("speaker-y", 200);
 
@@ -20,13 +20,13 @@ namespace GraphTableSVG {
             return output;
         }
 
-        static openCustomElement(e: SVGElement): Callout {
+        static openCustomElement(e: SVGElement): GCallout {
             const parent = e.parentElement;
             if (parent instanceof SVGSVGElement) {
-                const option = Callout.constructAttributes(e,true);
+                const option = GCallout.constructAttributes(e,true);
                 const attrs = e.gtGetAttributes();
 
-                const r = new Callout(parent, option);
+                const r = new GCallout(parent, option);
                 attrs.forEach((v)=>r.svgGroup.setAttribute(v.name, v.value));
                 e.remove();
                 return r;

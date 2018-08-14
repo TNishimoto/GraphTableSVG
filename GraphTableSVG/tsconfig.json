@@ -16,8 +16,7 @@
         "gui.ts",
         "logic_tree.ts",
         "svg.ts",
-        "vline.ts",
-        "object/pp_a_object.ts"
+        "vline.ts"
 
     ],
     "include": [

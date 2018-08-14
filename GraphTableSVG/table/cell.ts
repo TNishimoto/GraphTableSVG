@@ -1067,7 +1067,8 @@ namespace GraphTableSVG {
             innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
 
             if (this.isLocated) {
-                ObsoleteGraph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+                this.svgText.gtSetXY(innerRect, this.verticalAnchor, this.horizontalAnchor, false);
+                //ObsoleteGraph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
             }
         }
 

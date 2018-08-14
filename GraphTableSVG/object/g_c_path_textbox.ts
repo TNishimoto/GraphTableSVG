@@ -1,5 +1,5 @@
 namespace GraphTableSVG {
-    export class PPPathTextBox extends PPVertex {
+    export class GPathTextBox extends GVertex {
         //private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {
             return <SVGPathElement>this.surface;

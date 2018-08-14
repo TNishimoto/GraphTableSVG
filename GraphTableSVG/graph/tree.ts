@@ -43,7 +43,7 @@ namespace GraphTableSVG {
          * 入力木構造を表現する文字列を出力します。
          * @param tree 文字列に変換する木構造
          */
-        export function getParseString(tree : GraphTableSVG.ObsoleteVertex) : string {
+        export function getParseString(tree : GraphTableSVG.GVertex) : string {
             let str = "";
             str += "(";
             tree.outcomingEdges.forEach((v)=>{
