@@ -122,7 +122,7 @@ namespace GraphTableSVG {
             } else if (type == ShapeObjectType.Rect) {
                 const option = GTextBox.constructAttributes(e, true);
                 r = new GRect(parent, option);
-            } else if (type == ShapeObjectType.Line) {
+            } else if (type == ShapeObjectType.Edge) {
                 const option = GEdge.constructAttributes(e, true);
                 r = <any>new GEdge(parent, option);
             } else if (type == ShapeObjectType.Graph) {
@@ -185,7 +185,7 @@ namespace GraphTableSVG {
             case ShapeObjectType.ShapeArrowCallout : return new ShapeArrowCallout(_parent, option);
             case ShapeObjectType.Ellipse : return new GEllipse(_parent, option);
             case ShapeObjectType.Rect : return new GRect(_parent, option);
-            case ShapeObjectType.Line : return new GEdge(_parent, option);
+            case ShapeObjectType.Edge : return new GEdge(_parent, option);
             case ShapeObjectType.Graph : return new GGraph(_parent, option);
         }
         throw Error("error");

@@ -198,7 +198,7 @@ namespace GraphTableSVG {
          * @param option 
          */
         public appendChild(parent: GVertex, child: GVertex, option: { insertIndex?: number } = {}) {
-            const edge: GEdge = <any>GraphTableSVG.createShape(this, 'g-line');
+            const edge: GEdge = <any>GraphTableSVG.createShape(this, 'g-edge');
             this.connect(parent, edge, child, { beginConnectorType: "bottom", endConnectorType: "top" });
             //this.createdNodeCallback(child);
             this.relocate();
@@ -244,6 +244,20 @@ namespace GraphTableSVG {
 
             //this.roots = roots;
         }
+        removeGraph(svg: HTMLElement) {
+            if (svg.contains(this.svgGroup)) {
+                svg.removeChild(this.svgGroup);
+            }
+        }
+        /**
+         * グラフの領域を表すRectangleを返します。位置の基準はグラフが追加されているNodeです。
+         */
+        public getRegion(): Rectangle {
+            const rects = this.vertices.map((v) => v.region);
+            const rect = GraphTableSVG.Rectangle.merge(rects);
+            rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
+            return rect;
+        }
         /**
          * 入力のVertexを親として、入力のLogicTreeを子とした部分木を作成します。
          * @param parent 親にするVertex
@@ -257,7 +271,7 @@ namespace GraphTableSVG {
             const node : GVertex = <any>GraphTableSVG.createShape(this, 'g-ellipse', { class: logicVertex.vertexClass });
             if (logicVertex.vertexText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
             if (parent != null) {
-                const edge : GEdge = <any>GraphTableSVG.createShape(this, 'g-line', { class: logicVertex.parentEdgeClass });
+                const edge : GEdge = <any>GraphTableSVG.createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass });
                 if (logicVertex.parentEdgeText != null) {
                     edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
                     edge.pathTextAlignment = pathTextAlighnment.regularInterval;

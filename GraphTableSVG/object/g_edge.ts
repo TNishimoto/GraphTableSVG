@@ -227,8 +227,8 @@ namespace GraphTableSVG {
 
             if (option.startMarker == undefined && markerStartName != null) option.startMarker = markerStartName == "true";
             if (option.endMarker == undefined && markerEndName != null) option.endMarker = markerEndName == "true";
-            if (option.startMarker) this.markerStart = GraphTableSVG.ObsoleteEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
-            if (option.endMarker) this.markerEnd = GraphTableSVG.ObsoleteEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+            if (option.startMarker) this.markerStart = GraphTableSVG.GEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+            if (option.endMarker) this.markerEnd = GraphTableSVG.GEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
             const x1 = option.x1 == undefined ? 0 : option.x1;
             const y1 = option.y1 == undefined ? 0 : option.y1;
@@ -722,70 +722,82 @@ namespace GraphTableSVG {
                     const begType: number = ConnectorPosition.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
                     const endType: number = ConnectorPosition.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
                     r.push(` Call EditConnector(obj.ConnectorFormat, shapes_("${this.beginVertex.objectID}"), shapes_("${this.endVertex.objectID}"), ${begType}, ${endType})`)
+                    const lineType = msoDashStyle.getLineType(this.svgPath);
+                    const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    const strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                    const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                    r.push(` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
+
                 }
             } else if (this.controlPoint.length > 0) {
-                /*
+                
                 //subline.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
                 //lineArr.push(i);
+                r.push(` Dim nodes(${this.VBAConnectorNumber}) As Shape`);
 
                 for (let j = 0; j < this.VBAConnectorNumber; j++) {
                     const t = (j + 1) / (this.VBAConnectorNumber + 1);
                     const centerPoint = Common.bezierLocation([this.x1, this.y1], this.controlPoint[0], [this.x2, this.y2], t);
-                    const vertexID = vertexDic[`${this.objectID}_${j}`];
-                    subline.push(`Set nodes(${vertexID}) = shapes_.AddShape(msoShapeOval, ${centerPoint[0]}, ${centerPoint[1]}, 0, 0)`);
+                    r.push(`shapes_.AddShape(msoShapeOval, ${centerPoint[0]}, ${centerPoint[1]}, 0, 0).name = "${this.objectID}_node_${j}"`);
                 }
-
 
                 for (let j = 0; j <= this.VBAConnectorNumber; j++) {
                     //const centerPoint = Common.bezierLocation([this.x1, this.y1], this.controlPoint[0], [this.x2, this.y2], 0.5);
-                    const edgeID = edgeDic[`${this.objectID}_${j}`];
-                    const beg = j == 0 ? vertexDic[this.beginVertex.objectID] : vertexDic[`${this.objectID}_${j - 1}`];
-                    const end = j == this.VBAConnectorNumber ? vertexDic[this.endVertex.objectID] : vertexDic[`${this.objectID}_${j}`];
-                    lineArr.push(edgeID);
+                    const edgeID = `${this.objectID}_edge_${j}`;
+                    const beg = j == 0 ? this.beginVertex.objectID : `${this.objectID}_node_${j - 1}`;
+                    const end = j == this.VBAConnectorNumber ? this.endVertex.objectID : `${this.objectID}_node_${j}`;
 
-                    subline.push(` Set edges(${edgeID}) = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+                    r.push(` shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0).name = "${this.objectID}_edge_${j}"`);
+                    const lineType = msoDashStyle.getLineType(this.svgPath);
+                    const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    const strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
+                    const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                    r.push(` Call EditLine(shapes_("${edgeID}").Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
 
-                    const begType: number = j == 0 ? ConnectorPosition.ToVBAConnectorPosition(this.beginVertex.shapeType, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
-                    const endType: number = j == this.VBAConnectorNumber ? ConnectorPosition.ToVBAConnectorPosition(this.endVertex.shapeType, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y)) : 1;
-                    subline.push(` Call EditConnector(edges(${edgeID}).ConnectorFormat, nodes(${beg}), nodes(${end}), ${begType}, ${endType})`)
+                    const begType: number = j == 0 ? ConnectorPosition.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
+                    const endType: number = j == this.VBAConnectorNumber ? ConnectorPosition.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y)) : 1;
+                    r.push(` Call EditConnector(shapes_("${edgeID}").ConnectorFormat, shapes_("${beg}"), shapes_("${end}"), ${begType}, ${endType})`)
 
                 }
+                /*
                 const edgeBeginID = edgeDic[`${this.objectID}_${0}`];
                 const edgeEndID = edgeDic[`${this.objectID}_${this.VBAConnectorNumber}`];
 
                 if (this.beginVertex != null && this.endVertex != null) {
                     if (this.markerStart != null) {
-                        subline.push(` edges(${edgeBeginID}).Line.BeginArrowheadLength = msoArrowheadLong`);
-                        subline.push(` edges(${edgeBeginID}).Line.BeginArrowheadStyle = msoArrowheadTriangle`);
-                        subline.push(` edges(${edgeBeginID}).Line.BeginArrowheadWidth = msoArrowheadWide`);
+                        r.push(` edges(${edgeBeginID}).Line.BeginArrowheadLength = msoArrowheadLong`);
+                        r.push(` edges(${edgeBeginID}).Line.BeginArrowheadStyle = msoArrowheadTriangle`);
+                        r.push(` edges(${edgeBeginID}).Line.BeginArrowheadWidth = msoArrowheadWide`);
                     }
                     if (this.markerEnd != null) {
-                        subline.push(` edges(${edgeEndID}).Line.EndArrowheadLength = msoArrowheadLong`);
-                        subline.push(` edges(${edgeEndID}).Line.EndArrowheadStyle = msoArrowheadTriangle`);
-                        subline.push(` edges(${edgeEndID}).Line.EndArrowheadWidth = msoArrowheadWide`);
+                        r.push(` edges(${edgeEndID}).Line.EndArrowheadLength = msoArrowheadLong`);
+                        r.push(` edges(${edgeEndID}).Line.EndArrowheadStyle = msoArrowheadTriangle`);
+                        r.push(` edges(${edgeEndID}).Line.EndArrowheadWidth = msoArrowheadWide`);
                     }
 
                 }
                 */
             }
 
-            /*
+            
             lineArr.forEach((v) => {
                 const lineType = msoDashStyle.getLineType(this.svgPath);
                 const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
                 const strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
                 const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-                subline.push(` Call EditLine(edges(${v}).Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
+                r.push(` Call EditLine(edges(${v}).Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
             });
-            */
+            
 
 
 
             //subline.forEach((v) => sub.push([v]));
 
-            this.createVBACodeOfText("shapes_").forEach((v)=>r.push(v));
+            const textCodes = this.createVBACodeOfText(id);
+            textCodes.forEach((v,i) => r.push(`Call create${id}_label_${i}(shapes_)`));
             
             r.push(`End Sub`);
+            textCodes.forEach((v)=>v.forEach((w)=>r.push(w)));
             return r;
         }
         
@@ -794,8 +806,8 @@ namespace GraphTableSVG {
          * @param shapes 
          * @param result 
          */
-        public createVBACodeOfText(shapes: string): string[] {
-            const r : string[] = [];
+        public createVBACodeOfText(id : number): string[][] {
+            const r : string[][] = [];
             const fontSize = parseInt(this.svgTextPath.getPropertyStyleValueWithDefault("font-size", "12"));
             const fontFamily = VBATranslateFunctions.ToVBAFont(this.svgTextPath.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
             const fontBold = VBATranslateFunctions.ToFontBold(this.svgTextPath.getPropertyStyleValueWithDefault("font-weight", "none"));
@@ -816,8 +828,8 @@ namespace GraphTableSVG {
                 const top = p1.y - (fontSize * 1 / 4) - diffy ;
                 
                 //const top = this.graph.svgGroup.getY() + p1.y - diffy;
-
-                s.push(`With ${shapes}.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${width},${fontSize})`);
+                s.push(`Sub create${id}_label_${i}(shapes_ As Shapes)`);
+                s.push(`With shapes_.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${width},${fontSize})`);
                 s.push(`.TextFrame.TextRange.Text = "${this.svgTextPath.textContent[i]}"`);
                 s.push(`.TextFrame.marginLeft = 0`);
                 s.push(`.TextFrame.marginRight = 0`);
@@ -829,7 +841,9 @@ namespace GraphTableSVG {
                 s.push(`.IncrementRotation(${this.svgTextPath.getRotationOfChar(i)})`);
                 //s.push(`.IncrementRotation(${this.svgText.transform.baseVal.getItem(0).angle})`);
                 s.push(`End With`);
-                s.forEach((v)=>r.push(v));
+                s.push(`End Sub`);
+                r.push(s);
+
             }
             return r;
         }

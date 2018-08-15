@@ -1,6 +1,6 @@
 ﻿
 namespace GraphTableSVG {
-    export type VBAObjectType = ObsoleteGraph | Table | SVGPathElement | SVGTextElement | GTextBox;
+    export type VBAObjectType = Table | SVGPathElement | SVGTextElement | GTextBox;
     export class SVGToVBA {
 
         /**
@@ -28,10 +28,6 @@ namespace GraphTableSVG {
                     const item = items[i];
                     if (item instanceof Table) {
                         const lines = item.createVBACode(id++, "createdSlide");
-                        lines.forEach((v) => s.push(v));
-                        id++;
-                    } else if (item instanceof ObsoleteGraph) {
-                        const lines = item.createVBACode(id++);
                         lines.forEach((v) => s.push(v));
                         id++;
                     } else if (item instanceof SVGPathElement) {
@@ -67,8 +63,6 @@ namespace GraphTableSVG {
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
                     if (item instanceof Table) {
-                        c++;
-                    } else if (item instanceof ObsoleteGraph) {
                         c++;
                     } else if (item instanceof SVGPathElement) {
                         c++;

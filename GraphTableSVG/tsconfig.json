@@ -20,7 +20,7 @@
 
     ],
     "include": [
-        "graph", "table", "common", "object", "interface"
+        "table", "common", "object", "interface"
     ],
     "exclude": [
         "out"
