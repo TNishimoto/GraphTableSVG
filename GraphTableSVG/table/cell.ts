@@ -370,7 +370,7 @@ namespace GraphTableSVG {
         SVGTextElement生成時に設定するクラス名を返します。
         */
         get defaultTextClass(): string | null {
-            const r = this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass);
+            const r = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaultTextClass);
             return r;
         }
         /**

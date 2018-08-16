@@ -1,11 +1,6 @@
 ﻿
 namespace GraphTableSVG {
     export namespace SVG {
-        export const defaultTextClass: string = "--default-text-class";
-        export const defaultPathClass: string = "--default-path-class";
-        export const defaulSurfaceClass: string = "--default-surface-class";
-
-        export const objectIDName: string = "data-objectID";
         export let idCounter: number = 0;
 
         /**
@@ -52,7 +47,7 @@ namespace GraphTableSVG {
             line1.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
 
             if(parent instanceof SVGElement){
-                const _className = parent.getPropertyStyleValue(SVG.defaultPathClass);
+                const _className = parent.getPropertyStyleValue(CustomAttributeNames.defaultPathClass);
                 if(className == null){
                     className = _className;
                 }
@@ -81,7 +76,7 @@ namespace GraphTableSVG {
         export function createText(className: string | null = null): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-            _svgText.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
+            _svgText.setAttribute(CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             //_svgText.style.textAnchor = "middle";
             if (className == null) {
                 _svgText.style.fill = "black";
@@ -115,11 +110,11 @@ namespace GraphTableSVG {
                 const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
                 if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 
-                const width = rect.getPropertyStyleNumberValue(SVG.defaultWidthName, null);
+                const width = rect.getPropertyStyleNumberValue(CustomAttributeNames.defaultWidthName, null);
                 if (width != null) {
                     rect.width.baseVal.value = width;
                 }
-                const height = rect.getPropertyStyleNumberValue(SVG.defaultHeightName, null);
+                const height = rect.getPropertyStyleNumberValue(CustomAttributeNames.defaultHeightName, null);
                 if (height != null) {
                     rect.height.baseVal.value = height;
                 }
@@ -136,7 +131,7 @@ namespace GraphTableSVG {
          */
         export function createGroup(parent: HTMLElement | SVGElement | null, className: string | null = null): SVGGElement {
             const g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            g.setAttribute(GraphTableSVG.SVG.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
+            g.setAttribute(CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             if (className != null) {
                 g.setAttribute("class", className);
             }
@@ -155,10 +150,6 @@ namespace GraphTableSVG {
             style.fontWeight = null;
             style.fontFamily = null;
         }
-        export const defaultRadiusName = "--default-radius";
-        export const defaultWidthName = "--default-width";
-        export const defaultHeightName = "--default-height";
-        export let defaultCircleRadius = 15;
 
         /**
          * SVGCircleElementを生成します。
@@ -169,14 +160,14 @@ namespace GraphTableSVG {
         export function createCircle(parent: SVGElement, className: string | null = null): SVGCircleElement {
             const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             parent.appendChild(circle);
-            circle.r.baseVal.value = defaultCircleRadius;
+            circle.r.baseVal.value = CustomAttributeNames.defaultCircleRadius;
             if (className == null) {
                 circle.style.stroke = "black";
                 circle.style.strokeWidth = "1pt";
                 circle.style.fill = "#ffffff";
             } else {
                 circle.setAttribute("class", className);
-                const radius = circle.getPropertyStyleNumberValue(SVG.defaultRadiusName, null);
+                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.defaultRadiusName, null);
                 if (radius != null) {
                     circle.r.baseVal.value = radius;
                 }
@@ -197,8 +188,8 @@ namespace GraphTableSVG {
         export function createEllipse(parent: SVGElement, className: string | null = null): SVGEllipseElement {
             const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
             parent.appendChild(circle);
-            circle.rx.baseVal.value = defaultCircleRadius;
-            circle.ry.baseVal.value = defaultCircleRadius;
+            circle.rx.baseVal.value = CustomAttributeNames.defaultCircleRadius;
+            circle.ry.baseVal.value = CustomAttributeNames.defaultCircleRadius;
 
             if (className == null) {
                 circle.style.stroke = "black";
@@ -206,7 +197,7 @@ namespace GraphTableSVG {
                 circle.style.fill = "#ffffff";
             } else {
                 circle.setAttribute("class", className);
-                const radius = circle.getPropertyStyleNumberValue(SVG.defaultRadiusName, null);
+                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.defaultRadiusName, null);
                 if (radius != null) {
                     circle.rx.baseVal.value = radius;
                     circle.ry.baseVal.value = radius;

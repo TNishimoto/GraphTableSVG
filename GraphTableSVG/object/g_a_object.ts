@@ -62,8 +62,8 @@ namespace GraphTableSVG {
         get width(): number {
             return this.svgGroup.gtGetAttributeNumber("data-width", 0);
         }
-        set width(value: number) {
-            if (this.width != value) this.svgGroup.setAttribute("data-width", value.toString());
+        set width(value: number) {            
+            if (this.width != value && value != null) this.svgGroup.setAttribute("data-width", value.toString());
 
         }
         /**
@@ -73,7 +73,7 @@ namespace GraphTableSVG {
             return this.svgGroup.gtGetAttributeNumber("data-height", 0);
         }
         set height(value: number) {
-            if (this.height != value) this.svgGroup.setAttribute("data-height", value.toString());
+            if (this.height != value && value != null) this.svgGroup.setAttribute("data-height", value.toString());
         }
         public get x(): number {
             return this.cx - (this.width / 2);
@@ -106,9 +106,20 @@ namespace GraphTableSVG {
 
             if (option.id != undefined) this.svgGroup.id = option.id;
 
+            this.width = 50;
+            this.height = 50;
 
             if (option.width != undefined) this.width = option.width;
             if (option.height != undefined) this.height = option.height;
+
+            if(this.surface != null && this.surface.className != null){
+                const width = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.defaultWidthName, null);
+                const height = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.defaultHeightName, null);
+                if(width != null) this.width = width;
+                if(height != null) this.height = height;
+            }
+
+
 
             if (option.cx != undefined) this.cx = option.cx;
             if (option.cy != undefined) this.cy = option.cy;
@@ -131,7 +142,7 @@ namespace GraphTableSVG {
         このVertexのObjectIDを返します。
         */
         public get objectID(): string {
-            const r = this.svgGroup.getAttribute(GraphTableSVG.SVG.objectIDName);
+            const r = this.svgGroup.getAttribute(CustomAttributeNames.objectIDName);
             if (r == null) {
                 throw new Error();
             } else {

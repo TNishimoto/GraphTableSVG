@@ -14,14 +14,14 @@ window.onload = () => {
     const node9 = GraphTableSVG.createShape(graph, 'g-ellipse', {cx : 450, cy : 450, text : "9"});
 
 
-    GraphTableSVG.createShape(graph, 'g-line', {beginVertex : node1, endVertex : node2, text : "abcdef"});
-    GraphTableSVG.createShape(graph, 'g-line', {beginVertex : node1, endVertex : node3, text : "abcdef"});
-    GraphTableSVG.createShape(graph, 'g-line', {beginVertex : node1, endVertex : node4, text : "abcdef"});
-    GraphTableSVG.createShape(graph, 'g-line', {beginVertex : node1, endVertex : node5, text : "abcdef"});
-    GraphTableSVG.createShape(graph, 'g-line', {beginVertex : node1, endVertex : node6, text : "abcdef"});
-    GraphTableSVG.createShape(graph, 'g-line', {beginVertex : node1, endVertex : node7, text : "abcdef"});
-    GraphTableSVG.createShape(graph, 'g-line', {beginVertex : node1, endVertex : node8, text : "abcdef"});
-    GraphTableSVG.createShape(graph, 'g-line', {beginVertex : node1, endVertex : node9, text : "abcdef"});
+    GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : node1, endVertex : node2, text : "abcdef"});
+    GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : node1, endVertex : node3, text : "abcdef"});
+    GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : node1, endVertex : node4, text : "abcdef"});
+    GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : node1, endVertex : node5, text : "abcdef"});
+    GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : node1, endVertex : node6, text : "abcdef"});
+    GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : node1, endVertex : node7, text : "abcdef"});
+    GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : node1, endVertex : node8, text : "abcdef"});
+    GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : node1, endVertex : node9, text : "abcdef"});
     graph.edges.forEach((v)=>{
         v.svgTextPath.style.fontSize = "32pt"
     })

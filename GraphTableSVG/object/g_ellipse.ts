@@ -9,7 +9,7 @@ namespace GraphTableSVG {
             //this.update();
         }
         protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
-            this._surface = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
+            this._surface = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
         }
 

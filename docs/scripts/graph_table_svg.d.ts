@@ -172,10 +172,6 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     namespace SVG {
-        const defaultTextClass: string;
-        const defaultPathClass: string;
-        const defaulSurfaceClass: string;
-        const objectIDName: string;
         let idCounter: number;
         function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
         const msoDashStyleName = "--stroke-style";
@@ -184,10 +180,6 @@ declare namespace GraphTableSVG {
         function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
         function createGroup(parent: HTMLElement | SVGElement | null, className?: string | null): SVGGElement;
         function resetStyle(style: CSSStyleDeclaration): void;
-        const defaultRadiusName = "--default-radius";
-        const defaultWidthName = "--default-width";
-        const defaultHeightName = "--default-height";
-        let defaultCircleRadius: number;
         function createCircle(parent: SVGElement, className?: string | null): SVGCircleElement;
         function createEllipse(parent: SVGElement, className?: string | null): SVGEllipseElement;
         function createMarker(option?: {
@@ -635,7 +627,7 @@ declare namespace GraphTableSVG {
         readonly isNoParent: boolean;
         readonly children: GVertex[];
         readonly isLeaf: boolean;
-        readonly tree: PPVirtualSubTree;
+        readonly tree: GVirtualSubTree;
         readonly region: Rectangle;
         readonly shape: string;
         createVBACode(id: number): string[];
@@ -775,6 +767,7 @@ declare namespace GraphTableSVG {
         private createChildFromLogicTree<T>(parent, logicVertex, option?);
         createVBACode(id: number): string[];
         readonly VBAObjectNum: number;
+        getStyleValue(className: string, valueName: string): string | null;
     }
 }
 declare namespace GraphTableSVG {
@@ -793,7 +786,7 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    namespace PPTreeArrangement {
+    namespace GTreeArrangement {
         function alignVerticeByLeaveSub(forest: GGraph, xInterval: number, yInterval: number): void;
         function reverse(graph: GGraph, isX: boolean, isY: boolean): void;
         function alignVerticeByChildren(graph: GGraph): void;
@@ -824,7 +817,7 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class PPVirtualSubTree {
+    class GVirtualSubTree {
         subTreeRoot: GVertex;
         constructor(_root: GVertex);
         readonly children: GVertex[];
@@ -854,6 +847,15 @@ declare namespace GraphTableSVG {
         const defaultEdgeClass: string;
         const vertexXIntervalName: string;
         const vertexYIntervalName: string;
+        const defaultRadiusName = "--default-radius";
+        const defaultWidthName = "--default-width";
+        const defaultHeightName = "--default-height";
+        const defaultTextClass: string;
+        const defaultPathClass: string;
+        const defaulSurfaceClass: string;
+        const defaultSurfaceType: string;
+        const objectIDName: string;
+        let defaultCircleRadius: number;
     }
     type PPObjectAttributes = {
         class?: string;
@@ -900,6 +902,7 @@ declare namespace GraphTableSVG {
     function openCustomElement(id: string | SVGElement): any;
     function openSVG(id: string | SVGElement, output?: any[]): any[];
     function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option?: any): GObject;
+    function createVertex(parent: GGraph, option?: TextBoxShapeAttributes): GObject;
 }
 declare namespace HTMLFunctions {
     function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;

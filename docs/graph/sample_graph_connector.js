@@ -9,13 +9,13 @@ window.onload = () => {
         const vertexC = GraphTableSVG.createShape(graph, 'g-ellipse', {cx : 200, cy : (i+1) * 50, text : `${connectorTypes[i]}`, width : 40, height : 40});
         const vertexR = GraphTableSVG.createShape(graph, 'g-rect'   , {cx : 300, cy : (i+1) * 50, text : `${connectorTypes[i]}`, width : 40, height : 40});
 
-        const edgeL = GraphTableSVG.createShape(graph, 'g-line');
+        const edgeL = GraphTableSVG.createShape(graph, 'g-edge');
         edgeL.svgPath.style.stroke="red";
         /* 接続位置の設定 */
         graph.connect(vertexL, edgeL, vertexC, {beginConnectorType : connectorTypes[i], endConnectorType : connectorTypes[i]});
 
         /* create時にも接続位置の設定が可能 */
-        const edgeR = GraphTableSVG.createShape(graph, 'g-line', {beginVertex : vertexC, endVertex : vertexR, beginConnectorType : connectorTypes[i], endConnectorType : connectorTypes[i]});
+        const edgeR = GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : vertexC, endVertex : vertexR, beginConnectorType : connectorTypes[i], endConnectorType : connectorTypes[i]});
         edgeR.svgPath.style.stroke="blue";    
     }
     

@@ -12,7 +12,19 @@ namespace GraphTableSVG {
         export const defaultVertexClass: string = "--default-vertex-class";
         export const defaultEdgeClass: string = "--default-edge-class";
         export const vertexXIntervalName: string = "--vertex-x-interval";
-        export const vertexYIntervalName: string = "--vertex-y-interval";
+        export const vertexYIntervalName: string = "--vertex-y-interval";        
+        export const defaultRadiusName = "--default-radius";
+        export const defaultWidthName = "--default-width";
+        export const defaultHeightName = "--default-height";
+        export const defaultTextClass: string = "--default-text-class";
+        export const defaultPathClass: string = "--default-path-class";
+        export const defaulSurfaceClass: string = "--default-surface-class";
+        export const defaultSurfaceType: string = "--default-surface-type";
+
+
+        export const objectIDName: string = "data-objectID";
+
+        export let defaultCircleRadius = 15;
     }
 
     export type PPObjectAttributes = {
@@ -189,5 +201,20 @@ namespace GraphTableSVG {
             case ShapeObjectType.Graph : return new GGraph(_parent, option);
         }
         throw Error("error");
+    }
+    export function createVertex(parent : GGraph, option : TextBoxShapeAttributes = {}) : GObject {
+        let _parent = parent.svgGroup;
+        if(option.class == undefined && parent.defaultVertexClass != null) option.class = parent.defaultVertexClass;
+        const type = option.class == undefined ? null : parent.getStyleValue(option.class, CustomAttributeNames.defaultSurfaceType);
+        if(type != null){
+            switch(type){
+                case ShapeObjectType.Callout : return new GCallout(_parent, option);
+                case ShapeObjectType.ShapeArrowCallout : return new ShapeArrowCallout(_parent, option);
+                case ShapeObjectType.Ellipse : return new GEllipse(_parent, option);
+                case ShapeObjectType.Rect : return new GRect(_parent, option);
+            }    
+        }
+        return new GEllipse(_parent, option);
+
     }
 }

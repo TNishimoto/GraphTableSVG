@@ -5,7 +5,7 @@ namespace GraphTableSVG {
             const parent = this.svgGroup.parentElement;
             if (parent instanceof SVGElement) {
                 const className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.defaultVertexClass);
-                if (className != null) {
+                if (className != null && !this.svgGroup.hasAttribute("class") ) {
                     this.svgGroup.setAttribute("class", className);
                 }
             }
@@ -212,8 +212,8 @@ namespace GraphTableSVG {
         /**
          * このVertexを頂点とする仮想部分木を作成します。
          */
-        get tree(): PPVirtualSubTree {
-            return new PPVirtualSubTree(this);
+        get tree(): GVirtualSubTree {
+            return new GVirtualSubTree(this);
         }
         /**
         このVertexの領域を返します。

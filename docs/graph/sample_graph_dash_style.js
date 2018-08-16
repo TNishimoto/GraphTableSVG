@@ -10,9 +10,9 @@ window.onload = () => {
         const vertexC = GraphTableSVG.createShape(graph, 'g-rect', {cx : 450 , cy : (i+1) * 50});
         const vertexR = GraphTableSVG.createShape(graph, 'g-rect', {cx : 700 , cy : (i+1) * 50});
 
-        const edgeL = GraphTableSVG.createShape(graph, 'g-line', {beginVertex : vertexLL, endVertex : vertexL});
-        const edgeC = GraphTableSVG.createShape(graph, 'g-line', {beginVertex : vertexL, endVertex : vertexC, text : dashStyles[i]});
-        const edgeR = GraphTableSVG.createShape(graph, 'g-line', {beginVertex : vertexC, endVertex : vertexR});
+        const edgeL = GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : vertexLL, endVertex : vertexL});
+        const edgeC = GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : vertexL, endVertex : vertexC, text : dashStyles[i]});
+        const edgeR = GraphTableSVG.createShape(graph, 'g-edge', {beginVertex : vertexC, endVertex : vertexR});
 
         edgeL.svgPath.style.strokeWidth="1px"; 
         edgeC.svgPath.style.strokeWidth="3px"; 

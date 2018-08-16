@@ -32,8 +32,8 @@ namespace GraphTableSVG {
             output.cx = e.gtGetAttributeNumberWithoutNull("cx", 0);
             output.cy = e.gtGetAttributeNumberWithoutNull("cy", 0);
             if(e.hasAttribute("text"))output.text = <string>e.getAttribute("text");
-            output.width = e.gtGetAttributeNumberWithoutNull("width", 100);
-            output.height = e.gtGetAttributeNumberWithoutNull("height", 100);
+            output.width = e.gtGetAttributeNumberWithoutNull("width", undefined);
+            output.height = e.gtGetAttributeNumberWithoutNull("height", undefined);
 
             output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(CustomAttributeNames.autoSizeShapeToFitTextName, "false") == "true";
 
@@ -85,7 +85,7 @@ namespace GraphTableSVG {
         public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option)
 
-            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass));
+            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
 
 
@@ -99,6 +99,8 @@ namespace GraphTableSVG {
 
             if (option.text != undefined) this.svgText.setTextContent(option.text);
             if (option.isAutoSizeShapeToFitText != undefined) this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
+
+
 
 
 
@@ -205,8 +207,8 @@ namespace GraphTableSVG {
             return r;
         }
         public hasDescendant(obj: SVGElement): boolean {
-            const ids = this.svgElements.map((v) => v.getAttribute(GraphTableSVG.SVG.objectIDName)).filter((v) => v != null);
-            const id = obj.getAttribute(GraphTableSVG.SVG.objectIDName);
+            const ids = this.svgElements.map((v) => v.getAttribute(CustomAttributeNames.objectIDName)).filter((v) => v != null);
+            const id = obj.getAttribute(CustomAttributeNames.objectIDName);
             return ids.some((v) => v == id);
         }
 

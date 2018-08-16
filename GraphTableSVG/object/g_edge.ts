@@ -22,7 +22,7 @@ namespace GraphTableSVG {
             return this._svgTextPath;
         }
         protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
-            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(SVG.defaulSurfaceClass));
+            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         public get type(): string {
@@ -186,7 +186,7 @@ namespace GraphTableSVG {
             //this._svgGroup = SVG.createGroup(svgbox);
 
             this.svgText.textContent = "";
-            const textClass = this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass);
+            const textClass = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaultTextClass);
             this._svgTextPath = SVG.createTextPath2(textClass);
             this.svgPath.id = `path-${this.objectID}`;
 

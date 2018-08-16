@@ -1,5 +1,5 @@
 namespace GraphTableSVG {
-    export class PPVirtualSubTree {
+    export class GVirtualSubTree {
         subTreeRoot: GVertex;
 
         constructor(_root: GVertex) {

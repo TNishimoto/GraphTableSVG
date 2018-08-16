@@ -16,8 +16,8 @@ namespace GraphTableSVG {
 
         public get vertices(): GVertex[] {
             const r: GVertex[] = [];
-            HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(GraphTableSVG.SVG.objectIDName)).forEach((v) => {
-                const item = GObject.getObjectFromObjectID(v.getAttribute(GraphTableSVG.SVG.objectIDName))
+            HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(CustomAttributeNames.objectIDName)).forEach((v) => {
+                const item = GObject.getObjectFromObjectID(v.getAttribute(CustomAttributeNames.objectIDName))
                 if (item instanceof GVertex) {
                     r.push(item);
                 }
@@ -26,8 +26,8 @@ namespace GraphTableSVG {
         }
         public get edges(): GEdge[] {
             const r: GEdge[] = [];
-            HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(GraphTableSVG.SVG.objectIDName)).forEach((v) => {
-                const item = GObject.getObjectFromObjectID(v.getAttribute(GraphTableSVG.SVG.objectIDName))
+            HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(CustomAttributeNames.objectIDName)).forEach((v) => {
+                const item = GObject.getObjectFromObjectID(v.getAttribute(CustomAttributeNames.objectIDName))
                 if (item instanceof GEdge) {
                     r.push(item);
                 }
@@ -231,7 +231,7 @@ namespace GraphTableSVG {
                     }
                 });
                 if (this.relocateFunction == null) {
-                this.relocateFunction = GraphTableSVG.PPTreeArrangement.alignVerticeByChildren;
+                this.relocateFunction = GraphTableSVG.GTreeArrangement.alignVerticeByChildren;
                 } else {
                     this.relocate();
                 }
@@ -267,8 +267,8 @@ namespace GraphTableSVG {
          */
         private createChildFromLogicTree<T>(parent: GVertex | null = null, logicVertex: LogicTree, option: { isLatexMode?: boolean } = {}): GVertex {
             if (option.isLatexMode == undefined) option.isLatexMode = false;
-            
-            const node : GVertex = <any>GraphTableSVG.createShape(this, 'g-ellipse', { class: logicVertex.vertexClass });
+
+            const node : GVertex = <any>GraphTableSVG.createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
             if (logicVertex.vertexText != null) GraphTableSVG.SVG.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
             if (parent != null) {
                 const edge : GEdge = <any>GraphTableSVG.createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass });
@@ -297,6 +297,22 @@ namespace GraphTableSVG {
         
         public get VBAObjectNum() : number{
             return this.vertices.length + this.edges.length;
+        }
+
+        public getStyleValue(className : string, valueName : string) : string | null {
+
+            if(this.svgGroup.hasAttribute("class")){
+                const oldClass = this.svgGroup.getAttribute("class");                
+                this.svgGroup.setAttribute("class", className);
+                const r = this.svgGroup.getPropertyStyleValue(valueName);
+                this.svgGroup.setAttribute("class", oldClass);
+                return r;
+            }else{
+                this.svgGroup.setAttribute("class", className);
+                const r = this.svgGroup.getPropertyStyleValue(valueName);
+                this.svgGroup.removeAttribute("class");
+                return r;
+            }
         }
     }
 

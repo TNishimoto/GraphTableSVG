@@ -1,6 +1,6 @@
 namespace GraphTableSVG {
 
-    export namespace PPTreeArrangement {
+    export namespace GTreeArrangement {
         /**
          * 葉が一列に並ぶようにVertexを整列します。
          * @param forest 
@@ -105,7 +105,7 @@ namespace GraphTableSVG {
          * @param xInterval 
          * @param yInterval 
          */
-        function alignVerticeByChildrenSub(tree: PPVirtualSubTree, xInterval: number, yInterval: number): void {
+        function alignVerticeByChildrenSub(tree: GVirtualSubTree, xInterval: number, yInterval: number): void {
             tree.subTreeRoot.cx = 0;
             tree.subTreeRoot.cy = 0;
             let leaves = 0;
@@ -188,7 +188,7 @@ namespace GraphTableSVG {
         }
 
 
-        function standardTreeWidthArrangementSub(tree: PPVirtualSubTree, xInterval: number, yInterval: number): void {
+        function standardTreeWidthArrangementSub(tree: GVirtualSubTree, xInterval: number, yInterval: number): void {
             tree.subTreeRoot.cx = 0;
             tree.subTreeRoot.cy = 0;
             let centerX = 0;
