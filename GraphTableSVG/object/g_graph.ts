@@ -41,7 +41,7 @@ namespace GraphTableSVG {
         protected _roots: GVertex[] = [];
         constructor(box: SVGElement | string, option: TextBoxShapeAttributes = {}) {
             super(box, option)
-
+            this.svgGroup.addEventListener(CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);
         }
         public get vertexXInterval(): number | null {
             const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.vertexXIntervalName);
@@ -197,11 +197,13 @@ namespace GraphTableSVG {
          * @param child 
          * @param option 
          */
-        public appendChild(parent: GVertex, child: GVertex, option: { insertIndex?: number } = {}) {
+        public appendChild(parent: GVertex, child: GVertex | null, option: { insertIndex?: number } = {}) {
+            const _child = child == null ? GraphTableSVG.createVertex(this) : child;
             const edge: GEdge = <any>GraphTableSVG.createShape(this, 'g-edge');
-            this.connect(parent, edge, child, { beginConnectorType: "bottom", endConnectorType: "top" });
+            this.connect(parent, edge, _child, { beginConnectorType: "bottom", endConnectorType: "top" });
             //this.createdNodeCallback(child);
-            this.relocate();
+            this.relocate();    
+
         }
         private _relocateFunction: ((Tree: GGraph) => void) | null = null;
         public get relocateFunction(): ((Tree: GGraph) => void) | null {
@@ -312,6 +314,23 @@ namespace GraphTableSVG {
                 const r = this.svgGroup.getPropertyStyleValue(valueName);
                 this.svgGroup.removeAttribute("class");
                 return r;
+            }
+        }
+        protected dispatchVertexCreatedEvent(vertex : GVertex): void {
+            var event = document.createEvent("HTMLEvents");
+            event.initEvent(CustomAttributeNames.vertexCreatedEventName, true, true);
+            vertex.svgGroup.dispatchEvent(event);
+
+        }
+        private objectCreatedFunction = ( e : Event) =>{
+            const obj = GObject.getObjectFromObjectID(<SVGElement>e.target);
+            if(obj instanceof GVertex){
+                //console.log(obj);
+                this.dispatchVertexCreatedEvent(obj);
+            }else if(obj instanceof GEdge){
+
+            }else{
+
             }
         }
     }

@@ -4195,9 +4195,26 @@ var GraphTableSVG;
                 this.cx = option.cx;
             if (option.cy != undefined)
                 this.cy = option.cy;
+            this.dispatchObjectCreatedEvent();
         }
         GObject.getObjectFromObjectID = function (id) {
-            return this.objectDic[id];
+            if (id instanceof SVGElement) {
+                if (id.hasAttribute(GraphTableSVG.CustomAttributeNames.objectIDName)) {
+                    var _id = id.getAttribute(GraphTableSVG.CustomAttributeNames.objectIDName);
+                    return GObject.getObjectFromObjectID(_id);
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                if (id in this.objectDic) {
+                    return this.objectDic[id];
+                }
+                else {
+                    return null;
+                }
+            }
         };
         GObject.setObjectFromObjectID = function (obj) {
             var id = obj.objectID;
@@ -4339,6 +4356,11 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        GObject.prototype.dispatchObjectCreatedEvent = function () {
+            var event = document.createEvent("HTMLEvents");
+            event.initEvent(GraphTableSVG.CustomAttributeNames.objectCreatedEventName, true, true);
+            this.svgGroup.dispatchEvent(event);
+        };
         GObject.objectDic = {};
         return GObject;
     }());
@@ -4441,7 +4463,7 @@ var GraphTableSVG;
         GTextBox.prototype.dispatchConnectPositionChangedEvent = function () {
             if (this.surface != null) {
                 var event = document.createEvent("HTMLEvents");
-                event.initEvent(GTextBox.ConnectPositionChangedEventName, true, true);
+                event.initEvent(GraphTableSVG.CustomAttributeNames.connectPositionChangedEventName, true, true);
                 this.surface.dispatchEvent(event);
             }
         };
@@ -4550,7 +4572,6 @@ var GraphTableSVG;
             return ids.some(function (v) { return v == id; });
         };
         GTextBox.updateTextAttributes = ["style"];
-        GTextBox.ConnectPositionChangedEventName = "connect_position_changed";
         return GTextBox;
     }(GraphTableSVG.GObject));
     GraphTableSVG.GTextBox = GTextBox;
@@ -4776,6 +4797,21 @@ var GraphTableSVG;
             var visible = this.surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
             return " Call EditLine(obj.Line, " + lineColor + ", " + lineType + ", " + 0 + ", " + strokeWidth + ", " + visible + ")";
         };
+        Object.defineProperty(GVertex.prototype, "parentGraph", {
+            get: function () {
+                var v = this.svgGroup.parentElement;
+                if (v != null && v instanceof SVGGElement && v.hasAttribute(GraphTableSVG.CustomAttributeNames.objectIDName)) {
+                    var id = v.getAttribute(GraphTableSVG.CustomAttributeNames.objectIDName);
+                    var obj = GraphTableSVG.GObject.getObjectFromObjectID(id);
+                    if (obj instanceof GraphTableSVG.GGraph) {
+                        return obj;
+                    }
+                }
+                return null;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return GVertex;
     }(GraphTableSVG.GTextBox));
     GraphTableSVG.GVertex = GVertex;
@@ -5348,10 +5384,10 @@ var GraphTableSVG;
             configurable: true
         });
         GEdge.prototype.removeVertexEvent = function (vertex) {
-            vertex.svgGroup.removeEventListener(GraphTableSVG.GTextBox.ConnectPositionChangedEventName, this.pUpdateFunc);
+            vertex.svgGroup.removeEventListener(GraphTableSVG.CustomAttributeNames.connectPositionChangedEventName, this.pUpdateFunc);
         };
         GEdge.prototype.addVertexEvent = function (vertex) {
-            vertex.svgGroup.addEventListener(GraphTableSVG.GTextBox.ConnectPositionChangedEventName, this.pUpdateFunc);
+            vertex.svgGroup.addEventListener(GraphTableSVG.CustomAttributeNames.connectPositionChangedEventName, this.pUpdateFunc);
         };
         Object.defineProperty(GEdge.prototype, "beginVertex", {
             get: function () {
@@ -5909,6 +5945,17 @@ var GraphTableSVG;
             var _this = _super.call(this, box, option) || this;
             _this._roots = [];
             _this._relocateFunction = null;
+            _this.objectCreatedFunction = function (e) {
+                var obj = GraphTableSVG.GObject.getObjectFromObjectID(e.target);
+                if (obj instanceof GraphTableSVG.GVertex) {
+                    _this.dispatchVertexCreatedEvent(obj);
+                }
+                else if (obj instanceof GraphTableSVG.GEdge) {
+                }
+                else {
+                }
+            };
+            _this.svgGroup.addEventListener(GraphTableSVG.CustomAttributeNames.objectCreatedEventName, _this.objectCreatedFunction);
             return _this;
         }
         Object.defineProperty(GGraph.prototype, "vertices", {
@@ -6085,8 +6132,9 @@ var GraphTableSVG;
         };
         GGraph.prototype.appendChild = function (parent, child, option) {
             if (option === void 0) { option = {}; }
+            var _child = child == null ? GraphTableSVG.createVertex(this) : child;
             var edge = GraphTableSVG.createShape(this, 'g-edge');
-            this.connect(parent, edge, child, { beginConnectorType: "bottom", endConnectorType: "top" });
+            this.connect(parent, edge, _child, { beginConnectorType: "bottom", endConnectorType: "top" });
             this.relocate();
         };
         Object.defineProperty(GGraph.prototype, "relocateFunction", {
@@ -6195,6 +6243,11 @@ var GraphTableSVG;
                 this.svgGroup.removeAttribute("class");
                 return r;
             }
+        };
+        GGraph.prototype.dispatchVertexCreatedEvent = function (vertex) {
+            var event = document.createEvent("HTMLEvents");
+            event.initEvent(GraphTableSVG.CustomAttributeNames.vertexCreatedEventName, true, true);
+            vertex.svgGroup.dispatchEvent(event);
         };
         return GGraph;
     }(GraphTableSVG.GObject));
@@ -7008,6 +7061,9 @@ var GraphTableSVG;
         CustomAttributeNames.defaultPathClass = "--default-path-class";
         CustomAttributeNames.defaulSurfaceClass = "--default-surface-class";
         CustomAttributeNames.defaultSurfaceType = "--default-surface-type";
+        CustomAttributeNames.connectPositionChangedEventName = "connect_position_changed";
+        CustomAttributeNames.vertexCreatedEventName = "vertex_created";
+        CustomAttributeNames.objectCreatedEventName = "object_created";
         CustomAttributeNames.objectIDName = "data-objectID";
         CustomAttributeNames.defaultCircleRadius = 15;
     })(CustomAttributeNames = GraphTableSVG.CustomAttributeNames || (GraphTableSVG.CustomAttributeNames = {}));
@@ -7150,6 +7206,54 @@ var GraphTableSVG;
         return new GraphTableSVG.GEllipse(_parent, option);
     }
     GraphTableSVG.createVertex = createVertex;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    var Parse;
+    (function (Parse) {
+        function parseTree(parseText) {
+            var _a = parseTreeSub(parseText, 0), tree = _a[0], pos = _a[1];
+            return tree;
+        }
+        Parse.parseTree = parseTree;
+        function parseTreeSub(str, pos) {
+            var node = new GraphTableSVG.LogicTree({ item: "" });
+            var c = str[pos];
+            if (c != '(') {
+                throw Error("Parse Error");
+            }
+            else {
+                pos++;
+                while (true) {
+                    var c2 = str[pos];
+                    if (c2 == ')') {
+                        break;
+                    }
+                    else if (c2 == '(') {
+                        var _a = parseTreeSub(str, pos++), child = _a[0], newPos = _a[1];
+                        node.children.push(child);
+                        pos = newPos + 1;
+                    }
+                    else {
+                        pos++;
+                    }
+                }
+                return [node, pos];
+            }
+        }
+        function getParseString(tree) {
+            var str = "";
+            str += "(";
+            tree.outcomingEdges.forEach(function (v) {
+                if (v.endVertex != null) {
+                    str += getParseString(v.endVertex);
+                }
+            });
+            str += ")";
+            return str;
+        }
+        Parse.getParseString = getParseString;
+    })(Parse = GraphTableSVG.Parse || (GraphTableSVG.Parse = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 var HTMLFunctions;
 (function (HTMLFunctions) {

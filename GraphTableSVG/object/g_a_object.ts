@@ -2,16 +2,27 @@ namespace GraphTableSVG {
 
     export class GObject {
         private static objectDic: { [key: string]: GObject; } = {};
-        public static getObjectFromObjectID(id: string): GObject {
-            return this.objectDic[id];
+        public static getObjectFromObjectID(id: string | SVGElement): GObject | null {
+            if(id instanceof SVGElement){
+                if(id.hasAttribute(CustomAttributeNames.objectIDName)){
+                    const _id = id.getAttribute(CustomAttributeNames.objectIDName)!;
+                    return GObject.getObjectFromObjectID(_id);
+                }else{
+                    return null;
+                }
+            }else{
+                if(id in this.objectDic){
+                    return this.objectDic[id];
+                }else{
+                    return null;
+                }
+            }
         }
         public static setObjectFromObjectID(obj: GObject) {
             const id = obj.objectID;
             this.objectDic[id] = obj;
         }
         public static getObjectFromID(id: string): GObject | null {
-
-
             for (let key in this.objectDic) {
                 if (this.objectDic[key].svgGroup.id == id) {
                     return this.objectDic[key];
@@ -124,7 +135,7 @@ namespace GraphTableSVG {
             if (option.cx != undefined) this.cx = option.cx;
             if (option.cy != undefined) this.cy = option.cy;
 
-
+            this.dispatchObjectCreatedEvent();
         }
         /**
          * この頂点を廃棄します。廃棄された頂点はグラフから取り除かれます。
@@ -158,6 +169,13 @@ namespace GraphTableSVG {
         }
         public get VBAObjectNum() : number{
             return 1;
+        }
+        
+        protected dispatchObjectCreatedEvent(): void {
+            var event = document.createEvent("HTMLEvents");
+            event.initEvent(CustomAttributeNames.objectCreatedEventName, true, true);
+            this.svgGroup.dispatchEvent(event);
+
         }
     }
 }

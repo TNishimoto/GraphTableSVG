@@ -274,6 +274,18 @@ namespace GraphTableSVG {
             const visible = this.surface!.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
             return ` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`;
         }
+
+        public get parentGraph() : GGraph | null{
+            const v = this.svgGroup.parentElement;
+            if(v != null && v instanceof SVGGElement && v.hasAttribute(CustomAttributeNames.objectIDName)){
+                const id = v.getAttribute(CustomAttributeNames.objectIDName)!;
+                const obj = GObject.getObjectFromObjectID(id);
+                if(obj instanceof GGraph){
+                    return obj;
+                }
+            }
+            return null;
+        }
     }
 
 }

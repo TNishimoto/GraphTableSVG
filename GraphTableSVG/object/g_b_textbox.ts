@@ -74,11 +74,10 @@ namespace GraphTableSVG {
         };
         private static updateTextAttributes = ["style"]
 
-        public static ConnectPositionChangedEventName = "connect_position_changed";
         protected dispatchConnectPositionChangedEvent(): void {
             if (this.surface != null) {
                 var event = document.createEvent("HTMLEvents");
-                event.initEvent(GTextBox.ConnectPositionChangedEventName, true, true)
+                event.initEvent(CustomAttributeNames.connectPositionChangedEventName, true, true)
                 this.surface.dispatchEvent(event);
             }
         }

@@ -310,10 +310,10 @@ namespace GraphTableSVG {
         }
 
         private removeVertexEvent(vertex: GTextBox) {
-            vertex.svgGroup.removeEventListener(GTextBox.ConnectPositionChangedEventName, this.pUpdateFunc);
+            vertex.svgGroup.removeEventListener(CustomAttributeNames.connectPositionChangedEventName, this.pUpdateFunc);
         }
         private addVertexEvent(vertex: GTextBox) {
-            vertex.svgGroup.addEventListener(GTextBox.ConnectPositionChangedEventName, this.pUpdateFunc);
+            vertex.svgGroup.addEventListener(CustomAttributeNames.connectPositionChangedEventName, this.pUpdateFunc);
         }
         private pUpdateFunc = () => this.update();
 

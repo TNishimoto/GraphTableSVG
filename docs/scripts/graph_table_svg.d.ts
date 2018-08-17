@@ -461,7 +461,7 @@ declare namespace GraphTableSVG {
         readonly cellArray: Cell[];
         readonly borders: SVGLineElement[];
         getRegion(): Rectangle;
-        constructor(svgbox: HTMLElement, option?: {
+        constructor(svgbox: SVGElement, option?: {
             tableClassName?: string;
             rowCount?: number;
             columnCount?: number;
@@ -552,7 +552,7 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     class GObject {
         private static objectDic;
-        static getObjectFromObjectID(id: string): GObject;
+        static getObjectFromObjectID(id: string | SVGElement): GObject | null;
         static setObjectFromObjectID(obj: GObject): void;
         static getObjectFromID(id: string): GObject | null;
         protected _surface: SVGElement | null;
@@ -575,6 +575,7 @@ declare namespace GraphTableSVG {
         readonly objectID: string;
         createVBACode(id: number): string[];
         readonly VBAObjectNum: number;
+        protected dispatchObjectCreatedEvent(): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -589,7 +590,6 @@ declare namespace GraphTableSVG {
         private _textObserver;
         protected textObserverFunc: MutationCallback;
         private static updateTextAttributes;
-        static ConnectPositionChangedEventName: string;
         protected dispatchConnectPositionChangedEvent(): void;
         constructor(svgbox: SVGElement | string, option?: TextBoxShapeAttributes);
         horizontalAnchor: HorizontalAnchor;
@@ -633,6 +633,7 @@ declare namespace GraphTableSVG {
         createVBACode(id: number): string[];
         protected readonly VBAAdjustments: number[];
         private getVBAEditLine();
+        readonly parentGraph: GGraph | null;
     }
 }
 declare namespace GraphTableSVG {
@@ -751,7 +752,7 @@ declare namespace GraphTableSVG {
         clear(): void;
         connect(beginVertex: GVertex, edge: GEdge, endVertex: GVertex, option?: ConnectOption): void;
         getOrderedVertices(order: VertexOrder, node?: GVertex | null): GVertex[];
-        appendChild(parent: GVertex, child: GVertex, option?: {
+        appendChild(parent: GVertex, child: GVertex | null, option?: {
             insertIndex?: number;
         }): void;
         private _relocateFunction;
@@ -768,6 +769,8 @@ declare namespace GraphTableSVG {
         createVBACode(id: number): string[];
         readonly VBAObjectNum: number;
         getStyleValue(className: string, valueName: string): string | null;
+        protected dispatchVertexCreatedEvent(vertex: GVertex): void;
+        private objectCreatedFunction;
     }
 }
 declare namespace GraphTableSVG {
@@ -854,6 +857,9 @@ declare namespace GraphTableSVG {
         const defaultPathClass: string;
         const defaulSurfaceClass: string;
         const defaultSurfaceType: string;
+        const connectPositionChangedEventName = "connect_position_changed";
+        const vertexCreatedEventName = "vertex_created";
+        const objectCreatedEventName = "object_created";
         const objectIDName: string;
         let defaultCircleRadius: number;
     }
@@ -902,7 +908,13 @@ declare namespace GraphTableSVG {
     function openCustomElement(id: string | SVGElement): any;
     function openSVG(id: string | SVGElement, output?: any[]): any[];
     function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option?: any): GObject;
-    function createVertex(parent: GGraph, option?: TextBoxShapeAttributes): GObject;
+    function createVertex(parent: GGraph, option?: TextBoxShapeAttributes): GVertex;
+}
+declare namespace GraphTableSVG {
+    namespace Parse {
+        function parseTree(parseText: string): GraphTableSVG.LogicTree;
+        function getParseString(tree: GraphTableSVG.GVertex): string;
+    }
 }
 declare namespace HTMLFunctions {
     function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;

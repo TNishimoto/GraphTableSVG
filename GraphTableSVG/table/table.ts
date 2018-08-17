@@ -265,7 +265,7 @@ namespace GraphTableSVG {
          * @param option.columnWidth 各列の横幅(px)
          * @param option.tableClassName 表(svgGroup)のクラス属性
          */
-        constructor(svgbox: HTMLElement, 
+        constructor(svgbox: SVGElement, 
             option : {tableClassName? : string, rowCount? : number, columnCount? : number, 
                 x? : number, y? :number, rowHeight? : number, columnWidth? : number } = {}) {
 

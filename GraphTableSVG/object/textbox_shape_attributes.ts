@@ -20,6 +20,9 @@ namespace GraphTableSVG {
         export const defaultPathClass: string = "--default-path-class";
         export const defaulSurfaceClass: string = "--default-surface-class";
         export const defaultSurfaceType: string = "--default-surface-type";
+        export const connectPositionChangedEventName = "connect_position_changed";
+        export const vertexCreatedEventName = "vertex_created";
+        export const objectCreatedEventName = "object_created";
 
 
         export const objectIDName: string = "data-objectID";
@@ -202,7 +205,7 @@ namespace GraphTableSVG {
         }
         throw Error("error");
     }
-    export function createVertex(parent : GGraph, option : TextBoxShapeAttributes = {}) : GObject {
+    export function createVertex(parent : GGraph, option : TextBoxShapeAttributes = {}) : GVertex {
         let _parent = parent.svgGroup;
         if(option.class == undefined && parent.defaultVertexClass != null) option.class = parent.defaultVertexClass;
         const type = option.class == undefined ? null : parent.getStyleValue(option.class, CustomAttributeNames.defaultSurfaceType);
