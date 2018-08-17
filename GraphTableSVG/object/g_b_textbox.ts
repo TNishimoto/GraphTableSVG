@@ -32,8 +32,8 @@ namespace GraphTableSVG {
             output.cx = e.gtGetAttributeNumberWithoutNull("cx", 0);
             output.cy = e.gtGetAttributeNumberWithoutNull("cy", 0);
             if(e.hasAttribute("text"))output.text = <string>e.getAttribute("text");
-            output.width = e.gtGetAttributeNumberWithoutNull("width", undefined);
-            output.height = e.gtGetAttributeNumberWithoutNull("height", undefined);
+            output.width = e.gtGetAttributeNumber2("width");
+            output.height = e.gtGetAttributeNumber2("height");
 
             output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(CustomAttributeNames.autoSizeShapeToFitTextName, "false") == "true";
 

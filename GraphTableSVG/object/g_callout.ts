@@ -9,8 +9,8 @@ namespace GraphTableSVG {
 
         static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : CalloutAttributes = {}) : CalloutAttributes {        
             GTextBox.constructAttributes(e, removeAttributes, output);
-            output.speakerX = e.gtGetAttributeNumber("speaker-x", 200);
-            output.speakerY = e.gtGetAttributeNumber("speaker-y", 200);
+            output.speakerX = e.gtGetAttributeNumber("speaker-x", 200)!;
+            output.speakerY = e.gtGetAttributeNumber("speaker-y", 200)!;
 
             if(removeAttributes){
                 e.removeAttribute("speaker-x");
@@ -108,13 +108,13 @@ namespace GraphTableSVG {
         }
 
         get speakerX(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-speaker-x", 0);
+            return this.svgGroup.gtGetAttributeNumber("data-speaker-x", 0)!;
         }
         set speakerX(value: number) {
             if (this.speakerX != value) this.svgGroup.setAttribute("data-speaker-x", value.toString());
         }
         get speakerY(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-speaker-y", 0);
+            return this.svgGroup.gtGetAttributeNumber("data-speaker-y", 0)!;
         }
         set speakerY(value: number) {
             if (this.speakerY != value) this.svgGroup.setAttribute("data-speaker-y", value.toString());

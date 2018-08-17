@@ -694,7 +694,7 @@ namespace GraphTableSVG {
 
         }
         */
-       
+
         public get shape(): string {
             return "msoConnectorStraight";
         }
@@ -729,8 +729,8 @@ namespace GraphTableSVG {
                     r.push(` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
 
                 }
-            } else if (this.controlPoint.length > 0) {
-                
+            } else if (this.controlPoint.length > 0 && this.beginVertex != null && this.endVertex != null) {
+
                 //subline.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
                 //lineArr.push(i);
                 r.push(` Dim nodes(${this.VBAConnectorNumber}) As Shape`);
@@ -779,7 +779,7 @@ namespace GraphTableSVG {
                 */
             }
 
-            
+
             lineArr.forEach((v) => {
                 const lineType = msoDashStyle.getLineType(this.svgPath);
                 const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
@@ -787,63 +787,65 @@ namespace GraphTableSVG {
                 const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
                 r.push(` Call EditLine(edges(${v}).Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
             });
-            
+
 
 
 
             //subline.forEach((v) => sub.push([v]));
 
             const textCodes = this.createVBACodeOfText(id);
-            textCodes.forEach((v,i) => r.push(`Call create${id}_label_${i}(shapes_)`));
-            
+            textCodes.forEach((v, i) => r.push(`Call create${id}_label_${i}(shapes_)`));
+
             r.push(`End Sub`);
-            textCodes.forEach((v)=>v.forEach((w)=>r.push(w)));
+            textCodes.forEach((v) => v.forEach((w) => r.push(w)));
             return r;
         }
-        
+
         /**
          * VBAコードを作成します。
          * @param shapes 
          * @param result 
          */
-        public createVBACodeOfText(id : number): string[][] {
-            const r : string[][] = [];
+        public createVBACodeOfText(id: number): string[][] {
+            const r: string[][] = [];
             const fontSize = parseInt(this.svgTextPath.getPropertyStyleValueWithDefault("font-size", "12"));
             const fontFamily = VBATranslateFunctions.ToVBAFont(this.svgTextPath.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
             const fontBold = VBATranslateFunctions.ToFontBold(this.svgTextPath.getPropertyStyleValueWithDefault("font-weight", "none"));
 
-            for (let i = 0; i < this.svgTextPath.textContent.length; i++) {
-                const s: string[] = new Array(0);
-                const p1 = this.svgTextPath.getStartPositionOfChar(i);
-                const p2 = this.svgTextPath.getEndPositionOfChar(i);
-                const width = Math.abs(p2.x - p1.x);
-                const height = Math.abs(p2.y - p1.y);
+            if (this.svgTextPath.textContent != null) {
+                for (let i = 0; i < this.svgTextPath.textContent.length; i++) {
+                    const s: string[] = new Array(0);
+                    const p1 = this.svgTextPath.getStartPositionOfChar(i);
+                    const p2 = this.svgTextPath.getEndPositionOfChar(i);
+                    const width = Math.abs(p2.x - p1.x);
+                    const height = Math.abs(p2.y - p1.y);
 
-                const rad = this.svgTextPath.getRotationOfChar(i);
-                const diffx = (fontSize* 1/2) * Math.sin((rad/180) * Math.PI);
-                const diffy = (fontSize*3/8) + ((fontSize*3/8) * Math.cos((rad/180) * Math.PI));
+                    const rad = this.svgTextPath.getRotationOfChar(i);
+                    const diffx = (fontSize * 1 / 2) * Math.sin((rad / 180) * Math.PI);
+                    const diffy = (fontSize * 3 / 8) + ((fontSize * 3 / 8) * Math.cos((rad / 180) * Math.PI));
 
-                const left = p1.x + diffx;
-                //const top = this.graph.svgGroup.getY() + p1.y - (fontSize / 2);
-                const top = p1.y - (fontSize * 1 / 4) - diffy ;
-                
-                //const top = this.graph.svgGroup.getY() + p1.y - diffy;
-                s.push(`Sub create${id}_label_${i}(shapes_ As Shapes)`);
-                s.push(`With shapes_.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${width},${fontSize})`);
-                s.push(`.TextFrame.TextRange.Text = "${this.svgTextPath.textContent[i]}"`);
-                s.push(`.TextFrame.marginLeft = 0`);
-                s.push(`.TextFrame.marginRight = 0`);
-                s.push(`.TextFrame.marginTop = 0`);
-                s.push(`.TextFrame.marginBottom = 0`);
-                s.push(`.TextFrame.TextRange.Font.Size = ${fontSize}`);
-                s.push(`.TextFrame.TextRange.Font.name = "${fontFamily}"`);
-                s.push(`.TextFrame.TextRange.Font.Bold = ${fontBold}`);
-                s.push(`.IncrementRotation(${this.svgTextPath.getRotationOfChar(i)})`);
-                //s.push(`.IncrementRotation(${this.svgText.transform.baseVal.getItem(0).angle})`);
-                s.push(`End With`);
-                s.push(`End Sub`);
-                r.push(s);
+                    const left = p1.x + diffx;
+                    //const top = this.graph.svgGroup.getY() + p1.y - (fontSize / 2);
+                    const top = p1.y - (fontSize * 1 / 4) - diffy;
 
+                    //const top = this.graph.svgGroup.getY() + p1.y - diffy;
+                    s.push(`Sub create${id}_label_${i}(shapes_ As Shapes)`);
+                    s.push(`With shapes_.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${width},${fontSize})`);
+                    s.push(`.TextFrame.TextRange.Text = "${this.svgTextPath.textContent[i]}"`);
+                    s.push(`.TextFrame.marginLeft = 0`);
+                    s.push(`.TextFrame.marginRight = 0`);
+                    s.push(`.TextFrame.marginTop = 0`);
+                    s.push(`.TextFrame.marginBottom = 0`);
+                    s.push(`.TextFrame.TextRange.Font.Size = ${fontSize}`);
+                    s.push(`.TextFrame.TextRange.Font.name = "${fontFamily}"`);
+                    s.push(`.TextFrame.TextRange.Font.Bold = ${fontBold}`);
+                    s.push(`.IncrementRotation(${this.svgTextPath.getRotationOfChar(i)})`);
+                    //s.push(`.IncrementRotation(${this.svgText.transform.baseVal.getItem(0).angle})`);
+                    s.push(`End With`);
+                    s.push(`End Sub`);
+                    r.push(s);
+
+                }
             }
             return r;
         }

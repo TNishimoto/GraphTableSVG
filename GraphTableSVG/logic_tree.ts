@@ -76,7 +76,7 @@
             this.children[1] = value;
         }
         constructor(public item: any = null, left: BinaryLogicTree | null = null, right: BinaryLogicTree | null = null, nodeText: string | null = null, edgeLabel: string | null = null) {
-            super({item : item, children : [left, right], vertexText : nodeText, parentEdgeText : edgeLabel });
+            super({item : item == null ? undefined : item, children : [left, right], vertexText : nodeText == null ? undefined : nodeText, parentEdgeText : edgeLabel == null ? undefined : edgeLabel });
         }
         /*
         public toLogicTree(): LogicTree<T> {
@@ -175,9 +175,9 @@
             if(option.y == undefined) option.y = 0;
             [this.x, this.y] = [option.x, option.y];
 
-            if(option.tableClassName == undefined) option.tableClassName = null;
+            //if(option.tableClassName == undefined) option.tableClassName = null;
 
-            this.tableClassName = option.tableClassName;
+            this.tableClassName = option.tableClassName == undefined ? null : option.tableClassName;
             this.cells = new Array(option.rowCount);
             for (let y = 0; y < option.rowCount; y++) {
                 this.cells[y] = new Array(option.columnCount);
@@ -243,7 +243,7 @@
             return r;
         }
         public static create(str: string[][], tableClassName: string | null = null): LogicTable {
-            const table = new LogicTable({ columnCount : str[0].length, rowCount : str.length, tableClassName : tableClassName });
+            const table = new LogicTable({ columnCount : str[0].length, rowCount : str.length, tableClassName : tableClassName == null ? undefined : tableClassName });
 
             for (let y = 0; y < str.length; y++) {
                 for (let x = 0; x < str[y].length; x++) {

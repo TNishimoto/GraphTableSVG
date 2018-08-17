@@ -1,3 +1,4 @@
+"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -576,7 +577,7 @@ var GraphTableSVG;
             if (right === void 0) { right = null; }
             if (nodeText === void 0) { nodeText = null; }
             if (edgeLabel === void 0) { edgeLabel = null; }
-            var _this = _super.call(this, { item: item, children: [left, right], vertexText: nodeText, parentEdgeText: edgeLabel }) || this;
+            var _this = _super.call(this, { item: item == null ? undefined : item, children: [left, right], vertexText: nodeText == null ? undefined : nodeText, parentEdgeText: edgeLabel == null ? undefined : edgeLabel }) || this;
             _this.item = item;
             return _this;
         }
@@ -675,9 +676,7 @@ var GraphTableSVG;
             if (option.y == undefined)
                 option.y = 0;
             _a = [option.x, option.y], this.x = _a[0], this.y = _a[1];
-            if (option.tableClassName == undefined)
-                option.tableClassName = null;
-            this.tableClassName = option.tableClassName;
+            this.tableClassName = option.tableClassName == undefined ? null : option.tableClassName;
             this.cells = new Array(option.rowCount);
             for (var y = 0; y < option.rowCount; y++) {
                 this.cells[y] = new Array(option.columnCount);
@@ -756,7 +755,7 @@ var GraphTableSVG;
         };
         LogicTable.create = function (str, tableClassName) {
             if (tableClassName === void 0) { tableClassName = null; }
-            var table = new LogicTable({ columnCount: str[0].length, rowCount: str.length, tableClassName: tableClassName });
+            var table = new LogicTable({ columnCount: str[0].length, rowCount: str.length, tableClassName: tableClassName == null ? undefined : tableClassName });
             for (var y = 0; y < str.length; y++) {
                 for (var x = 0; x < str[y].length; x++) {
                     var p = str[y][x].split("%%%");
@@ -4425,8 +4424,8 @@ var GraphTableSVG;
             output.cy = e.gtGetAttributeNumberWithoutNull("cy", 0);
             if (e.hasAttribute("text"))
                 output.text = e.getAttribute("text");
-            output.width = e.gtGetAttributeNumberWithoutNull("width", undefined);
-            output.height = e.gtGetAttributeNumberWithoutNull("height", undefined);
+            output.width = e.gtGetAttributeNumber2("width");
+            output.height = e.gtGetAttributeNumber2("height");
             output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.autoSizeShapeToFitTextName, "false") == "true";
             if (removeAttributes) {
                 e.removeAttribute("cx");
@@ -5690,7 +5689,7 @@ var GraphTableSVG;
                     r.push(" Call EditLine(obj.Line, " + lineColor + ", " + lineType + ", " + 0 + ", " + strokeWidth + ", " + visible_2 + ")");
                 }
             }
-            else if (this.controlPoint.length > 0) {
+            else if (this.controlPoint.length > 0 && this.beginVertex != null && this.endVertex != null) {
                 r.push(" Dim nodes(" + this.VBAConnectorNumber + ") As Shape");
                 for (var j = 0; j < this.VBAConnectorNumber; j++) {
                     var t = (j + 1) / (this.VBAConnectorNumber + 1);
@@ -5730,31 +5729,33 @@ var GraphTableSVG;
             var fontSize = parseInt(this.svgTextPath.getPropertyStyleValueWithDefault("font-size", "12"));
             var fontFamily = GraphTableSVG.VBATranslateFunctions.ToVBAFont(this.svgTextPath.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
             var fontBold = GraphTableSVG.VBATranslateFunctions.ToFontBold(this.svgTextPath.getPropertyStyleValueWithDefault("font-weight", "none"));
-            for (var i = 0; i < this.svgTextPath.textContent.length; i++) {
-                var s = new Array(0);
-                var p1 = this.svgTextPath.getStartPositionOfChar(i);
-                var p2 = this.svgTextPath.getEndPositionOfChar(i);
-                var width = Math.abs(p2.x - p1.x);
-                var height = Math.abs(p2.y - p1.y);
-                var rad = this.svgTextPath.getRotationOfChar(i);
-                var diffx = (fontSize * 1 / 2) * Math.sin((rad / 180) * Math.PI);
-                var diffy = (fontSize * 3 / 8) + ((fontSize * 3 / 8) * Math.cos((rad / 180) * Math.PI));
-                var left = p1.x + diffx;
-                var top_1 = p1.y - (fontSize * 1 / 4) - diffy;
-                s.push("Sub create" + id + "_label_" + i + "(shapes_ As Shapes)");
-                s.push("With shapes_.AddTextBox(msoTextOrientationHorizontal, " + left + ", " + top_1 + "," + width + "," + fontSize + ")");
-                s.push(".TextFrame.TextRange.Text = \"" + this.svgTextPath.textContent[i] + "\"");
-                s.push(".TextFrame.marginLeft = 0");
-                s.push(".TextFrame.marginRight = 0");
-                s.push(".TextFrame.marginTop = 0");
-                s.push(".TextFrame.marginBottom = 0");
-                s.push(".TextFrame.TextRange.Font.Size = " + fontSize);
-                s.push(".TextFrame.TextRange.Font.name = \"" + fontFamily + "\"");
-                s.push(".TextFrame.TextRange.Font.Bold = " + fontBold);
-                s.push(".IncrementRotation(" + this.svgTextPath.getRotationOfChar(i) + ")");
-                s.push("End With");
-                s.push("End Sub");
-                r.push(s);
+            if (this.svgTextPath.textContent != null) {
+                for (var i = 0; i < this.svgTextPath.textContent.length; i++) {
+                    var s = new Array(0);
+                    var p1 = this.svgTextPath.getStartPositionOfChar(i);
+                    var p2 = this.svgTextPath.getEndPositionOfChar(i);
+                    var width = Math.abs(p2.x - p1.x);
+                    var height = Math.abs(p2.y - p1.y);
+                    var rad = this.svgTextPath.getRotationOfChar(i);
+                    var diffx = (fontSize * 1 / 2) * Math.sin((rad / 180) * Math.PI);
+                    var diffy = (fontSize * 3 / 8) + ((fontSize * 3 / 8) * Math.cos((rad / 180) * Math.PI));
+                    var left = p1.x + diffx;
+                    var top_1 = p1.y - (fontSize * 1 / 4) - diffy;
+                    s.push("Sub create" + id + "_label_" + i + "(shapes_ As Shapes)");
+                    s.push("With shapes_.AddTextBox(msoTextOrientationHorizontal, " + left + ", " + top_1 + "," + width + "," + fontSize + ")");
+                    s.push(".TextFrame.TextRange.Text = \"" + this.svgTextPath.textContent[i] + "\"");
+                    s.push(".TextFrame.marginLeft = 0");
+                    s.push(".TextFrame.marginRight = 0");
+                    s.push(".TextFrame.marginTop = 0");
+                    s.push(".TextFrame.marginBottom = 0");
+                    s.push(".TextFrame.TextRange.Font.Size = " + fontSize);
+                    s.push(".TextFrame.TextRange.Font.name = \"" + fontFamily + "\"");
+                    s.push(".TextFrame.TextRange.Font.Bold = " + fontBold);
+                    s.push(".IncrementRotation(" + this.svgTextPath.getRotationOfChar(i) + ")");
+                    s.push("End With");
+                    s.push("End Sub");
+                    r.push(s);
+                }
             }
             return r;
         };
@@ -6469,7 +6470,7 @@ var GraphTableSVG;
             graph.vertices.forEach(function (v) { v.cx = 0; v.cy = 0; });
             var _a = getXYIntervals(graph), xi = _a[0], yi = _a[1];
             alignVerticeByLeaveSub(graph, xi, yi);
-            reverse(this, false, true);
+            reverse(graph, false, true);
             alignTrees(graph);
         }
         GTreeArrangement.alignVerticeByLeave = alignVerticeByLeave;
@@ -7349,6 +7350,16 @@ SVGElement.prototype.gtGetAttributeNumber = function (name, defaultValue) {
     }
     else {
         return defaultValue;
+    }
+};
+SVGElement.prototype.gtGetAttributeNumber2 = function (name) {
+    var item = this;
+    var value = item.getAttribute(name);
+    if (value != null) {
+        return Number(value);
+    }
+    else {
+        return undefined;
     }
 };
 SVGElement.prototype.gtGetAttributeNumberWithoutNull = function (name, defaultValue) {

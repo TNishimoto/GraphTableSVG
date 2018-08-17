@@ -77,9 +77,9 @@
             removeMacroModal();
         }
 
-        export function setSVGBoxSize(box: HTMLElement, w: number, h: number): void;
-        export function setSVGBoxSize(box: HTMLElement, rect: Rectangle, padding: Padding): void;
-        export function setSVGBoxSize(box: HTMLElement, item1: Rectangle | number, item2: Padding | number) {            
+        export function setSVGBoxSize(box: SVGSVGElement, w: number, h: number): void;
+        export function setSVGBoxSize(box: SVGSVGElement, rect: Rectangle, padding: Padding): void;
+        export function setSVGBoxSize(box: SVGSVGElement, item1: Rectangle | number, item2: Padding | number) {            
             if (item1 instanceof Rectangle) {
                 if (item2 instanceof Padding) {
                     const w: number = item1.right + item2.left + item2.right;
@@ -156,7 +156,7 @@
             }
         }
 
-        export function observeSVGBox(svgBox: HTMLElement, sizeFunc: () => GraphTableSVG.Rectangle, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {
+        export function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => GraphTableSVG.Rectangle, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {
             let _observer: MutationObserver;
             let observeFunction: MutationCallback = (x: MutationRecord[]) => {
                 let b = false;

@@ -60,7 +60,7 @@ namespace GraphTableSVG {
 頂点の幅を返します。
 */
         get width(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-width", 0);
+            return <number>this.svgGroup.gtGetAttributeNumber("data-width", 0);
         }
         set width(value: number) {            
             if (this.width != value && value != null) this.svgGroup.setAttribute("data-width", value.toString());
@@ -70,7 +70,7 @@ namespace GraphTableSVG {
         頂点の高さを返します。
         */
         get height(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-height", 0);
+            return <number>this.svgGroup.gtGetAttributeNumber("data-height", 0);
         }
         set height(value: number) {
             if (this.height != value && value != null) this.svgGroup.setAttribute("data-height", value.toString());

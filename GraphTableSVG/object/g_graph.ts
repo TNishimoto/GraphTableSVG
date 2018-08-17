@@ -17,7 +17,7 @@ namespace GraphTableSVG {
         public get vertices(): GVertex[] {
             const r: GVertex[] = [];
             HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(CustomAttributeNames.objectIDName)).forEach((v) => {
-                const item = GObject.getObjectFromObjectID(v.getAttribute(CustomAttributeNames.objectIDName))
+                const item = GObject.getObjectFromObjectID(v.getAttribute(CustomAttributeNames.objectIDName)!)
                 if (item instanceof GVertex) {
                     r.push(item);
                 }
@@ -27,7 +27,7 @@ namespace GraphTableSVG {
         public get edges(): GEdge[] {
             const r: GEdge[] = [];
             HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(CustomAttributeNames.objectIDName)).forEach((v) => {
-                const item = GObject.getObjectFromObjectID(v.getAttribute(CustomAttributeNames.objectIDName))
+                const item = GObject.getObjectFromObjectID(v.getAttribute(CustomAttributeNames.objectIDName)!)
                 if (item instanceof GEdge) {
                     r.push(item);
                 }
@@ -302,7 +302,7 @@ namespace GraphTableSVG {
         public getStyleValue(className : string, valueName : string) : string | null {
 
             if(this.svgGroup.hasAttribute("class")){
-                const oldClass = this.svgGroup.getAttribute("class");                
+                const oldClass = this.svgGroup.getAttribute("class")!;                
                 this.svgGroup.setAttribute("class", className);
                 const r = this.svgGroup.getPropertyStyleValue(valueName);
                 this.svgGroup.setAttribute("class", oldClass);

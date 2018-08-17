@@ -7,20 +7,20 @@ interface SVGElement {
 
 }
 SVGElement.prototype.getPaddingTop = function () {
-    const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--padding-top", 0);
+    const p: SVGElement = this;
+    return p.getPropertyStyleNumberValue("--padding-top", 0)!;
 };
 SVGElement.prototype.getPaddingLeft = function () {
-    const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--padding-left", 0);
+    const p: SVGElement = this;
+    return p.getPropertyStyleNumberValue("--padding-left", 0)!;
 };
 SVGElement.prototype.getPaddingRight = function () {
-    const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--padding-right", 0);
+    const p: SVGElement = this;
+    return p.getPropertyStyleNumberValue("--padding-right", 0)!;
 };
 SVGElement.prototype.getPaddingBottom = function () {
-    const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--padding-bottom", 0);
+    const p: SVGElement = this;
+    return p.getPropertyStyleNumberValue("--padding-bottom", 0)!;
 };
 
 interface SVGTextElement {
@@ -94,7 +94,7 @@ SVGTextElement.prototype.gtSetXY = function (rect: GraphTableSVG.Rectangle, vAnc
 
 SVGTextElement.prototype.getMarginLeft = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--margin-left", 0);
+    return p.getPropertyStyleNumberValue("--margin-left", 0)!;
 };
 SVGTextElement.prototype.setMarginLeft = function (value: number) {
     const p: SVGTextElement = this;    
@@ -102,7 +102,7 @@ SVGTextElement.prototype.setMarginLeft = function (value: number) {
 };
 SVGTextElement.prototype.getMarginTop = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--margin-top", 0);
+    return p.getPropertyStyleNumberValue("--margin-top", 0)!;
 };
 SVGTextElement.prototype.setMarginTop = function (value: number) {
     const p: SVGTextElement = this;    
@@ -110,7 +110,7 @@ SVGTextElement.prototype.setMarginTop = function (value: number) {
 };
 SVGTextElement.prototype.getMarginRight = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--margin-right", 0);
+    return p.getPropertyStyleNumberValue("--margin-right", 0)!;
 };
 SVGTextElement.prototype.setMarginRight = function (value: number) {
     const p: SVGTextElement = this;    
@@ -118,7 +118,7 @@ SVGTextElement.prototype.setMarginRight = function (value: number) {
 };
 SVGTextElement.prototype.getMarginBottom = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--margin-bottom", 0);
+    return p.getPropertyStyleNumberValue("--margin-bottom", 0)!;
 };
 SVGTextElement.prototype.setMarginBottom = function (value: number) {
     const p: SVGTextElement = this;    

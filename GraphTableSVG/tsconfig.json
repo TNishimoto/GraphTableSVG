@@ -6,8 +6,8 @@
         "outFile": "../docs/scripts/graph_table_svg.js",
         "sourceMap": true,
         "target" : "ES5",
-        "declaration" : true
-        //"strict": true
+        "declaration" : true,
+        "strict": true
         //"declarationDir" : "../"
     },
     "files": [

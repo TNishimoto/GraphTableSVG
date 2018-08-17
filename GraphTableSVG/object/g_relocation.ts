@@ -183,7 +183,7 @@ namespace GraphTableSVG {
             graph.vertices.forEach((v) => { v.cx = 0; v.cy = 0 });
             const [xi, yi] = getXYIntervals(graph);
             alignVerticeByLeaveSub(graph, xi, yi);
-            reverse(this, false, true);
+            reverse(graph, false, true);
             alignTrees(graph);
         }
 

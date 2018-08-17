@@ -98,15 +98,15 @@ declare namespace GraphTableSVG {
         function createMacroModal(vbaCode: string): void;
         function removeMacroModal(): void;
         function copyAndCloseMacroModal(): void;
-        function setSVGBoxSize(box: HTMLElement, w: number, h: number): void;
-        function setSVGBoxSize(box: HTMLElement, rect: Rectangle, padding: Padding): void;
+        function setSVGBoxSize(box: SVGSVGElement, w: number, h: number): void;
+        function setSVGBoxSize(box: SVGSVGElement, rect: Rectangle, padding: Padding): void;
         function getURLParameters(): {
             [key: string]: string;
         };
         function setURLParametersToHTMLElements(): void;
         function getInputText(elementID: string): string;
         function getNonNullElementById(id: string): HTMLElement;
-        function observeSVGBox(svgBox: HTMLElement, sizeFunc: () => GraphTableSVG.Rectangle, padding?: GraphTableSVG.Padding): void;
+        function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => GraphTableSVG.Rectangle, padding?: GraphTableSVG.Padding): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -499,7 +499,7 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    type VBAObjectType = Table | SVGPathElement | SVGTextElement | GTextBox;
+    type VBAObjectType = Table | SVGPathElement | SVGTextElement | GObject;
     class SVGToVBA {
         static create(items: VBAObjectType[] | VBAObjectType): string;
         static count(items: VBAObjectType[] | VBAObjectType): number;
@@ -938,6 +938,7 @@ interface SVGElement {
     setPropertyStyleValue(name: string, value: string | null): void;
     gtGetAttributeNumber(name: string, defaultValue: number | null): number | null;
     gtGetAttributeNumberWithoutNull(name: string, defaultValue: number): number;
+    gtGetAttributeNumber2(name: string): number | undefined;
     gtGetAttribute(name: string, defaultValue: string | null): string | null;
     gtGetAttributes(): {
         name: string;
