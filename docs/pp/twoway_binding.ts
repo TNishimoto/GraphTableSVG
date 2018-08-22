@@ -31,7 +31,17 @@ namespace AttributeFunctions{
         return e.hasAttribute(SimpleTwowayBinding.bindSourceAttributeName) || e.hasAttribute(SimpleTwowayBinding.bindTargetAttributeName);
     }
 }
-
+type SimpleTwowayBindingAttribute = {
+    sourceElement?: HTMLElement, 
+    targetElement: HTMLElement, 
+    watchedTargetAttribute?: string,
+    watchedSourceStyle?: string,  
+    sourceValueCongerter? : Converter, 
+    targetValueConverter? : Converter, 
+    watchedSourceAttribute?: string, 
+    sourceToTarget? : boolean, 
+    targetToSource? : boolean
+}
 class SimpleTwowayBinding {
     source: SimpleAttributeObserver;
     target: SimpleAttributeObserver;
@@ -62,9 +72,7 @@ class SimpleTwowayBinding {
     static readonly sourceToTargetName : string = "n-source-to-target";
     static readonly targetToSourceName : string = "n-target-to-source";
 
-    constructor(obj: { sourceElement?: HTMLElement, targetElement: HTMLElement, watchedTargetAttribute?: string,
-        watchedSourceStyle?: string,  sourceValueCongerter? : Converter, targetValueConverter? : Converter, 
-        watchedSourceAttribute?: string, sourceToTarget? : boolean, targetToSource? : boolean  }) {
+    constructor(obj: SimpleTwowayBindingAttribute) {
 
             
         if(obj.watchedSourceAttribute != undefined){

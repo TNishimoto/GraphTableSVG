@@ -5,7 +5,7 @@
          * @param svg 
          * @param items 
          */
-        export function clearGraphTables(svg: HTMLElement, items: (GraphTableSVG.GGraph | GraphTableSVG.Table)[]) {
+        export function clearGraphTables(svg: SVGElement, items: (GraphTableSVG.GGraph | GraphTableSVG.Table)[]) {
             for (let i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item instanceof GraphTableSVG.GGraph) {

@@ -687,7 +687,7 @@ namespace GraphTableSVG {
          * テーブルを削除します。
          * @param svg 表が格納されているSVG要素
          */
-        public removeTable(svg: HTMLElement) {
+        public removeTable(svg: SVGElement) {
             if (svg.contains(this.svgGroup)) {
                 svg.removeChild(this.svgGroup);
             }

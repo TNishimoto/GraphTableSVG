@@ -488,7 +488,7 @@ declare namespace GraphTableSVG {
         private resize();
         private relocation();
         private createCell();
-        removeTable(svg: HTMLElement): void;
+        removeTable(svg: SVGElement): void;
         setSize(columnCount: number, rowCount: number): void;
         clear(): void;
         insertRow(i: number): void;
@@ -529,7 +529,7 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     namespace Common {
-        function clearGraphTables(svg: HTMLElement, items: (GraphTableSVG.GGraph | GraphTableSVG.Table)[]): void;
+        function clearGraphTables(svg: SVGElement, items: (GraphTableSVG.GGraph | GraphTableSVG.Table)[]): void;
         function IsDescendantOfBody(node: Node): boolean;
         function getRegion(items: VBAObjectType[]): Rectangle;
         function paddingLeft(text: string, length: number, leftChar: string): string;
@@ -763,7 +763,7 @@ declare namespace GraphTableSVG {
             y?: number;
             isLatexMode?: boolean;
         }): void;
-        removeGraph(svg: HTMLElement): void;
+        removeGraph(svg: SVGElement): void;
         getRegion(): Rectangle;
         private createChildFromLogicTree<T>(parent, logicVertex, option?);
         createVBACode(id: number): string[];

@@ -246,7 +246,7 @@ namespace GraphTableSVG {
 
             //this.roots = roots;
         }
-        removeGraph(svg: HTMLElement) {
+        removeGraph(svg: SVGElement) {
             if (svg.contains(this.svgGroup)) {
                 svg.removeChild(this.svgGroup);
             }

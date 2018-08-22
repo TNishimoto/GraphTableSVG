@@ -11,6 +11,7 @@
         "twoway_binding.ts",
         "../scripts/graph_table_svg.d.ts",
         "footer_button.ts",
-        "pp.ts"
+        "pp.ts", 
+        "transform.ts"
     ]
 }

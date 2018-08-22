@@ -8,7 +8,11 @@ class SimpleAttributeObserver{
         this.watchedAttributeName = obj.watchedAttribute;
 
         this.watchedStyleName = obj.watchedStyleName;        
-        this.element.oninput = this.targetChangeFunc;
+        if(this.element instanceof HTMLSelectElement){
+            this.element.onchange = this.targetChangeFunc;
+        }else{
+            this.element.oninput = this.targetChangeFunc;
+        }
 
         this._observer = new MutationObserver(this.observerFunc);
         const option1: MutationObserverInit = { attributes: true };
@@ -20,12 +24,14 @@ class SimpleAttributeObserver{
         }
         else if(this.watchedAttributeName == "@textContent"){
             return this.element.textContent;
-        }else{
+        }
+        else{
             return this.element.getAttribute(this.watchedAttributeName);
         }
     }
     public set watchedAttributeValue(value: string | null) {
         if (this.watchedAttributeValue != value) {
+
             if(this.watchedAttributeName == "style" && this.watchedStyleName != undefined){
                 this.element.style.setProperty(this.watchedStyleName, value);                
             }
@@ -59,6 +65,15 @@ class SimpleAttributeObserver{
                 if(this.element.checked != b) this.element.checked = b;
             }
         }
+        if(this.element instanceof HTMLSelectElement){
+            for(let i=0;i<this.element.options.length;i++){
+                const p = this.element.options[i].value;
+                if(p == value){
+                    this.element.selectedIndex = i;
+                    break;
+                }
+            }
+        }
     }
     private _observer: MutationObserver;
     private observerFunc: MutationCallback = (x: MutationRecord[]) => {        
@@ -77,14 +92,18 @@ class SimpleAttributeObserver{
     private targetChangeFunc = () => {        
         if(this.element instanceof HTMLInputElement){
             if(this.element.type == "checkbox"){
-                const t = <HTMLInputElement>this.element;
-                const value = t.value;
+                //const t = <HTMLInputElement>this.element;
+                //const value = t.value;
                 this.watchedAttributeValue = this.element.checked.toString();    
             }else{
                 const t = <HTMLInputElement>this.element;
                 const value = t.value;
-                this.watchedAttributeValue = value;    
+                this.watchedAttributeValue = value;
             }
+        }else if(this.element instanceof HTMLSelectElement){
+                const num =  this.element.selectedIndex;
+                const value = this.element.options[num].value;
+                this.watchedAttributeValue = value;
         }
     }
     public onChanged : ((obj? : SimpleAttributeObserver) => void) | null = null;

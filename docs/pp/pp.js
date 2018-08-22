@@ -16,8 +16,8 @@ var SimpleAttributeObserver = /** @class */ (function () {
         this.targetChangeFunc = function () {
             if (_this.element instanceof HTMLInputElement) {
                 if (_this.element.type == "checkbox") {
-                    var t = _this.element;
-                    var value = t.value;
+                    //const t = <HTMLInputElement>this.element;
+                    //const value = t.value;
                     _this.watchedAttributeValue = _this.element.checked.toString();
                 }
                 else {
@@ -26,12 +26,22 @@ var SimpleAttributeObserver = /** @class */ (function () {
                     _this.watchedAttributeValue = value;
                 }
             }
+            else if (_this.element instanceof HTMLSelectElement) {
+                var num = _this.element.selectedIndex;
+                var value = _this.element.options[num].value;
+                _this.watchedAttributeValue = value;
+            }
         };
         this.onChanged = null;
         this.element = obj.element;
         this.watchedAttributeName = obj.watchedAttribute;
         this.watchedStyleName = obj.watchedStyleName;
-        this.element.oninput = this.targetChangeFunc;
+        if (this.element instanceof HTMLSelectElement) {
+            this.element.onchange = this.targetChangeFunc;
+        }
+        else {
+            this.element.oninput = this.targetChangeFunc;
+        }
         this._observer = new MutationObserver(this.observerFunc);
         var option1 = { attributes: true };
         this._observer.observe(this.element, option1);
@@ -82,6 +92,15 @@ var SimpleAttributeObserver = /** @class */ (function () {
                     this.element.setAttribute(this.watchedAttributeName, b.toString());
                     if (this.element.checked != b)
                         this.element.checked = b;
+                }
+            }
+            if (this.element instanceof HTMLSelectElement) {
+                for (var i = 0; i < this.element.options.length; i++) {
+                    var p = this.element.options[i].value;
+                    if (p == value) {
+                        this.element.selectedIndex = i;
+                        break;
+                    }
                 }
             }
         },
@@ -446,25 +465,47 @@ var FooterButton = /** @class */ (function () {
     return FooterButton;
 }());
 var items = [];
+var mouseMoveItem = null;
+var binderObjects = [];
 window.onload = function () {
     var box = document.getElementById('svgbox');
     if (box instanceof SVGSVGElement) {
         var p = GraphTableSVG.openSVG(box);
         p.forEach(function (v) {
-            if (v instanceof GraphTableSVG.PPTextBoxShapeBase) {
+            if (v instanceof GraphTableSVG.GObject) {
                 v.svgGroup.onclick = onObjectClick;
                 items.push(v);
             }
         });
     }
-    /*
-    positionFieldSet = <HTMLElement>document.getElementById('position-field');
-    xyFieldSet = <HTMLElement>document.getElementById('xy-field');
-    calloutFieldSet = <HTMLElement>document.getElementById('callout-field');
-    arrowFieldSet = <HTMLElement>document.getElementById('arrow-field');
-    */
     FooterButton.call('footer-button', 0);
 };
+function binding(e) {
+    binderObjects.forEach(function (v) { return v.dispose(); });
+    binderObjects = [];
+    var optionFieldSet = document.getElementById('option-field');
+    var id = e.svgGroup.getAttribute("id");
+    if (id == null)
+        throw Error("No ID");
+    SimpleTwowayBinding.autoBind({ targetElement: optionFieldSet, bindID: id }).forEach(function (v) { return binderObjects.push(v); });
+}
+function onObjectClick(e) {
+    var p = GraphTableSVG.GObject.getObjectFromObjectID(this);
+    mouseMoveItem = p;
+    if (mouseMoveItem != null) {
+        binding(mouseMoveItem);
+    }
+}
+/*
+function mouseMoveEvent(e: MouseEvent): void {
+    if (e.buttons == 1 && mouseMoveItem != null) {
+        if (mouseMoveItem instanceof GraphTableSVG.GObject) {
+            mouseMoveItem.cx = e.x;
+            mouseMoveItem.cy = e.y;
+        }
+    }
+}
+*/
 function sconv(value) {
     var _a = GraphTableSVG.Common.parseUnit(value), v = _a[0], unit = _a[1];
     return v.toString();
@@ -506,96 +547,56 @@ function transformTconv(value, binder) {
     console.log(source);
     throw Error("error");
 }
-function getObject(svg) {
-    for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        if (item instanceof GraphTableSVG.PPTextBoxShapeBase) {
-            if (item.hasDescendant(svg)) {
-                return item;
-            }
-        }
-    }
-    return null;
-}
-var mouseMoveItem = null;
-/*
-let positionFieldSet : HTMLElement;
-let xyFieldSet : HTMLElement;
-let calloutFieldSet : HTMLElement;
-let arrowFieldSet : HTMLElement;
-*/
-var binderObjects = [];
-function setOption(e) {
-    binderObjects.forEach(function (v) { return v.dispose(); });
-    binderObjects = [];
-    var optionFieldSet = document.getElementById('option-field');
-    if (e instanceof GraphTableSVG.Callout) {
-        var id = e.svgGroup.getAttribute("id");
-        if (id == null)
-            throw Error("No ID");
-        SimpleTwowayBinding.autoBind({ targetElement: optionFieldSet, bindID: id }).forEach(function (v) { return binderObjects.push(v); });
-    }
-    else if (e instanceof GraphTableSVG.ShapeArrowCallout) {
-        var id = e.svgGroup.getAttribute("id");
-        if (id == null)
-            throw Error("error");
-        SimpleTwowayBinding.autoBind({ targetElement: optionFieldSet, bindID: id }).forEach(function (v) { return binderObjects.push(v); });
-    }
-}
-function onObjectClick(e) {
-    var p = getObject(this);
-    mouseMoveItem = p;
-    if (mouseMoveItem != null) {
-        setOption(mouseMoveItem);
-    }
-}
-function mouseMoveEvent(e) {
-    if (e.buttons == 1 && mouseMoveItem != null) {
-        if (mouseMoveItem instanceof GraphTableSVG.PPTextBoxShapeBase) {
-            mouseMoveItem.cx = e.x;
-            mouseMoveItem.cy = e.y;
-        }
-    }
-}
-function plus() {
-    var circle = document.getElementById('circle');
-    circle.style.strokeWidth = "8pt";
-}
 function optionIf(source, target) {
     var id = target.getAttribute("id");
     if (source instanceof SVGElement) {
-        var e = getObject(source);
-        if (e instanceof GraphTableSVG.Callout) {
+        var e = GraphTableSVG.GObject.getObjectFromObjectID(source);
+        if (e instanceof GraphTableSVG.GObject) {
             switch (id) {
-                case "position-field": return false;
                 case "xy-field": return true;
+                case "object-id-field": return true;
+            }
+        }
+        if (e instanceof GraphTableSVG.GVertex) {
+            switch (id) {
+                case "margin-field": return true;
+                case "vertical-field": return true;
+                case "horizontal-field": return true;
+                case "text-field": return true;
+                case "shrink-field": return true;
+            }
+        }
+        if (e instanceof GraphTableSVG.GRect) {
+            switch (id) {
+                case "rect-size-field": return true;
+            }
+        }
+        if (e instanceof GraphTableSVG.GEllipse) {
+            switch (id) {
+                case "ellipse-size-field": return true;
+            }
+        }
+        if (e instanceof GraphTableSVG.GEdge) {
+            switch (id) {
+                case "begin-connector-type-field": return true;
+                case "end-connector-type-field": return true;
+            }
+        }
+        if (e instanceof GraphTableSVG.GCallout) {
+            switch (id) {
                 case "arrow-field": return false;
                 case "callout-field": return true;
                 case "callout-direction-field": return false;
-                case "shrink-field": return true;
                 case "size-field": return true;
-                case "margin-field": return true;
-                case "vertical-field": return true;
-                case "horizontal-field": return true;
-                case "text-field": return true;
             }
-            return false;
         }
         else if (e instanceof GraphTableSVG.ShapeArrowCallout) {
             switch (id) {
-                case "position-field": return false;
-                case "xy-field": return true;
                 case "arrow-field": return true;
                 case "callout-field": return false;
                 case "callout-direction-field": return true;
-                case "shrink-field": return true;
                 case "size-field": return true;
-                case "margin-field": return true;
-                case "vertical-field": return true;
-                case "horizontal-field": return true;
-                case "text-field": return true;
             }
-            return false;
         }
     }
     return false;
