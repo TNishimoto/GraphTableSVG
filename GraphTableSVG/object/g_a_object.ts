@@ -113,34 +113,28 @@ namespace GraphTableSVG {
 
             this.svgGroup.setAttribute("data-group-type", this.type);
             this.createSurface(parentElement, option);
-            this.updateOptionByCSS(option);
-
-
-            if (option.id != undefined) this.svgGroup.id = option.id;
-
-            this.width = 50;
-            this.height = 50;
-
-            if (option.width != undefined) this.width = option.width;
-            if (option.height != undefined) this.height = option.height;
-
-            if(this.surface != null && this.surface.className != null){
-                const width = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
-                const height = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeightName, null);
-                if(width != null) this.width = width;
-                if(height != null) this.height = height;
-            }
-
-
-
-            if (option.cx != undefined) this.cx = option.cx;
-            if (option.cy != undefined) this.cy = option.cy;
+            const _option = this.updateOptionByCSS(option);
+            if (typeof option.id !== "undefined") this.svgGroup.id = option.id;
+            this.width = _option.width!;
+            this.height = _option.height!;
+            this.cx = _option.cx!;
+            this.cy = _option.cy!;
 
             this.dispatchObjectCreatedEvent();
         }
         updateOptionByCSS(option: PPObjectAttributes) : PPObjectAttributes {
-            const p = {...option};
-            return p;
+            const _option = {...option};
+            if(this.surface != null && this.surface.className != null){
+                const width = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
+                const height = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeightName, null);
+                if(width != null) _option.width = width;
+                if(height != null) _option.height = height;
+            }
+            if (typeof _option.width === "undefined") _option.width = 50;
+            if (typeof _option.height === "undefined") _option.height = 50;
+            if (typeof _option.cx === "undefined") _option.cx = 0;
+            if (typeof _option.cy === "undefined") _option.cy = 0;
+            return _option;
         }
 
         /**

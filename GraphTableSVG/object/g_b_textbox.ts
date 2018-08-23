@@ -1,31 +1,23 @@
 namespace GraphTableSVG {
 
     export class GTextBox extends GObject {
-        private _svgText: SVGTextElement;
-        public get svgText(): SVGTextElement {
-            return this._svgText;
+        public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
+            super(svgbox, option)
+
+            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass));
+            this.svgGroup.appendChild(this.svgText);
+
+            this._observer = new MutationObserver(this.observerFunc);
+            const option1: MutationObserverInit = { attributes: true, childList: true, subtree: true };
+            this._observer.observe(this.svgGroup, option1);
+
+            this._textObserver = new MutationObserver(this.textObserverFunc);
+            const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
+            this._textObserver.observe(this.svgText, option2);
+
+            if (typeof option.text !== "undefined") this.svgText.setTextContent(option.text);
+            if (typeof option.isAutoSizeShapeToFitText !== "undefined") this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
         }
-
-
-
-        private _observer: MutationObserver;
-        private observerFunc: MutationCallback = (x: MutationRecord[]) => {
-
-            let b = false;
-            if (!this.isLocated) return;
-            for (let i = 0; i < x.length; i++) {
-                const p = x[i];
-                if (this.updateAttributes.some((v) => v == p.attributeName)) {
-                    b = true;
-                }
-
-                if (p.attributeName == "transform") {
-                    this.dispatchConnectPositionChangedEvent();
-                }
-            }
-            if (b) this.update();
-        };
-        
         static constructAttributes(e: SVGElement,
             removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): TextBoxShapeAttributes {
             if(e.hasAttribute("class"))output.class = <string>e.getAttribute("class")
@@ -48,6 +40,29 @@ namespace GraphTableSVG {
             }
             return output;
         }
+        private _svgText: SVGTextElement;
+        public get svgText(): SVGTextElement {
+            return this._svgText;
+        }
+        private _observer: MutationObserver;
+        private observerFunc: MutationCallback = (x: MutationRecord[]) => {
+
+            let b = false;
+            if (!this.isLocated) return;
+            for (let i = 0; i < x.length; i++) {
+                const p = x[i];
+                if (this.updateAttributes.some((v) => v == p.attributeName)) {
+                    b = true;
+                }
+
+                if (p.attributeName == "transform") {
+                    this.dispatchConnectPositionChangedEvent();
+                }
+            }
+            if (b) this.update();
+        };
+        
+
 
         protected updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y",
             "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",
@@ -80,29 +95,6 @@ namespace GraphTableSVG {
                 event.initEvent(CustomAttributeNames.connectPositionChangedEventName, true, true)
                 this.surface.dispatchEvent(event);
             }
-        }
-        public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
-            super(svgbox, option)
-
-            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass));
-            this.svgGroup.appendChild(this.svgText);
-
-
-            this._observer = new MutationObserver(this.observerFunc);
-            const option1: MutationObserverInit = { attributes: true, childList: true, subtree: true };
-            this._observer.observe(this.svgGroup, option1);
-
-            this._textObserver = new MutationObserver(this.textObserverFunc);
-            const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
-            this._textObserver.observe(this.svgText, option2);
-
-            if (option.text != undefined) this.svgText.setTextContent(option.text);
-            if (option.isAutoSizeShapeToFitText != undefined) this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
-
-
-
-
-
         }
 
 

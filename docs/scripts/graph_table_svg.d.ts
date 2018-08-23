@@ -581,18 +581,18 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class GTextBox extends GObject {
+        constructor(svgbox: SVGElement | string, option?: TextBoxShapeAttributes);
+        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): TextBoxShapeAttributes;
         private _svgText;
         readonly svgText: SVGTextElement;
         private _observer;
         private observerFunc;
-        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TextBoxShapeAttributes): TextBoxShapeAttributes;
         protected updateAttributes: string[];
         protected surfaceAttributes: string[];
         private _textObserver;
         protected textObserverFunc: MutationCallback;
         private static updateTextAttributes;
         protected dispatchConnectPositionChangedEvent(): void;
-        constructor(svgbox: SVGElement | string, option?: TextBoxShapeAttributes);
         horizontalAnchor: HorizontalAnchor;
         verticalAnchor: VerticalAnchor;
         isAutoSizeShapeToFitText: boolean;
@@ -664,6 +664,9 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class GEdge extends GTextBox {
+        constructor(svgbox: SVGElement | string, option?: PPEdgeAttributes);
+        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: PPEdgeAttributes): PPEdgeAttributes;
+        updateOptionByCSS(option: PPObjectAttributes): PPObjectAttributes;
         private static connectedBeginVertexDic;
         private static connectedEndVertexDic;
         static getConnectedVertexFromDic(edge: GEdge, isBegin: boolean): GVertex | null;
@@ -675,17 +678,13 @@ declare namespace GraphTableSVG {
         protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
         readonly type: string;
         tag: any;
-        markerStart: SVGMarkerElement | null;
-        markerEnd: SVGMarkerElement | null;
         controlPoint: [number, number][];
-        readonly lineColor: string | null;
-        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: PPEdgeAttributes): PPEdgeAttributes;
-        updateOptionByCSS(option: PPObjectAttributes): PPObjectAttributes;
-        constructor(svgbox: SVGElement | string, option?: PPEdgeAttributes);
         beginConnectorType: ConnectorPosition;
         endConnectorType: ConnectorPosition;
         private beginVertexID;
         private endVertexID;
+        markerStart: SVGMarkerElement | null;
+        markerEnd: SVGMarkerElement | null;
         private removeVertexEvent(vertex);
         private addVertexEvent(vertex);
         private pUpdateFunc;
@@ -696,6 +695,7 @@ declare namespace GraphTableSVG {
         y1: number;
         x2: number;
         y2: number;
+        readonly lineColor: string | null;
         private removeTextLengthAttribute();
         private setRegularInterval(value);
         private pathPoints;

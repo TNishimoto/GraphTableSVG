@@ -4183,27 +4183,13 @@ var GraphTableSVG;
             GObject.setObjectFromObjectID(this);
             this.svgGroup.setAttribute("data-group-type", this.type);
             this.createSurface(parentElement, option);
-            this.updateOptionByCSS(option);
-            if (option.id != undefined)
+            var _option = this.updateOptionByCSS(option);
+            if (typeof option.id !== "undefined")
                 this.svgGroup.id = option.id;
-            this.width = 50;
-            this.height = 50;
-            if (option.width != undefined)
-                this.width = option.width;
-            if (option.height != undefined)
-                this.height = option.height;
-            if (this.surface != null && this.surface.className != null) {
-                var width = this.surface.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.defaultWidthName, null);
-                var height = this.surface.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.defaultHeightName, null);
-                if (width != null)
-                    this.width = width;
-                if (height != null)
-                    this.height = height;
-            }
-            if (option.cx != undefined)
-                this.cx = option.cx;
-            if (option.cy != undefined)
-                this.cy = option.cy;
+            this.width = _option.width;
+            this.height = _option.height;
+            this.cx = _option.cx;
+            this.cy = _option.cy;
             this.dispatchObjectCreatedEvent();
         }
         GObject.getObjectFromObjectID = function (id) {
@@ -4331,8 +4317,24 @@ var GraphTableSVG;
         GObject.prototype.setClassNameOfSVGGroup = function () {
         };
         GObject.prototype.updateOptionByCSS = function (option) {
-            var p = __assign({}, option);
-            return p;
+            var _option = __assign({}, option);
+            if (this.surface != null && this.surface.className != null) {
+                var width = this.surface.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.defaultWidthName, null);
+                var height = this.surface.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.defaultHeightName, null);
+                if (width != null)
+                    _option.width = width;
+                if (height != null)
+                    _option.height = height;
+            }
+            if (typeof _option.width === "undefined")
+                _option.width = 50;
+            if (typeof _option.height === "undefined")
+                _option.height = 50;
+            if (typeof _option.cx === "undefined")
+                _option.cx = 0;
+            if (typeof _option.cy === "undefined")
+                _option.cy = 0;
+            return _option;
         };
         GObject.prototype.dispose = function () {
         };
@@ -4437,19 +4439,12 @@ var GraphTableSVG;
             _this._textObserver = new MutationObserver(_this.textObserverFunc);
             var option2 = { childList: true, attributes: true, subtree: true };
             _this._textObserver.observe(_this.svgText, option2);
-            if (option.text != undefined)
+            if (typeof option.text !== "undefined")
                 _this.svgText.setTextContent(option.text);
-            if (option.isAutoSizeShapeToFitText != undefined)
+            if (typeof option.isAutoSizeShapeToFitText !== "undefined")
                 _this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
             return _this;
         }
-        Object.defineProperty(GTextBox.prototype, "svgText", {
-            get: function () {
-                return this._svgText;
-            },
-            enumerable: true,
-            configurable: true
-        });
         GTextBox.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
             if (output === void 0) { output = {}; }
@@ -4473,6 +4468,13 @@ var GraphTableSVG;
             }
             return output;
         };
+        Object.defineProperty(GTextBox.prototype, "svgText", {
+            get: function () {
+                return this._svgText;
+            },
+            enumerable: true,
+            configurable: true
+        });
         GTextBox.prototype.dispatchConnectPositionChangedEvent = function () {
             if (this.surface != null) {
                 var event = document.createEvent("HTMLEvents");
@@ -5174,160 +5176,6 @@ var GraphTableSVG;
             _this.update();
             return _this;
         }
-        GEdge.getConnectedVertexFromDic = function (edge, isBegin) {
-            var dic = isBegin ? GEdge.connectedBeginVertexDic : GEdge.connectedEndVertexDic;
-            if (edge.objectID in dic) {
-                var id = dic[edge.objectID];
-                var obj = GraphTableSVG.GObject.getObjectFromObjectID(id);
-                if (obj instanceof GraphTableSVG.GVertex) {
-                    return obj;
-                }
-                else {
-                    return null;
-                }
-            }
-            else {
-                return null;
-            }
-        };
-        GEdge.setConnectedVertexFromDic = function (edge, isBegin) {
-            var dic = isBegin ? GEdge.connectedBeginVertexDic : GEdge.connectedEndVertexDic;
-            var id = isBegin ? edge.beginVertexID : edge.endVertexID;
-            if (id == null) {
-                if (edge.objectID in dic) {
-                    delete dic[edge.objectID];
-                }
-            }
-            else {
-                dic[edge.objectID] = id;
-            }
-        };
-        GEdge.prototype.setClassNameOfSVGGroup = function () {
-            var parent = this.svgGroup.parentElement;
-            if (parent instanceof SVGElement) {
-                var className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultEdgeClass);
-                if (className != null) {
-                    this.svgGroup.setAttribute("class", className);
-                }
-            }
-        };
-        Object.defineProperty(GEdge.prototype, "svgPath", {
-            get: function () {
-                return this.surface;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(GEdge.prototype, "svgTextPath", {
-            get: function () {
-                return this._svgTextPath;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        GEdge.prototype.createSurface = function (svgbox, option) {
-            if (option === void 0) { option = {}; }
-            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaulSurfaceClass));
-            this.svgGroup.insertBefore(this.svgPath, this.svgText);
-        };
-        Object.defineProperty(GEdge.prototype, "type", {
-            get: function () {
-                return "PPEdge";
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(GEdge.prototype, "markerStart", {
-            get: function () {
-                if (this.svgPath != null) {
-                    var p = this.svgPath.getAttribute("marker-start");
-                    if (p != null) {
-                        var str = p.substring(5, p.length - 1);
-                        var ele = document.getElementById(str);
-                        return ele;
-                    }
-                    else {
-                        return null;
-                    }
-                }
-                else {
-                    return null;
-                }
-            },
-            set: function (value) {
-                if (this.svgPath != null) {
-                    if (value == null) {
-                        this.svgPath.removeAttribute("marker-start");
-                    }
-                    else {
-                        this.svgGroup.appendChild(value);
-                        this.svgPath.setAttribute("marker-start", "url(#" + value.id + ")");
-                    }
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(GEdge.prototype, "markerEnd", {
-            get: function () {
-                if (this.svgPath != null) {
-                    var p = this.svgPath.getAttribute("marker-end");
-                    if (p != null) {
-                        var str = p.substring(5, p.length - 1);
-                        var ele = document.getElementById(str);
-                        return ele;
-                    }
-                    else {
-                        return null;
-                    }
-                }
-                else {
-                    return null;
-                }
-            },
-            set: function (value) {
-                if (this.svgPath != null) {
-                    if (value == null) {
-                        this.svgPath.removeAttribute("marker-end");
-                    }
-                    else {
-                        this.svgGroup.appendChild(value);
-                        this.svgPath.setAttribute("marker-end", "url(#" + value.id + ")");
-                    }
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(GEdge.prototype, "controlPoint", {
-            get: function () {
-                var r = this.pathPoints;
-                r.shift();
-                r.pop();
-                return r;
-            },
-            set: function (value) {
-                var fst = [this.x1, this.y1];
-                var lst = [this.x2, this.y2];
-                value.unshift(fst);
-                value.push(lst);
-                this.pathPoints = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(GEdge.prototype, "lineColor", {
-            get: function () {
-                if (this.svgPath != null) {
-                    return this.svgPath.getPropertyStyleValueWithDefault("stroke", "black");
-                }
-                else {
-                    return null;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
         GEdge.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
             if (output === void 0) { output = {}; }
@@ -5396,6 +5244,86 @@ var GraphTableSVG;
                 _option.pathTextAlignment = GraphTableSVG.pathTextAlighnment.center;
             return _option;
         };
+        GEdge.getConnectedVertexFromDic = function (edge, isBegin) {
+            var dic = isBegin ? GEdge.connectedBeginVertexDic : GEdge.connectedEndVertexDic;
+            if (edge.objectID in dic) {
+                var id = dic[edge.objectID];
+                var obj = GraphTableSVG.GObject.getObjectFromObjectID(id);
+                if (obj instanceof GraphTableSVG.GVertex) {
+                    return obj;
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        };
+        GEdge.setConnectedVertexFromDic = function (edge, isBegin) {
+            var dic = isBegin ? GEdge.connectedBeginVertexDic : GEdge.connectedEndVertexDic;
+            var id = isBegin ? edge.beginVertexID : edge.endVertexID;
+            if (id == null) {
+                if (edge.objectID in dic) {
+                    delete dic[edge.objectID];
+                }
+            }
+            else {
+                dic[edge.objectID] = id;
+            }
+        };
+        GEdge.prototype.setClassNameOfSVGGroup = function () {
+            var parent = this.svgGroup.parentElement;
+            if (parent instanceof SVGElement) {
+                var className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultEdgeClass);
+                if (className != null) {
+                    this.svgGroup.setAttribute("class", className);
+                }
+            }
+        };
+        Object.defineProperty(GEdge.prototype, "svgPath", {
+            get: function () {
+                return this.surface;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GEdge.prototype, "svgTextPath", {
+            get: function () {
+                return this._svgTextPath;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        GEdge.prototype.createSurface = function (svgbox, option) {
+            if (option === void 0) { option = {}; }
+            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaulSurfaceClass));
+            this.svgGroup.insertBefore(this.svgPath, this.svgText);
+        };
+        Object.defineProperty(GEdge.prototype, "type", {
+            get: function () {
+                return "PPEdge";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GEdge.prototype, "controlPoint", {
+            get: function () {
+                var r = this.pathPoints;
+                r.shift();
+                r.pop();
+                return r;
+            },
+            set: function (value) {
+                var fst = [this.x1, this.y1];
+                var lst = [this.x2, this.y2];
+                value.unshift(fst);
+                value.push(lst);
+                this.pathPoints = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(GEdge.prototype, "beginConnectorType", {
             get: function () {
                 var p = this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.beginConnectorTypeName);
@@ -5443,6 +5371,68 @@ var GraphTableSVG;
                 }
                 else {
                     this.svgGroup.setAttribute(GraphTableSVG.CustomAttributeNames.endNodeName, v);
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GEdge.prototype, "markerStart", {
+            get: function () {
+                if (this.svgPath != null) {
+                    var p = this.svgPath.getAttribute("marker-start");
+                    if (p != null) {
+                        var str = p.substring(5, p.length - 1);
+                        var ele = document.getElementById(str);
+                        return ele;
+                    }
+                    else {
+                        return null;
+                    }
+                }
+                else {
+                    return null;
+                }
+            },
+            set: function (value) {
+                if (this.svgPath != null) {
+                    if (value == null) {
+                        this.svgPath.removeAttribute("marker-start");
+                    }
+                    else {
+                        this.svgGroup.appendChild(value);
+                        this.svgPath.setAttribute("marker-start", "url(#" + value.id + ")");
+                    }
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GEdge.prototype, "markerEnd", {
+            get: function () {
+                if (this.svgPath != null) {
+                    var p = this.svgPath.getAttribute("marker-end");
+                    if (p != null) {
+                        var str = p.substring(5, p.length - 1);
+                        var ele = document.getElementById(str);
+                        return ele;
+                    }
+                    else {
+                        return null;
+                    }
+                }
+                else {
+                    return null;
+                }
+            },
+            set: function (value) {
+                if (this.svgPath != null) {
+                    if (value == null) {
+                        this.svgPath.removeAttribute("marker-end");
+                    }
+                    else {
+                        this.svgGroup.appendChild(value);
+                        this.svgPath.setAttribute("marker-end", "url(#" + value.id + ")");
+                    }
                 }
             },
             enumerable: true,
@@ -5546,6 +5536,18 @@ var GraphTableSVG;
                 var p = this.pathPoints;
                 p[p.length - 1][1] = value;
                 this.pathPoints = p;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GEdge.prototype, "lineColor", {
+            get: function () {
+                if (this.svgPath != null) {
+                    return this.svgPath.getPropertyStyleValueWithDefault("stroke", "black");
+                }
+                else {
+                    return null;
+                }
             },
             enumerable: true,
             configurable: true
