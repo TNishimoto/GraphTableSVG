@@ -3,10 +3,39 @@ namespace GraphTableSVG {
      * 辺をSVGで表現するためのクラスです。
      */
     export class GEdge extends GTextBox {
+        private static connectedBeginVertexDic: { [key: string]: string; } = {};
+        private static connectedEndVertexDic: { [key: string]: string; } = {};
+        public static getConnectedVertexFromDic(edge: GEdge, isBegin : boolean): GVertex | null {
+            const dic = isBegin ? GEdge.connectedBeginVertexDic : GEdge.connectedEndVertexDic;
+            if(edge.objectID in dic){
+                const id = dic[edge.objectID];
+                const obj = GObject.getObjectFromObjectID(id);
+                if(obj instanceof GVertex){
+                    return obj;
+                }else{
+                    return null;
+                }
+            }else{
+                return null;
+            }    
+        }
+        public static setConnectedVertexFromDic(edge: GEdge, isBegin : boolean): void {
+            const dic = isBegin ? GEdge.connectedBeginVertexDic : GEdge.connectedEndVertexDic;
+            const id = isBegin ? edge.beginVertexID : edge.endVertexID;
+            if(id == null){
+                if(edge.objectID in dic){
+                    delete dic[edge.objectID];
+                }
+            }else{
+                dic[edge.objectID] = id;
+            }
+        }
+
+
         protected setClassNameOfSVGGroup() {
             const parent = this.svgGroup.parentElement;
             if (parent instanceof SVGElement) {
-                const className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.defaultEdgeClass);
+                const className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultEdgeClass);
                 if (className != null) {
                     this.svgGroup.setAttribute("class", className);
                 }
@@ -22,7 +51,7 @@ namespace GraphTableSVG {
             return this._svgTextPath;
         }
         protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
-            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaulSurfaceClass));
+            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         public get type(): string {
@@ -178,15 +207,57 @@ namespace GraphTableSVG {
                 e.removeAttribute("end-connector");
 
             }
-
             return output;
+        }
+
+        updateOptionByCSS(option: PPObjectAttributes) : PPObjectAttributes {
+            const _option = <PPEdgeAttributes>super.updateOptionByCSS(option);
+
+            
+            const markerStartName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.markerStartName);
+            const markerEndName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.markerEndName);
+            if (typeof _option.startMarker === "undefined" && markerStartName != null) _option.startMarker = markerStartName == "true";
+            if (typeof _option.endMarker === "undefined" && markerEndName != null) _option.endMarker = markerEndName == "true";
+
+
+            if(typeof _option.x1 === "undefined") _option.x1 = 0;
+            if(typeof _option.y1 === "undefined") _option.y1 = 0;
+            if(typeof _option.x2 === "undefined") _option.x2 = 300;
+            if(typeof _option.y2 === "undefined") _option.y2 = 300;
+
+            if (typeof _option.beginVertex === "string") {
+                const obj = GTextBox.getObjectFromID(_option.beginVertex);
+                if (obj instanceof GVertex) {
+                    _option.beginVertex = obj;
+                }
+            }
+            if (typeof _option.endVertex === "string") {
+                const obj = GTextBox.getObjectFromID(_option.endVertex);
+                if (obj instanceof GVertex) {
+                    _option.endVertex = obj;
+                }
+            }
+
+            const styleBeginConnectorType = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorTypeName);
+            const styleEndConnectorType = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorTypeName);
+
+            if(typeof _option.beginConnectorType === "undefined" && styleBeginConnectorType === null) _option.beginConnectorType = ConnectorPosition.Auto;
+            if(typeof _option.endConnectorType === "undefined" && styleEndConnectorType === null) _option.endConnectorType = ConnectorPosition.Auto;
+            if(typeof _option.pathTextAlignment === "undefined") _option.pathTextAlignment = pathTextAlighnment.center;
+
+            return _option;
+
         }
         constructor(svgbox: SVGElement | string, option: PPEdgeAttributes = {}) {
             super(svgbox, option);
+            this.updateAttributes.push(CustomAttributeNames.beginNodeName);
+            this.updateAttributes.push(CustomAttributeNames.endNodeName);
+
+
             //this._svgGroup = SVG.createGroup(svgbox);
 
             this.svgText.textContent = "";
-            const textClass = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaultTextClass);
+            const textClass = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
             this._svgTextPath = SVG.createTextPath2(textClass);
             this.svgPath.id = `path-${this.objectID}`;
 
@@ -222,39 +293,18 @@ namespace GraphTableSVG {
             const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
             const strokeWidth2 = strokeWidth == null ? undefined : strokeWidth;
 
-            const markerStartName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.markerStartName);
-            const markerEndName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.markerEndName);
+            if (typeof option.startMarker !== "undefined") this.markerStart = GraphTableSVG.GEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+            if (typeof option.endMarker !== "undefined") this.markerEnd = GraphTableSVG.GEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
-            if (option.startMarker == undefined && markerStartName != null) option.startMarker = markerStartName == "true";
-            if (option.endMarker == undefined && markerEndName != null) option.endMarker = markerEndName == "true";
-            if (option.startMarker) this.markerStart = GraphTableSVG.GEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
-            if (option.endMarker) this.markerEnd = GraphTableSVG.GEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+            this.pathPoints = [[option.x1!, option.y1!], [option.x2!, option.y2!]];
 
-            const x1 = option.x1 == undefined ? 0 : option.x1;
-            const y1 = option.y1 == undefined ? 0 : option.y1;
-            const x2 = option.x2 == undefined ? 300 : option.x2;
-            const y2 = option.y2 == undefined ? 300 : option.y2;
-            this.pathPoints = [[x1, y1], [x2, y2]];
+            if(option.beginVertex instanceof GVertex) this.beginVertex = option.beginVertex;
+            if(option.endVertex instanceof GVertex) this.endVertex = option.endVertex;
 
+            if(typeof option.beginConnectorType !== "undefined")this.beginConnectorType = option.beginConnectorType;
+            if(typeof option.endConnectorType !== "undefined")this.endConnectorType = option.endConnectorType;
 
-            if (option.beginVertex != null) {
-                const obj = option.beginVertex instanceof GVertex ? option.beginVertex : GTextBox.getObjectFromID(option.beginVertex);
-                if (obj instanceof GVertex) {
-                    this.beginVertex = obj;
-                }
-            }
-            if (option.endVertex != null) {
-                const obj = option.endVertex instanceof GVertex ? option.endVertex : GTextBox.getObjectFromID(option.endVertex);
-
-                //const obj = PPTextBoxShapeBase.getObjectFromID(option.endVertexID);
-                if (obj instanceof GVertex) {
-                    this.endVertex = obj;
-                }
-            }
-            this.beginConnectorType = option.beginConnectorType == undefined ? ConnectorPosition.Auto : option.beginConnectorType;
-            this.endConnectorType = option.endConnectorType == undefined ? ConnectorPosition.Auto : option.endConnectorType;
-
-            this.pathTextAlignment = option.pathTextAlignment != undefined ? option.pathTextAlignment : pathTextAlighnment.center;
+            this.pathTextAlignment = option.pathTextAlignment!;
 
             this.update();
 
@@ -263,28 +313,28 @@ namespace GraphTableSVG {
         開始接点の接続位置を返します。
         */
         get beginConnectorType(): ConnectorPosition {
-            const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.beginConnectorTypeName);
+            const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorTypeName);
             return ConnectorPosition.ToConnectorPosition(p);
         }
         /**
         開始接点の接続位置を設定します。
         */
         set beginConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.beginConnectorTypeName, value)
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.beginConnectorTypeName, value)
             //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
         /**
         終了接点の接続位置を返します。
         */
         get endConnectorType(): ConnectorPosition {
-            const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.endConnectorTypeName);
+            const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorTypeName);
             return ConnectorPosition.ToConnectorPosition(p);
         }
         /**
         終了接点の接続位置を設定します。
         */
         set endConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.endConnectorTypeName, value)
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.endConnectorTypeName, value)
         }
 
         private get beginVertexID(): string | null {
@@ -331,23 +381,10 @@ namespace GraphTableSVG {
         開始接点を設定します。
         */
         set beginVertex(value: GVertex | null) {
-            if (this.beginVertex != null) {
-                this.removeVertexEvent(this.beginVertex);
-                if (this.beginVertex.outcomingEdges.indexOf(this) != -1) {
-                    this.beginVertex.removeOutcomingEdge(this);
-                }
-            }
-
             if (value == null) {
                 this.beginVertexID = null;
             } else {
                 this.beginVertexID = value.objectID;
-                if (this.beginVertex == null) throw Error("error");
-                this.addVertexEvent(this.beginVertex);
-                if (this.beginVertex.outcomingEdges.indexOf(this) == -1) {
-                    this.beginVertex.insertOutcomingEdge(this);
-                }
-
             }
 
             this.update();
@@ -367,25 +404,12 @@ namespace GraphTableSVG {
         終了接点を設定します。
         */
         set endVertex(value: GVertex | null) {
-            if (this.endVertex != null) {
-                this.removeVertexEvent(this.endVertex);
-                if (this.endVertex.incomingEdges.indexOf(this) != -1) {
-                    this.endVertex.removeIncomingEdge(this);
-                }
-            }
-
-
             if (value == null) {
                 this.endVertexID = null;
             } else {
                 this.endVertexID = value.objectID;
-                if (this.endVertex == null) throw Error("error");
-                this.addVertexEvent(this.endVertex);
-                if (this.endVertex.incomingEdges.indexOf(this) == -1) {
-                    this.endVertex.insertIncomingEdge(this);
-                }
-
             }
+
 
             this.update();
 
@@ -530,10 +554,50 @@ namespace GraphTableSVG {
                 this.svgPath.setAttribute("d", path);
             }
         }
+        private updateConnectorInfo(){
+            const oldBeginVertex = GEdge.getConnectedVertexFromDic(this, true);
+            const oldEndVertex = GEdge.getConnectedVertexFromDic(this, false);
+            if(this.beginVertex != oldBeginVertex){
+                if (oldBeginVertex != null) {
+
+                    this.removeVertexEvent(oldBeginVertex);
+                    if (oldBeginVertex.outcomingEdges.indexOf(this) != -1) {
+                        oldBeginVertex.removeOutcomingEdge(this);
+                    }
+                }
+    
+                if (this.beginVertex != null) {
+                    this.addVertexEvent(this.beginVertex);
+                    if (this.beginVertex.outcomingEdges.indexOf(this) == -1) {
+                        this.beginVertex.insertOutcomingEdge(this);
+                    }
+                }
+                GEdge.setConnectedVertexFromDic(this, true);
+            }
+            if(this.endVertex != oldEndVertex){
+                if (oldEndVertex != null) {
+                    this.removeVertexEvent(oldEndVertex);
+                    if (oldEndVertex.incomingEdges.indexOf(this) != -1) {
+                        oldEndVertex.removeIncomingEdge(this);
+                    }
+                }
+    
+                if(this.endVertex != null){
+                    this.addVertexEvent(this.endVertex);
+                    if (this.endVertex.incomingEdges.indexOf(this) == -1) {
+                        this.endVertex.insertIncomingEdge(this);
+                    }
+                }
+                GEdge.setConnectedVertexFromDic(this, false);
+            }
+            //if(this.beginVertexID != )
+        }
         /**
          * 再描画します。
          */
         public update(): boolean {
+            this.updateConnectorInfo();
+
             const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
             const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];
 

@@ -139,6 +139,15 @@
                         </select>
                     </fieldset>
                     <label id="object-id-field" n-if="optionIf" class="field">data-objectID : <span n-bind:s-attr="data-objectID" n-bind:t-attr="@textContent" > </span></label>
+                    <fieldset id="begin-node-field" n-if="optionIf" class="field">
+                        <legend>begin-node</legend>
+                        <span><input n-bind:s-attr="data-begin-node" type="text"></span>
+                    </fieldset>                    
+                    <fieldset id="end-node-field" n-if="optionIf" class="field">
+                        <legend>end-node</legend>
+                        <span><input n-bind:s-attr="data-end-node" type="text"></span>
+                    </fieldset>                    
+                    
                 </div>
             </div>
             <div class="FooterContent" name="footer-button" data-type="footer-content" data-id="1" id="fc4" style="display:none">

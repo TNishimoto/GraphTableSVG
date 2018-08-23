@@ -113,6 +113,7 @@ namespace GraphTableSVG {
 
             this.svgGroup.setAttribute("data-group-type", this.type);
             this.createSurface(parentElement, option);
+            this.updateOptionByCSS(option);
 
 
             if (option.id != undefined) this.svgGroup.id = option.id;
@@ -124,8 +125,8 @@ namespace GraphTableSVG {
             if (option.height != undefined) this.height = option.height;
 
             if(this.surface != null && this.surface.className != null){
-                const width = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.defaultWidthName, null);
-                const height = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.defaultHeightName, null);
+                const width = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
+                const height = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeightName, null);
                 if(width != null) this.width = width;
                 if(height != null) this.height = height;
             }
@@ -137,6 +138,11 @@ namespace GraphTableSVG {
 
             this.dispatchObjectCreatedEvent();
         }
+        updateOptionByCSS(option: PPObjectAttributes) : PPObjectAttributes {
+            const p = {...option};
+            return p;
+        }
+
         /**
          * この頂点を廃棄します。廃棄された頂点はグラフから取り除かれます。
          */

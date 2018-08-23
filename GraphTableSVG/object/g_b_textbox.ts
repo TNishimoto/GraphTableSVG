@@ -35,7 +35,7 @@ namespace GraphTableSVG {
             output.width = e.gtGetAttributeNumber2("width");
             output.height = e.gtGetAttributeNumber2("height");
 
-            output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(CustomAttributeNames.autoSizeShapeToFitTextName, "false") == "true";
+            output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.autoSizeShapeToFitTextName, "false") == "true";
 
             if (removeAttributes) {
                 e.removeAttribute("cx");
@@ -44,7 +44,7 @@ namespace GraphTableSVG {
                 e.removeAttribute("text");
                 e.removeAttribute("width");
                 e.removeAttribute("height");
-                e.style.removeProperty(CustomAttributeNames.autoSizeShapeToFitTextName);
+                e.style.removeProperty(CustomAttributeNames.Style.autoSizeShapeToFitTextName);
             }
             return output;
         }
@@ -84,7 +84,7 @@ namespace GraphTableSVG {
         public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option)
 
-            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaultTextClass));
+            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
 
 
@@ -138,10 +138,10 @@ namespace GraphTableSVG {
          * このVertexがテキストに合わせてサイズを変える場合Trueを返します。
          */
         get isAutoSizeShapeToFitText(): boolean {
-            return this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.autoSizeShapeToFitTextName, "false") == "true";
+            return this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.autoSizeShapeToFitTextName, "false") == "true";
         }
         set isAutoSizeShapeToFitText(value: boolean) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.autoSizeShapeToFitTextName, value ? "true" : "false");
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitTextName, value ? "true" : "false");
         }
         private _isUpdating: boolean = false;
         protected update() {

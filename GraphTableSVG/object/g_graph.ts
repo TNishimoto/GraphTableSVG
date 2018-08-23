@@ -44,7 +44,7 @@ namespace GraphTableSVG {
             this.svgGroup.addEventListener(CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);
         }
         public get vertexXInterval(): number | null {
-            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.vertexXIntervalName);
+            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.vertexXIntervalName);
             if (v == null) {
                 return null;
             } else {
@@ -52,10 +52,10 @@ namespace GraphTableSVG {
             }
         }
         public set vertexXInterval(value: number | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.vertexXIntervalName, value == null ? null : value.toString());
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.vertexXIntervalName, value == null ? null : value.toString());
         }
         public get vertexYInterval(): number | null {
-            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.vertexYIntervalName);
+            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.vertexYIntervalName);
             if (v == null) {
                 return null;
             } else {
@@ -63,33 +63,33 @@ namespace GraphTableSVG {
             }
         }
         public set vertexYInterval(value: number | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.vertexYIntervalName, value == null ? null : value.toString());
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.vertexYIntervalName, value == null ? null : value.toString());
         }
 
         /**
         Vertexインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
         */
         get defaultVertexClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaultVertexClass);
+            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultVertexClass);
         }
         /**
         Vertexインスタンスの生成時のクラス名を設定します。
         */
         set defaultVertexClass(value: string | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.defaultVertexClass, value);
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.defaultVertexClass, value);
         }
 
         /**
         Edgeインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
         */
         get defaultEdgeClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaultEdgeClass);
+            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultEdgeClass);
         }
         /**
         Edgeインスタンスの生成時のクラス名を設定します。
         */
         set defaultEdgeClass(value: string | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.defaultEdgeClass, value);
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.defaultEdgeClass, value);
         }
         /**
         根を返します。

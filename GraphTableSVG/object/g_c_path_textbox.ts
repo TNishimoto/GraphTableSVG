@@ -11,7 +11,7 @@ namespace GraphTableSVG {
             //this.update();
         }
         protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
-            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.defaulSurfaceClass));
+            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
 

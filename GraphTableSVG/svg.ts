@@ -47,7 +47,7 @@ namespace GraphTableSVG {
             line1.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
 
             if(parent instanceof SVGElement){
-                const _className = parent.getPropertyStyleValue(CustomAttributeNames.defaultPathClass);
+                const _className = parent.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
                 if(className == null){
                     className = _className;
                 }
@@ -110,11 +110,11 @@ namespace GraphTableSVG {
                 const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
                 if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 
-                const width = rect.getPropertyStyleNumberValue(CustomAttributeNames.defaultWidthName, null);
+                const width = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
                 if (width != null) {
                     rect.width.baseVal.value = width;
                 }
-                const height = rect.getPropertyStyleNumberValue(CustomAttributeNames.defaultHeightName, null);
+                const height = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeightName, null);
                 if (height != null) {
                     rect.height.baseVal.value = height;
                 }
@@ -167,7 +167,7 @@ namespace GraphTableSVG {
                 circle.style.fill = "#ffffff";
             } else {
                 circle.setAttribute("class", className);
-                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.defaultRadiusName, null);
+                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadiusName, null);
                 if (radius != null) {
                     circle.r.baseVal.value = radius;
                 }
@@ -197,7 +197,7 @@ namespace GraphTableSVG {
                 circle.style.fill = "#ffffff";
             } else {
                 circle.setAttribute("class", className);
-                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.defaultRadiusName, null);
+                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadiusName, null);
                 if (radius != null) {
                     circle.rx.baseVal.value = radius;
                     circle.ry.baseVal.value = radius;

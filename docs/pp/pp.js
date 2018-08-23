@@ -580,6 +580,8 @@ function optionIf(source, target) {
             switch (id) {
                 case "begin-connector-type-field": return true;
                 case "end-connector-type-field": return true;
+                case "begin-node-field": return true;
+                case "end-node-field": return true;
             }
         }
         if (e instanceof GraphTableSVG.GCallout) {

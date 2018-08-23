@@ -570,6 +570,7 @@ declare namespace GraphTableSVG {
         protected createSurface(svgbox: SVGElement, option?: TextBoxShapeAttributes): void;
         protected setClassNameOfSVGGroup(): void;
         constructor(svgbox: SVGElement | string, option?: PPObjectAttributes);
+        updateOptionByCSS(option: PPObjectAttributes): PPObjectAttributes;
         dispose(): void;
         readonly isDisposed: boolean;
         readonly objectID: string;
@@ -663,6 +664,10 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class GEdge extends GTextBox {
+        private static connectedBeginVertexDic;
+        private static connectedEndVertexDic;
+        static getConnectedVertexFromDic(edge: GEdge, isBegin: boolean): GVertex | null;
+        static setConnectedVertexFromDic(edge: GEdge, isBegin: boolean): void;
         protected setClassNameOfSVGGroup(): void;
         readonly svgPath: SVGPathElement;
         protected _svgTextPath: SVGTextPathElement;
@@ -675,6 +680,7 @@ declare namespace GraphTableSVG {
         controlPoint: [number, number][];
         readonly lineColor: string | null;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: PPEdgeAttributes): PPEdgeAttributes;
+        updateOptionByCSS(option: PPObjectAttributes): PPObjectAttributes;
         constructor(svgbox: SVGElement | string, option?: PPEdgeAttributes);
         beginConnectorType: ConnectorPosition;
         endConnectorType: ConnectorPosition;
@@ -693,6 +699,7 @@ declare namespace GraphTableSVG {
         private removeTextLengthAttribute();
         private setRegularInterval(value);
         private pathPoints;
+        private updateConnectorInfo();
         update(): boolean;
         pathTextAlignment: pathTextAlighnment;
         save(): void;
@@ -837,26 +844,28 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     namespace CustomAttributeNames {
-        const autoSizeShapeToFitTextName: string;
-        const beginConnectorTypeName: string;
-        const endConnectorTypeName: string;
-        const defaultLineClass: string;
+        namespace Style {
+            const autoSizeShapeToFitTextName: string;
+            const beginConnectorTypeName: string;
+            const endConnectorTypeName: string;
+            const defaultLineClass: string;
+            const markerStartName: string;
+            const markerEndName: string;
+            const defaultVertexClass: string;
+            const defaultEdgeClass: string;
+            const vertexXIntervalName: string;
+            const vertexYIntervalName: string;
+            const defaultRadiusName = "--default-radius";
+            const defaultWidthName = "--default-width";
+            const defaultHeightName = "--default-height";
+            const defaultTextClass: string;
+            const defaultPathClass: string;
+            const defaulSurfaceClass: string;
+            const defaultSurfaceType: string;
+        }
         const beginNodeName: string;
         const endNodeName: string;
         const controlPointName: string;
-        const markerStartName: string;
-        const markerEndName: string;
-        const defaultVertexClass: string;
-        const defaultEdgeClass: string;
-        const vertexXIntervalName: string;
-        const vertexYIntervalName: string;
-        const defaultRadiusName = "--default-radius";
-        const defaultWidthName = "--default-width";
-        const defaultHeightName = "--default-height";
-        const defaultTextClass: string;
-        const defaultPathClass: string;
-        const defaulSurfaceClass: string;
-        const defaultSurfaceType: string;
         const connectPositionChangedEventName = "connect_position_changed";
         const vertexCreatedEventName = "vertex_created";
         const objectCreatedEventName = "object_created";
