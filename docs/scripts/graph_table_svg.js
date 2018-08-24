@@ -4812,7 +4812,7 @@ var GraphTableSVG;
             var visible = this.surface.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
             return " Call EditLine(obj.Line, " + lineColor + ", " + lineType + ", " + 0 + ", " + strokeWidth + ", " + visible + ")";
         };
-        Object.defineProperty(GVertex.prototype, "parentGraph", {
+        Object.defineProperty(GVertex.prototype, "graph", {
             get: function () {
                 var v = this.svgGroup.parentElement;
                 if (v != null && v instanceof SVGGElement && v.hasAttribute(GraphTableSVG.CustomAttributeNames.objectIDName)) {
@@ -6328,6 +6328,34 @@ var GraphTableSVG;
             var event = document.createEvent("HTMLEvents");
             event.initEvent(GraphTableSVG.CustomAttributeNames.vertexCreatedEventName, true, true);
             vertex.svgGroup.dispatchEvent(event);
+        };
+        GGraph.prototype.setRootIndex = function (vertex, rootIndex) {
+            if (vertex.graph == this) {
+                if (rootIndex < this.roots.length) {
+                    this.svgGroup.insertBefore(vertex.svgGroup, this.roots[rootIndex].svgGroup);
+                }
+                else {
+                    if (this.roots.length == 0) {
+                        if (this.svgGroup.firstChild == null) {
+                            this.svgGroup.appendChild(vertex.svgGroup);
+                        }
+                        else {
+                            this.svgGroup.insertBefore(vertex.svgGroup, this.svgGroup.firstChild);
+                        }
+                    }
+                    else {
+                        if (this.roots[this.roots.length - 1].svgGroup.nextSibling == null) {
+                            this.svgGroup.appendChild(vertex.svgGroup);
+                        }
+                        else {
+                            this.svgGroup.insertBefore(vertex.svgGroup, this.roots[this.roots.length - 1].svgGroup.nextSibling);
+                        }
+                    }
+                }
+            }
+            else {
+                throw Error("error!");
+            }
         };
         return GGraph;
     }(GraphTableSVG.GObject));

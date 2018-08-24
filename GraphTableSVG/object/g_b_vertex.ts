@@ -275,7 +275,7 @@ namespace GraphTableSVG {
             return ` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`;
         }
 
-        public get parentGraph() : GGraph | null{
+        public get graph() : GGraph | null{
             const v = this.svgGroup.parentElement;
             if(v != null && v instanceof SVGGElement && v.hasAttribute(CustomAttributeNames.objectIDName)){
                 const id = v.getAttribute(CustomAttributeNames.objectIDName)!;

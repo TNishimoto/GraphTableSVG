@@ -634,7 +634,7 @@ declare namespace GraphTableSVG {
         createVBACode(id: number): string[];
         protected readonly VBAAdjustments: number[];
         private getVBAEditLine();
-        readonly parentGraph: GGraph | null;
+        readonly graph: GGraph | null;
     }
 }
 declare namespace GraphTableSVG {
@@ -778,6 +778,7 @@ declare namespace GraphTableSVG {
         getStyleValue(className: string, valueName: string): string | null;
         protected dispatchVertexCreatedEvent(vertex: GVertex): void;
         private objectCreatedFunction;
+        setRootIndex(vertex: GVertex, rootIndex: number): void;
     }
 }
 declare namespace GraphTableSVG {

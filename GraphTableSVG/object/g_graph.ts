@@ -333,6 +333,29 @@ namespace GraphTableSVG {
 
             }
         }
+        public setRootIndex(vertex : GVertex, rootIndex : number){
+            if(vertex.graph == this){
+                if(rootIndex < this.roots.length){
+                    this.svgGroup.insertBefore(vertex.svgGroup, this.roots[rootIndex].svgGroup);
+                }else{
+                    if(this.roots.length == 0){
+                        if(this.svgGroup.firstChild == null){
+                            this.svgGroup.appendChild(vertex.svgGroup);
+                        }else{
+                            this.svgGroup.insertBefore(vertex.svgGroup, this.svgGroup.firstChild);
+                        }
+                    }else{
+                        if(this.roots[this.roots.length-1].svgGroup.nextSibling == null){
+                            this.svgGroup.appendChild(vertex.svgGroup);
+                        }else{
+                            this.svgGroup.insertBefore(vertex.svgGroup, this.roots[this.roots.length-1].svgGroup.nextSibling);
+                        }    
+                    }
+                }
+            }else{
+                throw Error("error!");
+            }
+        }
     }
 
 
