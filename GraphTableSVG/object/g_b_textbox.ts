@@ -18,6 +18,10 @@ namespace GraphTableSVG {
             if (typeof option.text !== "undefined") this.svgText.setTextContent(option.text);
             if (typeof option.isAutoSizeShapeToFitText !== "undefined") this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
         }
+        initializeOption(option: PPObjectAttributes) : PPObjectAttributes {
+            const _option = <PPEdgeAttributes>super.initializeOption(option);
+            return _option;
+        }
         static constructAttributes(e: SVGElement,
             removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): TextBoxShapeAttributes {
             if(e.hasAttribute("class"))output.class = <string>e.getAttribute("class")

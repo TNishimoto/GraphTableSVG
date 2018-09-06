@@ -3,7 +3,7 @@ namespace GraphTableSVG {
      * 表の列を表現するクラスです。
      */
     export class Column {
-        private readonly table: Table;
+        private readonly table: GTable;
         //private readonly _cellX: number;
         public static readonly rowWidthName = "data-width";
         private _svgGroup: SVGGElement;
@@ -83,7 +83,7 @@ namespace GraphTableSVG {
             return items;
         }
 
-        constructor(_table: Table, _x: number, _width : number = 30) {
+        constructor(_table: GTable, _x: number, _width : number = 30) {
             this.table = _table;
             this._svgGroup = SVG.createGroup(this.table.svgGroup);
 

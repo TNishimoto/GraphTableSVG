@@ -1,6 +1,6 @@
 ﻿
 namespace GraphTableSVG {
-    export type VBAObjectType = Table | SVGPathElement | SVGTextElement | GObject;
+    export type VBAObjectType = GTable | SVGPathElement | SVGTextElement | GObject;
     export class SVGToVBA {
 
         /**
@@ -26,8 +26,8 @@ namespace GraphTableSVG {
                 let id = 0;
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
-                    if (item instanceof Table) {
-                        const lines = item.createVBACode(id++, "createdSlide");
+                    if (item instanceof GTable) {
+                        const lines = item.createVBACode2(id++, "createdSlide");
                         lines.forEach((v) => s.push(v));
                         id++;
                     } else if (item instanceof SVGPathElement) {
@@ -62,7 +62,7 @@ namespace GraphTableSVG {
                 let c = 0;
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
-                    if (item instanceof Table) {
+                    if (item instanceof GTable) {
                         c++;
                     } else if (item instanceof SVGPathElement) {
                         c++;

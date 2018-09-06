@@ -4,14 +4,6 @@ namespace GraphTableSVG {
     グラフを表します。
     */
     export class GGraph extends GObject {
-        /*
-        public static readonly defaultVertexClass: string = "--default-vertex-class";
-        public static readonly defaultEdgeClass: string = "--default-edge-class";
-        public static readonly vertexXIntervalName: string = "--vertex-x-interval";
-        public static readonly vertexYIntervalName: string = "--vertex-y-interval";
-        */
-        //public static readonly objectIDName: string = "data-objectID";
-        //public static readonly typeName: string = "data-type";
 
 
         public get vertices(): GVertex[] {

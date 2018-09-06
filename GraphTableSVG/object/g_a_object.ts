@@ -121,7 +121,7 @@ namespace GraphTableSVG {
 
             this.svgGroup.setAttribute("data-group-type", this.type);
             this.createSurface(parentElement, option);
-            const _option = this.updateOptionByCSS(option);
+            const _option = this.initializeOption(option);
             if (typeof option.id !== "undefined") this.svgGroup.id = option.id;
             this.width = _option.width!;
             this.height = _option.height!;
@@ -130,7 +130,7 @@ namespace GraphTableSVG {
 
             this.dispatchObjectCreatedEvent();
         }
-        updateOptionByCSS(option: PPObjectAttributes) : PPObjectAttributes {
+        initializeOption(option: PPObjectAttributes) : PPObjectAttributes {
             const _option = {...option};
             if(this.surface != null && this.surface.className != null){
                 const width = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);

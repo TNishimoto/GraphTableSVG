@@ -5,12 +5,12 @@
          * @param svg 
          * @param items 
          */
-        export function clearGraphTables(svg: SVGElement, items: (GraphTableSVG.GGraph | GraphTableSVG.Table)[]) {
+        export function clearGraphTables(svg: SVGElement, items: (GraphTableSVG.GGraph | GraphTableSVG.GTable)[]) {
             for (let i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item instanceof GraphTableSVG.GGraph) {
                     item.removeGraph(svg);
-                } else if (item instanceof GraphTableSVG.Table) {
+                } else if (item instanceof GraphTableSVG.GTable) {
                     item.removeTable(svg);
                 }
             }
@@ -39,7 +39,7 @@
             const rects = items.map((v) => {
                 if (v instanceof GGraph) {
                     return v.getRegion();
-                } else if (v instanceof Table) {
+                } else if (v instanceof GTable) {
                     return v.getRegion();
                 } else if (v instanceof SVGPathElement || v instanceof SVGTextElement) {
                     const rect = v.getBBox();

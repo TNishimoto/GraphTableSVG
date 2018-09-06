@@ -1,23 +1,26 @@
 namespace GraphTableSVG {
-    export namespace CustomAttributeNames{
-        export namespace Style{
+    export namespace CustomAttributeNames {
+        export namespace Style {
             export const autoSizeShapeToFitTextName: string = "--autosize-shape-to-fit-text"
             export const beginConnectorTypeName: string = "--begin-connector-type";
             export const endConnectorTypeName: string = "--end-connector-type";
-            export const defaultLineClass: string = "--default-line-class";    
+            export const defaultLineClass: string = "--default-line-class";
             export const markerStartName: string = "--marker-start";
             export const markerEndName: string = "--marker-end";
             export const defaultVertexClass: string = "--default-vertex-class";
             export const defaultEdgeClass: string = "--default-edge-class";
             export const vertexXIntervalName: string = "--vertex-x-interval";
-            export const vertexYIntervalName: string = "--vertex-y-interval";        
+            export const vertexYIntervalName: string = "--vertex-y-interval";
             export const defaultRadiusName = "--default-radius";
             export const defaultWidthName = "--default-width";
             export const defaultHeightName = "--default-height";
             export const defaultTextClass: string = "--default-text-class";
             export const defaultPathClass: string = "--default-path-class";
             export const defaulSurfaceClass: string = "--default-surface-class";
-            export const defaultSurfaceType: string = "--default-surface-type";    
+            export const defaultSurfaceType: string = "--default-surface-type";
+            export const defaultCellClass: string = "--default-cell-class";
+            export const defaultBorderClass: string = "--default-border-class";
+    
         }
         export const beginNodeName: string = "data-begin-node";
         export const endNodeName: string = "data-end-node";
@@ -25,7 +28,8 @@ namespace GraphTableSVG {
         export const connectPositionChangedEventName = "connect_position_changed";
         export const vertexCreatedEventName = "vertex_created";
         export const objectCreatedEventName = "object_created";
-        export const objectIDName: string = "data-objectID";
+        export const objectIDName: string = "data-objectID";        
+
 
         export let defaultCircleRadius = 15;
     }
@@ -36,7 +40,7 @@ namespace GraphTableSVG {
         cy?: number,
         width?: number,
         height?: number,
-        id? : string
+        id?: string
     }
 
     export type TextBoxShapeAttributes = PPObjectAttributes & {
@@ -65,13 +69,22 @@ namespace GraphTableSVG {
         endConnectorType?: ConnectorPosition,
         beginVertex?: GVertex | string,
         endVertex?: GVertex | string,
-        pathTextAlignment? : pathTextAlighnment
+        pathTextAlignment?: pathTextAlighnment
     }
     export type ConnectOption = {
-        outcomingInsertIndex?: number, 
+        outcomingInsertIndex?: number,
         incomingInsertIndex?: number,
-        beginConnectorType?: GraphTableSVG.ConnectorPosition, 
+        beginConnectorType?: GraphTableSVG.ConnectorPosition,
         endConnectorType?: GraphTableSVG.ConnectorPosition
+    }
+    export type TableOption = PPObjectAttributes & {
+        //tableClassName?: string,
+        rowCount?: number,
+        columnCount?: number,
+        //x?: number,
+        //y?: number,
+        rowHeight?: number,
+        columnWidth?: number
     }
 
     /*
@@ -115,15 +128,15 @@ namespace GraphTableSVG {
         } else {
             const element = id;
             const type = ShapeObjectType.toShapeObjectType(element.nodeName);
-            if(type != null){
+            if (type != null) {
                 return createCustomElement(element, type);
             }
         }
     }
-    function createCustomElement(e: SVGElement, type: ShapeObjectType): GTextBox | null {
+    function createCustomElement(e: SVGElement, type: ShapeObjectType): GObject | null {
         const parent = e.parentElement;
         if (parent instanceof SVGElement) {
-            let r: GTextBox;
+            let r: GObject;
 
             if (type == ShapeObjectType.Callout) {
                 const option = GCallout.constructAttributes(e, true);
@@ -139,10 +152,13 @@ namespace GraphTableSVG {
                 r = new GRect(parent, option);
             } else if (type == ShapeObjectType.Edge) {
                 const option = GEdge.constructAttributes(e, true);
-                r = <any>new GEdge(parent, option);
+                r = new GEdge(parent, option);
             } else if (type == ShapeObjectType.Graph) {
                 const option = GTextBox.constructAttributes(e, true);
-                r = <any>new GGraph(parent, option);
+                r = new GGraph(parent, option);
+            } else if(type == ShapeObjectType.Table){
+                const option = GTextBox.constructAttributes(e, true);
+                r = new GTable(parent, option);
             }
             else {
                 return null;
@@ -172,50 +188,52 @@ namespace GraphTableSVG {
                 HTMLFunctions.getChildren(element).forEach((v) => {
                     if (v instanceof SVGElement) {
                         const p = GraphTableSVG.openCustomElement(v);
-                        if (p != null){
+                        if (p != null) {
                             output.push(p);
                             b = true;
-                        }else{
+                        } else {
                             openSVG(v, output);
                         }
                     }
                 });
-                if(!b) break;
+                if (!b) break;
             }
             return output;
         }
     }
-    export function createShape(parent : SVGElement | string | GObject, type : ShapeObjectType, option : any = {}) : GObject {
-        let _parent : SVGElement;
-        if(parent instanceof GObject){
+    export function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option: any = {}): GObject {
+        let _parent: SVGElement;
+        if (parent instanceof GObject) {
             _parent = parent.svgGroup;
-        }else if(parent instanceof SVGElement){
+        } else if (parent instanceof SVGElement) {
             _parent = parent;
-        }else{
+        } else {
             _parent = <any>document.getElementById(parent);
         }
 
-        switch(type){
-            case ShapeObjectType.Callout : return new GCallout(_parent, option);
-            case ShapeObjectType.ShapeArrowCallout : return new ShapeArrowCallout(_parent, option);
-            case ShapeObjectType.Ellipse : return new GEllipse(_parent, option);
-            case ShapeObjectType.Rect : return new GRect(_parent, option);
-            case ShapeObjectType.Edge : return new GEdge(_parent, option);
-            case ShapeObjectType.Graph : return new GGraph(_parent, option);
+        switch (type) {
+            case ShapeObjectType.Callout: return new GCallout(_parent, option);
+            case ShapeObjectType.ShapeArrowCallout: return new ShapeArrowCallout(_parent, option);
+            case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
+            case ShapeObjectType.Rect: return new GRect(_parent, option);
+            case ShapeObjectType.Edge: return new GEdge(_parent, option);
+            case ShapeObjectType.Graph: return new GGraph(_parent, option);
+            case ShapeObjectType.Table: return new GTable(_parent, option);
+
         }
         throw Error("error");
     }
-    export function createVertex(parent : GGraph, option : TextBoxShapeAttributes = {}) : GVertex {
+    export function createVertex(parent: GGraph, option: TextBoxShapeAttributes = {}): GVertex {
         let _parent = parent.svgGroup;
-        if(option.class == undefined && parent.defaultVertexClass != null) option.class = parent.defaultVertexClass;
+        if (option.class == undefined && parent.defaultVertexClass != null) option.class = parent.defaultVertexClass;
         const type = option.class == undefined ? null : parent.getStyleValue(option.class, CustomAttributeNames.Style.defaultSurfaceType);
-        if(type != null){
-            switch(type){
-                case ShapeObjectType.Callout : return new GCallout(_parent, option);
-                case ShapeObjectType.ShapeArrowCallout : return new ShapeArrowCallout(_parent, option);
-                case ShapeObjectType.Ellipse : return new GEllipse(_parent, option);
-                case ShapeObjectType.Rect : return new GRect(_parent, option);
-            }    
+        if (type != null) {
+            switch (type) {
+                case ShapeObjectType.Callout: return new GCallout(_parent, option);
+                case ShapeObjectType.ShapeArrowCallout: return new ShapeArrowCallout(_parent, option);
+                case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
+                case ShapeObjectType.Rect: return new GRect(_parent, option);
+            }
         }
         return new GEllipse(_parent, option);
 

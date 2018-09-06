@@ -112,7 +112,7 @@ namespace GraphTableSVG {
             }
 
         }
-        
+
         public get shape(): string {
             return "msoShapeRectangle";
         }

@@ -4,22 +4,19 @@ namespace GraphTableSVG {
     /**
     テーブルを表します。
     */
-    export class Table {
-        private static readonly defaultCellClass: string = "--default-cell-class";
-        private static readonly defaultBorderClass: string = "--default-border-class";
+    export class GTable extends GObject {
 
         
 
         /*
         field
         */
+        /*
         private _svgGroup: SVGGElement;
-        /**
-        テーブルを表現しているSVGGElementを返します。
-        */
         public get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
+        */
         private _svgHiddenGroup: SVGGElement;
         /**
          * mergeによって見えなくなったBorderなどを格納している特別なSVGGElementです。
@@ -106,38 +103,32 @@ namespace GraphTableSVG {
             this.rows.forEach((v)=>v.fitHeightToOriginalCell(allowShrink));
             this.columns.forEach((v)=>v.fitWidthToOriginalCell(allowShrink));
         }
-
-        /**
-         * svgGroupのx座標です。
-         */
+        /*
         public get x() : number {
             return this.svgGroup.getX();
         }
         public set x(value :number) {
             this.svgGroup.setX(value);
         }
-        /**
-         * svgGroupのy座標です。
-         */
         public get y() : number {
             return this.svgGroup.getY();
         }
         public set y(value :number) {
             this.svgGroup.setY(value);
         }
-
+        */
 
         /**
         セルのインスタント生成時にこの値がインスタントのクラス名にセットされます。
         */
         get defaultCellClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(Table.defaultCellClass);
+            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultCellClass);
         }
         /**
         ボーダーのインスタント生成時にこの値がインスタントのクラス名にセットされます。
         */
         get defaultBorderClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(Table.defaultBorderClass);
+            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultBorderClass);
         }
         /**
         * テーブルの行方向の単位セルの数を返します。
@@ -266,31 +257,30 @@ namespace GraphTableSVG {
          * @param option.tableClassName 表(svgGroup)のクラス属性
          */
         constructor(svgbox: SVGElement, 
-            option : {tableClassName? : string, rowCount? : number, columnCount? : number, 
-                x? : number, y? :number, rowHeight? : number, columnWidth? : number } = {}) {
-
+            option : TableOption = {}) {
+                super(svgbox, option)
             if (Common.getGraphTableCSS() == null) Common.setGraphTableCSS("yellow", "red");
 
-            this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            svgbox.appendChild(this.svgGroup);
+            //this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            //svgbox.appendChild(this.svgGroup);
 
             this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this._svgHiddenGroup.style.visibility = "hidden";
-            svgbox.appendChild(this.svgHiddenGroup);
-
+            //svgbox.appendChild(this.svgHiddenGroup);
+            this.svgGroup.appendChild(this.svgHiddenGroup);
 
             this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             //this.svgGroup.appendChild(this.svgLineGroup);
 
-            if (option.tableClassName != null) this.svgGroup.setAttribute("class", option.tableClassName);
+            //if (option.tableClassName != null) this.svgGroup.setAttribute("class", option.tableClassName);
             if(option.rowCount == undefined) option.rowCount = 5;
             if(option.columnCount == undefined) option.columnCount = 5;
             this.setSize(option.columnCount, option.rowCount);
 
-            if(option.x == undefined) option.x = 0;
-            if(option.y == undefined) option.y = 0;
-            [this.x, this.y] = [option.x, option.y];
+            //if(option.x == undefined) option.x = 0;
+            //if(option.y == undefined) option.y = 0;
+           // [this.cx, this.cy] = [option.x, option.y];
 
             if(option.rowHeight != undefined){
                 this.rows.forEach((v)=>v.height = <number>option.rowHeight);
@@ -310,8 +300,8 @@ namespace GraphTableSVG {
             if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
             this.setSize(table.columnWidths.length, table.rowHeights.length);
 
-            if(table.x != null) this.x = table.x;
-            if(table.y != null) this.y = table.y;
+            if(table.x != null) this.cx = table.x;
+            if(table.y != null) this.cy = table.y;
 
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
@@ -437,7 +427,7 @@ namespace GraphTableSVG {
             if(option.isLatexMode == undefined) option.isLatexMode = false;
             if(option.x == undefined) option.x = 0;
             if(option.y == undefined) option.y = 0;
-            [this.x, this.y] = [option.x, option.y];
+            [this.cx, this.cy] = [option.x, option.y];
 
 
             this.clear();
@@ -468,7 +458,7 @@ namespace GraphTableSVG {
          * @param id 
          * @param slide 
          */
-        public createVBACode(id: number, slide: string): string[] {
+        public createVBACode2(id: number, slide: string): string[] {
             const lines = new Array(0);
             lines.push(`Sub create${id}(createdSlide As slide)`);
             

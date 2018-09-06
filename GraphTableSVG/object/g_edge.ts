@@ -95,8 +95,8 @@ namespace GraphTableSVG {
             return output;
         }
 
-        updateOptionByCSS(option: PPObjectAttributes): PPObjectAttributes {
-            const _option = <PPEdgeAttributes>super.updateOptionByCSS(option);
+        initializeOption(option: PPObjectAttributes): PPObjectAttributes {
+            const _option = <PPEdgeAttributes>super.initializeOption(option);
 
 
             const markerStartName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.markerStartName);

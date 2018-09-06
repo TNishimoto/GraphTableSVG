@@ -19,7 +19,7 @@ namespace GraphTableSVG {
 
             return output;
         }
-
+        /*
         static openCustomElement(e: SVGElement): GCallout {
             const parent = e.parentElement;
             if (parent instanceof SVGSVGElement) {
@@ -34,6 +34,7 @@ namespace GraphTableSVG {
                 throw Error("error!");
             }
         }
+        */
         public get type(): string {
             return "CallOut";
         }

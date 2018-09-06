@@ -3,7 +3,7 @@
      * 表の行を表現するクラスです。
      */
     export class Row {
-        private readonly table: Table;
+        private readonly table: GTable;
         //private readonly _cellY: number;
         private _svgGroup: SVGGElement;
         public static readonly columnHeightName = "data-height";
@@ -51,7 +51,7 @@
             */
         }
 
-        constructor(_table: Table, _y: number, _height: number = 30) {
+        constructor(_table: GTable, _y: number, _height: number = 30) {
             this.table = _table;
             this._svgGroup = SVG.createGroup(this.table.svgGroup);
 

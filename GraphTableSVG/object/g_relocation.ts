@@ -77,7 +77,7 @@ namespace GraphTableSVG {
          * @param xInterval 
          * @param yInterval 
          */
-        function alignVerticeByChildrenSub(tree: GVirtualSubTree, xInterval: number, yInterval: number): void {
+        function alignVerticeByChildrenSub(tree: VirtualTree, xInterval: number, yInterval: number): void {
             tree.subTreeRoot.cx = 0;
             tree.subTreeRoot.cy = 0;
             let leaves = 0;
@@ -206,7 +206,7 @@ namespace GraphTableSVG {
         }
 
 
-        function standardTreeWidthArrangementSub(tree: GVirtualSubTree, xInterval: number, yInterval: number): void {
+        function standardTreeWidthArrangementSub(tree: VirtualTree, xInterval: number, yInterval: number): void {
             tree.subTreeRoot.cx = 0;
             tree.subTreeRoot.cy = 0;
             let centerX = 0;
