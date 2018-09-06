@@ -31,6 +31,14 @@ namespace GraphTableSVG {
             return null;
         }
         protected _surface : SVGElement | null = null;
+        public _tag : any;
+        public get tag(){
+            return this._tag;
+        }
+        public set tag(v : any){
+            this._tag = v;
+        }
+
         private _svgGroup: SVGGElement;
         /**
         セルを表しているSVGGElementを返します。

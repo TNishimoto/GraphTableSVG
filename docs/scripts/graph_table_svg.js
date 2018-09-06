@@ -4223,6 +4223,16 @@ var GraphTableSVG;
             }
             return null;
         };
+        Object.defineProperty(GObject.prototype, "tag", {
+            get: function () {
+                return this._tag;
+            },
+            set: function (v) {
+                this._tag = v;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(GObject.prototype, "svgGroup", {
             get: function () {
                 return this._svgGroup;

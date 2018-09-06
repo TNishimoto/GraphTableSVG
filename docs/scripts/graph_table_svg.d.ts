@@ -556,6 +556,8 @@ declare namespace GraphTableSVG {
         static setObjectFromObjectID(obj: GObject): void;
         static getObjectFromID(id: string): GObject | null;
         protected _surface: SVGElement | null;
+        _tag: any;
+        tag: any;
         private _svgGroup;
         readonly svgGroup: SVGGElement;
         readonly isLocated: boolean;
