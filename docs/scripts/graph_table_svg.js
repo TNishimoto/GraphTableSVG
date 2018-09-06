@@ -6024,7 +6024,6 @@ var GraphTableSVG;
             if (option === void 0) { option = {}; }
             var _this = _super.call(this, box, option) || this;
             _this._roots = [];
-            _this._relocateFunction = null;
             _this.objectCreatedFunction = function (e) {
                 var obj = GraphTableSVG.GObject.getObjectFromObjectID(e.target);
                 if (obj instanceof GraphTableSVG.GVertex) {
@@ -6217,20 +6216,23 @@ var GraphTableSVG;
             this.connect(parent, edge, _child, { beginConnectorType: "bottom", endConnectorType: "top" });
             this.relocate();
         };
-        Object.defineProperty(GGraph.prototype, "relocateFunction", {
+        Object.defineProperty(GGraph.prototype, "relocateAttribute", {
             get: function () {
-                return this._relocateFunction;
+                return this.svgGroup.getPropertyStyleValue("--relocate");
             },
-            set: function (func) {
-                this._relocateFunction = func;
-                this.relocate();
+            set: function (value) {
+                this.svgGroup.setPropertyStyleValue("--relocate", value);
             },
             enumerable: true,
             configurable: true
         });
         GGraph.prototype.relocate = function () {
-            if (this._relocateFunction != null)
-                this._relocateFunction(this);
+            var value = this.relocateAttribute;
+            if (value != null) {
+                var p = Function("v", "return " + value + "(v)");
+                var f = Function("graph", value + "(graph)");
+                f(this);
+            }
         };
         GGraph.prototype.constructFromLogicTree = function (roots, option) {
             var _this = this;
@@ -6244,12 +6246,7 @@ var GraphTableSVG;
                         _this.createChildFromLogicTree(null, v, option);
                     }
                 });
-                if (this.relocateFunction == null) {
-                    this.relocateFunction = GraphTableSVG.GTreeArrangement.alignVerticeByChildren;
-                }
-                else {
-                    this.relocate();
-                }
+                this.relocate();
             }
             else {
                 this.constructFromLogicTree([roots], option);
@@ -6487,31 +6484,8 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    var GTreeArrangement;
-    (function (GTreeArrangement) {
-        function alignVerticeByLeaveSub(forest, xInterval, yInterval) {
-            var leafCounter = 0;
-            forest.getOrderedVertices(GraphTableSVG.VertexOrder.Postorder).forEach(function (v) {
-                var x = 0;
-                var y = 0;
-                if (v.isLeaf) {
-                    x = leafCounter * xInterval;
-                    leafCounter++;
-                }
-                else {
-                    v.children.forEach(function (w) {
-                        x += w.cx;
-                        if (y < w.cy)
-                            y = w.cy;
-                    });
-                    x = x / v.children.length;
-                    y += yInterval;
-                }
-                v.cx = x;
-                v.cy = y;
-            });
-        }
-        GTreeArrangement.alignVerticeByLeaveSub = alignVerticeByLeaveSub;
+    var TreeArrangement;
+    (function (TreeArrangement) {
         function reverse(graph, isX, isY) {
             if (graph.vertices.length > 0) {
                 if (isY) {
@@ -6538,7 +6512,7 @@ var GraphTableSVG;
                 }
             }
         }
-        GTreeArrangement.reverse = reverse;
+        TreeArrangement.reverse = reverse;
         function average(items) {
             if (items.length > 0) {
                 var y_1 = 0;
@@ -6577,7 +6551,7 @@ var GraphTableSVG;
             }
             alignTrees(graph);
         }
-        GTreeArrangement.alignVerticeByChildren = alignVerticeByChildren;
+        TreeArrangement.alignVerticeByChildren = alignVerticeByChildren;
         function alignVerticeByChildrenSub(tree, xInterval, yInterval) {
             tree.subTreeRoot.cx = 0;
             tree.subTreeRoot.cy = 0;
@@ -6601,7 +6575,7 @@ var GraphTableSVG;
                 rootTree.setRootLocation(x, y);
             }
         }
-        GTreeArrangement.standardTreeWidthArrangement = standardTreeWidthArrangement;
+        TreeArrangement.standardTreeWidthArrangement = standardTreeWidthArrangement;
         function computeAutoXYIntervals(graph) {
             var yMaximalInterval = 30;
             var xMaximalInterval = 30;
@@ -6627,14 +6601,47 @@ var GraphTableSVG;
                 x += region.width;
             });
         }
+        function addOffset(graph, x, y) {
+            graph.vertices.forEach(function (v) {
+                v.cx += x;
+                v.cy += y;
+            });
+        }
+        TreeArrangement.addOffset = addOffset;
+        function alignVerticeByLeaveSub(forest, xInterval, yInterval) {
+            var leafCounter = 0;
+            forest.getOrderedVertices(GraphTableSVG.VertexOrder.Postorder).forEach(function (v) {
+                var x = 0;
+                var y = 0;
+                if (v.isLeaf) {
+                    x = leafCounter * xInterval;
+                    leafCounter++;
+                }
+                else {
+                    v.children.forEach(function (w) {
+                        x += w.cx;
+                        if (y < w.cy)
+                            y = w.cy;
+                    });
+                    x = x / v.children.length;
+                    y += yInterval;
+                }
+                v.cx = x;
+                v.cy = y;
+            });
+        }
+        TreeArrangement.alignVerticeByLeaveSub = alignVerticeByLeaveSub;
         function alignVerticeByLeave(graph) {
             graph.vertices.forEach(function (v) { v.cx = 0; v.cy = 0; });
             var _a = getXYIntervals(graph), xi = _a[0], yi = _a[1];
             alignVerticeByLeaveSub(graph, xi, yi);
             reverse(graph, false, true);
-            alignTrees(graph);
+            var reg = graph.getRegion();
+            var dx = reg.x < 0 ? -reg.x : 0;
+            var dy = reg.y < 0 ? -reg.y : 0;
+            addOffset(graph, dx, dy);
         }
-        GTreeArrangement.alignVerticeByLeave = alignVerticeByLeave;
+        TreeArrangement.alignVerticeByLeave = alignVerticeByLeave;
         function standardTreeWidthArrangementSub(tree, xInterval, yInterval) {
             tree.subTreeRoot.cx = 0;
             tree.subTreeRoot.cy = 0;
@@ -6663,7 +6670,7 @@ var GraphTableSVG;
                 tree.subTreeRoot.cx = centerX;
             }
         }
-    })(GTreeArrangement = GraphTableSVG.GTreeArrangement || (GraphTableSVG.GTreeArrangement = {}));
+    })(TreeArrangement = GraphTableSVG.TreeArrangement || (GraphTableSVG.TreeArrangement = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {

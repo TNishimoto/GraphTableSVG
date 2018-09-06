@@ -205,6 +205,7 @@ namespace GraphTableSVG {
             this.relocate();    
 
         }
+        /*
         private _relocateFunction: ((Tree: GGraph) => void) | null = null;
         public get relocateFunction(): ((Tree: GGraph) => void) | null {
             return this._relocateFunction;
@@ -213,10 +214,32 @@ namespace GraphTableSVG {
             this._relocateFunction = func;
             this.relocate();
         }
+        */
+        public get relocateAttribute() : string | null{
+            return this.svgGroup.getPropertyStyleValue("--relocate")
+            /*
+            if(this.svgGroup.hasAttribute("relocate")){
+                return this.svgGroup.getAttribute("relocate");
+            }else{
+                return null;
+            }
+            */
+        }
+        public set relocateAttribute(value : string | null){
+            this.svgGroup.setPropertyStyleValue("--relocate", value);
+        }
 
         public relocate() {
-            if (this._relocateFunction != null) this._relocateFunction(this);
+            const value = this.relocateAttribute;
+            if(value != null){
+                const p = Function("v", `return ${value}(v)`);
+                const f = <any>Function("graph", `${value}(graph)`);
+                f(this);
+            }
+
+            //if (this._relocateFunction != null) this._relocateFunction(this);
         }
+
 
         /**
         * LogicTreeから木を構築します。
@@ -232,11 +255,14 @@ namespace GraphTableSVG {
                         this.createChildFromLogicTree(null, v, option);
                     }
                 });
+                this.relocate();
+                /*
                 if (this.relocateFunction == null) {
                 this.relocateFunction = GraphTableSVG.GTreeArrangement.alignVerticeByChildren;
                 } else {
                     this.relocate();
                 }
+                */
 
             } else {
                 this.constructFromLogicTree([roots], option);

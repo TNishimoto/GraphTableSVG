@@ -1,34 +1,6 @@
 namespace GraphTableSVG {
 
-    export namespace GTreeArrangement {
-        /**
-         * 葉が一列に並ぶようにVertexを整列します。
-         * @param forest 
-         * @param xInterval 
-         * @param yInterval 
-         */
-        export function alignVerticeByLeaveSub(forest: GGraph, xInterval: number, yInterval: number): void {
-            let leafCounter = 0;
-            forest.getOrderedVertices(VertexOrder.Postorder).forEach((v) => {
-                let x = 0;
-                let y = 0;
-                if (v.isLeaf) {
-                    x = leafCounter * xInterval;
-                    leafCounter++;
-                } else {
-                    v.children.forEach((w) => {
-                        x += w.cx;
-                        if (y < w.cy) y = w.cy;
-
-                    });
-                    x = x / v.children.length;
-                    y += yInterval;
-                }
-
-                v.cx = x;
-                v.cy = y;
-            });
-        }
+    export namespace TreeArrangement {
         export function reverse(graph: GGraph, isX: boolean, isY: boolean) {
             if (graph.vertices.length > 0) {
                 if (isY) {
@@ -172,9 +144,49 @@ namespace GraphTableSVG {
             graph.roots.forEach((v)=>{
                 const region = v.tree.region();
                 v.tree.setRectangleLocation(x, 0);
+                //x += graph.vertexXInterval != null ? graph.vertexXInterval : 0;
                 x += region.width;
             });
         }
+
+        export function addOffset(graph : GGraph, x : number, y : number){
+            graph.vertices.forEach((v)=>{
+                v.cx += x;
+                v.cy += y;
+            });
+        }
+
+        /**
+         * 葉が一列に並ぶようにVertexを整列します。
+         * @param forest 
+         * @param xInterval 
+         * @param yInterval 
+         */
+        export function alignVerticeByLeaveSub(forest: GGraph, xInterval: number, yInterval: number): void {
+            let leafCounter = 0;
+            forest.getOrderedVertices(VertexOrder.Postorder).forEach((v) => {
+                let x = 0;
+                let y = 0;
+                if (v.isLeaf) {
+                    x = leafCounter * xInterval;
+                    leafCounter++;
+                } else {
+                    v.children.forEach((w) => {
+                        x += w.cx;
+                        if (y < w.cy) y = w.cy;
+
+                    });
+                    x = x / v.children.length;
+                    y += yInterval;
+                }
+
+                v.cx = x;
+                v.cy = y;
+            });
+
+
+        }
+
         /**
          * 葉が一列に並ぶようにVertexを整列します。
          * @param graph 
@@ -184,7 +196,13 @@ namespace GraphTableSVG {
             const [xi, yi] = getXYIntervals(graph);
             alignVerticeByLeaveSub(graph, xi, yi);
             reverse(graph, false, true);
-            alignTrees(graph);
+            //alignTrees(graph);
+
+            const reg = graph.getRegion();
+            const dx = reg.x < 0 ? -reg.x : 0;
+            const dy = reg.y < 0 ? -reg.y : 0;
+            
+            addOffset(graph, dx, dy);            
         }
 
 

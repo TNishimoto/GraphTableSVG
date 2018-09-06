@@ -762,8 +762,7 @@ declare namespace GraphTableSVG {
         appendChild(parent: GVertex, child: GVertex | null, option?: {
             insertIndex?: number;
         }): void;
-        private _relocateFunction;
-        relocateFunction: ((Tree: GGraph) => void) | null;
+        relocateAttribute: string | null;
         relocate(): void;
         constructFromLogicTree(roots: LogicTree[] | LogicTree, option?: {
             x?: number;
@@ -797,11 +796,12 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    namespace GTreeArrangement {
-        function alignVerticeByLeaveSub(forest: GGraph, xInterval: number, yInterval: number): void;
+    namespace TreeArrangement {
         function reverse(graph: GGraph, isX: boolean, isY: boolean): void;
         function alignVerticeByChildren(graph: GGraph): void;
         function standardTreeWidthArrangement(graph: GGraph): void;
+        function addOffset(graph: GGraph, x: number, y: number): void;
+        function alignVerticeByLeaveSub(forest: GGraph, xInterval: number, yInterval: number): void;
         function alignVerticeByLeave(graph: GGraph): void;
     }
 }
