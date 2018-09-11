@@ -49,14 +49,19 @@ window.onload = () => {
     /* 隣り合う頂点間の垂直方向の間隔を設定 */
     graph.vertexYInterval = 70;
     /* 木の各頂点の配置方法を選択 */
-    graph.relocateFunction = GraphTableSVG.PPTreeArrangement.alignVerticeByLeave;
+        graph.relocateAttribute = "GraphTableSVG.TreeArrangement.alignVerticeByLeave";
+    //graph.relocate();
 
 
     document.getElementById("childrenButton").onclick = () => {
-        graph.relocateFunction = GraphTableSVG.PPTreeArrangement.alignVerticeByChildren;
+        graph.relocateAttribute = "GraphTableSVG.TreeArrangement.alignVerticeByChildren";
+        //graph.relocate();
+
     };
     document.getElementById("leaveButton").onclick = () => {
-        graph.relocateFunction = GraphTableSVG.PPTreeArrangement.alignVerticeByLeave;
+        graph.relocateAttribute = "GraphTableSVG.TreeArrangement.alignVerticeByLeave";
+        //graph.relocate();
+
     };
 
 };

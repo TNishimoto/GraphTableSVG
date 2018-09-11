@@ -57,6 +57,9 @@ namespace GraphTableSVG {
         get ry() : number{
             return this.svgEllipse.ry.baseVal.value;
         }
+        public get type(): ShapeObjectType {
+            return ShapeObjectType.Ellipse;
+        }
 
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
 

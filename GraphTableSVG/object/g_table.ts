@@ -7,7 +7,39 @@ namespace GraphTableSVG {
     export class GTable extends GObject {
 
         
+        static constructAttributes(e: SVGElement,
+            removeAttributes: boolean = false, output: TableOption = {}): TableOption {
+            
+            GObject.constructAttributes(e, removeAttributes, output);
 
+            const rows = HTMLFunctions.getChildren(e).filter((v)=>v.nodeName == "row");
+            if(rows.length == 0){
+
+            }else{
+                const cells : Element[][] = new Array(rows.length);
+                rows.forEach((v,i) => {
+                    const cellArray = HTMLFunctions.getChildren(v).filter((v)=>v.nodeName == "cell");
+                    cells[i] = cellArray;
+                });
+                const firstColumnSize = cells[0].length;
+                const b = cells.every((v)=>v.length == firstColumnSize);
+                if(!b){
+                    throw Error("Different Column Sizes!");
+                }
+                output.table = new LogicTable({rowCount : rows.length, columnCount : firstColumnSize});
+
+                for(let y=0;y<cells.length;y++){
+                    for(let x=0;x<cells[y].length;x++){
+                        output.table!.cells[y][x].text = cells[y][x].innerHTML;
+                    }    
+                }
+                if(output.cx !== undefined)output.table!.x = output.cx;
+                if(output.cy !== undefined)output.table!.y = output.cy;
+                if(output.class !== undefined)output.table!.tableClassName = output.class;
+                while(e.childNodes.length > 0) e.removeChild(e.childNodes.item(0));
+            }
+            return output;
+        }
         /*
         field
         */
@@ -23,6 +55,9 @@ namespace GraphTableSVG {
          */
         public get svgHiddenGroup(): SVGGElement {
             return this._svgHiddenGroup;
+        }
+        public get type(): ShapeObjectType {
+            return ShapeObjectType.Table;
         }
 
         /**
@@ -274,21 +309,22 @@ namespace GraphTableSVG {
             //this.svgGroup.appendChild(this.svgLineGroup);
 
             //if (option.tableClassName != null) this.svgGroup.setAttribute("class", option.tableClassName);
-            if(option.rowCount == undefined) option.rowCount = 5;
-            if(option.columnCount == undefined) option.columnCount = 5;
-            this.setSize(option.columnCount, option.rowCount);
+            this.updateAttributes = [];
 
-            //if(option.x == undefined) option.x = 0;
-            //if(option.y == undefined) option.y = 0;
-           // [this.cx, this.cy] = [option.x, option.y];
-
-            if(option.rowHeight != undefined){
-                this.rows.forEach((v)=>v.height = <number>option.rowHeight);
+            if(option.table === undefined){
+                if(option.rowCount == undefined) option.rowCount = 5;
+                if(option.columnCount == undefined) option.columnCount = 5;
+                this.setSize(option.columnCount, option.rowCount);
+        
+                if(option.rowHeight != undefined){
+                    this.rows.forEach((v)=>v.height = <number>option.rowHeight);
+                }
+                if(option.columnWidth != undefined){
+                    this.columns.forEach((v)=>v.width = <number>option.columnWidth);
+                }    
+            }else{
+                this.constructFromLogicTable(option.table);                
             }
-            if(option.columnWidth != undefined){
-                this.columns.forEach((v)=>v.width = <number>option.columnWidth);
-            }
-
 
         }
         /**
@@ -611,7 +647,7 @@ namespace GraphTableSVG {
         public getEmphasizedCells(): GraphTableSVG.Cell[] {
             return this.cellArray.filter((v) => v.isEmphasized);
         }
-
+        private _updateCounter = 0;
         /*
         Update
         */
@@ -624,7 +660,8 @@ namespace GraphTableSVG {
             this.resize();
             this.relocation();
             //this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
-
+            this._updateCounter++;
+            if(this._updateCounter > 100) throw Error("error");
             this._isDrawing = false;
 
         }

@@ -32,4 +32,12 @@ namespace HTMLFunctions{
         }
         return r;
     }
+    export function getChildByNodeName(e : Element, name : string) : Element | null {
+        const p = getChildren(e).filter((v)=>v.nodeName == name);
+        if(p.length > 0){
+            return p[0];
+        }else{
+            return null;
+        }
+    }
 }

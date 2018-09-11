@@ -7,7 +7,11 @@ interface SVGElement {
     setPropertyStyleValue(name: string, value: string | null): void;
     gtGetAttributeNumber(name: string, defaultValue: number | null): number | null;
     gtGetAttributeNumberWithoutNull(name: string, defaultValue: number): number;
-    gtGetAttributeNumber2(name: string): number | undefined;
+
+    gtGetAttributeNumberWithUndefined(name: string): number | undefined;
+    gtGetAttributeStringWithUndefined(name: string): string | undefined;
+    gtGetAttributeBooleanWithUndefined(name: string): boolean | undefined;
+    gtGetStyleBooleanWithUndefined(name: string): boolean | undefined;
     
     gtGetAttribute(name: string, defaultValue: string | null): string | null;
 
@@ -61,12 +65,42 @@ SVGElement.prototype.gtGetAttributeNumber = function(name: string, defaultValue:
         return defaultValue;
     }
 }
-SVGElement.prototype.gtGetAttributeNumber2 = function(name: string): number | undefined{
+SVGElement.prototype.gtGetAttributeNumberWithUndefined = function(name: string): number | undefined{
     const item: SVGElement = this;
 
     const value = item.getAttribute(name);
     if (value != null) {
         return Number(value);
+    } else {
+        return undefined;
+    }
+}
+SVGElement.prototype.gtGetAttributeStringWithUndefined = function(name: string): string | undefined{
+    const item: SVGElement = this;
+
+    const value = item.getAttribute(name);
+    if (value != null) {
+        return value;
+    } else {
+        return undefined;
+    }
+}
+SVGElement.prototype.gtGetAttributeBooleanWithUndefined = function(name: string): boolean | undefined{
+    const item: SVGElement = this;
+
+    const value = item.getAttribute(name);
+    if (value != null) {
+        return value == "true";
+    } else {
+        return undefined;
+    }
+}
+SVGElement.prototype.gtGetStyleBooleanWithUndefined = function(name: string): boolean | undefined{
+    const item: SVGElement = this;
+
+    const value = item.getPropertyStyleValue(name);
+    if (value != null) {
+        return value == "true";
     } else {
         return undefined;
     }

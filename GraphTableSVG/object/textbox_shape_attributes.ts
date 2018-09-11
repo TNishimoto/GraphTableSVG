@@ -84,7 +84,8 @@ namespace GraphTableSVG {
         //x?: number,
         //y?: number,
         rowHeight?: number,
-        columnWidth?: number
+        columnWidth?: number,
+        table? : LogicTable
     }
 
     /*
@@ -157,7 +158,7 @@ namespace GraphTableSVG {
                 const option = GTextBox.constructAttributes(e, true);
                 r = new GGraph(parent, option);
             } else if(type == ShapeObjectType.Table){
-                const option = GTextBox.constructAttributes(e, true);
+                const option = GTable.constructAttributes(e, true);
                 r = new GTable(parent, option);
             }
             else {

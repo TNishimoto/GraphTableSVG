@@ -47,8 +47,8 @@ namespace GraphTableSVG {
             }
         }
         */
-        public get type(): string {
-            return "ShapeArrow";
+        public get type(): ShapeObjectType {
+            return ShapeObjectType.ShapeArrowCallout;
         }
         get arrowNeckWidth(): number {
             return this.svgGroup.gtGetAttributeNumberWithoutNull("data-arrow-neck-width", 0);

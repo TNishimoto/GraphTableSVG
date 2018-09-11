@@ -66,6 +66,31 @@ namespace GraphTableSVG {
             }
             return line1;
         }
+        export function createSurfacePath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
+            const line1 = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            parent.appendChild(line1);
+            line1.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
+
+            if(parent instanceof SVGElement){
+                const _className = parent.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
+                if(className == null){
+                    className = _className;
+                }
+            }
+
+            if (className != null) {
+                line1.setAttribute("class", className)
+                const dashStyle = line1.getPropertyStyleValue(msoDashStyleName);
+                if (dashStyle != null) {
+                    msoDashStyle.setStyle(line1, dashStyle);
+                }
+            } else {
+                line1.style.stroke = "black";
+                line1.style.fill = "white";
+                line1.style.strokeWidth = "1pt";
+            }
+            return line1;
+        }
 
 
         /**
@@ -102,8 +127,8 @@ namespace GraphTableSVG {
             rect.width.baseVal.value = 30;
             rect.height.baseVal.value = 30;
             if (className == null) {
-                rect.style.fill = "#ffffff";
-                rect.style.stroke = "#000000";
+                rect.style.fill = "white";
+                rect.style.stroke = "black";
                 rect.style.strokeWidth = "1pt";
             } else {
                 rect.setAttribute("class", className);
@@ -164,7 +189,7 @@ namespace GraphTableSVG {
             if (className == null) {
                 circle.style.stroke = "black";
                 circle.style.strokeWidth = "1pt";
-                circle.style.fill = "#ffffff";
+                circle.style.fill = "white";
             } else {
                 circle.setAttribute("class", className);
                 const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadiusName, null);

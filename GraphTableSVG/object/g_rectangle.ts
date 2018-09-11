@@ -22,6 +22,10 @@ namespace GraphTableSVG {
 
             return output;
         }
+        public get type(): ShapeObjectType {
+            return ShapeObjectType.Rect;
+        }
+
         /**
         テキストの領域を返します。
         */

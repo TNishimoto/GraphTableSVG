@@ -76,6 +76,7 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="graphtablesvg.treearrangement.html#addoffset" class="tsd-kind-icon">add<wbr>Offset</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="graphtablesvg.treearrangement.html#aligntrees" class="tsd-kind-icon">align<wbr>Trees</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="graphtablesvg.treearrangement.html#alignverticebychildren" class="tsd-kind-icon">align<wbr>Vertice<wbr>ByChildren</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="graphtablesvg.treearrangement.html#alignverticebychildrensub" class="tsd-kind-icon">align<wbr>Vertice<wbr>ByChildren<wbr>Sub</a></li>
@@ -95,17 +96,46 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-					<a name="aligntrees" class="tsd-anchor"></a>
-					<h3>align<wbr>Trees</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">align<wbr>Trees<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="addoffset" class="tsd-anchor"></a>
+					<h3>add<wbr>Offset</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Offset<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a>, x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L173">graph/relocation.ts:173</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L152">object/g_relocation.ts:152</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>graph: <a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a></h5>
+								</li>
+								<li>
+									<h5>x: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>y: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<a name="aligntrees" class="tsd-anchor"></a>
+					<h3>align<wbr>Trees</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">align<wbr>Trees<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L142">object/g_relocation.ts:142</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -116,7 +146,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>graph: <a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
+									<h5>graph: <a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -129,13 +159,13 @@
 					<a name="alignverticebychildren" class="tsd-anchor"></a>
 					<h3>align<wbr>Vertice<wbr>ByChildren</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">align<wbr>Vertice<wbr>ByChildren<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">align<wbr>Vertice<wbr>ByChildren<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L92">graph/relocation.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L61">object/g_relocation.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -146,7 +176,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>graph: <a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
+									<h5>graph: <a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -159,13 +189,13 @@
 					<a name="alignverticebychildrensub" class="tsd-anchor"></a>
 					<h3>align<wbr>Vertice<wbr>ByChildren<wbr>Sub</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">align<wbr>Vertice<wbr>ByChildren<wbr>Sub<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.virtualsubtree.html" class="tsd-signature-type">VirtualSubTree</a>, xInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, yInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">align<wbr>Vertice<wbr>ByChildren<wbr>Sub<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.virtualtree.html" class="tsd-signature-type">VirtualTree</a>, xInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, yInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L111">graph/relocation.ts:111</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L80">object/g_relocation.ts:80</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -176,7 +206,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>tree: <a href="../classes/graphtablesvg.virtualsubtree.html" class="tsd-signature-type">VirtualSubTree</a></h5>
+									<h5>tree: <a href="../classes/graphtablesvg.virtualtree.html" class="tsd-signature-type">VirtualTree</a></h5>
 								</li>
 								<li>
 									<h5>xInterval: <span class="tsd-signature-type">number</span></h5>
@@ -195,13 +225,13 @@
 					<a name="alignverticebyleave" class="tsd-anchor"></a>
 					<h3>align<wbr>Vertice<wbr>ByLeave</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">align<wbr>Vertice<wbr>ByLeave<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">align<wbr>Vertice<wbr>ByLeave<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L185">graph/relocation.ts:185</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L194">object/g_relocation.ts:194</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -212,7 +242,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>graph: <a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
+									<h5>graph: <a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -225,13 +255,13 @@
 					<a name="alignverticebyleavesub" class="tsd-anchor"></a>
 					<h3>align<wbr>Vertice<wbr>ByLeave<wbr>Sub</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">align<wbr>Vertice<wbr>ByLeave<wbr>Sub<span class="tsd-signature-symbol">(</span>forest<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a>, xInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, yInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">align<wbr>Vertice<wbr>ByLeave<wbr>Sub<span class="tsd-signature-symbol">(</span>forest<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a>, xInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, yInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L13">graph/relocation.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L165">object/g_relocation.ts:165</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -242,7 +272,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>forest: <a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
+									<h5>forest: <a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a></h5>
 								</li>
 								<li>
 									<h5>xInterval: <span class="tsd-signature-type">number</span></h5>
@@ -267,7 +297,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L63">graph/relocation.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L32">object/g_relocation.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -284,13 +314,13 @@
 					<a name="computeautoxyintervals" class="tsd-anchor"></a>
 					<h3>compute<wbr>AutoXYIntervals</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">compute<wbr>AutoXYIntervals<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></li>
+						<li class="tsd-signature tsd-kind-icon">compute<wbr>AutoXYIntervals<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L150">graph/relocation.ts:150</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L119">object/g_relocation.ts:119</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -301,7 +331,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>graph: <a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
+									<h5>graph: <a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -314,13 +344,13 @@
 					<a name="getxyintervals" class="tsd-anchor"></a>
 					<h3>getXYIntervals</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">getXYIntervals<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></li>
+						<li class="tsd-signature tsd-kind-icon">getXYIntervals<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L163">graph/relocation.ts:163</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L132">object/g_relocation.ts:132</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -331,7 +361,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>graph: <a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
+									<h5>graph: <a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -350,7 +380,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L74">graph/relocation.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L43">object/g_relocation.ts:43</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -367,19 +397,19 @@
 					<a name="reverse" class="tsd-anchor"></a>
 					<h3>reverse</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">reverse<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a>, isX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, isY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">reverse<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a>, isX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, isY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L35">graph/relocation.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L4">object/g_relocation.ts:4</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>graph: <a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
+									<h5>graph: <a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a></h5>
 								</li>
 								<li>
 									<h5>isX: <span class="tsd-signature-type">boolean</span></h5>
@@ -396,19 +426,19 @@
 					<a name="standardtreewidtharrangement" class="tsd-anchor"></a>
 					<h3>standard<wbr>Tree<wbr>Width<wbr>Arrangement</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">standard<wbr>Tree<wbr>Width<wbr>Arrangement<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">standard<wbr>Tree<wbr>Width<wbr>Arrangement<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L131">graph/relocation.ts:131</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L100">object/g_relocation.ts:100</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>graph: <a href="../classes/graphtablesvg.graph.html" class="tsd-signature-type">Graph</a></h5>
+									<h5>graph: <a href="../classes/graphtablesvg.ggraph.html" class="tsd-signature-type">GGraph</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -419,19 +449,19 @@
 					<a name="standardtreewidtharrangementsub" class="tsd-anchor"></a>
 					<h3>standard<wbr>Tree<wbr>Width<wbr>Arrangement<wbr>Sub</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">standard<wbr>Tree<wbr>Width<wbr>Arrangement<wbr>Sub<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.virtualsubtree.html" class="tsd-signature-type">VirtualSubTree</a>, xInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, yInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">standard<wbr>Tree<wbr>Width<wbr>Arrangement<wbr>Sub<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><a href="../classes/graphtablesvg.virtualtree.html" class="tsd-signature-type">VirtualTree</a>, xInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, yInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/graph/relocation.ts#L194">graph/relocation.ts:194</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/object/g_relocation.ts#L209">object/g_relocation.ts:209</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>tree: <a href="../classes/graphtablesvg.virtualsubtree.html" class="tsd-signature-type">VirtualSubTree</a></h5>
+									<h5>tree: <a href="../classes/graphtablesvg.virtualtree.html" class="tsd-signature-type">VirtualTree</a></h5>
 								</li>
 								<li>
 									<h5>xInterval: <span class="tsd-signature-type">number</span></h5>
@@ -465,10 +495,13 @@
 								<a href="graphtablesvg.connectorposition.html">Connector<wbr>Position</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="graphtablesvg.gui.html">GUI</a>
+								<a href="graphtablesvg.customattributenames.html">Custom<wbr>Attribute<wbr>Names</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="graphtablesvg.grapharrangement.html">Graph<wbr>Arrangement</a>
+								<a href="graphtablesvg.direction.html">Direction</a>
+							</li>
+							<li class=" tsd-kind-module tsd-parent-kind-module">
+								<a href="graphtablesvg.gui.html">GUI</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
 								<a href="graphtablesvg.horizontalanchor.html">Horizontal<wbr>Anchor</a>
@@ -481,6 +514,9 @@
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
 								<a href="graphtablesvg.svg.html">SVG</a>
+							</li>
+							<li class=" tsd-kind-module tsd-parent-kind-module">
+								<a href="graphtablesvg.shapeobjecttype.html">Shape<wbr>Object<wbr>Type</a>
 							</li>
 							<li class="current tsd-kind-module tsd-parent-kind-module">
 								<a href="graphtablesvg.treearrangement.html">Tree<wbr>Arrangement</a>
@@ -496,10 +532,16 @@
 							</li>
 						</ul>
 					</li>
+					<li class=" tsd-kind-module tsd-is-not-exported">
+						<a href="htmlfunctions.html">HTMLFunctions</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="graphtablesvg.treearrangement.html#addoffset" class="tsd-kind-icon">add<wbr>Offset</a>
+					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
 						<a href="graphtablesvg.treearrangement.html#aligntrees" class="tsd-kind-icon">align<wbr>Trees</a>
 					</li>

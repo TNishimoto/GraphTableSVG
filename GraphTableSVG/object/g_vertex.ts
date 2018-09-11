@@ -1,3 +1,4 @@
+/// <reference path="g_textbox.ts"/>
 namespace GraphTableSVG {
 
     export class GVertex extends GTextBox {

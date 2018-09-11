@@ -104,6 +104,7 @@
         public leftBorderClass: string | null = null;
         public rightBorderClass: string | null = null;
         public bottomBorderClass: string | null = null;
+        public svgText : SVGTextElement | null = null;
         public connectedColumnCount: number = 1;
         public connectedRowCount: number = 1;
 

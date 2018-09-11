@@ -22,45 +22,26 @@ namespace GraphTableSVG {
             if (option.text != undefined) {
                 this.svgTextPath.setTextContent(option.text);
             }
-
-            /*
-            const t1 = this.svgGroup.getPropertyStyleValue(Edge.beginConnectorTypeName);
-            const t2 = this.svgGroup.getPropertyStyleValue(Edge.endConnectorTypeName);
-
-            this.beginConnectorType = ToConnectorPosition(t1);
-            this.endConnectorType = ToConnectorPosition(t2);
-
-            this._observer = new MutationObserver(this.observerFunc);
-            const option1: MutationObserverInit = { attributes: true };
-            this._observer.observe(this.svgGroup, option1);
-
-
-            const textClass = this.svgGroup.getPropertyStyleValue(SVG.defaultTextClass);
-            [this._svgText, this._svgTextPath] = SVG.createTextPath(textClass);
-            this.svgGroup.appendChild(this._svgText);
-            this._svgText.appendChild(this._svgTextPath);
-            this._svgTextPath.href.baseVal = `#${this._svgPath.id}`
-            */
-
-            //if(option.x1 != undefined) this.x1 = option.x1;
+            const _option = <PPEdgeAttributes>this.initializeOption(option);
 
             const edgeColor = this.svgPath.getPropertyStyleValue("stroke");
             const edgeColor2 = edgeColor == null ? undefined : edgeColor;
             const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
             const strokeWidth2 = strokeWidth == null ? undefined : strokeWidth;
 
-            if (typeof option.startMarker !== "undefined") this.markerStart = GraphTableSVG.GEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
-            if (typeof option.endMarker !== "undefined") this.markerEnd = GraphTableSVG.GEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+            if (typeof _option.startMarker !== "undefined") this.markerStart = GraphTableSVG.GEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+            if (typeof _option.endMarker !== "undefined") this.markerEnd = GraphTableSVG.GEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
-            this.pathPoints = [[option.x1!, option.y1!], [option.x2!, option.y2!]];
+            this.pathPoints = [[_option.x1!, _option.y1!], [_option.x2!, _option.y2!]];
 
-            if (option.beginVertex instanceof GVertex) this.beginVertex = option.beginVertex;
-            if (option.endVertex instanceof GVertex) this.endVertex = option.endVertex;
+            if (_option.beginVertex instanceof GVertex) this.beginVertex = _option.beginVertex;
+            if (_option.endVertex instanceof GVertex) this.endVertex = _option.endVertex;
 
-            if (typeof option.beginConnectorType !== "undefined") this.beginConnectorType = option.beginConnectorType;
-            if (typeof option.endConnectorType !== "undefined") this.endConnectorType = option.endConnectorType;
 
-            this.pathTextAlignment = option.pathTextAlignment!;
+            if (typeof _option.beginConnectorType !== "undefined") this.beginConnectorType = _option.beginConnectorType;
+            if (typeof _option.endConnectorType !== "undefined") this.endConnectorType = _option.endConnectorType;
+
+            this.pathTextAlignment = _option.pathTextAlignment!;
 
             this.update();
 
@@ -71,25 +52,27 @@ namespace GraphTableSVG {
             output.x2 = e.gtGetAttributeNumberWithoutNull("x2", 300);
             output.y1 = e.gtGetAttributeNumberWithoutNull("y1", 0);
             output.y2 = e.gtGetAttributeNumberWithoutNull("y2", 300);
-            if (e.hasAttribute("begin-vertex")) output.beginVertex = <string>e.getAttribute("begin-vertex");
-            if (e.hasAttribute("end-vertex")) output.endVertex = <string>e.getAttribute("end-vertex");
-            output.beginConnectorType = ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("begin-connector", "auto"));
-            output.endConnectorType = ConnectorPosition.ToConnectorPosition(e.gtGetAttribute("end-connector", "auto"));
+            output.beginVertex = e.gtGetAttributeStringWithUndefined("begin-vertex");
+            output.endVertex = e.gtGetAttributeStringWithUndefined("end-vertex");
+            output.beginConnectorType = ConnectorPosition.ToConnectorPosition(e.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.beginConnectorTypeName, "auto"));
+            output.endConnectorType = ConnectorPosition.ToConnectorPosition(e.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.endConnectorTypeName, "auto"));
 
-            output.startMarker = e.gtGetAttribute("start-marker", "false") == "true";
-            output.endMarker = e.gtGetAttribute("end-marker", "false") == "true";
+            output.startMarker = e.gtGetStyleBooleanWithUndefined(GraphTableSVG.CustomAttributeNames.Style.markerStartName);
+            output.endMarker = e.gtGetAttributeBooleanWithUndefined(GraphTableSVG.CustomAttributeNames.Style.markerEndName);
 
             if (removeAttributes) {
                 e.removeAttribute("x1");
                 e.removeAttribute("x2");
                 e.removeAttribute("y1");
                 e.removeAttribute("y2");
-                e.removeAttribute("start-marker");
-                e.removeAttribute("end-marker");
+                //e.removeAttribute("start-marker");
+                //e.removeAttribute("end-marker");
                 e.removeAttribute("begin-vertex");
                 e.removeAttribute("end-vertex");
+                /*
                 e.removeAttribute("begin-connector");
                 e.removeAttribute("end-connector");
+                */
 
             }
             return output;
@@ -122,6 +105,7 @@ namespace GraphTableSVG {
                     _option.endVertex = obj;
                 }
             }
+
 
             const styleBeginConnectorType = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorTypeName);
             const styleEndConnectorType = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorTypeName);
@@ -185,8 +169,8 @@ namespace GraphTableSVG {
             this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
-        public get type(): string {
-            return "PPEdge";
+        public get type(): ShapeObjectType {
+            return "g-edge";
         }
         /*
         public get surface() : SVGElement {
@@ -858,6 +842,9 @@ namespace GraphTableSVG {
             return r;
         }
 
+        public get hasSize() : boolean{
+            return false;
+        }
         /**
          * VBAコードを作成します。
          * @param shapes 

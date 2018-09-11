@@ -1,3 +1,4 @@
+/// <reference path="g_path_textbox.ts"/>
 namespace GraphTableSVG {
 
     export class GCallout extends GPathTextBox {
@@ -35,8 +36,8 @@ namespace GraphTableSVG {
             }
         }
         */
-        public get type(): string {
-            return "CallOut";
+        public get type(): ShapeObjectType {
+            return "g-callout";
         }
 
         protected update() {

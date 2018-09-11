@@ -1,3 +1,4 @@
+/// <reference path="g_object.ts"/>
 namespace GraphTableSVG {
 
     export class GTextBox extends GObject {
@@ -6,17 +7,14 @@ namespace GraphTableSVG {
 
             this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
-
-            this._observer = new MutationObserver(this.observerFunc);
-            const option1: MutationObserverInit = { attributes: true, childList: true, subtree: true };
-            this._observer.observe(this.svgGroup, option1);
-
             this._textObserver = new MutationObserver(this.textObserverFunc);
             const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
             this._textObserver.observe(this.svgText, option2);
 
+            //this.isAutoSizeShapeToFitText = false;            
             if (typeof option.text !== "undefined") this.svgText.setTextContent(option.text);
             if (typeof option.isAutoSizeShapeToFitText !== "undefined") this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
+            
         }
         initializeOption(option: PPObjectAttributes) : PPObjectAttributes {
             const _option = <PPEdgeAttributes>super.initializeOption(option);
@@ -24,22 +22,22 @@ namespace GraphTableSVG {
         }
         static constructAttributes(e: SVGElement,
             removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): TextBoxShapeAttributes {
-            if(e.hasAttribute("class"))output.class = <string>e.getAttribute("class")
-            output.cx = e.gtGetAttributeNumberWithoutNull("cx", 0);
-            output.cy = e.gtGetAttributeNumberWithoutNull("cy", 0);
-            if(e.hasAttribute("text"))output.text = <string>e.getAttribute("text");
-            output.width = e.gtGetAttributeNumber2("width");
-            output.height = e.gtGetAttributeNumber2("height");
+            
+            GObject.constructAttributes(e, removeAttributes, output);
+            output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitTextName);            
+            const textChild = HTMLFunctions.getChildByNodeName(e, "text");
 
-            output.isAutoSizeShapeToFitText = e.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.autoSizeShapeToFitTextName, "false") == "true";
+            if(e.hasAttribute("text")){
+                output.text = <string>e.getAttribute("text");
+            }else if(textChild != null){
+
+            }else if(e.innerHTML.length > 0){
+                output.text = e.innerHTML;
+            }
+
 
             if (removeAttributes) {
-                e.removeAttribute("cx");
-                e.removeAttribute("cy");
-                e.removeAttribute("class");
                 e.removeAttribute("text");
-                e.removeAttribute("width");
-                e.removeAttribute("height");
                 e.style.removeProperty(CustomAttributeNames.Style.autoSizeShapeToFitTextName);
             }
             return output;
@@ -48,29 +46,9 @@ namespace GraphTableSVG {
         public get svgText(): SVGTextElement {
             return this._svgText;
         }
-        private _observer: MutationObserver;
-        private observerFunc: MutationCallback = (x: MutationRecord[]) => {
-
-            let b = false;
-            if (!this.isLocated) return;
-            for (let i = 0; i < x.length; i++) {
-                const p = x[i];
-                if (this.updateAttributes.some((v) => v == p.attributeName)) {
-                    b = true;
-                }
-
-                if (p.attributeName == "transform") {
-                    this.dispatchConnectPositionChangedEvent();
-                }
-            }
-            if (b) this.update();
-        };
         
 
 
-        protected updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y",
-            "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",
-            "data-arrow-head-width", "data-arrow-head-height"]
 
         protected surfaceAttributes: string[] = [];
 
@@ -93,13 +71,6 @@ namespace GraphTableSVG {
         };
         private static updateTextAttributes = ["style"]
 
-        protected dispatchConnectPositionChangedEvent(): void {
-            if (this.surface != null) {
-                var event = document.createEvent("HTMLEvents");
-                event.initEvent(CustomAttributeNames.connectPositionChangedEventName, true, true)
-                this.surface.dispatchEvent(event);
-            }
-        }
 
 
 
@@ -139,7 +110,6 @@ namespace GraphTableSVG {
         set isAutoSizeShapeToFitText(value: boolean) {
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitTextName, value ? "true" : "false");
         }
-        private _isUpdating: boolean = false;
         protected update() {
             this._isUpdating = true;
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
@@ -207,6 +177,9 @@ namespace GraphTableSVG {
             return ids.some((v) => v == id);
         }
 
+        public get hasSize() : boolean{
+            return true;
+        }
 
 
     }

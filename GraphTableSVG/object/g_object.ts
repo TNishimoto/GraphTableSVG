@@ -3,17 +3,17 @@ namespace GraphTableSVG {
     export class GObject {
         private static objectDic: { [key: string]: GObject; } = {};
         public static getObjectFromObjectID(id: string | SVGElement): GObject | null {
-            if(id instanceof SVGElement){
-                if(id.hasAttribute(CustomAttributeNames.objectIDName)){
+            if (id instanceof SVGElement) {
+                if (id.hasAttribute(CustomAttributeNames.objectIDName)) {
                     const _id = id.getAttribute(CustomAttributeNames.objectIDName)!;
                     return GObject.getObjectFromObjectID(_id);
-                }else{
+                } else {
                     return null;
                 }
-            }else{
-                if(id in this.objectDic){
+            } else {
+                if (id in this.objectDic) {
                     return this.objectDic[id];
-                }else{
+                } else {
                     return null;
                 }
             }
@@ -30,12 +30,12 @@ namespace GraphTableSVG {
             }
             return null;
         }
-        protected _surface : SVGElement | null = null;
-        public _tag : any;
-        public get tag(){
+        protected _surface: SVGElement | null = null;
+        public _tag: any;
+        public get tag() {
             return this._tag;
         }
-        public set tag(v : any){
+        public set tag(v: any) {
             this._tag = v;
         }
 
@@ -79,20 +79,31 @@ namespace GraphTableSVG {
 頂点の幅を返します。
 */
         get width(): number {
-            return <number>this.svgGroup.gtGetAttributeNumber("data-width", 0);
+            if(this.hasSize){
+                return <number>this.svgGroup.gtGetAttributeNumber("data-width", 0);
+            }else{
+                return 0;
+            }
         }
-        set width(value: number) {            
-            if (this.width != value && value != null) this.svgGroup.setAttribute("data-width", value.toString());
-
+        set width(value: number) {
+            if(this.hasSize){
+                if (this.width != value && value != null) this.svgGroup.setAttribute("data-width", value.toString());
+            }
         }
         /**
         頂点の高さを返します。
         */
         get height(): number {
-            return <number>this.svgGroup.gtGetAttributeNumber("data-height", 0);
+            if(this.hasSize){
+                return <number>this.svgGroup.gtGetAttributeNumber("data-height", 0);
+            }else{
+                return 0;
+            }
         }
         set height(value: number) {
-            if (this.height != value && value != null) this.svgGroup.setAttribute("data-height", value.toString());
+            if(this.hasSize){
+                if (this.height != value && value != null) this.svgGroup.setAttribute("data-height", value.toString());
+            }
         }
         public get x(): number {
             return this.cx - (this.width / 2);
@@ -100,14 +111,36 @@ namespace GraphTableSVG {
         public get y(): number {
             return this.cy - (this.height / 2);
         }
-        public get type(): string {
-            return "PPTextBoxShapeBase";
+        public get type(): ShapeObjectType {
+            return ShapeObjectType.Object;
         }
         protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
 
         }
-        protected setClassNameOfSVGGroup(){
+        protected setClassNameOfSVGGroup() {
 
+        }
+        private _observer: MutationObserver;
+        private observerFunc: MutationCallback = (x: MutationRecord[]) => {
+            this.observerFunction(x);
+        };
+
+        protected observerFunction(x: MutationRecord[]) {
+            let b = false;
+            if (!this.isLocated) return;
+
+            for (let i = 0; i < x.length; i++) {
+                const p = x[i];
+                if (this.updateAttributes.some((v) => v == p.attributeName)) {
+                    b = true;
+                }
+
+                if (p.attributeName == "transform") {
+                    this.dispatchConnectPositionChangedEvent();
+                }
+            }
+
+            if (b) this.update();
         }
         public constructor(svgbox: SVGElement | string, option: PPObjectAttributes = {}) {
             let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
@@ -128,21 +161,44 @@ namespace GraphTableSVG {
             this.cx = _option.cx!;
             this.cy = _option.cy!;
 
+
+            this._observer = new MutationObserver(this.observerFunc);
+            const option1: MutationObserverInit = { attributes: true, childList: true, subtree: true };
+            this._observer.observe(this.svgGroup, option1);
+
             this.dispatchObjectCreatedEvent();
         }
-        initializeOption(option: PPObjectAttributes) : PPObjectAttributes {
-            const _option = {...option};
-            if(this.surface != null && this.surface.className != null){
+        initializeOption(option: PPObjectAttributes): PPObjectAttributes {
+            const _option = { ...option };
+            if (this.surface != null && this.surface.className != null) {
                 const width = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
                 const height = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeightName, null);
-                if(width != null) _option.width = width;
-                if(height != null) _option.height = height;
+                if (width != null) _option.width = width;
+                if (height != null) _option.height = height;
             }
-            if (typeof _option.width === "undefined") _option.width = 50;
-            if (typeof _option.height === "undefined") _option.height = 50;
+            if (typeof _option.width === "undefined") _option.width = 25;
+            if (typeof _option.height === "undefined") _option.height = 25;
             if (typeof _option.cx === "undefined") _option.cx = 0;
             if (typeof _option.cy === "undefined") _option.cy = 0;
             return _option;
+        }
+        static constructAttributes(e: SVGElement,
+            removeAttributes: boolean = false, output: PPObjectAttributes = {}): PPObjectAttributes {
+            output.class = e.gtGetAttributeStringWithUndefined("class");
+            output.cx = e.gtGetAttributeNumberWithUndefined("cx");
+            output.cy = e.gtGetAttributeNumberWithUndefined("cy");
+            output.width = e.gtGetAttributeNumberWithUndefined("width");
+            output.height = e.gtGetAttributeNumberWithUndefined("height");
+
+
+            if (removeAttributes) {
+                e.removeAttribute("cx");
+                e.removeAttribute("cy");
+                e.removeAttribute("class");
+                e.removeAttribute("width");
+                e.removeAttribute("height");
+            }
+            return output;
         }
 
         /**
@@ -168,22 +224,40 @@ namespace GraphTableSVG {
                 return r;
             }
         }
-        
+
         public createVBACode(id: number): string[] {
             const lines: string[] = [];
             lines.push(`Sub create${id}(createdSlide As slide)`);
             lines.push(`End Sub`);
             return lines;
         }
-        public get VBAObjectNum() : number{
+        public get VBAObjectNum(): number {
             return 1;
         }
-        
+
         protected dispatchObjectCreatedEvent(): void {
             var event = document.createEvent("HTMLEvents");
             event.initEvent(CustomAttributeNames.objectCreatedEventName, true, true);
             this.svgGroup.dispatchEvent(event);
 
+        }
+        protected _isUpdating: boolean = false;
+        protected update() {
+            this._isUpdating = true;
+            this._isUpdating = false;
+        }
+        protected updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y",
+            "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",
+            "data-arrow-head-width", "data-arrow-head-height"]
+        protected dispatchConnectPositionChangedEvent(): void {
+            if (this.surface != null) {
+                var event = document.createEvent("HTMLEvents");
+                event.initEvent(CustomAttributeNames.connectPositionChangedEventName, true, true)
+                this.surface.dispatchEvent(event);
+            }
+        }
+        public get hasSize() : boolean{
+            return false;
         }
     }
 }

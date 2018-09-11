@@ -69,6 +69,14 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>SVGをPNGに変換するための名前空間です。
+						この名前空間のコードは<a href="https://st40.xyz/one-run/article/133/を使用しています。">https://st40.xyz/one-run/article/133/を使用しています。</a></p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -77,11 +85,13 @@
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="graphtablesvg.png.html#base64toblob" class="tsd-kind-icon">base64to<wbr>Blob</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="graphtablesvg.png.html#copycsstostyle" class="tsd-kind-icon">copyCSSto<wbr>Style</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="graphtablesvg.png.html#createcanvasfromimage" class="tsd-kind-icon">create<wbr>Canvas<wbr>From<wbr>Image</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="graphtablesvg.png.html#createpngfromsvg" class="tsd-kind-icon">createPNGFromSVG</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="graphtablesvg.png.html#getcanvas" class="tsd-kind-icon">get<wbr>Canvas</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="graphtablesvg.png.html#getimage" class="tsd-kind-icon">get<wbr>Image</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="graphtablesvg.png.html#getimage" class="tsd-kind-icon">get<wbr>Image</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="graphtablesvg.png.html#saveblob" class="tsd-kind-icon">save<wbr>Blob</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="graphtablesvg.png.html#savecanvas" class="tsd-kind-icon">save<wbr>Canvas</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="graphtablesvg.png.html#setsaveevent" class="tsd-kind-icon">set<wbr>Save<wbr>Event</a></li>
 							</ul>
 						</section>
 					</div>
@@ -99,16 +109,83 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/common/png.ts#L105">common/png.ts:105</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/common/png.ts#L123">common/png.ts:123</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Base64データをBlobデータに変換します。</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>base64: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Blob</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="copycsstostyle" class="tsd-anchor"></a>
+					<h3>copyCSSto<wbr>Style</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">copyCSSto<wbr>Style<span class="tsd-signature-symbol">(</span>svg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/common/png.ts#L12">common/png.ts:12</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>svg要素のCSSをStyle属性に書き込みます。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>svg: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="createcanvasfromimage" class="tsd-anchor"></a>
+					<h3>create<wbr>Canvas<wbr>From<wbr>Image</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Canvas<wbr>From<wbr>Image<span class="tsd-signature-symbol">(</span>img<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLCanvasElement</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/common/png.ts#L29">common/png.ts:29</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>HTMLImageElementからCanvasElementを作成します。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>img: <span class="tsd-signature-type">HTMLImageElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLCanvasElement</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -122,59 +199,50 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/common/png.ts#L3">common/png.ts:3</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/common/png.ts#L55">common/png.ts:55</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>SVG要素からPNG画像を生成して保存します。</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>id: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLCanvasElement</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-					<a name="getcanvas" class="tsd-anchor"></a>
-					<h3>get<wbr>Canvas</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Canvas<span class="tsd-signature-symbol">(</span>svgBox<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLCanvasElement</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/common/png.ts#L82">common/png.ts:82</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>svgBox: <span class="tsd-signature-type">HTMLElement</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLCanvasElement</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="getimage" class="tsd-anchor"></a>
 					<h3>get<wbr>Image</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Image<span class="tsd-signature-symbol">(</span>svgBox<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/common/png.ts#L66">common/png.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/common/png.ts#L77">common/png.ts:77</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>svg要素をHTMLImageElementに変換します。</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>svgBox: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLImageElement</span></h4>
@@ -191,9 +259,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/common/png.ts#L123">common/png.ts:123</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/common/png.ts#L146">common/png.ts:146</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Blobデータをダウンロードします。</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -201,6 +274,8 @@
 								</li>
 								<li>
 									<h5>fileName: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -217,9 +292,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/1032237/GraphTableSVG/common/png.ts#L89">common/png.ts:89</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/common/png.ts#L104">common/png.ts:104</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>canvas上のイメージを保存します。</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -227,6 +307,41 @@
 								</li>
 								<li>
 									<h5>canvas: <span class="tsd-signature-type">HTMLCanvasElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="setsaveevent" class="tsd-anchor"></a>
+					<h3>set<wbr>Save<wbr>Event</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Save<wbr>Event<span class="tsd-signature-symbol">(</span>img<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span>, canvas<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLCanvasElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/667ce9f/GraphTableSVG/common/png.ts#L43">common/png.ts:43</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>HTMLImageElementの画像を保存するイベントを作成します。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>img: <span class="tsd-signature-type">HTMLImageElement</span></h5>
+								</li>
+								<li>
+									<h5>canvas: <span class="tsd-signature-type">HTMLCanvasElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -254,10 +369,13 @@
 								<a href="graphtablesvg.connectorposition.html">Connector<wbr>Position</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="graphtablesvg.gui.html">GUI</a>
+								<a href="graphtablesvg.customattributenames.html">Custom<wbr>Attribute<wbr>Names</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="graphtablesvg.grapharrangement.html">Graph<wbr>Arrangement</a>
+								<a href="graphtablesvg.direction.html">Direction</a>
+							</li>
+							<li class=" tsd-kind-module tsd-parent-kind-module">
+								<a href="graphtablesvg.gui.html">GUI</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
 								<a href="graphtablesvg.horizontalanchor.html">Horizontal<wbr>Anchor</a>
@@ -270,6 +388,9 @@
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
 								<a href="graphtablesvg.svg.html">SVG</a>
+							</li>
+							<li class=" tsd-kind-module tsd-parent-kind-module">
+								<a href="graphtablesvg.shapeobjecttype.html">Shape<wbr>Object<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-module tsd-parent-kind-module">
 								<a href="graphtablesvg.treearrangement.html">Tree<wbr>Arrangement</a>
@@ -285,6 +406,9 @@
 							</li>
 						</ul>
 					</li>
+					<li class=" tsd-kind-module tsd-is-not-exported">
+						<a href="htmlfunctions.html">HTMLFunctions</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -293,12 +417,15 @@
 						<a href="graphtablesvg.png.html#base64toblob" class="tsd-kind-icon">base64to<wbr>Blob</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="graphtablesvg.png.html#copycsstostyle" class="tsd-kind-icon">copyCSSto<wbr>Style</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="graphtablesvg.png.html#createcanvasfromimage" class="tsd-kind-icon">create<wbr>Canvas<wbr>From<wbr>Image</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="graphtablesvg.png.html#createpngfromsvg" class="tsd-kind-icon">createPNGFromSVG</a>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-						<a href="graphtablesvg.png.html#getcanvas" class="tsd-kind-icon">get<wbr>Canvas</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="graphtablesvg.png.html#getimage" class="tsd-kind-icon">get<wbr>Image</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
@@ -306,6 +433,9 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
 						<a href="graphtablesvg.png.html#savecanvas" class="tsd-kind-icon">save<wbr>Canvas</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="graphtablesvg.png.html#setsaveevent" class="tsd-kind-icon">set<wbr>Save<wbr>Event</a>
 					</li>
 				</ul>
 			</nav>

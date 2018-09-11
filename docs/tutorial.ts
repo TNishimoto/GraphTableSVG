@@ -131,8 +131,10 @@ pack.midMacros.elements["rhref"] = (e: libxmljs.Element, info: Macroup.Setting) 
         const methodName = texts[texts.length-1].toLowerCase();
         if(texts.length == 2){
             className = texts[0].toLowerCase();
+            replaceXMLText(e, `<a href="./typedoc/${prefix}${className}.html#${methodName}" target="_blank">${text}</a>`);
+        }else if(texts.length == 1){
+            replaceXMLText(e, `<a href="./typedoc/modules/graphtablesvg.html#${methodName}" target="_blank">${text}</a>`);
         }
-        replaceXMLText(e, `<a href="./typedoc/${prefix}${className}.html#${methodName}" target="_blank">${text}</a>`);
     }else{
         className = text.toLowerCase();
 

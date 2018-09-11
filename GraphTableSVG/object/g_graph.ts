@@ -374,6 +374,29 @@ namespace GraphTableSVG {
                 throw Error("error!");
             }
         }
+        protected observerFunction(x: MutationRecord[]){
+            super.observerFunction(x);
+            for (let i = 0; i < x.length; i++) {
+                const p = x[i];
+                if (p.attributeName == "style") {
+                    this.relocate();
+                }
+            }
+        }
+        
+        public get type(): ShapeObjectType {
+            return ShapeObjectType.Graph;
+        }
+        /*
+        protected update() {
+            if(!this._isUpdating){
+                this._isUpdating = true;
+                //this.relocate();
+                this._isUpdating = false;
+    
+            }
+        }
+        */
     }
 
 

@@ -1,3 +1,5 @@
+/// <reference path="g_vertex.ts"/>
+
 namespace GraphTableSVG {
     export class GPathTextBox extends GVertex {
         //private _svgPath: SVGPathElement;
@@ -7,12 +9,21 @@ namespace GraphTableSVG {
         public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
             super(svgbox, option);
 
+            /*
+            if(this.surface!.className == null && this.surface!.getPropertyStyleValue("fill") == null){
+                this.surface!.setPropertyStyleValue("fill", "white");
+            }
+            */
 
             //this.update();
         }
         protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
-            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
+            this._surface = GraphTableSVG.SVG.createSurfacePath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
+        }
+        initializeOption(option: PPObjectAttributes) : PPObjectAttributes {
+            const _option = super.initializeOption(option);
+            return _option;
         }
 
         get innerRectangle(): Rectangle {
@@ -41,8 +52,8 @@ namespace GraphTableSVG {
         }
         */
         
-        public get type(): string {
-            return "PPPathTextBox";
+        public get type(): ShapeObjectType {
+            return "g-path-textbox";
         }
         /**
         * 接続部分の座標を返します。
