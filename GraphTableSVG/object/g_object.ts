@@ -114,7 +114,7 @@ namespace GraphTableSVG {
         public get type(): ShapeObjectType {
             return ShapeObjectType.Object;
         }
-        protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
+        protected createSurface(svgbox: SVGElement, option: GTextBoxAttributes = {}): void {
 
         }
         protected setClassNameOfSVGGroup() {
@@ -142,7 +142,7 @@ namespace GraphTableSVG {
 
             if (b) this.update();
         }
-        public constructor(svgbox: SVGElement | string, option: PPObjectAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GObjectAttributes = {}) {
             let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
 
             this._svgGroup = SVG.createGroup(parentElement, option.class == undefined ? null : option.class);
@@ -168,7 +168,7 @@ namespace GraphTableSVG {
 
             this.dispatchObjectCreatedEvent();
         }
-        initializeOption(option: PPObjectAttributes): PPObjectAttributes {
+        initializeOption(option: GObjectAttributes): GObjectAttributes {
             const _option = { ...option };
             if (this.surface != null && this.surface.className != null) {
                 const width = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
@@ -183,7 +183,7 @@ namespace GraphTableSVG {
             return _option;
         }
         static constructAttributes(e: SVGElement,
-            removeAttributes: boolean = false, output: PPObjectAttributes = {}): PPObjectAttributes {
+            removeAttributes: boolean = false, output: GObjectAttributes = {}): GObjectAttributes {
             output.class = e.gtGetAttributeStringWithUndefined("class");
             output.cx = e.gtGetAttributeNumberWithUndefined("cx");
             output.cy = e.gtGetAttributeNumberWithUndefined("cy");

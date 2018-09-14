@@ -2,13 +2,13 @@
 namespace GraphTableSVG {
 
     export class GCallout extends GPathTextBox {
-        public constructor(svgbox: SVGElement | string, option: CalloutAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GCalloutAttributes = {}) {
             super(svgbox, option);
             this.speakerX = option.speakerX == undefined ? 0 : option.speakerX;
             this.speakerY = option.speakerY == undefined ? 0 : option.speakerY;
         }
 
-        static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : CalloutAttributes = {}) : CalloutAttributes {        
+        static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : GCalloutAttributes = {}) : GCalloutAttributes {        
             GTextBox.constructAttributes(e, removeAttributes, output);
             output.speakerX = e.gtGetAttributeNumber("speaker-x", 200)!;
             output.speakerY = e.gtGetAttributeNumber("speaker-y", 200)!;

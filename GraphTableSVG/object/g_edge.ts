@@ -4,7 +4,7 @@ namespace GraphTableSVG {
      */
     export class GEdge extends GTextBox {
 
-        constructor(svgbox: SVGElement | string, option: PPEdgeAttributes = {}) {
+        constructor(svgbox: SVGElement | string, option: GEdgeAttributes = {}) {
             super(svgbox, option);
             this.updateAttributes.push(CustomAttributeNames.beginNodeName);
             this.updateAttributes.push(CustomAttributeNames.endNodeName);
@@ -22,7 +22,7 @@ namespace GraphTableSVG {
             if (option.text != undefined) {
                 this.svgTextPath.setTextContent(option.text);
             }
-            const _option = <PPEdgeAttributes>this.initializeOption(option);
+            const _option = <GEdgeAttributes>this.initializeOption(option);
 
             const edgeColor = this.svgPath.getPropertyStyleValue("stroke");
             const edgeColor2 = edgeColor == null ? undefined : edgeColor;
@@ -46,7 +46,7 @@ namespace GraphTableSVG {
             this.update();
 
         }
-        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: PPEdgeAttributes = {}): PPEdgeAttributes {
+        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GEdgeAttributes = {}): GEdgeAttributes {
             GTextBox.constructAttributes(e, removeAttributes, output);
             output.x1 = e.gtGetAttributeNumberWithoutNull("x1", 0);
             output.x2 = e.gtGetAttributeNumberWithoutNull("x2", 300);
@@ -78,8 +78,8 @@ namespace GraphTableSVG {
             return output;
         }
 
-        initializeOption(option: PPObjectAttributes): PPObjectAttributes {
-            const _option = <PPEdgeAttributes>super.initializeOption(option);
+        initializeOption(option: GObjectAttributes): GObjectAttributes {
+            const _option = <GEdgeAttributes>super.initializeOption(option);
 
 
             const markerStartName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.markerStartName);
@@ -165,7 +165,7 @@ namespace GraphTableSVG {
         public get svgTextPath(): SVGTextPathElement {
             return this._svgTextPath;
         }
-        protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
+        protected createSurface(svgbox: SVGElement, option: GTextBoxAttributes = {}): void {
             this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
@@ -670,11 +670,11 @@ namespace GraphTableSVG {
          * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
          */
         public get pathTextAlignment(): pathTextAlighnment {
-            const value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.PathTextAlignmentName, "none");
+            const value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.PathTextAlignment, "none");
             return pathTextAlighnment.toPathTextAlighnment(value);
         }
         public set pathTextAlignment(value: pathTextAlighnment) {
-            this.svgTextPath.setPropertyStyleValue(GraphTableSVG.PathTextAlignmentName, value);
+            this.svgTextPath.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.PathTextAlignment, value);
             /*
             const prev = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.PathTextAlighnmentName, "none");
             const str : string = value;

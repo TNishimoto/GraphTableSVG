@@ -31,7 +31,7 @@ namespace GraphTableSVG {
         }
 
         protected _roots: GVertex[] = [];
-        constructor(box: SVGElement | string, option: TextBoxShapeAttributes = {}) {
+        constructor(box: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(box, option)
             this.svgGroup.addEventListener(CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);
         }

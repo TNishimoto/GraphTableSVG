@@ -6,7 +6,7 @@ namespace GraphTableSVG {
         public get svgPath(): SVGPathElement {
             return <SVGPathElement>this.surface;
         }
-        public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(svgbox, option);
 
             /*
@@ -17,11 +17,11 @@ namespace GraphTableSVG {
 
             //this.update();
         }
-        protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
+        protected createSurface(svgbox: SVGElement, option: GTextBoxAttributes = {}): void {
             this._surface = GraphTableSVG.SVG.createSurfacePath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
-        initializeOption(option: PPObjectAttributes) : PPObjectAttributes {
+        initializeOption(option: GObjectAttributes) : GObjectAttributes {
             const _option = super.initializeOption(option);
             return _option;
         }

@@ -2,36 +2,66 @@
 namespace GraphTableSVG {
 
     export class GTextBox extends GObject {
-        public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(svgbox, option)
 
-            this._svgText = GraphTableSVG.SVG.createText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass));
+            this._svgText = GTextBox.createSVGText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
             this._textObserver = new MutationObserver(this.textObserverFunc);
             const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
             this._textObserver.observe(this.svgText, option2);
 
-            //this.isAutoSizeShapeToFitText = false;            
-            if (typeof option.text !== "undefined") this.svgText.setTextContent(option.text);
-            if (typeof option.isAutoSizeShapeToFitText !== "undefined") this.isAutoSizeShapeToFitText = option.isAutoSizeShapeToFitText;
-            
+            const _option = <GTextBoxAttributes>this.initializeOption(option);
+            if (_option.text !== undefined) this.svgText.setTextContent(_option.text);
+            if (_option.isAutoSizeShapeToFitText !== undefined) this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;
+
         }
-        initializeOption(option: PPObjectAttributes) : PPObjectAttributes {
-            const _option = <PPEdgeAttributes>super.initializeOption(option);
+        initializeOption(option: GObjectAttributes): GObjectAttributes {
+            const _option = <GTextBoxAttributes>super.initializeOption(option);
+            if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
+            if(_option.verticalAnchor === undefined) _option.verticalAnchor = VerticalAnchor.Middle;
+            if(_option.horizontalAnchor === undefined) _option.horizontalAnchor = HorizontalAnchor.Center;
+
             return _option;
         }
+        /**
+                 * SVGTextElementを生成します。
+                 * @param className 生成するSVG要素のクラス属性名
+                 * @returns 生成されたSVGTextElement
+                 */
+        private static createSVGText(className: string | null = null): SVGTextElement {
+            const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
+            _svgText.setAttribute(CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
+            //_svgText.style.textAnchor = "middle";
+            if (className == null) {
+                _svgText.style.fill = "black";
+                _svgText.style.fontSize = "14px";
+                _svgText.style.fontWeight = "bold";
+                _svgText.style.fontFamily = 'Times New Roman';
+                _svgText.setMarginLeft(10);
+                _svgText.setMarginRight(10);
+                _svgText.setMarginTop(10);
+                _svgText.setMarginBottom(10);
+            } else {
+                _svgText.setAttribute("class", className);
+                //_svgText.className = className;
+            }
+            return _svgText;
+        }
+
         static constructAttributes(e: SVGElement,
-            removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): TextBoxShapeAttributes {
-            
+            removeAttributes: boolean = false, output: GTextBoxAttributes = {}): GTextBoxAttributes {
+
             GObject.constructAttributes(e, removeAttributes, output);
-            output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitTextName);            
+            output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitTextName);
             const textChild = HTMLFunctions.getChildByNodeName(e, "text");
 
-            if(e.hasAttribute("text")){
+            if (e.hasAttribute("text")) {
                 output.text = <string>e.getAttribute("text");
-            }else if(textChild != null){
+            } else if (textChild != null) {
 
-            }else if(e.innerHTML.length > 0){
+            } else if (e.innerHTML.length > 0) {
                 output.text = e.innerHTML;
             }
 
@@ -46,7 +76,7 @@ namespace GraphTableSVG {
         public get svgText(): SVGTextElement {
             return this._svgText;
         }
-        
+
 
 
 
@@ -78,27 +108,27 @@ namespace GraphTableSVG {
 
 
         get horizontalAnchor(): HorizontalAnchor {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(HorizontalAnchorPropertyName, "center");
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.HorizontalAnchor, "center");
             return HorizontalAnchor.toHorizontalAnchor(b);
         }
         /**
         テキストの水平方向の配置設定を設定します。
         */
         set horizontalAnchor(value: HorizontalAnchor) {
-            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(HorizontalAnchorPropertyName, value);
+            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor, value);
         }
         /**
         テキストの垂直方向の配置設定を返します。
         */
         get verticalAnchor(): VerticalAnchor {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(VerticalAnchorPropertyName, "middle");
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.VerticalAnchor, "middle");
             return VerticalAnchor.toVerticalAnchor(b);
         }
         /**
         テキストの垂直方向の配置設定を設定します。
         */
         set verticalAnchor(value: VerticalAnchor) {
-            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(VerticalAnchorPropertyName, value);
+            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor, value);
         }
 
         /**
@@ -177,7 +207,7 @@ namespace GraphTableSVG {
             return ids.some((v) => v == id);
         }
 
-        public get hasSize() : boolean{
+        public get hasSize(): boolean {
             return true;
         }
 

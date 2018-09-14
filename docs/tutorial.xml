@@ -5,6 +5,10 @@
 <OUTPUT path="./tutorial.html" remove="" macro="html" />
 <MACRO path="./tutorial.js" remove=""/>
 <stylesheet path="tutorial.css" />
+<stylesheet path="svg/sample_graph.css" />
+
+<script src="scripts/graph_table_svg.js"></script>
+<script src="tutorial_script.js"></script>
 </head>
 <body>
 
@@ -23,7 +27,8 @@ SVG入門の参考として
 <xarticle title="Object Sample : hello world" >
 <load path="svg/sample_hello1.html" />
 <a href="svg/sample_hello1.html">実行結果</a><dbr/>
-<load path="images/object1.png" /><dbr/>
+<load path="svg/sample_hello1.html" id="svgbox" />
+
 最も簡単なHello Worldサンプル。
 GraphTableSVGにはいくつかのカスタムSVG要素が存在し、オブジェクトはSVGのいくつかの要素を格納したG要素である。
 g-rect要素はその内の一つで、text要素とrect要素を格納している。
@@ -34,7 +39,7 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
 <xarticle title="Object Sample : オブジェクトの種類" >
 <load path="svg/sample_hello2.html" />
 <a href="svg/sample_hello2.html">実行結果</a><dbr/>
-<load path="images/object2.png" />
+<load path="svg/sample_hello2.html" id="svgbox" />
 </xarticle>
 
 <xarticle title="Table Sample : hello world" >

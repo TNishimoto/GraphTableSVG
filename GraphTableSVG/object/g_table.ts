@@ -1,42 +1,64 @@
 ﻿
 namespace GraphTableSVG {
-    
+
     /**
     テーブルを表します。
     */
     export class GTable extends GObject {
 
-        
+
         static constructAttributes(e: SVGElement,
             removeAttributes: boolean = false, output: TableOption = {}): TableOption {
-            
+
             GObject.constructAttributes(e, removeAttributes, output);
 
-            const rows = HTMLFunctions.getChildren(e).filter((v)=>v.nodeName == "row");
-            if(rows.length == 0){
+            const rows = HTMLFunctions.getChildren(e).filter((v) => v.nodeName == "row").map((v) => <HTMLElement>v);
+            if (rows.length == 0) {
 
-            }else{
-                const cells : Element[][] = new Array(rows.length);
-                rows.forEach((v,i) => {
-                    const cellArray = HTMLFunctions.getChildren(v).filter((v)=>v.nodeName == "cell");
+            } else {
+                const cells: Element[][] = new Array(rows.length);
+                let columnSize = 0;
+                rows.forEach((v, i) => {
+                    const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.nodeName == "cell");
                     cells[i] = cellArray;
+                    if (columnSize < cellArray.length) columnSize = cellArray.length;
                 });
-                const firstColumnSize = cells[0].length;
+                /*
+                const firstColumnSize = cells[0];
                 const b = cells.every((v)=>v.length == firstColumnSize);
                 if(!b){
                     throw Error("Different Column Sizes!");
                 }
-                output.table = new LogicTable({rowCount : rows.length, columnCount : firstColumnSize});
+                */
+                output.table = new LogicTable({ rowCount: rows.length, columnCount: columnSize });
 
-                for(let y=0;y<cells.length;y++){
-                    for(let x=0;x<cells[y].length;x++){
-                        output.table!.cells[y][x].text = cells[y][x].innerHTML;
-                    }    
+                const widthsStr = e.getPropertyStyleValue("--widths");
+                if (widthsStr != null) {
+                    const widths: (number | null)[] = JSON.parse(widthsStr);
+                    widths.forEach((v, i) => output.table!.columnWidths[i] = v);
                 }
-                if(output.cx !== undefined)output.table!.x = output.cx;
-                if(output.cy !== undefined)output.table!.y = output.cy;
-                if(output.class !== undefined)output.table!.tableClassName = output.class;
-                while(e.childNodes.length > 0) e.removeChild(e.childNodes.item(0));
+
+                for (let y = 0; y < cells.length; y++) {
+                    const h = rows[y].getPropertyStyleNumberValue("--height", null);
+                    output.table!.rowHeights[y] = h;
+
+                    for (let x = 0; x < cells[y].length; x++) {
+                        output.table!.cells[y][x].text = cells[y][x].innerHTML;
+                        if (cells[y][x].hasAttribute("g-w")) {
+                            const w = Number(cells[y][x].getAttribute("g-w"));
+                            output.table!.cells[y][x].connectedColumnCount = w;
+                        }
+                        if (cells[y][x].hasAttribute("g-h")) {
+                            const h = Number(cells[y][x].getAttribute("g-h"));
+                            output.table!.cells[y][x].connectedRowCount = h;
+                        }
+
+                    }
+                }
+                if (output.cx !== undefined) output.table!.x = output.cx;
+                if (output.cy !== undefined) output.table!.y = output.cy;
+                if (output.class !== undefined) output.table!.tableClassName = output.class;
+                while (e.childNodes.length > 0) e.removeChild(e.childNodes.item(0));
             }
             return output;
         }
@@ -111,7 +133,7 @@ namespace GraphTableSVG {
             let b = false;
             let b2 = false;
             for (let i = 0; i < x.length; i++) {
-                const p : MutationRecord = x[i];
+                const p: MutationRecord = x[i];
                 if (p.type == "childList") {
                     b = true;
                     b2 = true;
@@ -125,7 +147,7 @@ namespace GraphTableSVG {
                     }
                 }
             }
-            if(b2){
+            if (b2) {
                 this.fitSizeToOriginalCells(false);
             }
             if (b) this.update();
@@ -134,9 +156,9 @@ namespace GraphTableSVG {
          * セルの元々のサイズに合わせて表のサイズを調整します。
          * @param allowShrink 各行と各列が原罪の幅より短くなることを許す
          */
-        public fitSizeToOriginalCells(allowShrink : boolean){
-            this.rows.forEach((v)=>v.fitHeightToOriginalCell(allowShrink));
-            this.columns.forEach((v)=>v.fitWidthToOriginalCell(allowShrink));
+        public fitSizeToOriginalCells(allowShrink: boolean) {
+            this.rows.forEach((v) => v.fitHeightToOriginalCell(allowShrink));
+            this.columns.forEach((v) => v.fitWidthToOriginalCell(allowShrink));
         }
         /*
         public get x() : number {
@@ -291,9 +313,9 @@ namespace GraphTableSVG {
          * @param option.columnWidth 各列の横幅(px)
          * @param option.tableClassName 表(svgGroup)のクラス属性
          */
-        constructor(svgbox: SVGElement, 
-            option : TableOption = {}) {
-                super(svgbox, option)
+        constructor(svgbox: SVGElement,
+            option: TableOption = {}) {
+            super(svgbox, option)
             if (Common.getGraphTableCSS() == null) Common.setGraphTableCSS("yellow", "red");
 
             //this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -311,112 +333,133 @@ namespace GraphTableSVG {
             //if (option.tableClassName != null) this.svgGroup.setAttribute("class", option.tableClassName);
             this.updateAttributes = [];
 
-            if(option.table === undefined){
-                if(option.rowCount == undefined) option.rowCount = 5;
-                if(option.columnCount == undefined) option.columnCount = 5;
+            if (option.table === undefined) {
+                if (option.rowCount == undefined) option.rowCount = 5;
+                if (option.columnCount == undefined) option.columnCount = 5;
                 this.setSize(option.columnCount, option.rowCount);
-        
-                if(option.rowHeight != undefined){
-                    this.rows.forEach((v)=>v.height = <number>option.rowHeight);
+
+                if (option.rowHeight != undefined) {
+                    this.rows.forEach((v) => v.height = <number>option.rowHeight);
                 }
-                if(option.columnWidth != undefined){
-                    this.columns.forEach((v)=>v.width = <number>option.columnWidth);
-                }    
-            }else{
-                this.constructFromLogicTable(option.table);                
+                if (option.columnWidth != undefined) {
+                    this.columns.forEach((v) => v.width = <number>option.columnWidth);
+                }
+
+                for(let y=0;y<this.rowCount;y++){
+                    for(let x=0;x<this.columnCount;x++){
+                        this.updateCellByLogicCell(null, x, y);
+                    }                        
+                }
+
+            } else {
+                this.constructFromLogicTable(option.table);
             }
 
+        }
+        private updateCellByLogicCell(table: LogicTable | null, x: number, y: number) {
+            const cell = this.cells[y][x];
+
+            if (table != null) {
+                const cellInfo = table.cells[y][x];
+                if (cellInfo != null) {
+                    if (cellInfo.cellClass != null) {
+                        GraphTableSVG.SVG.resetStyle(cell.svgGroup.style);
+                        cell.svgGroup.setAttribute("class", cellInfo.cellClass);
+                    }
+                    if (cellInfo.backgroundClass != null) {
+                        GraphTableSVG.SVG.resetStyle(cell.svgBackground.style);
+                        cell.svgBackground.setAttribute("class", cellInfo.backgroundClass);
+                    }
+                    if (cellInfo.textClass != null) {
+                        GraphTableSVG.SVG.resetStyle(cell.svgText.style);
+                        cell.svgText.setAttribute("class", cellInfo.textClass);
+                    }
+                    if (cellInfo.text != null) {
+                        cell.svgText.setTextContent(cellInfo.text, cellInfo.isLatexMode);
+                    }
+                    if (cellInfo.topBorderClass != null) {
+                        const topCellInfo = y > 0 ? table.cells[y - 1][x] : null;
+                        let borderClass = cellInfo.topBorderClass;
+                        if (topCellInfo != null && topCellInfo.bottomBorderClass != null) {
+                            borderClass = topCellInfo.bottomBorderClass;
+                        }
+                        //if (topCellInfo != null && topCellInfo.bottomBorderClass != cellInfo.topBorderClass) {
+                        //    throw Error(`Forbidden table[${y}][${x}].topBorderClass != table[${y-1}][${x}].bottomBorderClass`);
+                        //}
+
+                        GraphTableSVG.SVG.resetStyle(cell.topBorder.style);
+                        cell.topBorder.setAttribute("class", borderClass);
+                    }
+                    if (cellInfo.leftBorderClass != null) {
+                        const leftCellInfo = x > 0 ? table.cells[y][x - 1] : null;
+
+                        let borderClass = cellInfo.leftBorderClass;
+                        if (leftCellInfo != null && leftCellInfo.rightBorderClass != null) {
+                            borderClass = leftCellInfo.rightBorderClass;
+                        }
+                        /*
+                        if (leftCellInfo != null && leftCellInfo.rightBorderClass != cellInfo.leftBorderClass) {
+                            throw Error(`Forbidden table[${y}][${x}].leftBorderClass != table[${y}][${x-1}].rightBorderClass`);
+                        }
+                        */
+                        GraphTableSVG.SVG.resetStyle(cell.leftBorder.style);
+                        cell.leftBorder.setAttribute("class", borderClass);
+                    }
+                    if (cellInfo.rightBorderClass != null) {
+                        const rightCellInfo = x + 1 < table.columnCount ? table.cells[y][x + 1] : null;
+                        let borderClass = cellInfo.rightBorderClass;
+                        if (rightCellInfo != null && rightCellInfo.leftBorderClass != null) {
+                            borderClass = rightCellInfo.leftBorderClass;
+                        }
+                        /*
+                        if (rightCellInfo != null && rightCellInfo.leftBorderClass != cellInfo.rightBorderClass) {
+                            throw Error(`Forbidden table[${y}][${x}].rightBorderClass != table[${y}][${x + 1}].leftBorderClass`);
+                        }
+                        */
+                        GraphTableSVG.SVG.resetStyle(cell.rightBorder.style);
+                        cell.rightBorder.setAttribute("class", borderClass);
+                    }
+                    if (cellInfo.bottomBorderClass != null) {
+                        const bottomCellInfo = y + 1 < table.rowCount ? table.cells[y + 1][x] : null;
+                        let borderClass = cellInfo.bottomBorderClass;
+                        if (bottomCellInfo != null && bottomCellInfo.topBorderClass != null) {
+                            borderClass = bottomCellInfo.topBorderClass;
+                        }
+                        /*
+                        if (bottomCellInfo != null && bottomCellInfo.topBorderClass != cellInfo.bottomBorderClass) {
+                            throw Error(`Forbidden table[${y}][${x}].bottomBorderClass != table[${y+1}][${x}].topBorderClass`);
+                        }
+                        */
+                        GraphTableSVG.SVG.resetStyle(cell.bottomBorder.style);
+                        cell.bottomBorder.setAttribute("class", borderClass);
+                    }
+                }
+            }
+
+            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingLeft))cell.svgGroup.setPaddingLeft(10);
+            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingRight))cell.svgGroup.setPaddingRight(10);
+            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingTop))cell.svgGroup.setPaddingTop(10);
+            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingBottom))cell.svgGroup.setPaddingBottom(10);
+            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.VerticalAnchor))cell.verticalAnchor = VerticalAnchor.Middle;
+            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.HorizontalAnchor))cell.horizontalAnchor = HorizontalAnchor.Center;
+
+            //if(this.cells[y][x].)
         }
         /**
          * LogicTableからTableを構築します。
          * @param table 入力LogicTable
          */
-        public constructFromLogicTable(table: LogicTable ) {
+        public constructFromLogicTable(table: LogicTable) {
 
             if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
             this.setSize(table.columnWidths.length, table.rowHeights.length);
 
-            if(table.x != null) this.cx = table.x;
-            if(table.y != null) this.cy = table.y;
+            if (table.x != null) this.cx = table.x;
+            if (table.y != null) this.cy = table.y;
 
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
-                    const cellInfo = table.cells[y][x];
-                    if (cellInfo != null) {
-                        const cell = this.cells[y][x];
-                        if (cellInfo.cellClass != null) {
-                            GraphTableSVG.SVG.resetStyle(cell.svgGroup.style);
-                            cell.svgGroup.setAttribute("class", cellInfo.cellClass);
-                        }
-                        if (cellInfo.backgroundClass != null) {
-                            GraphTableSVG.SVG.resetStyle(cell.svgBackground.style);
-                            cell.svgBackground.setAttribute("class", cellInfo.backgroundClass);
-                        }
-                        if (cellInfo.textClass != null) {
-                            GraphTableSVG.SVG.resetStyle(cell.svgText.style);
-                            cell.svgText.setAttribute("class", cellInfo.textClass);
-                        }
-                        if (cellInfo.text != null) {
-                            cell.svgText.setTextContent(cellInfo.text, cellInfo.isLatexMode);
-                        }
-                        if (cellInfo.topBorderClass != null) {
-                            const topCellInfo = y > 0 ? table.cells[y - 1][x] : null;
-                            let borderClass = cellInfo.topBorderClass;
-                            if(topCellInfo != null && topCellInfo.bottomBorderClass != null){
-                                borderClass = topCellInfo.bottomBorderClass;
-                            }
-                            //if (topCellInfo != null && topCellInfo.bottomBorderClass != cellInfo.topBorderClass) {
-                            //    throw Error(`Forbidden table[${y}][${x}].topBorderClass != table[${y-1}][${x}].bottomBorderClass`);
-                            //}
-
-                            GraphTableSVG.SVG.resetStyle(cell.topBorder.style);
-                            cell.topBorder.setAttribute("class", borderClass);
-                        }
-                        if (cellInfo.leftBorderClass != null) {
-                            const leftCellInfo = x > 0 ? table.cells[y][x - 1] : null;
-
-                            let borderClass = cellInfo.leftBorderClass;
-                            if(leftCellInfo != null && leftCellInfo.rightBorderClass != null){
-                                borderClass = leftCellInfo.rightBorderClass;
-                            }
-                            /*
-                            if (leftCellInfo != null && leftCellInfo.rightBorderClass != cellInfo.leftBorderClass) {
-                                throw Error(`Forbidden table[${y}][${x}].leftBorderClass != table[${y}][${x-1}].rightBorderClass`);
-                            }
-                            */
-                            GraphTableSVG.SVG.resetStyle(cell.leftBorder.style);
-                            cell.leftBorder.setAttribute("class", borderClass);
-                        }
-                        if (cellInfo.rightBorderClass != null) {
-                            const rightCellInfo = x + 1 < table.columnCount ? table.cells[y][x + 1] : null;
-                            let borderClass = cellInfo.rightBorderClass;
-                            if(rightCellInfo != null && rightCellInfo.leftBorderClass != null){
-                                borderClass = rightCellInfo.leftBorderClass;
-                            }
-                            /*
-                            if (rightCellInfo != null && rightCellInfo.leftBorderClass != cellInfo.rightBorderClass) {
-                                throw Error(`Forbidden table[${y}][${x}].rightBorderClass != table[${y}][${x + 1}].leftBorderClass`);
-                            }
-                            */
-                            GraphTableSVG.SVG.resetStyle(cell.rightBorder.style);
-                            cell.rightBorder.setAttribute("class", borderClass);
-                        }
-                        if (cellInfo.bottomBorderClass != null) {
-                            const bottomCellInfo = y + 1 < table.rowCount ? table.cells[y + 1][x] : null;
-                            let borderClass = cellInfo.bottomBorderClass;
-                            if(bottomCellInfo != null && bottomCellInfo.topBorderClass != null){
-                                borderClass = bottomCellInfo.topBorderClass;
-                            }
-                            /*
-                            if (bottomCellInfo != null && bottomCellInfo.topBorderClass != cellInfo.bottomBorderClass) {
-                                throw Error(`Forbidden table[${y}][${x}].bottomBorderClass != table[${y+1}][${x}].topBorderClass`);
-                            }
-                            */
-                            GraphTableSVG.SVG.resetStyle(cell.bottomBorder.style);
-                            cell.bottomBorder.setAttribute("class", borderClass);
-                        }
-
-                    }
+                    this.updateCellByLogicCell(table, x, y);
                 }
 
             }
@@ -430,7 +473,7 @@ namespace GraphTableSVG {
                 const w = table.columnWidths[x];
                 if (w != null) this.columns[x].width = w;
             }
-            
+
 
             this.update();
             for (let y = 0; y < this.rowCount; y++) {
@@ -459,10 +502,10 @@ namespace GraphTableSVG {
          * @param option.isLatexMode Trueのときセルの文字列をLatex表記とみなして描画します。
          * 
          */
-        public construct(table: string[][], option : {tableClassName? : string, x? : number, y? :number, rowHeight? : number, columnWidth? : number, isLatexMode?: boolean  } = {}) {
-            if(option.isLatexMode == undefined) option.isLatexMode = false;
-            if(option.x == undefined) option.x = 0;
-            if(option.y == undefined) option.y = 0;
+        public construct(table: string[][], option: { tableClassName?: string, x?: number, y?: number, rowHeight?: number, columnWidth?: number, isLatexMode?: boolean } = {}) {
+            if (option.isLatexMode == undefined) option.isLatexMode = false;
+            if (option.x == undefined) option.x = 0;
+            if (option.y == undefined) option.y = 0;
             [this.cx, this.cy] = [option.x, option.y];
 
 
@@ -477,11 +520,11 @@ namespace GraphTableSVG {
                     this.cells[y][x].svgText.setTextContent(str, <boolean>option.isLatexMode);
                 })
             })
-            if(option.rowHeight != undefined){
-                this.rows.forEach((v)=>v.height = <number>option.rowHeight);
+            if (option.rowHeight != undefined) {
+                this.rows.forEach((v) => v.height = <number>option.rowHeight);
             }
-            if(option.columnWidth != undefined){
-                this.columns.forEach((v)=>v.width = <number>option.columnWidth);
+            if (option.columnWidth != undefined) {
+                this.columns.forEach((v) => v.width = <number>option.columnWidth);
             }
 
         }
@@ -497,7 +540,7 @@ namespace GraphTableSVG {
         public createVBACode2(id: number, slide: string): string[] {
             const lines = new Array(0);
             lines.push(`Sub create${id}(createdSlide As slide)`);
-            
+
             const [main, sub] = this.createVBAMainCode("createdSlide", id);
 
             lines.push(main);
@@ -511,7 +554,7 @@ namespace GraphTableSVG {
          */
         private createVBAMainCode(slideName: string, id: number): [string, string] {
             const fstLines: string[] = [];
-            const lines : string[][] = new Array(0);
+            const lines: string[][] = new Array(0);
 
             fstLines.push(` Dim tableS As shape`);
             fstLines.push(` Dim table_ As table`);
@@ -524,7 +567,7 @@ namespace GraphTableSVG {
             fstLines.push(` Set table_ = tableS.table`);
 
             const tableName = "table_";
-            
+
             for (let y = 0; y < this.rowCount; y++) {
                 lines.push([` Call EditRow(${tableName}.Rows(${y + 1}), ${this.rows[y].height})`]);
             }
@@ -567,20 +610,20 @@ namespace GraphTableSVG {
                     const cell = this.cells[y][x];
                     const upLineStyle = VBATranslateFunctions.colorToVBA(cell.topBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
                     const upLineStrokeWidth = cell.topBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.topBorder.style.strokeWidth) : "";
-                    const upLineVisibility = cell.topBorder.style.visibility != null ? GraphTableSVG.visible(cell.topBorder.style.visibility) : ""; 
+                    const upLineVisibility = cell.topBorder.style.visibility != null ? GraphTableSVG.visible(cell.topBorder.style.visibility) : "";
 
                     lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${upLineStyle}, ${upLineStrokeWidth}, ${upLineVisibility})`]);
 
                     const leftLineStyle = VBATranslateFunctions.colorToVBA(cell.leftBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
                     const leftLineStrokeWidth = cell.leftBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.leftBorder.style.strokeWidth) : "";
-                    const leftLineVisibility = cell.leftBorder.style.visibility != null ? GraphTableSVG.visible(cell.leftBorder.style.visibility) : ""; 
+                    const leftLineVisibility = cell.leftBorder.style.visibility != null ? GraphTableSVG.visible(cell.leftBorder.style.visibility) : "";
 
                     lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${leftLineStyle}, ${leftLineStrokeWidth}, ${leftLineVisibility})`]);
                     if (x + 1 == this.columnCount) {
 
                         const rightLineStyle = VBATranslateFunctions.colorToVBA(cell.rightBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
                         const rightLineStrokeWidth = cell.rightBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.rightBorder.style.strokeWidth) : "";
-                        const rightLineVisibility = cell.rightBorder.style.visibility != null ? GraphTableSVG.visible(cell.rightBorder.style.visibility) : ""; 
+                        const rightLineVisibility = cell.rightBorder.style.visibility != null ? GraphTableSVG.visible(cell.rightBorder.style.visibility) : "";
 
                         lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderRight), ${rightLineStyle}, ${rightLineStrokeWidth}, ${rightLineVisibility})`]);
                     }
@@ -588,7 +631,7 @@ namespace GraphTableSVG {
                     if (y + 1 == this.rowCount) {
                         const bottomLineStyle = VBATranslateFunctions.colorToVBA(cell.bottomBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
                         const bottomLineStrokeWidth = cell.bottomBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.bottomBorder.style.strokeWidth) : "";
-                        const bottomLineVisibility = cell.bottomBorder.style.visibility != null ? GraphTableSVG.visible(cell.bottomBorder.style.visibility) : ""; 
+                        const bottomLineVisibility = cell.bottomBorder.style.visibility != null ? GraphTableSVG.visible(cell.bottomBorder.style.visibility) : "";
 
                         lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderBottom), ${bottomLineStyle}, ${bottomLineStrokeWidth}, ${bottomLineVisibility})`]);
                     }
@@ -613,7 +656,7 @@ namespace GraphTableSVG {
             const [x1, y1] = VBATranslateFunctions.splitCode(lines, `${tableName} as Table`, `${tableName}`, id);
             return [VBATranslateFunctions.joinLines([x0, x1]), y1];
         }
-        
+
 
         /**
          * 表を文字列に変換した結果を返します。
@@ -661,7 +704,7 @@ namespace GraphTableSVG {
             this.relocation();
             //this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
             this._updateCounter++;
-            if(this._updateCounter > 100) throw Error("error");
+            if (this._updateCounter > 100) throw Error("error");
             this._isDrawing = false;
 
         }
@@ -680,7 +723,7 @@ namespace GraphTableSVG {
          */
         private resize() {
             this.rows.forEach((v) => v.resize());
-            this.columns.forEach((v)=>v.resize());
+            this.columns.forEach((v) => v.resize());
 
         }
         /**
@@ -704,7 +747,11 @@ namespace GraphTableSVG {
          * 新しいセルを作成します。
          */
         private createCell(): Cell {
-            return new Cell(this, 0, 0, this.defaultCellClass, this.defaultBorderClass);
+            const cellClass = this.defaultCellClass == null ? undefined : this.defaultCellClass;
+            const borderClass = this.defaultBorderClass == null ? undefined : this.defaultBorderClass;
+
+            const option: CellOption = { cellClass: cellClass, borderClass: borderClass };
+            return new Cell(this, 0, 0, option);
         }
         /*
         Dynamic Method
@@ -724,7 +771,7 @@ namespace GraphTableSVG {
          * @param columnCount 列数 
          * @param rowCount 行数
          */
-        public setSize(columnCount : number, rowCount: number) {
+        public setSize(columnCount: number, rowCount: number) {
 
             this.clear();
             while (this.rowCount < rowCount) {
@@ -742,7 +789,7 @@ namespace GraphTableSVG {
             if (this.columnCount != this.columns.length) throw Error("clear error");
             while (this.rowCount > 1) {
 
-                this.rows[this.rows.length-1].remove(true);
+                this.rows[this.rows.length - 1].remove(true);
 
             }
             while (this.columnCount > 0) {
@@ -772,7 +819,7 @@ namespace GraphTableSVG {
                 this._columns.splice(i, 0, new Column(this, i));
                 //this.columns[i].cellX = i;
                 if (i > 0 && i != this.columnCount - 1) {
-                    
+
                     this.columns[i].cells.forEach((v, j) => {
                         //v.cellY = j;
                         this.cells[j][i - 1].rightBorder = v.leftBorder;

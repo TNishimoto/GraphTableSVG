@@ -4,19 +4,19 @@ namespace GraphTableSVG {
             return <SVGRectElement>this._surface;
         }
 
-        public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(svgbox, option);
             this.updateAttributes.push("width");
             this.updateAttributes.push("height");
 
             this.update();
         }
-        protected createSurface(svgbox: SVGElement, option: TextBoxShapeAttributes = {}): void {
+        protected createSurface(svgbox: SVGElement, option: GTextBoxAttributes = {}): void {
             this._surface = SVG.createRectangle(this.svgGroup, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
         }
 
-        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): CalloutAttributes {
+        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GTextBoxAttributes = {}): GCalloutAttributes {
             GTextBox.constructAttributes(e, removeAttributes, output);
 
 

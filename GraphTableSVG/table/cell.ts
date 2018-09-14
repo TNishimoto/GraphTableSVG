@@ -69,11 +69,11 @@ namespace GraphTableSVG {
         }
 
 
-        constructor(parent: GTable, _px: number, _py: number, cellClass: string | null = null, borderClass: string | null = null) {
+        constructor(parent: GTable, _px: number, _py: number, option : CellOption = {}) {
             this._svgGroup = SVG.createGroup(null);
             this._table = parent;
             this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
-            if (cellClass != null) this.svgGroup.setAttribute("class", cellClass);
+            if (option.cellClass !== undefined) this.svgGroup.setAttribute("class", option.cellClass);
             this.svgGroup.setAttribute(Cell.elementTypeName, "cell-group");
             //this.padding = new Padding();
             this.svgGroup.setAttribute(Cell.cellXName, `${_px}`);
@@ -96,6 +96,7 @@ namespace GraphTableSVG {
             */
 
             //this.parent.svgGroup.appendChild(this.svgGroup);
+            const borderClass = option.borderClass === undefined ? null : option.borderClass;
 
             this.topBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.leftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
@@ -294,51 +295,50 @@ namespace GraphTableSVG {
         テキストとセル間の左のパディング値を返します。
         */
         get paddingLeft(): number {
-            return parsePXString(this.svgGroup.getPropertyStyleValue("padding-left"));
+            return this.svgGroup.getPaddingLeft();
         }
 
         /**
         テキストとセル間の右のパディング値を返します。
         */
         get paddingRight(): number {
-            return parsePXString(this.svgGroup.getPropertyStyleValue("padding-right"));
+            return this.svgGroup.getPaddingRight();
         }
         /**
         テキストとセル間の上のパディング値を返します。
         */
         get paddingTop(): number {
-            return parsePXString(this.svgGroup.getPropertyStyleValue("padding-top"));
+            return this.svgGroup.getPaddingTop();
         }
         /**
         テキストとセル間の下のパディング値を返します。
         */
         get paddingBottom(): number {
-            return parsePXString(this.svgGroup.getPropertyStyleValue("padding-bottom"));
-
+            return this.svgGroup.getPaddingBottom();
         }
         /**
         テキストの水平方向の配置設定を返します。
         */
         get horizontalAnchor(): string | null {
-            return this.svgGroup.getPropertyStyleValue(HorizontalAnchorPropertyName);
+            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor);
         }
         /**
         テキストの水平方向の配置設定を設定します。
         */
         set horizontalAnchor(value: string | null) {
-            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(HorizontalAnchorPropertyName, value);
+            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor, value);
         }
         /**
         テキストの垂直方向の配置設定を返します。
         */
         get verticalAnchor(): string | null {
-            return this.svgGroup.getPropertyStyleValue(VerticalAnchorPropertyName);
+            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor);
         }
         /**
         テキストの垂直方向の配置設定を設定します。
         */
         set verticalAnchor(value: string | null) {
-            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(VerticalAnchorPropertyName, value);
+            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor, value);
         }
 
         /**
@@ -426,7 +426,7 @@ namespace GraphTableSVG {
         get calculatedWidthUsingText(): number {
             if (this.isLocated) {
                 return this.svgText.getBBox().width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
-                    + parsePXString(this.svgGroup.style.paddingLeft) + parsePXString(this.svgGroup.style.paddingRight);
+                    + this.paddingLeft + this.paddingRight;
             } else {
                 return 0;
             }
@@ -436,7 +436,7 @@ namespace GraphTableSVG {
         */
         get calculatedHeightUsingText(): number {
             if (this.isLocated) {
-                return this.svgText.getBBox().height + parsePXString(this.svgGroup.style.paddingTop) + parsePXString(this.svgGroup.style.paddingBottom);
+                return this.svgText.getBBox().height + this.paddingTop + this.paddingBottom;
             } else {
                 return 0;
             }
@@ -1320,5 +1320,6 @@ namespace GraphTableSVG {
             this.bottomBorder.setAttribute(Cell.borderYName, `${this.cellY + 1}`);
             this.bottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
         }
+        
     }
 }

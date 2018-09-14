@@ -1,7 +1,7 @@
 namespace GraphTableSVG {
     export class ShapeArrowCallout extends GPathTextBox {
 
-        public constructor(svgbox: SVGElement | string, option: ShapeArrowCalloutAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GShapeArrowCalloutAttributes = {}) {
             super(svgbox, option);
             if (option.height == undefined) this.height = 100;
             if (option.width == undefined) this.width = 100;
@@ -13,7 +13,7 @@ namespace GraphTableSVG {
 
             this.updateAttributes.push("data-direction");
         }
-        static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : ShapeArrowCalloutAttributes = {}) : ShapeArrowCalloutAttributes {        
+        static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : GShapeArrowCalloutAttributes = {}) : GShapeArrowCalloutAttributes {        
             GTextBox.constructAttributes(e, removeAttributes, output);
             output.arrowNeckWidth = e.gtGetAttributeNumberWithoutNull("arrow-neck-width", 10);
             output.arrowNeckHeight = e.gtGetAttributeNumberWithoutNull("arrow-neck-height", 10);

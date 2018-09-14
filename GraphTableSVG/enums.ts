@@ -273,9 +273,9 @@
         }
     }
     */
-    export const VerticalAnchorPropertyName: string = "--vertical-anchor";
-    export const HorizontalAnchorPropertyName: string = "--horizontal-anchor";
-    export const PathTextAlignmentName: string = "--path-text-alignment";
+    //export const VerticalAnchorPropertyName: string = "--vertical-anchor";
+    //export const HorizontalAnchorPropertyName: string = "--horizontal-anchor";
+    //export const PathTextAlignmentName: string = "--path-text-alignment";
 
 
     /**

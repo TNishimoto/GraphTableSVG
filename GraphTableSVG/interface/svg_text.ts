@@ -5,23 +5,47 @@ interface SVGElement {
     getPaddingRight() : number;
     getPaddingBottom() : number;
 
+    
+    setPaddingLeft(value : number) : void;
+    setPaddingTop(value : number) : void;
+    setPaddingRight(value : number) : void;
+    setPaddingBottom(value : number) : void;
+
 }
 SVGElement.prototype.getPaddingTop = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue("--padding-top", 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, 0)!;
 };
 SVGElement.prototype.getPaddingLeft = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue("--padding-left", 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, 0)!;
 };
 SVGElement.prototype.getPaddingRight = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue("--padding-right", 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, 0)!;
 };
 SVGElement.prototype.getPaddingBottom = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue("--padding-bottom", 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, 0)!;
 };
+
+SVGElement.prototype.setPaddingLeft = function (value: number) {
+    const p: SVGElement = this;    
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, value.toString());
+};
+SVGElement.prototype.setPaddingTop = function (value: number) {
+    const p: SVGElement = this;    
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, value.toString());
+};
+SVGElement.prototype.setPaddingRight = function (value: number) {
+    const p: SVGElement = this;    
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, value.toString());
+};
+SVGElement.prototype.setPaddingBottom = function (value: number) {
+    const p: SVGElement = this;    
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, value.toString());
+};
+
 
 interface SVGTextElement {
     /**
@@ -94,35 +118,35 @@ SVGTextElement.prototype.gtSetXY = function (rect: GraphTableSVG.Rectangle, vAnc
 
 SVGTextElement.prototype.getMarginLeft = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--margin-left", 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginLeft, 0)!;
 };
 SVGTextElement.prototype.setMarginLeft = function (value: number) {
     const p: SVGTextElement = this;    
-    p.setPropertyStyleValue("--margin-left", value.toString());
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.marginLeft, value.toString());
 };
 SVGTextElement.prototype.getMarginTop = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--margin-top", 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginTop, 0)!;
 };
 SVGTextElement.prototype.setMarginTop = function (value: number) {
     const p: SVGTextElement = this;    
-    p.setPropertyStyleValue("--margin-top", value.toString());
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.marginTop, value.toString());
 };
 SVGTextElement.prototype.getMarginRight = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--margin-right", 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginRight, 0)!;
 };
 SVGTextElement.prototype.setMarginRight = function (value: number) {
     const p: SVGTextElement = this;    
-    p.setPropertyStyleValue("--margin-right", value.toString());
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.marginRight, value.toString());
 };
 SVGTextElement.prototype.getMarginBottom = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue("--margin-bottom", 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginBottom, 0)!;
 };
 SVGTextElement.prototype.setMarginBottom = function (value: number) {
     const p: SVGTextElement = this;    
-    p.setPropertyStyleValue("--margin-bottom", value.toString());
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.marginBottom, value.toString());
 };
 
 

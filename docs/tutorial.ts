@@ -1,5 +1,5 @@
 
-import { SET, Macroup, MacroupLib, HTMLLib, libxmljs } from 'macroup';
+import { SET, Macroup, MacroupLib, HTMLLib, libxmljs, TextLoader } from 'macroup';
 import path = require('path');
 
 const pack = new Macroup.MacroPackage("tutorial");
@@ -32,6 +32,10 @@ function createLoadCode(e: libxmljs.Element, dir: string): libxmljs.Element {
         img.attr({ src: filePath, "style": "max-width:100%" });
         //img.attr({src:v });        
         return img;
+    } else if(e.attr("id") != null){
+        const id : string = e.attr("id").value()!;
+        return TextLoader.loadTextByID(filePath, dir, id);
+        //throw Error("error");
     } else {
         return HTMLLib.createReferenceCodeTag(filePath, dir, e.doc());
     }
@@ -164,6 +168,8 @@ pack.midMacros.elements["xarticle"] = (e: libxmljs.Element, info: Macroup.Settin
         } else if (v.name() == "load") {
             if (tmp.length > 0) newNodes.push(tempora(tmp, e));
             newNodes.push(createLoadCode(v, dir));
+            const br = new libxmljs.Element(info.document, "br");
+            newNodes.push(br);
         }
         else if (v.name() == "dbr") {
             //if(title.text() == "はじめに")console.log(v.text());

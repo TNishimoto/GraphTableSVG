@@ -4,16 +4,16 @@ namespace GraphTableSVG {
             return <SVGEllipseElement>this._surface;
         }
 
-        public constructor(svgbox: SVGElement | string, option: TextBoxShapeAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(svgbox, option);
             //this.update();
         }
-        protected createSurface(svgbox : SVGElement, option : TextBoxShapeAttributes = {}) : void {
+        protected createSurface(svgbox : SVGElement, option : GTextBoxAttributes = {}) : void {
             this._surface = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
         }
 
-        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: TextBoxShapeAttributes = {}): CalloutAttributes {
+        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GTextBoxAttributes = {}): GCalloutAttributes {
             GTextBox.constructAttributes(e, removeAttributes, output);
 
 

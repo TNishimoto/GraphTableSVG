@@ -1,4 +1,4 @@
-interface SVGElement {
+interface Element {
     getActiveStyle(): CSSStyleDeclaration;
     getPropertyStyleValue(name: string): string | null;
     getPropertyStyleNumberValue(name: string, defaultValue: number | null): number | null;
@@ -16,6 +16,7 @@ interface SVGElement {
     gtGetAttribute(name: string, defaultValue: string | null): string | null;
 
     gtGetAttributes() : {name : string, value : string}[];
+    hasStyleAttribute(name : string) : boolean; 
 
     /*
     getX(): number;
@@ -24,8 +25,13 @@ interface SVGElement {
     setY(value: number): void;
     */
 }
-SVGElement.prototype.gtGetAttribute = function(name: string, defaultValue: string | null = null): string | null{
-    const item: SVGElement = this;
+
+Element.prototype.hasStyleAttribute = function(name: string): boolean {
+    const p = this.getPropertyStyleValue(name);
+    return p !== null;
+}
+Element.prototype.gtGetAttribute = function(name: string, defaultValue: string | null = null): string | null{
+    const item: Element = this;
 
     const value = item.getAttribute(name);
     if (value != null) {
@@ -35,8 +41,8 @@ SVGElement.prototype.gtGetAttribute = function(name: string, defaultValue: strin
     }
 }
 
-SVGElement.prototype.gtGetAttributes = function () {
-    const p: SVGElement = this;
+Element.prototype.gtGetAttributes = function () {
+    const p: Element = this;
     const r: {name : string, value : string}[] = [];
     for(let i=0;i<p.attributes.length;i++){
         const item = p.attributes.item(i);
@@ -46,17 +52,17 @@ SVGElement.prototype.gtGetAttributes = function () {
     }
     return r;
 }
-SVGElement.prototype.getActiveStyle = function () {
-    const p: SVGElement = this;
+Element.prototype.getActiveStyle = function () {
+    const p: Element = this;
     const r = p.getAttribute("class");
     if (r == null) {
-        return p.style;
+        return (<any>p).style;
     } else {
         return getComputedStyle(p);
     }
 }
-SVGElement.prototype.gtGetAttributeNumber = function(name: string, defaultValue: number | null = null): number | null{
-    const item: SVGElement = this;
+Element.prototype.gtGetAttributeNumber = function(name: string, defaultValue: number | null = null): number | null{
+    const item: Element = this;
 
     const value = item.getAttribute(name);
     if (value != null) {
@@ -65,8 +71,8 @@ SVGElement.prototype.gtGetAttributeNumber = function(name: string, defaultValue:
         return defaultValue;
     }
 }
-SVGElement.prototype.gtGetAttributeNumberWithUndefined = function(name: string): number | undefined{
-    const item: SVGElement = this;
+Element.prototype.gtGetAttributeNumberWithUndefined = function(name: string): number | undefined{
+    const item: Element = this;
 
     const value = item.getAttribute(name);
     if (value != null) {
@@ -75,8 +81,8 @@ SVGElement.prototype.gtGetAttributeNumberWithUndefined = function(name: string):
         return undefined;
     }
 }
-SVGElement.prototype.gtGetAttributeStringWithUndefined = function(name: string): string | undefined{
-    const item: SVGElement = this;
+Element.prototype.gtGetAttributeStringWithUndefined = function(name: string): string | undefined{
+    const item: Element = this;
 
     const value = item.getAttribute(name);
     if (value != null) {
@@ -85,8 +91,8 @@ SVGElement.prototype.gtGetAttributeStringWithUndefined = function(name: string):
         return undefined;
     }
 }
-SVGElement.prototype.gtGetAttributeBooleanWithUndefined = function(name: string): boolean | undefined{
-    const item: SVGElement = this;
+Element.prototype.gtGetAttributeBooleanWithUndefined = function(name: string): boolean | undefined{
+    const item: Element = this;
 
     const value = item.getAttribute(name);
     if (value != null) {
@@ -95,8 +101,8 @@ SVGElement.prototype.gtGetAttributeBooleanWithUndefined = function(name: string)
         return undefined;
     }
 }
-SVGElement.prototype.gtGetStyleBooleanWithUndefined = function(name: string): boolean | undefined{
-    const item: SVGElement = this;
+Element.prototype.gtGetStyleBooleanWithUndefined = function(name: string): boolean | undefined{
+    const item: Element = this;
 
     const value = item.getPropertyStyleValue(name);
     if (value != null) {
@@ -106,8 +112,8 @@ SVGElement.prototype.gtGetStyleBooleanWithUndefined = function(name: string): bo
     }
 }
 
-SVGElement.prototype.gtGetAttributeNumberWithoutNull = function(name: string, defaultValue: number = 0): number{
-    const item: SVGElement = this;
+Element.prototype.gtGetAttributeNumberWithoutNull = function(name: string, defaultValue: number = 0): number{
+    const item: Element = this;
 
     const value = item.getAttribute(name);
     if (value != null) {
@@ -117,8 +123,8 @@ SVGElement.prototype.gtGetAttributeNumberWithoutNull = function(name: string, de
     }
 }
 
-SVGElement.prototype.getPropertyStyleValueWithDefault = function (name: string, defaultValue: string): string {
-    const item: SVGElement = this;
+Element.prototype.getPropertyStyleValueWithDefault = function (name: string, defaultValue: string): string {
+    const item: Element = this;
 
     const p = item.getPropertyStyleValue(name);
     if (p == null) {
@@ -127,9 +133,9 @@ SVGElement.prototype.getPropertyStyleValueWithDefault = function (name: string, 
         return p;
     }
 }
-SVGElement.prototype.getPropertyStyleValue = function (name: string): string | null {
-    const item: SVGElement = this;
-    const p = item.style.getPropertyValue(name).trim();
+Element.prototype.getPropertyStyleValue = function (name: string): string | null {
+    const item: Element = this;
+    const p = (<any>item).style.getPropertyValue(name).trim();
     if (p.length == 0) {
         const r = item.getAttribute("class");
         if (r == null) {
@@ -149,8 +155,8 @@ SVGElement.prototype.getPropertyStyleValue = function (name: string): string | n
         return p;
     }
 }
-SVGElement.prototype.getPropertyStyleNumberValue = function (name: string, defaultValue: number | null = null): number | null {
-    const item: SVGElement = this;
+Element.prototype.getPropertyStyleNumberValue = function (name: string, defaultValue: number | null = null): number | null {
+    const item: Element = this;
     const p = item.getPropertyStyleValue(name);
     if (p != null) {
         return GraphTableSVG.Common.toPX(p);
@@ -158,8 +164,8 @@ SVGElement.prototype.getPropertyStyleNumberValue = function (name: string, defau
         return defaultValue;
     }
 }
-SVGElement.prototype.setPropertyStyleValue = function (name: string, value: string | null) {
-    const item: SVGElement = this;
+Element.prototype.setPropertyStyleValue = function (name: string, value: string | null) {
+    const item: Element = this;
 
-    item.style.setProperty(name, value);
+    (<any>item).style.setProperty(name, value);
 }

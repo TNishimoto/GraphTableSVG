@@ -3,6 +3,9 @@
 <head>
    <title>Tutorial</title>
    <link rel="stylesheet" href="tutorial.css" type="text/css"/>
+   <link rel="stylesheet" href="svg/sample_graph.css" type="text/css"/>
+   <script src="scripts/graph_table_svg.js"></script>
+   <script src="tutorial_script.js"></script>
    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/atelier-sulphurpool.dark.min.css" rel="stylesheet"/>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
    <script>hljs.initHighlightingOnLoad();</script>
@@ -124,9 +127,23 @@ SVG入門の参考として
 &lt;/body&gt;&#13;
 &lt;/html&gt;</code></pre>
       </div>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="svg/sample_hello1.html">実行結果</a></section>
-      <img src="images/object1.png" style="max-width:100%"/>
+      <svg viewbox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
+         <g-rect cx="100" cy="100">hello world!</g-rect>
+         <!--
+            openSVGによって以下のように展開される。
+            <g data-group-type="g-rect" transform="matrix(1 0 0 1 100 100)">
+                <rect width="25" height="25" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); stroke-width: 1pt;" x="-12.5" y="-12.5"></rect>
+                <text style="fill: black; font-size: 14px; font-weight: bold; font-family: Times New Roman;" x="-35.96666717529297" y="4.5">
+                    <tspan>hello world!</tspan>
+                </text>
+            </g>
+        -->
+      </svg>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　
+
 最も簡単なHello Worldサンプル。
 GraphTableSVGにはいくつかのカスタムSVG要素が存在し、オブジェクトはSVGのいくつかの要素を格納したG要素である。
 g-rect要素はその内の一つで、text要素とrect要素を格納している。
@@ -256,8 +273,106 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
 &#13;
 &lt;/html&gt;</code></pre>
       </div>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="svg/sample_hello2.html">実行結果</a></section>
-      <img src="images/object2.png" style="max-width:100%"/>
+      <svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
+         <g-rect cx="100" cy="100">g-rect</g-rect>
+         <!--
+            <g data-group-type="g-rect" ...>
+                <rect ...></rect>
+                <text ...>
+                    <tspan>g-rect</tspan>
+                </text>
+            </g>
+        -->
+         <g-ellipse cx="100" cy="200">g-ellipse</g-ellipse>
+         <!--
+            <g data-group-type="g-ellipse" ...>
+                <ellipse ...></ellipse>
+                <text ...>
+                    <tspan>g-ellipse</tspan>
+                </text>
+            </g>
+        -->
+         <g-callout cx="200" cy="100">g-callout</g-callout>
+         <!--
+            <g data-group-type="g-callout" ...>
+                <path ...></path>
+                <text ...>
+                    <tspan>g-callout</tspan>
+                </text>
+            </g>
+        -->
+         <g-sarrowcallout cx="300" cy="100">g-sarrowcallout</g-sarrowcallout>
+         <!--
+            <g data-group-type="g-sarrowcallout" ...>
+                <path ...></path>
+                <text ...>
+                    <tspan>g-sarrowcallout</tspan>
+                </text>
+            </g>
+        -->
+         <g-edge x1="100" y1="300" x2="300" y2="300">g-edge</g-edge>
+         <!--
+            <g data-group-type="g-edge" ...>
+                <path ...></path>
+                <text ...>
+                    <textPath ...>
+                        <tspan>g-edge</tspan>
+                    </textPath>
+                </text>
+            </g>
+        -->
+         <g-table cx="300" cy="400">
+            <row>
+               <cell>g-table</cell>
+               <cell></cell>
+               <cell></cell>
+            </row>
+            <row>
+               <cell></cell>
+               <cell></cell>
+               <cell></cell>
+            </row>
+         </g-table>
+         <!--
+            <g data-group-type="g-table" ...>
+                //cells
+                <g ...>
+                    <rect ...></rect>
+                    <text ...><tspan></tspan></text>
+                </g>
+                <g  ...>
+                    <rect ...></rect>
+                    <text ...><tspan></tspan></text>
+                </g>
+                ...
+                //borders
+                <line ...></line>
+                <line ...></line>
+                <line ...></line>
+                <line ...></line>
+                ...
+            </g>
+        -->
+         <g-graph cx="100" cy="400">
+            <g-ellipse id="g1" cx="0" cy="0">g-graph</g-ellipse>
+            <g-ellipse id="g2" cx="-50" cy="100"></g-ellipse>
+            <g-ellipse id="g3" cx="50" cy="100"></g-ellipse>
+            <g-edge begin-vertex="g1" end-vertex="g2"></g-edge>
+            <g-edge begin-vertex="g1" end-vertex="g3"></g-edge>
+         </g-graph>
+         <!--
+            <g data-group-type="g-graph" ...">
+                <g-ellipse>...</g-ellipse>
+                <g-ellipse>...</g-ellipse>
+                <g-ellipse>...</g-ellipse>
+                <g-edge>...</g-edge>
+                <g-edge>...</g-edge>
+            </g>
+        -->
+      </svg>
+      <br/>
    </article>
    <article title="Table Sample : hello world" id="xarticle-3" after="article" class="sample-article">
       <h2>Table Sample : hello world</h2>
@@ -274,6 +389,7 @@ window.onload = () =&gt; {&#13;
 };&#13;
 </code></pre>
       </div>
+      <br/>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_hello.html</h4>
          <pre><code>&lt;!DOCTYPE html&gt;&#13;
@@ -297,7 +413,9 @@ window.onload = () =&gt; {&#13;
 &#13;
 &lt;/html&gt;</code></pre>
       </div>
+      <br/>
       <img src="images/table_hello1.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_hello.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 Table（表）を作成する例。
@@ -310,6 +428,7 @@ Table（表）を作成する例。
 ブラウザのデバッグ機能を用いてTableがSVGでどのように構成されているか見ることも編集することも可能。
 </section>
       <img src="images/table_hello2.png" style="max-width:100%"/>
+      <br/>
    </article>
    <article title="Table Sample : Tableの構成" id="xarticle-4" after="article" class="sample-article">
       <h2>Table Sample : Tableの構成</h2>
@@ -320,7 +439,9 @@ Tableは各Cellを表すSVGGElementと各枠を表すSVGLineElementをSVGGElemen
 これらはブラウザのデバッグ機能で確認できる。
 </section>
       <img src="images/table2.png" style="max-width:100%"/>
+      <br/>
       <img src="images/table3.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　
 参考のために各SVG要素のリファレンスを貼っておく。
 <ol>
@@ -373,6 +494,7 @@ window.onload = () =&gt; {&#13;
 };&#13;
 </code></pre>
       </div>
+      <br/>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_style.css</h4>
          <pre><code>body {&#13;
@@ -399,7 +521,9 @@ window.onload = () =&gt; {&#13;
     stroke-width: 8pt;&#13;
 }</code></pre>
       </div>
+      <br/>
       <img src="images/table_style.png" style="max-width:100%"/>
+      <br/>
    </article>
    <article title="Table Sample : デフォルトクラス名の指定" id="xarticle-5" after="article" class="sample-article">
       <h2>Table Sample : デフォルトクラス名の指定</h2>
@@ -418,6 +542,7 @@ window.onload = () =&gt; {&#13;
 };&#13;
 </code></pre>
       </div>
+      <br/>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_style_select.css</h4>
          <pre><code>body {&#13;
@@ -454,7 +579,9 @@ window.onload = () =&gt; {&#13;
 }&#13;
 </code></pre>
       </div>
+      <br/>
       <img src="images/table_select_style.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　
 Tableの各セルや枠にCSSを適用するためには各要素のクラス属性を設定しないといけない。
 これは面倒なので、TableのCSSからセルや枠のCSSも設定できるようにカスタム属性を追加している。
@@ -491,7 +618,9 @@ window.onload = () =&gt; {&#13;
 };&#13;
 </code></pre>
       </div>
+      <br/>
       <img src="images/table_rowcolumn.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_width.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 各行の高さ、各列の幅は<a href="./typedoc/classes/graphtablesvg.table.html#rows" target="_blank">Table.rows</a>と<a href="./typedoc/classes/graphtablesvg.table.html#columns" target="_blank">Table.columns</a>のプロパティから設定できる。
@@ -531,7 +660,9 @@ window.onload = () =&gt; {&#13;
 };&#13;
 </code></pre>
       </div>
+      <br/>
       <img src="images/table_merge.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_merge.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 隣り合うセルを結合することが出来る。<a href="./typedoc/classes/graphtablesvg.cell.html#mergeright" target="_blank">Cell.mergeRight</a>は右のセルと結合、<a href="./typedoc/classes/graphtablesvg.cell.html#mergebottom" target="_blank">Cell.mergeBottom</a>は下のセルと結合する。
@@ -575,6 +706,7 @@ window.onload = () =&gt; {&#13;
 };&#13;
 </code></pre>
       </div>
+      <br/>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_anchor.css</h4>
          <pre><code>body {&#13;
@@ -616,7 +748,9 @@ window.onload = () =&gt; {&#13;
     --horizontal-anchor : right;&#13;
 }</code></pre>
       </div>
+      <br/>
       <img src="images/table_anchor.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_anchor.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 Powerpointの表のようにセル内のテキスト位置を指定できる。
@@ -646,7 +780,9 @@ window.onload = () =&gt; {&#13;
 };&#13;
 </code></pre>
       </div>
+      <br/>
       <img src="images/table_logic.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_logic.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　<a href="./typedoc/classes/graphtablesvg.logictable.html" target="_blank">LogicTable</a>クラスから表を作成することが出来る。
 LogicTableクラスはTableクラスから描画関係を取り除いたクラスである。
@@ -683,6 +819,7 @@ LogicTableクラスはTableクラスから描画関係を取り除いたクラ�
 &#13;
 &lt;/html&gt;</code></pre>
       </div>
+      <br/>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_powerpoint.js</h4>
          <pre><code>let table = null;&#13;
@@ -693,9 +830,13 @@ window.onload = () =&gt; {&#13;
 };&#13;
 </code></pre>
       </div>
+      <br/>
       <img src="images/table_powerpoint1.png" style="max-width:100%"/>
+      <br/>
       <img src="images/table_powerpoint2.png" style="max-width:100%"/>
+      <br/>
       <img src="images/table_powerpoint3.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="table/sample_table_powerpoint.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 表をVBAのコードに変換し、Powerpointのマクロとして実行することでスライド上に表を作成することが出来る。
@@ -734,6 +875,7 @@ SVGをPNG画像に変換して保存することが出来る。<a href="./typedo
 &#13;
 &lt;/html&gt;</code></pre>
       </div>
+      <br/>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_hello.js</h4>
          <pre><code>let graph = null;&#13;
@@ -749,7 +891,9 @@ window.onload = () =&gt; {        &#13;
     //vertex.svgText.textContent = "hello world";    &#13;
 };</code></pre>
       </div>
+      <br/>
       <img src="images/graph_hello.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_hello.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 頂点が一つだけのグラフのHello World。
@@ -784,7 +928,9 @@ window.onload = () =&gt; {&#13;
     //edge1.svgTextPath.setTextContent("efgh");&#13;
 };</code></pre>
       </div>
+      <br/>
       <img src="images/graph_edge.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_edge.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 辺を使って頂点を接続する例。
@@ -801,7 +947,9 @@ window.onload = () =&gt; {&#13;
 下の図は頂点や辺を構成しているSVG要素の参考図である。表と同じように直接SVGを編集してスタイルを変更することが可能。
 </section>
       <img src="images/graph1.png" style="max-width:100%"/>
+      <br/>
       <img src="images/graph_edge2.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_edge2.html">実行結果</a></section>
    </article>
    <article title="Graph Sample : Vertex and Edge" id="xarticle-13" after="article" class="sample-article">
@@ -830,7 +978,9 @@ window.onload = () =&gt; {&#13;
     &#13;
 };</code></pre>
       </div>
+      <br/>
       <img src="images/graph_vertex.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_vertex.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 
@@ -873,7 +1023,9 @@ window.onload = () =&gt; {&#13;
     &#13;
 };</code></pre>
       </div>
+      <br/>
       <img src="images/graph_connector.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_connector.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 頂点上の辺の接続位置は選択することが出来る。図形がCircleの場合、真上から45度刻みに8方向選ぶことが出来る。Rectangleの場合は真上から90度刻みに4方向。
@@ -900,6 +1052,7 @@ window.onload = () =&gt; {&#13;
     &#13;
 };</code></pre>
       </div>
+      <br/>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_class.css</h4>
          <pre><code>body {&#13;
@@ -948,7 +1101,9 @@ window.onload = () =&gt; {&#13;
 }&#13;
 </code></pre>
       </div>
+      <br/>
       <img src="images/graph_class.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_class.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 表の場合と同様に、頂点や辺のsvgGroupに設定したCSSから構成している各種SVG要素のプロパティを設定することが出来る。
@@ -982,7 +1137,9 @@ window.onload = () =&gt; {    &#13;
     &#13;
 };</code></pre>
       </div>
+      <br/>
       <img src="images/graph_textpath.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　
 
 <a href="graph/sample_graph_textpath.html">実行結果</a></section>
@@ -1025,7 +1182,9 @@ window.onload = () =&gt; {&#13;
     &#13;
 };</code></pre>
       </div>
+      <br/>
       <img src="images/graph_dash.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_dash_style.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 Edgeの線は点線にすることが出来る。svgTextPathのstroke-dasharrayを編集することで実現できるが、本ライブラリで用意されたGraphTableSVG.msoDashStyle.setStyleで点線の種類を選択することが望ましい。
@@ -1112,8 +1271,11 @@ function XYInterval(px, py){&#13;
     graph.relocate();&#13;
 }</code></pre>
       </div>
+      <br/>
       <img src="images/graph_tree_children.png" style="max-width:100%"/>
+      <br/>
       <img src="images/graph_tree_leave.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_tree.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　
 現在、graphで描画されているのが木である場合に適用できる各頂点の配置関数がライブラリに用意されている。
@@ -1156,7 +1318,9 @@ window.onload = () =&gt; {&#13;
     &#13;
 };</code></pre>
       </div>
+      <br/>
       <img src="images/graph_logictree.png" style="max-width:100%"/>
+      <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_logictree.html">実行結果</a></section>
       <section ignore-format="true" class="sample-commentary">　<a href="./typedoc/classes/graphtablesvg.logictree.html" target="_blank">LogicTree</a>はLogicTableと同様に、SVG要素を取り除いて木の形や各頂点や辺の設定プロパティだけで構成されたクラスである。
 SVG要素として構築する前にあらかじめ木の形が決まっているときはこのクラスを通すと設計がすっきりするかもしれない。
