@@ -6,7 +6,64 @@ namespace GraphTableSVG {
     */
     export class GTable extends GObject {
 
+        /*
+                 constructor
+                */
+        /**
+         * コンストラクタです。
+         */
+        constructor(svgbox: SVGElement,
+            option: TableOption = {}) {
+            super(svgbox, option)
+            if (Common.getGraphTableCSS() == null) Common.setGraphTableCSS("yellow", "red");
 
+            this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            this._svgHiddenGroup.style.visibility = "hidden";
+            this.svgGroup.appendChild(this.svgHiddenGroup);
+            this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
+            this.updateAttributes = [];
+
+            if (option.table === undefined) {
+                if (option.rowCount == undefined) option.rowCount = 5;
+                if (option.columnCount == undefined) option.columnCount = 5;
+                this.setSize(option.columnCount, option.rowCount);
+
+                if (option.rowHeight != undefined) {
+                    this.rows.forEach((v) => v.height = <number>option.rowHeight);
+                }
+                if (option.columnWidth != undefined) {
+                    this.columns.forEach((v) => v.width = <number>option.columnWidth);
+                }
+                for (let y = 0; y < this.rowCount; y++) {
+                    for (let x = 0; x < this.columnCount; x++) {
+                        this.updateCellByLogicCell(null, x, y);
+                    }
+                }
+
+            } else {
+                this.constructFromLogicTable(option.table);
+            }
+
+            if (option.cx !== undefined) this.cx = option.cx;
+            if (option.cy !== undefined) this.cy = option.cy;
+
+
+        }
+        get width(): number {
+            let width = 0;
+            this.columns.forEach((v) => width += v.width);
+            return width;
+        }
+        set width(value: number) {
+        }
+        get height(): number {
+            let height = 0;
+            this.rows.forEach((v) => height += v.height);
+            return height;
+
+        }
+        set height(value: number) {
+        }
         static constructAttributes(e: SVGElement,
             removeAttributes: boolean = false, output: TableOption = {}): TableOption {
 
@@ -23,13 +80,6 @@ namespace GraphTableSVG {
                     cells[i] = cellArray;
                     if (columnSize < cellArray.length) columnSize = cellArray.length;
                 });
-                /*
-                const firstColumnSize = cells[0];
-                const b = cells.every((v)=>v.length == firstColumnSize);
-                if(!b){
-                    throw Error("Different Column Sizes!");
-                }
-                */
                 output.table = new LogicTable({ rowCount: rows.length, columnCount: columnSize });
 
                 const widthsStr = e.getPropertyStyleValue("--widths");
@@ -44,19 +94,28 @@ namespace GraphTableSVG {
 
                     for (let x = 0; x < cells[y].length; x++) {
                         output.table!.cells[y][x].text = cells[y][x].innerHTML;
-                        if (cells[y][x].hasAttribute("g-w")) {
-                            const w = Number(cells[y][x].getAttribute("g-w"));
+                        if (cells[y][x].hasAttribute("w")) {
+                            const w = Number(cells[y][x].getAttribute("w"));
                             output.table!.cells[y][x].connectedColumnCount = w;
                         }
-                        if (cells[y][x].hasAttribute("g-h")) {
-                            const h = Number(cells[y][x].getAttribute("g-h"));
+                        if (cells[y][x].hasAttribute("h")) {
+                            const h = Number(cells[y][x].getAttribute("h"));
                             output.table!.cells[y][x].connectedRowCount = h;
+                        }
+                        const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(cells[y][x]).filter((v) => v.nodeName == "t");
+                        if (tNodes.length > 0) {
+                            tNodes.forEach((v,i) => {
+                                if (i > 0 && !v.hasAttribute("newline"))
+                                    v.setAttribute("newline", "true")
+                            }
+                            )
+                            output.table!.cells[y][x].tTexts = tNodes;
                         }
 
                     }
                 }
-                if (output.cx !== undefined) output.table!.x = output.cx;
-                if (output.cy !== undefined) output.table!.y = output.cy;
+                if (output.x !== undefined) output.table!.x = output.x;
+                if (output.y !== undefined) output.table!.y = output.y;
                 if (output.class !== undefined) output.table!.tableClassName = output.class;
                 while (e.childNodes.length > 0) e.removeChild(e.childNodes.item(0));
             }
@@ -298,64 +357,7 @@ namespace GraphTableSVG {
             return rect;
         }
 
-        /*
-         constructor
-        */
-        /**
-         * コンストラクタです。
-         * @param svgbox 表を置くsvg要素
-         * @param option 表情報
-         * @param option.x 表のx座標
-         * @param option.y 表のy座標
-         * @param option.rowCount 表の行数
-         * @param option.columnCount 表の列数
-         * @param option.rowHeight 各行の縦幅(px)
-         * @param option.columnWidth 各列の横幅(px)
-         * @param option.tableClassName 表(svgGroup)のクラス属性
-         */
-        constructor(svgbox: SVGElement,
-            option: TableOption = {}) {
-            super(svgbox, option)
-            if (Common.getGraphTableCSS() == null) Common.setGraphTableCSS("yellow", "red");
 
-            //this._svgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            //svgbox.appendChild(this.svgGroup);
-
-            this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            this._svgHiddenGroup.style.visibility = "hidden";
-            //svgbox.appendChild(this.svgHiddenGroup);
-            this.svgGroup.appendChild(this.svgHiddenGroup);
-
-            this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
-            //this.svgLineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            //this.svgGroup.appendChild(this.svgLineGroup);
-
-            //if (option.tableClassName != null) this.svgGroup.setAttribute("class", option.tableClassName);
-            this.updateAttributes = [];
-
-            if (option.table === undefined) {
-                if (option.rowCount == undefined) option.rowCount = 5;
-                if (option.columnCount == undefined) option.columnCount = 5;
-                this.setSize(option.columnCount, option.rowCount);
-
-                if (option.rowHeight != undefined) {
-                    this.rows.forEach((v) => v.height = <number>option.rowHeight);
-                }
-                if (option.columnWidth != undefined) {
-                    this.columns.forEach((v) => v.width = <number>option.columnWidth);
-                }
-
-                for(let y=0;y<this.rowCount;y++){
-                    for(let x=0;x<this.columnCount;x++){
-                        this.updateCellByLogicCell(null, x, y);
-                    }                        
-                }
-
-            } else {
-                this.constructFromLogicTable(option.table);
-            }
-
-        }
         private updateCellByLogicCell(table: LogicTable | null, x: number, y: number) {
             const cell = this.cells[y][x];
 
@@ -374,9 +376,12 @@ namespace GraphTableSVG {
                         GraphTableSVG.SVG.resetStyle(cell.svgText.style);
                         cell.svgText.setAttribute("class", cellInfo.textClass);
                     }
+                    cellInfo.createTextElement(cell.svgText);
+                    /*
                     if (cellInfo.text != null) {
                         cell.svgText.setTextContent(cellInfo.text, cellInfo.isLatexMode);
                     }
+                    */
                     if (cellInfo.topBorderClass != null) {
                         const topCellInfo = y > 0 ? table.cells[y - 1][x] : null;
                         let borderClass = cellInfo.topBorderClass;
@@ -436,12 +441,12 @@ namespace GraphTableSVG {
                 }
             }
 
-            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingLeft))cell.svgGroup.setPaddingLeft(10);
-            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingRight))cell.svgGroup.setPaddingRight(10);
-            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingTop))cell.svgGroup.setPaddingTop(10);
-            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingBottom))cell.svgGroup.setPaddingBottom(10);
-            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.VerticalAnchor))cell.verticalAnchor = VerticalAnchor.Middle;
-            if(!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.HorizontalAnchor))cell.horizontalAnchor = HorizontalAnchor.Center;
+            if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingLeft)) cell.svgGroup.setPaddingLeft(10);
+            if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingRight)) cell.svgGroup.setPaddingRight(10);
+            if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingTop)) cell.svgGroup.setPaddingTop(10);
+            if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingBottom)) cell.svgGroup.setPaddingBottom(10);
+            if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.VerticalAnchor)) cell.verticalAnchor = VerticalAnchor.Middle;
+            if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.HorizontalAnchor)) cell.horizontalAnchor = HorizontalAnchor.Center;
 
             //if(this.cells[y][x].)
         }

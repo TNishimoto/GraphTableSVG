@@ -36,7 +36,7 @@ interface SVGTextPathElement {
     setTextContent(text: string): void;
 }
 SVGTextPathElement.prototype.setTextContent = function (text: string, isLatexMode: boolean = false) {
-    GraphTableSVG.SVG.setTextToTextPath(this, text, isLatexMode);
+    GraphTableSVG.SVGTextBox.setTextToTextPath(this, text, isLatexMode);
 };
 
 

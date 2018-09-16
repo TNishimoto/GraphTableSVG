@@ -5,17 +5,25 @@ namespace GraphTableSVG {
         public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(svgbox, option)
 
+            /*
             this._svgText = GTextBox.createSVGText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
             this._textObserver = new MutationObserver(this.textObserverFunc);
             const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
             this._textObserver.observe(this.svgText, option2);
+            */
 
             const _option = <GTextBoxAttributes>this.initializeOption(option);
+
+            this._svgText = GTextBox.createSVGText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass));
+            this.svgGroup.appendChild(this.svgText);
+            this._textObserver = new MutationObserver(this.textObserverFunc);
+            const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
+            this._textObserver.observe(this.svgText, option2);
             if (_option.text !== undefined) this.svgText.setTextContent(_option.text);
             if (_option.isAutoSizeShapeToFitText !== undefined) this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;
-
         }
+        
         initializeOption(option: GObjectAttributes): GObjectAttributes {
             const _option = <GTextBoxAttributes>super.initializeOption(option);
             if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
@@ -210,7 +218,6 @@ namespace GraphTableSVG {
         public get hasSize(): boolean {
             return true;
         }
-
 
     }
 

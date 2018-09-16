@@ -1,50 +1,4 @@
-interface SVGElement {
-    
-    getPaddingLeft() : number;
-    getPaddingTop() : number;
-    getPaddingRight() : number;
-    getPaddingBottom() : number;
 
-    
-    setPaddingLeft(value : number) : void;
-    setPaddingTop(value : number) : void;
-    setPaddingRight(value : number) : void;
-    setPaddingBottom(value : number) : void;
-
-}
-SVGElement.prototype.getPaddingTop = function () {
-    const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, 0)!;
-};
-SVGElement.prototype.getPaddingLeft = function () {
-    const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, 0)!;
-};
-SVGElement.prototype.getPaddingRight = function () {
-    const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, 0)!;
-};
-SVGElement.prototype.getPaddingBottom = function () {
-    const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, 0)!;
-};
-
-SVGElement.prototype.setPaddingLeft = function (value: number) {
-    const p: SVGElement = this;    
-    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, value.toString());
-};
-SVGElement.prototype.setPaddingTop = function (value: number) {
-    const p: SVGElement = this;    
-    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, value.toString());
-};
-SVGElement.prototype.setPaddingRight = function (value: number) {
-    const p: SVGElement = this;    
-    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, value.toString());
-};
-SVGElement.prototype.setPaddingBottom = function (value: number) {
-    const p: SVGElement = this;    
-    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, value.toString());
-};
 
 
 interface SVGTextElement {
@@ -80,11 +34,11 @@ interface SVGTextElement {
     setMarginRight(value : number) : void;
     getMarginBottom() : number;
     setMarginBottom(value : number) : void;
-    gtSetXY(rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null, isAutoSizeShapeToFitText: boolean) : void;
+    gtSetXY(rect: GraphTableSVG.Rectangle, vAnchor: GraphTableSVG.VerticalAnchor | null, hAnchor: GraphTableSVG.HorizontalAnchor | null, isAutoSizeShapeToFitText: boolean) : void;
 
 
 }
-SVGTextElement.prototype.gtSetXY = function (rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null, isAutoSizeShapeToFitText: boolean) {
+SVGTextElement.prototype.gtSetXY = function (rect: GraphTableSVG.Rectangle, vAnchor: GraphTableSVG.VerticalAnchor | null, hAnchor: GraphTableSVG.HorizontalAnchor | null, isAutoSizeShapeToFitText: boolean) {
     const text : SVGTextElement = this;
     let x = rect.x;
     let y = rect.y;
@@ -151,7 +105,7 @@ SVGTextElement.prototype.setMarginBottom = function (value: number) {
 
 
 SVGTextElement.prototype.setTextContent = function (text: string, isLatexMode: boolean = false) {
-    GraphTableSVG.SVG.setTextToSVGText(this, text, isLatexMode);
+    GraphTableSVG.SVGTextBox.setTextToSVGText(this, text, isLatexMode);
 };
 
 SVGTextElement.prototype.getX = function () {

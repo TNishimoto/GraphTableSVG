@@ -107,6 +107,7 @@
         public svgText : SVGTextElement | null = null;
         public connectedColumnCount: number = 1;
         public connectedRowCount: number = 1;
+        public tTexts : HTMLElement[] | null = null;
 
         public item: any;
 
@@ -124,6 +125,14 @@
             if (rightBorderClass !== undefined) this.rightBorderClass = rightBorderClass;
             if (bottomBorderClass !== undefined) this.bottomBorderClass = bottomBorderClass;
             this.isLatexMode = isLatexMode;
+        }
+        public createTextElement(svgText : SVGTextElement){
+            if(this.tTexts != null){
+                GraphTableSVG.SVGTextBox.setTextToSVGText2(svgText, this.tTexts, this.isLatexMode);   
+
+            }else if (this.text != null) {
+                svgText.setTextContent(this.text, this.isLatexMode);
+            }
         }
         /*
         public set(text: string | null = null, isLatexMode: boolean = false, cellClass: string | null = null, backgroundClass: string | null = null, textClass: string | null = null

@@ -316,31 +316,46 @@ namespace GraphTableSVG {
         get paddingBottom(): number {
             return this.svgGroup.getPaddingBottom();
         }
-        /**
-        テキストの水平方向の配置設定を返します。
-        */
-        get horizontalAnchor(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor);
+
+
+        get horizontalAnchor(): HorizontalAnchor {
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.HorizontalAnchor, "center");
+            return HorizontalAnchor.toHorizontalAnchor(b);
         }
         /**
         テキストの水平方向の配置設定を設定します。
         */
-        set horizontalAnchor(value: string | null) {
+        set horizontalAnchor(value: HorizontalAnchor) {
             if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor, value);
         }
         /**
         テキストの垂直方向の配置設定を返します。
         */
-        get verticalAnchor(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor);
+        get verticalAnchor(): VerticalAnchor {
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.VerticalAnchor, "middle");
+            return VerticalAnchor.toVerticalAnchor(b);
         }
         /**
         テキストの垂直方向の配置設定を設定します。
         */
-        set verticalAnchor(value: string | null) {
+        set verticalAnchor(value: VerticalAnchor) {
             if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor, value);
         }
 
+        /*
+        get horizontalAnchor(): string | null {
+            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor);
+        }
+        set horizontalAnchor(value: string | null) {
+            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor, value);
+        }
+        get verticalAnchor(): string | null {
+            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor);
+        }
+        set verticalAnchor(value: string | null) {
+            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor, value);
+        }
+        */
         /**
         単位セルを基準にした自身のX座標を返します。
         */
@@ -1038,6 +1053,7 @@ namespace GraphTableSVG {
          *セルのサイズを再計算します。
          */
         private resize() {
+            SVGTextBox.sortText(this.svgText, null, this.verticalAnchor, this.horizontalAnchor);
             const [w, h] = this.calculatedSizeUsingGroup();
             if (this.width != w) {
                 this.width = w;

@@ -11,7 +11,7 @@ namespace GraphTableSVG {
 
 
             //this._svgGroup = SVG.createGroup(svgbox);
-
+            const _option = <GEdgeAttributes>this.initializeOption(option);
             this.svgText.textContent = "";
             const textClass = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
             this._svgTextPath = SVG.createTextPath2(textClass);
@@ -19,10 +19,9 @@ namespace GraphTableSVG {
 
             this.svgText.appendChild(this._svgTextPath);
             this._svgTextPath.href.baseVal = `#${this.svgPath.id}`
-            if (option.text != undefined) {
-                this.svgTextPath.setTextContent(option.text);
+            if (_option.text != undefined) {
+                this.svgTextPath.setTextContent(_option.text);
             }
-            const _option = <GEdgeAttributes>this.initializeOption(option);
 
             const edgeColor = this.svgPath.getPropertyStyleValue("stroke");
             const edgeColor2 = edgeColor == null ? undefined : edgeColor;
@@ -42,10 +41,16 @@ namespace GraphTableSVG {
             if (typeof _option.endConnectorType !== "undefined") this.endConnectorType = _option.endConnectorType;
 
             this.pathTextAlignment = _option.pathTextAlignment!;
+            
 
             this.update();
 
         }
+        /*
+        protected createObjects(svgbox: SVGElement, option: GObjectAttributes = {}): void {
+
+        }
+        */
         static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GEdgeAttributes = {}): GEdgeAttributes {
             GTextBox.constructAttributes(e, removeAttributes, output);
             output.x1 = e.gtGetAttributeNumberWithoutNull("x1", 0);
@@ -165,7 +170,7 @@ namespace GraphTableSVG {
         public get svgTextPath(): SVGTextPathElement {
             return this._svgTextPath;
         }
-        protected createSurface(svgbox: SVGElement, option: GTextBoxAttributes = {}): void {
+        protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
             this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }

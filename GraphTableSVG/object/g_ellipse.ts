@@ -8,7 +8,7 @@ namespace GraphTableSVG {
             super(svgbox, option);
             //this.update();
         }
-        protected createSurface(svgbox : SVGElement, option : GTextBoxAttributes = {}) : void {
+        protected createSurface(svgbox : SVGElement, option :GObjectAttributes = {}) : void {
             this._surface = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
         }

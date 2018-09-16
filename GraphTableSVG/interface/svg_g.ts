@@ -64,3 +64,50 @@ SVGGElement.prototype.setY = function (value: number) {
 
     //this.transform.baseVal.getItem(0).matrix.f = value;
 };
+interface SVGElement {
+    
+    getPaddingLeft() : number;
+    getPaddingTop() : number;
+    getPaddingRight() : number;
+    getPaddingBottom() : number;
+
+    
+    setPaddingLeft(value : number) : void;
+    setPaddingTop(value : number) : void;
+    setPaddingRight(value : number) : void;
+    setPaddingBottom(value : number) : void;
+
+}
+SVGElement.prototype.getPaddingTop = function () {
+    const p: SVGElement = this;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, 0)!;
+};
+SVGElement.prototype.getPaddingLeft = function () {
+    const p: SVGElement = this;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, 0)!;
+};
+SVGElement.prototype.getPaddingRight = function () {
+    const p: SVGElement = this;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, 0)!;
+};
+SVGElement.prototype.getPaddingBottom = function () {
+    const p: SVGElement = this;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, 0)!;
+};
+
+SVGElement.prototype.setPaddingLeft = function (value: number) {
+    const p: SVGElement = this;    
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, value.toString());
+};
+SVGElement.prototype.setPaddingTop = function (value: number) {
+    const p: SVGElement = this;    
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, value.toString());
+};
+SVGElement.prototype.setPaddingRight = function (value: number) {
+    const p: SVGElement = this;    
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, value.toString());
+};
+SVGElement.prototype.setPaddingBottom = function (value: number) {
+    const p: SVGElement = this;    
+    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, value.toString());
+};

@@ -143,10 +143,12 @@ declare namespace GraphTableSVG {
         svgText: SVGTextElement | null;
         connectedColumnCount: number;
         connectedRowCount: number;
+        tTexts: HTMLElement[] | null;
         item: any;
         isLatexMode: boolean;
         constructor();
         set(text?: string | undefined, isLatexMode?: boolean, cellClass?: string | undefined, backgroundClass?: string | undefined, textClass?: string | undefined, topBorderClass?: string | undefined, leftBorderClass?: string | undefined, rightBorderClass?: string | undefined, bottomBorderClass?: string | undefined): void;
+        createTextElement(svgText: SVGTextElement): void;
     }
     class LogicTable {
         cells: LogicCell[][];
@@ -191,8 +193,6 @@ declare namespace GraphTableSVG {
         }): [SVGMarkerElement, SVGPathElement];
         function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
         function createTextPath2(className?: string | null): SVGTextPathElement;
-        function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean): void;
-        function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexMode: boolean): void;
         function setClass(svg: SVGElement, className?: string | null): void;
         function setCSSToStyle(svg: HTMLElement, isComplete?: boolean): void;
         function getAllElementStyleMap(item: HTMLElement | string): {
@@ -302,8 +302,8 @@ declare namespace GraphTableSVG {
         readonly paddingRight: number;
         readonly paddingTop: number;
         readonly paddingBottom: number;
-        horizontalAnchor: string | null;
-        verticalAnchor: string | null;
+        horizontalAnchor: HorizontalAnchor;
+        verticalAnchor: VerticalAnchor;
         cellX: number;
         cellY: number;
         readonly defaultTextClass: string | null;
@@ -481,52 +481,12 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    namespace CustomAttributeNames {
-        namespace Style {
-            const autoSizeShapeToFitTextName: string;
-            const beginConnectorTypeName: string;
-            const endConnectorTypeName: string;
-            const defaultLineClass: string;
-            const markerStartName: string;
-            const markerEndName: string;
-            const defaultVertexClass: string;
-            const defaultEdgeClass: string;
-            const vertexXIntervalName: string;
-            const vertexYIntervalName: string;
-            const defaultRadiusName = "--default-radius";
-            const defaultWidthName = "--default-width";
-            const defaultHeightName = "--default-height";
-            const defaultTextClass: string;
-            const defaultPathClass: string;
-            const defaulSurfaceClass: string;
-            const defaultSurfaceType: string;
-            const defaultCellClass: string;
-            const defaultBorderClass: string;
-            const paddingTop: string;
-            const paddingLeft: string;
-            const paddingRight: string;
-            const paddingBottom: string;
-            const marginTop: string;
-            const marginLeft: string;
-            const marginRight: string;
-            const marginBottom: string;
-            const VerticalAnchor: string;
-            const HorizontalAnchor: string;
-            const PathTextAlignment: string;
-        }
-        const beginNodeName: string;
-        const endNodeName: string;
-        const controlPointName: string;
-        const connectPositionChangedEventName = "connect_position_changed";
-        const vertexCreatedEventName = "vertex_created";
-        const objectCreatedEventName = "object_created";
-        const objectIDName: string;
-        let defaultCircleRadius: number;
-    }
     type GObjectAttributes = {
         class?: string;
         cx?: number;
         cy?: number;
+        x?: number;
+        y?: number;
         width?: number;
         height?: number;
         id?: string;
@@ -584,15 +544,60 @@ declare namespace GraphTableSVG {
     function createVertex(parent: GGraph, option?: GTextBoxAttributes): GVertex;
 }
 declare namespace GraphTableSVG {
+    namespace CustomAttributeNames {
+        namespace Style {
+            const autoSizeShapeToFitTextName: string;
+            const beginConnectorTypeName: string;
+            const endConnectorTypeName: string;
+            const defaultLineClass: string;
+            const markerStartName: string;
+            const markerEndName: string;
+            const defaultVertexClass: string;
+            const defaultEdgeClass: string;
+            const vertexXIntervalName: string;
+            const vertexYIntervalName: string;
+            const defaultRadiusName = "--default-radius";
+            const defaultWidthName = "--default-width";
+            const defaultHeightName = "--default-height";
+            const defaultTextClass: string;
+            const defaultPathClass: string;
+            const defaulSurfaceClass: string;
+            const defaultSurfaceType: string;
+            const defaultCellClass: string;
+            const defaultBorderClass: string;
+            const paddingTop: string;
+            const paddingLeft: string;
+            const paddingRight: string;
+            const paddingBottom: string;
+            const marginTop: string;
+            const marginLeft: string;
+            const marginRight: string;
+            const marginBottom: string;
+            const VerticalAnchor: string;
+            const HorizontalAnchor: string;
+            const PathTextAlignment: string;
+        }
+        const beginNodeName: string;
+        const endNodeName: string;
+        const controlPointName: string;
+        const connectPositionChangedEventName = "connect_position_changed";
+        const vertexCreatedEventName = "vertex_created";
+        const objectCreatedEventName = "object_created";
+        const GroupAttribute = "data-group-type";
+        const objectIDName: string;
+        let defaultCircleRadius: number;
+    }
+}
+declare namespace GraphTableSVG {
     class GObject {
-        private static objectDic;
-        static getObjectFromObjectID(id: string | SVGElement): GObject | null;
-        static setObjectFromObjectID(obj: GObject): void;
-        static getObjectFromID(id: string): GObject | null;
         protected _surface: SVGElement | null;
-        _tag: any;
-        tag: any;
+        protected _tag: any;
         private _svgGroup;
+        private _observer;
+        constructor(svgbox: SVGElement | string, option?: GObjectAttributes);
+        initializeOption(option: GObjectAttributes): GObjectAttributes;
+        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GObjectAttributes): GObjectAttributes;
+        tag: any;
         readonly svgGroup: SVGGElement;
         readonly isLocated: boolean;
         readonly surface: SVGElement | null;
@@ -600,17 +605,13 @@ declare namespace GraphTableSVG {
         cy: number;
         width: number;
         height: number;
-        readonly x: number;
-        readonly y: number;
+        x: number;
+        y: number;
         readonly type: ShapeObjectType;
-        protected createSurface(svgbox: SVGElement, option?: GTextBoxAttributes): void;
+        protected createSurface(svgbox: SVGElement, option?: GObjectAttributes): void;
         protected setClassNameOfSVGGroup(): void;
-        private _observer;
         private observerFunc;
         protected observerFunction(x: MutationRecord[]): void;
-        constructor(svgbox: SVGElement | string, option?: GObjectAttributes);
-        initializeOption(option: GObjectAttributes): GObjectAttributes;
-        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GObjectAttributes): GObjectAttributes;
         dispose(): void;
         readonly isDisposed: boolean;
         readonly objectID: string;
@@ -622,6 +623,10 @@ declare namespace GraphTableSVG {
         protected updateAttributes: string[];
         protected dispatchConnectPositionChangedEvent(): void;
         readonly hasSize: boolean;
+        private static objectDic;
+        static getObjectFromObjectID(id: string | SVGElement): GObject | null;
+        static setObjectFromObjectID(obj: GObject): void;
+        static getObjectFromID(id: string): GObject | null;
     }
 }
 declare namespace GraphTableSVG {
@@ -684,7 +689,7 @@ declare namespace GraphTableSVG {
     class GPathTextBox extends GVertex {
         readonly svgPath: SVGPathElement;
         constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
-        protected createSurface(svgbox: SVGElement, option?: GTextBoxAttributes): void;
+        protected createSurface(svgbox: SVGElement, option?: GObjectAttributes): void;
         initializeOption(option: GObjectAttributes): GObjectAttributes;
         readonly innerRectangle: Rectangle;
         readonly type: ShapeObjectType;
@@ -718,7 +723,7 @@ declare namespace GraphTableSVG {
         readonly svgPath: SVGPathElement;
         protected _svgTextPath: SVGTextPathElement;
         readonly svgTextPath: SVGTextPathElement;
-        protected createSurface(svgbox: SVGElement, option?: GTextBoxAttributes): void;
+        protected createSurface(svgbox: SVGElement, option?: GObjectAttributes): void;
         readonly type: ShapeObjectType;
         tag: any;
         controlPoint: [number, number][];
@@ -774,7 +779,7 @@ declare namespace GraphTableSVG {
     class GEllipse extends GVertex {
         readonly svgEllipse: SVGEllipseElement;
         constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
-        protected createSurface(svgbox: SVGElement, option?: GTextBoxAttributes): void;
+        protected createSurface(svgbox: SVGElement, option?: GObjectAttributes): void;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GTextBoxAttributes): GCalloutAttributes;
         readonly innerRectangle: Rectangle;
         width: number;
@@ -831,7 +836,7 @@ declare namespace GraphTableSVG {
     class GRect extends GVertex {
         readonly svgRectangle: SVGRectElement;
         constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
-        protected createSurface(svgbox: SVGElement, option?: GTextBoxAttributes): void;
+        protected createSurface(svgbox: SVGElement, option?: GObjectAttributes): void;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GTextBoxAttributes): GCalloutAttributes;
         readonly type: ShapeObjectType;
         readonly innerRectangle: Rectangle;
@@ -876,6 +881,9 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class GTable extends GObject {
+        constructor(svgbox: SVGElement, option?: TableOption);
+        width: number;
+        height: number;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TableOption): TableOption;
         private _svgHiddenGroup;
         readonly svgHiddenGroup: SVGGElement;
@@ -904,7 +912,6 @@ declare namespace GraphTableSVG {
         readonly cellArray: Cell[];
         readonly borders: SVGLineElement[];
         getRegion(): Rectangle;
-        constructor(svgbox: SVGElement, option?: TableOption);
         private updateCellByLogicCell(table, x, y);
         constructFromLogicTable(table: LogicTable): void;
         construct(table: string[][], option?: {
@@ -984,6 +991,16 @@ interface SVGGElement {
     getY(): number;
     setY(value: number): void;
 }
+interface SVGElement {
+    getPaddingLeft(): number;
+    getPaddingTop(): number;
+    getPaddingRight(): number;
+    getPaddingBottom(): number;
+    setPaddingLeft(value: number): void;
+    setPaddingTop(value: number): void;
+    setPaddingRight(value: number): void;
+    setPaddingBottom(value: number): void;
+}
 interface Element {
     getActiveStyle(): CSSStyleDeclaration;
     getPropertyStyleValue(name: string): string | null;
@@ -1003,16 +1020,6 @@ interface Element {
     }[];
     hasStyleAttribute(name: string): boolean;
 }
-interface SVGElement {
-    getPaddingLeft(): number;
-    getPaddingTop(): number;
-    getPaddingRight(): number;
-    getPaddingBottom(): number;
-    setPaddingLeft(value: number): void;
-    setPaddingTop(value: number): void;
-    setPaddingRight(value: number): void;
-    setPaddingBottom(value: number): void;
-}
 interface SVGTextElement {
     getX(): number;
     setX(value: number): void;
@@ -1028,5 +1035,13 @@ interface SVGTextElement {
     setMarginRight(value: number): void;
     getMarginBottom(): number;
     setMarginBottom(value: number): void;
-    gtSetXY(rect: GraphTableSVG.Rectangle, vAnchor: string | null, hAnchor: string | null, isAutoSizeShapeToFitText: boolean): void;
+    gtSetXY(rect: GraphTableSVG.Rectangle, vAnchor: GraphTableSVG.VerticalAnchor | null, hAnchor: GraphTableSVG.HorizontalAnchor | null, isAutoSizeShapeToFitText: boolean): void;
+}
+declare namespace GraphTableSVG {
+    namespace SVGTextBox {
+        function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexMode: boolean): void;
+        function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean): void;
+        function sortText(svgText: SVGTextElement, rect: GraphTableSVG.Rectangle | null, vAnchor: GraphTableSVG.VerticalAnchor, hAnchor: GraphTableSVG.HorizontalAnchor): void;
+        function setTextToSVGText2(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean): void;
+    }
 }

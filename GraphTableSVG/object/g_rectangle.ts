@@ -11,7 +11,7 @@ namespace GraphTableSVG {
 
             this.update();
         }
-        protected createSurface(svgbox: SVGElement, option: GTextBoxAttributes = {}): void {
+        protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
             this._surface = SVG.createRectangle(this.svgGroup, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
         }
