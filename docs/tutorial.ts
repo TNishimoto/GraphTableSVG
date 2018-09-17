@@ -32,10 +32,10 @@ function createLoadCode(e: libxmljs.Element, dir: string): libxmljs.Element {
         img.attr({ src: filePath, "style": "max-width:100%" });
         //img.attr({src:v });        
         return img;
-    } else if(e.attr("id") != null){
-        const id : string = e.attr("id").value()!;
+    } else if (e.attr("id") != null) {
+        const id: string = e.attr("id").value()!;
         const node = TextLoader.loadTextByID(filePath, dir, id);
-        node.attr({ "ignore-format": "true"});
+        node.attr({ "ignore-format": "true" });
         return node;
         //throw Error("error");
     } else {
@@ -62,20 +62,13 @@ pack.midMacros.elements["p"] = (e : libxmljs.Element, info : Macroup.Setting) =>
 }
 */
 function tempora(lines: libxmljs.Element[], e: libxmljs.Element): libxmljs.Element {
-    //MacroupLib.insertFirst(v, "　");
     const sectionNode = new libxmljs.Element(e.doc(), "section", undefined);
     sectionNode.attr({ "ignore-format": "true", class: "sample-commentary" });
     lines.forEach((w) => {
-        //console.log(w.text());
-
         sectionNode.addChild(w);
-        //moveChildren(w, sectionNode);
-
     })
     MacroupLib.insertFirst(sectionNode, "　");
-    //console.log("//");
     lines.splice(0, lines.length);
-
     return sectionNode;
 
 }
@@ -94,7 +87,7 @@ function replaceXMLText(e: libxmljs.Element, text: string) {
     //e.addChild(result.root());
 }
 let increment = 1;
-pack.preMacros.elements["incr"] = (e : Macroup.PremacroArg) => {
+pack.preMacros.elements["incr"] = (e: Macroup.PremacroArg) => {
     e.isTagErased = true;
     e.content = `${increment++}`;
 }
@@ -115,7 +108,7 @@ pack.midMacros.elements["ahref"] = (e: libxmljs.Element, info: Macroup.Setting) 
         hrefDic[name1.value()] = url.value();
     }
 }
-pack.midMacros.elements["rhref"] = (e: libxmljs.Element, info: Macroup.Setting) =>{
+pack.midMacros.elements["rhref"] = (e: libxmljs.Element, info: Macroup.Setting) => {
     const isMethod = e.attr("method") != null;
     const isModule = e.attr("module") != null;
     const isInterface = e.attr("interface") != null;
@@ -123,31 +116,32 @@ pack.midMacros.elements["rhref"] = (e: libxmljs.Element, info: Macroup.Setting) 
     const text = e.text();
     let prefix = "";
     let className = "";
-    if(isModule){
+    if (isModule) {
         prefix = "modules/graphtablesvg.";
-    } else if(isInterface){
+    } else if (isInterface) {
         prefix = "interfaces/";
     }
-    else{
+    else {
         prefix = "classes/graphtablesvg.";
     }
 
-    if(isMethod){
+    if (isMethod) {
         const texts = text.split(".");
-        const methodName = texts[texts.length-1].toLowerCase();
-        if(texts.length == 2){
+        const methodName = texts[texts.length - 1].toLowerCase();
+        if (texts.length == 2) {
             className = texts[0].toLowerCase();
             replaceXMLText(e, `<a href="./typedoc/${prefix}${className}.html#${methodName}" target="_blank">${text}</a>`);
-        }else if(texts.length == 1){
+        } else if (texts.length == 1) {
             replaceXMLText(e, `<a href="./typedoc/modules/graphtablesvg.html#${methodName}" target="_blank">${text}</a>`);
         }
-    }else{
+    } else {
         className = text.toLowerCase();
 
-        replaceXMLText(e, `<a href="./typedoc/${prefix}${className}.html" target="_blank">${text}</a>`);        
+        replaceXMLText(e, `<a href="./typedoc/${prefix}${className}.html" target="_blank">${text}</a>`);
     }
 
 }
+
 pack.midMacros.elements["xarticle"] = (e: libxmljs.Element, info: Macroup.Setting) => {
     e.attr({ after: "article" });
     e.attr({ class: "sample-article" })
@@ -188,12 +182,10 @@ pack.midMacros.elements["xarticle"] = (e: libxmljs.Element, info: Macroup.Settin
 
     clearChildren(e);
     newNodes.forEach((v) => {
-        //if(title.text() == "はじめに")console.log(v.text());
         e.addChild(v)
     });
-    //if(title.text() == "はじめに")console.log(e.toString());
-
 }
+
 pack.midMacros.elements["table_of_contents"] = (e: libxmljs.Element, info: Macroup.Setting) => {
     e.attr({ after: "div" });
 
@@ -213,5 +205,143 @@ pack.midMacros.elements["table_of_contents"] = (e: libxmljs.Element, info: Macro
     e.addChild(listNode);
     e.attr({ class: "sample-table-of-contents" });
 }
+
+
+pack.midMacros.elements["load"] = (e: libxmljs.Element, info: Macroup.Setting) => {
+    const parent = e.parent();
+    if (parent.name() == "xarticle") return;
+    const dir = path.dirname(info.inputPath);
+
+    const newNode = createLoadCode(e, dir);
+    const br = new libxmljs.Element(info.document, "br");
+    e.addNextSibling(br);
+    e.addNextSibling(newNode);
+    e.remove();
+}
+
+pack.midMacros.elements["yarticle"] = (e: libxmljs.Element, info: Macroup.Setting) => {
+    e.attr({ after: "article" });
+    e.attr({ class: "sample-article" })
+
+    const dir = path.dirname(info.inputPath);
+    const title = new libxmljs.Element(e.doc(), "h2", e.attr("title")!.value());
+    const fst = e.child(0);
+    if (fst !== undefined) {
+        fst.addPrevSibling(title);
+    } else {
+        e.addChild(title);
+    }
+
+}
+pack.midMacros.elements["comment"] = (e: libxmljs.Element, info: Macroup.Setting) => {
+    const parent = e.parent();
+    if (parent.name() == "xarticle") return;
+
+    MacroupLib.insertFirst(e, "　");
+    const sectionNode = new libxmljs.Element(e.doc(), "section", undefined);
+    sectionNode.attr({ "ignore-format": "true", class: "sample-commentary" });
+    const prev = e.nextSibling();
+    moveChildren(e, sectionNode);
+    if (prev == null) {
+        parent.addChild(sectionNode);
+    } else {
+        prev.addPrevSibling(sectionNode);
+    }
+    e.remove();
+}
+import fs = require('fs');
+
+let bTab = false;
+let tabCounter = 0;
+
+pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) => {
+
+    const pages = e.childNodes().filter((v) => v.name() == "page");
+    const tab = new libxmljs.Element(e.doc(), "div");
+    tab.attr({ class: "tabs" })
+    pages.forEach((v, i) => {
+        const tabInput = new libxmljs.Element(e.doc(), "input");
+        const tabLabel = new libxmljs.Element(e.doc(), "label");
+
+        tabInput.attr({ id: `tab-${tabCounter}-${i}`, type: "radio", name: "tab-radio", checked: "1" })
+        tabLabel.attr({ class: `tab-label`, for: `tab-${i}` })
+        MacroupLib.setText(tabLabel, `page${i}`);
+
+        tab.addChild(tabInput);
+        tab.addChild(tabLabel);
+
+    })
+    pages.forEach((v, i) => {
+        const tabDiv = new libxmljs.Element(e.doc(), "div");
+        tabDiv.attr({ class: `tab-content tab-${tabCounter}-${i}-content` })
+        v.childNodes().forEach((w) => tabDiv.addChild(w));
+        tab.addChild(tabDiv);
+    })
+    e.addPrevSibling(tab);
+    e.remove();
+    /*
+    let cssPath = path.basename(info.outputPath, ".html") + "_tab.css";
+
+    if (!bTab) {
+        const prevCSS = `
+.tabs {
+    margin-top: 12px;
+}
+       
+      .tabs .tab-label {
+        display: inline-block;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border: 1px solid #999;
+        background-color: #f3f3f3;
+        margin-left: 1px;
+        margin-right: 1px;
+        padding: 3px 6px;
+        border-bottom: none;
+        font-size: 0.9em;
+      }
+       
+      .tabs .tab-label:hover {
+        opacity: 0.7;
+      }
+       
+      .tabs input[name="tab-radio"],
+      .tabs .tab-content {
+        display: none;
+      }
+       
+      .tabs .tab-content{
+        border: 1px solid #999;
+        padding: 10px;
+        min-height: 200px;
+      }
+          
+      .tabs input[name="tab-radio"]:checked + .tab-label {
+        background-color: #fff;
+      }
+        `;
+        fs.writeFile(cssPath, prevCSS, function (err) {
+            if (err) {
+                throw err;
+            }
+        });
+        bTab = true;
+    }
+    let tabStr = "";
+    const cssStrs = pages.map((v, i) => {
+        return `.tabs #tab-${tabCounter}-${i}:checked ~ .tab-${tabCounter}-${i}-content`;
+    })
+    if (cssStrs.length > 0) {
+        const data = cssStrs.join(",\n") + "{display: block;}"
+        fs.appendFile(cssPath, data, function (err) {
+            if (err) {
+                throw err;
+            }
+        });
+    }
+    */
+    tabCounter++;
+}
+
 
 SET.addPackage(pack);

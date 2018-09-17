@@ -6,6 +6,7 @@
 <MACRO path="./tutorial.js" remove=""/>
 <stylesheet path="tutorial.css" />
 <stylesheet path="svg/sample_graph.css" />
+<stylesheet path="tutorial_tab.css" />
 
 <script src="scripts/graph_table_svg.js"></script>
 <script src="tutorial_script.js"></script>
@@ -24,17 +25,20 @@ SVG入門の参考として
 詳細は<a href="#xarticle-8">Table Sample 8 : Powerpointへ出力</a>に書いてある。<dbr/>
 </xarticle>
 
-<xarticle title="Object Sample : hello world" >
-<load path="svg/sample_hello1.html" />
-<a href="svg/sample_hello1.html">実行結果</a><dbr/>
-<load path="svg/sample_hello1.html" id="svgbox" />
-
+<yarticle title="Object Sample : hello world" >
+<tab>
+<page><load path="svg/sample_hello1.html" /></page>
+<page><a href="svg/sample_hello1.html">実行結果</a></page>
+<page><load path="svg/sample_hello1.html" id="svgbox" /></page>
+</tab>
+<comment>
 最も簡単なHello Worldサンプル。
 GraphTableSVGにはいくつかのカスタムSVG要素が存在し、オブジェクトはSVGのいくつかの要素を格納したG要素である。
 g-rect要素はその内の一つで、text要素とrect要素を格納している。
 g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何も描画されないが、
 <rhref method="true">openSVG</rhref>関数でSVG要素のidを指定して呼び出すことでSVG要素内のカスタムSVG要素をG要素に変換することが出来る。
-</xarticle>
+</comment>
+</yarticle>
 
 <xarticle title="Object Sample : オブジェクトの種類" >
 <load path="svg/sample_hello2.html" />

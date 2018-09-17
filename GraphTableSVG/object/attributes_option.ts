@@ -172,9 +172,13 @@ namespace GraphTableSVG {
         }
         else {
             const element = id;
+
             while (true) {
                 let b = false;
                 HTMLFunctions.getChildren(element).forEach((v) => {
+                    console.log(v);
+                    console.log(v instanceof Element);
+
                     if (v instanceof SVGElement) {
                         const p = GraphTableSVG.openCustomElement(v);
                         if (p != null) {

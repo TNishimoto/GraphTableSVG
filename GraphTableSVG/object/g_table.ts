@@ -705,6 +705,17 @@ namespace GraphTableSVG {
         各セルのサイズを再計算します。
         */
         public update() {
+            const display = this.svgGroup.getPropertyStyleValue("display");
+            const style = getComputedStyle(this.svgGroup);            
+            console.log(style.display);
+            console.log(style.visibility);
+            const style2 = getComputedStyle(this.svgGroup.parentElement!.parentElement!);            
+
+            console.log(style2.display);
+            console.log(style2.visibility);
+
+            console.log(this.svgGroup.getBBox());
+            if(display == "none") return;
             this._isDrawing = true;
             this.renumbering();
             this.resize();

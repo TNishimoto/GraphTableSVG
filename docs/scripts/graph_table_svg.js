@@ -3618,6 +3618,8 @@ var GraphTableSVG;
             var _loop_2 = function () {
                 var b = false;
                 HTMLFunctions.getChildren(element).forEach(function (v) {
+                    console.log(v);
+                    console.log(v instanceof Element);
                     if (v instanceof SVGElement) {
                         var p = GraphTableSVG.openCustomElement(v);
                         if (p != null) {
@@ -7278,6 +7280,16 @@ var GraphTableSVG;
             return this.cellArray.filter(function (v) { return v.isEmphasized; });
         };
         GTable.prototype.update = function () {
+            var display = this.svgGroup.getPropertyStyleValue("display");
+            var style = getComputedStyle(this.svgGroup);
+            console.log(style.display);
+            console.log(style.visibility);
+            var style2 = getComputedStyle(this.svgGroup.parentElement.parentElement);
+            console.log(style2.display);
+            console.log(style2.visibility);
+            console.log(this.svgGroup.getBBox());
+            if (display == "none")
+                return;
             this._isDrawing = true;
             this.renumbering();
             this.resize();
