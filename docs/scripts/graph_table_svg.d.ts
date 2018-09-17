@@ -19,10 +19,10 @@ declare namespace GraphTableSVG {
         Preorder = 0,
         Postorder = 1,
     }
-    type ShapeObjectType = "g-callout" | "g-sarrowcallout" | "g-ellipse" | "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox";
+    type ShapeObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox";
     namespace ShapeObjectType {
         const Callout: ShapeObjectType;
-        const ShapeArrowCallout: ShapeObjectType;
+        const ArrowCallout: ShapeObjectType;
         const Ellipse: ShapeObjectType;
         const Rect: ShapeObjectType;
         const Edge: ShapeObjectType;
@@ -131,6 +131,8 @@ declare namespace GraphTableSVG {
         right: BinaryLogicTree | null;
         constructor(item?: any, left?: BinaryLogicTree | null, right?: BinaryLogicTree | null, nodeText?: string | null, edgeLabel?: string | null);
     }
+}
+declare namespace GraphTableSVG {
     class LogicCell {
         text: string | null;
         cellClass: string | null;
@@ -285,10 +287,10 @@ declare namespace GraphTableSVG {
         readonly masterID: number;
         readonly master: Cell;
         private _borders;
-        topBorder: SVGLineElement;
-        leftBorder: SVGLineElement;
-        rightBorder: SVGLineElement;
-        bottomBorder: SVGLineElement;
+        svgTopBorder: SVGLineElement;
+        svgLeftBorder: SVGLineElement;
+        svgRightBorder: SVGLineElement;
+        svgBottomBorder: SVGLineElement;
         private _table;
         readonly table: GTable;
         private _svgBackground;
@@ -356,7 +358,7 @@ declare namespace GraphTableSVG {
         readonly mostBottomCellY: number;
         private getNextGroupCells(direction);
         private readonly leftSideGroupCells;
-        private readonly upperSideGroupCells;
+        readonly upperSideGroupCells: Cell[];
         x: number;
         y: number;
         width: number;
@@ -430,7 +432,7 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    type VBAObjectType = GTable | SVGPathElement | SVGTextElement | GObject;
+    type VBAObjectType = SVGPathElement | SVGTextElement | GObject;
     class SVGToVBA {
         static create(items: VBAObjectType[] | VBAObjectType): string;
         static count(items: VBAObjectType[] | VBAObjectType): number;
@@ -538,8 +540,8 @@ declare namespace GraphTableSVG {
         columnWidth?: number;
         table?: LogicTable;
     };
-    function openCustomElement(id: string | SVGElement): any;
-    function openSVG(id?: string | SVGElement | null, output?: any[]): any[];
+    function openCustomElement(id: string | SVGElement): GObject | null;
+    function openSVG(id?: string | SVGElement | null, output?: GObject[], shrink?: boolean): GObject[];
     function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option?: any): GObject;
     function createVertex(parent: GGraph, option?: GTextBoxAttributes): GVertex;
 }
@@ -590,7 +592,7 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class GObject {
-        protected _surface: SVGElement | null;
+        protected _svgSurface: SVGElement | null;
         protected _tag: any;
         private _svgGroup;
         private _observer;
@@ -600,7 +602,7 @@ declare namespace GraphTableSVG {
         tag: any;
         readonly svgGroup: SVGGElement;
         readonly isLocated: boolean;
-        readonly surface: SVGElement | null;
+        readonly svgSurface: SVGElement | null;
         cx: number;
         cy: number;
         width: number;
@@ -627,6 +629,7 @@ declare namespace GraphTableSVG {
         static getObjectFromObjectID(id: string | SVGElement): GObject | null;
         static setObjectFromObjectID(obj: GObject): void;
         static getObjectFromID(id: string): GObject | null;
+        getRegion(): Rectangle;
     }
 }
 declare namespace GraphTableSVG {
@@ -693,6 +696,27 @@ declare namespace GraphTableSVG {
         initializeOption(option: GObjectAttributes): GObjectAttributes;
         readonly innerRectangle: Rectangle;
         readonly type: ShapeObjectType;
+        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
+        protected getAutoPosition(x: number, y: number): ConnectorPosition;
+    }
+}
+declare namespace GraphTableSVG {
+    class GArrowCallout extends GPathTextBox {
+        constructor(svgbox: SVGElement | string, option?: GShapeArrowCalloutAttributes);
+        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GShapeArrowCalloutAttributes): GShapeArrowCalloutAttributes;
+        readonly type: ShapeObjectType;
+        arrowNeckWidth: number;
+        arrowNeckHeight: number;
+        arrowHeadWidth: number;
+        arrowHeadHeight: number;
+        direction: Direction;
+        readonly innerRectangle: Rectangle;
+        protected readonly boxHeight: number;
+        protected readonly boxWidth: number;
+        protected updateToFitText(): void;
+        protected update(): void;
+        readonly shape: string;
+        protected readonly VBAAdjustments: number[];
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
         protected getAutoPosition(x: number, y: number): ConnectorPosition;
     }
@@ -859,40 +883,19 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class ShapeArrowCallout extends GPathTextBox {
-        constructor(svgbox: SVGElement | string, option?: GShapeArrowCalloutAttributes);
-        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GShapeArrowCalloutAttributes): GShapeArrowCalloutAttributes;
-        readonly type: ShapeObjectType;
-        arrowNeckWidth: number;
-        arrowNeckHeight: number;
-        arrowHeadWidth: number;
-        arrowHeadHeight: number;
-        direction: Direction;
-        readonly innerRectangle: Rectangle;
-        protected readonly boxHeight: number;
-        protected readonly boxWidth: number;
-        protected updateToFitText(): void;
-        protected update(): void;
-        readonly shape: string;
-        protected readonly VBAAdjustments: number[];
-        getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
-        protected getAutoPosition(x: number, y: number): ConnectorPosition;
-    }
-}
-declare namespace GraphTableSVG {
     class GTable extends GObject {
+        private _svgHiddenGroup;
+        private _rows;
+        private _columns;
+        private _cells;
         constructor(svgbox: SVGElement, option?: TableOption);
         width: number;
         height: number;
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TableOption): TableOption;
-        private _svgHiddenGroup;
         readonly svgHiddenGroup: SVGGElement;
         readonly type: ShapeObjectType;
-        private _rows;
         readonly rows: Row[];
-        private _columns;
         readonly columns: Column[];
-        private _cells;
         readonly cells: Cell[][];
         private _isDrawing;
         readonly isDrawing: boolean;

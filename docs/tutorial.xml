@@ -40,6 +40,8 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
 <load path="svg/sample_hello2.html" />
 <a href="svg/sample_hello2.html">実行結果</a><dbr/>
 <load path="svg/sample_hello2.html" id="svgbox" />
+<load path="svg/svg.html" id="svgbox3" />
+
 </xarticle>
 
 <xarticle title="Table Sample : hello world" >

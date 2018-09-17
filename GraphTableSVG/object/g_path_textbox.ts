@@ -4,7 +4,7 @@ namespace GraphTableSVG {
     export class GPathTextBox extends GVertex {
         //private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {
-            return <SVGPathElement>this.surface;
+            return <SVGPathElement>this.svgSurface;
         }
         public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(svgbox, option);
@@ -18,7 +18,7 @@ namespace GraphTableSVG {
             //this.update();
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
-            this._surface = GraphTableSVG.SVG.createSurfacePath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
+            this._svgSurface = GraphTableSVG.SVG.createSurfacePath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         initializeOption(option: GObjectAttributes) : GObjectAttributes {

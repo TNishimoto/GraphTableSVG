@@ -1,6 +1,6 @@
 ﻿
 namespace GraphTableSVG {
-    export type VBAObjectType = GTable | SVGPathElement | SVGTextElement | GObject;
+    export type VBAObjectType = SVGPathElement | SVGTextElement | GObject;
     export class SVGToVBA {
 
         /**

@@ -37,9 +37,7 @@
          */
         export function getRegion(items: VBAObjectType[]): Rectangle {
             const rects = items.map((v) => {
-                if (v instanceof GGraph) {
-                    return v.getRegion();
-                } else if (v instanceof GTable) {
+                if (v instanceof GObject) {
                     return v.getRegion();
                 } else if (v instanceof SVGPathElement || v instanceof SVGTextElement) {
                     const rect = v.getBBox();

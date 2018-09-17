@@ -74,10 +74,10 @@
             const r: SVGLineElement[] = [];
             this.cells.forEach((v) => {
                 if (r.length == 0) {
-                    r.push(v.topBorder);
+                    r.push(v.svgTopBorder);
                 } else {
                     const last = r[r.length - 1];
-                    if (last != v.topBorder) r.push(v.topBorder);
+                    if (last != v.svgTopBorder) r.push(v.svgTopBorder);
                 }
             });
             return r;
@@ -89,10 +89,10 @@
             const r: SVGLineElement[] = [];
             this.cells.forEach((v) => {
                 if (r.length == 0) {
-                    r.push(v.bottomBorder);
+                    r.push(v.svgBottomBorder);
                 } else {
                     const last = r[r.length - 1];
-                    if (last != v.bottomBorder) r.push(v.bottomBorder);
+                    if (last != v.svgBottomBorder) r.push(v.svgBottomBorder);
                 }
             });
             return r;
@@ -101,14 +101,14 @@
          * この行のセルの左にある枠を返します。
          */
         public get leftBorder(): SVGLineElement {
-            return this.cells[0].leftBorder;
+            return this.cells[0].svgLeftBorder;
         }
         /**
          * この行のセルの右にある枠を返します。
          */
         public get rightBorder(): SVGLineElement {
             const cells = this.cells;
-            return cells[cells.length - 1].rightBorder;
+            return cells[cells.length - 1].svgRightBorder;
         }
 
         public setHeightToCells() {

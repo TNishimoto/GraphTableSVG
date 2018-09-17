@@ -19,11 +19,11 @@
         Auto = 9
     }
     */
-    export type ShapeObjectType = "g-callout" | "g-sarrowcallout" | "g-ellipse" |
+    export type ShapeObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" |
      "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox";
     export namespace ShapeObjectType {
         export const Callout: ShapeObjectType = "g-callout"
-        export const ShapeArrowCallout: ShapeObjectType = "g-sarrowcallout"
+        export const ArrowCallout: ShapeObjectType = "g-arrow-callout"
         export const Ellipse: ShapeObjectType = "g-ellipse"
         export const Rect: ShapeObjectType = "g-rect"
         export const Edge: ShapeObjectType = "g-edge"

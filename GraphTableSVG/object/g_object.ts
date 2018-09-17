@@ -2,7 +2,7 @@ namespace GraphTableSVG {
 
     export class GObject {
 
-        protected _surface: SVGElement | null = null;
+        protected _svgSurface: SVGElement | null = null;
         protected _tag: any;
         private _svgGroup: SVGGElement;
         private _observer: MutationObserver;
@@ -40,9 +40,9 @@ namespace GraphTableSVG {
         }
         initializeOption(option: GObjectAttributes): GObjectAttributes {
             const _option = { ...option };
-            if (this.surface != null && this.surface.className != null) {
-                const width = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
-                const height = this.surface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeightName, null);
+            if (this.svgSurface != null && this.svgSurface.className != null) {
+                const width = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
+                const height = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeightName, null);
                 if (width != null) _option.width = width;
                 if (height != null) _option.height = height;
             }
@@ -93,8 +93,8 @@ namespace GraphTableSVG {
         get isLocated(): boolean {
             return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
         }
-        public get surface(): SVGElement | null {
-            return this._surface;
+        public get svgSurface(): SVGElement | null {
+            return this._svgSurface;
         }
 
         /**
@@ -244,10 +244,10 @@ namespace GraphTableSVG {
             "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",
             "data-arrow-head-width", "data-arrow-head-height"]
         protected dispatchConnectPositionChangedEvent(): void {
-            if (this.surface != null) {
+            if (this.svgSurface != null) {
                 var event = document.createEvent("HTMLEvents");
                 event.initEvent(CustomAttributeNames.connectPositionChangedEventName, true, true)
-                this.surface.dispatchEvent(event);
+                this.svgSurface.dispatchEvent(event);
             }
         }
         public get hasSize() : boolean{
@@ -282,6 +282,17 @@ namespace GraphTableSVG {
                 }
             }
             return null;
+        }
+        /**
+         * グラフの領域を表すRectangleを返します。位置の基準はグラフが追加されているNodeです。
+         */
+        public getRegion(): Rectangle {
+            let rect = new Rectangle();
+            rect.x = this.x;
+            rect.y = this.y;
+            rect.width = this.width;
+            rect.height = this.height;
+            return rect;
         }
     }
 }

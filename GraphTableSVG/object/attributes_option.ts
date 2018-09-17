@@ -93,7 +93,7 @@ namespace GraphTableSVG {
     */
 
 
-    export function openCustomElement(id: string | SVGElement): any {
+    export function openCustomElement(id: string | SVGElement): GObject | null {
 
         if (typeof id == "string") {
             const item = document.getElementById(id);
@@ -107,6 +107,8 @@ namespace GraphTableSVG {
             const type = ShapeObjectType.toShapeObjectType(element.nodeName);
             if (type != null) {
                 return createCustomElement(element, type);
+            }else{
+                return null;
             }
         }
     }
@@ -118,9 +120,9 @@ namespace GraphTableSVG {
             if (type == ShapeObjectType.Callout) {
                 const option = GCallout.constructAttributes(e, true);
                 r = new GCallout(parent, option);
-            } else if (type == ShapeObjectType.ShapeArrowCallout) {
-                const option = ShapeArrowCallout.constructAttributes(e, true);
-                r = new ShapeArrowCallout(parent, option);
+            } else if (type == ShapeObjectType.ArrowCallout) {
+                const option = GArrowCallout.constructAttributes(e, true);
+                r = new GArrowCallout(parent, option);
             } else if (type == ShapeObjectType.Ellipse) {
                 const option = GTextBox.constructAttributes(e, true);
                 r = new GEllipse(parent, option);
@@ -150,7 +152,7 @@ namespace GraphTableSVG {
             throw Error("error!");
         }
     }
-    export function openSVG(id: string | SVGElement | null = null, output: any[] = []): any[] {
+    export function openSVG(id: string | SVGElement | null = null, output: GObject[] = [], shrink : boolean = false): GObject[] {
         if (typeof id == "string") {
             const item = document.getElementById(id);
             if (item != null && item instanceof SVGSVGElement) {
@@ -167,7 +169,8 @@ namespace GraphTableSVG {
             }
             svgElements.forEach((v)=> openSVG(v, output));
             return output;
-        } else {
+        }
+        else {
             const element = id;
             while (true) {
                 let b = false;
@@ -184,6 +187,12 @@ namespace GraphTableSVG {
                 });
                 if (!b) break;
             }
+
+            if(element instanceof SVGSVGElement){
+                const sh = element.getAttribute("g-shrink");
+                if(sh != null) shrink = sh == "true";
+                if(shrink)GraphTableSVG.GUI.observeSVGBox(element, () => GraphTableSVG.Common.getRegion(output), new Padding(0,0,0,0));  
+            }
             return output;
         }
     }
@@ -199,7 +208,7 @@ namespace GraphTableSVG {
 
         switch (type) {
             case ShapeObjectType.Callout: return new GCallout(_parent, option);
-            case ShapeObjectType.ShapeArrowCallout: return new ShapeArrowCallout(_parent, option);
+            case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent, option);
             case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
             case ShapeObjectType.Rect: return new GRect(_parent, option);
             case ShapeObjectType.Edge: return new GEdge(_parent, option);
@@ -216,7 +225,7 @@ namespace GraphTableSVG {
         if (type != null) {
             switch (type) {
                 case ShapeObjectType.Callout: return new GCallout(_parent, option);
-                case ShapeObjectType.ShapeArrowCallout: return new ShapeArrowCallout(_parent, option);
+                case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent, option);
                 case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
                 case ShapeObjectType.Rect: return new GRect(_parent, option);
             }

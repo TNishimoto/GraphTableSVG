@@ -1,7 +1,7 @@
 namespace GraphTableSVG {
     export class GEllipse extends GVertex {
         public get svgEllipse(): SVGEllipseElement {
-            return <SVGEllipseElement>this._surface;
+            return <SVGEllipseElement>this._svgSurface;
         }
 
         public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
@@ -9,7 +9,7 @@ namespace GraphTableSVG {
             //this.update();
         }
         protected createSurface(svgbox : SVGElement, option :GObjectAttributes = {}) : void {
-            this._surface = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
+            this._svgSurface = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
         }
 

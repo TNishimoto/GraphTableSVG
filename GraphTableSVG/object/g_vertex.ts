@@ -236,8 +236,8 @@ namespace GraphTableSVG {
          */
         public createVBACode(id: number): string[] {
             const lines: string[] = [];
-            const backColor = VBATranslateFunctions.colorToVBA(this.surface!.getPropertyStyleValueWithDefault("fill", "gray"));
-            const visible = this.surface!.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            const backColor = VBATranslateFunctions.colorToVBA(this.svgSurface!.getPropertyStyleValueWithDefault("fill", "gray"));
+            const visible = this.svgSurface!.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
 
             const vAnchor = VBATranslateFunctions.ToVerticalAnchor(this.verticalAnchor);
             const hAnchor = VBATranslateFunctions.ToHorizontalAnchor(this.horizontalAnchor);
@@ -269,10 +269,10 @@ namespace GraphTableSVG {
             return [];
         }
         private getVBAEditLine(): string {
-            const lineColor = VBATranslateFunctions.colorToVBA(this.surface!.getPropertyStyleValueWithDefault("stroke", "gray"));
-            const lineType = GraphTableSVG.msoDashStyle.getLineType(this.surface!);
-            const strokeWidth = parseInt(this.surface!.getPropertyStyleValueWithDefault("stroke-width", "4"));
-            const visible = this.surface!.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            const lineColor = VBATranslateFunctions.colorToVBA(this.svgSurface!.getPropertyStyleValueWithDefault("stroke", "gray"));
+            const lineType = GraphTableSVG.msoDashStyle.getLineType(this.svgSurface!);
+            const strokeWidth = parseInt(this.svgSurface!.getPropertyStyleValueWithDefault("stroke-width", "4"));
+            const visible = this.svgSurface!.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
             return ` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`;
         }
 

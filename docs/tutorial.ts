@@ -34,7 +34,9 @@ function createLoadCode(e: libxmljs.Element, dir: string): libxmljs.Element {
         return img;
     } else if(e.attr("id") != null){
         const id : string = e.attr("id").value()!;
-        return TextLoader.loadTextByID(filePath, dir, id);
+        const node = TextLoader.loadTextByID(filePath, dir, id);
+        node.attr({ "ignore-format": "true"});
+        return node;
         //throw Error("error");
     } else {
         return HTMLLib.createReferenceCodeTag(filePath, dir, e.doc());

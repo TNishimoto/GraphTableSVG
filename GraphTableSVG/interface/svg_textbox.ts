@@ -185,6 +185,7 @@ namespace GraphTableSVG {
                 dx -= width;
                 //dy += fs;
             }
+
             if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
                 let maxWidth = 0;
                 const widths = lineSpans.map((v) => {
@@ -200,7 +201,6 @@ namespace GraphTableSVG {
                 })
                 dx = 0;
                 if (widths.length > 0) {
-                    console.log(widths)
                     for (let y = 0; y < lineSpans.length; y++) {
                         const offset = (maxWidth - widths[y]) / 2;
                         let width = offset;
@@ -227,9 +227,12 @@ namespace GraphTableSVG {
             let dx = 0;
 
             const spans = text.map((v, i) => {
-                const span = createSingleTextSpan(v.textContent!, null);
-                copy(v, span);
-                return span;
+                
+                const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                tspan.innerHTML = v.innerHTML;
+                //const span = createSingleTextSpan(v.textContent!, null);
+                copy(v, tspan);
+                return tspan;
             })
             let dy = 0;
 

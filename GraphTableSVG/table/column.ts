@@ -155,10 +155,10 @@ namespace GraphTableSVG {
             const r: SVGLineElement[] = [];
             this.cells.forEach((v) => {
                 if (r.length == 0) {
-                    r.push(v.leftBorder);
+                    r.push(v.svgLeftBorder);
                 } else {
                     const last = r[r.length - 1];
-                    if (last != v.leftBorder) r.push(v.leftBorder);
+                    if (last != v.svgLeftBorder) r.push(v.svgLeftBorder);
                 }
             });
             return r;
@@ -170,10 +170,10 @@ namespace GraphTableSVG {
             const r: SVGLineElement[] = [];
             this.cells.forEach((v) => {
                 if (r.length == 0) {
-                    r.push(v.rightBorder);
+                    r.push(v.svgRightBorder);
                 } else {
                     const last = r[r.length - 1];
-                    if (last != v.rightBorder) r.push(v.rightBorder);
+                    if (last != v.svgRightBorder) r.push(v.svgRightBorder);
                 }
             });
             return r;
@@ -182,14 +182,14 @@ namespace GraphTableSVG {
          * この列の上の枠を返します。
          */
         public get topBorder(): SVGLineElement {
-            return this.cells[0].topBorder;
+            return this.cells[0].svgTopBorder;
         }
         /**
          * この列の下の枠を返します。
          */
         public get bottomBorder(): SVGLineElement {
             const cells = this.cells;
-            return cells[cells.length - 1].bottomBorder;
+            return cells[cells.length - 1].svgBottomBorder;
         }
         /**
          * この列を取り除きます。

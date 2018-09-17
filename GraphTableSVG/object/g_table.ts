@@ -5,6 +5,17 @@ namespace GraphTableSVG {
     テーブルを表します。
     */
     export class GTable extends GObject {
+        private _svgHiddenGroup: SVGGElement;
+        /**
+        各行を表す配列を返します。読み取り専用です。
+        */
+       private _rows: Row[] = new Array(0);
+        /**
+        各列を表す配列を返します。読み取り専用です。
+        */
+       private _columns: Column[] = new Array(0);
+       private _cells: Cell[][] = [];
+
 
         /*
                  constructor
@@ -47,7 +58,7 @@ namespace GraphTableSVG {
             if (option.cx !== undefined) this.cx = option.cx;
             if (option.cy !== undefined) this.cy = option.cy;
 
-
+            this.update();
         }
         get width(): number {
             let width = 0;
@@ -104,7 +115,7 @@ namespace GraphTableSVG {
                         }
                         const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(cells[y][x]).filter((v) => v.nodeName == "t");
                         if (tNodes.length > 0) {
-                            tNodes.forEach((v,i) => {
+                            tNodes.forEach((v, i) => {
                                 if (i > 0 && !v.hasAttribute("newline"))
                                     v.setAttribute("newline", "true")
                             }
@@ -121,16 +132,6 @@ namespace GraphTableSVG {
             }
             return output;
         }
-        /*
-        field
-        */
-        /*
-        private _svgGroup: SVGGElement;
-        public get svgGroup(): SVGGElement {
-            return this._svgGroup;
-        }
-        */
-        private _svgHiddenGroup: SVGGElement;
         /**
          * mergeによって見えなくなったBorderなどを格納している特別なSVGGElementです。
          */
@@ -144,24 +145,15 @@ namespace GraphTableSVG {
         /**
         各行を表す配列を返します。読み取り専用です。
         */
-        private _rows: Row[] = new Array(0);
-        /**
-        各行を表す配列を返します。読み取り専用です。
-        */
         get rows(): Row[] {
             return this._rows;
         }
         /**
         各列を表す配列を返します。読み取り専用です。
         */
-        private _columns: Column[] = new Array(0);
-        /**
-        各列を表す配列を返します。読み取り専用です。
-        */
         get columns(): Column[] {
             return this._columns;
         }
-        private _cells: Cell[][] = [];
         /**
         各セルを格納している二次元ジャグ配列を返します。
         */
@@ -329,17 +321,17 @@ namespace GraphTableSVG {
             const arr = new Array(0);
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
-                    if (arr.indexOf(this.cells[y][x].topBorder) == -1) {
-                        arr.push(this.cells[y][x].topBorder);
+                    if (arr.indexOf(this.cells[y][x].svgTopBorder) == -1) {
+                        arr.push(this.cells[y][x].svgTopBorder);
                     }
-                    if (arr.indexOf(this.cells[y][x].leftBorder) == -1) {
-                        arr.push(this.cells[y][x].leftBorder);
+                    if (arr.indexOf(this.cells[y][x].svgLeftBorder) == -1) {
+                        arr.push(this.cells[y][x].svgLeftBorder);
                     }
-                    if (arr.indexOf(this.cells[y][x].rightBorder) == -1) {
-                        arr.push(this.cells[y][x].rightBorder);
+                    if (arr.indexOf(this.cells[y][x].svgRightBorder) == -1) {
+                        arr.push(this.cells[y][x].svgRightBorder);
                     }
-                    if (arr.indexOf(this.cells[y][x].bottomBorder) == -1) {
-                        arr.push(this.cells[y][x].bottomBorder);
+                    if (arr.indexOf(this.cells[y][x].svgBottomBorder) == -1) {
+                        arr.push(this.cells[y][x].svgBottomBorder);
                     }
                 }
             }
@@ -351,10 +343,18 @@ namespace GraphTableSVG {
         所属しているSVGタグ上でのテーブルの領域を表すRectangleクラスを返します。        
         */
         public getRegion(): Rectangle {
+            let rect = new Rectangle();
+            rect.x = this.svgGroup.getX();
+            rect.y = this.svgGroup.getY();
+            rect.width = this.width;
+            rect.height = this.height;
+            return rect;
+            /*
             const regions = this.cellArray.map((v) => v.region);
             const rect = Rectangle.merge(regions);
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
             return rect;
+            */
         }
 
 
@@ -392,8 +392,8 @@ namespace GraphTableSVG {
                         //    throw Error(`Forbidden table[${y}][${x}].topBorderClass != table[${y-1}][${x}].bottomBorderClass`);
                         //}
 
-                        GraphTableSVG.SVG.resetStyle(cell.topBorder.style);
-                        cell.topBorder.setAttribute("class", borderClass);
+                        GraphTableSVG.SVG.resetStyle(cell.svgTopBorder.style);
+                        cell.svgTopBorder.setAttribute("class", borderClass);
                     }
                     if (cellInfo.leftBorderClass != null) {
                         const leftCellInfo = x > 0 ? table.cells[y][x - 1] : null;
@@ -407,8 +407,8 @@ namespace GraphTableSVG {
                             throw Error(`Forbidden table[${y}][${x}].leftBorderClass != table[${y}][${x-1}].rightBorderClass`);
                         }
                         */
-                        GraphTableSVG.SVG.resetStyle(cell.leftBorder.style);
-                        cell.leftBorder.setAttribute("class", borderClass);
+                        GraphTableSVG.SVG.resetStyle(cell.svgLeftBorder.style);
+                        cell.svgLeftBorder.setAttribute("class", borderClass);
                     }
                     if (cellInfo.rightBorderClass != null) {
                         const rightCellInfo = x + 1 < table.columnCount ? table.cells[y][x + 1] : null;
@@ -421,8 +421,8 @@ namespace GraphTableSVG {
                             throw Error(`Forbidden table[${y}][${x}].rightBorderClass != table[${y}][${x + 1}].leftBorderClass`);
                         }
                         */
-                        GraphTableSVG.SVG.resetStyle(cell.rightBorder.style);
-                        cell.rightBorder.setAttribute("class", borderClass);
+                        GraphTableSVG.SVG.resetStyle(cell.svgRightBorder.style);
+                        cell.svgRightBorder.setAttribute("class", borderClass);
                     }
                     if (cellInfo.bottomBorderClass != null) {
                         const bottomCellInfo = y + 1 < table.rowCount ? table.cells[y + 1][x] : null;
@@ -435,9 +435,11 @@ namespace GraphTableSVG {
                             throw Error(`Forbidden table[${y}][${x}].bottomBorderClass != table[${y+1}][${x}].topBorderClass`);
                         }
                         */
-                        GraphTableSVG.SVG.resetStyle(cell.bottomBorder.style);
-                        cell.bottomBorder.setAttribute("class", borderClass);
+                        GraphTableSVG.SVG.resetStyle(cell.svgBottomBorder.style);
+                        cell.svgBottomBorder.setAttribute("class", borderClass);
                     }
+                    cell.update();
+
                 }
             }
 
@@ -613,30 +615,30 @@ namespace GraphTableSVG {
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
                     const cell = this.cells[y][x];
-                    const upLineStyle = VBATranslateFunctions.colorToVBA(cell.topBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                    const upLineStrokeWidth = cell.topBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.topBorder.style.strokeWidth) : "";
-                    const upLineVisibility = cell.topBorder.style.visibility != null ? GraphTableSVG.visible(cell.topBorder.style.visibility) : "";
+                    const upLineStyle = VBATranslateFunctions.colorToVBA(cell.svgTopBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    const upLineStrokeWidth = cell.svgTopBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.svgTopBorder.style.strokeWidth) : "";
+                    const upLineVisibility = cell.svgTopBorder.style.visibility != null ? GraphTableSVG.visible(cell.svgTopBorder.style.visibility) : "";
 
                     lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${upLineStyle}, ${upLineStrokeWidth}, ${upLineVisibility})`]);
 
-                    const leftLineStyle = VBATranslateFunctions.colorToVBA(cell.leftBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                    const leftLineStrokeWidth = cell.leftBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.leftBorder.style.strokeWidth) : "";
-                    const leftLineVisibility = cell.leftBorder.style.visibility != null ? GraphTableSVG.visible(cell.leftBorder.style.visibility) : "";
+                    const leftLineStyle = VBATranslateFunctions.colorToVBA(cell.svgLeftBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    const leftLineStrokeWidth = cell.svgLeftBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.svgLeftBorder.style.strokeWidth) : "";
+                    const leftLineVisibility = cell.svgLeftBorder.style.visibility != null ? GraphTableSVG.visible(cell.svgLeftBorder.style.visibility) : "";
 
                     lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${leftLineStyle}, ${leftLineStrokeWidth}, ${leftLineVisibility})`]);
                     if (x + 1 == this.columnCount) {
 
-                        const rightLineStyle = VBATranslateFunctions.colorToVBA(cell.rightBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                        const rightLineStrokeWidth = cell.rightBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.rightBorder.style.strokeWidth) : "";
-                        const rightLineVisibility = cell.rightBorder.style.visibility != null ? GraphTableSVG.visible(cell.rightBorder.style.visibility) : "";
+                        const rightLineStyle = VBATranslateFunctions.colorToVBA(cell.svgRightBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                        const rightLineStrokeWidth = cell.svgRightBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.svgRightBorder.style.strokeWidth) : "";
+                        const rightLineVisibility = cell.svgRightBorder.style.visibility != null ? GraphTableSVG.visible(cell.svgRightBorder.style.visibility) : "";
 
                         lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderRight), ${rightLineStyle}, ${rightLineStrokeWidth}, ${rightLineVisibility})`]);
                     }
 
                     if (y + 1 == this.rowCount) {
-                        const bottomLineStyle = VBATranslateFunctions.colorToVBA(cell.bottomBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                        const bottomLineStrokeWidth = cell.bottomBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.bottomBorder.style.strokeWidth) : "";
-                        const bottomLineVisibility = cell.bottomBorder.style.visibility != null ? GraphTableSVG.visible(cell.bottomBorder.style.visibility) : "";
+                        const bottomLineStyle = VBATranslateFunctions.colorToVBA(cell.svgBottomBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                        const bottomLineStrokeWidth = cell.svgBottomBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.svgBottomBorder.style.strokeWidth) : "";
+                        const bottomLineVisibility = cell.svgBottomBorder.style.visibility != null ? GraphTableSVG.visible(cell.svgBottomBorder.style.visibility) : "";
 
                         lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderBottom), ${bottomLineStyle}, ${bottomLineStrokeWidth}, ${bottomLineVisibility})`]);
                     }
@@ -827,7 +829,7 @@ namespace GraphTableSVG {
 
                     this.columns[i].cells.forEach((v, j) => {
                         //v.cellY = j;
-                        this.cells[j][i - 1].rightBorder = v.leftBorder;
+                        this.cells[j][i - 1].svgRightBorder = v.svgLeftBorder;
                         /*
                         if (v.leftCell != null && v.rightCell != null) {
                             v.leftCell.rightBorder = v.leftBorder;
@@ -856,7 +858,7 @@ namespace GraphTableSVG {
             this._rows.splice(i, 0, new Row(this, i));
             if (i > 0 && i < this.rowCount - 1) {
                 for (let x = 0; x < columnCount; x++) {
-                    this.cells[i - 1][x].bottomBorder = this.cells[i][x].topBorder;
+                    this.cells[i - 1][x].svgBottomBorder = this.cells[i][x].svgTopBorder;
                 }
             }
 

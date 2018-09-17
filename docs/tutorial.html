@@ -129,9 +129,9 @@ SVG入門の参考として
       </div>
       <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="svg/sample_hello1.html">実行結果</a></section>
-      <svg viewbox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
-         <g-rect cx="100" cy="100">hello world!</g-rect>
-         <!--
+      <svg viewbox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">&#13;
+        <g-rect cx="100" cy="100">hello world!</g-rect>&#13;
+        <!--
             openSVGによって以下のように展開される。
             <g data-group-type="g-rect" transform="matrix(1 0 0 1 100 100)">
                 <rect width="25" height="25" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); stroke-width: 1pt;" x="-12.5" y="-12.5"></rect>
@@ -139,8 +139,8 @@ SVG入門の参考として
                     <tspan>hello world!</tspan>
                 </text>
             </g>
-        -->
-      </svg>
+        -->&#13;
+    </svg>
       <br/>
       <section ignore-format="true" class="sample-commentary">　
 
@@ -199,9 +199,9 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                 &lt;/text&gt;&#13;
             &lt;/g&gt;&#13;
         --&gt;&#13;
-        &lt;g-sarrowcallout cx="300" cy="100"&gt;g-sarrowcallout&lt;/g-sarrowcallout&gt;&#13;
+        &lt;g-arrow-callout cx="300" cy="100"&gt;g-arrowcallout&lt;/g-arrow-callout&gt;&#13;
         &lt;!--&#13;
-            &lt;g data-group-type="g-sarrowcallout" ...&gt;&#13;
+            &lt;g data-group-type="g-arrow-callout" ...&gt;&#13;
                 &lt;path ...&gt;&lt;/path&gt;&#13;
                 &lt;text ...&gt;&#13;
                     &lt;tspan&gt;g-sarrowcallout&lt;/tspan&gt;&#13;
@@ -275,45 +275,45 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
       </div>
       <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="svg/sample_hello2.html">実行結果</a></section>
-      <svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox">
-         <g-rect cx="100" cy="100">g-rect</g-rect>
-         <!--
+      <svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">&#13;
+        <g-rect cx="100" cy="100">g-rect</g-rect>&#13;
+        <!--
             <g data-group-type="g-rect" ...>
                 <rect ...></rect>
                 <text ...>
                     <tspan>g-rect</tspan>
                 </text>
             </g>
-        -->
-         <g-ellipse cx="100" cy="200">g-ellipse</g-ellipse>
-         <!--
+        -->&#13;
+        <g-ellipse cx="100" cy="200">g-ellipse</g-ellipse>&#13;
+        <!--
             <g data-group-type="g-ellipse" ...>
                 <ellipse ...></ellipse>
                 <text ...>
                     <tspan>g-ellipse</tspan>
                 </text>
             </g>
-        -->
-         <g-callout cx="200" cy="100">g-callout</g-callout>
-         <!--
+        -->&#13;
+        <g-callout cx="200" cy="100">g-callout</g-callout>&#13;
+        <!--
             <g data-group-type="g-callout" ...>
                 <path ...></path>
                 <text ...>
                     <tspan>g-callout</tspan>
                 </text>
             </g>
-        -->
-         <g-sarrowcallout cx="300" cy="100">g-sarrowcallout</g-sarrowcallout>
-         <!--
-            <g data-group-type="g-sarrowcallout" ...>
+        -->&#13;
+        <g-arrow-callout cx="300" cy="100">g-arrowcallout</g-arrow-callout>&#13;
+        <!--
+            <g data-group-type="g-arrow-callout" ...>
                 <path ...></path>
                 <text ...>
                     <tspan>g-sarrowcallout</tspan>
                 </text>
             </g>
-        -->
-         <g-edge x1="100" y1="300" x2="300" y2="300">g-edge</g-edge>
-         <!--
+        -->&#13;
+        <g-edge x1="100" y1="300" x2="300" y2="300">g-edge</g-edge>&#13;
+        <!--
             <g data-group-type="g-edge" ...>
                 <path ...></path>
                 <text ...>
@@ -322,20 +322,20 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                     </textPath>
                 </text>
             </g>
-        -->
-         <g-table cx="300" cy="400">
-            <row>
-               <cell>g-table</cell>
-               <cell></cell>
-               <cell></cell>
-            </row>
-            <row>
-               <cell></cell>
-               <cell></cell>
-               <cell></cell>
-            </row>
-         </g-table>
-         <!--
+        -->&#13;
+        <g-table cx="300" cy="400">&#13;
+            <row>&#13;
+                <cell>g-table</cell>&#13;
+                <cell></cell>&#13;
+                <cell></cell>&#13;
+            </row>&#13;
+            <row>&#13;
+                <cell></cell>&#13;
+                <cell></cell>&#13;
+                <cell></cell>&#13;
+            </row>&#13;
+        </g-table>&#13;
+        <!--
             <g data-group-type="g-table" ...>
                 //cells
                 <g ...>
@@ -354,15 +354,15 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                 <line ...></line>
                 ...
             </g>
-        -->
-         <g-graph cx="100" cy="400">
-            <g-ellipse id="g1" cx="0" cy="0">g-graph</g-ellipse>
-            <g-ellipse id="g2" cx="-50" cy="100"></g-ellipse>
-            <g-ellipse id="g3" cx="50" cy="100"></g-ellipse>
-            <g-edge begin-vertex="g1" end-vertex="g2"></g-edge>
-            <g-edge begin-vertex="g1" end-vertex="g3"></g-edge>
-         </g-graph>
-         <!--
+        -->&#13;
+        <g-graph cx="100" cy="400">&#13;
+            <g-ellipse id="g1" cx="0" cy="0">g-graph</g-ellipse>&#13;
+            <g-ellipse id="g2" cx="-50" cy="100"></g-ellipse>&#13;
+            <g-ellipse id="g3" cx="50" cy="100"></g-ellipse>&#13;
+            <g-edge begin-vertex="g1" end-vertex="g2"></g-edge>&#13;
+            <g-edge begin-vertex="g1" end-vertex="g3"></g-edge>&#13;
+        </g-graph>&#13;
+        <!--
             <g data-group-type="g-graph" ...">
                 <g-ellipse>...</g-ellipse>
                 <g-ellipse>...</g-ellipse>
@@ -370,9 +370,200 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                 <g-edge>...</g-edge>
                 <g-edge>...</g-edge>
             </g>
-        -->
-      </svg>
+        -->&#13;
+&#13;
+    </svg>
       <br/>
+      <svg viewbox="0 0 800 1200" width="800px" height="1200px" id="svgbox3" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
+        <g-table x="0" y="0">
+            <row>
+                <cell>カスタム要素</cell>
+                <cell>構成SVG要素名</cell>
+                <cell>SVG要素</cell>
+                <cell>補足</cell>
+            </row>
+            <row>
+                <cell w="1" h="3">
+                    <t>g-rect</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.grect.html" target="_blank">GRect</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgSurface</cell>
+                <cell>SVGRectElement</cell>
+                <cell>枠部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>枠内テキスト部分</cell>
+            </row>
+            <row>
+                <cell w="1" h="3">
+                    <t>g-ellipse</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.gellipse.html" target="_blank">GEllipse</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgSurface</cell>
+                <cell>SVGEllipseElement</cell>
+                <cell>枠部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>枠内テキスト部分</cell>
+            </row>
+            <row>
+                <cell w="1" h="3">
+                    <t>g-callout</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.gcallout.html" target="_blank">GCallout</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgSurface</cell>
+                <cell>SVGPathElement</cell>
+                <cell>枠部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>枠内テキスト部分</cell>
+            </row>
+            <row>
+                <cell w="1" h="3">
+                    <t>g-arrow-callout</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.garrowcallout.html" target="_blank">GArrowCallout</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgSurface</cell>
+                <cell>SVGPathElement</cell>
+                <cell>枠部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>枠内テキスト部分</cell>
+            </row>
+            <row>
+                <cell w="1" h="3">
+                    <t>g-edge</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.gedge.html" target="_blank">GEdge</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgSurface</cell>
+                <cell>SVGPathElement</cell>
+                <cell>辺部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>子にSVGTextPathElementを持っている</cell>
+            </row>
+            <row>
+                <cell>
+                    <t>g-graph</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.ggraph.html" target="_blank">GGraph</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell w="1" h="2">
+                    <t>g-table</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.gtable.html" target="_blank">GTable</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>cells</cell>
+                <cell>Cell[][]</cell>
+                <cell>各セルを表現</cell>
+            </row>
+            <row>
+                <cell w="1" h="7">
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.cell.html" target="_blank">Cell</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgBackground</cell>
+                <cell>SVGRectElement</cell>
+                <cell>各セルを表現</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>枠内テキスト部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgTopBorder</cell>
+                <cell>SVGLineElement</cell>
+                <cell>上枠</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgLeftBorder</cell>
+                <cell>SVGLineElement</cell>
+                <cell>左枠</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgRightBorder</cell>
+                <cell>SVGLineElement</cell>
+                <cell>右枠</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgBottomBorder</cell>
+                <cell>SVGLineElement</cell>
+                <cell>下枠</cell>
+            </row>
+
+
+        </g-table>
+
+    </svg>
+      <br/>
+      <section ignore-format="true" class="sample-commentary">　
+
+</section>
    </article>
    <article title="Table Sample : hello world" id="xarticle-3" after="article" class="sample-article">
       <h2>Table Sample : hello world</h2>

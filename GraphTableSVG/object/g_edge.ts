@@ -164,14 +164,14 @@ namespace GraphTableSVG {
 
         //private _svgPath: SVGPathElement | null;
         public get svgPath(): SVGPathElement {
-            return <SVGPathElement>this.surface;
+            return <SVGPathElement>this.svgSurface;
         }
         protected _svgTextPath: SVGTextPathElement;
         public get svgTextPath(): SVGTextPathElement {
             return this._svgTextPath;
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
-            this._surface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
+            this._svgSurface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         public get type(): ShapeObjectType {
