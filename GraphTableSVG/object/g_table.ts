@@ -33,7 +33,6 @@ namespace GraphTableSVG {
             this.svgGroup.appendChild(this.svgHiddenGroup);
             this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             this.updateAttributes = [];
-
             if (option.table === undefined) {
                 if (option.rowCount == undefined) option.rowCount = 5;
                 if (option.columnCount == undefined) option.columnCount = 5;
@@ -363,7 +362,6 @@ namespace GraphTableSVG {
 
         private updateCellByLogicCell(table: LogicTable | null, x: number, y: number) {
             const cell = this.cells[y][x];
-
             if (table != null) {
                 const cellInfo = table.cells[y][x];
                 if (cellInfo != null) {

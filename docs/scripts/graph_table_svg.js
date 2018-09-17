@@ -8160,10 +8160,10 @@ var GraphTableSVG;
                 if (isLatexMode) {
                     createTextSpans(lineText, null, fs, dx, dy).forEach(function (v) {
                         svgText.appendChild(v);
-                        var rect = v.getBoundingClientRect();
+                        var tLen = v.getComputedTextLength();
                         dx = 0;
                         dy = 0;
-                        width += rect.width;
+                        width += tLen;
                     });
                     dy += fs;
                 }
@@ -8235,12 +8235,12 @@ var GraphTableSVG;
                 var width = 0;
                 for (var x = 0; x < lineSpans[y].length; x++) {
                     var v = lineSpans[y][x];
-                    var rect_1 = v.getBoundingClientRect();
+                    var tLen = v.getComputedTextLength();
                     if (x == 0)
                         v.setAttribute("dx", dx.toString());
                     if (x == 0 && y != 0)
                         v.setAttribute("dy", dy.toString());
-                    width += rect_1.width;
+                    width += tLen;
                 }
                 dx -= width;
             }
@@ -8249,8 +8249,7 @@ var GraphTableSVG;
                 var widths = lineSpans.map(function (v) {
                     var width = 0;
                     v.forEach(function (w) {
-                        var rect = w.getBoundingClientRect();
-                        width += rect.width;
+                        width += w.getComputedTextLength();
                     });
                     return width;
                 });
@@ -8265,11 +8264,11 @@ var GraphTableSVG;
                         var width = offset;
                         for (var x = 0; x < lineSpans[y].length; x++) {
                             var v = lineSpans[y][x];
-                            var rect_2 = v.getBoundingClientRect();
+                            var tLen = v.getComputedTextLength();
                             if (x == 0 && y != 0) {
                                 v.setAttribute("dx", (dx + offset).toString());
                             }
-                            width += rect_2.width;
+                            width += tLen;
                         }
                         dx = -width;
                     }

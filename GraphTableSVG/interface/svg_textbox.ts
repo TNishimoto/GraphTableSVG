@@ -89,10 +89,10 @@ namespace GraphTableSVG {
                 if (isLatexMode) {
                     createTextSpans(lineText, null, fs, dx, dy).forEach((v) => {
                         svgText.appendChild(v)
-                        const rect = v.getBoundingClientRect();
+                        const tLen = v.getComputedTextLength();
                         dx = 0;
                         dy = 0;
-                        width += rect.width;
+                        width += tLen;
                     });
 
                     dy += fs;
@@ -177,10 +177,10 @@ namespace GraphTableSVG {
                 let width = 0;
                 for (let x = 0; x < lineSpans[y].length; x++) {
                     const v = lineSpans[y][x];
-                    const rect = v.getBoundingClientRect();
+                    const tLen = v.getComputedTextLength();
                     if(x == 0)v.setAttribute("dx", dx.toString());
                     if(x == 0 && y != 0)v.setAttribute("dy", dy.toString());
-                    width += rect.width;
+                    width += tLen;
                 }
                 dx -= width;
                 //dy += fs;
@@ -191,8 +191,7 @@ namespace GraphTableSVG {
                 const widths = lineSpans.map((v) => {
                     let width = 0;
                     v.forEach((w) => {
-                        const rect = w.getBoundingClientRect();
-                        width += rect.width;
+                        width += w.getComputedTextLength();
                     })
                     return width;
                 })
@@ -206,11 +205,11 @@ namespace GraphTableSVG {
                         let width = offset;
                         for (let x = 0; x < lineSpans[y].length; x++) {
                             const v = lineSpans[y][x];
-                            const rect = v.getBoundingClientRect();
+                            const tLen = v.getComputedTextLength();
                             if(x == 0 && y != 0){
                                 v.setAttribute("dx", (dx+offset).toString());                                
                             }
-                            width += rect.width;
+                            width += tLen;
                         }
                         dx = -width;
                     }
