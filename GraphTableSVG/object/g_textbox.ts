@@ -21,8 +21,10 @@ namespace GraphTableSVG {
             const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
             this._textObserver.observe(this.svgText, option2);
             if (_option.text !== undefined) this.svgText.setTextContent(_option.text);
-            if (_option.isAutoSizeShapeToFitText !== undefined) this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;
+            if (_option.isAutoSizeShapeToFitText !== undefined) this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;            
+
         }
+        private isFixTextSize : boolean = false;
         
         initializeOption(option: GObjectAttributes): GObjectAttributes {
             const _option = <GTextBoxAttributes>super.initializeOption(option);
@@ -58,7 +60,7 @@ namespace GraphTableSVG {
             return _svgText;
         }
 
-        static constructAttributes(e: SVGElement,
+        static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: GTextBoxAttributes = {}): GTextBoxAttributes {
 
             GObject.constructAttributes(e, removeAttributes, output);
@@ -76,7 +78,7 @@ namespace GraphTableSVG {
 
             if (removeAttributes) {
                 e.removeAttribute("text");
-                e.style.removeProperty(CustomAttributeNames.Style.autoSizeShapeToFitTextName);
+                (<any>e).style.removeProperty(CustomAttributeNames.Style.autoSizeShapeToFitTextName);
             }
             return output;
         }
@@ -150,17 +152,21 @@ namespace GraphTableSVG {
         }
         protected update() {
             this._isUpdating = true;
+            this._observer.disconnect();
+
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();
             this.svgText.gtSetXY(this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
+            this._observer.observe(this.svgGroup, this.groupObserverOption);
         }
 
         protected updateSurface() {
 
         }
         protected updateToFitText() {
+            this.isFixTextSize = true;
             const box = this.svgText.getBBox();
             this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
             this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;

@@ -8,7 +8,7 @@ namespace GraphTableSVG {
             this.speakerY = option.speakerY == undefined ? 0 : option.speakerY;
         }
 
-        static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : GCalloutAttributes = {}) : GCalloutAttributes {        
+        static constructAttributes(e : Element, removeAttributes : boolean = false, output : GCalloutAttributes = {}) : GCalloutAttributes {        
             GTextBox.constructAttributes(e, removeAttributes, output);
             output.speakerX = e.gtGetAttributeNumber("speaker-x", 200)!;
             output.speakerY = e.gtGetAttributeNumber("speaker-y", 200)!;

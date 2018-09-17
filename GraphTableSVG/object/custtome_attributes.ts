@@ -43,7 +43,8 @@ namespace GraphTableSVG {
         export const objectCreatedEventName = "object_created";
         export const GroupAttribute = "data-group-type";
 
-        export const objectIDName: string = "data-objectID";        
+        export const objectIDName: string = "data-objectID";
+        export const customElement : string = "data-custom";      
 
 
         export let defaultCircleRadius = 15;

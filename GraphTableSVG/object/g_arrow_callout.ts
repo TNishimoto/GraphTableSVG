@@ -14,7 +14,7 @@ namespace GraphTableSVG {
 
             this.updateAttributes.push("data-direction");
         }
-        static constructAttributes(e : SVGElement, removeAttributes : boolean = false, output : GShapeArrowCalloutAttributes = {}) : GShapeArrowCalloutAttributes {        
+        static constructAttributes(e : Element, removeAttributes : boolean = false, output : GShapeArrowCalloutAttributes = {}) : GShapeArrowCalloutAttributes {        
             GTextBox.constructAttributes(e, removeAttributes, output);
             output.arrowNeckWidth = e.gtGetAttributeNumberWithoutNull("arrow-neck-width", 10);
             output.arrowNeckHeight = e.gtGetAttributeNumberWithoutNull("arrow-neck-height", 10);

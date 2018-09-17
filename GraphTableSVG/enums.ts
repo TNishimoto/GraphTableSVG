@@ -19,6 +19,8 @@
         Auto = 9
     }
     */
+    export type CustomTag = "row" | "cell" | "t";
+
     export type ShapeObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" |
      "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox";
     export namespace ShapeObjectType {
@@ -32,8 +34,43 @@
         export const Object: ShapeObjectType = "g-object"
         export const PathTextBox: ShapeObjectType = "g-path-textbox"
 
+        const typeDic: { [key: string]: boolean; } = {
+            "g-callout": true,
+            "g-arrow-callout": true,
+            "g-ellipse": true,
+            "g-rect": true,
+            "g-edge": true,
+            "g-graph": true,
+            "g-table": true,
+            "g-object": true,
+            "g-path-textbox": true
+        }
+        const customTypeDic: { [key: string]: boolean; } = {
+            "row": true,
+            "cell": true,
+            "t": true
+        }
+
         export function toShapeObjectType(value : string) : ShapeObjectType | null {
-            return <ShapeObjectType>value;
+            if(value in typeDic){
+                return <ShapeObjectType>value;
+            }else{
+                return null;
+            }
+        }
+        export function toShapeObjectTypeOrCustomTag(value : string) : ShapeObjectType | CustomTag | null {
+            
+            const value1 = toShapeObjectType(value); 
+            if(value1 != null){
+                return value1;
+            }else{
+                if(value in customTypeDic){
+                    return <CustomTag>value;
+                }else{
+                    return null;
+                }
+            }
+            
         }
     }
 

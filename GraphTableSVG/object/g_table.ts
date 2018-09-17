@@ -57,8 +57,8 @@ namespace GraphTableSVG {
 
             if (option.cx !== undefined) this.cx = option.cx;
             if (option.cy !== undefined) this.cy = option.cy;
-
             this.update();
+
         }
         get width(): number {
             let width = 0;
@@ -75,19 +75,20 @@ namespace GraphTableSVG {
         }
         set height(value: number) {
         }
-        static constructAttributes(e: SVGElement,
+        static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: TableOption = {}): TableOption {
 
             GObject.constructAttributes(e, removeAttributes, output);
 
-            const rows = HTMLFunctions.getChildren(e).filter((v) => v.nodeName == "row").map((v) => <HTMLElement>v);
+            const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
             if (rows.length == 0) {
 
             } else {
                 const cells: Element[][] = new Array(rows.length);
                 let columnSize = 0;
                 rows.forEach((v, i) => {
-                    const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.nodeName == "cell");
+                    const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "cell");
+                    cellArray.forEach((v)=>v.removeAttribute(CustomAttributeNames.customElement));
                     cells[i] = cellArray;
                     if (columnSize < cellArray.length) columnSize = cellArray.length;
                 });
@@ -113,9 +114,10 @@ namespace GraphTableSVG {
                             const h = Number(cells[y][x].getAttribute("h"));
                             output.table!.cells[y][x].connectedRowCount = h;
                         }
-                        const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(cells[y][x]).filter((v) => v.nodeName == "t");
+                        const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(cells[y][x]).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "t");
                         if (tNodes.length > 0) {
                             tNodes.forEach((v, i) => {
+                                v.removeAttribute(CustomAttributeNames.customElement);
                                 if (i > 0 && !v.hasAttribute("newline"))
                                     v.setAttribute("newline", "true")
                             }
@@ -130,6 +132,7 @@ namespace GraphTableSVG {
                 if (output.class !== undefined) output.table!.tableClassName = output.class;
                 while (e.childNodes.length > 0) e.removeChild(e.childNodes.item(0));
             }
+
             return output;
         }
         /**
@@ -481,7 +484,6 @@ namespace GraphTableSVG {
                 if (w != null) this.columns[x].width = w;
             }
 
-
             this.update();
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
@@ -697,7 +699,7 @@ namespace GraphTableSVG {
         public getEmphasizedCells(): GraphTableSVG.Cell[] {
             return this.cellArray.filter((v) => v.isEmphasized);
         }
-        private _updateCounter = 0;
+        //private _updateCounter = 0;
         /*
         Update
         */
@@ -705,25 +707,22 @@ namespace GraphTableSVG {
         各セルのサイズを再計算します。
         */
         public update() {
+            this._observer.disconnect();
             const display = this.svgGroup.getPropertyStyleValue("display");
             const style = getComputedStyle(this.svgGroup);            
-            console.log(style.display);
-            console.log(style.visibility);
             const style2 = getComputedStyle(this.svgGroup.parentElement!.parentElement!);            
 
-            console.log(style2.display);
-            console.log(style2.visibility);
 
-            console.log(this.svgGroup.getBBox());
             if(display == "none") return;
             this._isDrawing = true;
             this.renumbering();
             this.resize();
             this.relocation();
             //this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
-            this._updateCounter++;
-            if (this._updateCounter > 100) throw Error("error");
+            //this._updateCounter++;
+            //if (this._updateCounter > 100) throw Error("error");
             this._isDrawing = false;
+            this._observer.observe(this.svgGroup, this.groupObserverOption);
 
         }
         /**
@@ -784,6 +783,7 @@ namespace GraphTableSVG {
                 svg.removeChild(this.svgGroup);
             }
         }
+        private isSetSize = false;
         /**
          * 表の列数と行数を変更します。
          * @param columnCount 列数 
@@ -792,12 +792,16 @@ namespace GraphTableSVG {
         public setSize(columnCount: number, rowCount: number) {
 
             this.clear();
+            this.isSetSize = true;
             while (this.rowCount < rowCount) {
                 this.insertRowFunction(this.rowCount, columnCount);
             }
             while (this.columnCount < columnCount) {
                 this.insertColumn(this.columnCount);
             }
+            this.isSetSize = false;
+
+            this.update();
 
         }
         /**
@@ -851,7 +855,7 @@ namespace GraphTableSVG {
             } else {
                 this.insertRow(0);
             }
-            this.update();
+            if(!this.isSetSize)this.update();
 
         }
         /**
@@ -873,7 +877,7 @@ namespace GraphTableSVG {
                 }
             }
 
-            this.update();
+            if(!this.isSetSize)this.update();
 
         }
         /**

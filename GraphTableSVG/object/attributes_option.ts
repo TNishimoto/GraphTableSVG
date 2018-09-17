@@ -104,19 +104,30 @@ namespace GraphTableSVG {
             }
         } else {
             const element = id;
+            //const shapeType = GraphTableSVG.ShapeObjectType.toShapeObjectType(element.nodeName);
+            const type2 = element.getAttribute(CustomAttributeNames.customElement);
             const type = ShapeObjectType.toShapeObjectType(element.nodeName);
-            if (type != null) {
+            if(type2 != null){
+                const type3 = ShapeObjectType.toShapeObjectType(type2);
+                if(type3 != null){
+                    return createCustomElement(element, type3);
+                }else{
+                    return null;
+                }
+            }
+            else if (type != null) {
                 return createCustomElement(element, type);
             }else{
                 return null;
             }
         }
     }
-    function createCustomElement(e: SVGElement, type: ShapeObjectType): GObject | null {
+    function createCustomElement(e: Element, type: ShapeObjectType): GObject | null {
         const parent = e.parentElement;
         if (parent instanceof SVGElement) {
             let r: GObject;
 
+            e.removeAttribute(CustomAttributeNames.customElement);
             if (type == ShapeObjectType.Callout) {
                 const option = GCallout.constructAttributes(e, true);
                 r = new GCallout(parent, option);
@@ -128,7 +139,11 @@ namespace GraphTableSVG {
                 r = new GEllipse(parent, option);
             } else if (type == ShapeObjectType.Rect) {
                 const option = GTextBox.constructAttributes(e, true);
+
                 r = new GRect(parent, option);
+                //throw Error("error");
+
+
             } else if (type == ShapeObjectType.Edge) {
                 const option = GEdge.constructAttributes(e, true);
                 r = new GEdge(parent, option);
@@ -138,6 +153,7 @@ namespace GraphTableSVG {
             } else if(type == ShapeObjectType.Table){
                 const option = GTable.constructAttributes(e, true);
                 r = new GTable(parent, option);
+
             }
             else {
                 return null;
@@ -152,7 +168,7 @@ namespace GraphTableSVG {
             throw Error("error!");
         }
     }
-    export function openSVG(id: string | SVGElement | null = null, output: GObject[] = [], shrink : boolean = false): GObject[] {
+    export function openSVG(id: string | Element | null = null, output: GObject[] = [], shrink : boolean = false): GObject[] {
         if (typeof id == "string") {
             const item = document.getElementById(id);
             if (item != null && item instanceof SVGSVGElement) {
@@ -176,10 +192,15 @@ namespace GraphTableSVG {
             while (true) {
                 let b = false;
                 HTMLFunctions.getChildren(element).forEach((v) => {
-                    console.log(v);
-                    console.log(v instanceof Element);
+                    //console.log(v);
+                    //console.log(v instanceof Element);
+                    const shapeType = GraphTableSVG.ShapeObjectType.toShapeObjectType(v.nodeName);
+                    if(shapeType != null){
+                        toHTMLUnknownElement(v);
+                        b = true;
+                        //throw Error("error")
 
-                    if (v instanceof SVGElement) {
+                    } else if (v instanceof SVGElement) {
                         const p = GraphTableSVG.openCustomElement(v);
                         if (p != null) {
                             output.push(p);
@@ -187,6 +208,7 @@ namespace GraphTableSVG {
                         } else {
                             openSVG(v, output);
                         }
+                        //throw Error("error");
                     }
                 });
                 if (!b) break;
@@ -236,5 +258,28 @@ namespace GraphTableSVG {
         }
         return new GEllipse(_parent, option);
 
+    }
+    export function toHTMLUnknownElement(e : Element){
+        const type = ShapeObjectType.toShapeObjectTypeOrCustomTag(e.nodeName);
+
+        if(type == null){
+
+        }else{
+            const ns = document.createElementNS('http://www.w3.org/2000/svg', "g");        
+            ns.setAttribute(CustomAttributeNames.customElement, e.nodeName);
+            for(let i=0;i<e.attributes.length;i++){
+                const attr = e.attributes.item(i);
+                ns.setAttribute(attr!.name, attr!.value);
+            }
+            ns.innerHTML = e.innerHTML;
+            //HTMLFunctions.getChildren(e).forEach((v)=>ns.appendChild(v));
+            const p = e.parentElement;
+            if(p != null){
+                p.insertBefore(ns, e);
+                e.remove();
+            }
+            const children = HTMLFunctions.getChildren(ns);
+            children.forEach((v)=>toHTMLUnknownElement(v));    
+        }
     }
 }

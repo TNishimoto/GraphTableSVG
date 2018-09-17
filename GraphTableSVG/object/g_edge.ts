@@ -51,7 +51,7 @@ namespace GraphTableSVG {
 
         }
         */
-        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GEdgeAttributes = {}): GEdgeAttributes {
+        static constructAttributes(e: Element, removeAttributes: boolean = false, output: GEdgeAttributes = {}): GEdgeAttributes {
             GTextBox.constructAttributes(e, removeAttributes, output);
             output.x1 = e.gtGetAttributeNumberWithoutNull("x1", 0);
             output.x2 = e.gtGetAttributeNumberWithoutNull("x2", 300);

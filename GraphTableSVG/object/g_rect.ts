@@ -8,7 +8,7 @@ namespace GraphTableSVG {
             super(svgbox, option);
             this.updateAttributes.push("width");
             this.updateAttributes.push("height");
-
+            //throw Error("error2");
             this.update();
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {

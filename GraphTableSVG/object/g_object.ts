@@ -5,7 +5,7 @@ namespace GraphTableSVG {
         protected _svgSurface: SVGElement | null = null;
         protected _tag: any;
         private _svgGroup: SVGGElement;
-        private _observer: MutationObserver;
+        protected _observer: MutationObserver;
 
         public constructor(svgbox: SVGElement | string, option: GObjectAttributes = {}) {
             let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
@@ -13,14 +13,11 @@ namespace GraphTableSVG {
             this._svgGroup = SVG.createGroup(parentElement, option.class == undefined ? null : option.class);
             this.setClassNameOfSVGGroup();
 
-            //const objID = PPTextBoxShapeBase.objectIDCounter++;
-            //this.svgGroup.setAttribute("objectID", objID.toString());
             GObject.setObjectFromObjectID(this);
 
+
             this.svgGroup.setAttribute(CustomAttributeNames.GroupAttribute, this.type);
-            //this.createSurface(parentElement, option);
             const _option = this.initializeOption(option);
-            //this.createObjects(parentElement, _option); 
             this.createSurface(parentElement, option);
             if (typeof _option.id !== "undefined") this.svgGroup.id = _option.id;
             this.width = _option.width!;
@@ -28,16 +25,14 @@ namespace GraphTableSVG {
             this.cx = _option.cx!;
             this.cy = _option.cy!;
 
-            //if(_option.x !== undefined) this.x = _option.x;
-            //if(_option.y !== undefined) this.y = _option.y;
-
-
             this._observer = new MutationObserver(this.observerFunc);
             const option1: MutationObserverInit = { attributes: true, childList: true, subtree: true };
             this._observer.observe(this.svgGroup, option1);
 
             this.dispatchObjectCreatedEvent();
         }
+        protected groupObserverOption : MutationObserverInit = { attributes: true, childList: true, subtree: true };
+
         initializeOption(option: GObjectAttributes): GObjectAttributes {
             const _option = { ...option };
             if (this.svgSurface != null && this.svgSurface.className != null) {
@@ -52,7 +47,7 @@ namespace GraphTableSVG {
             if (typeof _option.cy === "undefined") _option.cy = 0;
             return _option;
         }
-        static constructAttributes(e: SVGElement,
+        static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: GObjectAttributes = {}): GObjectAttributes {
             output.class = e.gtGetAttributeStringWithUndefined("class");
             output.cx = e.gtGetAttributeNumberWithUndefined("cx");
@@ -176,7 +171,10 @@ namespace GraphTableSVG {
             this.observerFunction(x);
         };
 
-        protected observerFunction(x: MutationRecord[]) {
+        protected observerFunction(x: MutationRecord[]) 
+        {
+            //throw Error("error1");
+            
             let b = false;
             if (!this.isLocated) return;
 
@@ -192,6 +190,7 @@ namespace GraphTableSVG {
             }
 
             if (b) this.update();
+            
         }
         
 

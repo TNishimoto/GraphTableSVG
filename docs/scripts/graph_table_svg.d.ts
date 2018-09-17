@@ -19,6 +19,7 @@ declare namespace GraphTableSVG {
         Preorder = 0,
         Postorder = 1,
     }
+    type CustomTag = "row" | "cell" | "t";
     type ShapeObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox";
     namespace ShapeObjectType {
         const Callout: ShapeObjectType;
@@ -31,6 +32,7 @@ declare namespace GraphTableSVG {
         const Object: ShapeObjectType;
         const PathTextBox: ShapeObjectType;
         function toShapeObjectType(value: string): ShapeObjectType | null;
+        function toShapeObjectTypeOrCustomTag(value: string): ShapeObjectType | CustomTag | null;
     }
     type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
     namespace pathTextAlighnment {
@@ -541,9 +543,10 @@ declare namespace GraphTableSVG {
         table?: LogicTable;
     };
     function openCustomElement(id: string | SVGElement): GObject | null;
-    function openSVG(id?: string | SVGElement | null, output?: GObject[], shrink?: boolean): GObject[];
+    function openSVG(id?: string | Element | null, output?: GObject[], shrink?: boolean): GObject[];
     function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option?: any): GObject;
     function createVertex(parent: GGraph, option?: GTextBoxAttributes): GVertex;
+    function toHTMLUnknownElement(e: Element): void;
 }
 declare namespace GraphTableSVG {
     namespace CustomAttributeNames {
@@ -587,6 +590,7 @@ declare namespace GraphTableSVG {
         const objectCreatedEventName = "object_created";
         const GroupAttribute = "data-group-type";
         const objectIDName: string;
+        const customElement: string;
         let defaultCircleRadius: number;
     }
 }
@@ -595,10 +599,11 @@ declare namespace GraphTableSVG {
         protected _svgSurface: SVGElement | null;
         protected _tag: any;
         private _svgGroup;
-        private _observer;
+        protected _observer: MutationObserver;
         constructor(svgbox: SVGElement | string, option?: GObjectAttributes);
+        protected groupObserverOption: MutationObserverInit;
         initializeOption(option: GObjectAttributes): GObjectAttributes;
-        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GObjectAttributes): GObjectAttributes;
+        static constructAttributes(e: Element, removeAttributes?: boolean, output?: GObjectAttributes): GObjectAttributes;
         tag: any;
         readonly svgGroup: SVGGElement;
         readonly isLocated: boolean;
@@ -635,9 +640,10 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     class GTextBox extends GObject {
         constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
+        private isFixTextSize;
         initializeOption(option: GObjectAttributes): GObjectAttributes;
         private static createSVGText(className?);
-        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GTextBoxAttributes): GTextBoxAttributes;
+        static constructAttributes(e: Element, removeAttributes?: boolean, output?: GTextBoxAttributes): GTextBoxAttributes;
         private _svgText;
         readonly svgText: SVGTextElement;
         protected surfaceAttributes: string[];
@@ -703,7 +709,7 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     class GArrowCallout extends GPathTextBox {
         constructor(svgbox: SVGElement | string, option?: GShapeArrowCalloutAttributes);
-        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GShapeArrowCalloutAttributes): GShapeArrowCalloutAttributes;
+        static constructAttributes(e: Element, removeAttributes?: boolean, output?: GShapeArrowCalloutAttributes): GShapeArrowCalloutAttributes;
         readonly type: ShapeObjectType;
         arrowNeckWidth: number;
         arrowNeckHeight: number;
@@ -724,7 +730,7 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     class GCallout extends GPathTextBox {
         constructor(svgbox: SVGElement | string, option?: GCalloutAttributes);
-        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GCalloutAttributes): GCalloutAttributes;
+        static constructAttributes(e: Element, removeAttributes?: boolean, output?: GCalloutAttributes): GCalloutAttributes;
         readonly type: ShapeObjectType;
         protected update(): void;
         speakerX: number;
@@ -737,7 +743,7 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     class GEdge extends GTextBox {
         constructor(svgbox: SVGElement | string, option?: GEdgeAttributes);
-        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GEdgeAttributes): GEdgeAttributes;
+        static constructAttributes(e: Element, removeAttributes?: boolean, output?: GEdgeAttributes): GEdgeAttributes;
         initializeOption(option: GObjectAttributes): GObjectAttributes;
         private static connectedBeginVertexDic;
         private static connectedEndVertexDic;
@@ -891,7 +897,7 @@ declare namespace GraphTableSVG {
         constructor(svgbox: SVGElement, option?: TableOption);
         width: number;
         height: number;
-        static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: TableOption): TableOption;
+        static constructAttributes(e: Element, removeAttributes?: boolean, output?: TableOption): TableOption;
         readonly svgHiddenGroup: SVGGElement;
         readonly type: ShapeObjectType;
         readonly rows: Row[];
@@ -929,13 +935,13 @@ declare namespace GraphTableSVG {
         private createVBAMainCode(slideName, id);
         toPlainText(): string;
         getEmphasizedCells(): GraphTableSVG.Cell[];
-        private _updateCounter;
         update(): void;
         private renumbering();
         private resize();
         private relocation();
         private createCell();
         removeTable(svg: SVGElement): void;
+        private isSetSize;
         setSize(columnCount: number, rowCount: number): void;
         clear(): void;
         insertRow(i: number): void;
