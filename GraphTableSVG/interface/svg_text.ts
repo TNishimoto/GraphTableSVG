@@ -39,13 +39,14 @@ interface SVGTextElement {
 
 }
 SVGTextElement.prototype.gtSetXY = function (rect: GraphTableSVG.Rectangle, vAnchor: GraphTableSVG.VerticalAnchor | null, hAnchor: GraphTableSVG.HorizontalAnchor | null, isAutoSizeShapeToFitText: boolean) {
+    
     const text : SVGTextElement = this;
     let x = rect.x;
     let y = rect.y;
     text.setAttribute('x', x.toString());
     text.setAttribute('y', y.toString());
 
-    const b2 = text.getBBox();
+    const b2 = GraphTableSVG.SVGTextBox.getSize(text);
 
     const dy = b2.y - y;
     const dx = b2.x - x;
@@ -66,6 +67,7 @@ SVGTextElement.prototype.gtSetXY = function (rect: GraphTableSVG.Rectangle, vAnc
 
     text.setAttribute('y', y.toString());
     text.setAttribute('x', x.toString());
+    
 }
 
 

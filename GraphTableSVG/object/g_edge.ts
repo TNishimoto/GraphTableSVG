@@ -469,8 +469,10 @@ namespace GraphTableSVG {
         }
         private setRegularInterval(value: number): void {
             this.removeTextLengthAttribute();
-            const box = this.svgText.getBBox();
-            const diff = value - box.width;
+            
+            const textRect = SVGTextBox.getSize(this.svgText);
+            //const box = this.svgText.getBBox();
+            const diff = value - textRect.width;
             const number = this.svgText.textContent != null ? this.svgText.textContent.length : 0;
             if (number >= 2) {
                 const w = diff / (number - 1)
@@ -643,15 +645,17 @@ namespace GraphTableSVG {
             }
             else if (this.pathTextAlignment == pathTextAlighnment.end) {
                 this.removeTextLengthAttribute();
-                const box = this.svgText.getBBox();
+                const textRect = SVGTextBox.getSize(this.svgText);
+                //const box = this.svgText.getBBox();
                 const pathLen = this.svgPath.getTotalLength();
-                this.svgTextPath.setAttribute("startOffset", `${pathLen - box.width}`);
+                this.svgTextPath.setAttribute("startOffset", `${pathLen - textRect.width}`);
             }
             else if (this.pathTextAlignment == pathTextAlighnment.center) {
                 this.removeTextLengthAttribute();
-                const box = this.svgText.getBBox();
+                const textRect = SVGTextBox.getSize(this.svgText);
+                //const box = this.svgText.getBBox();
                 const pathLen = this.svgPath.getTotalLength();
-                const offset = (pathLen - box.width) / 2;
+                const offset = (pathLen - textRect.width) / 2;
                 this.svgTextPath.setAttribute("startOffset", `${offset}`);
                 //こっちだとEdgeではおかしくなる
                 //this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    

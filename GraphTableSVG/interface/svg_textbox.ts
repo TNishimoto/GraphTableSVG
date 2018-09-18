@@ -178,8 +178,8 @@ namespace GraphTableSVG {
                 for (let x = 0; x < lineSpans[y].length; x++) {
                     const v = lineSpans[y][x];
                     const tLen = v.getComputedTextLength();
-                    if(x == 0)v.setAttribute("dx", dx.toString());
-                    if(x == 0 && y != 0)v.setAttribute("dy", dy.toString());
+                    if (x == 0) v.setAttribute("dx", dx.toString());
+                    if (x == 0 && y != 0) v.setAttribute("dy", dy.toString());
                     width += tLen;
                 }
                 dx -= width;
@@ -206,8 +206,8 @@ namespace GraphTableSVG {
                         for (let x = 0; x < lineSpans[y].length; x++) {
                             const v = lineSpans[y][x];
                             const tLen = v.getComputedTextLength();
-                            if(x == 0 && y != 0){
-                                v.setAttribute("dx", (dx+offset).toString());                                
+                            if (x == 0 && y != 0) {
+                                v.setAttribute("dx", (dx + offset).toString());
                             }
                             width += tLen;
                         }
@@ -226,7 +226,7 @@ namespace GraphTableSVG {
             let dx = 0;
 
             const spans = text.map((v, i) => {
-                
+
                 const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                 tspan.innerHTML = v.innerHTML;
                 //const span = createSingleTextSpan(v.textContent!, null);
@@ -252,11 +252,52 @@ namespace GraphTableSVG {
 
             })
             */
+        }
+        let ura : SVGSVGElement | null = null;
+        export function getSize(svgText:SVGTextElement) : Rectangle {
+            let r = new Rectangle();
+            if(HTMLFunctions.isShow(svgText)){
+                const rect = svgText.getBBox();
+                r.x = rect.x;
+                r.y = rect.y;
+                r.width = rect.width;
+                r.height = rect.height;
+                return r;
+            }else{
+                if(ura == null){
+                    ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                } 
+                document.body.appendChild(ura);
+                ura.innerHTML = svgText.outerHTML;
+                const fst = ura.firstChild;
+                //const pos = svgText.nextSibling;
+                //const parent = svgText.parentElement;
+                if(fst instanceof SVGTextElement){
+                    /*
+                    const x = svgText.getX();
+                    const y = svgText.getY();
+                    fst.setAttribute("x", x.toString());
+                    fst.setAttribute("y", y.toString());
+                    */
 
-
-
-
-
+                    const rect = fst.getBBox();
+                    r.x = rect.x;
+                    r.y = rect.y;
+                    r.width = rect.width;
+                    r.height = rect.height;
+    
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return r;
+                }else if(fst != null){
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return r;
+                }else{
+                    ura.remove();
+                    return r;
+                }
+            }
         }
 
     }

@@ -264,7 +264,7 @@ pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) =>
         const tabLabel = new libxmljs.Element(e.doc(), "label");
 
         tabInput.attr({ id: `tab-${tabCounter}-${i}`, type: "radio", name: "tab-radio", checked: "1" })
-        tabLabel.attr({ class: `tab-label`, for: `tab-${i}` })
+        tabLabel.attr({ class: `tab-label`, for: `tab-${tabCounter}-${i}` })
         MacroupLib.setText(tabLabel, `page${i}`);
 
         tab.addChild(tabInput);

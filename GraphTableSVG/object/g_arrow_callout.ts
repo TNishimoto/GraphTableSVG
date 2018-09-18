@@ -91,9 +91,11 @@ namespace GraphTableSVG {
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
             if (this.isAutoSizeShapeToFitText) {
-                const b = this.svgText.getBBox();
-                rect.width = b.width;
-                rect.height = b.height;
+                
+                const textRect = SVGTextBox.getSize(this.svgText);
+                //const b = this.svgText.getBBox();
+                rect.width = textRect.width;
+                rect.height = textRect.height;
                 rect.x = (-this.width / 2) + this.marginPaddingLeft;
                 rect.y = (-this.height / 2) + this.marginPaddingTop;
             } else {
@@ -126,13 +128,14 @@ namespace GraphTableSVG {
 
         protected updateToFitText() {
 
-            const box = this.svgText.getBBox();
+            const textRect = SVGTextBox.getSize(this.svgText);
+            //const box = this.svgText.getBBox();
             if (this.direction == "up" || this.direction == "down") {
-                this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
-                this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom + this.arrowNeckHeight + this.arrowHeadHeight;
+                this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;
+                this.height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom + this.arrowNeckHeight + this.arrowHeadHeight;
             } else {
-                this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight + this.arrowNeckHeight + this.arrowHeadHeight;
-                this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;
+                this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight + this.arrowNeckHeight + this.arrowHeadHeight;
+                this.height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;
             }
         }
         protected update() {

@@ -440,7 +440,8 @@ namespace GraphTableSVG {
         */
         get calculatedWidthUsingText(): number {
             if (this.isLocated) {
-                return this.svgText.getBBox().width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
+                const textRect = SVGTextBox.getSize(this.svgText);
+                return textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
                     + this.paddingLeft + this.paddingRight;
             } else {
                 return 0;
@@ -451,7 +452,9 @@ namespace GraphTableSVG {
         */
         get calculatedHeightUsingText(): number {
             if (this.isLocated) {
-                return this.svgText.getBBox().height + this.paddingTop + this.paddingBottom;
+                const textRect = SVGTextBox.getSize(this.svgText);
+
+                return textRect.height + this.paddingTop + this.paddingBottom;
             } else {
                 return 0;
             }

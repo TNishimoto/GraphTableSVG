@@ -167,9 +167,15 @@ namespace GraphTableSVG {
         }
         protected updateToFitText() {
             this.isFixTextSize = true;
-            const box = this.svgText.getBBox();
-            this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
-            this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;
+            //console.log("c")
+            //console.log(this.svgText.getBoundingClientRect());
+            //console.log(this.svgText.getBBox());
+
+            //const box = this.svgText.getBBox();
+            const textRect = SVGTextBox.getSize(this.svgText);
+            
+            this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;
+            this.height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;
         }
         get marginPaddingTop() {
             return this.svgText.getMarginTop() + this.svgGroup.getPaddingTop();

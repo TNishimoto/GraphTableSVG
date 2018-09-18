@@ -1810,7 +1810,8 @@ var GraphTableSVG;
         Object.defineProperty(Cell.prototype, "calculatedWidthUsingText", {
             get: function () {
                 if (this.isLocated) {
-                    return this.svgText.getBBox().width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
+                    var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+                    return textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
                         + this.paddingLeft + this.paddingRight;
                 }
                 else {
@@ -1823,7 +1824,8 @@ var GraphTableSVG;
         Object.defineProperty(Cell.prototype, "calculatedHeightUsingText", {
             get: function () {
                 if (this.isLocated) {
-                    return this.svgText.getBBox().height + this.paddingTop + this.paddingBottom;
+                    var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+                    return textRect.height + this.paddingTop + this.paddingBottom;
                 }
                 else {
                     return 0;
@@ -3897,6 +3899,13 @@ var GraphTableSVG;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(GObject.prototype, "isShow", {
+            get: function () {
+                return HTMLFunctions.isShow(this.svgGroup);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(GObject.prototype, "svgGroup", {
             get: function () {
                 return this._svgGroup;
@@ -4276,9 +4285,9 @@ var GraphTableSVG;
         };
         GTextBox.prototype.updateToFitText = function () {
             this.isFixTextSize = true;
-            var box = this.svgText.getBBox();
-            this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
-            this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;
+            var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+            this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;
+            this.height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;
         };
         Object.defineProperty(GTextBox.prototype, "marginPaddingTop", {
             get: function () {
@@ -4615,9 +4624,9 @@ var GraphTableSVG;
             get: function () {
                 var rect = new GraphTableSVG.Rectangle();
                 if (this.isAutoSizeShapeToFitText) {
-                    var b = this.svgText.getBBox();
-                    rect.width = b.width;
-                    rect.height = b.height;
+                    var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+                    rect.width = textRect.width;
+                    rect.height = textRect.height;
                     rect.x = (-this.width / 2) + this.marginPaddingLeft;
                     rect.y = (-this.height / 2) + this.marginPaddingTop;
                 }
@@ -4794,9 +4803,9 @@ var GraphTableSVG;
             get: function () {
                 var rect = new GraphTableSVG.Rectangle();
                 if (this.isAutoSizeShapeToFitText) {
-                    var b = this.svgText.getBBox();
-                    rect.width = b.width;
-                    rect.height = b.height;
+                    var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+                    rect.width = textRect.width;
+                    rect.height = textRect.height;
                     rect.x = (-this.width / 2) + this.marginPaddingLeft;
                     rect.y = (-this.height / 2) + this.marginPaddingTop;
                 }
@@ -4840,14 +4849,14 @@ var GraphTableSVG;
             configurable: true
         });
         GArrowCallout.prototype.updateToFitText = function () {
-            var box = this.svgText.getBBox();
+            var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
             if (this.direction == "up" || this.direction == "down") {
-                this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight;
-                this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom + this.arrowNeckHeight + this.arrowHeadHeight;
+                this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;
+                this.height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom + this.arrowNeckHeight + this.arrowHeadHeight;
             }
             else {
-                this.width = box.width + this.marginPaddingLeft + this.marginPaddingRight + this.arrowNeckHeight + this.arrowHeadHeight;
-                this.height = box.height + this.marginPaddingTop + this.marginPaddingBottom;
+                this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight + this.arrowNeckHeight + this.arrowHeadHeight;
+                this.height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;
             }
         };
         GArrowCallout.prototype.update = function () {
@@ -5653,8 +5662,8 @@ var GraphTableSVG;
         };
         GEdge.prototype.setRegularInterval = function (value) {
             this.removeTextLengthAttribute();
-            var box = this.svgText.getBBox();
-            var diff = value - box.width;
+            var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+            var diff = value - textRect.width;
             var number = this.svgText.textContent != null ? this.svgText.textContent.length : 0;
             if (number >= 2) {
                 var w = diff / (number - 1);
@@ -5788,15 +5797,15 @@ var GraphTableSVG;
             }
             else if (this.pathTextAlignment == GraphTableSVG.pathTextAlighnment.end) {
                 this.removeTextLengthAttribute();
-                var box = this.svgText.getBBox();
+                var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 var pathLen = this.svgPath.getTotalLength();
-                this.svgTextPath.setAttribute("startOffset", "" + (pathLen - box.width));
+                this.svgTextPath.setAttribute("startOffset", "" + (pathLen - textRect.width));
             }
             else if (this.pathTextAlignment == GraphTableSVG.pathTextAlighnment.center) {
                 this.removeTextLengthAttribute();
-                var box = this.svgText.getBBox();
+                var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 var pathLen = this.svgPath.getTotalLength();
-                var offset = (pathLen - box.width) / 2;
+                var offset = (pathLen - textRect.width) / 2;
                 this.svgTextPath.setAttribute("startOffset", "" + offset);
             }
             else {
@@ -7661,6 +7670,24 @@ var HTMLFunctions;
         }
     }
     HTMLFunctions.getAncestorAttribute = getAncestorAttribute;
+    function isShow(e) {
+        var p = getComputedStyle(e);
+        var disp = p.display;
+        var vis = p.visibility;
+        if (disp == "none" || vis == "hidden") {
+            return false;
+        }
+        else {
+            var parent_1 = e.parentElement;
+            if (parent_1 == null) {
+                return true;
+            }
+            else {
+                return isShow(parent_1);
+            }
+        }
+    }
+    HTMLFunctions.isShow = isShow;
     function getDescendants(e) {
         var r = [];
         r.push(e);
@@ -7997,7 +8024,7 @@ SVGTextElement.prototype.gtSetXY = function (rect, vAnchor, hAnchor, isAutoSizeS
     var y = rect.y;
     text.setAttribute('x', x.toString());
     text.setAttribute('y', y.toString());
-    var b2 = text.getBBox();
+    var b2 = GraphTableSVG.SVGTextBox.getSize(text);
     var dy = b2.y - y;
     var dx = b2.x - x;
     y -= dy;
@@ -8295,6 +8322,46 @@ var GraphTableSVG;
             });
         }
         SVGTextBox.setTextToSVGText2 = setTextToSVGText2;
+        var ura = null;
+        function getSize(svgText) {
+            var r = new GraphTableSVG.Rectangle();
+            if (HTMLFunctions.isShow(svgText)) {
+                var rect = svgText.getBBox();
+                r.x = rect.x;
+                r.y = rect.y;
+                r.width = rect.width;
+                r.height = rect.height;
+                return r;
+            }
+            else {
+                if (ura == null) {
+                    ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                }
+                document.body.appendChild(ura);
+                ura.innerHTML = svgText.outerHTML;
+                var fst = ura.firstChild;
+                if (fst instanceof SVGTextElement) {
+                    var rect = fst.getBBox();
+                    r.x = rect.x;
+                    r.y = rect.y;
+                    r.width = rect.width;
+                    r.height = rect.height;
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return r;
+                }
+                else if (fst != null) {
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return r;
+                }
+                else {
+                    ura.remove();
+                    return r;
+                }
+            }
+        }
+        SVGTextBox.getSize = getSize;
     })(SVGTextBox = GraphTableSVG.SVGTextBox || (GraphTableSVG.SVGTextBox = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 //# sourceMappingURL=graph_table_svg.js.map

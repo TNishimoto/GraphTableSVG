@@ -605,6 +605,7 @@ declare namespace GraphTableSVG {
         initializeOption(option: GObjectAttributes): GObjectAttributes;
         static constructAttributes(e: Element, removeAttributes?: boolean, output?: GObjectAttributes): GObjectAttributes;
         tag: any;
+        readonly isShow: boolean;
         readonly svgGroup: SVGGElement;
         readonly isLocated: boolean;
         readonly svgSurface: SVGElement | null;
@@ -975,6 +976,7 @@ declare namespace GraphTableSVG {
 }
 declare namespace HTMLFunctions {
     function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;
+    function isShow(e: HTMLElement | SVGElement): boolean;
     function getDescendants(e: Element): Element[];
     function getChildren(e: Element): Element[];
     function getChildByNodeName(e: Element, name: string): Element | null;
@@ -1052,5 +1054,6 @@ declare namespace GraphTableSVG {
         function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean): void;
         function sortText(svgText: SVGTextElement, rect: GraphTableSVG.Rectangle | null, vAnchor: GraphTableSVG.VerticalAnchor, hAnchor: GraphTableSVG.HorizontalAnchor): void;
         function setTextToSVGText2(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean): void;
+        function getSize(svgText: SVGTextElement): Rectangle;
     }
 }

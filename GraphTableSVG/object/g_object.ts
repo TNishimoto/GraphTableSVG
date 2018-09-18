@@ -8,7 +8,14 @@ namespace GraphTableSVG {
         protected _observer: MutationObserver;
 
         public constructor(svgbox: SVGElement | string, option: GObjectAttributes = {}) {
+
             let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
+            /*
+            if(!HTMLFunctions.isShow(parentElement)){
+                throw Error("The parent element of the instance must be displayed when the instance is created");
+            }
+            */
+
 
             this._svgGroup = SVG.createGroup(parentElement, option.class == undefined ? null : option.class);
             this.setClassNameOfSVGGroup();
@@ -74,6 +81,9 @@ namespace GraphTableSVG {
         }
         public set tag(v: any) {
             this._tag = v;
+        }
+        public get isShow(){
+            return HTMLFunctions.isShow(this.svgGroup);
         }
 
         /**
