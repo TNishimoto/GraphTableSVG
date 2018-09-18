@@ -20,61 +20,58 @@
             <a href="#xarticle-0">はじめに</a>
          </li>
          <li>
-            <a href="#xarticle-1">Object Sample : オブジェクトの種類</a>
+            <a href="#xarticle-1">Table Sample : hello world</a>
          </li>
          <li>
-            <a href="#xarticle-2">Table Sample : hello world</a>
+            <a href="#xarticle-2">Table Sample : Tableの構成</a>
          </li>
          <li>
-            <a href="#xarticle-3">Table Sample : Tableの構成</a>
+            <a href="#xarticle-3">Table Sample : デフォルトクラス名の指定</a>
          </li>
          <li>
-            <a href="#xarticle-4">Table Sample : デフォルトクラス名の指定</a>
+            <a href="#xarticle-4">Table Sample : RowとColumn</a>
          </li>
          <li>
-            <a href="#xarticle-5">Table Sample : RowとColumn</a>
+            <a href="#xarticle-5">Table Sample : セルの連結</a>
          </li>
          <li>
-            <a href="#xarticle-6">Table Sample : セルの連結</a>
+            <a href="#xarticle-6">Table Sample : テキスト位置の指定</a>
          </li>
          <li>
-            <a href="#xarticle-7">Table Sample : テキスト位置の指定</a>
+            <a href="#xarticle-7">Table Sample : Logic Table</a>
          </li>
          <li>
-            <a href="#xarticle-8">Table Sample : Logic Table</a>
+            <a href="#xarticle-8">Table Sample : Powerpointへ出力とPNG保存について</a>
          </li>
          <li>
-            <a href="#xarticle-9">Table Sample : Powerpointへ出力とPNG保存について</a>
+            <a href="#xarticle-9">Graph Sample : Hello World</a>
          </li>
          <li>
-            <a href="#xarticle-10">Graph Sample : Hello World</a>
+            <a href="#xarticle-10">Graph Sample : Edge</a>
          </li>
          <li>
-            <a href="#xarticle-11">Graph Sample : Edge</a>
+            <a href="#xarticle-11">Graph Sample : Vertex and Edge</a>
          </li>
          <li>
-            <a href="#xarticle-12">Graph Sample : Vertex and Edge</a>
+            <a href="#xarticle-12">Graph Sample : Connector</a>
          </li>
          <li>
-            <a href="#xarticle-13">Graph Sample : Connector</a>
+            <a href="#xarticle-13">Graph Sample : Class Name</a>
          </li>
          <li>
-            <a href="#xarticle-14">Graph Sample : Class Name</a>
+            <a href="#xarticle-14">Graph Sample : Alignment</a>
          </li>
          <li>
-            <a href="#xarticle-15">Graph Sample : Alignment</a>
+            <a href="#xarticle-15">Graph Sample : 破線</a>
          </li>
          <li>
-            <a href="#xarticle-16">Graph Sample : 破線</a>
+            <a href="#xarticle-16">Graph Sample : Tree</a>
          </li>
          <li>
-            <a href="#xarticle-17">Graph Sample : Tree</a>
+            <a href="#xarticle-17">Graph Sample : Logic Tree</a>
          </li>
          <li>
-            <a href="#xarticle-18">Graph Sample : Logic Tree</a>
-         </li>
-         <li>
-            <a href="#xarticle-19">Graph Sample : Powerpoint</a>
+            <a href="#xarticle-18">Graph Sample : Powerpoint</a>
          </li>
       </ol>
    </div>
@@ -95,52 +92,48 @@ SVG入門の参考として
    <article title="Object Sample : hello world" after="article" class="sample-article">
       <h2>Object Sample : hello world</h2>
       <div class="tabs">
-         <input id="tab-0-0" type="radio" name="tab-radio" checked="1"/>
-         <label class="tab-label" for="tab-0-0">page0</label>
-         <input id="tab-0-1" type="radio" name="tab-radio" checked="1"/>
-         <label class="tab-label" for="tab-0-1">page1</label>
-         <input id="tab-0-2" type="radio" name="tab-radio" checked="1"/>
-         <label class="tab-label" for="tab-0-2">page2</label>
+         <input id="tab-0-0" type="radio" name="tab-radio0"/>
+         <label class="tab-label" for="tab-0-0">code</label>
+         <input id="tab-0-1" type="radio" name="tab-radio0" checked="1"/>
+         <label class="tab-label" for="tab-0-1">svg</label>
          <div class="tab-content tab-0-0-content">
+            <a href="svg/sample_hello1.html">実行結果</a>
             <div class="code-div">
                <h4 class="code-filename">svg/sample_hello1.html</h4>
-               <pre><code>&lt;!DOCTYPE html&gt;&#13;
-&lt;html&gt;&#13;
-&lt;head&gt;&#13;
-    &lt;meta charset="utf-8" /&gt;&#13;
-    &lt;title&gt;Sample&lt;/title&gt;&#13;
-    &lt;link rel="stylesheet" href="sample_graph.css" type="text/css" /&gt;&#13;
-    &lt;script src="../scripts/graph_table_svg.js"&gt;&lt;/script&gt;&#13;
-    &lt;script&gt;&#13;
-    window.onload = () =&gt; {        &#13;
-    GraphTableSVG.openSVG("svgbox");&#13;
-    };&#13;
-    &lt;/script&gt;&#13;
-&lt;/head&gt;&#13;
-&lt;body&gt;&#13;
-    &lt;svg viewBox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox"&gt;&#13;
-        &lt;g-rect cx="100" cy="100"&gt;hello world!&lt;/g-rect&gt;&#13;
-        &lt;!--&#13;
-            openSVGによって以下のように展開される。&#13;
-            &lt;g data-group-type="g-rect" transform="matrix(1 0 0 1 100 100)"&gt;&#13;
-                &lt;rect width="25" height="25" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); stroke-width: 1pt;" x="-12.5" y="-12.5"&gt;&lt;/rect&gt;&#13;
-                &lt;text style="fill: black; font-size: 14px; font-weight: bold; font-family: Times New Roman;" x="-35.96666717529297" y="4.5"&gt;&#13;
-                    &lt;tspan&gt;hello world!&lt;/tspan&gt;&#13;
-                &lt;/text&gt;&#13;
-            &lt;/g&gt;&#13;
-        --&gt;&#13;
-    &lt;/svg&gt;&#13;
-&lt;/body&gt;&#13;
+               <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;Sample&lt;/title&gt;
+    &lt;link rel="stylesheet" href="sample_graph.css" type="text/css" /&gt;
+    &lt;script src="../scripts/graph_table_svg.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+    window.onload = () =&gt; {        
+    GraphTableSVG.openSVG("svgbox");
+    };
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;svg viewBox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox"&gt;
+        &lt;g-rect cx="100" cy="100"&gt;hello world!&lt;/g-rect&gt;
+        &lt;!--
+            openSVGによって以下のように展開される。
+            &lt;g data-group-type="g-rect" transform="matrix(1 0 0 1 100 100)"&gt;
+                &lt;rect width="25" height="25" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); stroke-width: 1pt;" x="-12.5" y="-12.5"&gt;&lt;/rect&gt;
+                &lt;text style="fill: black; font-size: 14px; font-weight: bold; font-family: Times New Roman;" x="-35.96666717529297" y="4.5"&gt;
+                    &lt;tspan&gt;hello world!&lt;/tspan&gt;
+                &lt;/text&gt;
+            &lt;/g&gt;
+        --&gt;
+    &lt;/svg&gt;
+&lt;/body&gt;
 &lt;/html&gt;</code></pre>
             </div>
             <br/>
          </div>
          <div class="tab-content tab-0-1-content">
-            <a href="svg/sample_hello1.html">実行結果</a>
-         </div>
-         <div class="tab-content tab-0-2-content">
-            <svg viewbox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">&#13;
-        <g-rect cx="100" cy="100">hello world!</g-rect>&#13;
+            <svg viewbox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">
+        <g-rect cx="100" cy="100">hello world!</g-rect>
         <!--
             openSVGによって以下のように展開される。
             <g data-group-type="g-rect" transform="matrix(1 0 0 1 100 100)">
@@ -149,7 +142,7 @@ SVG入門の参考として
                     <tspan>hello world!</tspan>
                 </text>
             </g>
-        -->&#13;
+        -->
     </svg>
             <br/>
          </div>
@@ -162,132 +155,148 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
 <a href="./typedoc/modules/graphtablesvg.html#opensvg" target="_blank">openSVG</a>関数でSVG要素のidを指定して呼び出すことでSVG要素内のカスタムSVG要素をG要素に変換することが出来る。
 </section>
    </article>
-   <article title="Object Sample : オブジェクトの種類" id="xarticle-1" after="article" class="sample-article">
+   <article title="Object Sample : オブジェクトの種類" after="article" class="sample-article">
       <h2>Object Sample : オブジェクトの種類</h2>
-      <div class="code-div">
-         <h4 class="code-filename">svg/sample_hello2.html</h4>
-         <pre><code>&lt;!DOCTYPE html&gt;&#13;
-&lt;html&gt;&#13;
-&#13;
-&lt;head&gt;&#13;
-    &lt;meta charset="utf-8" /&gt;&#13;
-    &lt;title&gt;Sample&lt;/title&gt;&#13;
-    &lt;link rel="stylesheet" href="sample_graph.css" type="text/css" /&gt;&#13;
-    &lt;script src="../scripts/graph_table_svg.js"&gt;&lt;/script&gt;&#13;
-    &lt;script&gt;&#13;
-        window.onload = () =&gt; {&#13;
-            GraphTableSVG.openSVG("svgbox");&#13;
-        };&#13;
-    &lt;/script&gt;&#13;
-&lt;/head&gt;&#13;
-&#13;
-&lt;body&gt;&#13;
-    &lt;svg viewBox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox"&gt;&#13;
-        &lt;g-rect cx="100" cy="100"&gt;g-rect&lt;/g-rect&gt;&#13;
-        &lt;!--&#13;
-            &lt;g data-group-type="g-rect" ...&gt;&#13;
-                &lt;rect ...&gt;&lt;/rect&gt;&#13;
-                &lt;text ...&gt;&#13;
-                    &lt;tspan&gt;g-rect&lt;/tspan&gt;&#13;
-                &lt;/text&gt;&#13;
-            &lt;/g&gt;&#13;
-        --&gt;&#13;
-        &lt;g-ellipse cx="100" cy="200"&gt;g-ellipse&lt;/g-ellipse&gt;&#13;
-        &lt;!--&#13;
-            &lt;g data-group-type="g-ellipse" ...&gt;&#13;
-                &lt;ellipse ...&gt;&lt;/ellipse&gt;&#13;
-                &lt;text ...&gt;&#13;
-                    &lt;tspan&gt;g-ellipse&lt;/tspan&gt;&#13;
-                &lt;/text&gt;&#13;
-            &lt;/g&gt;&#13;
-        --&gt;&#13;
-        &lt;g-callout cx="200" cy="100"&gt;g-callout&lt;/g-callout&gt;&#13;
-        &lt;!--&#13;
-            &lt;g data-group-type="g-callout" ...&gt;&#13;
-                &lt;path ...&gt;&lt;/path&gt;&#13;
-                &lt;text ...&gt;&#13;
-                    &lt;tspan&gt;g-callout&lt;/tspan&gt;&#13;
-                &lt;/text&gt;&#13;
-            &lt;/g&gt;&#13;
-        --&gt;&#13;
-        &lt;g-arrow-callout cx="300" cy="100"&gt;g-arrowcallout&lt;/g-arrow-callout&gt;&#13;
-        &lt;!--&#13;
-            &lt;g data-group-type="g-arrow-callout" ...&gt;&#13;
-                &lt;path ...&gt;&lt;/path&gt;&#13;
-                &lt;text ...&gt;&#13;
-                    &lt;tspan&gt;g-sarrowcallout&lt;/tspan&gt;&#13;
-                &lt;/text&gt;&#13;
-            &lt;/g&gt;&#13;
-        --&gt;&#13;
-        &lt;g-edge x1="100" y1="300" x2="300" y2="300"&gt;g-edge&lt;/g-edge&gt;&#13;
-        &lt;!--&#13;
-            &lt;g data-group-type="g-edge" ...&gt;&#13;
-                &lt;path ...&gt;&lt;/path&gt;&#13;
-                &lt;text ...&gt;&#13;
-                    &lt;textPath ...&gt;&#13;
-                        &lt;tspan&gt;g-edge&lt;/tspan&gt;&#13;
-                    &lt;/textPath&gt;&#13;
-                &lt;/text&gt;&#13;
-            &lt;/g&gt;&#13;
-        --&gt;&#13;
-        &lt;g-table cx="300" cy="400"&gt;&#13;
-            &lt;row&gt;&#13;
-                &lt;cell&gt;g-table&lt;/cell&gt;&#13;
-                &lt;cell&gt;&lt;/cell&gt;&#13;
-                &lt;cell&gt;&lt;/cell&gt;&#13;
-            &lt;/row&gt;&#13;
-            &lt;row&gt;&#13;
-                &lt;cell&gt;&lt;/cell&gt;&#13;
-                &lt;cell&gt;&lt;/cell&gt;&#13;
-                &lt;cell&gt;&lt;/cell&gt;&#13;
-            &lt;/row&gt;&#13;
-        &lt;/g-table&gt;&#13;
-        &lt;!--&#13;
-            &lt;g data-group-type="g-table" ...&gt;&#13;
-                //cells&#13;
-                &lt;g ...&gt;&#13;
-                    &lt;rect ...&gt;&lt;/rect&gt;&#13;
-                    &lt;text ...&gt;&lt;tspan&gt;&lt;/tspan&gt;&lt;/text&gt;&#13;
-                &lt;/g&gt;&#13;
-                &lt;g  ...&gt;&#13;
-                    &lt;rect ...&gt;&lt;/rect&gt;&#13;
-                    &lt;text ...&gt;&lt;tspan&gt;&lt;/tspan&gt;&lt;/text&gt;&#13;
-                &lt;/g&gt;&#13;
-                ...&#13;
-                //borders&#13;
-                &lt;line ...&gt;&lt;/line&gt;&#13;
-                &lt;line ...&gt;&lt;/line&gt;&#13;
-                &lt;line ...&gt;&lt;/line&gt;&#13;
-                &lt;line ...&gt;&lt;/line&gt;&#13;
-                ...&#13;
-            &lt;/g&gt;&#13;
-        --&gt;&#13;
-        &lt;g-graph cx="100" cy="400"&gt;&#13;
-            &lt;g-ellipse id="g1" cx="0" cy="0"&gt;g-graph&lt;/g-ellipse&gt;&#13;
-            &lt;g-ellipse id="g2" cx="-50" cy="100"&gt;&lt;/g-ellipse&gt;&#13;
-            &lt;g-ellipse id="g3" cx="50" cy="100"&gt;&lt;/g-ellipse&gt;&#13;
-            &lt;g-edge begin-vertex="g1" end-vertex="g2"&gt;&lt;/g-edge&gt;&#13;
-            &lt;g-edge begin-vertex="g1" end-vertex="g3"&gt;&lt;/g-edge&gt;&#13;
-        &lt;/g-graph&gt;&#13;
-        &lt;!--&#13;
-            &lt;g data-group-type="g-graph" ..."&gt;&#13;
-                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;&#13;
-                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;&#13;
-                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;&#13;
-                &lt;g-edge&gt;...&lt;/g-edge&gt;&#13;
-                &lt;g-edge&gt;...&lt;/g-edge&gt;&#13;
-            &lt;/g&gt;&#13;
-        --&gt;&#13;
-&#13;
-    &lt;/svg&gt;&#13;
-&lt;/body&gt;&#13;
-&#13;
+      <div class="tabs">
+         <input id="tab-1-0" type="radio" name="tab-radio1"/>
+         <label class="tab-label" for="tab-1-0">code</label>
+         <input id="tab-1-1" type="radio" name="tab-radio1" checked="1"/>
+         <label class="tab-label" for="tab-1-1">svg</label>
+         <input id="tab-1-2" type="radio" name="tab-radio1"/>
+         <label class="tab-label" for="tab-1-2">表</label>
+         <div class="tab-content tab-1-0-content">
+            
+
+            <a href="svg/sample_hello2.html">実行結果</a>
+            
+
+            <div class="code-div">
+               <h4 class="code-filename">svg/sample_hello2.html</h4>
+               <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;Sample&lt;/title&gt;
+    &lt;link rel="stylesheet" href="sample_graph.css" type="text/css" /&gt;
+    &lt;script src="../scripts/graph_table_svg.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        window.onload = () =&gt; {
+            GraphTableSVG.openSVG("svgbox");
+        };
+    &lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;svg viewBox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox"&gt;
+        &lt;g-rect cx="100" cy="100"&gt;g-rect&lt;/g-rect&gt;
+        &lt;!--
+            &lt;g data-group-type="g-rect" ...&gt;
+                &lt;rect ...&gt;&lt;/rect&gt;
+                &lt;text ...&gt;
+                    &lt;tspan&gt;g-rect&lt;/tspan&gt;
+                &lt;/text&gt;
+            &lt;/g&gt;
+        --&gt;
+        &lt;g-ellipse cx="100" cy="200"&gt;g-ellipse&lt;/g-ellipse&gt;
+        &lt;!--
+            &lt;g data-group-type="g-ellipse" ...&gt;
+                &lt;ellipse ...&gt;&lt;/ellipse&gt;
+                &lt;text ...&gt;
+                    &lt;tspan&gt;g-ellipse&lt;/tspan&gt;
+                &lt;/text&gt;
+            &lt;/g&gt;
+        --&gt;
+        &lt;g-callout cx="200" cy="100"&gt;g-callout&lt;/g-callout&gt;
+        &lt;!--
+            &lt;g data-group-type="g-callout" ...&gt;
+                &lt;path ...&gt;&lt;/path&gt;
+                &lt;text ...&gt;
+                    &lt;tspan&gt;g-callout&lt;/tspan&gt;
+                &lt;/text&gt;
+            &lt;/g&gt;
+        --&gt;
+        &lt;g-arrow-callout cx="300" cy="100"&gt;g-arrowcallout&lt;/g-arrow-callout&gt;
+        &lt;!--
+            &lt;g data-group-type="g-arrow-callout" ...&gt;
+                &lt;path ...&gt;&lt;/path&gt;
+                &lt;text ...&gt;
+                    &lt;tspan&gt;g-sarrowcallout&lt;/tspan&gt;
+                &lt;/text&gt;
+            &lt;/g&gt;
+        --&gt;
+        &lt;g-edge x1="100" y1="300" x2="300" y2="300"&gt;g-edge&lt;/g-edge&gt;
+        &lt;!--
+            &lt;g data-group-type="g-edge" ...&gt;
+                &lt;path ...&gt;&lt;/path&gt;
+                &lt;text ...&gt;
+                    &lt;textPath ...&gt;
+                        &lt;tspan&gt;g-edge&lt;/tspan&gt;
+                    &lt;/textPath&gt;
+                &lt;/text&gt;
+            &lt;/g&gt;
+        --&gt;
+        &lt;g-table cx="300" cy="400"&gt;
+            &lt;row&gt;
+                &lt;cell&gt;g-table&lt;/cell&gt;
+                &lt;cell&gt;&lt;/cell&gt;
+                &lt;cell&gt;&lt;/cell&gt;
+            &lt;/row&gt;
+            &lt;row&gt;
+                &lt;cell&gt;&lt;/cell&gt;
+                &lt;cell&gt;&lt;/cell&gt;
+                &lt;cell&gt;&lt;/cell&gt;
+            &lt;/row&gt;
+        &lt;/g-table&gt;
+        &lt;!--
+            &lt;g data-group-type="g-table" ...&gt;
+                //cells
+                &lt;g ...&gt;
+                    &lt;rect ...&gt;&lt;/rect&gt;
+                    &lt;text ...&gt;&lt;tspan&gt;&lt;/tspan&gt;&lt;/text&gt;
+                &lt;/g&gt;
+                &lt;g  ...&gt;
+                    &lt;rect ...&gt;&lt;/rect&gt;
+                    &lt;text ...&gt;&lt;tspan&gt;&lt;/tspan&gt;&lt;/text&gt;
+                &lt;/g&gt;
+                ...
+                //borders
+                &lt;line ...&gt;&lt;/line&gt;
+                &lt;line ...&gt;&lt;/line&gt;
+                &lt;line ...&gt;&lt;/line&gt;
+                &lt;line ...&gt;&lt;/line&gt;
+                ...
+            &lt;/g&gt;
+        --&gt;
+        &lt;g-graph cx="100" cy="400"&gt;
+            &lt;g-ellipse id="g1" cx="0" cy="0"&gt;g-graph&lt;/g-ellipse&gt;
+            &lt;g-ellipse id="g2" cx="-50" cy="100"&gt;&lt;/g-ellipse&gt;
+            &lt;g-ellipse id="g3" cx="50" cy="100"&gt;&lt;/g-ellipse&gt;
+            &lt;g-edge begin-vertex="g1" end-vertex="g2"&gt;&lt;/g-edge&gt;
+            &lt;g-edge begin-vertex="g1" end-vertex="g3"&gt;&lt;/g-edge&gt;
+        &lt;/g-graph&gt;
+        &lt;!--
+            &lt;g data-group-type="g-graph" ..."&gt;
+                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;
+                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;
+                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;
+                &lt;g-edge&gt;...&lt;/g-edge&gt;
+                &lt;g-edge&gt;...&lt;/g-edge&gt;
+            &lt;/g&gt;
+        --&gt;
+
+    &lt;/svg&gt;
+&lt;/body&gt;
+
 &lt;/html&gt;</code></pre>
-      </div>
-      <br/>
-      <section ignore-format="true" class="sample-commentary">　<a href="svg/sample_hello2.html">実行結果</a></section>
-      <svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">&#13;
-        <g-rect cx="100" cy="100">g-rect</g-rect>&#13;
+            </div>
+            <br/>
+            
+
+         </div>
+         <div class="tab-content tab-1-1-content">
+            <svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">
+        <g-rect cx="100" cy="100">g-rect</g-rect>
         <!--
             <g data-group-type="g-rect" ...>
                 <rect ...></rect>
@@ -295,8 +304,8 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                     <tspan>g-rect</tspan>
                 </text>
             </g>
-        -->&#13;
-        <g-ellipse cx="100" cy="200">g-ellipse</g-ellipse>&#13;
+        -->
+        <g-ellipse cx="100" cy="200">g-ellipse</g-ellipse>
         <!--
             <g data-group-type="g-ellipse" ...>
                 <ellipse ...></ellipse>
@@ -304,8 +313,8 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                     <tspan>g-ellipse</tspan>
                 </text>
             </g>
-        -->&#13;
-        <g-callout cx="200" cy="100">g-callout</g-callout>&#13;
+        -->
+        <g-callout cx="200" cy="100">g-callout</g-callout>
         <!--
             <g data-group-type="g-callout" ...>
                 <path ...></path>
@@ -313,8 +322,8 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                     <tspan>g-callout</tspan>
                 </text>
             </g>
-        -->&#13;
-        <g-arrow-callout cx="300" cy="100">g-arrowcallout</g-arrow-callout>&#13;
+        -->
+        <g-arrow-callout cx="300" cy="100">g-arrowcallout</g-arrow-callout>
         <!--
             <g data-group-type="g-arrow-callout" ...>
                 <path ...></path>
@@ -322,8 +331,8 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                     <tspan>g-sarrowcallout</tspan>
                 </text>
             </g>
-        -->&#13;
-        <g-edge x1="100" y1="300" x2="300" y2="300">g-edge</g-edge>&#13;
+        -->
+        <g-edge x1="100" y1="300" x2="300" y2="300">g-edge</g-edge>
         <!--
             <g data-group-type="g-edge" ...>
                 <path ...></path>
@@ -333,19 +342,19 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                     </textPath>
                 </text>
             </g>
-        -->&#13;
-        <g-table cx="300" cy="400">&#13;
-            <row>&#13;
-                <cell>g-table</cell>&#13;
-                <cell></cell>&#13;
-                <cell></cell>&#13;
-            </row>&#13;
-            <row>&#13;
-                <cell></cell>&#13;
-                <cell></cell>&#13;
-                <cell></cell>&#13;
-            </row>&#13;
-        </g-table>&#13;
+        -->
+        <g-table cx="300" cy="400">
+            <row>
+                <cell>g-table</cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+        </g-table>
         <!--
             <g data-group-type="g-table" ...>
                 //cells
@@ -365,14 +374,14 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                 <line ...></line>
                 ...
             </g>
-        -->&#13;
-        <g-graph cx="100" cy="400">&#13;
-            <g-ellipse id="g1" cx="0" cy="0">g-graph</g-ellipse>&#13;
-            <g-ellipse id="g2" cx="-50" cy="100"></g-ellipse>&#13;
-            <g-ellipse id="g3" cx="50" cy="100"></g-ellipse>&#13;
-            <g-edge begin-vertex="g1" end-vertex="g2"></g-edge>&#13;
-            <g-edge begin-vertex="g1" end-vertex="g3"></g-edge>&#13;
-        </g-graph>&#13;
+        -->
+        <g-graph cx="100" cy="400">
+            <g-ellipse id="g1" cx="0" cy="0">g-graph</g-ellipse>
+            <g-ellipse id="g2" cx="-50" cy="100"></g-ellipse>
+            <g-ellipse id="g3" cx="50" cy="100"></g-ellipse>
+            <g-edge begin-vertex="g1" end-vertex="g2"></g-edge>
+            <g-edge begin-vertex="g1" end-vertex="g3"></g-edge>
+        </g-graph>
         <!--
             <g data-group-type="g-graph" ...">
                 <g-ellipse>...</g-ellipse>
@@ -381,11 +390,13 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
                 <g-edge>...</g-edge>
                 <g-edge>...</g-edge>
             </g>
-        -->&#13;
-&#13;
+        -->
+
     </svg>
-      <br/>
-      <svg viewbox="0 0 800 1200" width="800px" height="1200px" id="svgbox3" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
+            <br/>
+         </div>
+         <div class="tab-content tab-1-2-content">
+            <svg viewbox="0 0 800 1200" width="800px" height="1200px" id="svgbox3" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
         <g-table x="0" y="0">
             <row>
                 <cell>カスタム要素</cell>
@@ -571,12 +582,11 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
         </g-table>
 
     </svg>
-      <br/>
-      <section ignore-format="true" class="sample-commentary">　
-
-</section>
+            <br/>
+         </div>
+      </div>
    </article>
-   <article title="Table Sample : hello world" id="xarticle-2" after="article" class="sample-article">
+   <article title="Table Sample : hello world" id="xarticle-1" after="article" class="sample-article">
       <h2>Table Sample : hello world</h2>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_hello.js</h4>
@@ -632,7 +642,7 @@ Table（表）を作成する例。
       <img src="images/table_hello2.png" style="max-width:100%"/>
       <br/>
    </article>
-   <article title="Table Sample : Tableの構成" id="xarticle-3" after="article" class="sample-article">
+   <article title="Table Sample : Tableの構成" id="xarticle-2" after="article" class="sample-article">
       <h2>Table Sample : Tableの構成</h2>
       <section ignore-format="true" class="sample-commentary">　
 下の図はTableとCellがどのようなSVG要素で構成されているかを示している。
@@ -727,7 +737,7 @@ window.onload = () =&gt; {&#13;
       <img src="images/table_style.png" style="max-width:100%"/>
       <br/>
    </article>
-   <article title="Table Sample : デフォルトクラス名の指定" id="xarticle-4" after="article" class="sample-article">
+   <article title="Table Sample : デフォルトクラス名の指定" id="xarticle-3" after="article" class="sample-article">
       <h2>Table Sample : デフォルトクラス名の指定</h2>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_style_select.js</h4>
@@ -798,7 +808,7 @@ CSSファイルにこれらのカスタム属性を記述しておくことで�
 ただし、この方法では各セルごとにCSSを変更するなどの細かな設定はできないことに注意すること。
 </section>
    </article>
-   <article title="Table Sample : RowとColumn" id="xarticle-5" after="article" class="sample-article">
+   <article title="Table Sample : RowとColumn" id="xarticle-4" after="article" class="sample-article">
       <h2>Table Sample : RowとColumn</h2>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_width.js</h4>
@@ -829,7 +839,7 @@ window.onload = () =&gt; {&#13;
 これらは<a href="./typedoc/classes/graphtablesvg.row.html" target="_blank">Row</a>クラスと<a href="./typedoc/classes/graphtablesvg.column.html" target="_blank">Column</a>クラスの配列である。
 </section>
    </article>
-   <article title="Table Sample : セルの連結" id="xarticle-6" after="article" class="sample-article">
+   <article title="Table Sample : セルの連結" id="xarticle-5" after="article" class="sample-article">
       <h2>Table Sample : セルの連結</h2>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_merge.js</h4>
@@ -873,7 +883,7 @@ window.onload = () =&gt; {&#13;
 実際に結合できるかどうかは<a href="./typedoc/classes/graphtablesvg.cell.html#canmerge" target="_blank">Cell.canMerge</a>, <a href="./typedoc/classes/graphtablesvg.cell.html#canmergeright" target="_blank">Cell.canMergeRight</a>, <a href="./typedoc/classes/graphtablesvg.cell.html#canmergebottom" target="_blank">Cell.canMergeBottom</a>で確認できる。
 </section>
    </article>
-   <article title="Table Sample : テキスト位置の指定" id="xarticle-7" after="article" class="sample-article">
+   <article title="Table Sample : テキスト位置の指定" id="xarticle-6" after="article" class="sample-article">
       <h2>Table Sample : テキスト位置の指定</h2>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_anchor.js</h4>
@@ -960,7 +970,7 @@ Powerpointの表のようにセル内のテキスト位置を指定できる。
 水平方向のテキストの配置位置は<a href="./typedoc/classes/graphtablesvg.cell.html#horizontalanchor" target="_blank">Cell.horizontalAnchor</a>もしくはcell.svgGroupの--horizontal-anchor属性で指定できる。
 </section>
    </article>
-   <article title="Table Sample : Logic Table" id="xarticle-8" after="article" class="sample-article">
+   <article title="Table Sample : Logic Table" id="xarticle-7" after="article" class="sample-article">
       <h2>Table Sample : Logic Table</h2>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_logic.js</h4>
@@ -995,7 +1005,7 @@ LogicTableクラスはTableクラスから描画関係を取り除いたクラ�
 表の装飾にこだわらない場合はこっちから作ったほうが良いかもしれない。
 </section>
    </article>
-   <article title="Table Sample : Powerpointへ出力とPNG保存について" id="xarticle-9" after="article" class="sample-article">
+   <article title="Table Sample : Powerpointへ出力とPNG保存について" id="xarticle-8" after="article" class="sample-article">
       <h2>Table Sample : Powerpointへ出力とPNG保存について</h2>
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_powerpoint.html</h4>
@@ -1052,7 +1062,7 @@ SVGをPNG画像に変換して保存することが出来る。<a href="./typedo
 また、画像生成時に少々時間のかかる処理をしているので、手早くPNG画像を生成したい人はスクリーンショットを使うこと。
 </section>
    </article>
-   <article title="Graph Sample : Hello World" id="xarticle-10" after="article" class="sample-article">
+   <article title="Graph Sample : Hello World" id="xarticle-9" after="article" class="sample-article">
       <h2>Graph Sample : Hello World</h2>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_hello.html</h4>
@@ -1105,7 +1115,7 @@ window.onload = () =&gt; {        &#13;
 作成した頂点にはSVGTextElementがあるので、頂点にテキストを入れることが出来る。
 </section>
    </article>
-   <article title="Graph Sample : Edge" id="xarticle-11" after="article" class="sample-article">
+   <article title="Graph Sample : Edge" id="xarticle-10" after="article" class="sample-article">
       <h2>Graph Sample : Edge</h2>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_edge.js</h4>
@@ -1154,7 +1164,7 @@ window.onload = () =&gt; {&#13;
       <br/>
       <section ignore-format="true" class="sample-commentary">　<a href="graph/sample_graph_edge2.html">実行結果</a></section>
    </article>
-   <article title="Graph Sample : Vertex and Edge" id="xarticle-12" after="article" class="sample-article">
+   <article title="Graph Sample : Vertex and Edge" id="xarticle-11" after="article" class="sample-article">
       <h2>Graph Sample : Vertex and Edge</h2>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_vertex.js</h4>
@@ -1198,7 +1208,7 @@ SVGMarkerElementは矢じりのSVGオブジェクトである。
 同様に<a href="./typedoc/classes/graphtablesvg.edge.html#markerstart" target="_blank">Edge.markerStart</a>は開始頂点の矢じりを設定するプロパティである。
 </section>
    </article>
-   <article title="Graph Sample : Connector" id="xarticle-13" after="article" class="sample-article">
+   <article title="Graph Sample : Connector" id="xarticle-12" after="article" class="sample-article">
       <h2>Graph Sample : Connector</h2>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_connector.js</h4>
@@ -1234,7 +1244,7 @@ window.onload = () =&gt; {&#13;
 Autoを選択した場合、二点の位置関係から計算した最適な位置を自動で選択する。
 </section>
    </article>
-   <article title="Graph Sample : Class Name" id="xarticle-14" after="article" class="sample-article">
+   <article title="Graph Sample : Class Name" id="xarticle-13" after="article" class="sample-article">
       <h2>Graph Sample : Class Name</h2>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_class.js</h4>
@@ -1311,7 +1321,7 @@ window.onload = () =&gt; {&#13;
 表の場合と同様に、頂点や辺のsvgGroupに設定したCSSから構成している各種SVG要素のプロパティを設定することが出来る。
 </section>
    </article>
-   <article title="Graph Sample : Alignment" id="xarticle-15" after="article" class="sample-article">
+   <article title="Graph Sample : Alignment" id="xarticle-14" after="article" class="sample-article">
       <h2>Graph Sample : Alignment</h2>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_textpath.js</h4>
@@ -1351,7 +1361,7 @@ window.onload = () =&gt; {    &#13;
 何も選ばない場合は中央配置となる。
 </section>
    </article>
-   <article title="Graph Sample : 破線" id="xarticle-16" after="article" class="sample-article">
+   <article title="Graph Sample : 破線" id="xarticle-15" after="article" class="sample-article">
       <h2>Graph Sample : 破線</h2>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_dash_style.js</h4>
@@ -1393,7 +1403,7 @@ Edgeの線は点線にすることが出来る。svgTextPathのstroke-dasharray�
 setStyleで設定した点線はPowerpoint側で用意された点線に直接変換できるからである。理由はそれだけなのでPowerpointに出力することを想定していない場合はstroke-dasharrayで十分である。
 </section>
    </article>
-   <article title="Graph Sample : Tree" id="xarticle-17" after="article" class="sample-article">
+   <article title="Graph Sample : Tree" id="xarticle-16" after="article" class="sample-article">
       <h2>Graph Sample : Tree</h2>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_tree.js</h4>
@@ -1495,7 +1505,7 @@ function XYInterval(px, py){&#13;
 このあたりは設計が煮詰まっていないので今後の実装で変更することもあるかもしれない。
 </section>
    </article>
-   <article title="Graph Sample : Logic Tree" id="xarticle-18" after="article" class="sample-article">
+   <article title="Graph Sample : Logic Tree" id="xarticle-17" after="article" class="sample-article">
       <h2>Graph Sample : Logic Tree</h2>
       <div class="code-div">
          <h4 class="code-filename">graph/sample_graph_logictree.js</h4>
@@ -1529,7 +1539,7 @@ SVG要素として構築する前にあらかじめ木の形が決まってい�
 ちなみにLogicGraphはまだ実装されていない。
 </section>
    </article>
-   <article title="Graph Sample : Powerpoint" id="xarticle-19" after="article" class="sample-article">
+   <article title="Graph Sample : Powerpoint" id="xarticle-18" after="article" class="sample-article">
       <h2>Graph Sample : Powerpoint</h2>
       <section ignore-format="true" class="sample-commentary">　
 グラフもVBAコードを使ってPowerpoint上に作成することが出来る。

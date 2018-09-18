@@ -262,10 +262,21 @@ pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) =>
     pages.forEach((v, i) => {
         const tabInput = new libxmljs.Element(e.doc(), "input");
         const tabLabel = new libxmljs.Element(e.doc(), "label");
+        const title = v.attr("title");
+        if(title != null){
+            MacroupLib.setText(tabLabel, title.value());
+        }else{
+            MacroupLib.setText(tabLabel, `page${i}`);
+        }
 
-        tabInput.attr({ id: `tab-${tabCounter}-${i}`, type: "radio", name: "tab-radio", checked: "1" })
+        tabInput.attr({ id: `tab-${tabCounter}-${i}`, type: "radio", name: `tab-radio${tabCounter}` })
+        const checkAttr = v.attr("checked");
+        if(checkAttr != null){
+            const p = {};
+            p[checkAttr.name()] = checkAttr.value();
+            tabInput.attr(p);
+        }
         tabLabel.attr({ class: `tab-label`, for: `tab-${tabCounter}-${i}` })
-        MacroupLib.setText(tabLabel, `page${i}`);
 
         tab.addChild(tabInput);
         tab.addChild(tabLabel);
@@ -279,7 +290,7 @@ pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) =>
     })
     e.addPrevSibling(tab);
     e.remove();
-    /*
+    
     let cssPath = path.basename(info.outputPath, ".html") + "_tab.css";
 
     if (!bTab) {
@@ -316,8 +327,8 @@ pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) =>
         min-height: 200px;
       }
           
-      .tabs input[name="tab-radio"]:checked + .tab-label {
-        background-color: #fff;
+      .tabs input:checked + .tab-label {
+        background-color: yellow;
       }
         `;
         fs.writeFile(cssPath, prevCSS, function (err) {
@@ -332,14 +343,15 @@ pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) =>
         return `.tabs #tab-${tabCounter}-${i}:checked ~ .tab-${tabCounter}-${i}-content`;
     })
     if (cssStrs.length > 0) {
-        const data = cssStrs.join(",\n") + "{display: block;}"
+        let data = cssStrs.join(",\n") + "{display: block;}"
+        data += `\n .tabs input[name="tab-radio${tabCounter}"] {display: none;} \n`
         fs.appendFile(cssPath, data, function (err) {
             if (err) {
                 throw err;
             }
         });
     }
-    */
+    
     tabCounter++;
 }
 

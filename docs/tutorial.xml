@@ -27,9 +27,8 @@ SVG入門の参考として
 
 <yarticle title="Object Sample : hello world" >
 <tab>
-<page><load path="svg/sample_hello1.html" /></page>
-<page><a href="svg/sample_hello1.html">実行結果</a></page>
-<page><load path="svg/sample_hello1.html" id="svgbox" /></page>
+<page title="code"><a href="svg/sample_hello1.html">実行結果</a><load path="svg/sample_hello1.html" /></page>
+<page title="svg" checked="1"><load path="svg/sample_hello1.html" id="svgbox" /></page>
 </tab>
 <comment>
 最も簡単なHello Worldサンプル。
@@ -40,13 +39,22 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
 </comment>
 </yarticle>
 
-<xarticle title="Object Sample : オブジェクトの種類" >
-<load path="svg/sample_hello2.html" />
-<a href="svg/sample_hello2.html">実行結果</a><dbr/>
-<load path="svg/sample_hello2.html" id="svgbox" />
-<load path="svg/svg.html" id="svgbox3" />
+<yarticle title="Object Sample : オブジェクトの種類" >
 
-</xarticle>
+
+<tab>
+<page title="code">
+<a href="svg/sample_hello2.html">実行結果</a>
+<load path="svg/sample_hello2.html" />
+</page>
+<page title="svg" checked="1"><load path="svg/sample_hello2.html" id="svgbox" /></page>
+<page title="表"><load path="svg/svg.html" id="svgbox3" /></page>
+
+</tab>
+
+
+
+</yarticle>
 
 <xarticle title="Table Sample : hello world" >
 <load path="table/sample_table_hello.js" />
