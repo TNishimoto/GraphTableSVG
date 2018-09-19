@@ -8272,14 +8272,17 @@ var GraphTableSVG;
                 dx -= width;
             }
             if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
+                var tl_1 = getComputedTextLengthsOfTSpans(svgText);
+                var p_1 = 0;
                 var maxWidth_1 = 0;
                 var widths = lineSpans.map(function (v) {
                     var width = 0;
                     v.forEach(function (w) {
-                        width += w.getComputedTextLength();
+                        width += tl_1[p_1++];
                     });
                     return width;
                 });
+                p_1 = 0;
                 widths.forEach(function (v) {
                     if (v > maxWidth_1)
                         maxWidth_1 = v;
@@ -8291,7 +8294,8 @@ var GraphTableSVG;
                         var width = offset;
                         for (var x = 0; x < lineSpans[y].length; x++) {
                             var v = lineSpans[y][x];
-                            var tLen = v.getComputedTextLength();
+                            var tLen = tl_1[p_1++];
+                            console.log(y + "/" + tLen);
                             if (x == 0 && y != 0) {
                                 v.setAttribute("dx", (dx + offset).toString());
                             }
@@ -8362,6 +8366,37 @@ var GraphTableSVG;
             }
         }
         SVGTextBox.getSize = getSize;
+        function getComputedTextLengthsOfTSpans(svgText) {
+            if (HTMLFunctions.isShow(svgText)) {
+                var tspans = HTMLFunctions.getChildren(svgText).filter(function (v) { return v.nodeName == "tspan"; });
+                return tspans.map(function (v) { return v.getComputedTextLength(); });
+            }
+            else {
+                if (ura == null) {
+                    ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                }
+                document.body.appendChild(ura);
+                ura.innerHTML = svgText.outerHTML;
+                var fst = ura.firstChild;
+                if (fst instanceof SVGTextElement) {
+                    var tspans = HTMLFunctions.getChildren(fst).filter(function (v) { return v.nodeName == "tspan"; });
+                    var r = tspans.map(function (v) { return v.getComputedTextLength(); });
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return r;
+                }
+                else if (fst != null) {
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return [];
+                }
+                else {
+                    ura.remove();
+                    return [];
+                }
+            }
+        }
+        SVGTextBox.getComputedTextLengthsOfTSpans = getComputedTextLengthsOfTSpans;
     })(SVGTextBox = GraphTableSVG.SVGTextBox || (GraphTableSVG.SVGTextBox = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 //# sourceMappingURL=graph_table_svg.js.map

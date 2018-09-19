@@ -187,14 +187,17 @@ namespace GraphTableSVG {
             }
 
             if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
+                const tl = getComputedTextLengthsOfTSpans(svgText);
+                let p=0;
                 let maxWidth = 0;
                 const widths = lineSpans.map((v) => {
                     let width = 0;
                     v.forEach((w) => {
-                        width += w.getComputedTextLength();
+                        width += tl[p++];
                     })
                     return width;
                 })
+                p=0;
                 widths.forEach((v) => {
                     if (v > maxWidth) maxWidth = v;
                 })
@@ -205,7 +208,10 @@ namespace GraphTableSVG {
                         let width = offset;
                         for (let x = 0; x < lineSpans[y].length; x++) {
                             const v = lineSpans[y][x];
-                            const tLen = v.getComputedTextLength();
+                            //const tLen = v.getComputedTextLength();
+                            const tLen = tl[p++];
+                            
+                            console.log(y + "/" + tLen);
                             if (x == 0 && y != 0) {
                                 v.setAttribute("dx", (dx + offset).toString());
                             }
@@ -299,6 +305,33 @@ namespace GraphTableSVG {
                 }
             }
         }
+        export function getComputedTextLengthsOfTSpans(svgText:SVGTextElement) : number[] {
+            if(HTMLFunctions.isShow(svgText)){
+                const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v)=>v.nodeName=="tspan");
+                return tspans.map((v)=>v.getComputedTextLength());
+            }else{
+                if(ura == null){
+                    ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                } 
+                document.body.appendChild(ura);
+                ura.innerHTML = svgText.outerHTML;
+                const fst = ura.firstChild;
+                if(fst instanceof SVGTextElement){
 
+                    const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(fst).filter((v)=>v.nodeName=="tspan");
+                    const r = tspans.map((v)=>v.getComputedTextLength());
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return r;
+                }else if(fst != null){
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return [];
+                }else{
+                    ura.remove();
+                    return [];
+                }
+            }
+        }
     }
 }

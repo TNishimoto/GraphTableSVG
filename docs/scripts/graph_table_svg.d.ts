@@ -1055,5 +1055,6 @@ declare namespace GraphTableSVG {
         function sortText(svgText: SVGTextElement, rect: GraphTableSVG.Rectangle | null, vAnchor: GraphTableSVG.VerticalAnchor, hAnchor: GraphTableSVG.HorizontalAnchor): void;
         function setTextToSVGText2(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean): void;
         function getSize(svgText: SVGTextElement): Rectangle;
+        function getComputedTextLengthsOfTSpans(svgText: SVGTextElement): number[];
     }
 }

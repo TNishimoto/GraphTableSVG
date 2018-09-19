@@ -40,8 +40,6 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
 </yarticle>
 
 <yarticle title="Object Sample : オブジェクトの種類" >
-
-
 <tab>
 <page title="code">
 <a href="svg/sample_hello2.html">実行結果</a>
@@ -49,27 +47,29 @@ g-rect要素はカスタムSVG要素なのでsvg要素内に記述しても何�
 </page>
 <page title="svg" checked="1"><load path="svg/sample_hello2.html" id="svgbox" /></page>
 <page title="表"><load path="svg/svg.html" id="svgbox3" /></page>
-
 </tab>
-
-
-
 </yarticle>
 
-<xarticle title="Table Sample : hello world" >
+<yarticle title="Object Sample : カスタム属性" >
+</yarticle>
+
+<yarticle title="Table Sample : hello world" >
 <load path="table/sample_table_hello.js" />
 <load path="table/sample_table_hello.html" />
 <load path="images/table_hello1.png" />
 <a href="table/sample_table_hello.html">実行結果</a><dbr/>
+<comment>
 Table（表）を作成する例。
 <rhref>Table</rhref>は表をSVGで表現するためのクラスで、どのSVG要素内に作成するかを<rhref method="true">Table.constructor</rhref>の引数の第一要素で指定する。
 第二要素はオプションでTableのSVG要素内の位置や行数列数を指定することができる。
 表内のセルは<rhref>Cell</rhref>クラスで表現されており、これもセルをSVGで表現するためのクラスである。これらのプロパティやメソッドの詳細はリファレンスで確認できる。
-<dbr/>
+</comment>
+<comment>
 前述の通りTableはSVGなので構成要素のプロパティを編集することでTableの中身を編集することができる。
 ブラウザのデバッグ機能を用いてTableがSVGでどのように構成されているか見ることも編集することも可能。
 <load path="images/table_hello2.png" />
-</xarticle>
+</comment>
+</yarticle>
 
 <xarticle title="Table Sample : Tableの構成">
 下の図はTableとCellがどのようなSVG要素で構成されているかを示している。
