@@ -192,8 +192,6 @@ namespace GraphTableSVG {
             while (true) {
                 let b = false;
                 HTMLFunctions.getChildren(element).forEach((v) => {
-                    //console.log(v);
-                    //console.log(v instanceof Element);
                     const shapeType = GraphTableSVG.ShapeObjectType.toShapeObjectType(v.nodeName);
                     if(shapeType != null){
                         toHTMLUnknownElement(v);

@@ -470,7 +470,7 @@ namespace GraphTableSVG {
         private setRegularInterval(value: number): void {
             this.removeTextLengthAttribute();
             
-            const textRect = SVGTextBox.getSize(this.svgText);
+            const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
             //const box = this.svgText.getBBox();
             const diff = value - textRect.width;
             const number = this.svgText.textContent != null ? this.svgText.textContent.length : 0;
@@ -645,14 +645,14 @@ namespace GraphTableSVG {
             }
             else if (this.pathTextAlignment == pathTextAlighnment.end) {
                 this.removeTextLengthAttribute();
-                const textRect = SVGTextBox.getSize(this.svgText);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 //const box = this.svgText.getBBox();
                 const pathLen = this.svgPath.getTotalLength();
                 this.svgTextPath.setAttribute("startOffset", `${pathLen - textRect.width}`);
             }
             else if (this.pathTextAlignment == pathTextAlighnment.center) {
                 this.removeTextLengthAttribute();
-                const textRect = SVGTextBox.getSize(this.svgText);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 //const box = this.svgText.getBBox();
                 const pathLen = this.svgPath.getTotalLength();
                 const offset = (pathLen - textRect.width) / 2;

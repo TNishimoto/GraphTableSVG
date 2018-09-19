@@ -167,12 +167,8 @@ namespace GraphTableSVG {
         }
         protected updateToFitText() {
             this.isFixTextSize = true;
-            //console.log("c")
-            //console.log(this.svgText.getBoundingClientRect());
-            //console.log(this.svgText.getBBox());
-
             //const box = this.svgText.getBBox();
-            const textRect = SVGTextBox.getSize(this.svgText);
+            const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
             
             this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;
             this.height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;

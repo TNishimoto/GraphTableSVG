@@ -259,6 +259,8 @@ namespace GraphTableSVG {
             */
         }
         let ura : SVGSVGElement | null = null;
+
+        
         export function getSize(svgText:SVGTextElement) : Rectangle {
             let r = new Rectangle();
             if(HTMLFunctions.isShow(svgText)){
@@ -275,15 +277,7 @@ namespace GraphTableSVG {
                 document.body.appendChild(ura);
                 ura.innerHTML = svgText.outerHTML;
                 const fst = ura.firstChild;
-                //const pos = svgText.nextSibling;
-                //const parent = svgText.parentElement;
                 if(fst instanceof SVGTextElement){
-                    /*
-                    const x = svgText.getX();
-                    const y = svgText.getY();
-                    fst.setAttribute("x", x.toString());
-                    fst.setAttribute("y", y.toString());
-                    */
 
                     const rect = fst.getBBox();
                     r.x = rect.x;
@@ -304,6 +298,7 @@ namespace GraphTableSVG {
                 }
             }
         }
+        
         export function getComputedTextLengthsOfTSpans(svgText:SVGTextElement) : number[] {
             if(HTMLFunctions.isShow(svgText)){
                 const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v)=>v.nodeName=="tspan");

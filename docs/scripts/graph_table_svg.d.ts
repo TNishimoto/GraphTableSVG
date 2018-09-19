@@ -208,6 +208,9 @@ declare namespace GraphTableSVG {
         function setCSSToAllElementStyles(item: HTMLElement | string, isComplete?: boolean): void;
         function getStyleSheet(name: string): CSSStyleDeclaration | null;
         function getRegion(e: SVGElement): Rectangle;
+        function getSVGSVG(e: SVGElement): SVGSVGElement;
+        function isSVGSVGHidden(e: SVGElement): boolean;
+        function isSVGHidden(e: SVGElement): boolean;
     }
 }
 declare namespace GraphTableSVG {

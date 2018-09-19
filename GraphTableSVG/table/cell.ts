@@ -440,7 +440,7 @@ namespace GraphTableSVG {
         */
         get calculatedWidthUsingText(): number {
             if (this.isLocated) {
-                const textRect = SVGTextBox.getSize(this.svgText);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 return textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
                     + this.paddingLeft + this.paddingRight;
             } else {
@@ -452,7 +452,7 @@ namespace GraphTableSVG {
         */
         get calculatedHeightUsingText(): number {
             if (this.isLocated) {
-                const textRect = SVGTextBox.getSize(this.svgText);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
 
                 return textRect.height + this.paddingTop + this.paddingBottom;
             } else {
@@ -1071,7 +1071,6 @@ namespace GraphTableSVG {
             if (this.height < this.calculatedHeightUsingText) {
                 this.height = this.calculatedHeightUsingText;
             }
-            //console.log([-1, this.width, this.height, w, h]);
             
 
         }
@@ -1084,7 +1083,6 @@ namespace GraphTableSVG {
             innerRect.y = this.paddingTop;
             innerRect.height = this.height - this.paddingTop - this.paddingBottom;
             innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
-
             if (this.isLocated) {
                 this.svgText.gtSetXY(innerRect, this.verticalAnchor, this.horizontalAnchor, false);
                 //ObsoleteGraph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
@@ -1308,7 +1306,6 @@ namespace GraphTableSVG {
                 this.svgTopBorder = this.topCell.svgBottomBorder;
             }
 
-            //console.log(this.cellY + "/" + this.cellX + "/" + this.table.rows.length + "/" + this.table.columns.length);
             if (this.rightCell != null && this.rightCell.svgLeftBorder != this.svgRightBorder) {
                 this.rightCell.removeBorder(DirectionType.left);
                 this.rightCell.svgLeftBorder = this.svgRightBorder;

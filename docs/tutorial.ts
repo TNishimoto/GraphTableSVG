@@ -226,7 +226,7 @@ pack.midMacros.elements["yarticle"] = (e: libxmljs.Element, info: Macroup.Settin
     const dir = path.dirname(info.inputPath);
     const title = new libxmljs.Element(e.doc(), "h2", e.attr("title")!.value());
     const fst = e.child(0);
-    if (fst !== undefined) {
+    if (fst !== undefined && fst !== null) {
         fst.addPrevSibling(title);
     } else {
         e.addChild(title);

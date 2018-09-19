@@ -29,7 +29,7 @@ namespace GraphTableSVG {
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
             if (this.isAutoSizeShapeToFitText) {
-                const textRect = SVGTextBox.getSize(this.svgText);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 //const b = this.svgText.getBBox();
                 rect.width = textRect.width;
                 rect.height = textRect.height;

@@ -199,9 +199,6 @@ namespace GraphTableSVG {
 
                 const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
                 if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
-                //const s = circle.getActiveStyle().getPropertyValue(defaultRadiusName).trim();
-                //circle.className = className
-                //console.log("d : " + circle.setAttribute("class", className));
             }
             //circle.style.fill = "#ffffff";
             circle.cx.baseVal.value = 0;
@@ -575,29 +572,118 @@ namespace GraphTableSVG {
                 const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
                 const rectangles = elements.map((v) => getRegion(v));
 
-                const eRegion = e.getBoundingClientRect();
+                const eRegion = getRelativeBoundingClientRect(e);
                 const region = Rectangle.merge(rectangles);
-                const region2 = new Rectangle(region.x - eRegion.left, region.y - eRegion.top, region.width, region.height);
 
-                return region2;
+                return region;
 
             }
             else if (e instanceof SVGGElement) {
                 const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
                 const rectangles = elements.map((v) => getRegion(v));
 
-                const eRegion = e.getBoundingClientRect();
+                const eRegion = getRelativeBoundingClientRect(e);
                 const region = Rectangle.merge(rectangles);
 
-                const region2 = new Rectangle(region.x, region.y, region.width, region.height);
+                const region2 = new Rectangle(region.x + eRegion.x, region.y + eRegion.y, region.width, region.height);
 
                 return region2;
-            }else{
-                const rect = e.getBoundingClientRect();
-                const region = new Rectangle(rect.left, rect.top, rect.width, rect.height);
-                //console.log(region);
+            } else {
+                const rect = getRelativeBoundingClientRect(e);
+                const region = rect
                 return region;
             }
         }
+        let ura: SVGSVGElement | null = null;
+
+        function getRelativeBoundingClientRect(e: SVGElement): Rectangle {
+            let r = new Rectangle();
+            const svgsvgHidden = isSVGSVGHidden(e);
+            const svgHidden = isSVGHidden(e);
+
+            if(svgHidden){
+                return r;
+            }else if(svgsvgHidden){
+                if (ura == null) {
+                    ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                }
+                document.body.appendChild(ura);
+                ura.innerHTML = e.outerHTML;
+                const fst = ura.firstChild;
+                if (fst instanceof SVGElement) {
+
+                    const rect = fst.getBoundingClientRect();
+                    const parentRect = ura.getBoundingClientRect();
+                    r.x = rect.left - parentRect.left;
+                    r.y = rect.top - parentRect.top;
+                    r.width = rect.width;
+                    r.height = rect.height;
+
+                    ura.removeChild(fst);
+                    ura.remove();
+
+
+                    return r;
+                } else if (fst != null) {
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return r;
+                } else {
+                    ura.remove();
+                    return r;
+                }
+            }else{
+                const rect = e.getBoundingClientRect();
+                const parentRect = e.parentElement!.getBoundingClientRect();
+                r.x = rect.left - parentRect.left;
+                r.y = rect.top - parentRect.top;
+                r.width = rect.width;
+                r.height = rect.height;
+
+                return r;
+            }
+
+        }
+        export function getSVGSVG(e: SVGElement): SVGSVGElement {
+            if(e instanceof SVGSVGElement){
+                return e;
+            }else{
+                const parent = e.parentElement;
+                if(parent instanceof SVGElement){
+                    return getSVGSVG(parent);
+                } else {
+                    throw Error("svgsvg");
+                }
+    
+            }
+            
+
+        }
+        export function isSVGSVGHidden(e: SVGElement): boolean {
+            const svgsvg = getSVGSVG(e);
+            return !HTMLFunctions.isShow(svgsvg);
+        }
+        export function isSVGHidden(e: SVGElement): boolean {
+            if (e instanceof SVGSVGElement) {
+                return false;
+            }else{
+                const p = getComputedStyle(e);
+                const disp = p.display;
+                const vis = p.visibility;
+    
+                if (disp == "none" || vis == "hidden") {
+                    return true;
+                } else {
+                    const parent = e.parentElement;
+                    if(parent instanceof SVGElement){
+                        return isSVGHidden(parent);
+                    }else{
+                        throw Error("svg");
+                    }
+                }    
+            }
+            
+        }
+
     }
 }

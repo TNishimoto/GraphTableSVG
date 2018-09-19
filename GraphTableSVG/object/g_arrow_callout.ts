@@ -92,7 +92,7 @@ namespace GraphTableSVG {
             const rect = new Rectangle();
             if (this.isAutoSizeShapeToFitText) {
                 
-                const textRect = SVGTextBox.getSize(this.svgText);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 //const b = this.svgText.getBBox();
                 rect.width = textRect.width;
                 rect.height = textRect.height;
@@ -128,7 +128,7 @@ namespace GraphTableSVG {
 
         protected updateToFitText() {
 
-            const textRect = SVGTextBox.getSize(this.svgText);
+            const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
             //const box = this.svgText.getBBox();
             if (this.direction == "up" || this.direction == "down") {
                 this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;

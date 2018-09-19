@@ -476,7 +476,6 @@ var GraphTableSVG;
         }
         GUI.copyAndCloseMacroModal = copyAndCloseMacroModal;
         function setSVGBoxSize(box, item1, item2) {
-            console.log(item1);
             if (item1 instanceof GraphTableSVG.Rectangle) {
                 if (item2 instanceof GraphTableSVG.Padding) {
                     var w = item1.right + item2.left + item2.right;
@@ -1255,26 +1254,114 @@ var GraphTableSVG;
             if (e instanceof SVGSVGElement) {
                 var elements = HTMLFunctions.getChildren(e).filter(function (v) { return v instanceof SVGElement; });
                 var rectangles = elements.map(function (v) { return getRegion(v); });
-                var eRegion = e.getBoundingClientRect();
+                var eRegion = getRelativeBoundingClientRect(e);
                 var region = GraphTableSVG.Rectangle.merge(rectangles);
-                var region2 = new GraphTableSVG.Rectangle(region.x - eRegion.left, region.y - eRegion.top, region.width, region.height);
-                return region2;
+                return region;
             }
             else if (e instanceof SVGGElement) {
                 var elements = HTMLFunctions.getChildren(e).filter(function (v) { return v instanceof SVGElement; });
                 var rectangles = elements.map(function (v) { return getRegion(v); });
-                var eRegion = e.getBoundingClientRect();
+                var eRegion = getRelativeBoundingClientRect(e);
                 var region = GraphTableSVG.Rectangle.merge(rectangles);
-                var region2 = new GraphTableSVG.Rectangle(region.x, region.y, region.width, region.height);
+                var region2 = new GraphTableSVG.Rectangle(region.x + eRegion.x, region.y + eRegion.y, region.width, region.height);
                 return region2;
             }
             else {
-                var rect = e.getBoundingClientRect();
-                var region = new GraphTableSVG.Rectangle(rect.left, rect.top, rect.width, rect.height);
+                var rect = getRelativeBoundingClientRect(e);
+                var region = rect;
                 return region;
             }
         }
         SVG.getRegion = getRegion;
+        var ura = null;
+        function getRelativeBoundingClientRect(e) {
+            var r = new GraphTableSVG.Rectangle();
+            var svgsvgHidden = isSVGSVGHidden(e);
+            var svgHidden = isSVGHidden(e);
+            if (svgHidden) {
+                return r;
+            }
+            else if (svgsvgHidden) {
+                if (ura == null) {
+                    ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                }
+                document.body.appendChild(ura);
+                ura.innerHTML = e.outerHTML;
+                var fst = ura.firstChild;
+                if (fst instanceof SVGElement) {
+                    var rect = fst.getBoundingClientRect();
+                    var parentRect = ura.getBoundingClientRect();
+                    r.x = rect.left - parentRect.left;
+                    r.y = rect.top - parentRect.top;
+                    r.width = rect.width;
+                    r.height = rect.height;
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return r;
+                }
+                else if (fst != null) {
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return r;
+                }
+                else {
+                    ura.remove();
+                    return r;
+                }
+            }
+            else {
+                var rect = e.getBoundingClientRect();
+                var parentRect = e.parentElement.getBoundingClientRect();
+                r.x = rect.left - parentRect.left;
+                r.y = rect.top - parentRect.top;
+                r.width = rect.width;
+                r.height = rect.height;
+                return r;
+            }
+        }
+        function getSVGSVG(e) {
+            if (e instanceof SVGSVGElement) {
+                return e;
+            }
+            else {
+                var parent_1 = e.parentElement;
+                if (parent_1 instanceof SVGElement) {
+                    return getSVGSVG(parent_1);
+                }
+                else {
+                    throw Error("svgsvg");
+                }
+            }
+        }
+        SVG.getSVGSVG = getSVGSVG;
+        function isSVGSVGHidden(e) {
+            var svgsvg = getSVGSVG(e);
+            return !HTMLFunctions.isShow(svgsvg);
+        }
+        SVG.isSVGSVGHidden = isSVGSVGHidden;
+        function isSVGHidden(e) {
+            if (e instanceof SVGSVGElement) {
+                return false;
+            }
+            else {
+                var p = getComputedStyle(e);
+                var disp = p.display;
+                var vis = p.visibility;
+                if (disp == "none" || vis == "hidden") {
+                    return true;
+                }
+                else {
+                    var parent_2 = e.parentElement;
+                    if (parent_2 instanceof SVGElement) {
+                        return isSVGHidden(parent_2);
+                    }
+                    else {
+                        throw Error("svg");
+                    }
+                }
+            }
+        }
+        SVG.isSVGHidden = isSVGHidden;
     })(SVG = GraphTableSVG.SVG || (GraphTableSVG.SVG = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
@@ -7703,12 +7790,12 @@ var HTMLFunctions;
             return false;
         }
         else {
-            var parent_1 = e.parentElement;
-            if (parent_1 == null) {
+            var parent_3 = e.parentElement;
+            if (parent_3 == null) {
                 return true;
             }
             else {
-                return isShow(parent_1);
+                return isShow(parent_3);
             }
         }
     }

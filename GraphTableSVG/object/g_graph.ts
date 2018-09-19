@@ -343,7 +343,6 @@ namespace GraphTableSVG {
         private objectCreatedFunction = ( e : Event) =>{
             const obj = GObject.getObjectFromObjectID(<SVGElement>e.target);
             if(obj instanceof GVertex){
-                //console.log(obj);
                 this.dispatchVertexCreatedEvent(obj);
             }else if(obj instanceof GEdge){
 

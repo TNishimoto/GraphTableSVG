@@ -81,7 +81,6 @@ namespace GraphTableSVG {
                 img.style.height = svgBox.style.height;
                 img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgBox.outerHTML)));
 
-                //console.log(unescape(encodeURIComponent(svg)));
             } else {
                 throw Error("Error");
             }
