@@ -79,7 +79,8 @@
 
         export function setSVGBoxSize(box: SVGSVGElement, w: number, h: number): void;
         export function setSVGBoxSize(box: SVGSVGElement, rect: Rectangle, padding: Padding): void;
-        export function setSVGBoxSize(box: SVGSVGElement, item1: Rectangle | number, item2: Padding | number) {            
+        export function setSVGBoxSize(box: SVGSVGElement, item1: Rectangle | number, item2: Padding | number) {      
+            console.log(item1);      
             if (item1 instanceof Rectangle) {
                 if (item2 instanceof Padding) {
                     const w: number = item1.right + item2.left + item2.right;

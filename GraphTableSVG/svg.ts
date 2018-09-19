@@ -46,9 +46,9 @@ namespace GraphTableSVG {
             parent.appendChild(line1);
             line1.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
 
-            if(parent instanceof SVGElement){
+            if (parent instanceof SVGElement) {
                 const _className = parent.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
-                if(className == null){
+                if (className == null) {
                     className = _className;
                 }
             }
@@ -71,9 +71,9 @@ namespace GraphTableSVG {
             parent.appendChild(line1);
             line1.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
 
-            if(parent instanceof SVGElement){
+            if (parent instanceof SVGElement) {
                 const _className = parent.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
-                if(className == null){
+                if (className == null) {
                     className = _className;
                 }
             }
@@ -160,7 +160,7 @@ namespace GraphTableSVG {
             if (className != null) {
                 g.setAttribute("class", className);
             }
-            if(parent != null)parent.appendChild(g);
+            if (parent != null) parent.appendChild(g);
             return g;
         }
         /**
@@ -268,7 +268,7 @@ namespace GraphTableSVG {
             marker.setAttribute("refX", "10");
             marker.setAttribute("refY", "5");
             //marker.setAttribute("data-skip", "1");
-            
+
 
             //marker.refX.baseVal.value = 10;
             //marker.refY.baseVal.value = 5;
@@ -309,11 +309,11 @@ namespace GraphTableSVG {
             return [text, path];
         }
 
-                /**
-         * SVGTextElementを子に持つSVGTextPathElementを作成します。
-         * @param className 生成するSVGTextPathElementのクラス属性名
-         * @returns 生成されたSVGTextElementとSVGTextPathElement
-         */
+        /**
+ * SVGTextElementを子に持つSVGTextPathElementを作成します。
+ * @param className 生成するSVGTextPathElementのクラス属性名
+ * @returns 生成されたSVGTextElementとSVGTextPathElement
+ */
         export function createTextPath2(className: string | null = null): SVGTextPathElement {
             const path = <SVGTextPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
 
@@ -330,7 +330,7 @@ namespace GraphTableSVG {
 
 
 
-        
+
 
         /*
         export function setDefaultValue(item: SVGCircleElement | SVGRectElement, style: CSSStyleDeclaration | null = null) {
@@ -408,7 +408,7 @@ namespace GraphTableSVG {
                         const name = css.item(i);
                         const value = css.getPropertyValue(name);
                         if (value.length > 0) {
-                            if(!exceptionStyleNames.some((v)=>v==name)){
+                            if (!exceptionStyleNames.some((v) => v == name)) {
                                 svg.style.setProperty(name, value);
                             }
                         }
@@ -445,7 +445,7 @@ namespace GraphTableSVG {
                     return null;
                 } else {
                     const css = getCSSStyle(item);
-                    if(css == null) throw Error("error");
+                    if (css == null) throw Error("error");
                     //const css = getComputedStyle(item);
                     const p2 = css.getPropertyValue(name).trim();
                     if (p2.length == 0) {
@@ -459,7 +459,7 @@ namespace GraphTableSVG {
             }
         }
 
-        function getAllElementStyleMapSub(item: HTMLElement | string, output : { [key: number]: string | null; }, id : number) : number {
+        function getAllElementStyleMapSub(item: HTMLElement | string, output: { [key: number]: string | null; }, id: number): number {
             if (typeof item == 'string') {
                 const svgBox: HTMLElement | null = document.getElementById(item);
                 if (svgBox != null) {
@@ -472,7 +472,7 @@ namespace GraphTableSVG {
                 for (let i = 0; i < item.children.length; i++) {
                     const child = <HTMLElement>item.children.item(i);
                     if (child != null) {
-                      id = getAllElementStyleMapSub(child, output, id);
+                        id = getAllElementStyleMapSub(child, output, id);
                     }
                 }
             }
@@ -480,12 +480,12 @@ namespace GraphTableSVG {
 
         }
 
-        export function getAllElementStyleMap(item: HTMLElement | string) : { [key: number]: string; } {
-            const dic : { [key: number]: string; } = {}; 
+        export function getAllElementStyleMap(item: HTMLElement | string): { [key: number]: string; } {
+            const dic: { [key: number]: string; } = {};
             getAllElementStyleMapSub(item, dic, 0);
             return dic;
         }
-        function setAllElementStyleMapSub(item: HTMLElement | string, output : { [key: number]: string | null; }, id : number) : number {
+        function setAllElementStyleMapSub(item: HTMLElement | string, output: { [key: number]: string | null; }, id: number): number {
             if (typeof item == 'string') {
                 const svgBox: HTMLElement | null = document.getElementById(item);
                 if (svgBox != null) {
@@ -494,15 +494,15 @@ namespace GraphTableSVG {
             }
             else {
                 const style = output[id++];
-                if(style == null){
+                if (style == null) {
                     item.removeAttribute("style");
-                }else{
+                } else {
                     item.setAttribute("style", style);
                 }
                 for (let i = 0; i < item.children.length; i++) {
                     const child = <HTMLElement>item.children.item(i);
                     if (child != null) {
-                      id = setAllElementStyleMapSub(child, output, id);
+                        id = setAllElementStyleMapSub(child, output, id);
                     }
                 }
             }
@@ -510,7 +510,7 @@ namespace GraphTableSVG {
 
         }
 
-        export function setAllElementStyleMap(item: HTMLElement | string, dic : { [key: number]: string; }) {
+        export function setAllElementStyleMap(item: HTMLElement | string, dic: { [key: number]: string; }) {
             setAllElementStyleMapSub(item, dic, 0);
         }
 
@@ -527,7 +527,7 @@ namespace GraphTableSVG {
                 }
             }
             else {
-                if(!item.hasAttribute("data-skip")) setCSSToStyle(item, isComplete);
+                if (!item.hasAttribute("data-skip")) setCSSToStyle(item, isComplete);
                 for (let i = 0; i < item.children.length; i++) {
                     const child = <HTMLElement>item.children.item(i);
                     if (child != null) {
@@ -569,5 +569,35 @@ namespace GraphTableSVG {
             svg.style.strokeWidth = style.stroke;
         }
         */
+
+        export function getRegion(e: SVGElement): Rectangle {
+            if (e instanceof SVGSVGElement) {
+                const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
+                const rectangles = elements.map((v) => getRegion(v));
+
+                const eRegion = e.getBoundingClientRect();
+                const region = Rectangle.merge(rectangles);
+                const region2 = new Rectangle(region.x - eRegion.left, region.y - eRegion.top, region.width, region.height);
+
+                return region2;
+
+            }
+            else if (e instanceof SVGGElement) {
+                const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
+                const rectangles = elements.map((v) => getRegion(v));
+
+                const eRegion = e.getBoundingClientRect();
+                const region = Rectangle.merge(rectangles);
+
+                const region2 = new Rectangle(region.x, region.y, region.width, region.height);
+
+                return region2;
+            }else{
+                const rect = e.getBoundingClientRect();
+                const region = new Rectangle(rect.left, rect.top, rect.width, rect.height);
+                //console.log(region);
+                return region;
+            }
+        }
     }
 }

@@ -217,7 +217,7 @@ namespace GraphTableSVG {
             if(element instanceof SVGSVGElement){
                 const sh = element.getAttribute("g-shrink");
                 if(sh != null) shrink = sh == "true";
-                if(shrink)GraphTableSVG.GUI.observeSVGBox(element, () => GraphTableSVG.Common.getRegion(output), new Padding(0,0,0,0));  
+                if(shrink)GraphTableSVG.GUI.observeSVGBox(element, () => GraphTableSVG.SVG.getRegion(element), new Padding(0,0,0,0));  
             }
             return output;
         }

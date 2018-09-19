@@ -211,7 +211,6 @@ namespace GraphTableSVG {
                             //const tLen = v.getComputedTextLength();
                             const tLen = tl[p++];
                             
-                            console.log(y + "/" + tLen);
                             if (x == 0 && y != 0) {
                                 v.setAttribute("dx", (dx + offset).toString());
                             }
