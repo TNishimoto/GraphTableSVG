@@ -2,14 +2,18 @@ namespace GraphTableSVG {
         
 
     export type GObjectAttributes = {
-        class?: string,
+        //class?: string,
         cx?: number,
         cy?: number,
         x? : number,
         y? : number,
         width?: number,
         height?: number,
-        id?: string
+        id?: string,
+        groupClass? : string,
+        surfaceClass? : string,
+        groupStyle? : string,
+        surfaceStyle? : string
     }
 
     export type GTextBoxAttributes = GObjectAttributes & {
@@ -17,6 +21,9 @@ namespace GraphTableSVG {
         isAutoSizeShapeToFitText?: boolean,
         verticalAnchor? : VerticalAnchor,
         horizontalAnchor? : HorizontalAnchor
+        textClass? : string
+        textStyle? : string
+
     }
     export type GShapeArrowCalloutAttributes = GTextBoxAttributes & {
         arrowHeadWidth?: number,
@@ -244,8 +251,8 @@ namespace GraphTableSVG {
     }
     export function createVertex(parent: GGraph, option: GTextBoxAttributes = {}): GVertex {
         let _parent = parent.svgGroup;
-        if (option.class == undefined && parent.defaultVertexClass != null) option.class = parent.defaultVertexClass;
-        const type = option.class == undefined ? null : parent.getStyleValue(option.class, CustomAttributeNames.Style.defaultSurfaceType);
+        if (option.groupClass == undefined && parent.defaultVertexClass != null) option.groupClass = parent.defaultVertexClass;
+        const type = option.groupClass == undefined ? null : parent.getStyleValue(option.groupClass, CustomAttributeNames.Style.defaultSurfaceType);
         if (type != null) {
             switch (type) {
                 case ShapeObjectType.Callout: return new GCallout(_parent, option);

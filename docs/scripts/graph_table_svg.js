@@ -851,58 +851,6 @@ var GraphTableSVG;
         }
         SVG.createLine = createLine;
         SVG.msoDashStyleName = "--stroke-style";
-        function createPath(parent, x, y, x2, y2, className) {
-            if (className === void 0) { className = null; }
-            var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            parent.appendChild(line1);
-            line1.setAttribute("d", "M " + x + " " + y + " L " + x2 + " " + y2);
-            if (parent instanceof SVGElement) {
-                var _className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultPathClass);
-                if (className == null) {
-                    className = _className;
-                }
-            }
-            if (className != null) {
-                line1.setAttribute("class", className);
-                var dashStyle = line1.getPropertyStyleValue(SVG.msoDashStyleName);
-                if (dashStyle != null) {
-                    GraphTableSVG.msoDashStyle.setStyle(line1, dashStyle);
-                }
-            }
-            else {
-                line1.style.stroke = "black";
-                line1.style.fill = "none";
-                line1.style.strokeWidth = "1pt";
-            }
-            return line1;
-        }
-        SVG.createPath = createPath;
-        function createSurfacePath(parent, x, y, x2, y2, className) {
-            if (className === void 0) { className = null; }
-            var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            parent.appendChild(line1);
-            line1.setAttribute("d", "M " + x + " " + y + " L " + x2 + " " + y2);
-            if (parent instanceof SVGElement) {
-                var _className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultPathClass);
-                if (className == null) {
-                    className = _className;
-                }
-            }
-            if (className != null) {
-                line1.setAttribute("class", className);
-                var dashStyle = line1.getPropertyStyleValue(SVG.msoDashStyleName);
-                if (dashStyle != null) {
-                    GraphTableSVG.msoDashStyle.setStyle(line1, dashStyle);
-                }
-            }
-            else {
-                line1.style.stroke = "black";
-                line1.style.fill = "white";
-                line1.style.strokeWidth = "1pt";
-            }
-            return line1;
-        }
-        SVG.createSurfacePath = createSurfacePath;
         function createText(className) {
             if (className === void 0) { className = null; }
             var _svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -947,13 +895,9 @@ var GraphTableSVG;
             return rect;
         }
         SVG.createRectangle = createRectangle;
-        function createGroup(parent, className) {
-            if (className === void 0) { className = null; }
+        function createGroup(parent) {
             var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             g.setAttribute(GraphTableSVG.CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
-            if (className != null) {
-                g.setAttribute("class", className);
-            }
             if (parent != null)
                 parent.appendChild(g);
             return g;
@@ -993,33 +937,6 @@ var GraphTableSVG;
             return circle;
         }
         SVG.createCircle = createCircle;
-        function createEllipse(parent, className) {
-            if (className === void 0) { className = null; }
-            var circle = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-            parent.appendChild(circle);
-            circle.rx.baseVal.value = GraphTableSVG.CustomAttributeNames.defaultCircleRadius;
-            circle.ry.baseVal.value = GraphTableSVG.CustomAttributeNames.defaultCircleRadius;
-            if (className == null) {
-                circle.style.stroke = "black";
-                circle.style.strokeWidth = "1pt";
-                circle.style.fill = "#ffffff";
-            }
-            else {
-                circle.setAttribute("class", className);
-                var radius = circle.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.defaultRadiusName, null);
-                if (radius != null) {
-                    circle.rx.baseVal.value = radius;
-                    circle.ry.baseVal.value = radius;
-                }
-                var dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
-                if (dashStyle != null)
-                    GraphTableSVG.msoDashStyle.setStyle(circle, dashStyle);
-            }
-            circle.cx.baseVal.value = 0;
-            circle.cy.baseVal.value = 0;
-            return circle;
-        }
-        SVG.createEllipse = createEllipse;
         function createMarker(option) {
             if (option === void 0) { option = {}; }
             var marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
@@ -3841,9 +3758,9 @@ var GraphTableSVG;
     function createVertex(parent, option) {
         if (option === void 0) { option = {}; }
         var _parent = parent.svgGroup;
-        if (option.class == undefined && parent.defaultVertexClass != null)
-            option.class = parent.defaultVertexClass;
-        var type = option.class == undefined ? null : parent.getStyleValue(option.class, GraphTableSVG.CustomAttributeNames.Style.defaultSurfaceType);
+        if (option.groupClass == undefined && parent.defaultVertexClass != null)
+            option.groupClass = parent.defaultVertexClass;
+        var type = option.groupClass == undefined ? null : parent.getStyleValue(option.groupClass, GraphTableSVG.CustomAttributeNames.Style.defaultSurfaceType);
         if (type != null) {
             switch (type) {
                 case GraphTableSVG.ShapeObjectType.Callout: return new GraphTableSVG.GCallout(_parent, option);
@@ -3943,12 +3860,16 @@ var GraphTableSVG;
                 "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",
                 "data-arrow-head-width", "data-arrow-head-height"];
             var parentElement = svgbox instanceof SVGElement ? svgbox : document.getElementById(svgbox);
-            this._svgGroup = GraphTableSVG.SVG.createGroup(parentElement, option.class == undefined ? null : option.class);
+            this._svgGroup = GraphTableSVG.SVG.createGroup(parentElement);
+            if (option.groupClass !== undefined)
+                this._svgGroup.setAttribute("class", option.groupClass);
+            if (option.groupStyle !== undefined)
+                this._svgGroup.setAttribute("style", option.groupStyle);
             this.setClassNameOfSVGGroup();
             GObject.setObjectFromObjectID(this);
             this.svgGroup.setAttribute(GraphTableSVG.CustomAttributeNames.GroupAttribute, this.type);
             var _option = this.initializeOption(option);
-            this.createSurface(parentElement, option);
+            this.createSurface(parentElement, _option);
             if (typeof _option.id !== "undefined")
                 this.svgGroup.id = _option.id;
             this.width = _option.width;
@@ -3970,20 +3891,27 @@ var GraphTableSVG;
                 if (height != null)
                     _option.height = height;
             }
-            if (typeof _option.width === "undefined")
+            if (_option.width === undefined)
                 _option.width = 25;
-            if (typeof _option.height === "undefined")
+            if (_option.height === undefined)
                 _option.height = 25;
-            if (typeof _option.cx === "undefined")
+            if (_option.cx === undefined)
                 _option.cx = 0;
-            if (typeof _option.cy === "undefined")
+            if (_option.cy === undefined)
                 _option.cy = 0;
+            if (_option.surfaceClass === undefined)
+                _option.surfaceClass = this.svgGroup.gtGetAttributeStringWithUndefined(GraphTableSVG.CustomAttributeNames.Style.defaulSurfaceClass);
             return _option;
         };
         GObject.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
             if (output === void 0) { output = {}; }
-            output.class = e.gtGetAttributeStringWithUndefined("class");
+            output.groupClass = e.gtGetAttributeStringWithUndefined("class");
+            if (output.groupClass === undefined)
+                e.gtGetAttributeStringWithUndefined("group-class");
+            output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface-class");
+            output.groupStyle = e.gtGetAttributeStringWithUndefined("group-style");
+            output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface-style");
             output.cx = e.gtGetAttributeNumberWithUndefined("cx");
             output.cy = e.gtGetAttributeNumberWithUndefined("cy");
             output.width = e.gtGetAttributeNumberWithUndefined("width");
@@ -3996,6 +3924,10 @@ var GraphTableSVG;
                 e.removeAttribute("x");
                 e.removeAttribute("y");
                 e.removeAttribute("class");
+                e.removeAttribute("surface-class");
+                e.removeAttribute("group-class");
+                e.removeAttribute("surface-style");
+                e.removeAttribute("group-style");
                 e.removeAttribute("width");
                 e.removeAttribute("height");
             }
@@ -4282,7 +4214,7 @@ var GraphTableSVG;
                     _this.update();
             };
             var _option = _this.initializeOption(option);
-            _this._svgText = GTextBox.createSVGText(_this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultTextClass));
+            _this._svgText = GTextBox.createSVGText(_option.textClass, _option.textStyle);
             _this.svgGroup.appendChild(_this.svgText);
             _this._textObserver = new MutationObserver(_this.textObserverFunc);
             var option2 = { childList: true, attributes: true, subtree: true };
@@ -4301,21 +4233,32 @@ var GraphTableSVG;
                 _option.verticalAnchor = GraphTableSVG.VerticalAnchor.Middle;
             if (_option.horizontalAnchor === undefined)
                 _option.horizontalAnchor = GraphTableSVG.HorizontalAnchor.Center;
+            if (_option.textClass === undefined)
+                _option.textClass = this.svgGroup.gtGetAttributeStringWithUndefined(GraphTableSVG.CustomAttributeNames.Style.defaultTextClass);
             return _option;
         };
-        GTextBox.createSVGText = function (className) {
-            if (className === void 0) { className = null; }
+        GTextBox.createSVGText = function (className, style) {
             var _svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             _svgText.setAttribute(GraphTableSVG.CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
+            if (style !== undefined)
+                _svgText.setAttribute("style", style);
             if (className == null) {
-                _svgText.style.fill = "black";
-                _svgText.style.fontSize = "14px";
-                _svgText.style.fontWeight = "bold";
-                _svgText.style.fontFamily = 'Times New Roman';
-                _svgText.setMarginLeft(10);
-                _svgText.setMarginRight(10);
-                _svgText.setMarginTop(10);
-                _svgText.setMarginBottom(10);
+                if (_svgText.style.fill == null || _svgText.style.fill == "")
+                    _svgText.style.fill = "black";
+                if (_svgText.style.fontSize == null || _svgText.style.fontSize == "")
+                    _svgText.style.fontSize = "14px";
+                if (_svgText.style.fontWeight == null || _svgText.style.fontWeight == "")
+                    _svgText.style.fontWeight = "bold";
+                if (_svgText.style.fontFamily == null || _svgText.style.fontFamily == "")
+                    _svgText.style.fontFamily = 'Times New Roman';
+                if (_svgText.style.getPropertyValue(GraphTableSVG.CustomAttributeNames.Style.marginLeft) == "")
+                    _svgText.setMarginLeft(10);
+                if (_svgText.style.getPropertyValue(GraphTableSVG.CustomAttributeNames.Style.marginRight) == "")
+                    _svgText.setMarginRight(10);
+                if (_svgText.style.getPropertyValue(GraphTableSVG.CustomAttributeNames.Style.marginTop) == "")
+                    _svgText.setMarginTop(10);
+                if (_svgText.style.getPropertyValue(GraphTableSVG.CustomAttributeNames.Style.marginBottom) == "")
+                    _svgText.setMarginBottom(10);
             }
             else {
                 _svgText.setAttribute("class", className);
@@ -4328,6 +4271,8 @@ var GraphTableSVG;
             GraphTableSVG.GObject.constructAttributes(e, removeAttributes, output);
             output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(GraphTableSVG.CustomAttributeNames.Style.autoSizeShapeToFitTextName);
             var textChild = HTMLFunctions.getChildByNodeName(e, "text");
+            output.textClass = e.gtGetAttributeStringWithUndefined("text-class");
+            output.textStyle = e.gtGetAttributeStringWithUndefined("text-style");
             if (e.hasAttribute("text")) {
                 output.text = e.getAttribute("text");
             }
@@ -4338,6 +4283,8 @@ var GraphTableSVG;
             }
             if (removeAttributes) {
                 e.removeAttribute("text");
+                e.removeAttribute("text-class");
+                e.removeAttribute("text-style");
                 e.style.removeProperty(GraphTableSVG.CustomAttributeNames.Style.autoSizeShapeToFitTextName);
             }
             return output;
@@ -4725,8 +4672,34 @@ var GraphTableSVG;
         });
         GPathTextBox.prototype.createSurface = function (svgbox, option) {
             if (option === void 0) { option = {}; }
-            this._svgSurface = GraphTableSVG.SVG.createSurfacePath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaulSurfaceClass));
+            var _className = this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultPathClass);
+            if (_className != null)
+                option.surfaceClass = _className;
+            this._svgSurface = GPathTextBox.createSurfacePath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
+        };
+        GPathTextBox.createSurfacePath = function (parent, x, y, x2, y2, className, style) {
+            var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            parent.appendChild(path);
+            path.setAttribute("d", "M " + x + " " + y + " L " + x2 + " " + y2);
+            if (style !== undefined)
+                path.setAttribute("style", style);
+            if (className != null) {
+                path.setAttribute("class", className);
+                var dashStyle = path.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if (dashStyle != null) {
+                    GraphTableSVG.msoDashStyle.setStyle(path, dashStyle);
+                }
+            }
+            else {
+                if (path.style.stroke == null || path.style.stroke == "")
+                    path.style.stroke = "black";
+                if (path.style.fill == null || path.style.fill == "")
+                    path.style.fill = "white";
+                if (path.style.strokeWidth == null || path.style.strokeWidth == "")
+                    path.style.strokeWidth = "1pt";
+            }
+            return path;
         };
         GPathTextBox.prototype.initializeOption = function (option) {
             var _option = _super.prototype.initializeOption.call(this, option);
@@ -5509,8 +5482,34 @@ var GraphTableSVG;
         });
         GEdge.prototype.createSurface = function (svgbox, option) {
             if (option === void 0) { option = {}; }
-            this._svgSurface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaulSurfaceClass));
+            var _className = this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultPathClass);
+            if (_className != null)
+                option.surfaceClass = _className;
+            this._svgSurface = GEdge.createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
+        };
+        GEdge.createPath = function (parent, x, y, x2, y2, className, style) {
+            var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            parent.appendChild(path);
+            path.setAttribute("d", "M " + x + " " + y + " L " + x2 + " " + y2);
+            if (style !== undefined)
+                path.setAttribute("style", style);
+            if (className !== undefined) {
+                path.setAttribute("class", className);
+                var dashStyle = path.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if (dashStyle != null) {
+                    GraphTableSVG.msoDashStyle.setStyle(path, dashStyle);
+                }
+            }
+            else {
+                if (path.style.stroke == null || path.style.stroke == "")
+                    path.style.stroke = "black";
+                if (path.style.fill == null || path.style.fill == "")
+                    path.style.fill = "none";
+                if (path.style.strokeWidth == null || path.style.strokeWidth == "")
+                    path.style.strokeWidth = "1pt";
+            }
+            return path;
         };
         Object.defineProperty(GEdge.prototype, "type", {
             get: function () {
@@ -6116,8 +6115,38 @@ var GraphTableSVG;
         });
         GEllipse.prototype.createSurface = function (svgbox, option) {
             if (option === void 0) { option = {}; }
-            this._svgSurface = GraphTableSVG.SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaulSurfaceClass));
+            this._svgSurface = GEllipse.createEllipse(this.svgGroup, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
+        };
+        GEllipse.createEllipse = function (parent, className, style) {
+            var circle = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+            parent.appendChild(circle);
+            if (style !== undefined)
+                circle.setAttribute("style", style);
+            circle.rx.baseVal.value = GraphTableSVG.CustomAttributeNames.defaultCircleRadius;
+            circle.ry.baseVal.value = GraphTableSVG.CustomAttributeNames.defaultCircleRadius;
+            if (className == null) {
+                if (circle.style.stroke == null || circle.style.stroke == "")
+                    circle.style.stroke = "black";
+                if (circle.style.strokeWidth == null || circle.style.strokeWidth == "")
+                    circle.style.strokeWidth = "1pt";
+                if (circle.style.fill == null || circle.style.fill == "")
+                    circle.style.fill = "white";
+            }
+            else {
+                circle.setAttribute("class", className);
+                var radius = circle.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.defaultRadiusName, null);
+                if (radius != null) {
+                    circle.rx.baseVal.value = radius;
+                    circle.ry.baseVal.value = radius;
+                }
+                var dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if (dashStyle != null)
+                    GraphTableSVG.msoDashStyle.setStyle(circle, dashStyle);
+            }
+            circle.cx.baseVal.value = 0;
+            circle.cy.baseVal.value = 0;
+            return circle;
         };
         GEllipse.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
@@ -6499,7 +6528,7 @@ var GraphTableSVG;
             if (option === void 0) { option = {}; }
             if (option.isLatexMode == undefined)
                 option.isLatexMode = false;
-            var node = GraphTableSVG.createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
+            var node = GraphTableSVG.createVertex(this, { groupClass: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
             if (logicVertex.vertexText != null)
                 GraphTableSVG.SVGTextBox.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
             if (parent != null) {
@@ -6621,8 +6650,39 @@ var GraphTableSVG;
         });
         GRect.prototype.createSurface = function (svgbox, option) {
             if (option === void 0) { option = {}; }
-            this._svgSurface = GraphTableSVG.SVG.createRectangle(this.svgGroup, this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaulSurfaceClass));
+            this._svgSurface = GRect.createRectangle(this.svgGroup, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
+        };
+        GRect.createRectangle = function (parent, className, style) {
+            var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            parent.appendChild(rect);
+            rect.width.baseVal.value = 30;
+            rect.height.baseVal.value = 30;
+            if (style !== undefined)
+                rect.setAttribute("style", style);
+            if (className == null) {
+                if (rect.style.stroke == null || rect.style.stroke == "")
+                    rect.style.stroke = "black";
+                if (rect.style.fill == null || rect.style.fill == "")
+                    rect.style.fill = "white";
+                if (rect.style.strokeWidth == null || rect.style.strokeWidth == "")
+                    rect.style.strokeWidth = "1pt";
+            }
+            else {
+                rect.setAttribute("class", className);
+                var dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if (dashStyle != null)
+                    GraphTableSVG.msoDashStyle.setStyle(rect, dashStyle);
+                var width = rect.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.defaultWidthName, null);
+                if (width != null) {
+                    rect.width.baseVal.value = width;
+                }
+                var height = rect.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.defaultHeightName, null);
+                if (height != null) {
+                    rect.height.baseVal.value = height;
+                }
+            }
+            return rect;
         };
         GRect.constructAttributes = function (e, removeAttributes, output) {
             if (removeAttributes === void 0) { removeAttributes = false; }
@@ -7065,8 +7125,8 @@ var GraphTableSVG;
                     output.table.x = output.x;
                 if (output.y !== undefined)
                     output.table.y = output.y;
-                if (output.class !== undefined)
-                    output.table.tableClassName = output.class;
+                if (output.groupClass !== undefined)
+                    output.table.tableClassName = output.groupClass;
                 while (e.childNodes.length > 0)
                     e.removeChild(e.childNodes.item(0));
             }

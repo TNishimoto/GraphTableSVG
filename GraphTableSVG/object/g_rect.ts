@@ -12,8 +12,42 @@ namespace GraphTableSVG {
             this.update();
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
-            this._svgSurface = SVG.createRectangle(this.svgGroup, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
+            this._svgSurface = GRect.createRectangle(this.svgGroup, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
+        }
+        /**
+         * SVGRectElementを生成します。
+         * @param parent 生成したSVG要素を子に追加する要素
+         * @param className 生成するSVG要素のクラス属性名
+         * @returns 生成されたSVGRectElement
+         */
+        private static createRectangle(parent: SVGElement, className: string | undefined, style : string | undefined): SVGRectElement {
+            const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            parent.appendChild(rect);
+            rect.width.baseVal.value = 30;
+            rect.height.baseVal.value = 30;
+            if(style !== undefined) rect.setAttribute("style", style);
+
+            if (className == null) {
+                if(rect.style.stroke == null || rect.style.stroke == "")rect.style.stroke = "black";
+                if(rect.style.fill == null || rect.style.fill == "")rect.style.fill = "white";
+                if(rect.style.strokeWidth == null || rect.style.strokeWidth == "")rect.style.strokeWidth = "1pt";
+            } else {
+                rect.setAttribute("class", className);
+                const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
+
+                const width = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
+                if (width != null) {
+                    rect.width.baseVal.value = width;
+                }
+                const height = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeightName, null);
+                if (height != null) {
+                    rect.height.baseVal.value = height;
+                }
+
+            }
+            return rect;
         }
 
         static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GTextBoxAttributes = {}): GCalloutAttributes {

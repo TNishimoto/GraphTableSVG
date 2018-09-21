@@ -182,14 +182,11 @@ declare namespace GraphTableSVG {
         let idCounter: number;
         function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
         const msoDashStyleName = "--stroke-style";
-        function createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
-        function createSurfacePath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className?: string | null): SVGPathElement;
         function createText(className?: string | null): SVGTextElement;
         function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
-        function createGroup(parent: HTMLElement | SVGElement | null, className?: string | null): SVGGElement;
+        function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement;
         function resetStyle(style: CSSStyleDeclaration): void;
         function createCircle(parent: SVGElement, className?: string | null): SVGCircleElement;
-        function createEllipse(parent: SVGElement, className?: string | null): SVGEllipseElement;
         function createMarker(option?: {
             className?: string;
             strokeWidth?: string;
@@ -490,7 +487,6 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     type GObjectAttributes = {
-        class?: string;
         cx?: number;
         cy?: number;
         x?: number;
@@ -498,12 +494,18 @@ declare namespace GraphTableSVG {
         width?: number;
         height?: number;
         id?: string;
+        groupClass?: string;
+        surfaceClass?: string;
+        groupStyle?: string;
+        surfaceStyle?: string;
     };
     type GTextBoxAttributes = GObjectAttributes & {
         text?: string;
         isAutoSizeShapeToFitText?: boolean;
         verticalAnchor?: VerticalAnchor;
         horizontalAnchor?: HorizontalAnchor;
+        textClass?: string;
+        textStyle?: string;
     };
     type GShapeArrowCalloutAttributes = GTextBoxAttributes & {
         arrowHeadWidth?: number;
@@ -644,17 +646,17 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class GTextBox extends GObject {
-        constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
-        private isFixTextSize;
-        initializeOption(option: GObjectAttributes): GObjectAttributes;
-        private static createSVGText(className?);
-        static constructAttributes(e: Element, removeAttributes?: boolean, output?: GTextBoxAttributes): GTextBoxAttributes;
         private _svgText;
-        readonly svgText: SVGTextElement;
+        private isFixTextSize;
         protected surfaceAttributes: string[];
         private _textObserver;
-        protected textObserverFunc: MutationCallback;
         private static updateTextAttributes;
+        constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
+        initializeOption(option: GObjectAttributes): GObjectAttributes;
+        private static createSVGText(className, style);
+        static constructAttributes(e: Element, removeAttributes?: boolean, output?: GTextBoxAttributes): GTextBoxAttributes;
+        readonly svgText: SVGTextElement;
+        protected textObserverFunc: MutationCallback;
         horizontalAnchor: HorizontalAnchor;
         verticalAnchor: VerticalAnchor;
         isAutoSizeShapeToFitText: boolean;
@@ -704,6 +706,7 @@ declare namespace GraphTableSVG {
         readonly svgPath: SVGPathElement;
         constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
         protected createSurface(svgbox: SVGElement, option?: GObjectAttributes): void;
+        private static createSurfacePath(parent, x, y, x2, y2, className, style);
         initializeOption(option: GObjectAttributes): GObjectAttributes;
         readonly innerRectangle: Rectangle;
         readonly type: ShapeObjectType;
@@ -759,6 +762,7 @@ declare namespace GraphTableSVG {
         protected _svgTextPath: SVGTextPathElement;
         readonly svgTextPath: SVGTextPathElement;
         protected createSurface(svgbox: SVGElement, option?: GObjectAttributes): void;
+        private static createPath(parent, x, y, x2, y2, className, style);
         readonly type: ShapeObjectType;
         tag: any;
         controlPoint: [number, number][];
@@ -815,6 +819,7 @@ declare namespace GraphTableSVG {
         readonly svgEllipse: SVGEllipseElement;
         constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
         protected createSurface(svgbox: SVGElement, option?: GObjectAttributes): void;
+        private static createEllipse(parent, className, style);
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GTextBoxAttributes): GCalloutAttributes;
         readonly innerRectangle: Rectangle;
         width: number;
@@ -872,6 +877,7 @@ declare namespace GraphTableSVG {
         readonly svgRectangle: SVGRectElement;
         constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
         protected createSurface(svgbox: SVGElement, option?: GObjectAttributes): void;
+        private static createRectangle(parent, className, style);
         static constructAttributes(e: SVGElement, removeAttributes?: boolean, output?: GTextBoxAttributes): GCalloutAttributes;
         readonly type: ShapeObjectType;
         readonly innerRectangle: Rectangle;

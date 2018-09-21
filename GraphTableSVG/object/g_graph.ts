@@ -288,7 +288,7 @@ namespace GraphTableSVG {
         private createChildFromLogicTree<T>(parent: GVertex | null = null, logicVertex: LogicTree, option: { isLatexMode?: boolean } = {}): GVertex {
             if (option.isLatexMode == undefined) option.isLatexMode = false;
 
-            const node : GVertex = <any>GraphTableSVG.createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
+            const node : GVertex = <any>GraphTableSVG.createVertex(this, { groupClass: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
             if (logicVertex.vertexText != null) GraphTableSVG.SVGTextBox.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
             if (parent != null) {
                 const edge : GEdge = <any>GraphTableSVG.createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass });

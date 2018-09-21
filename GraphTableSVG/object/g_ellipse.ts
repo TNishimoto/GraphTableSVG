@@ -9,8 +9,37 @@ namespace GraphTableSVG {
             //this.update();
         }
         protected createSurface(svgbox : SVGElement, option :GObjectAttributes = {}) : void {
-            this._svgSurface = SVG.createEllipse(this.svgGroup, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
+            this._svgSurface = GEllipse.createEllipse(this.svgGroup, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
+        }
+        private static createEllipse(parent: SVGElement, className: string | undefined, style : string | undefined): SVGEllipseElement {
+            const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+            parent.appendChild(circle);
+            if(style !== undefined) circle.setAttribute("style", style);
+
+
+            circle.rx.baseVal.value = CustomAttributeNames.defaultCircleRadius;
+            circle.ry.baseVal.value = CustomAttributeNames.defaultCircleRadius;
+
+            if (className == null) {
+                if(circle.style.stroke == null || circle.style.stroke == "")circle.style.stroke = "black";
+                if(circle.style.strokeWidth == null || circle.style.strokeWidth == "")circle.style.strokeWidth = "1pt";
+                if(circle.style.fill == null || circle.style.fill == "")circle.style.fill = "white";
+            } else {
+                circle.setAttribute("class", className);
+                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadiusName, null);
+                if (radius != null) {
+                    circle.rx.baseVal.value = radius;
+                    circle.ry.baseVal.value = radius;
+                }
+
+                const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
+            }
+            circle.cx.baseVal.value = 0;
+            circle.cy.baseVal.value = 0;
+
+            return circle;
         }
 
         static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GTextBoxAttributes = {}): GCalloutAttributes {

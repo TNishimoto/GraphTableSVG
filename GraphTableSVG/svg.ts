@@ -31,66 +31,8 @@ namespace GraphTableSVG {
             return line1;
         }
         export const msoDashStyleName = "--stroke-style";
-        /**
-             * SVGPathElementを生成します。
-             * @param parent 生成したSVGPathElementを子に追加する要素
-             * @param x 開始位置のX座標
-             * @param y 開始位置のY座標
-             * @param x2 終了位置のX座標
-             * @param y2 終了位置のY座標
-             * @param className SVGPathElementのクラス属性名
-             * @returns 生成されたSVGPathElement
-             */
-        export function createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
-            const line1 = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            parent.appendChild(line1);
-            line1.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
+        
 
-            if (parent instanceof SVGElement) {
-                const _className = parent.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
-                if (className == null) {
-                    className = _className;
-                }
-            }
-
-            if (className != null) {
-                line1.setAttribute("class", className)
-                const dashStyle = line1.getPropertyStyleValue(msoDashStyleName);
-                if (dashStyle != null) {
-                    msoDashStyle.setStyle(line1, dashStyle);
-                }
-            } else {
-                line1.style.stroke = "black";
-                line1.style.fill = "none";
-                line1.style.strokeWidth = "1pt";
-            }
-            return line1;
-        }
-        export function createSurfacePath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, className: string | null = null): SVGPathElement {
-            const line1 = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            parent.appendChild(line1);
-            line1.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
-
-            if (parent instanceof SVGElement) {
-                const _className = parent.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
-                if (className == null) {
-                    className = _className;
-                }
-            }
-
-            if (className != null) {
-                line1.setAttribute("class", className)
-                const dashStyle = line1.getPropertyStyleValue(msoDashStyleName);
-                if (dashStyle != null) {
-                    msoDashStyle.setStyle(line1, dashStyle);
-                }
-            } else {
-                line1.style.stroke = "black";
-                line1.style.fill = "white";
-                line1.style.strokeWidth = "1pt";
-            }
-            return line1;
-        }
 
 
         /**
@@ -154,12 +96,14 @@ namespace GraphTableSVG {
          * @param className 生成するSVG要素のクラス属性名
          * @returns 生成されたSVGGElement
          */
-        export function createGroup(parent: HTMLElement | SVGElement | null, className: string | null = null): SVGGElement {
+        export function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement {
             const g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
             g.setAttribute(CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
+            /*
             if (className != null) {
                 g.setAttribute("class", className);
             }
+            */
             if (parent != null) parent.appendChild(g);
             return g;
         }
@@ -207,32 +151,7 @@ namespace GraphTableSVG {
 
             return circle;
         }
-        export function createEllipse(parent: SVGElement, className: string | null = null): SVGEllipseElement {
-            const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-            parent.appendChild(circle);
-            circle.rx.baseVal.value = CustomAttributeNames.defaultCircleRadius;
-            circle.ry.baseVal.value = CustomAttributeNames.defaultCircleRadius;
-
-            if (className == null) {
-                circle.style.stroke = "black";
-                circle.style.strokeWidth = "1pt";
-                circle.style.fill = "#ffffff";
-            } else {
-                circle.setAttribute("class", className);
-                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadiusName, null);
-                if (radius != null) {
-                    circle.rx.baseVal.value = radius;
-                    circle.ry.baseVal.value = radius;
-                }
-
-                const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
-                if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
-            }
-            circle.cx.baseVal.value = 0;
-            circle.cy.baseVal.value = 0;
-
-            return circle;
-        }
+        
 
 
         /**

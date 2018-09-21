@@ -1,7 +1,13 @@
 /// <reference path="g_object.ts"/>
 namespace GraphTableSVG {
 
-    export class GTextBox extends GObject {
+    export class GTextBox extends GObject {        
+        private _svgText: SVGTextElement;
+        private isFixTextSize : boolean = false;
+        protected surfaceAttributes: string[] = [];
+        private _textObserver: MutationObserver;
+        private static updateTextAttributes = ["style"]
+
         public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(svgbox, option)
 
@@ -15,7 +21,7 @@ namespace GraphTableSVG {
 
             const _option = <GTextBoxAttributes>this.initializeOption(option);
 
-            this._svgText = GTextBox.createSVGText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass));
+            this._svgText = GTextBox.createSVGText(_option.textClass, _option.textStyle);
             this.svgGroup.appendChild(this.svgText);
             this._textObserver = new MutationObserver(this.textObserverFunc);
             const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
@@ -24,13 +30,13 @@ namespace GraphTableSVG {
             if (_option.isAutoSizeShapeToFitText !== undefined) this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;            
 
         }
-        private isFixTextSize : boolean = false;
         
         initializeOption(option: GObjectAttributes): GObjectAttributes {
             const _option = <GTextBoxAttributes>super.initializeOption(option);
             if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
             if(_option.verticalAnchor === undefined) _option.verticalAnchor = VerticalAnchor.Middle;
             if(_option.horizontalAnchor === undefined) _option.horizontalAnchor = HorizontalAnchor.Center;
+            if(_option.textClass === undefined) _option.textClass = this.svgGroup.gtGetAttributeStringWithUndefined(CustomAttributeNames.Style.defaultTextClass);
 
             return _option;
         }
@@ -39,20 +45,22 @@ namespace GraphTableSVG {
                  * @param className 生成するSVG要素のクラス属性名
                  * @returns 生成されたSVGTextElement
                  */
-        private static createSVGText(className: string | null = null): SVGTextElement {
+        private static createSVGText(className: string | undefined, style : string | undefined): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
             _svgText.setAttribute(CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
+            if(style !== undefined) _svgText.setAttribute("style", style);
+            
             //_svgText.style.textAnchor = "middle";
             if (className == null) {
-                _svgText.style.fill = "black";
-                _svgText.style.fontSize = "14px";
-                _svgText.style.fontWeight = "bold";
-                _svgText.style.fontFamily = 'Times New Roman';
-                _svgText.setMarginLeft(10);
-                _svgText.setMarginRight(10);
-                _svgText.setMarginTop(10);
-                _svgText.setMarginBottom(10);
+                if(_svgText.style.fill == null || _svgText.style.fill == "")_svgText.style.fill = "black";
+                if(_svgText.style.fontSize == null || _svgText.style.fontSize == "")_svgText.style.fontSize = "14px";
+                if(_svgText.style.fontWeight == null || _svgText.style.fontWeight == "")_svgText.style.fontWeight = "bold";
+                if(_svgText.style.fontFamily == null || _svgText.style.fontFamily == "")_svgText.style.fontFamily = 'Times New Roman';
+                if(_svgText.style.getPropertyValue(CustomAttributeNames.Style.marginLeft) == "") _svgText.setMarginLeft(10);
+                if(_svgText.style.getPropertyValue(CustomAttributeNames.Style.marginRight) == "")_svgText.setMarginRight(10);
+                if(_svgText.style.getPropertyValue(CustomAttributeNames.Style.marginTop) == "")_svgText.setMarginTop(10);
+                if(_svgText.style.getPropertyValue(CustomAttributeNames.Style.marginBottom) == "")_svgText.setMarginBottom(10);
             } else {
                 _svgText.setAttribute("class", className);
                 //_svgText.className = className;
@@ -66,6 +74,8 @@ namespace GraphTableSVG {
             GObject.constructAttributes(e, removeAttributes, output);
             output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitTextName);
             const textChild = HTMLFunctions.getChildByNodeName(e, "text");
+            output.textClass = e.gtGetAttributeStringWithUndefined("text-class");
+            output.textStyle = e.gtGetAttributeStringWithUndefined("text-style");
 
             if (e.hasAttribute("text")) {
                 output.text = <string>e.getAttribute("text");
@@ -78,11 +88,13 @@ namespace GraphTableSVG {
 
             if (removeAttributes) {
                 e.removeAttribute("text");
+                e.removeAttribute("text-class");
+                e.removeAttribute("text-style");
+
                 (<any>e).style.removeProperty(CustomAttributeNames.Style.autoSizeShapeToFitTextName);
             }
             return output;
         }
-        private _svgText: SVGTextElement;
         public get svgText(): SVGTextElement {
             return this._svgText;
         }
@@ -90,9 +102,6 @@ namespace GraphTableSVG {
 
 
 
-        protected surfaceAttributes: string[] = [];
-
-        private _textObserver: MutationObserver;
         protected textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
             if (!this.isLocated) return;
             let b = false;
@@ -109,7 +118,6 @@ namespace GraphTableSVG {
             if (b) this.update();
 
         };
-        private static updateTextAttributes = ["style"]
 
 
 

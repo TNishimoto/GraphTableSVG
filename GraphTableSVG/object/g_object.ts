@@ -17,7 +17,10 @@ namespace GraphTableSVG {
             */
 
 
-            this._svgGroup = SVG.createGroup(parentElement, option.class == undefined ? null : option.class);
+            this._svgGroup = SVG.createGroup(parentElement);
+            if(option.groupClass !== undefined)this._svgGroup.setAttribute("class", option.groupClass);
+            if(option.groupStyle !== undefined)this._svgGroup.setAttribute("style", option.groupStyle);
+            
             this.setClassNameOfSVGGroup();
 
             GObject.setObjectFromObjectID(this);
@@ -25,8 +28,10 @@ namespace GraphTableSVG {
 
             this.svgGroup.setAttribute(CustomAttributeNames.GroupAttribute, this.type);
             const _option = this.initializeOption(option);
-            this.createSurface(parentElement, option);
+            this.createSurface(parentElement, _option);
             if (typeof _option.id !== "undefined") this.svgGroup.id = _option.id;
+            //if(_option.surfaceClass !== undefined && this.svgSurface !== null) this.svgSurface.setAttribute("class", _option.surfaceClass);
+
             this.width = _option.width!;
             this.height = _option.height!;
             this.cx = _option.cx!;
@@ -48,15 +53,21 @@ namespace GraphTableSVG {
                 if (width != null) _option.width = width;
                 if (height != null) _option.height = height;
             }
-            if (typeof _option.width === "undefined") _option.width = 25;
-            if (typeof _option.height === "undefined") _option.height = 25;
-            if (typeof _option.cx === "undefined") _option.cx = 0;
-            if (typeof _option.cy === "undefined") _option.cy = 0;
+            if (_option.width === undefined) _option.width = 25;
+            if (_option.height === undefined) _option.height = 25;
+            if (_option.cx === undefined) _option.cx = 0;
+            if (_option.cy === undefined) _option.cy = 0;
+            if(_option.surfaceClass === undefined) _option.surfaceClass = this.svgGroup.gtGetAttributeStringWithUndefined(CustomAttributeNames.Style.defaulSurfaceClass)
             return _option;
         }
         static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: GObjectAttributes = {}): GObjectAttributes {
-            output.class = e.gtGetAttributeStringWithUndefined("class");
+            output.groupClass = e.gtGetAttributeStringWithUndefined("class");
+            if(output.groupClass === undefined) e.gtGetAttributeStringWithUndefined("group-class");
+            output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface-class");
+            output.groupStyle = e.gtGetAttributeStringWithUndefined("group-style");
+            output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface-style");
+
             output.cx = e.gtGetAttributeNumberWithUndefined("cx");
             output.cy = e.gtGetAttributeNumberWithUndefined("cy");
             output.width = e.gtGetAttributeNumberWithUndefined("width");
@@ -71,6 +82,11 @@ namespace GraphTableSVG {
                 e.removeAttribute("x");
                 e.removeAttribute("y");
                 e.removeAttribute("class");
+                e.removeAttribute("surface-class");
+                e.removeAttribute("group-class");
+                e.removeAttribute("surface-style");
+                e.removeAttribute("group-style");
+
                 e.removeAttribute("width");
                 e.removeAttribute("height");
             }

@@ -41,7 +41,7 @@ namespace GraphTableSVG {
             if (typeof _option.endConnectorType !== "undefined") this.endConnectorType = _option.endConnectorType;
 
             this.pathTextAlignment = _option.pathTextAlignment!;
-            
+
 
             this.update();
 
@@ -171,8 +171,44 @@ namespace GraphTableSVG {
             return this._svgTextPath;
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
-            this._svgSurface = GraphTableSVG.SVG.createPath(this.svgGroup, 0, 0, 0, 0, this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaulSurfaceClass));
+
+            const _className = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
+            if (_className != null) option.surfaceClass = _className;
+
+            this._svgSurface = GEdge.createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
+        }
+        /**
+             * SVGPathElementを生成します。
+             * @param parent 生成したSVGPathElementを子に追加する要素
+             * @param x 開始位置のX座標
+             * @param y 開始位置のY座標
+             * @param x2 終了位置のX座標
+             * @param y2 終了位置のY座標
+             * @param className SVGPathElementのクラス属性名
+             * @returns 生成されたSVGPathElement
+             */
+        private static createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number,
+            className: string | undefined, style: string | undefined): SVGPathElement {
+            const path = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            parent.appendChild(path);
+            path.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
+
+            if (style !== undefined) path.setAttribute("style", style);
+
+            if (className !== undefined) {
+                path.setAttribute("class", className)
+                const dashStyle = path.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                if (dashStyle != null) {
+                    msoDashStyle.setStyle(path, dashStyle);
+                }
+            } else {
+                if (path.style.stroke == null || path.style.stroke == "") path.style.stroke = "black";
+                if (path.style.fill == null || path.style.fill == "") path.style.fill = "none";
+                if (path.style.strokeWidth == null || path.style.strokeWidth == "") path.style.strokeWidth = "1pt";
+            }
+
+            return path;
         }
         public get type(): ShapeObjectType {
             return "g-edge";
@@ -469,7 +505,7 @@ namespace GraphTableSVG {
         }
         private setRegularInterval(value: number): void {
             this.removeTextLengthAttribute();
-            
+
             const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
             //const box = this.svgText.getBBox();
             const diff = value - textRect.width;
@@ -851,7 +887,7 @@ namespace GraphTableSVG {
             return r;
         }
 
-        public get hasSize() : boolean{
+        public get hasSize(): boolean {
             return false;
         }
         /**
