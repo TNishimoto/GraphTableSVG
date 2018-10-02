@@ -36,7 +36,7 @@ namespace GraphTableSVG {
             this.svgGroup.addEventListener(CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);
         }
         public get vertexXInterval(): number | null {
-            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.vertexXIntervalName);
+            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.vertexXInterval);
             if (v == null) {
                 return null;
             } else {
@@ -44,10 +44,10 @@ namespace GraphTableSVG {
             }
         }
         public set vertexXInterval(value: number | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.vertexXIntervalName, value == null ? null : value.toString());
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.vertexXInterval, value == null ? null : value.toString());
         }
         public get vertexYInterval(): number | null {
-            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.vertexYIntervalName);
+            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.vertexYInterval);
             if (v == null) {
                 return null;
             } else {
@@ -55,7 +55,7 @@ namespace GraphTableSVG {
             }
         }
         public set vertexYInterval(value: number | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.vertexYIntervalName, value == null ? null : value.toString());
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.vertexYInterval, value == null ? null : value.toString());
         }
 
         /**

@@ -37,11 +37,11 @@ namespace GraphTableSVG {
                 const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
                 if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 
-                const width = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
+                const width = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidth, null);
                 if (width != null) {
                     rect.width.baseVal.value = width;
                 }
-                const height = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeightName, null);
+                const height = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeight, null);
                 if (height != null) {
                     rect.height.baseVal.value = height;
                 }

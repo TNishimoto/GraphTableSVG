@@ -27,7 +27,7 @@ namespace GraphTableSVG {
                 if(circle.style.fill == null || circle.style.fill == "")circle.style.fill = "white";
             } else {
                 circle.setAttribute("class", className);
-                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadiusName, null);
+                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadius, null);
                 if (radius != null) {
                     circle.rx.baseVal.value = radius;
                     circle.ry.baseVal.value = radius;

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Sample</title>
+    <link rel="stylesheet" href="sample_graph.css" type="text/css" />
+    <script src="../scripts/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.openSVG();
+        };
+    </script>
+</head>
+
+<body>
+    <svg viewBox="0 0 300 300" width="300px" height="300px" id="svgbox1" xmlns="http://www.w3.org/2000/svg" class="svgbox">
+        <g-table cx="100" cy="100" style="--widths:[100,null,null]">
+            <row style="--height:100;">
+                <cell g-w="2" g-h="2">hello</cell>
+                <cell g-x="0" g-w="1"></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>hello</cell>
+            </row>
+            <row>
+                <cell>hello</cell>
+            </row>
+        </g-table>
+    </svg>
+    <svg viewBox="0 0 300 300" width="300px" height="300px" id="svgbox2" xmlns="http://www.w3.org/2000/svg" class="svgbox">
+        <g-rect cx="100" cy="100">hello world!</g-rect>
+    </svg>
+    <br />
+    <svg viewBox="0 0 800 1200" width="800px" height="1200px" id="svgbox3" xmlns="http://www.w3.org/2000/svg" class="svgbox"
+        g-shrink="true">
+        <g-table x="0" y="0">
+            <row>
+                <cell>カスタム要素</cell>
+                <cell>構成SVG要素名</cell>
+                <cell>SVG要素</cell>
+                <cell>補足</cell>
+            </row>
+            <row>
+                <cell w="1" h="3">
+                    <t>g-rect</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.grect.html" target="_blank">GRect</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgSurface</cell>
+                <cell>SVGRectElement</cell>
+                <cell>枠部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>枠内テキスト部分</cell>
+            </row>
+            <row>
+                <cell w="1" h="3">
+                    <t>g-ellipse</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.gellipse.html" target="_blank">GEllipse</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgSurface</cell>
+                <cell>SVGEllipseElement</cell>
+                <cell>枠部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>枠内テキスト部分</cell>
+            </row>
+            <row>
+                <cell w="1" h="3">
+                    <t>g-callout</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.gcallout.html" target="_blank">GCallout</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgSurface</cell>
+                <cell>SVGPathElement</cell>
+                <cell>枠部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>枠内テキスト部分</cell>
+            </row>
+            <row>
+                <cell w="1" h="3">
+                    <t>g-arrow-callout</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.garrowcallout.html" target="_blank">GArrowCallout</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgSurface</cell>
+                <cell>SVGPathElement</cell>
+                <cell>枠部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>枠内テキスト部分</cell>
+            </row>
+            <row>
+                <cell w="1" h="3">
+                    <t>g-edge</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.gedge.html" target="_blank">GEdge</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgSurface</cell>
+                <cell>SVGPathElement</cell>
+                <cell>辺部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>子にSVGTextPathElementを持っている</cell>
+            </row>
+            <row>
+                <cell>
+                    <t>g-graph</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.ggraph.html" target="_blank">GGraph</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell w="1" h="2">
+                    <t>g-table</t>
+                    <t>(<a fill="blue" xlink:href="../typedoc/classes/graphtablesvg.gtable.html" target="_blank">GTable</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>cells</cell>
+                <cell>Cell[][]</cell>
+                <cell>各セルを表現</cell>
+            </row>
+            <row>
+                <cell w="1" h="7">
+                    <t>(<a fill=" blue" xlink:href="../typedoc/classes/graphtablesvg.cell.html" target="_blank">Cell</a>)</t>
+                </cell>
+                <cell>svgGroup</cell>
+                <cell>SVGGElement</cell>
+                <cell>他のSVG要素を子に持つ</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgBackground</cell>
+                <cell>SVGRectElement</cell>
+                <cell>各セルを表現</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgText</cell>
+                <cell>SVGTextElement</cell>
+                <cell>枠内テキスト部分</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgTopBorder</cell>
+                <cell>SVGLineElement</cell>
+                <cell>上枠</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgLeftBorder</cell>
+                <cell>SVGLineElement</cell>
+                <cell>左枠</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgRightBorder</cell>
+                <cell>SVGLineElement</cell>
+                <cell>右枠</cell>
+            </row>
+            <row>
+                <cell></cell>
+                <cell>svgBottomBorder</cell>
+                <cell>SVGLineElement</cell>
+                <cell>下枠</cell>
+            </row>
+
+
+        </g-table>
+
+    </svg>
+    <br />
+    <svg viewBox="0 0 400 200" width="400px" height="200px" id="svgbox4" xmlns="http://www.w3.org/2000/svg" class="svgbox"
+        g-shrink="true">
+        <g-rect cx="100" cy="100" id="4_1">GObject</g-rect>
+
+        <g-rect cx="200" cy="200" id="4_2">GTextbox</g-rect>
+        <g-rect cx="100" cy="300" id="4_3">GTable</g-rect>
+        <g-rect cx="200" cy="400" id="4_4">GVertex</g-rect>
+        <g-rect cx="300" cy="500" id="4_5">GPathTextbox</g-rect>
+        <g-rect cx="400" cy="600" id="4_6">GEdge</g-rect>
+        <g-rect cx="500" cy="700" id="4_7">GRect</g-rect>
+        <g-rect cx="600" cy="800" id="4_8">GEllipse</g-rect>
+        <g-rect cx="700" cy="900" id="4_9">GCallout</g-rect>
+
+        <g-edge begin-vertex="4_1" end-vertex="4_2"></g-edge>
+        <g-edge begin-vertex="4_1" end-vertex="4_3"></g-edge>
+    </svg>
+    <br />
+    <svg viewBox="0 0 800 1200" width="800px" height="1200px" id="svgbox5" xmlns="http://www.w3.org/2000/svg" class="svgbox"
+        g-shrink="true">
+        <g-table x="0" y="0">
+            <row>
+                <cell>カスタム属性</cell>
+                <cell>型</cell>
+                <cell>説明</cell>
+                <cell>対象</cell>
+            </row>
+            <row>
+                <cell>id</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>surface-id</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>text-id</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+
+
+            <row>
+                <cell>cx</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>cy</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>x</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>y</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>width</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>height</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>group-class(もしくはclass)</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>surface-class</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>text-class</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GTextbox</cell>
+            </row>
+            <row>
+                <cell>group-style</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>surface-style</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject</cell>
+            </row>
+            <row>
+                <cell>text-style</cell>
+                <cell>number</cell>
+                <cell>hogehoge</cell>
+                <cell>GTextbox</cell>
+            </row>
+
+
+        </g-table>
+
+    </svg>
+    <br/>
+    <svg viewBox="0 0 800 1200" width="800px" height="1200px" id="svgbox6" xmlns="http://www.w3.org/2000/svg" class="svgbox"
+        g-shrink="true">
+        <g-table x="0" y="0">
+            <row>
+                <cell>カスタムスタイル属性</cell>
+                <cell>型</cell>
+                <cell>説明</cell>
+                <cell>対象</cell>
+            </row>
+            <row>
+                <cell>--autosize-shape-to-fit-text</cell>
+                <cell>boolean</cell>
+                <cell>hogehoge</cell>
+                <cell>GObject.svgGroup</cell>
+            </row>
+            <row>
+                <cell>--begin-connector-type</cell>
+                <cell>ConnectorPosition</cell>
+                <cell>辺の開始頂点上の接続位置</cell>
+                <cell>GEdge.svgGroup</cell>
+            </row>
+            <row>
+                <cell>--end-connector-type</cell>
+                <cell>ConnectorPosition</cell>
+                <cell>辺の終了頂点上の接続位置</cell>
+                <cell>GEdge.svgGroup</cell>
+            </row>
+            <row>
+                <cell>--default-line-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--marker-start</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--marker-end</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-vertex-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-edge-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--vertex-x-interval</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--vertex-y-interval</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-radius</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-width</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-height</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-text-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-path-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-surface-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-surface-type</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-cell-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--default-border-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--padding-top</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--padding-left</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--padding-right</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--padding-bottom</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--margin-top</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--margin-left</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--margin-right</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--margin-bottom</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--vertical-anchor</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--horizontal-anchor</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+            <row>
+                <cell>--path-text-alignment</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+            </row>
+        </g-table>
+
+    </svg>
+</body>
+
+</html>

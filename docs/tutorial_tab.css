@@ -34,11 +34,11 @@
       .tabs input:checked + .tab-label {
         background-color: yellow;
       }
-        .tabs #tab-0-0:checked ~ .tab-0-0-content,
-.tabs #tab-0-1:checked ~ .tab-0-1-content{display: block;}
- .tabs input[name="tab-radio0"] {display: none;} 
-.tabs #tab-1-0:checked ~ .tab-1-0-content,
+        .tabs #tab-1-0:checked ~ .tab-1-0-content,
 .tabs #tab-1-1:checked ~ .tab-1-1-content,
 .tabs #tab-1-2:checked ~ .tab-1-2-content,
 .tabs #tab-1-3:checked ~ .tab-1-3-content{display: block;}
  .tabs input[name="tab-radio1"] {display: none;} 
+.tabs #tab-0-0:checked ~ .tab-0-0-content,
+.tabs #tab-0-1:checked ~ .tab-0-1-content{display: block;}
+ .tabs input[name="tab-radio0"] {display: none;} 

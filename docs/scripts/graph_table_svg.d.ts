@@ -557,19 +557,19 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     namespace CustomAttributeNames {
         namespace Style {
-            const autoSizeShapeToFitTextName: string;
-            const beginConnectorTypeName: string;
-            const endConnectorTypeName: string;
+            const autoSizeShapeToFitText: string;
+            const beginConnectorType: string;
+            const endConnectorType: string;
             const defaultLineClass: string;
-            const markerStartName: string;
-            const markerEndName: string;
+            const markerStart: string;
+            const markerEnd: string;
             const defaultVertexClass: string;
             const defaultEdgeClass: string;
-            const vertexXIntervalName: string;
-            const vertexYIntervalName: string;
-            const defaultRadiusName = "--default-radius";
-            const defaultWidthName = "--default-width";
-            const defaultHeightName = "--default-height";
+            const vertexXInterval: string;
+            const vertexYInterval: string;
+            const defaultRadius = "--default-radius";
+            const defaultWidth = "--default-width";
+            const defaultHeight = "--default-height";
             const defaultTextClass: string;
             const defaultPathClass: string;
             const defaulSurfaceClass: string;

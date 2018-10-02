@@ -1,19 +1,19 @@
 namespace GraphTableSVG {
     export namespace CustomAttributeNames {
         export namespace Style {
-            export const autoSizeShapeToFitTextName: string = "--autosize-shape-to-fit-text"
-            export const beginConnectorTypeName: string = "--begin-connector-type";
-            export const endConnectorTypeName: string = "--end-connector-type";
+            export const autoSizeShapeToFitText: string = "--autosize-shape-to-fit-text"
+            export const beginConnectorType: string = "--begin-connector-type";
+            export const endConnectorType: string = "--end-connector-type";
             export const defaultLineClass: string = "--default-line-class";
-            export const markerStartName: string = "--marker-start";
-            export const markerEndName: string = "--marker-end";
+            export const markerStart: string = "--marker-start";
+            export const markerEnd: string = "--marker-end";
             export const defaultVertexClass: string = "--default-vertex-class";
             export const defaultEdgeClass: string = "--default-edge-class";
-            export const vertexXIntervalName: string = "--vertex-x-interval";
-            export const vertexYIntervalName: string = "--vertex-y-interval";
-            export const defaultRadiusName = "--default-radius";
-            export const defaultWidthName = "--default-width";
-            export const defaultHeightName = "--default-height";
+            export const vertexXInterval: string = "--vertex-x-interval";
+            export const vertexYInterval: string = "--vertex-y-interval";
+            export const defaultRadius = "--default-radius";
+            export const defaultWidth = "--default-width";
+            export const defaultHeight = "--default-height";
             export const defaultTextClass: string = "--default-text-class";
             export const defaultPathClass: string = "--default-path-class";
             export const defaulSurfaceClass: string = "--default-surface-class";

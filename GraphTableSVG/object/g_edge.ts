@@ -59,11 +59,11 @@ namespace GraphTableSVG {
             output.y2 = e.gtGetAttributeNumberWithoutNull("y2", 300);
             output.beginVertex = e.gtGetAttributeStringWithUndefined("begin-vertex");
             output.endVertex = e.gtGetAttributeStringWithUndefined("end-vertex");
-            output.beginConnectorType = ConnectorPosition.ToConnectorPosition(e.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.beginConnectorTypeName, "auto"));
-            output.endConnectorType = ConnectorPosition.ToConnectorPosition(e.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.endConnectorTypeName, "auto"));
+            output.beginConnectorType = ConnectorPosition.ToConnectorPosition(e.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.beginConnectorType, "auto"));
+            output.endConnectorType = ConnectorPosition.ToConnectorPosition(e.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.endConnectorType, "auto"));
 
-            output.startMarker = e.gtGetStyleBooleanWithUndefined(GraphTableSVG.CustomAttributeNames.Style.markerStartName);
-            output.endMarker = e.gtGetAttributeBooleanWithUndefined(GraphTableSVG.CustomAttributeNames.Style.markerEndName);
+            output.startMarker = e.gtGetStyleBooleanWithUndefined(GraphTableSVG.CustomAttributeNames.Style.markerStart);
+            output.endMarker = e.gtGetAttributeBooleanWithUndefined(GraphTableSVG.CustomAttributeNames.Style.markerEnd);
 
             if (removeAttributes) {
                 e.removeAttribute("x1");
@@ -87,8 +87,8 @@ namespace GraphTableSVG {
             const _option = <GEdgeAttributes>super.initializeOption(option);
 
 
-            const markerStartName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.markerStartName);
-            const markerEndName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.markerEndName);
+            const markerStartName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.markerStart);
+            const markerEndName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.markerEnd);
             if (typeof _option.startMarker === "undefined" && markerStartName != null) _option.startMarker = markerStartName == "true";
             if (typeof _option.endMarker === "undefined" && markerEndName != null) _option.endMarker = markerEndName == "true";
 
@@ -112,8 +112,8 @@ namespace GraphTableSVG {
             }
 
 
-            const styleBeginConnectorType = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorTypeName);
-            const styleEndConnectorType = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorTypeName);
+            const styleBeginConnectorType = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorType);
+            const styleEndConnectorType = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorType);
 
             if (typeof _option.beginConnectorType === "undefined" && styleBeginConnectorType === null) _option.beginConnectorType = ConnectorPosition.Auto;
             if (typeof _option.endConnectorType === "undefined" && styleEndConnectorType === null) _option.endConnectorType = ConnectorPosition.Auto;
@@ -239,28 +239,28 @@ namespace GraphTableSVG {
         開始接点の接続位置を返します。
         */
         get beginConnectorType(): ConnectorPosition {
-            const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorTypeName);
+            const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorType);
             return ConnectorPosition.ToConnectorPosition(p);
         }
         /**
         開始接点の接続位置を設定します。
         */
         set beginConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.beginConnectorTypeName, value)
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.beginConnectorType, value)
             //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, GraphTableSVG.ToStrFromConnectorPosition(value));
         }
         /**
         終了接点の接続位置を返します。
         */
         get endConnectorType(): ConnectorPosition {
-            const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorTypeName);
+            const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorType);
             return ConnectorPosition.ToConnectorPosition(p);
         }
         /**
         終了接点の接続位置を設定します。
         */
         set endConnectorType(value: ConnectorPosition) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.endConnectorTypeName, value)
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.endConnectorType, value)
         }
 
         private get beginVertexID(): string | null {

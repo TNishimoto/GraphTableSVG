@@ -48,8 +48,8 @@ namespace GraphTableSVG {
         initializeOption(option: GObjectAttributes): GObjectAttributes {
             const _option = { ...option };
             if (this.svgSurface != null && this.svgSurface.className != null) {
-                const width = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidthName, null);
-                const height = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeightName, null);
+                const width = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidth, null);
+                const height = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeight, null);
                 if (width != null) _option.width = width;
                 if (height != null) _option.height = height;
             }
