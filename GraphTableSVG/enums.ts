@@ -74,21 +74,21 @@
         }
     }
 
-    export type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
-    export namespace pathTextAlighnment {
-        export const regularInterval: pathTextAlighnment = "regularInterval"
-        export const begin: pathTextAlighnment = "begin"
-        export const end: pathTextAlighnment = "end"
-        export const center: pathTextAlighnment = "center"
+    export type PathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
+    export namespace PathTextAlighnment {
+        export const regularInterval: PathTextAlighnment = "regularInterval"
+        export const begin: PathTextAlighnment = "begin"
+        export const end: PathTextAlighnment = "end"
+        export const center: PathTextAlighnment = "center"
 
-        const typeDic: { [key: string]: pathTextAlighnment; } = {
+        const typeDic: { [key: string]: PathTextAlighnment; } = {
             "none": "none",
             "begin": "begin",
             "end": "end",
             "center": "center",
             "regularInterval": "regularInterval",
         }
-        export function toPathTextAlighnment(value: string): pathTextAlighnment {
+        export function toPathTextAlighnment(value: string): PathTextAlighnment {
             if (value in typeDic) {
                 return typeDic[value];
             } else {

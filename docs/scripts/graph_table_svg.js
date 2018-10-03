@@ -167,12 +167,12 @@ var GraphTableSVG;
         }
         ShapeObjectType.toShapeObjectTypeOrCustomTag = toShapeObjectTypeOrCustomTag;
     })(ShapeObjectType = GraphTableSVG.ShapeObjectType || (GraphTableSVG.ShapeObjectType = {}));
-    var pathTextAlighnment;
-    (function (pathTextAlighnment) {
-        pathTextAlighnment.regularInterval = "regularInterval";
-        pathTextAlighnment.begin = "begin";
-        pathTextAlighnment.end = "end";
-        pathTextAlighnment.center = "center";
+    var PathTextAlighnment;
+    (function (PathTextAlighnment) {
+        PathTextAlighnment.regularInterval = "regularInterval";
+        PathTextAlighnment.begin = "begin";
+        PathTextAlighnment.end = "end";
+        PathTextAlighnment.center = "center";
         var typeDic = {
             "none": "none",
             "begin": "begin",
@@ -188,8 +188,8 @@ var GraphTableSVG;
                 return "none";
             }
         }
-        pathTextAlighnment.toPathTextAlighnment = toPathTextAlighnment;
-    })(pathTextAlighnment = GraphTableSVG.pathTextAlighnment || (GraphTableSVG.pathTextAlighnment = {}));
+        PathTextAlighnment.toPathTextAlighnment = toPathTextAlighnment;
+    })(PathTextAlighnment = GraphTableSVG.PathTextAlighnment || (GraphTableSVG.PathTextAlighnment = {}));
     var msoDashStyle;
     (function (msoDashStyle) {
         msoDashStyle.msoLineDash = "msoLineDash";
@@ -4223,10 +4223,20 @@ var GraphTableSVG;
                 _this.svgText.setTextContent(_option.text);
             if (_option.isAutoSizeShapeToFitText !== undefined)
                 _this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;
+            if (_option.x !== undefined)
+                _this.x = _option.x;
+            if (_option.y !== undefined)
+                _this.y = _option.y;
             return _this;
         }
         GTextBox.prototype.initializeOption = function (option) {
+            var b = false;
+            if (option.width !== undefined || option.height !== undefined) {
+                b = true;
+            }
             var _option = _super.prototype.initializeOption.call(this, option);
+            if (b)
+                _option.isAutoSizeShapeToFitText = false;
             if (_option.isAutoSizeShapeToFitText === undefined)
                 _option.isAutoSizeShapeToFitText = true;
             if (_option.verticalAnchor === undefined)
@@ -4336,7 +4346,7 @@ var GraphTableSVG;
             if (this.isAutoSizeShapeToFitText)
                 this.updateToFitText();
             this.updateSurface();
-            this.svgText.gtSetXY(this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+            this.svgText.gtSetXY(this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
             this._isUpdating = false;
             this._observer.observe(this.svgGroup, this.groupObserverOption);
         };
@@ -4383,6 +4393,18 @@ var GraphTableSVG;
                 rect.height = 0;
                 rect.x = 0;
                 rect.y = 0;
+                return rect;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GTextBox.prototype, "innerRectangleWithoutMargin", {
+            get: function () {
+                var rect = this.innerRectangle;
+                rect.width = rect.width - this.marginPaddingLeft - this.marginPaddingRight;
+                rect.height = rect.height - this.marginPaddingTop - this.marginPaddingBottom;
+                rect.x = rect.x + this.marginPaddingLeft;
+                rect.y = rect.y + this.marginPaddingTop;
                 return rect;
             },
             enumerable: true,
@@ -5426,7 +5448,7 @@ var GraphTableSVG;
             if (typeof _option.endConnectorType === "undefined" && styleEndConnectorType === null)
                 _option.endConnectorType = GraphTableSVG.ConnectorPosition.Auto;
             if (typeof _option.pathTextAlignment === "undefined")
-                _option.pathTextAlignment = GraphTableSVG.pathTextAlighnment.center;
+                _option.pathTextAlignment = GraphTableSVG.PathTextAlighnment.center;
             return _option;
         };
         GEdge.getConnectedVertexFromDic = function (edge, isBegin) {
@@ -5894,7 +5916,7 @@ var GraphTableSVG;
                     node.setAttribute("fill", this.lineColor);
                 }
             }
-            if (this.pathTextAlignment == GraphTableSVG.pathTextAlighnment.regularInterval) {
+            if (this.pathTextAlignment == GraphTableSVG.PathTextAlighnment.regularInterval) {
                 var pathLen = this.svgPath.getTotalLength();
                 var strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
                 if (strLen > 0) {
@@ -5906,13 +5928,13 @@ var GraphTableSVG;
                     this.setRegularInterval(textPathLen);
                 }
             }
-            else if (this.pathTextAlignment == GraphTableSVG.pathTextAlighnment.end) {
+            else if (this.pathTextAlignment == GraphTableSVG.PathTextAlighnment.end) {
                 this.removeTextLengthAttribute();
                 var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 var pathLen = this.svgPath.getTotalLength();
                 this.svgTextPath.setAttribute("startOffset", "" + (pathLen - textRect.width));
             }
-            else if (this.pathTextAlignment == GraphTableSVG.pathTextAlighnment.center) {
+            else if (this.pathTextAlignment == GraphTableSVG.PathTextAlighnment.center) {
                 this.removeTextLengthAttribute();
                 var textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 var pathLen = this.svgPath.getTotalLength();
@@ -5935,7 +5957,7 @@ var GraphTableSVG;
         Object.defineProperty(GEdge.prototype, "pathTextAlignment", {
             get: function () {
                 var value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.PathTextAlignment, "none");
-                return GraphTableSVG.pathTextAlighnment.toPathTextAlighnment(value);
+                return GraphTableSVG.PathTextAlighnment.toPathTextAlighnment(value);
             },
             set: function (value) {
                 this.svgTextPath.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.PathTextAlignment, value);
@@ -6535,7 +6557,7 @@ var GraphTableSVG;
                 var edge = GraphTableSVG.createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass });
                 if (logicVertex.parentEdgeText != null) {
                     edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
-                    edge.pathTextAlignment = GraphTableSVG.pathTextAlighnment.regularInterval;
+                    edge.pathTextAlignment = GraphTableSVG.PathTextAlighnment.regularInterval;
                 }
                 this.connect(parent, edge, node, { beginConnectorType: "bottom", endConnectorType: "top" });
             }
@@ -6702,8 +6724,8 @@ var GraphTableSVG;
                 var rect = new GraphTableSVG.Rectangle();
                 rect.width = this.width;
                 rect.height = this.height;
-                rect.x = -this.width / 2;
-                rect.y = -this.height / 2;
+                rect.x = (-this.width / 2);
+                rect.y = (-this.height / 2);
                 return rect;
             },
             enumerable: true,

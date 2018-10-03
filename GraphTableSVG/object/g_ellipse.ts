@@ -59,6 +59,7 @@ namespace GraphTableSVG {
             rect.y = -this.svgEllipse.ry.baseVal.value;
             return rect;
         }
+        
         /**
         頂点の幅を返します。
         */

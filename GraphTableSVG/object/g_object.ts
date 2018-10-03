@@ -36,7 +36,7 @@ namespace GraphTableSVG {
             this.height = _option.height!;
             this.cx = _option.cx!;
             this.cy = _option.cy!;
-
+            
             this._observer = new MutationObserver(this.observerFunc);
             const option1: MutationObserverInit = { attributes: true, childList: true, subtree: true };
             this._observer.observe(this.svgGroup, option1);
@@ -45,6 +45,7 @@ namespace GraphTableSVG {
         }
         protected groupObserverOption : MutationObserverInit = { attributes: true, childList: true, subtree: true };
 
+        
         initializeOption(option: GObjectAttributes): GObjectAttributes {
             const _option = { ...option };
             if (this.svgSurface != null && this.svgSurface.className != null) {

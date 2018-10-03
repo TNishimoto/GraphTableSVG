@@ -67,8 +67,10 @@ namespace GraphTableSVG {
             const rect = new Rectangle();
             rect.width = this.width;
             rect.height = this.height;
-            rect.x = -this.width / 2;
-            rect.y = -this.height / 2;
+            rect.x = (-this.width / 2);
+            rect.y = (-this.height / 2);
+
+            
             return rect;
         }
         /**

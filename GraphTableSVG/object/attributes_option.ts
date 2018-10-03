@@ -47,7 +47,7 @@ namespace GraphTableSVG {
         endConnectorType?: ConnectorPosition,
         beginVertex?: GVertex | string,
         endVertex?: GVertex | string,
-        pathTextAlignment?: pathTextAlighnment
+        pathTextAlignment?: PathTextAlighnment
     }
     export type CellOption = {
         cellClass?: string, 

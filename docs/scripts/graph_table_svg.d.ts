@@ -34,13 +34,13 @@ declare namespace GraphTableSVG {
         function toShapeObjectType(value: string): ShapeObjectType | null;
         function toShapeObjectTypeOrCustomTag(value: string): ShapeObjectType | CustomTag | null;
     }
-    type pathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
-    namespace pathTextAlighnment {
-        const regularInterval: pathTextAlighnment;
-        const begin: pathTextAlighnment;
-        const end: pathTextAlighnment;
-        const center: pathTextAlighnment;
-        function toPathTextAlighnment(value: string): pathTextAlighnment;
+    type PathTextAlighnment = "none" | "begin" | "end" | "center" | "regularInterval";
+    namespace PathTextAlighnment {
+        const regularInterval: PathTextAlighnment;
+        const begin: PathTextAlighnment;
+        const end: PathTextAlighnment;
+        const center: PathTextAlighnment;
+        function toPathTextAlighnment(value: string): PathTextAlighnment;
     }
     type msoDashStyle = "msoLineDash" | "msoLineDashDot" | "msoLineDashDotDot" | "msoLineLongDash" | "msoLineLongDashDot" | "msoLineRoundDot" | "msoLineSolid" | "msoLineSquareDot";
     namespace msoDashStyle {
@@ -529,7 +529,7 @@ declare namespace GraphTableSVG {
         endConnectorType?: ConnectorPosition;
         beginVertex?: GVertex | string;
         endVertex?: GVertex | string;
-        pathTextAlignment?: pathTextAlighnment;
+        pathTextAlignment?: PathTextAlighnment;
     };
     type CellOption = {
         cellClass?: string;
@@ -668,6 +668,7 @@ declare namespace GraphTableSVG {
         readonly marginPaddingRight: number;
         readonly marginPaddingBottom: number;
         readonly innerRectangle: Rectangle;
+        private readonly innerRectangleWithoutMargin;
         readonly svgElements: SVGElement[];
         hasDescendant(obj: SVGElement): boolean;
         readonly hasSize: boolean;
@@ -788,7 +789,7 @@ declare namespace GraphTableSVG {
         private pathPoints;
         private updateConnectorInfo();
         update(): boolean;
-        pathTextAlignment: pathTextAlighnment;
+        pathTextAlignment: PathTextAlighnment;
         save(): void;
         setIndexDictionaryForVBA(vertexDic: {
             [key: string]: number;

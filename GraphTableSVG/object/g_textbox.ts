@@ -27,17 +27,28 @@ namespace GraphTableSVG {
             const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
             this._textObserver.observe(this.svgText, option2);
             if (_option.text !== undefined) this.svgText.setTextContent(_option.text);
-            if (_option.isAutoSizeShapeToFitText !== undefined) this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;            
+            if (_option.isAutoSizeShapeToFitText !== undefined) this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;  
+            
+            if(_option.x !== undefined) this.x = _option.x;
+            if(_option.y !== undefined) this.y = _option.y;
+
 
         }
         
         initializeOption(option: GObjectAttributes): GObjectAttributes {
+            let b= false;
+            if(option.width !== undefined || option.height !== undefined){
+                b = true;
+            }
+
             const _option = <GTextBoxAttributes>super.initializeOption(option);
+            if(b)_option.isAutoSizeShapeToFitText = false;
             if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
             if(_option.verticalAnchor === undefined) _option.verticalAnchor = VerticalAnchor.Middle;
             if(_option.horizontalAnchor === undefined) _option.horizontalAnchor = HorizontalAnchor.Center;
             if(_option.textClass === undefined) _option.textClass = this.svgGroup.gtGetAttributeStringWithUndefined(CustomAttributeNames.Style.defaultTextClass);
 
+            
             return _option;
         }
         /**
@@ -164,7 +175,7 @@ namespace GraphTableSVG {
 
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();
-            this.svgText.gtSetXY(this.innerRectangle, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+            this.svgText.gtSetXY(this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
             this._observer.observe(this.svgGroup, this.groupObserverOption);
@@ -195,13 +206,19 @@ namespace GraphTableSVG {
         }
 
         get innerRectangle(): Rectangle {
-
-
             const rect = new Rectangle();
             rect.width = 0;
             rect.height = 0;
             rect.x = 0;
             rect.y = 0;
+            return rect;
+        }
+        private get innerRectangleWithoutMargin() : Rectangle {
+            const rect = this.innerRectangle;
+            rect.width = rect.width - this.marginPaddingLeft - this.marginPaddingRight;
+            rect.height = rect.height  - this.marginPaddingTop - this.marginPaddingBottom;
+            rect.x = rect.x + this.marginPaddingLeft;
+            rect.y = rect.y + this.marginPaddingTop;
             return rect;
         }
 

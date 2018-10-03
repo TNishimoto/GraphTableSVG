@@ -294,7 +294,7 @@ namespace GraphTableSVG {
                 const edge : GEdge = <any>GraphTableSVG.createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass });
                 if (logicVertex.parentEdgeText != null) {
                     edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
-                    edge.pathTextAlignment = pathTextAlighnment.regularInterval;
+                    edge.pathTextAlignment = PathTextAlighnment.regularInterval;
                     //edge.svgText.setTextContent(tree.edgeLabel, isLatexMode);
                 }
                 this.connect(parent, edge, node, { beginConnectorType: "bottom", endConnectorType: "top" });

@@ -117,7 +117,7 @@ namespace GraphTableSVG {
 
             if (typeof _option.beginConnectorType === "undefined" && styleBeginConnectorType === null) _option.beginConnectorType = ConnectorPosition.Auto;
             if (typeof _option.endConnectorType === "undefined" && styleEndConnectorType === null) _option.endConnectorType = ConnectorPosition.Auto;
-            if (typeof _option.pathTextAlignment === "undefined") _option.pathTextAlignment = pathTextAlighnment.center;
+            if (typeof _option.pathTextAlignment === "undefined") _option.pathTextAlignment = PathTextAlighnment.center;
 
             return _option;
 
@@ -667,7 +667,7 @@ namespace GraphTableSVG {
             }
 
 
-            if (this.pathTextAlignment == pathTextAlighnment.regularInterval) {
+            if (this.pathTextAlignment == PathTextAlighnment.regularInterval) {
                 const pathLen = this.svgPath.getTotalLength();
                 const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
                 if (strLen > 0) {
@@ -679,14 +679,14 @@ namespace GraphTableSVG {
                 }
 
             }
-            else if (this.pathTextAlignment == pathTextAlighnment.end) {
+            else if (this.pathTextAlignment == PathTextAlighnment.end) {
                 this.removeTextLengthAttribute();
                 const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 //const box = this.svgText.getBBox();
                 const pathLen = this.svgPath.getTotalLength();
                 this.svgTextPath.setAttribute("startOffset", `${pathLen - textRect.width}`);
             }
-            else if (this.pathTextAlignment == pathTextAlighnment.center) {
+            else if (this.pathTextAlignment == PathTextAlighnment.center) {
                 this.removeTextLengthAttribute();
                 const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
                 //const box = this.svgText.getBBox();
@@ -714,11 +714,11 @@ namespace GraphTableSVG {
         /**
          * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
          */
-        public get pathTextAlignment(): pathTextAlighnment {
+        public get pathTextAlignment(): PathTextAlighnment {
             const value = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.PathTextAlignment, "none");
-            return pathTextAlighnment.toPathTextAlighnment(value);
+            return PathTextAlighnment.toPathTextAlighnment(value);
         }
-        public set pathTextAlignment(value: pathTextAlighnment) {
+        public set pathTextAlignment(value: PathTextAlighnment) {
             this.svgTextPath.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.PathTextAlignment, value);
             /*
             const prev = this.svgTextPath.getPropertyStyleValueWithDefault(GraphTableSVG.PathTextAlighnmentName, "none");

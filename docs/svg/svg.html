@@ -380,15 +380,15 @@
             </row>
             <row>
                 <cell>--marker-start</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>boolean</cell>
+                <cell>辺の始点に矢印をつける</cell>
+                <cell>GEdge.svgGroup</cell>
             </row>
             <row>
                 <cell>--marker-end</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>boolean</cell>
+                <cell>辺の終点に矢印をつける</cell>
+                <cell>GEdge.svgGroup</cell>
             </row>
             <row>
                 <cell>--default-vertex-class</cell>
@@ -470,71 +470,85 @@
             </row>
             <row>
                 <cell>--padding-top</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>number</cell>
+                <cell>padding</cell>
+                <cell>Cell.svgGroup</cell>
             </row>
             <row>
                 <cell>--padding-left</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>number</cell>
+                <cell>padding</cell>
+                <cell>Cell.svgGroup</cell>
             </row>
             <row>
                 <cell>--padding-right</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>number</cell>
+                <cell>padding</cell>
+                <cell>Cell.svgGroup</cell>
             </row>
             <row>
                 <cell>--padding-bottom</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>number</cell>
+                <cell>padding</cell>
+                <cell>Cell.svgGroup</cell>
             </row>
             <row>
                 <cell>--margin-top</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>number</cell>
+                <cell>margin</cell>
+                <cell>GTextbox.svgText</cell>
             </row>
             <row>
                 <cell>--margin-left</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>number</cell>
+                <cell>margin</cell>
+                <cell>GTextbox.svgText</cell>
             </row>
             <row>
                 <cell>--margin-right</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>number</cell>
+                <cell>margin</cell>
+                <cell>GTextbox.svgText</cell>
             </row>
             <row>
                 <cell>--margin-bottom</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>number</cell>
+                <cell>margin</cell>
+                <cell>GTextbox.svgText</cell>
             </row>
             <row>
                 <cell>--vertical-anchor</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>VerticalAnchor</cell>
+                <cell>svgTextの垂直方向の表示位置</cell>
+                <cell>
+                    <t>GTextbox.svgGroup</t>
+                    <t>Cell.svgGroup</t>
+                </cell>
             </row>
             <row>
                 <cell>--horizontal-anchor</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>HorizontalAnchor</cell>
+                <cell>svgTextの水平方向の表示位置</cell>
+                <cell>
+                        <t>GTextbox.svgGroup</t>
+                        <t>Cell.svgGroup</t>
+                </cell>
             </row>
             <row>
                 <cell>--path-text-alignment</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
+                <cell>PathTextAlighnment</cell>
+                <cell>辺上のテキストの配置位置</cell>
+                <cell>GEdge.svgTextPath</cell>
             </row>
         </g-table>
+
+    </svg>
+    <br/>
+    <svg viewBox="0 0 800 600" width="800px" height="600px" id="svgbox7" xmlns="http://www.w3.org/2000/svg" class="svgbox"
+    g-shrink="false">
+        <g-rect cx="100" cy="100">(cx,cy)=(100,100)</g-rect>
+        <g-rect x="200" y="200" width="200" height="200">(x,y, width, height)=(200,200, 200, 200)</g-rect>
+        <g-rect x="100" y="200" text-style="--margin-top:200">hogehoge</g-rect>
 
     </svg>
 </body>
