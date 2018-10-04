@@ -28,10 +28,8 @@ namespace GraphTableSVG {
             this._textObserver.observe(this.svgText, option2);
             if (_option.text !== undefined) this.svgText.setTextContent(_option.text);
             if (_option.isAutoSizeShapeToFitText !== undefined) this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;  
-            
             if(_option.x !== undefined) this.x = _option.x;
             if(_option.y !== undefined) this.y = _option.y;
-
 
         }
         
@@ -118,7 +116,7 @@ namespace GraphTableSVG {
             let b = false;
 
             for (let i = 0; i < x.length; i++) {
-                const p = x[i];
+                const p = x[i];                
                 if (GTextBox.updateTextAttributes.some((v) => v == p.attributeName)) {
                     b = true;
                 }
@@ -168,6 +166,7 @@ namespace GraphTableSVG {
         }
         set isAutoSizeShapeToFitText(value: boolean) {
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
+
         }
         protected update() {
             this._isUpdating = true;
@@ -176,6 +175,7 @@ namespace GraphTableSVG {
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();
             this.svgText.gtSetXY(this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
             this._observer.observe(this.svgGroup, this.groupObserverOption);

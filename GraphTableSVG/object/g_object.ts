@@ -67,6 +67,7 @@ namespace GraphTableSVG {
             if(output.groupClass === undefined) e.gtGetAttributeStringWithUndefined("group-class");
             output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface-class");
             output.groupStyle = e.gtGetAttributeStringWithUndefined("group-style");
+            if(e.hasAttribute("style")) output.groupStyle = e.gtGetAttributeStringWithUndefined("style");
             output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface-style");
 
             output.cx = e.gtGetAttributeNumberWithUndefined("cx");
@@ -87,6 +88,7 @@ namespace GraphTableSVG {
                 e.removeAttribute("group-class");
                 e.removeAttribute("surface-style");
                 e.removeAttribute("group-style");
+                e.removeAttribute("style");
 
                 e.removeAttribute("width");
                 e.removeAttribute("height");
