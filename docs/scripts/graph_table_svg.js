@@ -3589,6 +3589,24 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    var openSVGFunctions;
+    (function (openSVGFunctions) {
+        function getTNodes(e) {
+            var tNodes = HTMLFunctions.getChildren(e).filter(function (v) { return v.getAttribute(GraphTableSVG.CustomAttributeNames.customElement) == "t"; });
+            if (tNodes.length > 0) {
+                tNodes.forEach(function (v, i) {
+                    v.removeAttribute(GraphTableSVG.CustomAttributeNames.customElement);
+                    if (i > 0 && !v.hasAttribute("newline"))
+                        v.setAttribute("newline", "true");
+                });
+                return tNodes;
+            }
+            else {
+                return null;
+            }
+        }
+        openSVGFunctions.getTNodes = getTNodes;
+    })(openSVGFunctions = GraphTableSVG.openSVGFunctions || (GraphTableSVG.openSVGFunctions = {}));
     function openCustomElement(id) {
         if (typeof id == "string") {
             var item = document.getElementById(id);
@@ -4222,8 +4240,14 @@ var GraphTableSVG;
             _this._textObserver = new MutationObserver(_this.textObserverFunc);
             var option2 = { childList: true, attributes: true, subtree: true };
             _this._textObserver.observe(_this.svgText, option2);
-            if (_option.text !== undefined)
+            if (typeof _option.text == "string") {
                 _this.svgText.setTextContent(_option.text);
+            }
+            else if (Array.isArray(_option.text)) {
+                GraphTableSVG.SVGTextBox.setTextToSVGText2(_this.svgText, _option.text, false);
+            }
+            else {
+            }
             if (_option.isAutoSizeShapeToFitText !== undefined)
                 _this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;
             if (_option.x !== undefined)
@@ -4289,6 +4313,11 @@ var GraphTableSVG;
             if (e.hasAttribute("text")) {
                 output.text = e.getAttribute("text");
             }
+            else if (e.children.length > 0) {
+                var tNodes = GraphTableSVG.openSVGFunctions.getTNodes(e);
+                if (tNodes != null)
+                    output.text = tNodes;
+            }
             else if (textChild != null) {
             }
             else if (e.innerHTML.length > 0) {
@@ -4346,6 +4375,7 @@ var GraphTableSVG;
         GTextBox.prototype.update = function () {
             this._isUpdating = true;
             this._observer.disconnect();
+            GraphTableSVG.SVGTextBox.sortText(this.svgText, null, this.verticalAnchor, this.horizontalAnchor);
             if (this.isAutoSizeShapeToFitText)
                 this.updateToFitText();
             this.updateSurface();
@@ -5368,8 +5398,12 @@ var GraphTableSVG;
             _this.svgPath.id = "path-" + _this.objectID;
             _this.svgText.appendChild(_this._svgTextPath);
             _this._svgTextPath.href.baseVal = "#" + _this.svgPath.id;
-            if (_option.text != undefined) {
+            if (typeof _option.text == "string") {
                 _this.svgTextPath.setTextContent(_option.text);
+            }
+            else if (Array.isArray(_option.text)) {
+            }
+            else {
             }
             var edgeColor = _this.svgPath.getPropertyStyleValue("stroke");
             var edgeColor2 = edgeColor == null ? undefined : edgeColor;
@@ -7135,15 +7169,9 @@ var GraphTableSVG;
                             var h_2 = Number(cells_1[y][x].getAttribute("h"));
                             output.table.cells[y][x].connectedRowCount = h_2;
                         }
-                        var tNodes = HTMLFunctions.getChildren(cells_1[y][x]).filter(function (v) { return v.getAttribute(GraphTableSVG.CustomAttributeNames.customElement) == "t"; });
-                        if (tNodes.length > 0) {
-                            tNodes.forEach(function (v, i) {
-                                v.removeAttribute(GraphTableSVG.CustomAttributeNames.customElement);
-                                if (i > 0 && !v.hasAttribute("newline"))
-                                    v.setAttribute("newline", "true");
-                            });
+                        var tNodes = GraphTableSVG.openSVGFunctions.getTNodes(cells_1[y][x]);
+                        if (tNodes != null)
                             output.table.cells[y][x].tTexts = tNodes;
-                        }
                     }
                 }
                 if (output.x !== undefined)

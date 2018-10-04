@@ -19,8 +19,13 @@ namespace GraphTableSVG {
 
             this.svgText.appendChild(this._svgTextPath);
             this._svgTextPath.href.baseVal = `#${this.svgPath.id}`
-            if (_option.text != undefined) {
+
+            if(typeof _option.text == "string"){
                 this.svgTextPath.setTextContent(_option.text);
+            }else if(Array.isArray(_option.text)){
+
+            }else{
+
             }
 
             const edgeColor = this.svgPath.getPropertyStyleValue("stroke");

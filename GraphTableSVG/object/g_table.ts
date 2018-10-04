@@ -113,6 +113,9 @@ namespace GraphTableSVG {
                             const h = Number(cells[y][x].getAttribute("h"));
                             output.table!.cells[y][x].connectedRowCount = h;
                         }
+                        const tNodes = openSVGFunctions.getTNodes(cells[y][x]);
+                        if(tNodes != null) output.table!.cells[y][x].tTexts = tNodes;
+                        /*
                         const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(cells[y][x]).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "t");
                         if (tNodes.length > 0) {
                             tNodes.forEach((v, i) => {
@@ -123,6 +126,7 @@ namespace GraphTableSVG {
                             )
                             output.table!.cells[y][x].tTexts = tNodes;
                         }
+                        */
 
                     }
                 }

@@ -17,7 +17,7 @@ namespace GraphTableSVG {
     }
 
     export type GTextBoxAttributes = GObjectAttributes & {
-        text?: string,
+        text?: string | HTMLElement[],
         isAutoSizeShapeToFitText?: boolean,
         verticalAnchor? : VerticalAnchor,
         horizontalAnchor? : HorizontalAnchor
@@ -99,6 +99,22 @@ namespace GraphTableSVG {
     }
     */
 
+    export namespace openSVGFunctions{
+        export function getTNodes(e : Element) : HTMLElement[] | null {
+            const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "t");
+            if (tNodes.length > 0) {
+                tNodes.forEach((v, i) => {
+                    v.removeAttribute(CustomAttributeNames.customElement);
+                    if (i > 0 && !v.hasAttribute("newline"))
+                        v.setAttribute("newline", "true")
+                }
+                )
+                return tNodes;
+            }else{
+                return null;
+            }
+        }
+    }
 
     export function openCustomElement(id: string | SVGElement): GObject | null {
 

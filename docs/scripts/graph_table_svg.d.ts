@@ -500,7 +500,7 @@ declare namespace GraphTableSVG {
         surfaceStyle?: string;
     };
     type GTextBoxAttributes = GObjectAttributes & {
-        text?: string;
+        text?: string | HTMLElement[];
         isAutoSizeShapeToFitText?: boolean;
         verticalAnchor?: VerticalAnchor;
         horizontalAnchor?: HorizontalAnchor;
@@ -548,6 +548,9 @@ declare namespace GraphTableSVG {
         columnWidth?: number;
         table?: LogicTable;
     };
+    namespace openSVGFunctions {
+        function getTNodes(e: Element): HTMLElement[] | null;
+    }
     function openCustomElement(id: string | SVGElement): GObject | null;
     function openSVG(id?: string | Element | null, output?: GObject[], shrink?: boolean): GObject[];
     function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option?: any): GObject;

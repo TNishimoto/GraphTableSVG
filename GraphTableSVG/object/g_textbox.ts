@@ -26,7 +26,15 @@ namespace GraphTableSVG {
             this._textObserver = new MutationObserver(this.textObserverFunc);
             const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
             this._textObserver.observe(this.svgText, option2);
-            if (_option.text !== undefined) this.svgText.setTextContent(_option.text);
+
+            if(typeof _option.text == "string"){
+                this.svgText.setTextContent(_option.text);
+            }else if(Array.isArray(_option.text)){
+                GraphTableSVG.SVGTextBox.setTextToSVGText2(this.svgText, _option.text, false);   
+            }else{
+
+            }
+
             if (_option.isAutoSizeShapeToFitText !== undefined) this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;  
             if(_option.x !== undefined) this.x = _option.x;
             if(_option.y !== undefined) this.y = _option.y;
@@ -88,7 +96,11 @@ namespace GraphTableSVG {
 
             if (e.hasAttribute("text")) {
                 output.text = <string>e.getAttribute("text");
-            } else if (textChild != null) {
+            } else if(e.children.length > 0){
+                const tNodes = openSVGFunctions.getTNodes(e);
+                if(tNodes != null)  output.text = tNodes;
+            } 
+            else if (textChild != null) {
 
             } else if (e.innerHTML.length > 0) {
                 output.text = e.innerHTML;
@@ -172,8 +184,11 @@ namespace GraphTableSVG {
             this._isUpdating = true;
             this._observer.disconnect();
 
+            SVGTextBox.sortText(this.svgText, null, this.verticalAnchor, this.horizontalAnchor);
+
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();
+            
             this.svgText.gtSetXY(this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
 
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);

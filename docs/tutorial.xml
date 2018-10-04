@@ -80,10 +80,15 @@
 				<page title="継承">
 					<load path="images/extend.png" />
 				</page>
-
 			</tab>
 		</yarticle>
 		<yarticle title="Object Sample : カスタム属性">
+			<tab>
+				<page title="表" checked="1">
+					<load path="svg/svg.html" id="svgbox8" />
+				</page>
+			</tab>
+
 		</yarticle>
 		<yarticle title="Table Sample : hello world">
 			<load path="table/sample_table_hello.js" />
