@@ -1181,6 +1181,7 @@ var GraphTableSVG;
                 var eRegion = getRelativeBoundingClientRect(e);
                 var region = GraphTableSVG.Rectangle.merge(rectangles);
                 var region2 = new GraphTableSVG.Rectangle(region.x + eRegion.x, region.y + eRegion.y, region.width, region.height);
+                console.log(region2);
                 return region2;
             }
             else {
@@ -4315,8 +4316,10 @@ var GraphTableSVG;
             }
             else if (e.children.length > 0) {
                 var tNodes = GraphTableSVG.openSVGFunctions.getTNodes(e);
-                if (tNodes != null)
+                if (tNodes != null) {
+                    tNodes.forEach(function (v) { return v.remove(); });
                     output.text = tNodes;
+                }
             }
             else if (textChild != null) {
             }
@@ -8483,11 +8486,13 @@ var GraphTableSVG;
             var fs = parseInt(fontSize);
             var dx = 0;
             var dy = fs;
+            var c = 0;
+            var lengths = getComputedTextLengthsOfTSpans(svgText);
             for (var y = 0; y < lineSpans.length; y++) {
                 var width = 0;
                 for (var x = 0; x < lineSpans[y].length; x++) {
                     var v = lineSpans[y][x];
-                    var tLen = v.getComputedTextLength();
+                    var tLen = lengths[c++];
                     if (x == 0)
                         v.setAttribute("dx", dx.toString());
                     if (x == 0 && y != 0)

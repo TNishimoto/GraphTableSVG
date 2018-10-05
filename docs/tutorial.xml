@@ -87,6 +87,10 @@
 				<page title="表" checked="1">
 					<load path="svg/svg.html" id="svgbox8" />
 				</page>
+				<page title="test" checked="1">
+					<load path="svg/svg.html" id="svgbox8" type="code" />
+				</page>
+
 			</tab>
 
 		</yarticle>

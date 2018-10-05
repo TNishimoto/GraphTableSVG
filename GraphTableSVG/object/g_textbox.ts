@@ -98,7 +98,10 @@ namespace GraphTableSVG {
                 output.text = <string>e.getAttribute("text");
             } else if(e.children.length > 0){
                 const tNodes = openSVGFunctions.getTNodes(e);
-                if(tNodes != null)  output.text = tNodes;
+                if(tNodes != null){
+                    tNodes.forEach((v)=> v.remove())
+                    output.text = tNodes;
+                }  
             } 
             else if (textChild != null) {
 

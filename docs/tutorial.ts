@@ -27,19 +27,34 @@ function addNextSiblingCode(e : libxmljs.Element, codepaths : string[], dir : st
 function createLoadCode(e: libxmljs.Element, dir: string): libxmljs.Element {
     const filePath = e.attr("path").value();
     const ext = path.extname(filePath);
-    if (ext == ".png") {
-        const img = new libxmljs.Element(e.doc(), "img", "");
-        img.attr({ src: filePath, "style": "max-width:100%" });
-        //img.attr({src:v });        
-        return img;
-    } else if (e.attr("id") != null) {
-        const id: string = e.attr("id").value()!;
-        const node = TextLoader.loadTextByID(filePath, dir, id);
-        node.attr({ "ignore-format": "true" });
-        return node;
-        //throw Error("error");
-    } else {
-        return HTMLLib.createReferenceCodeTag(filePath, dir, e.doc());
+    const typeAttr = e.attr("type");
+    const type = typeAttr == null ? null : typeAttr.value();
+
+    if(type == "code"){
+        if (e.attr("id") != null) {
+            const id: string = e.attr("id").value()!;
+            const node = TextLoader.loadTextByID(filePath, dir, id);
+            const nodeText = node.toString();
+            return HTMLLib.createCodeTag(nodeText,e.doc()).createReferenceCodeTag({title : filePath});
+        } else {
+            return HTMLLib.createReferenceCodeTag(filePath, dir, e.doc());
+        }
+    }else{
+        if (ext == ".png") {
+            const img = new libxmljs.Element(e.doc(), "img", "");
+            img.attr({ src: filePath, "style": "max-width:100%" });
+            //img.attr({src:v });        
+            return img;
+        } else if (e.attr("id") != null) {
+            const id: string = e.attr("id").value()!;
+            const node = TextLoader.loadTextByID(filePath, dir, id);
+            node.attr({ "ignore-format": "true" });
+            return node;
+            //throw Error("error");
+        } else {
+            return HTMLLib.createReferenceCodeTag(filePath, dir, e.doc());
+        }
+    
     }
 }
 
@@ -255,6 +270,8 @@ let bTab = false;
 let tabCounter = 0;
 
 pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) => {
+    //console.log(e.hasBRChild());
+    
 
     const pages = e.childNodes().filter((v) => v.name() == "page");
     const tab = new libxmljs.Element(e.doc(), "div");

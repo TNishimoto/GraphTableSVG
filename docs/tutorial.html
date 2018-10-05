@@ -114,13 +114,9 @@
          <input id="tab-0-1" type="radio" name="tab-radio0" checked="1"/>
          <label class="tab-label" for="tab-0-1">svg</label>
          <div class="tab-content tab-0-0-content">
-            
-					
             <a href="svg/sample_hello1.html">
 						実行結果
 					</a>
-            
-					
             <div class="code-div">
                <h4 class="code-filename">svg/sample_hello1.html</h4>
                <pre><code>&lt;!DOCTYPE html&gt;
@@ -153,12 +149,8 @@
 &lt;/html&gt;</code></pre>
             </div>
             <br/>
-            
-				
          </div>
          <div class="tab-content tab-0-1-content">
-            
-					
             <svg viewbox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">
         <g-rect cx="100" cy="100">hello world!</g-rect>
         <!--
@@ -172,8 +164,6 @@
         -->
     </svg>
             <br/>
-            
-				
          </div>
       </div>
       <section ignore-format="true" class="sample-commentary">　
@@ -199,13 +189,9 @@
          <input id="tab-1-3" type="radio" name="tab-radio1"/>
          <label class="tab-label" for="tab-1-3">継承</label>
          <div class="tab-content tab-1-0-content">
-            
-					
             <a href="svg/sample_hello2.html">
 						実行結果
 					</a>
-            
-					
             <div class="code-div">
                <h4 class="code-filename">svg/sample_hello2.html</h4>
                <pre><code>&lt;!DOCTYPE html&gt;
@@ -327,12 +313,8 @@
 &lt;/html&gt;</code></pre>
             </div>
             <br/>
-            
-				
          </div>
          <div class="tab-content tab-1-1-content">
-            
-					
             <svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">
         <g-rect cx="100" cy="100">g-rect</g-rect>
         <!--
@@ -432,12 +414,8 @@
 
     </svg>
             <br/>
-            
-				
          </div>
          <div class="tab-content tab-1-2-content">
-            
-					
             <svg viewbox="0 0 800 1200" width="800px" height="1200px" id="svgbox3" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
         <g-table x="0" y="0">
             <row>
@@ -625,16 +603,10 @@
 
     </svg>
             <br/>
-            
-				
          </div>
          <div class="tab-content tab-1-3-content">
-            
-					
             <img src="images/extend.png" style="max-width:100%"/>
             <br/>
-            
-				
          </div>
       </div>
    </article>
@@ -643,10 +615,10 @@
       <div class="tabs">
          <input id="tab-2-0" type="radio" name="tab-radio2" checked="1"/>
          <label class="tab-label" for="tab-2-0">表</label>
+         <input id="tab-2-1" type="radio" name="tab-radio2" checked="1"/>
+         <label class="tab-label" for="tab-2-1">test</label>
          <div class="tab-content tab-2-0-content">
-            
-					
-            <svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox8" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
+            <svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox8" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="false" ignore-format="true">
         <g-rect x="0" y="0" width="250" height="100" style="--horizontal-anchor:left">--horizontal-anchor:left</g-rect>
         <g-rect x="280" y="0" width="250" height="100" style="--horizontal-anchor:center">--horizontal-anchor:center</g-rect>
         <g-rect x="550" y="0" width="250" height="100" style="--horizontal-anchor:right">--horizontal-anchor:right</g-rect>
@@ -668,15 +640,38 @@
 
     </svg>
             <br/>
-            
-				
+         </div>
+         <div class="tab-content tab-2-1-content">
+            <div class="code-div">
+               <h4 class="code-filename">svg/svg.html</h4>
+               <pre><code>&lt;svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox8" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="false"&gt;
+        &lt;g-rect x="0" y="0" width="250" height="100" style="--horizontal-anchor:left"&gt;--horizontal-anchor:left&lt;/g-rect&gt;
+        &lt;g-rect x="280" y="0" width="250" height="100" style="--horizontal-anchor:center"&gt;--horizontal-anchor:center&lt;/g-rect&gt;
+        &lt;g-rect x="550" y="0" width="250" height="100" style="--horizontal-anchor:right"&gt;--horizontal-anchor:right&lt;/g-rect&gt;
+        &lt;g-rect x="0" y="150" width="250" height="100" style="--vertical-anchor:top"&gt;--vertical-anchor:top&lt;/g-rect&gt;
+        &lt;g-rect x="280" y="150" width="250" height="100" style="--vertical-anchor:middle"&gt;--vertical-anchor:middle&lt;/g-rect&gt;
+        &lt;g-rect x="550" y="150" width="250" height="100" style="--vertical-anchor:bottom"&gt;--vertical-anchor:bottom&lt;/g-rect&gt;
+        &lt;g-rect x="0" y="300" width="250" height="100" style="--vertical-anchor:top;--horizontal-anchor:left"&gt;
+            &lt;t&gt;--vertical-anchor:top&lt;/t&gt;
+            &lt;t&gt;--horizontal-anchor:left&lt;/t&gt;
+        &lt;/g-rect&gt;
+        &lt;g-rect x="280" y="300" width="250" height="100" style="--vertical-anchor:middle;--horizontal-anchor:center"&gt;
+            &lt;t&gt;--vertical-anchor:middle&lt;/t&gt;
+            &lt;t&gt;--horizontal-anchor:center&lt;/t&gt;
+        &lt;/g-rect&gt;
+        &lt;g-rect x="550" y="300" width="250" height="100" style="--vertical-anchor:bottom;--horizontal-anchor:right"&gt;
+            &lt;t&gt;--vertical-anchor:bottom&lt;/t&gt;
+            &lt;t&gt;--horizontal-anchor:bottom&lt;/t&gt;
+        &lt;/g-rect&gt;
+
+    &lt;/svg&gt;</code></pre>
+            </div>
+            <br/>
          </div>
       </div>
    </article>
    <article title="Table Sample : hello world" after="article" class="sample-article">
       <h2>Table Sample : hello world</h2>
-      
-			
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_hello.js</h4>
          <pre><code>let table = null;&#13;
@@ -691,8 +686,6 @@ window.onload = () =&gt; {&#13;
 </code></pre>
       </div>
       <br/>
-      
-			
       <div class="code-div">
          <h4 class="code-filename">table/sample_table_hello.html</h4>
          <pre><code>&lt;!DOCTYPE html&gt;&#13;
@@ -717,20 +710,12 @@ window.onload = () =&gt; {&#13;
 &lt;/html&gt;</code></pre>
       </div>
       <br/>
-      
-			
       <img src="images/table_hello1.png" style="max-width:100%"/>
       <br/>
-      
-			
       <a href="table/sample_table_hello.html">
 				実行結果
 			</a>
-      
-			
       <dbr></dbr>
-      
-			
       <section ignore-format="true" class="sample-commentary">　
 				Table（表）を作成する例。
 				<a href="./typedoc/classes/graphtablesvg.      table     .html" target="_blank">
@@ -748,15 +733,11 @@ window.onload = () =&gt; {&#13;
 				</a>
 				クラスで表現されており、これもセルをSVGで表現するためのクラスである。これらのプロパティやメソッドの詳細はリファレンスで確認できる。
 			</section>
-      
-			
       <section ignore-format="true" class="sample-commentary">　
 				前述の通りTableはSVGなので構成要素のプロパティを編集することでTableの中身を編集することができる。
 				ブラウザのデバッグ機能を用いてTableがSVGでどのように構成されているか見ることも編集することも可能。
 				<img src="images/table_hello2.png" style="max-width:100%"/><br/>
 			</section>
-      
-		
    </article>
    <article title="Table Sample : Tableの構成" id="xarticle-1" after="article" class="sample-article">
       <h2>Table Sample : Tableの構成</h2>

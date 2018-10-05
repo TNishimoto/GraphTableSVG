@@ -505,6 +505,7 @@ namespace GraphTableSVG {
                 const region = Rectangle.merge(rectangles);
 
                 const region2 = new Rectangle(region.x + eRegion.x, region.y + eRegion.y, region.width, region.height);
+                console.log(region2);
 
                 return region2;
             } else {
@@ -519,7 +520,6 @@ namespace GraphTableSVG {
             let r = new Rectangle();
             const svgsvgHidden = isSVGSVGHidden(e);
             const svgHidden = isSVGHidden(e);
-
             if(svgHidden){
                 return r;
             }else if(svgsvgHidden){
@@ -540,7 +540,6 @@ namespace GraphTableSVG {
 
                     ura.removeChild(fst);
                     ura.remove();
-
 
                     return r;
                 } else if (fst != null) {

@@ -173,11 +173,15 @@ namespace GraphTableSVG {
 
             let dx = 0;
             let dy = fs;
+            let c = 0;
+            const lengths = getComputedTextLengthsOfTSpans(svgText);
             for (let y = 0; y < lineSpans.length; y++) {
                 let width = 0;
                 for (let x = 0; x < lineSpans[y].length; x++) {
                     const v = lineSpans[y][x];
-                    const tLen = v.getComputedTextLength();
+                    //const tLen = v.getComputedTextLength();
+                    const tLen = lengths[c++];
+
                     if (x == 0) v.setAttribute("dx", dx.toString());
                     if (x == 0 && y != 0) v.setAttribute("dy", dy.toString());
                     width += tLen;
@@ -327,5 +331,35 @@ namespace GraphTableSVG {
                 }
             }
         }
+        /*
+        export function getComputedTSpanLength(svgText:SVGTSpanElement) : number {
+            if(HTMLFunctions.isShow(svgText)){
+                return svgText.getComputedTextLength();
+            }else{
+                if(ura == null){
+                    ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                } 
+                document.body.appendChild(ura);
+                ura.innerHTML = svgText.outerHTML;
+                const fst = ura.firstChild;
+                if(fst instanceof SVGTextElement){
+
+                    const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(fst).filter((v)=>v.nodeName=="tspan");
+                    const r = tspans.map((v)=>v.getComputedTextLength());
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return r;
+                }else if(fst != null){
+                    ura.removeChild(fst);
+                    ura.remove();
+                    return [];
+                }else{
+                    ura.remove();
+                    return [];
+                }
+            }
+        }
+        */
+
     }
 }
