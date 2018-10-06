@@ -156,19 +156,32 @@
             }
             return r.join(",");
         }
-
-        export function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void {
+        /*
+        function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void {
             if (toMSODashStyle(type) != null) {
                 const width = <number>svgLine.getPropertyStyleNumberValue("stroke-width", 2);
                 svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
                 svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
-                svgLine.setPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName, type);
+                svgLine.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName, type);
             } else {
 
             }
         }
+        */
+        export function setCpmoutedDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement) : void {
+            const type = svgLine.getPropertyStyleValue(CustomAttributeNames.Style.msoDashStyleName);
+            if(type == null){
+
+            }
+            else if (toMSODashStyle(type) != null) {
+                const width = <number>svgLine.getPropertyStyleNumberValue("stroke-width", 2);
+                svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
+                svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
+            }
+        }
+
         export function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElement): msoDashStyle {
-            const typeName = svgLine.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+            const typeName = svgLine.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
             if (typeName != null) {
                 const type = toMSODashStyle(typeName);
                 if (type != null) {

@@ -41,8 +41,12 @@ namespace GraphTableSVG {
         endMarker?: boolean,
         x1?: number,
         x2?: number,
+        x3?: number,
+
         y1?: number,
         y2?: number,
+        y3?: number,
+
         beginConnectorType?: ConnectorPosition,
         endConnectorType?: ConnectorPosition,
         beginVertex?: GVertex | string,
@@ -238,7 +242,7 @@ namespace GraphTableSVG {
             if(element instanceof SVGSVGElement){
                 const sh = element.getAttribute("g-shrink");
                 if(sh != null) shrink = sh == "true";
-                if(shrink)GraphTableSVG.GUI.observeSVGBox(element, () => GraphTableSVG.SVG.getRegion(element), new Padding(0,0,0,0));  
+                if(shrink)GraphTableSVG.GUI.observeSVGSVG(element, new Padding(0,0,0,0));  
             }
             return output;
         }

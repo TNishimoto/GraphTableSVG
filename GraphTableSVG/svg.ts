@@ -30,7 +30,6 @@ namespace GraphTableSVG {
             //line1.setAttribute('stroke', 'black');
             return line1;
         }
-        export const msoDashStyleName = "--stroke-style";
         
 
 
@@ -74,8 +73,8 @@ namespace GraphTableSVG {
                 rect.style.strokeWidth = "1pt";
             } else {
                 rect.setAttribute("class", className);
-                const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
-                if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
+                //const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+                //if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 
                 const width = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidth, null);
                 if (width != null) {
@@ -141,8 +140,8 @@ namespace GraphTableSVG {
                     circle.r.baseVal.value = radius;
                 }
 
-                const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
-                if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
+                //const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+                //if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
             }
             //circle.style.fill = "#ffffff";
             circle.cx.baseVal.value = 0;
@@ -485,7 +484,7 @@ namespace GraphTableSVG {
             svg.style.strokeWidth = style.stroke;
         }
         */
-
+        /*
         export function getRegion(e: SVGElement): Rectangle {
             if (e instanceof SVGSVGElement) {
                 const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
@@ -501,21 +500,61 @@ namespace GraphTableSVG {
                 const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
                 const rectangles = elements.map((v) => getRegion(v));
 
-                const eRegion = getRelativeBoundingClientRect(e);
+                //const eRegion = getRelativeBoundingClientRect(e);
+                const px = e.getX();
+                const py = e.getY();
+
                 const region = Rectangle.merge(rectangles);
 
-                const region2 = new Rectangle(region.x + eRegion.x, region.y + eRegion.y, region.width, region.height);
-                console.log(region2);
-
+                //const region2 = new Rectangle(region.x + eRegion.x, region.y + eRegion.y, region.width, region.height);
+                const region2 = new Rectangle(region.x + px, region.y + py, region.width, region.height);
+                                
                 return region2;
             } else {
-                const rect = getRelativeBoundingClientRect(e);
+                const rect = getRelativeBoundingClientRect2(e);
                 const region = rect
                 return region;
             }
         }
-        let ura: SVGSVGElement | null = null;
+        */
+        export function getRegion2(e: SVGElement): Rectangle {
+            if (e instanceof SVGSVGElement) {
+                const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
+                const rectangles = elements.map((v) => getRegion2(v));
 
+                const parentRect = e.getBoundingClientRect();
+                const rect = Rectangle.merge(rectangles);
+
+                let r = new Rectangle();
+                r.x = 0;
+                r.y = 0;
+
+                r.width = rect.width + (rect.x - parentRect.left);
+                r.height = rect.height + (rect.y - parentRect.top);
+
+                return r;
+
+            }
+            else if (e instanceof SVGGElement) {
+                /*
+                const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
+                const rectangles = elements.map((v) => getRegion2(v));
+                const region = Rectangle.merge(rectangles);
+                                
+                return region;
+                */
+                const rect = e.getBoundingClientRect();
+                let r = new Rectangle(rect.left, rect.top, rect.width, rect.height);
+                return r;
+
+            } else {
+                const rect = e.getBoundingClientRect();
+                let r = new Rectangle(rect.left, rect.top, rect.width, rect.height);
+                return r;
+            }
+        }
+        let ura: SVGSVGElement | null = null;
+        /*
         function getRelativeBoundingClientRect(e: SVGElement): Rectangle {
             let r = new Rectangle();
             const svgsvgHidden = isSVGSVGHidden(e);
@@ -530,7 +569,7 @@ namespace GraphTableSVG {
                 ura.innerHTML = e.outerHTML;
                 const fst = ura.firstChild;
                 if (fst instanceof SVGElement) {
-
+                    
                     const rect = fst.getBoundingClientRect();
                     const parentRect = ura.getBoundingClientRect();
                     r.x = rect.left - parentRect.left;
@@ -538,6 +577,7 @@ namespace GraphTableSVG {
                     r.width = rect.width;
                     r.height = rect.height;
 
+    
                     ura.removeChild(fst);
                     ura.remove();
 
@@ -562,6 +602,65 @@ namespace GraphTableSVG {
             }
 
         }
+        
+        function getHiddenRelativeBoundingClientRect(e: SVGElement): Rectangle {
+            let r = new Rectangle();
+            if (ura == null) {
+                ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            }
+            document.body.appendChild(ura);
+            ura.innerHTML = e.outerHTML;
+            const fst = ura.firstChild;
+            if (fst instanceof SVGElement) {
+                
+                const rect = fst.getBoundingClientRect();
+                const parentRect = ura.getBoundingClientRect();
+                r.x = rect.left - parentRect.left;
+                r.y = rect.top - parentRect.top;
+                r.width = rect.width;
+                r.height = rect.height;
+
+
+                ura.removeChild(fst);
+                ura.remove();
+
+                return r;
+            } else if (fst != null) {
+                ura.removeChild(fst);
+                ura.remove();
+                return r;
+            } else {
+                ura.remove();
+                return r;
+            }
+        }
+        
+        function getRelativeBoundingClientRect2(e: SVGElement): Rectangle {
+            let r = new Rectangle();
+            const svgsvgHidden = isSVGSVGHidden(e);
+            const svgHidden = isSVGHidden(e);
+            if(svgHidden){
+                return r;
+            }else if(svgsvgHidden){
+                return getHiddenRelativeBoundingClientRect(e);
+            }else{
+                return getHiddenRelativeBoundingClientRect(e);
+            }
+        }
+        function getSVGSVGBoundingClientRect(e: SVGElement): Rectangle {
+            const parent = getSVGSVG(e);
+            let r = new Rectangle();
+            const rect = e.getBoundingClientRect();
+            const parentRect = parent.getBoundingClientRect();
+            r.x = rect.left - parentRect.left;
+            r.y = rect.top - parentRect.top;
+            r.width = rect.width;
+            r.height = rect.height;
+            return r;
+        }
+        */
+
+
         export function getSVGSVG(e: SVGElement): SVGSVGElement {
             if(e instanceof SVGSVGElement){
                 return e;
@@ -602,6 +701,7 @@ namespace GraphTableSVG {
             }
             
         }
+
 
     }
 }

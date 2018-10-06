@@ -56,7 +56,7 @@ declare namespace GraphTableSVG {
             [key: string]: number[];
         };
         function toMSODashStyle(value: string): msoDashStyle;
-        function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void;
+        function setCpmoutedDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement): void;
         function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElement): msoDashStyle;
     }
     type Direction = "up" | "left" | "right" | "down";
@@ -109,6 +109,7 @@ declare namespace GraphTableSVG {
         function getInputText(elementID: string): string;
         function getNonNullElementById(id: string): HTMLElement;
         function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => GraphTableSVG.Rectangle, padding?: GraphTableSVG.Padding): void;
+        function observeSVGSVG(svgBox: SVGSVGElement, padding?: GraphTableSVG.Padding): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -181,7 +182,6 @@ declare namespace GraphTableSVG {
     namespace SVG {
         let idCounter: number;
         function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
-        const msoDashStyleName = "--stroke-style";
         function createText(className?: string | null): SVGTextElement;
         function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
         function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement;
@@ -204,7 +204,7 @@ declare namespace GraphTableSVG {
         }): void;
         function setCSSToAllElementStyles(item: HTMLElement | string, isComplete?: boolean): void;
         function getStyleSheet(name: string): CSSStyleDeclaration | null;
-        function getRegion(e: SVGElement): Rectangle;
+        function getRegion2(e: SVGElement): Rectangle;
         function getSVGSVG(e: SVGElement): SVGSVGElement;
         function isSVGSVGHidden(e: SVGElement): boolean;
         function isSVGHidden(e: SVGElement): boolean;
@@ -523,8 +523,10 @@ declare namespace GraphTableSVG {
         endMarker?: boolean;
         x1?: number;
         x2?: number;
+        x3?: number;
         y1?: number;
         y2?: number;
+        y3?: number;
         beginConnectorType?: ConnectorPosition;
         endConnectorType?: ConnectorPosition;
         beginVertex?: GVertex | string;
@@ -590,6 +592,7 @@ declare namespace GraphTableSVG {
             const VerticalAnchor: string;
             const HorizontalAnchor: string;
             const PathTextAlignment: string;
+            const msoDashStyleName = "--stroke-style";
         }
         const beginNodeName: string;
         const endNodeName: string;
@@ -609,6 +612,7 @@ declare namespace GraphTableSVG {
         protected _tag: any;
         private _svgGroup;
         protected _observer: MutationObserver;
+        protected _observerOption: MutationObserverInit;
         constructor(svgbox: SVGElement | string, option?: GObjectAttributes);
         protected groupObserverOption: MutationObserverInit;
         initializeOption(option: GObjectAttributes): GObjectAttributes;
@@ -675,6 +679,7 @@ declare namespace GraphTableSVG {
         readonly svgElements: SVGElement[];
         hasDescendant(obj: SVGElement): boolean;
         readonly hasSize: boolean;
+        msoDashStyle: msoDashStyle | null;
     }
 }
 declare namespace GraphTableSVG {

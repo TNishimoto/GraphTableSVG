@@ -4,14 +4,19 @@ namespace GraphTableSVG {
     export class GCallout extends GPathTextBox {
         public constructor(svgbox: SVGElement | string, option: GCalloutAttributes = {}) {
             super(svgbox, option);
-            this.speakerX = option.speakerX == undefined ? 0 : option.speakerX;
-            this.speakerY = option.speakerY == undefined ? 0 : option.speakerY;
+            const defaultSX = this.cx - 100;
+            const defaultSY = this.cy - 100;
+
+            this.speakerX = option.speakerX == undefined ? defaultSX : option.speakerX;
+            this.speakerY = option.speakerY == undefined ? defaultSY : option.speakerY;
         }
 
         static constructAttributes(e : Element, removeAttributes : boolean = false, output : GCalloutAttributes = {}) : GCalloutAttributes {        
             GTextBox.constructAttributes(e, removeAttributes, output);
-            output.speakerX = e.gtGetAttributeNumber("speaker-x", 200)!;
-            output.speakerY = e.gtGetAttributeNumber("speaker-y", 200)!;
+
+
+            if(e.hasAttribute("speaker-x"))output.speakerX = e.gtGetAttributeNumber("speaker-x", 200)!;
+            if(e.hasAttribute("speaker-y"))output.speakerY = e.gtGetAttributeNumber("speaker-y", 200)!;
 
             if(removeAttributes){
                 e.removeAttribute("speaker-x");

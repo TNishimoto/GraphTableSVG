@@ -201,6 +201,12 @@ namespace GraphTableSVG {
 
         protected updateSurface() {
 
+            this._observer.disconnect();
+            const dashStyle = this.msoDashStyle;
+            if (dashStyle != null && this.svgSurface != null) {
+                msoDashStyle.setCpmoutedDashArray(this.svgSurface);
+            }
+            this._observer.observe(this.svgGroup, this._observerOption);
         }
         protected updateToFitText() {
             this.isFixTextSize = true;
@@ -268,6 +274,28 @@ namespace GraphTableSVG {
 
         public get hasSize(): boolean {
             return true;
+        }
+
+        public get msoDashStyle() : msoDashStyle | null {
+            if(this.svgSurface != null){
+                const dashStyle = this.svgSurface.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+                if(dashStyle != null){
+                    return msoDashStyle.toMSODashStyle(dashStyle);
+                }else{
+                    return null;
+                }
+            }else{
+                return null;
+            }
+        }
+        public set msoDashStyle(value : msoDashStyle | null){
+            if(this.svgSurface != null){
+                if(msoDashStyle == null){
+                    this.svgSurface.style.removeProperty(CustomAttributeNames.Style.msoDashStyleName);
+                }else{
+                    this.svgSurface.setPropertyStyleValue(CustomAttributeNames.Style.msoDashStyleName, value);
+                }
+            }            
         }
 
     }

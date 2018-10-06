@@ -83,15 +83,31 @@
 			</tab>
 		</yarticle>
 		<yarticle title="Object Sample : カスタム属性">
+			<load path="svg/svg.html" id="svgbox5" />
+
+		</yarticle>
+
+		<yarticle title="Object Sample : カスタムスタイル属性">
+			<load path="svg/svg.html" id="svgbox6" />
+
 			<tab>
 				<page title="表" checked="1">
 					<load path="svg/svg.html" id="svgbox8" />
 				</page>
-				<page title="test" checked="1">
+				<page title="test">
 					<load path="svg/svg.html" id="svgbox8" type="code" />
 				</page>
-
 			</tab>
+
+			<tab>
+				<page title="表" checked="1">
+					<load path="svg/svg.html" id="svgbox9" />
+				</page>
+				<page title="test">
+					<load path="svg/svg.html" id="svgbox9" type="code" />
+				</page>
+			</tab>
+
 
 		</yarticle>
 		<yarticle title="Table Sample : hello world">

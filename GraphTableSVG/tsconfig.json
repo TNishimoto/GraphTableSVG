@@ -5,7 +5,7 @@
         "preserveConstEnums": true,
         "outFile": "../docs/scripts/graph_table_svg.js",
         "sourceMap": true,
-        "target" : "ES5",
+        "target" : "ES6",
         "declaration" : true,
         "strict": true
         //"declarationDir" : "../"

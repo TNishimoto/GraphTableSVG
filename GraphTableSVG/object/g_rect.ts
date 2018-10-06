@@ -34,8 +34,8 @@ namespace GraphTableSVG {
                 if(rect.style.strokeWidth == null || rect.style.strokeWidth == "")rect.style.strokeWidth = "1pt";
             } else {
                 rect.setAttribute("class", className);
-                const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
-                if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
+                //const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+                //if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 
                 const width = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidth, null);
                 if (width != null) {
@@ -96,6 +96,13 @@ namespace GraphTableSVG {
         protected updateSurface() {
             this.svgRectangle.x.baseVal.value = -this.width / 2;
             this.svgRectangle.y.baseVal.value = -this.height / 2;
+
+            this._observer.disconnect();
+            const dashStyle = this.msoDashStyle;
+            if (dashStyle != null) {
+                msoDashStyle.setCpmoutedDashArray(this.svgRectangle);
+            }
+            this._observer.observe(this.svgGroup, this._observerOption);
 
         }
         /**

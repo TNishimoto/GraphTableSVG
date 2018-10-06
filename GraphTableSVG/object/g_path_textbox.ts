@@ -34,10 +34,12 @@ namespace GraphTableSVG {
 
             if (className != null) {
                 path.setAttribute("class", className)
-                const dashStyle = path.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
+                const dashStyle = path.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+                /*
                 if (dashStyle != null) {
                     msoDashStyle.setStyle(path, dashStyle);
                 }
+                */
             } else {
                 if(path.style.stroke == null || path.style.stroke == "")path.style.stroke = "black";
                 if(path.style.fill == null || path.style.fill == "")path.style.fill = "white";

@@ -33,8 +33,8 @@ namespace GraphTableSVG {
                     circle.ry.baseVal.value = radius;
                 }
 
-                const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.SVG.msoDashStyleName);
-                if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
+                //const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+                //if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
             }
             circle.cx.baseVal.value = 0;
             circle.cy.baseVal.value = 0;
