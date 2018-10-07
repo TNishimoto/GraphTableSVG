@@ -499,6 +499,11 @@ declare namespace GraphTableSVG {
         groupStyle?: string;
         surfaceStyle?: string;
     };
+    type GObjectMaps = {
+        groupAttributes?: Map<string, string>;
+        surfaceAttributes?: Map<string, string>;
+        textAttributes?: Map<string, string>;
+    };
     type GTextBoxAttributes = GObjectAttributes & {
         text?: string | HTMLElement[];
         isAutoSizeShapeToFitText?: boolean;

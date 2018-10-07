@@ -249,101 +249,172 @@
             </row>
             <row>
                 <cell>id</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>string</cell>
+                <cell>GObject.svgGroupのid</cell>
                 <cell>GObject</cell>
             </row>
             <row>
-                <cell>surface-id</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>surface:id</cell>
+                <cell>string</cell>
+                <cell>GObject.svgSurfaceのid</cell>
                 <cell>GObject</cell>
             </row>
             <row>
-                <cell>text-id</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
-                <cell>GObject</cell>
+                <cell>text:id</cell>
+                <cell>string</cell>
+                <cell>GTextbox.svgTextのid</cell>
+                <cell>GTextbox</cell>
             </row>
 
 
             <row>
-                <cell>cx</cell>
+                <cell>
+                    <t>cx</t>
+                    <t>cy</t>
+                </cell>
                 <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>GObject.svgGroupの中心座標</cell>
                 <cell>GObject</cell>
             </row>
             <row>
-                <cell>cy</cell>
+                <cell>
+                    <t>x</t>
+                    <t>y</t>
+                </cell>
                 <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>GObject.svgGroupの左上端の座標</cell>
                 <cell>GObject</cell>
             </row>
             <row>
-                <cell>x</cell>
+                <cell>
+                    <t>width</t>
+                    <t>height</t>
+                </cell>
                 <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>GObject.svgSurfaceの幅と高さ</cell>
                 <cell>GObject</cell>
             </row>
             <row>
-                <cell>y</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>group:class(もしくはclass)</cell>
+                <cell>string</cell>
+                <cell>GObject.svgGroupのclass</cell>
                 <cell>GObject</cell>
             </row>
             <row>
-                <cell>width</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>surface:class</cell>
+                <cell>string</cell>
+                <cell>GObject.svgSurfaceのclass</cell>
                 <cell>GObject</cell>
             </row>
             <row>
-                <cell>height</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
-                <cell>GObject</cell>
-            </row>
-            <row>
-                <cell>group-class(もしくはclass)</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
-                <cell>GObject</cell>
-            </row>
-            <row>
-                <cell>surface-class</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
-                <cell>GObject</cell>
-            </row>
-            <row>
-                <cell>text-class</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>text:class</cell>
+                <cell>string</cell>
+                <cell>GObject.svgTextのclass</cell>
                 <cell>GTextbox</cell>
             </row>
             <row>
-                <cell>group-style</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>group:style</cell>
+                <cell>string</cell>
+                <cell>GObject.svgGroupのstyle</cell>
                 <cell>GObject</cell>
             </row>
             <row>
-                <cell>surface-style</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>surface:style</cell>
+                <cell>string</cell>
+                <cell>GObject.svgSurfaceのstyle</cell>
                 <cell>GObject</cell>
             </row>
             <row>
-                <cell>text-style</cell>
-                <cell>number</cell>
-                <cell>hogehoge</cell>
+                <cell>text:style</cell>
+                <cell>string</cell>
+                <cell>GObject.svgTextのstyle</cell>
                 <cell>GTextbox</cell>
+            </row>
+            <row>
+                <cell>
+                    <t>speaker-x</t>
+                    <t>speaker-y</t>
+                </cell>
+                <cell>number</cell>
+                <cell>GCalloutの吹き出しの出処の座標</cell>
+                <cell>GCallout</cell>
+            </row>
+            <row>
+                <cell>
+                    <t>arrow-neck-width</t>
+                    <t>arrow-neck-height</t>
+                </cell>
+                <cell>number</cell>
+                <cell>矢印の細い部分の幅と高さ</cell>
+                <cell>GArrowCallout</cell>
+            </row>
+            <row>
+                <cell>
+                    <t>arrow-head-width</t>
+                    <t>arrow-head-height</t>
+                </cell>
+                <cell>number</cell>
+                <cell>矢印の先端の幅と高さ</cell>
+                <cell>GArrowCallout</cell>
+            </row>
+            <row>
+                <cell>direction</cell>
+                <cell>number</cell>
+                <cell>矢印の向き</cell>
+                <cell>GArrowCallout</cell>
             </row>
 
 
         </g-table>
 
     </svg>
+    <br />
+    <svg viewBox="0 0 800 600" width="800px" height="600px" id="svgbox7" xmlns="http://www.w3.org/2000/svg" class="svgbox"
+        g-shrink="true">
+        <g-rect cx="100" cy="100">
+            <t>cx:100</t>
+            <t>cy:100</t>
+        </g-rect>
+        <g-rect x="100" y="50">
+            <t>x:100______________</t>
+            <t>y:50</t>
+        </g-rect>
+
+        <g-rect x="250" y="200" width="200" height="200">
+            <t>x:250</t>
+            <t>y:200</t>
+            <t>width:200</t>
+            <t>height:200</t>
+        </g-rect>
+
+        <g-callout x="300" y="100" speaker-x="100" speaker-y="100">
+            <t>speaker-x="100"</t>
+            <t>speaker-y="100"</t>
+        </g-callout>
+        <g-arrow-callout cx="100" cy="200" direction="up">
+            <t>direction="up"</t>
+        </g-arrow-callout>
+        <g-arrow-callout cx="100" cy="300" direction="left">
+            <t>direction="left"</t>
+        </g-arrow-callout>
+        <g-arrow-callout cx="100" cy="400" direction="right">
+            <t>direction="right"</t>
+        </g-arrow-callout>
+        <g-arrow-callout cx="100" cy="500" direction="down">
+            <t>direction="down"</t>
+        </g-arrow-callout>
+
+        <g-arrow-callout cx="200" cy="600" direction="right" arrow-neck-height="100" arrow-neck-width="40" arrow-head-width="60" arrow-head-height="80">
+                <t>arrow-neck-height="100"</t>
+                <t>arrow-neck-width="15"</t>
+                <t>arrow-head-height="80"</t>
+                <t>arrow-head-width="60"</t>
+
+        </g-arrow-callout>
+    
+
+    </svg>
+
     <br />
     <svg viewBox="0 0 800 1200" width="800px" height="1200px" id="svgbox6" xmlns="http://www.w3.org/2000/svg" class="svgbox"
         g-shrink="true">
@@ -573,25 +644,17 @@
                 <cell>-</cell>
             </row>
             <row>
-                    <cell>--stroke-style</cell>
-                    <cell>msoDashStyle</cell>
-                    <cell>パスの点線種類</cell>
-                    <cell>GEdge.surface</cell>
-                    <cell>-</cell>
-                </row>
-    
+                <cell>--stroke-style</cell>
+                <cell>msoDashStyle</cell>
+                <cell>パスの点線種類</cell>
+                <cell>GEdge.surface</cell>
+                <cell>-</cell>
+            </row>
+
         </g-table>
 
     </svg>
-    <br />
-    <svg viewBox="0 0 800 600" width="800px" height="600px" id="svgbox7" xmlns="http://www.w3.org/2000/svg" class="svgbox"
-        g-shrink="false">
-        <g-rect cx="100" cy="100">(cx,cy)=(100,100)</g-rect>
-        <g-rect x="200" y="200" width="200" height="200">(x,y, width, height)=(200,200, 200, 200)</g-rect>
-        <g-rect x="100" y="200" text-style="--margin-top:50;--margin-left:50;--margin-right:25;--margin-bottom:25">margin</g-rect>
-        <g-rect x="100" y="400" style="--padding-top:50;--padding-left:50;--padding-right:25;--padding-bottom:25">padding</g-rect>
-        <g-rect x="500" y="100" width="200" height="200" style="--horizontal-anchor:right">aaa</g-rect>
-    </svg>
+
     <br />
     <svg viewBox="0 0 800 600" width="800px" height="600px" id="svgbox8" xmlns="http://www.w3.org/2000/svg" class="svgbox"
         g-shrink="true">
@@ -613,164 +676,205 @@
             <t>--vertical-anchor:bottom</t>
             <t>--horizontal-anchor:right</t>
         </g-rect>
+        <g-rect x="0" y="450" width="250" height="100" style="--autosize-shape-to-fit-text:true">
+            <t>--autosize-shape-to-fit-text:true</t>
+        </g-rect>
+        <g-rect x="380" y="500" text:style="--margin-top:50;--margin-left:50;--margin-right:25;--margin-bottom:25">
+            <t>margin-top:50</t>
+            <t>margin-left:50</t>
+            <t>margin-right:25</t>
+            <t>margin-bottom:25</t>
+        </g-rect>
+        <g-rect x="650" y="500" style="--padding-top:50;--padding-left:50;--padding-right:25;--padding-bottom:25">
+            <t>padding-top:50</t>
+            <t>padding-left:50</t>
+            <t>padding-right:25</t>
+            <t>padding-bottom:25</t>
+        </g-rect>
     </svg>
-    <br/>
+    <br />
     <svg viewBox="0 0 800 600" width="800px" height="600px" id="svgbox9" xmlns="http://www.w3.org/2000/svg" class="svgbox"
         g-shrink="true">
         <g-rect x="50" y="30" width="30" height="30" id="L_1">top</g-rect>
         <g-ellipse x="150" y="30" width="30" height="30" id="C_1">top</g-ellipse>
         <g-rect x="250" y="30" width="30" height="30" id="R_1">top</g-rect>
-        <g-edge begin-vertex="L_1" end-vertex="C_1" style="--begin-connector-type:top;--end-connector-type:top" surface-style="stroke:red"></g-edge>
-        <g-edge begin-vertex="C_1" end-vertex="R_1" style="--begin-connector-type:top;--end-connector-type:top" surface-style="stroke:blue"></g-edge>
+        <g-edge begin-vertex="L_1" end-vertex="C_1" style="--begin-connector-type:top;--end-connector-type:top"
+            surface:style="stroke:red"></g-edge>
+        <g-edge begin-vertex="C_1" end-vertex="R_1" style="--begin-connector-type:top;--end-connector-type:top"
+            surface:style="stroke:blue"></g-edge>
 
         <g-rect x="50" y="80" width="30" height="30" id="L_2">topright</g-rect>
         <g-ellipse x="150" y="80" width="30" height="30" id="C_2">topright</g-ellipse>
         <g-rect x="250" y="80" width="30" height="30" id="R_2">topright</g-rect>
-        <g-edge begin-vertex="L_2" end-vertex="C_2" style="--begin-connector-type:topright;--end-connector-type:topright" surface-style="stroke:red"></g-edge>
-        <g-edge begin-vertex="C_2" end-vertex="R_2" style="--begin-connector-type:topright;--end-connector-type:topright" surface-style="stroke:blue"></g-edge>
+        <g-edge begin-vertex="L_2" end-vertex="C_2" style="--begin-connector-type:topright;--end-connector-type:topright"
+            surface:style="stroke:red"></g-edge>
+        <g-edge begin-vertex="C_2" end-vertex="R_2" style="--begin-connector-type:topright;--end-connector-type:topright"
+            surface:style="stroke:blue"></g-edge>
 
         <g-rect x="50" y="130" width="30" height="30" id="L_3">right</g-rect>
         <g-ellipse x="150" y="130" width="30" height="30" id="C_3">right</g-ellipse>
         <g-rect x="250" y="130" width="30" height="30" id="R_3">right</g-rect>
-        <g-edge begin-vertex="L_3" end-vertex="C_3" style="--begin-connector-type:right;--end-connector-type:right" surface-style="stroke:red"></g-edge>
-        <g-edge begin-vertex="C_3" end-vertex="R_3" style="--begin-connector-type:right;--end-connector-type:right" surface-style="stroke:blue"></g-edge>
+        <g-edge begin-vertex="L_3" end-vertex="C_3" style="--begin-connector-type:right;--end-connector-type:right"
+            surface:style="stroke:red"></g-edge>
+        <g-edge begin-vertex="C_3" end-vertex="R_3" style="--begin-connector-type:right;--end-connector-type:right"
+            surface:style="stroke:blue"></g-edge>
 
         <g-rect x="50" y="180" width="30" height="30" id="L_4">bottomright</g-rect>
         <g-ellipse x="150" y="180" width="30" height="30" id="C_4">bottomright</g-ellipse>
         <g-rect x="250" y="180" width="30" height="30" id="R_4">bottomright</g-rect>
-        <g-edge begin-vertex="L_4" end-vertex="C_4" style="--begin-connector-type:bottomright;--end-connector-type:bottomright" surface-style="stroke:red"></g-edge>
-        <g-edge begin-vertex="C_4" end-vertex="R_4" style="--begin-connector-type:bottomright;--end-connector-type:bottomright" surface-style="stroke:blue"></g-edge>
+        <g-edge begin-vertex="L_4" end-vertex="C_4" style="--begin-connector-type:bottomright;--end-connector-type:bottomright"
+            surface:style="stroke:red"></g-edge>
+        <g-edge begin-vertex="C_4" end-vertex="R_4" style="--begin-connector-type:bottomright;--end-connector-type:bottomright"
+            surface:style="stroke:blue"></g-edge>
 
         <g-rect x="50" y="230" width="30" height="30" id="L_5">bottom</g-rect>
         <g-ellipse x="150" y="230" width="30" height="30" id="C_5">bottom</g-ellipse>
         <g-rect x="250" y="230" width="30" height="30" id="R_5">bottom</g-rect>
-        <g-edge begin-vertex="L_5" end-vertex="C_5" style="--begin-connector-type:bottom;--end-connector-type:bottom" surface-style="stroke:red"></g-edge>
-        <g-edge begin-vertex="C_5" end-vertex="R_5" style="--begin-connector-type:bottom;--end-connector-type:bottom" surface-style="stroke:blue"></g-edge>
+        <g-edge begin-vertex="L_5" end-vertex="C_5" style="--begin-connector-type:bottom;--end-connector-type:bottom"
+            surface:style="stroke:red"></g-edge>
+        <g-edge begin-vertex="C_5" end-vertex="R_5" style="--begin-connector-type:bottom;--end-connector-type:bottom"
+            surface:style="stroke:blue"></g-edge>
 
         <g-rect x="50" y="280" width="30" height="30" id="L_6">bottomleft</g-rect>
         <g-ellipse x="150" y="280" width="30" height="30" id="C_6">bottomleft</g-ellipse>
         <g-rect x="250" y="280" width="30" height="30" id="R_6">bottomleft</g-rect>
-        <g-edge begin-vertex="L_6" end-vertex="C_6" style="--begin-connector-type:bottomleft;--end-connector-type:bottomleft" surface-style="stroke:red"></g-edge>
-        <g-edge begin-vertex="C_6" end-vertex="R_6" style="--begin-connector-type:bottomleft;--end-connector-type:bottomleft" surface-style="stroke:blue"></g-edge>
+        <g-edge begin-vertex="L_6" end-vertex="C_6" style="--begin-connector-type:bottomleft;--end-connector-type:bottomleft"
+            surface:style="stroke:red"></g-edge>
+        <g-edge begin-vertex="C_6" end-vertex="R_6" style="--begin-connector-type:bottomleft;--end-connector-type:bottomleft"
+            surface:style="stroke:blue"></g-edge>
 
         <g-rect x="50" y="330" width="30" height="30" id="L_7">left</g-rect>
         <g-ellipse x="150" y="330" width="30" height="30" id="C_7">left</g-ellipse>
         <g-rect x="250" y="330" width="30" height="30" id="R_7">left</g-rect>
-        <g-edge begin-vertex="L_7" end-vertex="C_7" style="--begin-connector-type:left;--end-connector-type:left" surface-style="stroke:red"></g-edge>
-        <g-edge begin-vertex="C_7" end-vertex="R_7" style="--begin-connector-type:left;--end-connector-type:left" surface-style="stroke:blue"></g-edge>
+        <g-edge begin-vertex="L_7" end-vertex="C_7" style="--begin-connector-type:left;--end-connector-type:left"
+            surface:style="stroke:red"></g-edge>
+        <g-edge begin-vertex="C_7" end-vertex="R_7" style="--begin-connector-type:left;--end-connector-type:left"
+            surface:style="stroke:blue"></g-edge>
 
         <g-rect x="50" y="380" width="30" height="30" id="L_8">topleft</g-rect>
         <g-ellipse x="150" y="380" width="30" height="30" id="C_8">topleft</g-ellipse>
         <g-rect x="250" y="380" width="30" height="30" id="R_8">topleft</g-rect>
-        <g-edge begin-vertex="L_8" end-vertex="C_8" style="--begin-connector-type:topleft;--end-connector-type:topleft" surface-style="stroke:red"></g-edge>
-        <g-edge begin-vertex="C_8" end-vertex="R_8" style="--begin-connector-type:topleft;--end-connector-type:topleft" surface-style="stroke:blue"></g-edge>
+        <g-edge begin-vertex="L_8" end-vertex="C_8" style="--begin-connector-type:topleft;--end-connector-type:topleft"
+            surface:style="stroke:red"></g-edge>
+        <g-edge begin-vertex="C_8" end-vertex="R_8" style="--begin-connector-type:topleft;--end-connector-type:topleft"
+            surface:style="stroke:blue"></g-edge>
 
         <g-rect x="50" y="430" width="30" height="30" id="L_9">auto</g-rect>
         <g-ellipse x="150" y="430" width="30" height="30" id="C_9">auto</g-ellipse>
         <g-rect x="250" y="430" width="30" height="30" id="R_9">auto</g-rect>
-        <g-edge begin-vertex="L_9" end-vertex="C_9" style="--begin-connector-type:auto;--end-connector-type:topauto" surface-style="stroke:red"></g-edge>
-        <g-edge begin-vertex="C_9" end-vertex="R_9" style="--begin-connector-type:auto;--end-connector-type:topauto" surface-style="stroke:blue"></g-edge>
+        <g-edge begin-vertex="L_9" end-vertex="C_9" style="--begin-connector-type:auto;--end-connector-type:topauto"
+            surface:style="stroke:red"></g-edge>
+        <g-edge begin-vertex="C_9" end-vertex="R_9" style="--begin-connector-type:auto;--end-connector-type:topauto"
+            surface:style="stroke:blue"></g-edge>
+
+        <g-rect x="50" y="480" width="30" height="30" id="L_10"></g-rect>
+        <g-ellipse x="250" y="480" width="30" height="30" id="C_10"></g-ellipse>
+        <g-rect x="450" y="480" width="30" height="30" id="R_10"></g-rect>
+        <g-edge begin-vertex="L_10" end-vertex="C_10" style="--marker-start:true" surface:style="stroke:red">--marker-start:true</g-edge>
+        <g-edge begin-vertex="C_10" end-vertex="R_10" style="--marker-end:true" surface:style="stroke:blue">--marker-end:true</g-edge>
+
 
     </svg>
-    <br/>
+    <br />
     <svg viewBox="0 0 800 600" width="800px" height="600px" id="svgbox10" xmlns="http://www.w3.org/2000/svg" class="svgbox"
-    g-shrink="true">
-    <g-rect x="50" y="30" width="30" height="30" id="A_10_1"></g-rect>
-    <g-rect x="300" y="30" width="30" height="30" id="B_10_1"></g-rect>
-    <g-rect x="500" y="30" width="30" height="30" id="C_10_1"></g-rect>
-    <g-rect x="700" y="30" width="30" height="30" id="D_10_1"></g-rect>
-    <g-edge begin-vertex="A_10_1" end-vertex="B_10_1" surface-style="--stroke-style:msoLineDash;stroke-width:1px">msoLineDash(1px)</g-edge>
-    <g-edge begin-vertex="B_10_1" end-vertex="C_10_1" surface-style="--stroke-style:msoLineDash;stroke-width:3px">3px</g-edge>
-    <g-edge begin-vertex="C_10_1" end-vertex="D_10_1" surface-style="--stroke-style:msoLineDash;stroke-width:6px">6px</g-edge>
+        g-shrink="true">
+        <g-rect x="50" y="30" width="30" height="30" id="A_10_1"></g-rect>
+        <g-rect x="300" y="30" width="30" height="30" id="B_10_1"></g-rect>
+        <g-rect x="500" y="30" width="30" height="30" id="C_10_1"></g-rect>
+        <g-rect x="700" y="30" width="30" height="30" id="D_10_1"></g-rect>
+        <g-edge begin-vertex="A_10_1" end-vertex="B_10_1" surface:style="--stroke-style:msoLineDash;stroke-width:1px">msoLineDash(1px)</g-edge>
+        <g-edge begin-vertex="B_10_1" end-vertex="C_10_1" surface:style="--stroke-style:msoLineDash;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_1" end-vertex="D_10_1" surface:style="--stroke-style:msoLineDash;stroke-width:6px">6px</g-edge>
 
-    <g-rect x="50" y="80" width="30" height="30" id="A_10_2"></g-rect>
-    <g-rect x="300" y="80" width="30" height="30" id="B_10_2"></g-rect>
-    <g-rect x="500" y="80" width="30" height="30" id="C_10_2"></g-rect>
-    <g-rect x="700" y="80" width="30" height="30" id="D_10_2"></g-rect>
-    <g-edge begin-vertex="A_10_2" end-vertex="B_10_2" surface-style="--stroke-style:msoLineDashDot;stroke-width:1px">msoLineDashDot(1px)</g-edge>
-    <g-edge begin-vertex="B_10_2" end-vertex="C_10_2" surface-style="--stroke-style:msoLineDashDot;stroke-width:3px">3px</g-edge>
-    <g-edge begin-vertex="C_10_2" end-vertex="D_10_2" surface-style="--stroke-style:msoLineDashDot;stroke-width:6px">6px</g-edge>
+        <g-rect x="50" y="80" width="30" height="30" id="A_10_2"></g-rect>
+        <g-rect x="300" y="80" width="30" height="30" id="B_10_2"></g-rect>
+        <g-rect x="500" y="80" width="30" height="30" id="C_10_2"></g-rect>
+        <g-rect x="700" y="80" width="30" height="30" id="D_10_2"></g-rect>
+        <g-edge begin-vertex="A_10_2" end-vertex="B_10_2" surface:style="--stroke-style:msoLineDashDot;stroke-width:1px">msoLineDashDot(1px)</g-edge>
+        <g-edge begin-vertex="B_10_2" end-vertex="C_10_2" surface:style="--stroke-style:msoLineDashDot;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_2" end-vertex="D_10_2" surface:style="--stroke-style:msoLineDashDot;stroke-width:6px">6px</g-edge>
 
-    <g-rect x="50" y="130" width="30" height="30" id="A_10_3"></g-rect>
-    <g-rect x="300" y="130" width="30" height="30" id="B_10_3"></g-rect>
-    <g-rect x="500" y="130" width="30" height="30" id="C_10_3"></g-rect>
-    <g-rect x="700" y="130" width="30" height="30" id="D_10_3"></g-rect>
-    <g-edge begin-vertex="A_10_3" end-vertex="B_10_3" surface-style="--stroke-style:msoLineDashDotDot;stroke-width:1px">msoLineDashDotDot(1px)</g-edge>
-    <g-edge begin-vertex="B_10_3" end-vertex="C_10_3" surface-style="--stroke-style:msoLineDashDotDot;stroke-width:3px">3px</g-edge>
-    <g-edge begin-vertex="C_10_3" end-vertex="D_10_3" surface-style="--stroke-style:msoLineDashDotDot;stroke-width:6px">6px</g-edge>
+        <g-rect x="50" y="130" width="30" height="30" id="A_10_3"></g-rect>
+        <g-rect x="300" y="130" width="30" height="30" id="B_10_3"></g-rect>
+        <g-rect x="500" y="130" width="30" height="30" id="C_10_3"></g-rect>
+        <g-rect x="700" y="130" width="30" height="30" id="D_10_3"></g-rect>
+        <g-edge begin-vertex="A_10_3" end-vertex="B_10_3" surface:style="--stroke-style:msoLineDashDotDot;stroke-width:1px">msoLineDashDotDot(1px)</g-edge>
+        <g-edge begin-vertex="B_10_3" end-vertex="C_10_3" surface:style="--stroke-style:msoLineDashDotDot;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_3" end-vertex="D_10_3" surface:style="--stroke-style:msoLineDashDotDot;stroke-width:6px">6px</g-edge>
 
-    <g-rect x="50" y="180" width="30" height="30" id="A_10_4"></g-rect>
-    <g-rect x="300" y="180" width="30" height="30" id="B_10_4"></g-rect>
-    <g-rect x="500" y="180" width="30" height="30" id="C_10_4"></g-rect>
-    <g-rect x="700" y="180" width="30" height="30" id="D_10_4"></g-rect>
-    <g-edge begin-vertex="A_10_4" end-vertex="B_10_4" surface-style="--stroke-style:msoLineLongDash;stroke-width:1px">msoLineLongDash(1px)</g-edge>
-    <g-edge begin-vertex="B_10_4" end-vertex="C_10_4" surface-style="--stroke-style:msoLineLongDash;stroke-width:3px">3px</g-edge>
-    <g-edge begin-vertex="C_10_4" end-vertex="D_10_4" surface-style="--stroke-style:msoLineLongDash;stroke-width:6px">6px</g-edge>
+        <g-rect x="50" y="180" width="30" height="30" id="A_10_4"></g-rect>
+        <g-rect x="300" y="180" width="30" height="30" id="B_10_4"></g-rect>
+        <g-rect x="500" y="180" width="30" height="30" id="C_10_4"></g-rect>
+        <g-rect x="700" y="180" width="30" height="30" id="D_10_4"></g-rect>
+        <g-edge begin-vertex="A_10_4" end-vertex="B_10_4" surface:style="--stroke-style:msoLineLongDash;stroke-width:1px">msoLineLongDash(1px)</g-edge>
+        <g-edge begin-vertex="B_10_4" end-vertex="C_10_4" surface:style="--stroke-style:msoLineLongDash;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_4" end-vertex="D_10_4" surface:style="--stroke-style:msoLineLongDash;stroke-width:6px">6px</g-edge>
 
-    <g-rect x="50" y="230" width="30" height="30" id="A_10_5"></g-rect>
-    <g-rect x="300" y="230" width="30" height="30" id="B_10_5"></g-rect>
-    <g-rect x="500" y="230" width="30" height="30" id="C_10_5"></g-rect>
-    <g-rect x="700" y="230" width="30" height="30" id="D_10_5"></g-rect>
-    <g-edge begin-vertex="A_10_5" end-vertex="B_10_5" surface-style="--stroke-style:msoLineLongDashDot;stroke-width:1px">msoLineLongDashDot(1px)</g-edge>
-    <g-edge begin-vertex="B_10_5" end-vertex="C_10_5" surface-style="--stroke-style:msoLineLongDashDot;stroke-width:3px">3px</g-edge>
-    <g-edge begin-vertex="C_10_5" end-vertex="D_10_5" surface-style="--stroke-style:msoLineLongDashDot;stroke-width:6px">6px</g-edge>
+        <g-rect x="50" y="230" width="30" height="30" id="A_10_5"></g-rect>
+        <g-rect x="300" y="230" width="30" height="30" id="B_10_5"></g-rect>
+        <g-rect x="500" y="230" width="30" height="30" id="C_10_5"></g-rect>
+        <g-rect x="700" y="230" width="30" height="30" id="D_10_5"></g-rect>
+        <g-edge begin-vertex="A_10_5" end-vertex="B_10_5" surface:style="--stroke-style:msoLineLongDashDot;stroke-width:1px">msoLineLongDashDot(1px)</g-edge>
+        <g-edge begin-vertex="B_10_5" end-vertex="C_10_5" surface:style="--stroke-style:msoLineLongDashDot;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_5" end-vertex="D_10_5" surface:style="--stroke-style:msoLineLongDashDot;stroke-width:6px">6px</g-edge>
 
-    <g-rect x="50" y="280" width="30" height="30" id="A_10_6"></g-rect>
-    <g-rect x="300" y="280" width="30" height="30" id="B_10_6"></g-rect>
-    <g-rect x="500" y="280" width="30" height="30" id="C_10_6"></g-rect>
-    <g-rect x="700" y="280" width="30" height="30" id="D_10_6"></g-rect>
-    <g-edge begin-vertex="A_10_6" end-vertex="B_10_6" surface-style="--stroke-style:msoLineRoundDot;stroke-width:1px">msoLineRoundDot(1px)</g-edge>
-    <g-edge begin-vertex="B_10_6" end-vertex="C_10_6" surface-style="--stroke-style:msoLineRoundDot;stroke-width:3px">3px</g-edge>
-    <g-edge begin-vertex="C_10_6" end-vertex="D_10_6" surface-style="--stroke-style:msoLineRoundDot;stroke-width:6px">6px</g-edge>
+        <g-rect x="50" y="280" width="30" height="30" id="A_10_6"></g-rect>
+        <g-rect x="300" y="280" width="30" height="30" id="B_10_6"></g-rect>
+        <g-rect x="500" y="280" width="30" height="30" id="C_10_6"></g-rect>
+        <g-rect x="700" y="280" width="30" height="30" id="D_10_6"></g-rect>
+        <g-edge begin-vertex="A_10_6" end-vertex="B_10_6" surface:style="--stroke-style:msoLineRoundDot;stroke-width:1px">msoLineRoundDot(1px)</g-edge>
+        <g-edge begin-vertex="B_10_6" end-vertex="C_10_6" surface:style="--stroke-style:msoLineRoundDot;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_6" end-vertex="D_10_6" surface:style="--stroke-style:msoLineRoundDot;stroke-width:6px">6px</g-edge>
 
-    <g-rect x="50" y="330" width="30" height="30" id="A_10_7"></g-rect>
-    <g-rect x="300" y="330" width="30" height="30" id="B_10_7"></g-rect>
-    <g-rect x="500" y="330" width="30" height="30" id="C_10_7"></g-rect>
-    <g-rect x="700" y="330" width="30" height="30" id="D_10_7"></g-rect>
-    <g-edge begin-vertex="A_10_7" end-vertex="B_10_7" surface-style="--stroke-style:msoLineSolid;stroke-width:1px">msoLineSolid(1px)</g-edge>
-    <g-edge begin-vertex="B_10_7" end-vertex="C_10_7" surface-style="--stroke-style:msoLineSolid;stroke-width:3px">3px</g-edge>
-    <g-edge begin-vertex="C_10_7" end-vertex="D_10_7" surface-style="--stroke-style:msoLineSolid;stroke-width:6px">6px</g-edge>
+        <g-rect x="50" y="330" width="30" height="30" id="A_10_7"></g-rect>
+        <g-rect x="300" y="330" width="30" height="30" id="B_10_7"></g-rect>
+        <g-rect x="500" y="330" width="30" height="30" id="C_10_7"></g-rect>
+        <g-rect x="700" y="330" width="30" height="30" id="D_10_7"></g-rect>
+        <g-edge begin-vertex="A_10_7" end-vertex="B_10_7" surface:style="--stroke-style:msoLineSolid;stroke-width:1px">msoLineSolid(1px)</g-edge>
+        <g-edge begin-vertex="B_10_7" end-vertex="C_10_7" surface:style="--stroke-style:msoLineSolid;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_7" end-vertex="D_10_7" surface:style="--stroke-style:msoLineSolid;stroke-width:6px">6px</g-edge>
 
-    <g-rect x="50" y="380" width="30" height="30" id="A_10_8"></g-rect>
-    <g-rect x="300" y="380" width="30" height="30" id="B_10_8"></g-rect>
-    <g-rect x="500" y="380" width="30" height="30" id="C_10_8"></g-rect>
-    <g-rect x="700" y="380" width="30" height="30" id="D_10_8"></g-rect>
-    <g-edge begin-vertex="A_10_8" end-vertex="B_10_8" surface-style="--stroke-style:msoLineSquareDot;stroke-width:1px">msoLineSquareDot(1px)</g-edge>
-    <g-edge begin-vertex="B_10_8" end-vertex="C_10_8" surface-style="--stroke-style:msoLineSquareDot;stroke-width:3px">3px</g-edge>
-    <g-edge begin-vertex="C_10_8" end-vertex="D_10_8" surface-style="--stroke-style:msoLineSquareDot;stroke-width:6px">6px</g-edge>
+        <g-rect x="50" y="380" width="30" height="30" id="A_10_8"></g-rect>
+        <g-rect x="300" y="380" width="30" height="30" id="B_10_8"></g-rect>
+        <g-rect x="500" y="380" width="30" height="30" id="C_10_8"></g-rect>
+        <g-rect x="700" y="380" width="30" height="30" id="D_10_8"></g-rect>
+        <g-edge begin-vertex="A_10_8" end-vertex="B_10_8" surface:style="--stroke-style:msoLineSquareDot;stroke-width:1px">msoLineSquareDot(1px)</g-edge>
+        <g-edge begin-vertex="B_10_8" end-vertex="C_10_8" surface:style="--stroke-style:msoLineSquareDot;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_8" end-vertex="D_10_8" surface:style="--stroke-style:msoLineSquareDot;stroke-width:6px">6px</g-edge>
 
-    <g-rect x="50" y="480" width="50" height="50" surface-style="--stroke-style:msoLineSquareDot;stroke-width:3px"></g-rect>
-    <g-ellipse x="150" y="480" width="50" height="50" surface-style="--stroke-style:msoLineSquareDot;stroke-width:3px"></g-ellipse>
-    <g-callout x="250" y="480" width="50" height="50" surface-style="--stroke-style:msoLineSquareDot;stroke-width:3px"></g-callout>
+        <g-rect x="50" y="480" width="50" height="50" surface:style="--stroke-style:msoLineSquareDot;stroke-width:3px"></g-rect>
+        <g-ellipse x="150" y="480" width="50" height="50" surface:style="--stroke-style:msoLineSquareDot;stroke-width:3px"></g-ellipse>
+        <g-callout x="250" y="480" width="50" height="50" surface:style="--stroke-style:msoLineSquareDot;stroke-width:3px"></g-callout>
 
     </svg>
+    <br />
     <svg viewBox="0 0 800 600" width="800px" height="600px" id="svgbox11" xmlns="http://www.w3.org/2000/svg" class="svgbox"
-    g-shrink="true">
-    <g-rect x="50" y="150" width="30" height="30" id="L_11_1"></g-rect>
-    <g-rect x="250" y="150" width="30" height="30" id="C_11_1"></g-rect>
-    <g-rect x="450" y="150" width="30" height="30" id="R_11_1"></g-rect>
-    <g-edge begin-vertex="L_11_1" end-vertex="C_11_1" text-style="--path-text-alignment:begin">begin</g-edge>
-    <g-edge begin-vertex="C_11_1" end-vertex="R_11_1" x3="350" y3="50" text-style="--path-text-alignment:begin">begin</g-edge>
+        g-shrink="true">
+        <g-rect x="50" y="150" width="30" height="30" id="L_11_1"></g-rect>
+        <g-rect x="250" y="150" width="30" height="30" id="C_11_1"></g-rect>
+        <g-rect x="450" y="150" width="30" height="30" id="R_11_1"></g-rect>
+        <g-edge begin-vertex="L_11_1" end-vertex="C_11_1" text:style="--path-text-alignment:begin">begin</g-edge>
+        <g-edge begin-vertex="C_11_1" end-vertex="R_11_1" x3="350" y3="50" text:style="--path-text-alignment:begin">begin</g-edge>
 
-    <g-rect x="50" y="200" width="30" height="30" id="L_11_2"></g-rect>
-    <g-rect x="250" y="200" width="30" height="30" id="C_11_2"></g-rect>
-    <g-rect x="450" y="200" width="30" height="30" id="R_11_2"></g-rect>
-    <g-edge begin-vertex="L_11_2" end-vertex="C_11_2" text-style="--path-text-alignment:center">center</g-edge>
-    <g-edge begin-vertex="C_11_2" end-vertex="R_11_2" x3="350" y3="100" text-style="--path-text-alignment:center">center</g-edge>
+        <g-rect x="50" y="200" width="30" height="30" id="L_11_2"></g-rect>
+        <g-rect x="250" y="200" width="30" height="30" id="C_11_2"></g-rect>
+        <g-rect x="450" y="200" width="30" height="30" id="R_11_2"></g-rect>
+        <g-edge begin-vertex="L_11_2" end-vertex="C_11_2" text:style="--path-text-alignment:center">center</g-edge>
+        <g-edge begin-vertex="C_11_2" end-vertex="R_11_2" x3="350" y3="100" text:style="--path-text-alignment:center">center</g-edge>
 
-    <g-rect x="50" y="250" width="30" height="30" id="L_11_3"></g-rect>
-    <g-rect x="250" y="250" width="30" height="30" id="C_11_3"></g-rect>
-    <g-rect x="450" y="250" width="30" height="30" id="R_11_3"></g-rect>
-    <g-edge begin-vertex="L_11_3" end-vertex="C_11_3" text-style="--path-text-alignment:end">end</g-edge>
-    <g-edge begin-vertex="C_11_3" end-vertex="R_11_3" x3="350" y3="150" text-style="--path-text-alignment:end">end</g-edge>
+        <g-rect x="50" y="250" width="30" height="30" id="L_11_3"></g-rect>
+        <g-rect x="250" y="250" width="30" height="30" id="C_11_3"></g-rect>
+        <g-rect x="450" y="250" width="30" height="30" id="R_11_3"></g-rect>
+        <g-edge begin-vertex="L_11_3" end-vertex="C_11_3" text:style="--path-text-alignment:end">end</g-edge>
+        <g-edge begin-vertex="C_11_3" end-vertex="R_11_3" x3="350" y3="150" text:style="--path-text-alignment:end">end</g-edge>
 
-    <g-rect x="50" y="300" width="30" height="30" id="L_11_4"></g-rect>
-    <g-rect x="250" y="300" width="30" height="30" id="C_11_4"></g-rect>
-    <g-rect x="450" y="300" width="30" height="30" id="R_11_4"></g-rect>
-    <g-edge begin-vertex="L_11_4" end-vertex="C_11_4" text-style="--path-text-alignment:regularInterval">regularInterval</g-edge>
-    <g-edge begin-vertex="C_11_4" end-vertex="R_11_4" x3="350" y3="200" text-style="--path-text-alignment:regularInterval">regularInterval</g-edge>
+        <g-rect x="50" y="300" width="30" height="30" id="L_11_4"></g-rect>
+        <g-rect x="250" y="300" width="30" height="30" id="C_11_4"></g-rect>
+        <g-rect x="450" y="300" width="30" height="30" id="R_11_4"></g-rect>
+        <g-edge begin-vertex="L_11_4" end-vertex="C_11_4" text:style="--path-text-alignment:regularInterval">regularInterval</g-edge>
+        <g-edge begin-vertex="C_11_4" end-vertex="R_11_4" x3="350" y3="200" text:style="--path-text-alignment:regularInterval">regularInterval</g-edge>
 
-</svg>
+    </svg>
 
 
 </body>

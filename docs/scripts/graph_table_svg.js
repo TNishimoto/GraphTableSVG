@@ -3567,12 +3567,12 @@ var GraphTableSVG;
         static constructAttributes(e, removeAttributes = false, output = {}) {
             output.groupClass = e.gtGetAttributeStringWithUndefined("class");
             if (output.groupClass === undefined)
-                e.gtGetAttributeStringWithUndefined("group-class");
-            output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface-class");
-            output.groupStyle = e.gtGetAttributeStringWithUndefined("group-style");
+                e.gtGetAttributeStringWithUndefined("group:class");
+            output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface:class");
+            output.groupStyle = e.gtGetAttributeStringWithUndefined("group:style");
             if (e.hasAttribute("style"))
                 output.groupStyle = e.gtGetAttributeStringWithUndefined("style");
-            output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface-style");
+            output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface:style");
             output.cx = e.gtGetAttributeNumberWithUndefined("cx");
             output.cy = e.gtGetAttributeNumberWithUndefined("cy");
             output.width = e.gtGetAttributeNumberWithUndefined("width");
@@ -3585,10 +3585,10 @@ var GraphTableSVG;
                 e.removeAttribute("x");
                 e.removeAttribute("y");
                 e.removeAttribute("class");
-                e.removeAttribute("surface-class");
-                e.removeAttribute("group-class");
-                e.removeAttribute("surface-style");
-                e.removeAttribute("group-style");
+                e.removeAttribute("surface:class");
+                e.removeAttribute("group:class");
+                e.removeAttribute("surface:style");
+                e.removeAttribute("group:style");
                 e.removeAttribute("style");
                 e.removeAttribute("width");
                 e.removeAttribute("height");
@@ -3814,8 +3814,10 @@ var GraphTableSVG;
             }
             else {
             }
-            if (_option.isAutoSizeShapeToFitText !== undefined)
+            const b = this.svgGroup.gtGetStyleBooleanWithUndefined(GraphTableSVG.CustomAttributeNames.Style.autoSizeShapeToFitText);
+            if (b === undefined && _option.isAutoSizeShapeToFitText !== undefined) {
                 this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;
+            }
             if (_option.x !== undefined)
                 this.x = _option.x;
             if (_option.y !== undefined)
@@ -3827,7 +3829,7 @@ var GraphTableSVG;
                 b = true;
             }
             const _option = super.initializeOption(option);
-            if (b)
+            if (b && _option.isAutoSizeShapeToFitText === undefined)
                 _option.isAutoSizeShapeToFitText = false;
             if (_option.isAutoSizeShapeToFitText === undefined)
                 _option.isAutoSizeShapeToFitText = true;
@@ -3871,8 +3873,8 @@ var GraphTableSVG;
             GraphTableSVG.GObject.constructAttributes(e, removeAttributes, output);
             output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(GraphTableSVG.CustomAttributeNames.Style.autoSizeShapeToFitText);
             const textChild = HTMLFunctions.getChildByNodeName(e, "text");
-            output.textClass = e.gtGetAttributeStringWithUndefined("text-class");
-            output.textStyle = e.gtGetAttributeStringWithUndefined("text-style");
+            output.textClass = e.gtGetAttributeStringWithUndefined("text:class");
+            output.textStyle = e.gtGetAttributeStringWithUndefined("text:style");
             if (e.hasAttribute("text")) {
                 output.text = e.getAttribute("text");
             }
@@ -3890,8 +3892,8 @@ var GraphTableSVG;
             }
             if (removeAttributes) {
                 e.removeAttribute("text");
-                e.removeAttribute("text-class");
-                e.removeAttribute("text-style");
+                e.removeAttribute("text:class");
+                e.removeAttribute("text:style");
                 e.style.removeProperty(GraphTableSVG.CustomAttributeNames.Style.autoSizeShapeToFitText);
             }
             return output;
@@ -3916,7 +3918,13 @@ var GraphTableSVG;
                 this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.VerticalAnchor, value);
         }
         get isAutoSizeShapeToFitText() {
-            return this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.autoSizeShapeToFitText, "false") == "true";
+            const b = this.svgGroup.gtGetStyleBooleanWithUndefined(GraphTableSVG.CustomAttributeNames.Style.autoSizeShapeToFitText);
+            if (b == undefined) {
+                return false;
+            }
+            else {
+                return b;
+            }
         }
         set isAutoSizeShapeToFitText(value) {
             this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");

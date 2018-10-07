@@ -14,6 +14,12 @@ namespace GraphTableSVG {
         surfaceClass? : string,
         groupStyle? : string,
         surfaceStyle? : string
+
+    }
+    export type GObjectMaps = {
+        groupAttributes? : Map<string,string>;
+        surfaceAttributes? : Map<string,string>;
+        textAttributes? : Map<string,string>;
     }
 
     export type GTextBoxAttributes = GObjectAttributes & {
@@ -23,6 +29,7 @@ namespace GraphTableSVG {
         horizontalAnchor? : HorizontalAnchor
         textClass? : string
         textStyle? : string
+
 
     }
     export type GShapeArrowCalloutAttributes = GTextBoxAttributes & {

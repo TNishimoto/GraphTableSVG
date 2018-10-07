@@ -65,11 +65,11 @@ namespace GraphTableSVG {
         static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: GObjectAttributes = {}): GObjectAttributes {
             output.groupClass = e.gtGetAttributeStringWithUndefined("class");
-            if(output.groupClass === undefined) e.gtGetAttributeStringWithUndefined("group-class");
-            output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface-class");
-            output.groupStyle = e.gtGetAttributeStringWithUndefined("group-style");
+            if(output.groupClass === undefined) e.gtGetAttributeStringWithUndefined("group:class");
+            output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface:class");
+            output.groupStyle = e.gtGetAttributeStringWithUndefined("group:style");
             if(e.hasAttribute("style")) output.groupStyle = e.gtGetAttributeStringWithUndefined("style");
-            output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface-style");
+            output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface:style");
 
             output.cx = e.gtGetAttributeNumberWithUndefined("cx");
             output.cy = e.gtGetAttributeNumberWithUndefined("cy");
@@ -85,10 +85,10 @@ namespace GraphTableSVG {
                 e.removeAttribute("x");
                 e.removeAttribute("y");
                 e.removeAttribute("class");
-                e.removeAttribute("surface-class");
-                e.removeAttribute("group-class");
-                e.removeAttribute("surface-style");
-                e.removeAttribute("group-style");
+                e.removeAttribute("surface:class");
+                e.removeAttribute("group:class");
+                e.removeAttribute("surface:style");
+                e.removeAttribute("group:style");
                 e.removeAttribute("style");
 
                 e.removeAttribute("width");

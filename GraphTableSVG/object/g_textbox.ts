@@ -35,10 +35,13 @@ namespace GraphTableSVG {
 
             }
 
-            if (_option.isAutoSizeShapeToFitText !== undefined) this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;  
+            const b = this.svgGroup.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
+            if(b === undefined && _option.isAutoSizeShapeToFitText !== undefined){
+                this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;  
+            }
+
             if(_option.x !== undefined) this.x = _option.x;
             if(_option.y !== undefined) this.y = _option.y;
-
         }
         
         initializeOption(option: GObjectAttributes): GObjectAttributes {
@@ -48,7 +51,7 @@ namespace GraphTableSVG {
             }
 
             const _option = <GTextBoxAttributes>super.initializeOption(option);
-            if(b)_option.isAutoSizeShapeToFitText = false;
+            if(b && _option.isAutoSizeShapeToFitText === undefined)_option.isAutoSizeShapeToFitText = false;
             if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
             if(_option.verticalAnchor === undefined) _option.verticalAnchor = VerticalAnchor.Middle;
             if(_option.horizontalAnchor === undefined) _option.horizontalAnchor = HorizontalAnchor.Center;
@@ -91,8 +94,8 @@ namespace GraphTableSVG {
             GObject.constructAttributes(e, removeAttributes, output);
             output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
             const textChild = HTMLFunctions.getChildByNodeName(e, "text");
-            output.textClass = e.gtGetAttributeStringWithUndefined("text-class");
-            output.textStyle = e.gtGetAttributeStringWithUndefined("text-style");
+            output.textClass = e.gtGetAttributeStringWithUndefined("text:class");
+            output.textStyle = e.gtGetAttributeStringWithUndefined("text:style");
 
             if (e.hasAttribute("text")) {
                 output.text = <string>e.getAttribute("text");
@@ -112,8 +115,8 @@ namespace GraphTableSVG {
 
             if (removeAttributes) {
                 e.removeAttribute("text");
-                e.removeAttribute("text-class");
-                e.removeAttribute("text-style");
+                e.removeAttribute("text:class");
+                e.removeAttribute("text:style");
 
                 (<any>e).style.removeProperty(CustomAttributeNames.Style.autoSizeShapeToFitText);
             }
@@ -177,7 +180,12 @@ namespace GraphTableSVG {
          * このVertexがテキストに合わせてサイズを変える場合Trueを返します。
          */
         get isAutoSizeShapeToFitText(): boolean {
-            return this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.autoSizeShapeToFitText, "false") == "true";
+            const b = this.svgGroup.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
+            if(b == undefined){
+                return false;
+            }else{
+                return b;
+            }
         }
         set isAutoSizeShapeToFitText(value: boolean) {
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
