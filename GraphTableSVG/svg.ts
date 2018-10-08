@@ -524,7 +524,6 @@ namespace GraphTableSVG {
 
                 const parentRect = e.getBoundingClientRect();
                 const rect = Rectangle.merge(rectangles);
-
                 let r = new Rectangle();
                 r.x = 0;
                 r.y = 0;

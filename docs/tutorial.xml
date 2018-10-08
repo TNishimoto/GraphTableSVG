@@ -64,6 +64,9 @@
 			</comment>
 		</yarticle>
 		<yarticle title="Object Sample : オブジェクトの種類">
+			<comment>
+			g-rect以外にもオブジェクトを作成することが出来る。
+			</comment>
 			<tab>
 				<page title="code">
 					<a href="svg/sample_hello2.html">
@@ -74,37 +77,91 @@
 				<page title="svg" checked="1">
 					<load path="svg/sample_hello2.html" id="svgbox" />
 				</page>
-				<page title="表">
+			</tab>
+			<comment>
+			作成できるオブジェクトと継承関係は以下の通り。
+			</comment>
+			<tab>
+				<page title="表" checked="1">
 					<load path="svg/svg.html" id="svgbox3" />
 				</page>
 				<page title="継承">
 					<load path="images/extend.png" />
 				</page>
 			</tab>
+
 		</yarticle>
 		<yarticle title="Object Sample : カスタム属性">
+			<comment>
+			タグに属性を記述することで生成するオブジェクトの属性を指定することが出来る。
+			これをカスタム属性と呼ぶ。
+			指定できる属性は以下の通り。
+			</comment>
+
 			<load path="svg/svg.html" id="svgbox5" />
+			<comment>
+			カスタム属性の例を以下に載せる。
+			</comment>
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox7" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox7" />
+				</page>
+			</tab>
 
 		</yarticle>
 
 		<yarticle title="Object Sample : カスタムスタイル属性">
+			<comment>
+			タグのスタイルを記述することで生成するオブジェクトのスタイルを指定することが出来る。
+			これをカスタムスタイル属性と呼ぶ。
+			指定できるカスタムスタイル属性は以下の通り。
+			</comment>
+
 			<load path="svg/svg.html" id="svgbox6" />
+			<comment>
+			カスタムスタイル属性の例を以下に載せる。
+			</comment>
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox8" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox8" />
+			<comment>
+			hogehoge
+			</comment>
+
+				</page>
+			</tab>
+
 
 			<tab>
-				<page title="表" checked="1">
-					<load path="svg/svg.html" id="svgbox8" />
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox9" type="code" />
 				</page>
-				<page title="test">
-					<load path="svg/svg.html" id="svgbox8" type="code" />
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox9" />
 				</page>
 			</tab>
 
 			<tab>
-				<page title="表" checked="1">
-					<load path="svg/svg.html" id="svgbox9" />
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox10" type="code" />
 				</page>
-				<page title="test">
-					<load path="svg/svg.html" id="svgbox9" type="code" />
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox10" />
+				</page>
+			</tab>
+
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox11" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox11" />
 				</page>
 			</tab>
 

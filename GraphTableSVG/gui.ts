@@ -80,13 +80,13 @@
         export function setSVGBoxSize(box: SVGSVGElement, w: number, h: number): void;
         export function setSVGBoxSize(box: SVGSVGElement, rect: Rectangle, padding: Padding): void;
 
-        export function setSVGBoxSize(box: SVGSVGElement, item1: Rectangle | number, item2: Padding | number) {   
+        export function setSVGBoxSize(box: SVGSVGElement, item1: Rectangle | number, item2: Padding | number) {
             if (item1 instanceof Rectangle) {
 
                 if (item2 instanceof Padding) {
                     const w: number = item1.right + item2.left + item2.right;
                     const h: number = item1.bottom + item2.top + item2.bottom;
-                    
+
                     setSVGBoxSize(box, w, h);
                 } else {
                     throw new Error();
@@ -95,7 +95,7 @@
                 if (item2 instanceof Padding) {
                     throw new Error();
                 } else {
-    
+
                     const width = `${item1}px`;
                     const height = `${item2}px`;
                     if (box.style.width != width || box.style.height != height) {
@@ -181,19 +181,20 @@
             };
             _observer.observe(svgBox, option);
         }
-        
-        type ObserveSVGSVGInfo = {
-            svgsvg : SVGSVGElement;
-            visible : boolean;
-            padding : Padding;
-        }
-        let dic : ObserveSVGSVGInfo[] = [];
-        let createdObserveSVGSVGTimer = false;
-        function resizeSVGSVG(svgBox: SVGSVGElement, padding: GraphTableSVG.Padding){
-            //GraphTableSVG.GUI.setSVGBoxSize(svgBox, new Rectangle(0,0,1000,1000), padding);
 
+        type ObserveSVGSVGInfo = {
+            svgsvg: SVGSVGElement;
+            visible: boolean;
+            padding: Padding;
+        }
+        let dic: ObserveSVGSVGInfo[] = [];
+        let createdObserveSVGSVGTimer = false;
+        function resizeSVGSVG(svgBox: SVGSVGElement, padding: GraphTableSVG.Padding) {
+            //GraphTableSVG.GUI.setSVGBoxSize(svgBox, new Rectangle(0,0,1000,1000), padding);
             const rect = SVG.getRegion2(svgBox);
-            //console.log(rect);
+            if (rect.width == 0) rect.width = 1;
+            if (rect.height == 0) rect.height = 1;
+
             GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, padding);
         }
         export function observeSVGSVG(svgBox: SVGSVGElement, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {
@@ -208,9 +209,9 @@
                     }
                 }
 
-                if (b){
+                if (b) {
                     resizeSVGSVG(svgBox, padding);
-                } 
+                }
             }
 
             _observer = new MutationObserver(observeFunction);
@@ -219,22 +220,22 @@
             };
             _observer.observe(svgBox, option);
 
-            dic.push({svgsvg : svgBox, visible : false, padding : padding});
-            if(!createdObserveSVGSVGTimer){
+            dic.push({ svgsvg: svgBox, visible: false, padding: padding });
+            if (!createdObserveSVGSVGTimer) {
                 createdObserveSVGSVGTimer = true;
                 setTimeout(observeSVGSVGTimer, 500);
             }
         }
         function observeSVGSVGTimer() {
-            dic.forEach((v, i) =>{
+            dic.forEach((v, i) => {
                 const nowVisible = !SVG.isSVGSVGHidden(v.svgsvg);
-                if(v.visible){
-                    if(!nowVisible){
+                if (v.visible) {
+                    if (!nowVisible) {
                         v.visible = false;
                     }
                 }
-                else{
-                    if(nowVisible){
+                else {
+                    if (nowVisible) {
                         resizeSVGSVG(v.svgsvg, v.padding);
                         v.visible = true;
                     }
@@ -242,7 +243,7 @@
             })
             setTimeout(observeSVGSVGTimer, 500);
         }
-        
+
 
     }
 }

@@ -561,6 +561,10 @@ var GraphTableSVG;
         let createdObserveSVGSVGTimer = false;
         function resizeSVGSVG(svgBox, padding) {
             const rect = GraphTableSVG.SVG.getRegion2(svgBox);
+            if (rect.width == 0)
+                rect.width = 1;
+            if (rect.height == 0)
+                rect.height = 1;
             GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, padding);
         }
         function observeSVGSVG(svgBox, padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {

@@ -115,18 +115,6 @@ namespace GraphTableSVG {
                         }
                         const tNodes = openSVGFunctions.getTNodes(cells[y][x]);
                         if(tNodes != null) output.table!.cells[y][x].tTexts = tNodes;
-                        /*
-                        const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(cells[y][x]).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "t");
-                        if (tNodes.length > 0) {
-                            tNodes.forEach((v, i) => {
-                                v.removeAttribute(CustomAttributeNames.customElement);
-                                if (i > 0 && !v.hasAttribute("newline"))
-                                    v.setAttribute("newline", "true")
-                            }
-                            )
-                            output.table!.cells[y][x].tTexts = tNodes;
-                        }
-                        */
 
                     }
                 }
