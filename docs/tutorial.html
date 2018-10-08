@@ -794,19 +794,19 @@
                 <cell>GCell</cell>
             </row>
             <row>
-                    <cell>
-                        <t>x1</t>
-                        <t>y1</t>
-                        <t>x2</t>
-                        <t>y2</t>
-                        <t>x3</t>
-                        <t>y3</t>
-                    </cell>
-                    <cell>number</cell>
-                    <cell>辺の開始座標(x1,y1)、終了座標(x2,y2)、ベジエ曲線にしたときの制御点の座標(x3,y3)</cell>
-                    <cell>GEdge</cell>
-                </row>
-    
+                <cell>
+                    <t>x1</t>
+                    <t>y1</t>
+                    <t>x2</t>
+                    <t>y2</t>
+                    <t>x3</t>
+                    <t>y3</t>
+                </cell>
+                <cell>number</cell>
+                <cell>辺の開始座標(x1,y1)、終了座標(x2,y2)、ベジエ曲線にしたときの制御点の座標(x3,y3)</cell>
+                <cell>GEdge</cell>
+            </row>
+
         </g-table>
 
     </svg>
@@ -1264,8 +1264,10 @@
     </svg>
             <br/>
             <section ignore-format="true" class="sample-commentary">　
-			hogehoge
-			</section>
+			HorizontalAnchorとVerticalAnchorでテキストの配置位置を指定することが出来る。
+			paddingとmarginは図形とテキスト間の余白を表す。
+			autosize-shape-to-fit-textはtrueにすると、図形のサイズがテキストに合うように自動的に計算される。
+					</section>
          </div>
       </div>
       <div class="tabs">
@@ -1407,6 +1409,14 @@
 
     </svg>
             <br/>
+            <section ignore-format="true" class="sample-commentary">　
+			--begin-connector-typeと--end-connector-typeで辺の接続位置を設定できる。
+			ただし、接続位置はPowerpointに準拠しているので、オブジェクトと接続位置の組み合わせによっては直感的な位置に配置されないことに注意する。
+			例えば、g-rectとtoprightを組み合わせても右上の角が辺の接続位置になるわけではない。
+					</section>
+            <section ignore-format="true" class="sample-commentary">　
+					--marker-startと--marker-endはそれぞれ辺の開始位置と終了位置の矢印の有無を表す。
+					</section>
          </div>
       </div>
       <div class="tabs">
@@ -1562,6 +1572,9 @@
 
     </svg>
             <br/>
+            <section ignore-format="true" class="sample-commentary">　
+					--stroke-styleで辺もしくは図形の輪郭を点線に変更することが出来る。
+					</section>
          </div>
       </div>
       <div class="tabs">
@@ -1629,6 +1642,74 @@
 
     </svg>
             <br/>
+            <section ignore-format="true" class="sample-commentary">　
+				--path-text-alignmentで辺上のテキストの配置方法を指定できる。
+				</section>
+         </div>
+      </div>
+      <div class="tabs">
+         <input id="tab-8-0" type="radio" name="tab-radio8"/>
+         <label class="tab-label" for="tab-8-0">code</label>
+         <input id="tab-8-1" type="radio" name="tab-radio8" checked="1"/>
+         <label class="tab-label" for="tab-8-1">svg</label>
+         <div class="tab-content tab-8-0-content">
+            <div class="code-div">
+               <h4 class="code-filename">svg/svg.html</h4>
+               <pre><code>&lt;svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox12" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true"&gt;
+        &lt;g-table x="0" y="0" style="--widths:[20,40,60,80,100]"&gt;
+            &lt;row style="--height:20"&gt;
+                &lt;cell&gt;20&lt;/cell&gt;
+                &lt;cell&gt;40&lt;/cell&gt;
+                &lt;cell&gt;60&lt;/cell&gt;
+                &lt;cell&gt;80&lt;/cell&gt;
+                &lt;cell&gt;100&lt;/cell&gt;
+            &lt;/row&gt;
+            &lt;row style="--height:40"&gt;
+                &lt;cell&gt;40&lt;/cell&gt;
+            &lt;/row&gt;
+            &lt;row style="--height:60"&gt;
+                    &lt;cell&gt;60&lt;/cell&gt;
+            &lt;/row&gt;
+            &lt;row style="--height:80"&gt;
+                    &lt;cell&gt;80&lt;/cell&gt;
+            &lt;/row&gt;
+            &lt;row style="--height:100"&gt;
+                    &lt;cell&gt;100&lt;/cell&gt;
+            &lt;/row&gt;
+        &lt;/g-table&gt;
+    &lt;/svg&gt;</code></pre>
+            </div>
+            <br/>
+         </div>
+         <div class="tab-content tab-8-1-content">
+            <svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox12" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
+        <g-table x="0" y="0" style="--widths:[20,40,60,80,100]">
+            <row style="--height:20">
+                <cell>20</cell>
+                <cell>40</cell>
+                <cell>60</cell>
+                <cell>80</cell>
+                <cell>100</cell>
+            </row>
+            <row style="--height:40">
+                <cell>40</cell>
+            </row>
+            <row style="--height:60">
+                    <cell>60</cell>
+            </row>
+            <row style="--height:80">
+                    <cell>80</cell>
+            </row>
+            <row style="--height:100">
+                    <cell>100</cell>
+            </row>
+        </g-table>
+    </svg>
+            <br/>
+            <section ignore-format="true" class="sample-commentary">　
+				g-tableの--widthsと各rowの--heightで各列の横幅と各行の縦幅を設定できる。
+				ただしセル内のテキストの幅がそれよりも大きい場合は最大テキスト幅になる。
+				</section>
          </div>
       </div>
    </article>

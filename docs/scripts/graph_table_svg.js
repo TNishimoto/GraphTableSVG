@@ -6325,6 +6325,7 @@ var GraphTableSVG;
         set height(value) {
         }
         static constructAttributes(e, removeAttributes = false, output = {}) {
+            const widthsStr = e.getPropertyStyleValue("--widths");
             GraphTableSVG.GObject.constructAttributes(e, removeAttributes, output);
             const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(GraphTableSVG.CustomAttributeNames.customElement) == "row").map((v) => v);
             if (rows.length == 0) {
@@ -6340,7 +6341,6 @@ var GraphTableSVG;
                         columnSize = cellArray.length;
                 });
                 output.table = new GraphTableSVG.LogicTable({ rowCount: rows.length, columnCount: columnSize });
-                const widthsStr = e.getPropertyStyleValue("--widths");
                 if (widthsStr != null) {
                     const widths = JSON.parse(widthsStr);
                     widths.forEach((v, i) => output.table.columnWidths[i] = v);

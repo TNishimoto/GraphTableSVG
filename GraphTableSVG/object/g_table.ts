@@ -76,7 +76,8 @@ namespace GraphTableSVG {
         }
         static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: TableOption = {}): TableOption {
-
+            const widthsStr = e.getPropertyStyleValue("--widths");
+            
             GObject.constructAttributes(e, removeAttributes, output);
 
             const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
@@ -93,7 +94,6 @@ namespace GraphTableSVG {
                 });
                 output.table = new LogicTable({ rowCount: rows.length, columnCount: columnSize });
 
-                const widthsStr = e.getPropertyStyleValue("--widths");
                 if (widthsStr != null) {
                     const widths: (number | null)[] = JSON.parse(widthsStr);
                     widths.forEach((v, i) => output.table!.columnWidths[i] = v);

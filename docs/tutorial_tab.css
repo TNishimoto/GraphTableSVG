@@ -40,21 +40,24 @@
 .tabs #tab-1-0:checked ~ .tab-1-0-content,
 .tabs #tab-1-1:checked ~ .tab-1-1-content{display: block;}
  .tabs input[name="tab-radio1"] {display: none;} 
-.tabs #tab-3-0:checked ~ .tab-3-0-content,
-.tabs #tab-3-1:checked ~ .tab-3-1-content{display: block;}
- .tabs input[name="tab-radio3"] {display: none;} 
 .tabs #tab-4-0:checked ~ .tab-4-0-content,
 .tabs #tab-4-1:checked ~ .tab-4-1-content{display: block;}
  .tabs input[name="tab-radio4"] {display: none;} 
-.tabs #tab-2-0:checked ~ .tab-2-0-content,
-.tabs #tab-2-1:checked ~ .tab-2-1-content{display: block;}
- .tabs input[name="tab-radio2"] {display: none;} 
-.tabs #tab-7-0:checked ~ .tab-7-0-content,
-.tabs #tab-7-1:checked ~ .tab-7-1-content{display: block;}
- .tabs input[name="tab-radio7"] {display: none;} 
 .tabs #tab-5-0:checked ~ .tab-5-0-content,
 .tabs #tab-5-1:checked ~ .tab-5-1-content{display: block;}
  .tabs input[name="tab-radio5"] {display: none;} 
+.tabs #tab-3-0:checked ~ .tab-3-0-content,
+.tabs #tab-3-1:checked ~ .tab-3-1-content{display: block;}
+ .tabs input[name="tab-radio3"] {display: none;} 
 .tabs #tab-6-0:checked ~ .tab-6-0-content,
 .tabs #tab-6-1:checked ~ .tab-6-1-content{display: block;}
  .tabs input[name="tab-radio6"] {display: none;} 
+.tabs #tab-2-0:checked ~ .tab-2-0-content,
+.tabs #tab-2-1:checked ~ .tab-2-1-content{display: block;}
+ .tabs input[name="tab-radio2"] {display: none;} 
+.tabs #tab-8-0:checked ~ .tab-8-0-content,
+.tabs #tab-8-1:checked ~ .tab-8-1-content{display: block;}
+ .tabs input[name="tab-radio8"] {display: none;} 
+.tabs #tab-7-0:checked ~ .tab-7-0-content,
+.tabs #tab-7-1:checked ~ .tab-7-1-content{display: block;}
+ .tabs input[name="tab-radio7"] {display: none;} 
