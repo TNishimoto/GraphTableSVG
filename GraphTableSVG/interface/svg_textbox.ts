@@ -90,6 +90,7 @@ namespace GraphTableSVG {
                     createTextSpans(lineText, null, fs, dx, dy).forEach((v) => {
                         svgText.appendChild(v)
                         const tLen = v.getComputedTextLength();
+                        
                         dx = 0;
                         dy = 0;
                         width += tLen;
@@ -177,15 +178,20 @@ namespace GraphTableSVG {
             const lengths = getComputedTextLengthsOfTSpans(svgText);
             for (let y = 0; y < lineSpans.length; y++) {
                 let width = 0;
+                let heightMax = fs;
+                let fstObj : SVGTSpanElement | null = null;
                 for (let x = 0; x < lineSpans[y].length; x++) {
                     const v = lineSpans[y][x];
                     //const tLen = v.getComputedTextLength();
-                    const tLen = lengths[c++];
+                    const size = lengths[c++];
+                    if(size.height > heightMax) heightMax = size.height;
 
                     if (x == 0) v.setAttribute("dx", dx.toString());
-                    if (x == 0 && y != 0) v.setAttribute("dy", dy.toString());
-                    width += tLen;
+                    if(x == 0) fstObj = v;
+                    width += size.width;
                 }
+                if (y != 0 && fstObj != null) fstObj.setAttribute("dy", heightMax.toString());
+
                 dx -= width;
                 //dy += fs;
             }
@@ -197,7 +203,7 @@ namespace GraphTableSVG {
                 const widths = lineSpans.map((v) => {
                     let width = 0;
                     v.forEach((w) => {
-                        width += tl[p++];
+                        width += tl[p++].width;
                     })
                     return width;
                 })
@@ -213,7 +219,7 @@ namespace GraphTableSVG {
                         for (let x = 0; x < lineSpans[y].length; x++) {
                             const v = lineSpans[y][x];
                             //const tLen = v.getComputedTextLength();
-                            const tLen = tl[p++];
+                            const tLen = tl[p++].width;
                             
                             if (x == 0 && y != 0) {
                                 v.setAttribute("dx", (dx + offset).toString());
@@ -301,12 +307,18 @@ namespace GraphTableSVG {
                     return r;
                 }
             }
+            
         }
         
-        export function getComputedTextLengthsOfTSpans(svgText:SVGTextElement) : number[] {
+        export function getComputedTextLengthsOfTSpans(svgText:SVGTextElement) : Size[] {
             if(HTMLFunctions.isShow(svgText)){
                 const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v)=>v.nodeName=="tspan");
-                return tspans.map((v)=>v.getComputedTextLength());
+                const r = tspans.map((v)=> {
+                    const w = v.getComputedTextLength();
+                    const h = v.getBoundingClientRect().height;
+                    return new Size(w, h);
+                })
+                return r;
             }else{
                 if(ura == null){
                     ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -317,7 +329,11 @@ namespace GraphTableSVG {
                 if(fst instanceof SVGTextElement){
 
                     const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(fst).filter((v)=>v.nodeName=="tspan");
-                    const r = tspans.map((v)=>v.getComputedTextLength());
+                    const r = tspans.map((v)=> {
+                        const w = v.getComputedTextLength();
+                        const h = v.getBoundingClientRect().height;
+                        return new Size(w, h);
+                    })
                     ura.removeChild(fst);
                     ura.remove();
                     return r;

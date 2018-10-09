@@ -233,6 +233,11 @@ declare namespace GraphTableSVG {
         bottom: number;
         constructor(top?: number, left?: number, right?: number, bottom?: number);
     }
+    class Size {
+        width: number;
+        height: number;
+        constructor(width?: number, height?: number);
+    }
     class Rectangle {
         x: number;
         y: number;
@@ -631,6 +636,8 @@ declare namespace GraphTableSVG {
         cy: number;
         width: number;
         height: number;
+        fixedX: number | null;
+        fixedY: number | null;
         x: number;
         y: number;
         readonly type: ShapeObjectType;
@@ -1079,6 +1086,6 @@ declare namespace GraphTableSVG {
         function sortText(svgText: SVGTextElement, rect: GraphTableSVG.Rectangle | null, vAnchor: GraphTableSVG.VerticalAnchor, hAnchor: GraphTableSVG.HorizontalAnchor): void;
         function setTextToSVGText2(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean): void;
         function getSize(svgText: SVGTextElement): Rectangle;
-        function getComputedTextLengthsOfTSpans(svgText: SVGTextElement): number[];
+        function getComputedTextLengthsOfTSpans(svgText: SVGTextElement): Size[];
     }
 }

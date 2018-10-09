@@ -4,8 +4,8 @@ namespace GraphTableSVG {
     export class GCallout extends GPathTextBox {
         public constructor(svgbox: SVGElement | string, option: GCalloutAttributes = {}) {
             super(svgbox, option);
-            const defaultSX = this.cx - 100;
-            const defaultSY = this.cy - 100;
+            const defaultSX = this.fixedX == null ? this.cx - 100 : this.fixedX - 50;
+            const defaultSY = this.fixedY == null ? this.cy - 100 : this.fixedY - 50;
 
             this.speakerX = option.speakerX == undefined ? defaultSX : option.speakerX;
             this.speakerY = option.speakerY == undefined ? defaultSY : option.speakerY;

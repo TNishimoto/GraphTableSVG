@@ -63,6 +63,28 @@
 				関数でSVG要素のidを指定して呼び出すことでSVG要素内のカスタムSVG要素をG要素に変換することが出来る。
 			</comment>
 		</yarticle>
+		<yarticle title="Object Sample : テキスト">
+			<comment>			
+			オブジェクトに対応する要素の内容にテキストを記述することで、テキストを表示することができる。
+			</comment>
+
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox14" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox14" />
+					<comment>			
+			要素の内容のテキストに含まれている改行は無視される。
+			二行以上記述したい場合はt要素を利用する。
+			テキストはSVGのtext要素に変換され、t要素はtspan要素に変換される。
+			よって属性を設定することでテキストに装飾することができる。
+			また、t要素のnewline属性にfalseを与えるとそのテキストは改行されない。
+					</comment>
+
+				</page>
+			</tab>
+		</yarticle>
 		<yarticle title="Object Sample : オブジェクトの種類">
 			<comment>
 			g-rect以外にもオブジェクトを作成することが出来る。
@@ -176,9 +198,9 @@
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox11" />
-				<comment>
+					<comment>
 				--path-text-alignmentで辺上のテキストの配置方法を指定できる。
-				</comment>
+					</comment>
 				</page>
 			</tab>
 			<tab>
@@ -187,10 +209,10 @@
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox12" />
-				<comment>
+					<comment>
 				g-tableの--widthsと各rowの--heightで各列の横幅と各行の縦幅を設定できる。
 				ただしセル内のテキストの幅がそれよりも大きい場合は最大テキスト幅になる。
-				</comment>
+					</comment>
 				</page>
 			</tab>
 

@@ -37,6 +37,8 @@ namespace GraphTableSVG {
             this.height = _option.height!;
             this.cx = _option.cx!;
             this.cy = _option.cy!;
+            if(_option.x !== undefined) this.fixedX = _option.x;
+            if(_option.y !== undefined) this.fixedY = _option.y;
             
             this._observer = new MutationObserver(this.observerFunc);
             this._observerOption = { attributes: true, childList: true, subtree: true };
@@ -174,6 +176,27 @@ namespace GraphTableSVG {
                 if (this.height != value && value != null) this.svgGroup.setAttribute("data-height", value.toString());
             }
         }
+        public get fixedX() : number | null {
+            return this.svgGroup.gtGetAttributeNumber("data-fixedX", null);
+        }
+        public set fixedX(v : number | null)  {
+            if(v == null){
+                this.svgGroup.removeAttribute("data-fixedX");
+            }else{
+                this.svgGroup.setAttribute("data-fixedX", v.toString());
+            }
+        }
+        public get fixedY() : number | null {
+            return this.svgGroup.gtGetAttributeNumber("data-fixedY", null);
+        }
+        public set fixedY(v : number | null)  {
+            if(v == null){
+                this.svgGroup.removeAttribute("data-fixedY");
+            }else{
+                this.svgGroup.setAttribute("data-fixedY", v.toString());
+            }
+        }
+        
         public get x(): number {
             return this.cx - (this.width / 2);
         }

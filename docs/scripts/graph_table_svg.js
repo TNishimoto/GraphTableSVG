@@ -1326,6 +1326,13 @@ var GraphTableSVG;
         }
     }
     GraphTableSVG.Padding = Padding;
+    class Size {
+        constructor(width = 0, height = 0) {
+            this.width = width;
+            this.height = height;
+        }
+    }
+    GraphTableSVG.Size = Size;
     class Rectangle {
         constructor(x = 0, y = 0, width = 0, height = 0) {
             this.x = x;
@@ -3541,6 +3548,10 @@ var GraphTableSVG;
             this.height = _option.height;
             this.cx = _option.cx;
             this.cy = _option.cy;
+            if (_option.x !== undefined)
+                this.fixedX = _option.x;
+            if (_option.y !== undefined)
+                this.fixedY = _option.y;
             this._observer = new MutationObserver(this.observerFunc);
             this._observerOption = { attributes: true, childList: true, subtree: true };
             this._observer.observe(this.svgGroup, this._observerOption);
@@ -3659,6 +3670,28 @@ var GraphTableSVG;
             if (this.hasSize) {
                 if (this.height != value && value != null)
                     this.svgGroup.setAttribute("data-height", value.toString());
+            }
+        }
+        get fixedX() {
+            return this.svgGroup.gtGetAttributeNumber("data-fixedX", null);
+        }
+        set fixedX(v) {
+            if (v == null) {
+                this.svgGroup.removeAttribute("data-fixedX");
+            }
+            else {
+                this.svgGroup.setAttribute("data-fixedX", v.toString());
+            }
+        }
+        get fixedY() {
+            return this.svgGroup.gtGetAttributeNumber("data-fixedY", null);
+        }
+        set fixedY(v) {
+            if (v == null) {
+                this.svgGroup.removeAttribute("data-fixedY");
+            }
+            else {
+                this.svgGroup.setAttribute("data-fixedY", v.toString());
             }
         }
         get x() {
@@ -3822,10 +3855,6 @@ var GraphTableSVG;
             if (b === undefined && _option.isAutoSizeShapeToFitText !== undefined) {
                 this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;
             }
-            if (_option.x !== undefined)
-                this.x = _option.x;
-            if (_option.y !== undefined)
-                this.y = _option.y;
         }
         initializeOption(option) {
             let b = false;
@@ -3940,6 +3969,12 @@ var GraphTableSVG;
             if (this.isAutoSizeShapeToFitText)
                 this.updateToFitText();
             this.updateSurface();
+            if (this.fixedX != null && Math.abs(this.x - this.fixedX) > 2) {
+                this.x = this.fixedX;
+            }
+            if (this.fixedY != null && Math.abs(this.y - this.fixedY) > 2) {
+                this.y = this.fixedY;
+            }
             this.svgText.gtSetXY(this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
             this._isUpdating = false;
             this._observer.observe(this.svgGroup, this.groupObserverOption);
@@ -4626,8 +4661,8 @@ var GraphTableSVG;
     class GCallout extends GraphTableSVG.GPathTextBox {
         constructor(svgbox, option = {}) {
             super(svgbox, option);
-            const defaultSX = this.cx - 100;
-            const defaultSY = this.cy - 100;
+            const defaultSX = this.fixedX == null ? this.cx - 100 : this.fixedX - 50;
+            const defaultSY = this.fixedY == null ? this.cy - 100 : this.fixedY - 50;
             this.speakerX = option.speakerX == undefined ? defaultSX : option.speakerX;
             this.speakerY = option.speakerY == undefined ? defaultSY : option.speakerY;
         }
@@ -7585,15 +7620,21 @@ var GraphTableSVG;
             const lengths = getComputedTextLengthsOfTSpans(svgText);
             for (let y = 0; y < lineSpans.length; y++) {
                 let width = 0;
+                let heightMax = fs;
+                let fstObj = null;
                 for (let x = 0; x < lineSpans[y].length; x++) {
                     const v = lineSpans[y][x];
-                    const tLen = lengths[c++];
+                    const size = lengths[c++];
+                    if (size.height > heightMax)
+                        heightMax = size.height;
                     if (x == 0)
                         v.setAttribute("dx", dx.toString());
-                    if (x == 0 && y != 0)
-                        v.setAttribute("dy", dy.toString());
-                    width += tLen;
+                    if (x == 0)
+                        fstObj = v;
+                    width += size.width;
                 }
+                if (y != 0 && fstObj != null)
+                    fstObj.setAttribute("dy", heightMax.toString());
                 dx -= width;
             }
             if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
@@ -7603,7 +7644,7 @@ var GraphTableSVG;
                 const widths = lineSpans.map((v) => {
                     let width = 0;
                     v.forEach((w) => {
-                        width += tl[p++];
+                        width += tl[p++].width;
                     });
                     return width;
                 });
@@ -7619,7 +7660,7 @@ var GraphTableSVG;
                         let width = offset;
                         for (let x = 0; x < lineSpans[y].length; x++) {
                             const v = lineSpans[y][x];
-                            const tLen = tl[p++];
+                            const tLen = tl[p++].width;
                             if (x == 0 && y != 0) {
                                 v.setAttribute("dx", (dx + offset).toString());
                             }
@@ -7693,7 +7734,12 @@ var GraphTableSVG;
         function getComputedTextLengthsOfTSpans(svgText) {
             if (HTMLFunctions.isShow(svgText)) {
                 const tspans = HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName == "tspan");
-                return tspans.map((v) => v.getComputedTextLength());
+                const r = tspans.map((v) => {
+                    const w = v.getComputedTextLength();
+                    const h = v.getBoundingClientRect().height;
+                    return new GraphTableSVG.Size(w, h);
+                });
+                return r;
             }
             else {
                 if (ura == null) {
@@ -7704,7 +7750,11 @@ var GraphTableSVG;
                 const fst = ura.firstChild;
                 if (fst instanceof SVGTextElement) {
                     const tspans = HTMLFunctions.getChildren(fst).filter((v) => v.nodeName == "tspan");
-                    const r = tspans.map((v) => v.getComputedTextLength());
+                    const r = tspans.map((v) => {
+                        const w = v.getComputedTextLength();
+                        const h = v.getBoundingClientRect().height;
+                        return new GraphTableSVG.Size(w, h);
+                    });
                     ura.removeChild(fst);
                     ura.remove();
                     return r;

@@ -40,8 +40,8 @@ namespace GraphTableSVG {
                 this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;  
             }
 
-            if(_option.x !== undefined) this.x = _option.x;
-            if(_option.y !== undefined) this.y = _option.y;
+            //if(_option.x !== undefined) this.x = _option.x;
+            //if(_option.y !== undefined) this.y = _option.y;
         }
         
         initializeOption(option: GObjectAttributes): GObjectAttributes {
@@ -195,11 +195,27 @@ namespace GraphTableSVG {
             this._isUpdating = true;
             this._observer.disconnect();
 
+
             SVGTextBox.sortText(this.svgText, null, this.verticalAnchor, this.horizontalAnchor);
 
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();
-            
+
+            //console.log(this.fixedX + "/" + this.x);
+            if(this.fixedX != null && Math.abs(this.x - this.fixedX) > 2 ){
+                this.x = this.fixedX;
+            }
+            if(this.fixedY != null && Math.abs(this.y - this.fixedY) > 2 ){
+                this.y = this.fixedY;
+            }
+
+            /*
+            if(this.fixedY != null){
+                this.y = this.fixedY;
+            }
+            */
+
+
             this.svgText.gtSetXY(this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
 
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);

@@ -177,10 +177,10 @@
 				関数でSVG要素のidを指定して呼び出すことでSVG要素内のカスタムSVG要素をG要素に変換することが出来る。
 			</section>
    </article>
-   <article title="Object Sample : オブジェクトの種類" after="article" class="sample-article">
-      <h2>Object Sample : オブジェクトの種類</h2>
-      <section ignore-format="true" class="sample-commentary">　
-			g-rect以外にもオブジェクトを作成することが出来る。
+   <article title="Object Sample : テキスト" after="article" class="sample-article">
+      <h2>Object Sample : テキスト</h2>
+      <section ignore-format="true" class="sample-commentary">　			
+			オブジェクトに対応する要素の内容にテキストを記述することで、テキストを表示することができる。
 			</section>
       <div class="tabs">
          <input id="tab-1-0" type="radio" name="tab-radio1"/>
@@ -188,6 +188,80 @@
          <input id="tab-1-1" type="radio" name="tab-radio1" checked="1"/>
          <label class="tab-label" for="tab-1-1">svg</label>
          <div class="tab-content tab-1-0-content">
+            <div class="code-div">
+               <h4 class="code-filename">svg/svg.html</h4>
+               <pre><code>&lt;svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox14" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true"&gt;
+        &lt;g-rect x="0" y="100"&gt;g-rect&lt;/g-rect&gt;
+
+        &lt;g-rect x="0" y="200"&gt;
+                This is a pen.
+                He is Tom.
+        &lt;/g-rect&gt;
+        &lt;g-rect x="0" y="300"&gt;
+                &lt;t&gt;This is a pen.&lt;/t&gt;
+                &lt;t&gt;He is Tom.&lt;/t&gt;
+        &lt;/g-rect&gt;
+        &lt;g-rect x="0" y="400"&gt;
+                &lt;t&gt;This is a pen.&lt;/t&gt;
+                &lt;t newline="false"&gt;He is Tom.&lt;/t&gt;
+        &lt;/g-rect&gt;
+        &lt;g-rect x="0" y="500"&gt;
+                &lt;t&gt;This is a pen.&lt;/t&gt;
+                &lt;t style="font-size: 32pt;fill:red"&gt;He is Tom.&lt;/t&gt;
+                &lt;t newline="false"&gt;hello!&lt;/t&gt;
+
+            &lt;/g-rect&gt;
+        
+    &lt;/svg&gt;</code></pre>
+            </div>
+            <br/>
+         </div>
+         <div class="tab-content tab-1-1-content">
+            <svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox14" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
+        <g-rect x="0" y="100">g-rect</g-rect>
+
+        <g-rect x="0" y="200">
+                This is a pen.
+                He is Tom.
+        </g-rect>
+        <g-rect x="0" y="300">
+                <t>This is a pen.</t>
+                <t>He is Tom.</t>
+        </g-rect>
+        <g-rect x="0" y="400">
+                <t>This is a pen.</t>
+                <t newline="false">He is Tom.</t>
+        </g-rect>
+        <g-rect x="0" y="500">
+                <t>This is a pen.</t>
+                <t style="font-size: 32pt;fill:red">He is Tom.</t>
+                <t newline="false">hello!</t>
+
+            </g-rect>
+        
+    </svg>
+            <br/>
+            <section ignore-format="true" class="sample-commentary">　			
+			要素の内容のテキストに含まれている改行は無視される。
+			二行以上記述したい場合はt要素を利用する。
+			テキストはSVGのtext要素に変換され、t要素はtspan要素に変換される。
+			よって属性を設定することでテキストに装飾することができる。
+			また、t要素のnewline属性にfalseを与えるとそのテキストは改行されない。
+					</section>
+         </div>
+      </div>
+   </article>
+   <article title="Object Sample : オブジェクトの種類" after="article" class="sample-article">
+      <h2>Object Sample : オブジェクトの種類</h2>
+      <section ignore-format="true" class="sample-commentary">　
+			g-rect以外にもオブジェクトを作成することが出来る。
+			</section>
+      <div class="tabs">
+         <input id="tab-2-0" type="radio" name="tab-radio2"/>
+         <label class="tab-label" for="tab-2-0">code</label>
+         <input id="tab-2-1" type="radio" name="tab-radio2" checked="1"/>
+         <label class="tab-label" for="tab-2-1">svg</label>
+         <div class="tab-content tab-2-0-content">
             <a href="svg/sample_hello2.html">
 						実行結果
 					</a>
@@ -313,7 +387,7 @@
             </div>
             <br/>
          </div>
-         <div class="tab-content tab-1-1-content">
+         <div class="tab-content tab-2-1-content">
             <svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">
         <g-rect cx="100" cy="100">g-rect</g-rect>
         <!--
@@ -419,11 +493,11 @@
 			作成できるオブジェクトと継承関係は以下の通り。
 			</section>
       <div class="tabs">
-         <input id="tab-2-0" type="radio" name="tab-radio2" checked="1"/>
-         <label class="tab-label" for="tab-2-0">表</label>
-         <input id="tab-2-1" type="radio" name="tab-radio2"/>
-         <label class="tab-label" for="tab-2-1">継承</label>
-         <div class="tab-content tab-2-0-content">
+         <input id="tab-3-0" type="radio" name="tab-radio3" checked="1"/>
+         <label class="tab-label" for="tab-3-0">表</label>
+         <input id="tab-3-1" type="radio" name="tab-radio3"/>
+         <label class="tab-label" for="tab-3-1">継承</label>
+         <div class="tab-content tab-3-0-content">
             <svg viewbox="0 0 800 1200" width="800px" height="1200px" id="svgbox3" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
         <g-table x="0" y="0">
             <row>
@@ -638,7 +712,7 @@
     </svg>
             <br/>
          </div>
-         <div class="tab-content tab-2-1-content">
+         <div class="tab-content tab-3-1-content">
             <img src="images/extend.png" style="max-width:100%"/>
             <br/>
          </div>
@@ -815,11 +889,11 @@
 			カスタム属性の例を以下に載せる。
 			</section>
       <div class="tabs">
-         <input id="tab-3-0" type="radio" name="tab-radio3"/>
-         <label class="tab-label" for="tab-3-0">code</label>
-         <input id="tab-3-1" type="radio" name="tab-radio3" checked="1"/>
-         <label class="tab-label" for="tab-3-1">svg</label>
-         <div class="tab-content tab-3-0-content">
+         <input id="tab-4-0" type="radio" name="tab-radio4"/>
+         <label class="tab-label" for="tab-4-0">code</label>
+         <input id="tab-4-1" type="radio" name="tab-radio4" checked="1"/>
+         <label class="tab-label" for="tab-4-1">svg</label>
+         <div class="tab-content tab-4-0-content">
             <div class="code-div">
                <h4 class="code-filename">svg/svg.html</h4>
                <pre><code>&lt;svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox7" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true"&gt;
@@ -869,7 +943,7 @@
             </div>
             <br/>
          </div>
-         <div class="tab-content tab-3-1-content">
+         <div class="tab-content tab-4-1-content">
             <svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox7" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
         <g-rect cx="100" cy="100">
             <t>cx:100</t>
@@ -1181,11 +1255,11 @@
 			カスタムスタイル属性の例を以下に載せる。
 			</section>
       <div class="tabs">
-         <input id="tab-4-0" type="radio" name="tab-radio4"/>
-         <label class="tab-label" for="tab-4-0">code</label>
-         <input id="tab-4-1" type="radio" name="tab-radio4" checked="1"/>
-         <label class="tab-label" for="tab-4-1">svg</label>
-         <div class="tab-content tab-4-0-content">
+         <input id="tab-5-0" type="radio" name="tab-radio5"/>
+         <label class="tab-label" for="tab-5-0">code</label>
+         <input id="tab-5-1" type="radio" name="tab-radio5" checked="1"/>
+         <label class="tab-label" for="tab-5-1">svg</label>
+         <div class="tab-content tab-5-0-content">
             <div class="code-div">
                <h4 class="code-filename">svg/svg.html</h4>
                <pre><code>&lt;svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox8" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true"&gt;
@@ -1226,7 +1300,7 @@
             </div>
             <br/>
          </div>
-         <div class="tab-content tab-4-1-content">
+         <div class="tab-content tab-5-1-content">
             <svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox8" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
         <g-rect x="0" y="0" width="250" height="100" style="--horizontal-anchor:left">--horizontal-anchor:left</g-rect>
         <g-rect x="280" y="0" width="250" height="100" style="--horizontal-anchor:center">--horizontal-anchor:center</g-rect>
@@ -1271,11 +1345,11 @@
          </div>
       </div>
       <div class="tabs">
-         <input id="tab-5-0" type="radio" name="tab-radio5"/>
-         <label class="tab-label" for="tab-5-0">code</label>
-         <input id="tab-5-1" type="radio" name="tab-radio5" checked="1"/>
-         <label class="tab-label" for="tab-5-1">svg</label>
-         <div class="tab-content tab-5-0-content">
+         <input id="tab-6-0" type="radio" name="tab-radio6"/>
+         <label class="tab-label" for="tab-6-0">code</label>
+         <input id="tab-6-1" type="radio" name="tab-radio6" checked="1"/>
+         <label class="tab-label" for="tab-6-1">svg</label>
+         <div class="tab-content tab-6-0-content">
             <div class="code-div">
                <h4 class="code-filename">svg/svg.html</h4>
                <pre><code>&lt;svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox9" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true"&gt;
@@ -1344,7 +1418,7 @@
             </div>
             <br/>
          </div>
-         <div class="tab-content tab-5-1-content">
+         <div class="tab-content tab-6-1-content">
             <svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox9" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
         <g-rect x="50" y="30" width="30" height="30" id="L_1">top</g-rect>
         <g-ellipse x="150" y="30" width="30" height="30" id="C_1">top</g-ellipse>
@@ -1420,11 +1494,11 @@
          </div>
       </div>
       <div class="tabs">
-         <input id="tab-6-0" type="radio" name="tab-radio6"/>
-         <label class="tab-label" for="tab-6-0">code</label>
-         <input id="tab-6-1" type="radio" name="tab-radio6" checked="1"/>
-         <label class="tab-label" for="tab-6-1">svg</label>
-         <div class="tab-content tab-6-0-content">
+         <input id="tab-7-0" type="radio" name="tab-radio7"/>
+         <label class="tab-label" for="tab-7-0">code</label>
+         <input id="tab-7-1" type="radio" name="tab-radio7" checked="1"/>
+         <label class="tab-label" for="tab-7-1">svg</label>
+         <div class="tab-content tab-7-0-content">
             <div class="code-div">
                <h4 class="code-filename">svg/svg.html</h4>
                <pre><code>&lt;svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox10" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true"&gt;
@@ -1500,7 +1574,7 @@
             </div>
             <br/>
          </div>
-         <div class="tab-content tab-6-1-content">
+         <div class="tab-content tab-7-1-content">
             <svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox10" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
         <g-rect x="50" y="30" width="30" height="30" id="A_10_1"></g-rect>
         <g-rect x="300" y="30" width="30" height="30" id="B_10_1"></g-rect>
@@ -1578,11 +1652,11 @@
          </div>
       </div>
       <div class="tabs">
-         <input id="tab-7-0" type="radio" name="tab-radio7"/>
-         <label class="tab-label" for="tab-7-0">code</label>
-         <input id="tab-7-1" type="radio" name="tab-radio7" checked="1"/>
-         <label class="tab-label" for="tab-7-1">svg</label>
-         <div class="tab-content tab-7-0-content">
+         <input id="tab-8-0" type="radio" name="tab-radio8"/>
+         <label class="tab-label" for="tab-8-0">code</label>
+         <input id="tab-8-1" type="radio" name="tab-radio8" checked="1"/>
+         <label class="tab-label" for="tab-8-1">svg</label>
+         <div class="tab-content tab-8-0-content">
             <div class="code-div">
                <h4 class="code-filename">svg/svg.html</h4>
                <pre><code>&lt;svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox11" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true"&gt;
@@ -1614,7 +1688,7 @@
             </div>
             <br/>
          </div>
-         <div class="tab-content tab-7-1-content">
+         <div class="tab-content tab-8-1-content">
             <svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox11" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
         <g-rect x="50" y="150" width="30" height="30" id="L_11_1"></g-rect>
         <g-rect x="250" y="150" width="30" height="30" id="C_11_1"></g-rect>
@@ -1644,15 +1718,15 @@
             <br/>
             <section ignore-format="true" class="sample-commentary">　
 				--path-text-alignmentで辺上のテキストの配置方法を指定できる。
-				</section>
+					</section>
          </div>
       </div>
       <div class="tabs">
-         <input id="tab-8-0" type="radio" name="tab-radio8"/>
-         <label class="tab-label" for="tab-8-0">code</label>
-         <input id="tab-8-1" type="radio" name="tab-radio8" checked="1"/>
-         <label class="tab-label" for="tab-8-1">svg</label>
-         <div class="tab-content tab-8-0-content">
+         <input id="tab-9-0" type="radio" name="tab-radio9"/>
+         <label class="tab-label" for="tab-9-0">code</label>
+         <input id="tab-9-1" type="radio" name="tab-radio9" checked="1"/>
+         <label class="tab-label" for="tab-9-1">svg</label>
+         <div class="tab-content tab-9-0-content">
             <div class="code-div">
                <h4 class="code-filename">svg/svg.html</h4>
                <pre><code>&lt;svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox12" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true"&gt;
@@ -1681,7 +1755,7 @@
             </div>
             <br/>
          </div>
-         <div class="tab-content tab-8-1-content">
+         <div class="tab-content tab-9-1-content">
             <svg viewbox="0 0 800 600" width="800px" height="600px" id="svgbox12" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
         <g-table x="0" y="0" style="--widths:[20,40,60,80,100]">
             <row style="--height:20">
@@ -1709,7 +1783,7 @@
             <section ignore-format="true" class="sample-commentary">　
 				g-tableの--widthsと各rowの--heightで各列の横幅と各行の縦幅を設定できる。
 				ただしセル内のテキストの幅がそれよりも大きい場合は最大テキスト幅になる。
-				</section>
+					</section>
          </div>
       </div>
    </article>

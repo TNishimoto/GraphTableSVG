@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Sample</title>
+    <title>SVG Sample</title>
     <link rel="stylesheet" href="sample_graph.css" type="text/css" />
     <script src="../scripts/graph_table_svg.js"></script>
     <script>
@@ -245,23 +245,6 @@
 
         </g-table>
 
-    </svg>
-    <br />
-    <svg viewBox="0 0 400 200" width="400px" height="200px" id="svgbox4" xmlns="http://www.w3.org/2000/svg" class="svgbox"
-        g-shrink="true">
-        <g-rect cx="100" cy="100" id="4_1">GObject</g-rect>
-
-        <g-rect cx="200" cy="200" id="4_2">GTextbox</g-rect>
-        <g-rect cx="100" cy="300" id="4_3">GTable</g-rect>
-        <g-rect cx="200" cy="400" id="4_4">GVertex</g-rect>
-        <g-rect cx="300" cy="500" id="4_5">GPathTextbox</g-rect>
-        <g-rect cx="400" cy="600" id="4_6">GEdge</g-rect>
-        <g-rect cx="500" cy="700" id="4_7">GRect</g-rect>
-        <g-rect cx="600" cy="800" id="4_8">GEllipse</g-rect>
-        <g-rect cx="700" cy="900" id="4_9">GCallout</g-rect>
-
-        <g-edge begin-vertex="4_1" end-vertex="4_2"></g-edge>
-        <g-edge begin-vertex="4_1" end-vertex="4_3"></g-edge>
     </svg>
     <br />
     <svg viewBox="0 0 800 1200" width="800px" height="1200px" id="svgbox5" xmlns="http://www.w3.org/2000/svg" class="svgbox"
@@ -971,7 +954,37 @@
             </row>
         </g-table>
     </svg>
+    <br/>
+    <svg viewBox="0 0 600 600" width="600px" height="600px" id="svgbox13" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true">
+        <g-rect cx="100" cy="100">g-rect</g-rect>
+        <g-ellipse cx="100" cy="200">g-ellipse</g-ellipse>
+        <g-callout cx="200" cy="100">g-callout</g-callout>
+        <g-arrow-callout cx="300" cy="100">g-arrowcallout</g-arrow-callout>
+    </svg>
+    <br/>
+    <svg viewBox="0 0 600 600" width="600px" height="600px" id="svgbox14" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true">
+        <g-rect x="0" y="100">g-rect</g-rect>
 
+        <g-rect x="0" y="200">
+                This is a pen.
+                He is Tom.
+        </g-rect>
+        <g-rect x="0" y="300">
+                <t>This is a pen.</t>
+                <t>He is Tom.</t>
+        </g-rect>
+        <g-rect x="0" y="400">
+                <t>This is a pen.</t>
+                <t newline="false">He is Tom.</t>
+        </g-rect>
+        <g-rect x="0" y="500">
+                <t>This is a pen.</t>
+                <t style="font-size: 32pt;fill:red">He is Tom.</t>
+                <t newline="false" >hello!</t>
+
+            </g-rect>
+        
+    </svg>
 
 
 </body>
