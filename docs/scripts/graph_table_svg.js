@@ -3139,6 +3139,9 @@ var GraphTableSVG;
             else if (unit == "em") {
                 return val * 16;
             }
+            else if (unit == "pt") {
+                return (val / 72) * 96;
+            }
             else {
                 return val;
             }
@@ -3969,10 +3972,11 @@ var GraphTableSVG;
             if (this.isAutoSizeShapeToFitText)
                 this.updateToFitText();
             this.updateSurface();
-            if (this.fixedX != null && Math.abs(this.x - this.fixedX) > 2) {
+            console.log(this.fixedX + "/" + this.x + "/" + this.fixedY + "/" + this.y);
+            if (this.fixedX != null && Math.abs(this.x - this.fixedX) > 20) {
                 this.x = this.fixedX;
             }
-            if (this.fixedY != null && Math.abs(this.y - this.fixedY) > 2) {
+            if (this.fixedY != null && Math.abs(this.y - this.fixedY) > 20) {
                 this.y = this.fixedY;
             }
             this.svgText.gtSetXY(this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
@@ -7677,7 +7681,7 @@ var GraphTableSVG;
         function setTextToSVGText2(svgText, text, isLatexMode) {
             svgText.textContent = "";
             const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
-            const fs = parseInt(fontSize);
+            const fs = GraphTableSVG.Common.toPX(fontSize);
             let dx = 0;
             const spans = text.map((v, i) => {
                 const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
@@ -7736,8 +7740,9 @@ var GraphTableSVG;
                 const tspans = HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName == "tspan");
                 const r = tspans.map((v) => {
                     const w = v.getComputedTextLength();
-                    const h = v.getBoundingClientRect().height;
-                    return new GraphTableSVG.Size(w, h);
+                    const fontSize = v.getPropertyStyleValueWithDefault("font-size", "24");
+                    const fs = GraphTableSVG.Common.toPX(fontSize);
+                    return new GraphTableSVG.Size(w, fs);
                 });
                 return r;
             }
@@ -7752,8 +7757,9 @@ var GraphTableSVG;
                     const tspans = HTMLFunctions.getChildren(fst).filter((v) => v.nodeName == "tspan");
                     const r = tspans.map((v) => {
                         const w = v.getComputedTextLength();
-                        const h = v.getBoundingClientRect().height;
-                        return new GraphTableSVG.Size(w, h);
+                        const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
+                        const fs = GraphTableSVG.Common.toPX(fontSize);
+                        return new GraphTableSVG.Size(w, fs);
                     });
                     ura.removeChild(fst);
                     ura.remove();

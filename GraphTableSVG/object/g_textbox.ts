@@ -201,14 +201,15 @@ namespace GraphTableSVG {
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();
 
-            //console.log(this.fixedX + "/" + this.x);
-            if(this.fixedX != null && Math.abs(this.x - this.fixedX) > 2 ){
+            console.log(this.fixedX + "/" + this.x + "/" + this.fixedY + "/" + this.y);
+            
+            if(this.fixedX != null && Math.abs(this.x - this.fixedX) > 20 ){
                 this.x = this.fixedX;
             }
-            if(this.fixedY != null && Math.abs(this.y - this.fixedY) > 2 ){
+            if(this.fixedY != null && Math.abs(this.y - this.fixedY) > 20 ){
                 this.y = this.fixedY;
             }
-
+            
             /*
             if(this.fixedY != null){
                 this.y = this.fixedY;

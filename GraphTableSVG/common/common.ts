@@ -118,6 +118,8 @@
                 return val;
             } else if(unit == "em"){
                 return val * 16;
+            } else if(unit == "pt"){
+                return (val / 72) * 96;
             }
             else{
                 return val;

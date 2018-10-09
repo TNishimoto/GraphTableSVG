@@ -132,6 +132,19 @@
 					<load path="svg/svg.html" id="svgbox7" />
 				</page>
 			</tab>
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox15" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox15" />
+			<comment>
+			cellにw属性を設定することで指定した数だけ右のセルと結合させることができる。
+			同様にw属性を設定することで指定した数だけ下のセルと結合する。
+			</comment>
+
+				</page>
+			</tab>
 
 		</yarticle>
 

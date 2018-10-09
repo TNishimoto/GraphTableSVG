@@ -237,9 +237,8 @@ namespace GraphTableSVG {
         export function setTextToSVGText2(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean) {
             svgText.textContent = "";
             const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
-            const fs = parseInt(fontSize);
+            const fs = Common.toPX(fontSize);
             let dx = 0;
-
             const spans = text.map((v, i) => {
 
                 const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
@@ -315,8 +314,10 @@ namespace GraphTableSVG {
                 const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v)=>v.nodeName=="tspan");
                 const r = tspans.map((v)=> {
                     const w = v.getComputedTextLength();
-                    const h = v.getBoundingClientRect().height;
-                    return new Size(w, h);
+                    //const h = v.getBoundingClientRect().height;
+                    const fontSize = v.getPropertyStyleValueWithDefault("font-size", "24");
+                    const fs = Common.toPX(fontSize);
+                    return new Size(w, fs);
                 })
                 return r;
             }else{
@@ -331,8 +332,9 @@ namespace GraphTableSVG {
                     const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(fst).filter((v)=>v.nodeName=="tspan");
                     const r = tspans.map((v)=> {
                         const w = v.getComputedTextLength();
-                        const h = v.getBoundingClientRect().height;
-                        return new Size(w, h);
+                    const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
+                    const fs = Common.toPX(fontSize);
+                        return new Size(w, fs);
                     })
                     ura.removeChild(fst);
                     ura.remove();
