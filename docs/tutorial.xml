@@ -40,7 +40,7 @@
 			に書いてある。
 			<dbr />
 		</xarticle>
-		<yarticle title="Object Sample : hello world">
+		<yarticle title="hello world">
 			<tab>
 				<page title="code">
 					<a href="svg/sample_hello1.html">
@@ -62,8 +62,22 @@
 				</rhref>
 				関数でSVG要素のidを指定して呼び出すことでSVG要素内のカスタムSVG要素をG要素に変換することが出来る。
 			</comment>
+
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox21" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox21" />
+				</page>
+			</tab>
+			<comment>
+			ライブラリを適用するSVGSVGElement要素のviewboxは要素と同じ幅と高さを持っているか、もしくはg-shrink属性がtrueになっていることを仮定している。
+			g-shrink属性はライブラリのカスタム属性でtrueのとき、SVGSVGElement内の要素に合わせてSVGSVGElementが拡大縮小する。
+			</comment>
+
 		</yarticle>
-		<yarticle title="Object Sample : テキスト">
+		<yarticle title="テキスト">
 			<comment>
 				オブジェクトに対応する要素の内容にテキストを記述することで、テキストを表示することができる。
 			</comment>
@@ -83,7 +97,7 @@
 				</page>
 			</tab>
 		</yarticle>
-		<yarticle title="Object Sample : オブジェクトの種類">
+		<yarticle title="オブジェクトの種類">
 			<comment>
 				g-rect以外にもオブジェクトを作成することが出来る。
 			</comment>
@@ -109,8 +123,47 @@
 					<load path="images/extend.png" />
 				</page>
 			</tab>
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox18" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox18" />
+				</page>
+			</tab>
+			<comment>
+				g-rectは矩形、g-ellipseは楕円、g-calloutは吹き出し、g-arrow-calloutは矢印付き矩形である。
+				g-edgeは線である。
+			</comment>
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox19" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox19" />
+				</page>
+			</tab>
+			<comment>
+				g-tableは行数hかつ列数wの表を作る。
+				hはg-table内のrow要素の数で、wは行に含まれているセルの最大数である。
+				上から順に表の行とrow要素が対応しており、左から順にrow要素内のセルと表のセルが対応している。
+				セル要素の内容のテキストが対応するセルのテキストになる。
+			</comment>
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox20" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox20" />
+				</page>
+			</tab>
+			<comment>
+				g-graphは頂点と辺の集合である。ここでの辺はg-edgeで、頂点はGVertexを継承したオブジェクトである。
+				現在のところ、GVertexを継承しているオブジェクトはg-rect, g-ellipse, g-callout, g-arrow-calloutである。
+				g-graphの子に頂点と辺のオブジェクトを記述することで、それらを扱う集合となる。
+			</comment>
 		</yarticle>
-		<yarticle title="Object Sample : カスタム属性">
+		<yarticle title="カスタム属性">
 			<comment>
 				タグに属性を記述することで生成するオブジェクトの属性を指定することが出来る。
 				これをカスタム属性と呼ぶ。
@@ -120,34 +173,33 @@
 			<comment>
 				カスタム属性の例を以下に載せる。
 			</comment>
-						<tab>
+			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox7" type="code" />
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox7" />
 					<comment>
-					cx, cy属性を指定することで、要素の中心座標を指定できる。					
-					またx, y属性を指定することで、要素の左上端の座標を指定できる。
-					width, height属性を指定することで、要素のサイズを指定できる。
-					surface:style, text:style属性を指定することで図形のスタイルとテキストのスタイルを設定できる。
-					同様にsurface:class, text:class属性でそれぞれのクラスを指定することができる。
+						cx, cy属性を指定することで、要素の中心座標を指定できる。
+						またx, y属性を指定することで、要素の左上端の座標を指定できる。
+						width, height属性を指定することで、要素のサイズを指定できる。
+						surface:style, text:style属性を指定することで図形のスタイルとテキストのスタイルを設定できる。
+						同様にsurface:class, text:class属性でそれぞれのクラスを指定することができる。
 					</comment>
 				</page>
 			</tab>
-
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox15" type="code" />
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox15" />
-					<comment>
-						cellにw属性を設定することで指定した数だけ右のセルと結合させることができる。
-						同様にw属性を設定することで指定した数だけ下のセルと結合する。
-					</comment>
 				</page>
 			</tab>
+			<comment>
+				cellにw属性を設定することで指定した数だけ右のセルと結合させることができる。
+				同様にw属性を設定することで指定した数だけ下のセルと結合する。
+			</comment>
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox16" type="code" />
@@ -169,20 +221,19 @@
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox17" />
 					<comment>
-					speaker-x, speaker-y属性を指定することで、GCallout要素の吹き出しの開始位置を設定できる。					
+						speaker-x, speaker-y属性を指定することで、GCallout要素の吹き出しの開始位置を設定できる。
 					</comment>
 					<comment>
-					direction属性を指定することで、GArrowCallout要素の矢印の向きを指定できる。
-					arrow-neck-width,
-					arrow-neck-height,
-					arrow-head-width,
-					arrow-head-height属性を指定することで矢印のサイズの微調整ができる。
+						direction属性を指定することで、GArrowCallout要素の矢印の向きを指定できる。
+						arrow-neck-width,
+						arrow-neck-height,
+						arrow-head-width,
+						arrow-head-height属性を指定することで矢印のサイズの微調整ができる。
 					</comment>
 				</page>
 			</tab>
-
 		</yarticle>
-		<yarticle title="Object Sample : カスタムスタイル属性">
+		<yarticle title="カスタムスタイル属性">
 			<comment>
 				タグのスタイルを記述することで生成するオブジェクトのスタイルを指定することが出来る。
 				これをカスタムスタイル属性と呼ぶ。
@@ -256,449 +307,10 @@
 				</page>
 			</tab>
 		</yarticle>
-		<yarticle title="Table Sample : hello world">
-			<load path="table/sample_table_hello.js" />
-			<load path="table/sample_table_hello.html" />
-			<load path="images/table_hello1.png" />
-			<a href="table/sample_table_hello.html">
-				実行結果
-			</a>
-			<dbr />
-			<comment>
-				Table（表）を作成する例。
-				<rhref>
-					Table
-				</rhref>
-				は表をSVGで表現するためのクラスで、どのSVG要素内に作成するかを
-				<rhref method="true">
-					Table.constructor
-				</rhref>
-				の引数の第一要素で指定する。
-				第二要素はオプションでTableのSVG要素内の位置や行数列数を指定することができる。
-				表内のセルは
-				<rhref>
-					Cell
-				</rhref>
-				クラスで表現されており、これもセルをSVGで表現するためのクラスである。これらのプロパティやメソッドの詳細はリファレンスで確認できる。
-			</comment>
-			<comment>
-				前述の通りTableはSVGなので構成要素のプロパティを編集することでTableの中身を編集することができる。
-				ブラウザのデバッグ機能を用いてTableがSVGでどのように構成されているか見ることも編集することも可能。
-				<load path="images/table_hello2.png" />
-			</comment>
+		<yarticle title="マクロと画像出力">
+					<comment>
+			このライブラリで作成した表やグラフはVBAマクロによってPowerpointの図形に変換することが出来る。
+					</comment>
 		</yarticle>
-		<xarticle title="Table Sample : Tableの構成">
-			下の図はTableとCellがどのようなSVG要素で構成されているかを示している。
-			Cellは背景をSVGRectElementで、テキストをSVGTextElementで表しており、それらをSVGGElementでまとめている。
-			Tableは各Cellを表すSVGGElementと各枠を表すSVGLineElementをSVGGElementでまとめている。
-			これらはブラウザのデバッグ機能で確認できる。
-			<load path="images/table2.png" />
-			<load path="images/table3.png" />
-			参考のために各SVG要素のリファレンスを貼っておく。
-			<ol>
-				<li>
-					<a href="https://developer.mozilla.org/ja/docs/Web/API/SVGLineElement" target="_blank">
-						SVGLineElement
-					</a>
-				</li>
-				<li>
-					<a href="https://developer.mozilla.org/ja/docs/Web/API/SVGTextElement" target="_blank">
-						SVGTextElement
-					</a>
-				</li>
-				<li>
-					<a href="https://developer.mozilla.org/ja/docs/Web/API/SVGGElement" target="_blank">
-						SVGGElement
-					</a>
-				</li>
-				<li>
-					<a href="https://developer.mozilla.org/ja/docs/Web/API/SVGRectElement" target="_blank">
-						SVGRectElement
-					</a>
-				</li>
-			</ol>
-			<dbr />
-			下のコードはSVG要素のプロパティを編集してテーブルの見た目を変更する例である。
-			SVG要素のスタイル属性を直接編集や、クラス名によるCSSでの設定によって見た目を変更することが出来る。
-			<a href="table/sample_table_style.html">
-				実行結果
-			</a>
-			<dbr />
-			<load path="table/sample_table_style.js" />
-			<load path="table/sample_table_style.css" />
-			<load path="images/table_style.png" />
-		</xarticle>
-		<xarticle title="Table Sample : デフォルトクラス名の指定">
-			<load path="table/sample_table_style_select.js" />
-			<load path="table/sample_table_style_select.css" />
-			<load path="images/table_select_style.png" />
-			Tableの各セルや枠にCSSを適用するためには各要素のクラス属性を設定しないといけない。
-			これは面倒なので、TableのCSSからセルや枠のCSSも設定できるようにカスタム属性を追加している。
-			--default-cell-classと--default-border-classはそれぞれセルと枠の各クラス属性のデフォルト名を指定する属性である。
-			これを
-			<rhref method="true">
-				Table.svgGroup
-			</rhref>
-			のスタイルに設定しておくことで、一つずつクラス属性を設定する手間が省ける。
-			<dbr />
-			同様に
-			<rhref method="true">
-				Cell.svgGroup
-			</rhref>
-			に--default-background-classと--default-text-classを適用することで
-			<rhref method="true">
-				Cell.svgBackground
-			</rhref>
-			と
-			<rhref method="true">
-				Cell.svgText
-			</rhref>
-			のクラス属性を設定することができる。
-			また、Tableのコンストラクタの第二引数にあるtableClassNameからtable.svgGroupのクラス属性を設定することができるので、
-			CSSファイルにこれらのカスタム属性を記述しておくことで、コンストラクタとCSSからTableの見た目を一度に設定することが出来る。
-			（
-			<a href="table/sample_table_style_select.html">
-				実行結果
-			</a>
-			）
-			ただし、この方法では各セルごとにCSSを変更するなどの細かな設定はできないことに注意すること。
-		</xarticle>
-		<xarticle title="Table Sample : RowとColumn">
-			<load path="table/sample_table_width.js" />
-			<load path="images/table_rowcolumn.png" />
-			<a href="table/sample_table_width.html">
-				実行結果
-			</a>
-			<dbr />
-			各行の高さ、各列の幅は
-			<rhref method="true">
-				Table.rows
-			</rhref>
-			と
-			<rhref method="true">
-				Table.columns
-			</rhref>
-			のプロパティから設定できる。
-			これらは
-			<rhref>
-				Row
-			</rhref>
-			クラスと
-			<rhref>
-				Column
-			</rhref>
-			クラスの配列である。
-		</xarticle>
-		<xarticle title="Table Sample : セルの連結">
-			<load path="table/sample_table_merge.js" />
-			<load path="images/table_merge.png" />
-			<a href="table/sample_table_merge.html">
-				実行結果
-			</a>
-			<dbr />
-			隣り合うセルを結合することが出来る。
-			<rhref method="true">
-				Cell.mergeRight
-			</rhref>
-			は右のセルと結合、
-			<rhref method="true">
-				Cell.mergeBottom
-			</rhref>
-			は下のセルと結合する。
-			<rhref method="true">
-				Cell.merge
-			</rhref>
-			(w, h)はそのセルを基準として列セル数w、行セル数hの結合セルを作成する。
-			出来上がるセルは必ず矩形でなければならない。そのような結合セルにならない場合はエラーが発生する。
-			実際に結合できるかどうかは
-			<rhref method="true">
-				Cell.canMerge
-			</rhref>
-			,
-			<rhref method="true">
-				Cell.canMergeRight
-			</rhref>
-			,
-			<rhref method="true">
-				Cell.canMergeBottom
-			</rhref>
-			で確認できる。
-		</xarticle>
-		<xarticle title="Table Sample : テキスト位置の指定">
-			<load path="table/sample_table_anchor.js" />
-			<load path="table/sample_table_anchor.css" />
-			<load path="images/table_anchor.png" />
-			<a href="table/sample_table_anchor.html">
-				実行結果
-			</a>
-			<dbr />
-			Powerpointの表のようにセル内のテキスト位置を指定できる。
-			垂直方向のテキストの配置位置は
-			<rhref method="true">
-				Cell.verticalAnchor
-			</rhref>
-			もしくはcell.svgGroupの--vertical-anchor属性で指定できる。
-			水平方向のテキストの配置位置は
-			<rhref method="true">
-				Cell.horizontalAnchor
-			</rhref>
-			もしくはcell.svgGroupの--horizontal-anchor属性で指定できる。
-		</xarticle>
-		<xarticle title="Table Sample : Logic Table">
-			<load path="table/sample_table_logic.js" />
-			<load path="images/table_logic.png" />
-			<a href="table/sample_table_logic.html">
-				実行結果
-			</a>
-			<dbr />
-			<rhref>
-				LogicTable
-			</rhref>
-			クラスから表を作成することが出来る。
-			LogicTableクラスはTableクラスから描画関係を取り除いたクラスである。
-			<rhref>
-				LogicCell
-			</rhref>
-			を二次元配列に格納しており各LogicCellを編集することでセルの編集をすることができる。
-			よって、Tableクラスを作成する前からどのような表を作るか決まっている場合はLogicTableクラスを通してSVGを構築したほうがコードの見通しがすっきりするかもしれない。
-			<dbr />
-			<rhref method="true">
-				Table.construct
-			</rhref>
-			(table, option)は文字列の2次元配列tableからSVGを構築する関数である。
-			表の装飾にこだわらない場合はこっちから作ったほうが良いかもしれない。
-		</xarticle>
-		<xarticle title="Table Sample : Powerpointへ出力とPNG保存について">
-			<load path="table/sample_table_powerpoint.html" />
-			<load path="table/sample_table_powerpoint.js" />
-			<load path="images/table_powerpoint1.png" />
-			<load path="images/table_powerpoint2.png" />
-			<load path="images/table_powerpoint3.png" />
-			<a href="table/sample_table_powerpoint.html">
-				実行結果
-			</a>
-			<dbr />
-			表をVBAのコードに変換し、Powerpointのマクロとして実行することでスライド上に表を作成することが出来る。
-			GraphTableSVG.SVGToVBA.create(tables)はそのようなVBAのコードを作成する関数であるが、作成された表はSVGの表と完全に一致するわけではないので注意。
-			あくまで、似たような表を作るだけの関数である。コード変換に対応していないstyle属性が多くあるので、凝った装飾をしているとまず反映されない。
-			<dbr />
-			SVGをPNG画像に変換して保存することが出来る。
-			<rhref method="true" module="true">
-				PNG.createPNGFromSVG
-			</rhref>
-			関数は入力のSVG要素をPNG画像に変換する。
-			使い方はサンプルコードでのPNGボタンのクリックイベントの実装を参照。
-			この関数はChromeとEdgeでのみ使用できる。Firefoxでは使えないのでスクリーンショットで我慢すること。
-			また、画像生成時に少々時間のかかる処理をしているので、手早くPNG画像を生成したい人はスクリーンショットを使うこと。
-		</xarticle>
-		<xarticle title="Graph Sample : Hello World">
-			<load path="graph/sample_graph_hello.html" />
-			<load path="graph/sample_graph_hello.js" />
-			<load path="images/graph_hello.png" />
-			<a href="graph/sample_graph_hello.html">
-				実行結果
-			</a>
-			<dbr />
-			頂点が一つだけのグラフのHello World。
-			<rhref>
-				Graph
-			</rhref>
-			クラスはグラフをSVGで表現するためのクラスである。
-			表と同じように
-			<rhref method="true">
-				Graph.constructor
-			</rhref>
-			にsvg要素を与えてグラフを表すSVGを作成する。このとき指定したsvg要素に空のグラフが作成される。
-			<rhref>
-				Vertex
-			</rhref>
-			クラスは頂点をSVGで表現するためのクラスで、
-			<rhref method="true">
-				Vertex.create
-			</rhref>
-			で頂点を作成する。
-			作成した頂点にはSVGTextElementがあるので、頂点にテキストを入れることが出来る。
-		</xarticle>
-		<xarticle title="Graph Sample : Edge">
-			<load path="graph/sample_graph_edge.js" />
-			<load path="images/graph_edge.png" />
-			<a href="graph/sample_graph_edge.html">
-				実行結果
-			</a>
-			<dbr />
-			辺を使って頂点を接続する例。
-			<rhref>
-				Edge
-			</rhref>
-			クラスは辺をSVGで表現するためのクラスである。
-			<rhref method="true">
-				Edge.create
-			</rhref>
-			で辺を作成することができる。
-			第二引数にあるbeginVertexとendVertexで辺が接続する開始頂点と終了頂点を指定することが出来る。
-			ここで指定しない場合、辺を作成してもsvg要素上で描画されないので注意すること。
-			また、
-			<rhref method="true">
-				Graph.connect
-			</rhref>
-			で辺の接続先を指定することが出来る。
-			<dbr />
-			辺に沿ってテキストを設定することができる。create時の第二引数で指定するか、
-			<rhref method="true" interface="true">
-				SVGTextPathElement.setTextContent
-			</rhref>
-			で指定する。
-			ちなみに、頂点の形は現在、円か四角形のどちらかを選択できる。第二引数でsurfaceType: "rectangle"とすると四角形、それ以外は円形。
-			下の図は頂点や辺を構成しているSVG要素の参考図である。表と同じように直接SVGを編集してスタイルを変更することが可能。
-			<load path="images/graph1.png" />
-			<load path="images/graph_edge2.png" />
-			<a href="graph/sample_graph_edge2.html">
-				実行結果
-			</a>
-		</xarticle>
-		<xarticle title="Graph Sample : Vertex and Edge">
-			<load path="graph/sample_graph_vertex.js" />
-			<load path="images/graph_vertex.png" />
-			<a href="graph/sample_graph_vertex.html">
-				実行結果
-			</a>
-			<dbr />
-			辺に二次ベジエ曲線を使用することが出来る。
-			<rhref method="true">
-				Edge.controlPoint
-			</rhref>
-			プロパティに点の配列を与えることで二次ベジエ曲線の制御点を設定することが出来る。
-			また、制御点を設定したときにかぎり辺を直線でなく二次ベジエ曲線として扱う。
-			<dbr />
-			辺の開始位置と終了位置に矢じりを設定することが出来る。もっとも、これはSVGの仕様であるSVGMarkerElementを使用しているだけである。
-			SVGMarkerElementは矢じりのSVGオブジェクトである。
-			本ライブラリでは
-			<rhref method="true">
-				Edge.markerEnd
-			</rhref>
-			に
-			<rhref method="true">
-				Edge.createMark
-			</rhref>
-			()で生成したSVGMarkerElementインスタンスを設定することで
-			終了頂点の方向に矢印を設定することができる。
-			同様に
-			<rhref method="true">
-				Edge.markerStart
-			</rhref>
-			は開始頂点の矢じりを設定するプロパティである。
-		</xarticle>
-		<xarticle title="Graph Sample : Connector">
-			<load path="graph/sample_graph_connector.js" />
-			<load path="images/graph_connector.png" />
-			<a href="graph/sample_graph_connector.html">
-				実行結果
-			</a>
-			<dbr />
-			頂点上の辺の接続位置は選択することが出来る。図形がCircleの場合、真上から45度刻みに8方向選ぶことが出来る。Rectangleの場合は真上から90度刻みに4方向。
-			Autoを選択した場合、二点の位置関係から計算した最適な位置を自動で選択する。
-		</xarticle>
-		<xarticle title="Graph Sample : Class Name">
-			<load path="graph/sample_graph_class.js" />
-			<load path="graph/sample_graph_class.css" />
-			<load path="images/graph_class.png" />
-			<a href="graph/sample_graph_class.html">
-				実行結果
-			</a>
-			<dbr />
-			表の場合と同様に、頂点や辺のsvgGroupに設定したCSSから構成している各種SVG要素のプロパティを設定することが出来る。
-		</xarticle>
-		<xarticle title="Graph Sample : Alignment">
-			<load path="graph/sample_graph_textpath.js" />
-			<load path="images/graph_textpath.png" />
-			<a href="graph/sample_graph_textpath.html">
-				実行結果
-			</a>
-			<dbr />
-			辺に設定されたテキストの配置位置も
-			<rhref method="true">
-				Edge.pathTextAlignment
-			</rhref>
-			プロパティから設定できる。
-			開始頂点側、終了頂点側、辺の中央、そして辺上に均等に配置の四種類を選ぶことが出来る。
-			何も選ばない場合は中央配置となる。
-		</xarticle>
-		<xarticle title="Graph Sample : 破線">
-			<load path="graph/sample_graph_dash_style.js" />
-			<load path="images/graph_dash.png" />
-			<a href="graph/sample_graph_dash_style.html">
-				実行結果
-			</a>
-			<dbr />
-			Edgeの線は点線にすることが出来る。svgTextPathのstroke-dasharrayを編集することで実現できるが、本ライブラリで用意されたGraphTableSVG.msoDashStyle.setStyleで点線の種類を選択することが望ましい。
-			setStyleで設定した点線はPowerpoint側で用意された点線に直接変換できるからである。理由はそれだけなのでPowerpointに出力することを想定していない場合はstroke-dasharrayで十分である。
-		</xarticle>
-		<xarticle title="Graph Sample : Tree">
-			<load path="graph/sample_graph_tree.js" />
-			<load path="images/graph_tree_children.png" />
-			<load path="images/graph_tree_leave.png" />
-			<a href="graph/sample_graph_tree.html">
-				実行結果
-			</a>
-			<dbr />
-			現在、graphで描画されているのが木である場合に適用できる各頂点の配置関数がライブラリに用意されている。
-			<rhref module="true" method="true">
-				TreeArrangement.alignVerticeByChildren
-			</rhref>
-			と
-			<rhref module="true" method="true">
-				TreeArrangement.alignVerticeByLeave
-			</rhref>
-			である。
-			前者は子頂点が同じ高さになるように頂点を配置し、後者は葉頂点が同じ高さになるように配置される。
-			このときの各頂点の水平間隔と垂直間隔は
-			<rhref method="true">
-				Graph.vertexXInterval
-			</rhref>
-			と
-			<rhref method="true">
-				Graph.vertexYInterval
-			</rhref>
-			で設定できる。
-			<dbr />
-			<rhref method="true">
-				Graph.relocateFunction
-			</rhref>
-			はグラフの配置方法を決定するアロー関数のプロパティである。
-			第一引数でgraph自身を受け取る。
-			配置方法を決定すると言っても、この関数は(1)relocateFunctionの設定時か、(2)
-			<rhref method="true">
-				Graph.appendChild
-			</rhref>
-			関数を呼ばれた後か、
-			(3)
-			<rhref method="true">
-				Graph.relocate
-			</rhref>
-			関数を呼ばれた時か、
-			(4)もしくは後述する
-			<rhref method="true">
-				Graph.constructFromLogicTree
-			</rhref>
-			を呼んだ後にしか呼ばれないので明示的に設定しない限りは呼ばれることはないだろう。
-			このあたりは設計が煮詰まっていないので今後の実装で変更することもあるかもしれない。
-		</xarticle>
-		<xarticle title="Graph Sample : Logic Tree">
-			<load path="graph/sample_graph_logictree.js" />
-			<load path="images/graph_logictree.png" />
-			<a href="graph/sample_graph_logictree.html">
-				実行結果
-			</a>
-			<dbr />
-			<rhref>
-				LogicTree
-			</rhref>
-			はLogicTableと同様に、SVG要素を取り除いて木の形や各頂点や辺の設定プロパティだけで構成されたクラスである。
-			SVG要素として構築する前にあらかじめ木の形が決まっているときはこのクラスを通すと設計がすっきりするかもしれない。
-			ちなみにLogicGraphはまだ実装されていない。
-		</xarticle>
-		<xarticle title="Graph Sample : Powerpoint">
-			グラフもVBAコードを使ってPowerpoint上に作成することが出来る。
-		</xarticle>
 	</body>
 </html>
