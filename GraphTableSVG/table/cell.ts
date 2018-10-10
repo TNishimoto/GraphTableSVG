@@ -1071,7 +1071,6 @@ namespace GraphTableSVG {
             if (this.height < this.calculatedHeightUsingText) {
                 this.height = this.calculatedHeightUsingText;
             }
-            
 
         }
         /**

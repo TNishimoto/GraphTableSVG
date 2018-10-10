@@ -608,6 +608,7 @@ declare namespace GraphTableSVG {
         const endNodeName: string;
         const controlPointName: string;
         const connectPositionChangedEventName = "connect_position_changed";
+        const resizeName = "resized";
         const vertexCreatedEventName = "vertex_created";
         const objectCreatedEventName = "object_created";
         const GroupAttribute = "data-group-type";
@@ -625,6 +626,9 @@ declare namespace GraphTableSVG {
         protected _observerOption: MutationObserverInit;
         constructor(svgbox: SVGElement | string, option?: GObjectAttributes);
         protected groupObserverOption: MutationObserverInit;
+        private removeResizeEvent();
+        private addResizeEvent();
+        private pUpdateFunc;
         initializeOption(option: GObjectAttributes): GObjectAttributes;
         static constructAttributes(e: Element, removeAttributes?: boolean, output?: GObjectAttributes): GObjectAttributes;
         tag: any;
@@ -795,7 +799,7 @@ declare namespace GraphTableSVG {
         markerEnd: SVGMarkerElement | null;
         private removeVertexEvent(vertex);
         private addVertexEvent(vertex);
-        private pUpdateFunc;
+        private pUpdateFunc2;
         beginVertex: GVertex | null;
         endVertex: GVertex | null;
         dispose(): void;
@@ -967,6 +971,7 @@ declare namespace GraphTableSVG {
         private createVBAMainCode(slideName, id);
         toPlainText(): string;
         getEmphasizedCells(): GraphTableSVG.Cell[];
+        private prevShow;
         update(): void;
         private renumbering();
         private resize();

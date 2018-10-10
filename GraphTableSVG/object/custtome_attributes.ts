@@ -40,6 +40,7 @@ namespace GraphTableSVG {
         export const endNodeName: string = "data-end-node";
         export const controlPointName: string = "data-control-point";
         export const connectPositionChangedEventName = "connect_position_changed";
+        export const resizeName = "resized";
         export const vertexCreatedEventName = "vertex_created";
         export const objectCreatedEventName = "object_created";
         export const GroupAttribute = "data-group-type";

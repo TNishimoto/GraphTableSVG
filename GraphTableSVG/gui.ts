@@ -236,12 +236,27 @@
                 }
                 else {
                     if (nowVisible) {
+                        dispatchResizeEvent(v.svgsvg);
                         resizeSVGSVG(v.svgsvg, v.padding);
                         v.visible = true;
                     }
                 }
             })
             setTimeout(observeSVGSVGTimer, 500);
+        }
+        function dispatchResizeEvent(e: Element): void {
+            const children = HTMLFunctions.getChildren(e);
+            children.forEach((v)=>{
+                dispatchResizeEvent(v);
+            })
+            if (e instanceof SVGGElement) {
+                
+                var event = document.createEvent("HTMLEvents");
+                
+                event.initEvent(CustomAttributeNames.resizeName, false, true)
+                e.dispatchEvent(event);
+            }
+
         }
 
 

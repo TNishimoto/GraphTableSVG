@@ -45,10 +45,19 @@ namespace GraphTableSVG {
             this._observer.observe(this.svgGroup, this._observerOption);
 
             this.dispatchObjectCreatedEvent();
+            this.addResizeEvent();
         }
         protected groupObserverOption : MutationObserverInit = { attributes: true, childList: true, subtree: true };
 
-        
+        private removeResizeEvent() {
+            this.svgGroup.removeEventListener(CustomAttributeNames.resizeName, this.pUpdateFunc);
+        }
+        private addResizeEvent() {
+            this.svgGroup.addEventListener(CustomAttributeNames.resizeName, this.pUpdateFunc);
+        }        
+        private pUpdateFunc = () => {
+            this.update();
+        }
         initializeOption(option: GObjectAttributes): GObjectAttributes {
             const _option = { ...option };
             if (this.svgSurface != null && this.svgSurface.className != null) {

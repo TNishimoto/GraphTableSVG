@@ -168,6 +168,7 @@ namespace GraphTableSVG {
             }
         }
         export function sortText(svgText: SVGTextElement, rect: GraphTableSVG.Rectangle | null, vAnchor: GraphTableSVG.VerticalAnchor, hAnchor: GraphTableSVG.HorizontalAnchor) {
+            
             const lineSpans = getLines(svgText);
             const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
             const fs = parseInt(fontSize);
@@ -233,6 +234,7 @@ namespace GraphTableSVG {
             } else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
 
             }
+            
         }
         export function setTextToSVGText2(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean) {
             svgText.textContent = "";
@@ -280,6 +282,8 @@ namespace GraphTableSVG {
                 r.height = rect.height;
                 return r;
             }else{
+                return new Rectangle();
+                /*
                 if(ura == null){
                     ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 } 
@@ -305,6 +309,7 @@ namespace GraphTableSVG {
                     ura.remove();
                     return r;
                 }
+                */
             }
             
         }
@@ -319,8 +324,18 @@ namespace GraphTableSVG {
                     const fs = Common.toPX(fontSize);
                     return new Size(w, fs);
                 })
+                console.log(r);
+
                 return r;
             }else{
+                const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v)=>v.nodeName=="tspan");
+                const r = tspans.map((v)=> {
+                    return new Size(0, 0);
+                })
+                return r;
+
+                //return [];
+                /*
                 if(ura == null){
                     ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 } 
@@ -347,6 +362,7 @@ namespace GraphTableSVG {
                     ura.remove();
                     return [];
                 }
+                */
             }
         }
         /*

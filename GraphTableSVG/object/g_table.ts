@@ -186,7 +186,7 @@ namespace GraphTableSVG {
                 for (let j = 0; j < p.addedNodes.length; j++) {
                     const item = p.addedNodes.item(j);
 
-                    if (item.nodeName == "#text") {
+                    if (item != null && item.nodeName == "#text") {
                         b = true;
                         b2 = true;
                     }
@@ -354,6 +354,7 @@ namespace GraphTableSVG {
 
         private updateCellByLogicCell(table: LogicTable | null, x: number, y: number) {
             const cell = this.cells[y][x];
+            const isShow = HTMLFunctions.isShow(this.svgGroup);
             if (table != null) {
                 const cellInfo = table.cells[y][x];
                 if (cellInfo != null) {
@@ -431,7 +432,7 @@ namespace GraphTableSVG {
                         GraphTableSVG.SVG.resetStyle(cell.svgBottomBorder.style);
                         cell.svgBottomBorder.setAttribute("class", borderClass);
                     }
-                    cell.update();
+                    if(isShow)cell.update();
 
                 }
             }
@@ -693,19 +694,30 @@ namespace GraphTableSVG {
         /*
         Update
         */
+        private prevShow : boolean = false;
         /**
         各セルのサイズを再計算します。
         */
         public update() {
             this._observer.disconnect();
             const display = this.svgGroup.getPropertyStyleValue("display");
-            const style = getComputedStyle(this.svgGroup);            
-            const style2 = getComputedStyle(this.svgGroup.parentElement!.parentElement!);            
-
+            //const style = getComputedStyle(this.svgGroup);            
+            //const style2 = getComputedStyle(this.svgGroup.parentElement!.parentElement!);            
 
             if(display == "none") return;
+            const b = HTMLFunctions.isShow(this.svgGroup); 
+            if(!b){
+                this.prevShow = true;
+                return;
+            }
+
             this._isDrawing = true;
             this.renumbering();
+            if(this.prevShow){
+                this.cellArray.forEach((v)=>v.update());            
+                this.fitSizeToOriginalCells(false);
+                this.prevShow = false;
+            }
             this.resize();
             this.relocation();
             //this.cellArray.forEach(function (x, i, arr) { x.relocation(); });
@@ -713,6 +725,7 @@ namespace GraphTableSVG {
             //if (this._updateCounter > 100) throw Error("error");
             this._isDrawing = false;
             this._observer.observe(this.svgGroup, this.groupObserverOption);
+
 
         }
         /**
