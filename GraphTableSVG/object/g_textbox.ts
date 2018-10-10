@@ -201,7 +201,6 @@ namespace GraphTableSVG {
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();
 
-            console.log(this.fixedX + "/" + this.x + "/" + this.fixedY + "/" + this.y);
             
             if(this.fixedX != null && Math.abs(this.x - this.fixedX) > 20 ){
                 this.x = this.fixedX;

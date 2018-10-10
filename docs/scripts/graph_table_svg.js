@@ -3972,7 +3972,6 @@ var GraphTableSVG;
             if (this.isAutoSizeShapeToFitText)
                 this.updateToFitText();
             this.updateSurface();
-            console.log(this.fixedX + "/" + this.x + "/" + this.fixedY + "/" + this.y);
             if (this.fixedX != null && Math.abs(this.x - this.fixedX) > 20) {
                 this.x = this.fixedX;
             }
@@ -7680,8 +7679,6 @@ var GraphTableSVG;
         SVGTextBox.sortText = sortText;
         function setTextToSVGText2(svgText, text, isLatexMode) {
             svgText.textContent = "";
-            const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
-            const fs = GraphTableSVG.Common.toPX(fontSize);
             let dx = 0;
             const spans = text.map((v, i) => {
                 const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');

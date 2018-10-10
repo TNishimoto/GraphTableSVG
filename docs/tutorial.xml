@@ -64,30 +64,28 @@
 			</comment>
 		</yarticle>
 		<yarticle title="Object Sample : テキスト">
-			<comment>			
-			オブジェクトに対応する要素の内容にテキストを記述することで、テキストを表示することができる。
+			<comment>
+				オブジェクトに対応する要素の内容にテキストを記述することで、テキストを表示することができる。
 			</comment>
-
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox14" type="code" />
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox14" />
-					<comment>			
-			要素の内容のテキストに含まれている改行は無視される。
-			二行以上記述したい場合はt要素を利用する。
-			テキストはSVGのtext要素に変換され、t要素はtspan要素に変換される。
-			よって属性を設定することでテキストに装飾することができる。
-			また、t要素のnewline属性にfalseを与えるとそのテキストは改行されない。
+					<comment>
+						要素の内容のテキストに含まれている改行は無視される。
+						二行以上記述したい場合はt要素を利用する。
+						テキストはSVGのtext要素に変換され、t要素はtspan要素に変換される。
+						よって属性を設定することでテキストに装飾することができる。
+						また、t要素のnewline属性にfalseを与えるとそのテキストは改行されない。
 					</comment>
-
 				</page>
 			</tab>
 		</yarticle>
 		<yarticle title="Object Sample : オブジェクトの種類">
 			<comment>
-			g-rect以外にもオブジェクトを作成することが出来る。
+				g-rect以外にもオブジェクトを作成することが出来る。
 			</comment>
 			<tab>
 				<page title="code">
@@ -101,7 +99,7 @@
 				</page>
 			</tab>
 			<comment>
-			作成できるオブジェクトと継承関係は以下の通り。
+				作成できるオブジェクトと継承関係は以下の通り。
 			</comment>
 			<tab>
 				<page title="表" checked="1">
@@ -111,53 +109,88 @@
 					<load path="images/extend.png" />
 				</page>
 			</tab>
-
 		</yarticle>
 		<yarticle title="Object Sample : カスタム属性">
 			<comment>
-			タグに属性を記述することで生成するオブジェクトの属性を指定することが出来る。
-			これをカスタム属性と呼ぶ。
-			指定できる属性は以下の通り。
+				タグに属性を記述することで生成するオブジェクトの属性を指定することが出来る。
+				これをカスタム属性と呼ぶ。
+				指定できる属性は以下の通り。
 			</comment>
-
 			<load path="svg/svg.html" id="svgbox5" />
 			<comment>
-			カスタム属性の例を以下に載せる。
+				カスタム属性の例を以下に載せる。
 			</comment>
-			<tab>
+						<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox7" type="code" />
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox7" />
+					<comment>
+					cx, cy属性を指定することで、要素の中心座標を指定できる。					
+					またx, y属性を指定することで、要素の左上端の座標を指定できる。
+					width, height属性を指定することで、要素のサイズを指定できる。
+					surface:style, text:style属性を指定することで図形のスタイルとテキストのスタイルを設定できる。
+					同様にsurface:class, text:class属性でそれぞれのクラスを指定することができる。
+					</comment>
 				</page>
 			</tab>
+
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox15" type="code" />
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox15" />
-			<comment>
-			cellにw属性を設定することで指定した数だけ右のセルと結合させることができる。
-			同様にw属性を設定することで指定した数だけ下のセルと結合する。
-			</comment>
-
+					<comment>
+						cellにw属性を設定することで指定した数だけ右のセルと結合させることができる。
+						同様にw属性を設定することで指定した数だけ下のセルと結合する。
+					</comment>
+				</page>
+			</tab>
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox16" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox16" />
+					<comment>
+						x1,x2,y1,y2属性を指定することで辺の開始位置と終了位置の座標を設定できる。
+						さらにx3, y3属性を指定することで制御点を設定できる。
+						また、begin-vertexとend-vertexにGVertexを継承したオブジェクトのidを指定することで
+						指定したオブジェクト同士を辺でつなげることができる。
+					</comment>
+				</page>
+			</tab>
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox17" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox17" />
+					<comment>
+					speaker-x, speaker-y属性を指定することで、GCallout要素の吹き出しの開始位置を設定できる。					
+					</comment>
+					<comment>
+					direction属性を指定することで、GArrowCallout要素の矢印の向きを指定できる。
+					arrow-neck-width,
+					arrow-neck-height,
+					arrow-head-width,
+					arrow-head-height属性を指定することで矢印のサイズの微調整ができる。
+					</comment>
 				</page>
 			</tab>
 
 		</yarticle>
-
 		<yarticle title="Object Sample : カスタムスタイル属性">
 			<comment>
-			タグのスタイルを記述することで生成するオブジェクトのスタイルを指定することが出来る。
-			これをカスタムスタイル属性と呼ぶ。
-			指定できるカスタムスタイル属性は以下の通り。
+				タグのスタイルを記述することで生成するオブジェクトのスタイルを指定することが出来る。
+				これをカスタムスタイル属性と呼ぶ。
+				指定できるカスタムスタイル属性は以下の通り。
 			</comment>
-
 			<load path="svg/svg.html" id="svgbox6" />
 			<comment>
-			カスタムスタイル属性の例を以下に載せる。
+				カスタムスタイル属性の例を以下に載せる。
 			</comment>
 			<tab>
 				<page title="code">
@@ -166,15 +199,12 @@
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox8" />
 					<comment>
-			HorizontalAnchorとVerticalAnchorでテキストの配置位置を指定することが出来る。
-			paddingとmarginは図形とテキスト間の余白を表す。
-			autosize-shape-to-fit-textはtrueにすると、図形のサイズがテキストに合うように自動的に計算される。
+						HorizontalAnchorとVerticalAnchorでテキストの配置位置を指定することが出来る。
+						paddingとmarginは図形とテキスト間の余白を表す。
+						autosize-shape-to-fit-textはtrueにすると、図形のサイズがテキストに合うように自動的に計算される。
 					</comment>
-
 				</page>
 			</tab>
-
-
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox9" type="code" />
@@ -182,17 +212,15 @@
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox9" />
 					<comment>
-			--begin-connector-typeと--end-connector-typeで辺の接続位置を設定できる。
-			ただし、接続位置はPowerpointに準拠しているので、オブジェクトと接続位置の組み合わせによっては直感的な位置に配置されないことに注意する。
-			例えば、g-rectとtoprightを組み合わせても右上の角が辺の接続位置になるわけではない。
+						--begin-connector-typeと--end-connector-typeで辺の接続位置を設定できる。
+						ただし、接続位置はPowerpointに準拠しているので、オブジェクトと接続位置の組み合わせによっては直感的な位置に配置されないことに注意する。
+						例えば、g-rectとtoprightを組み合わせても右上の角が辺の接続位置になるわけではない。
 					</comment>
 					<comment>
-					--marker-startと--marker-endはそれぞれ辺の開始位置と終了位置の矢印の有無を表す。
+						--marker-startと--marker-endはそれぞれ辺の開始位置と終了位置の矢印の有無を表す。
 					</comment>
-
 				</page>
 			</tab>
-
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox10" type="code" />
@@ -200,11 +228,10 @@
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox10" />
 					<comment>
-					--stroke-styleで辺もしくは図形の輪郭を点線に変更することが出来る。
+						--stroke-styleで辺もしくは図形の輪郭を点線に変更することが出来る。
 					</comment>
 				</page>
 			</tab>
-
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox11" type="code" />
@@ -212,7 +239,7 @@
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox11" />
 					<comment>
-				--path-text-alignmentで辺上のテキストの配置方法を指定できる。
+						--path-text-alignmentで辺上のテキストの配置方法を指定できる。
 					</comment>
 				</page>
 			</tab>
@@ -223,13 +250,11 @@
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox12" />
 					<comment>
-				g-tableの--widthsと各rowの--heightで各列の横幅と各行の縦幅を設定できる。
-				ただしセル内のテキストの幅がそれよりも大きい場合は最大テキスト幅になる。
+						g-tableの--widthsと各rowの--heightで各列の横幅と各行の縦幅を設定できる。
+						ただしセル内のテキストの幅がそれよりも大きい場合は最大テキスト幅になる。
 					</comment>
 				</page>
 			</tab>
-
-
 		</yarticle>
 		<yarticle title="Table Sample : hello world">
 			<load path="table/sample_table_hello.js" />

@@ -236,8 +236,8 @@ namespace GraphTableSVG {
         }
         export function setTextToSVGText2(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean) {
             svgText.textContent = "";
-            const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
-            const fs = Common.toPX(fontSize);
+            //const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
+            //const fs = Common.toPX(fontSize);
             let dx = 0;
             const spans = text.map((v, i) => {
 
