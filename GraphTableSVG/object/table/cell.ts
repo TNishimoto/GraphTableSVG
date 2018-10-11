@@ -1056,7 +1056,7 @@ namespace GraphTableSVG {
          *セルのサイズを再計算します。
          */
         private resize() {
-            SVGTextBox.sortText(this.svgText, null, this.verticalAnchor, this.horizontalAnchor);
+            SVGTextBox.sortText(this.svgText, this.horizontalAnchor);
             const [w, h] = this.calculatedSizeUsingGroup();
             if (this.width != w) {
                 this.width = w;

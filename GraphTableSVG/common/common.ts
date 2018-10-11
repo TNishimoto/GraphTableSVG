@@ -66,9 +66,9 @@
         }
         const CSSName: string = "___GraphTableCSS";
         export function setGraphTableCSS(cellColor: string, borderColor : string) {
-            const item = document.head.getElementsByClassName(CSSName);
+            const item = document.head!.getElementsByClassName(CSSName);
             if (item.length > 0) {
-                document.head.removeChild(item[0]);
+                document.head!.removeChild(item[0]);
             }
             var blankStyle: HTMLStyleElement = document.createElement('style');
 
@@ -86,7 +86,7 @@
 
             const head = document.getElementsByTagName('head');
             
-            head.item(0).appendChild(blankStyle);
+            head.item(0)!.appendChild(blankStyle);
 
         }
         export function getGraphTableCSS(): HTMLElement | null {

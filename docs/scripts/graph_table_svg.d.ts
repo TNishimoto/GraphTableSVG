@@ -15,6 +15,19 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    namespace Common {
+        function clearGraphTables(svg: SVGElement, items: (GraphTableSVG.GGraph | GraphTableSVG.GTable)[]): void;
+        function IsDescendantOfBody(node: Node): boolean;
+        function getRegion(items: VBAObjectType[]): Rectangle;
+        function paddingLeft(text: string, length: number, leftChar: string): string;
+        function setGraphTableCSS(cellColor: string, borderColor: string): void;
+        function getGraphTableCSS(): HTMLElement | null;
+        function parseUnit(text: string): [number, string];
+        function toPX(value: string): number;
+        function bezierLocation([px1, py1]: [number, number], [px2, py2]: [number, number], [px3, py3]: [number, number], t: number): [number, number];
+    }
+}
+declare namespace GraphTableSVG {
     enum VertexOrder {
         Preorder = 0,
         Postorder = 1,
@@ -108,106 +121,21 @@ declare namespace GraphTableSVG {
         function setURLParametersToHTMLElements(): void;
         function getInputText(elementID: string): string;
         function getNonNullElementById(id: string): HTMLElement;
+    }
+}
+declare namespace GraphTableSVG {
+    namespace GUI {
         function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => GraphTableSVG.Rectangle, padding?: GraphTableSVG.Padding): void;
         function observeSVGSVG(svgBox: SVGSVGElement, padding?: GraphTableSVG.Padding): void;
     }
 }
 declare namespace GraphTableSVG {
-    class LogicTree {
-        vertexText: string | null;
-        parentEdgeText: string | null;
-        vertexClass: string | null;
-        parentEdgeClass: string | null;
-        children: (LogicTree | null)[];
-        item: any;
-        constructor(option?: {
-            item?: any;
-            children?: (LogicTree | null)[];
-            vertexText?: string;
-            parentEdgeText?: string;
-        });
-        getOrderedNodes(order: VertexOrder): LogicTree[];
-    }
-    class BinaryLogicTree extends LogicTree {
-        item: any;
-        left: BinaryLogicTree | null;
-        right: BinaryLogicTree | null;
-        constructor(item?: any, left?: BinaryLogicTree | null, right?: BinaryLogicTree | null, nodeText?: string | null, edgeLabel?: string | null);
-    }
-}
-declare namespace GraphTableSVG {
-    class LogicCell {
-        text: string | null;
-        cellClass: string | null;
-        textClass: string | null;
-        backgroundClass: string | null;
-        topBorderClass: string | null;
-        leftBorderClass: string | null;
-        rightBorderClass: string | null;
-        bottomBorderClass: string | null;
-        svgText: SVGTextElement | null;
-        connectedColumnCount: number;
-        connectedRowCount: number;
-        tTexts: HTMLElement[] | null;
-        item: any;
-        isLatexMode: boolean;
-        constructor();
-        set(text?: string | undefined, isLatexMode?: boolean, cellClass?: string | undefined, backgroundClass?: string | undefined, textClass?: string | undefined, topBorderClass?: string | undefined, leftBorderClass?: string | undefined, rightBorderClass?: string | undefined, bottomBorderClass?: string | undefined): void;
-        createTextElement(svgText: SVGTextElement): void;
-    }
-    class LogicTable {
-        cells: LogicCell[][];
-        columnWidths: (number | null)[];
-        rowHeights: (number | null)[];
-        tableClassName: string | null;
-        x: number | null;
-        y: number | null;
-        readonly rowCount: number;
-        readonly columnCount: number;
-        constructor(option?: {
-            columnCount?: number;
-            rowCount?: number;
-            tableClassName?: string;
-            x?: number;
-            y?: number;
-        });
-        readonly cellArray: LogicCell[];
-        getColumn(i: number): LogicCell[];
-        getRow(i: number): LogicCell[];
-        static parse(str: string, delimiter: string): string[][];
-        static create(str: string[][], tableClassName?: string | null): LogicTable;
-    }
-}
-declare namespace GraphTableSVG {
-    namespace SVG {
-        let idCounter: number;
-        function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
-        function createText(className?: string | null): SVGTextElement;
-        function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
-        function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement;
-        function resetStyle(style: CSSStyleDeclaration): void;
-        function createCircle(parent: SVGElement, className?: string | null): SVGCircleElement;
-        function createMarker(option?: {
-            className?: string;
-            strokeWidth?: string;
-            color?: string;
-        }): [SVGMarkerElement, SVGPathElement];
-        function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
-        function createTextPath2(className?: string | null): SVGTextPathElement;
-        function setClass(svg: SVGElement, className?: string | null): void;
-        function setCSSToStyle(svg: HTMLElement, isComplete?: boolean): void;
-        function getAllElementStyleMap(item: HTMLElement | string): {
-            [key: number]: string;
-        };
-        function setAllElementStyleMap(item: HTMLElement | string, dic: {
-            [key: number]: string;
-        }): void;
-        function setCSSToAllElementStyles(item: HTMLElement | string, isComplete?: boolean): void;
-        function getStyleSheet(name: string): CSSStyleDeclaration | null;
-        function getRegion2(e: SVGElement): Rectangle;
-        function getSVGSVG(e: SVGElement): SVGSVGElement;
-        function isSVGSVGHidden(e: SVGElement): boolean;
-        function isSVGHidden(e: SVGElement): boolean;
+    namespace PNG {
+        function copyCSStoStyle(svg: HTMLElement): void;
+        function createCanvasFromImage(img: HTMLImageElement): HTMLCanvasElement;
+        function setSaveEvent(img: HTMLImageElement, canvas: HTMLCanvasElement): void;
+        function createPNGFromSVG(id: string): HTMLCanvasElement;
+        function getImage(svgBox: HTMLElement): HTMLImageElement;
     }
 }
 declare namespace GraphTableSVG {
@@ -248,373 +176,6 @@ declare namespace GraphTableSVG {
         readonly bottom: number;
         addOffset(x: number, y: number): void;
         static merge(rects: Rectangle[]): Rectangle;
-    }
-}
-declare namespace GraphTableSVG {
-    enum DirectionType {
-        top = 0,
-        left = 1,
-        right = 2,
-        bottom = 3,
-    }
-    enum DirectionType2 {
-        topLeft = 0,
-        bottomLeft = 1,
-        bottomRight = 2,
-        topRight = 3,
-    }
-    class Cell {
-        private static readonly defaultBackgroundClassName;
-        static readonly emphasisCellClass: string;
-        static readonly emphasisBorderClass: string;
-        static readonly temporaryBorderClass: string;
-        static readonly cellXName: string;
-        static readonly cellYName: string;
-        static readonly borderXName: string;
-        static readonly borderYName: string;
-        static readonly borderTypeName: string;
-        static readonly masterIDName: string;
-        static readonly masterDiffXName: string;
-        static readonly masterDiffYName: string;
-        static readonly elementTypeName: string;
-        private _observer;
-        private _observerFunc;
-        private tmpStyle;
-        isEmphasized: boolean;
-        constructor(parent: GTable, _px: number, _py: number, option?: CellOption);
-        private readonly innerExtraPaddingLeft;
-        private readonly innerExtraPaddingRight;
-        readonly masterDiffX: number;
-        private setMasterDiffX(id);
-        readonly masterDiffY: number;
-        private setMasterDiffY(id);
-        readonly masterCellX: number;
-        private setMasterCellX(id);
-        readonly masterCellY: number;
-        private setMasterCellY(id);
-        readonly masterID: number;
-        readonly master: Cell;
-        private _borders;
-        svgTopBorder: SVGLineElement;
-        svgLeftBorder: SVGLineElement;
-        svgRightBorder: SVGLineElement;
-        svgBottomBorder: SVGLineElement;
-        private _table;
-        readonly table: GTable;
-        private _svgBackground;
-        readonly svgBackground: SVGRectElement;
-        private _svgText;
-        readonly svgText: SVGTextElement;
-        private _svgGroup;
-        readonly svgGroup: SVGGElement;
-        readonly fontSize: number;
-        readonly paddingLeft: number;
-        readonly paddingRight: number;
-        readonly paddingTop: number;
-        readonly paddingBottom: number;
-        horizontalAnchor: HorizontalAnchor;
-        verticalAnchor: VerticalAnchor;
-        cellX: number;
-        cellY: number;
-        readonly defaultTextClass: string | null;
-        readonly defaultBackgroundClass: string | null;
-        readonly logicalWidth: number;
-        readonly logicalHeight: number;
-        readonly isLocated: boolean;
-        readonly calculatedWidthUsingText: number;
-        readonly calculatedHeightUsingText: number;
-        calculatedSizeUsingGroup(): [number, number];
-        private computeSidePosition(dir);
-        readonly isMaster: boolean;
-        readonly isSlave: boolean;
-        readonly ID: number;
-        getNextCell(direction: DirectionType): Cell | null;
-        getNextMasterCell(direction: DirectionType): Cell | null;
-        readonly topCell: Cell | null;
-        readonly leftCell: Cell | null;
-        readonly rightCell: Cell | null;
-        readonly bottomCell: Cell | null;
-        readonly bottomRightCell: Cell | null;
-        readonly topRightCell: Cell | null;
-        readonly bottomLeftCell: Cell | null;
-        readonly topLeftCell: Cell | null;
-        readonly topMasterCell: Cell | null;
-        readonly leftMasterCell: Cell | null;
-        readonly rightMasterCell: Cell | null;
-        readonly bottomMasterCell: Cell | null;
-        readonly computeGroupWidth: number;
-        readonly computeGroupHeight: number;
-        readonly GroupRowCount: number;
-        readonly GroupColumnCount: number;
-        readonly cellsInGroup: Cell[][];
-        readonly cellArrayInGroup: Cell[];
-        readonly isSingleCell: boolean;
-        readonly isRowSingleCell: boolean;
-        readonly isColumnSingleCell: boolean;
-        private static computeOverlapRange(v, w);
-        static computeDisjunction(v: [number, number], w: [number, number]): [number, number] | null;
-        readonly groupColumnRange: [number, number];
-        readonly groupRowRange: [number, number];
-        private computeBorderLength2(dir);
-        canMerge(w: number, h: number): boolean;
-        merge(w: number, h: number): void;
-        getMergedRangeRight(): [number, number] | null;
-        getMergedRangeBottom(): [number, number] | null;
-        readonly canMergeRight: boolean;
-        readonly canMergeBottom: boolean;
-        readonly mostRightCellX: number;
-        readonly mostBottomCellY: number;
-        private getNextGroupCells(direction);
-        private readonly leftSideGroupCells;
-        readonly upperSideGroupCells: Cell[];
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        readonly region: Rectangle;
-        toPlainText(): string;
-        update(): void;
-        private groupUpdate();
-        private resize();
-        private localUpdate();
-        removeBorder(dir: DirectionType): void;
-        removeFromTable(isColumn: boolean): void;
-        private relocateTopBorder();
-        private relocateLeftBorder();
-        private relocateRightBorder();
-        private relocateBottomBorder();
-        relocation(): void;
-        mergeRight(): void;
-        mergeBottom(): void;
-        private decomposeRow(upperRowCount);
-        private decomposeColomn(leftColumnCount);
-        updateBorderAttributes(): void;
-    }
-}
-declare namespace GraphTableSVG {
-    class Column {
-        private readonly table;
-        static readonly rowWidthName: string;
-        private _svgGroup;
-        cellX: number;
-        width: number;
-        private setWidthToCells();
-        readonly cells: Cell[];
-        constructor(_table: GTable, _x: number, _width?: number);
-        private getMaxWidth();
-        update(): void;
-        resize(): void;
-        fitWidthToOriginalCell(allowShrink: boolean): void;
-        setX(posX: number): void;
-        readonly leftBorders: SVGLineElement[];
-        readonly rightBorders: SVGLineElement[];
-        readonly topBorder: SVGLineElement;
-        readonly bottomBorder: SVGLineElement;
-        remove(isUnit?: boolean): void;
-        relocation(): void;
-        readonly groupColumnRange: [number, number];
-    }
-}
-declare namespace GraphTableSVG {
-    class Row {
-        private readonly table;
-        private _svgGroup;
-        static readonly columnHeightName: string;
-        cellY: number;
-        height: number;
-        constructor(_table: GTable, _y: number, _height?: number);
-        readonly cells: Cell[];
-        readonly topBorders: SVGLineElement[];
-        readonly bottomBorders: SVGLineElement[];
-        readonly leftBorder: SVGLineElement;
-        readonly rightBorder: SVGLineElement;
-        setHeightToCells(): void;
-        update(): void;
-        resize(): void;
-        fitHeightToOriginalCell(allowShrink: boolean): void;
-        setY(posY: number): void;
-        private getMaxHeight();
-        remove(isUnit?: boolean): void;
-        relocation(): void;
-        readonly groupRowRange: [number, number];
-    }
-}
-declare namespace GraphTableSVG {
-    type VBAObjectType = SVGPathElement | SVGTextElement | GObject;
-    class SVGToVBA {
-        static create(items: VBAObjectType[] | VBAObjectType): string;
-        static count(items: VBAObjectType[] | VBAObjectType): number;
-        private static createVBACodeOfSVGPath(path, id);
-        private static createVBACodeOfTextElement(element, id);
-        static cellFunctionCode: string;
-    }
-    function parseInteger(value: string): number;
-    function visible(value: string): number;
-    class VBATranslateFunctions {
-        static grouping80(codes: string[][]): string[];
-        static splitCode(codes: string[][], subArg: string, callArg: string, id: number): [string, string];
-        static ToFontBold(bold: string): string;
-        static ToVerticalAnchor(value: string): string;
-        static ToHorizontalAnchor(value: string): string;
-        static createStringFunction(item: string): string;
-        static createArrayFunction(items: any[]): string;
-        static createStringArrayFunction(items: string[]): string;
-        static createJagArrayFunction(items: any[][]): string;
-        static joinLines(lines: string[]): string;
-        static colorToVBA(color: string): string;
-        static ToVBAFont(font: string): string;
-        static TranslateSVGTextElement(sub: string[][], item: SVGTextElement, range: string): void;
-        private static getFont(css);
-        static TranslateSVGTextElement2(item: SVGTextElement, range: string): string[];
-    }
-}
-declare namespace GraphTableSVG {
-    namespace Common {
-        function clearGraphTables(svg: SVGElement, items: (GraphTableSVG.GGraph | GraphTableSVG.GTable)[]): void;
-        function IsDescendantOfBody(node: Node): boolean;
-        function getRegion(items: VBAObjectType[]): Rectangle;
-        function paddingLeft(text: string, length: number, leftChar: string): string;
-        function setGraphTableCSS(cellColor: string, borderColor: string): void;
-        function getGraphTableCSS(): HTMLElement | null;
-        function parseUnit(text: string): [number, string];
-        function toPX(value: string): number;
-        function bezierLocation([px1, py1]: [number, number], [px2, py2]: [number, number], [px3, py3]: [number, number], t: number): [number, number];
-    }
-}
-declare namespace GraphTableSVG {
-    namespace PNG {
-        function copyCSStoStyle(svg: HTMLElement): void;
-        function createCanvasFromImage(img: HTMLImageElement): HTMLCanvasElement;
-        function setSaveEvent(img: HTMLImageElement, canvas: HTMLCanvasElement): void;
-        function createPNGFromSVG(id: string): HTMLCanvasElement;
-        function getImage(svgBox: HTMLElement): HTMLImageElement;
-    }
-}
-declare namespace GraphTableSVG {
-    type GObjectAttributes = {
-        cx?: number;
-        cy?: number;
-        x?: number;
-        y?: number;
-        width?: number;
-        height?: number;
-        id?: string;
-        groupClass?: string;
-        surfaceClass?: string;
-        groupStyle?: string;
-        surfaceStyle?: string;
-    };
-    type GObjectMaps = {
-        groupAttributes?: Map<string, string>;
-        surfaceAttributes?: Map<string, string>;
-        textAttributes?: Map<string, string>;
-    };
-    type GTextBoxAttributes = GObjectAttributes & {
-        text?: string | HTMLElement[];
-        isAutoSizeShapeToFitText?: boolean;
-        verticalAnchor?: VerticalAnchor;
-        horizontalAnchor?: HorizontalAnchor;
-        textClass?: string;
-        textStyle?: string;
-    };
-    type GShapeArrowCalloutAttributes = GTextBoxAttributes & {
-        arrowHeadWidth?: number;
-        arrowHeadHeight?: number;
-        arrowNeckWidth?: number;
-        arrowNeckHeight?: number;
-        direction?: Direction;
-    };
-    type GCalloutAttributes = GTextBoxAttributes & {
-        speakerX?: number;
-        speakerY?: number;
-    };
-    type GEdgeAttributes = GTextBoxAttributes & {
-        startMarker?: boolean;
-        endMarker?: boolean;
-        x1?: number;
-        x2?: number;
-        x3?: number;
-        y1?: number;
-        y2?: number;
-        y3?: number;
-        beginConnectorType?: ConnectorPosition;
-        endConnectorType?: ConnectorPosition;
-        beginVertex?: GVertex | string;
-        endVertex?: GVertex | string;
-        pathTextAlignment?: PathTextAlighnment;
-    };
-    type CellOption = {
-        cellClass?: string;
-        borderClass?: string;
-    };
-    type ConnectOption = {
-        outcomingInsertIndex?: number;
-        incomingInsertIndex?: number;
-        beginConnectorType?: GraphTableSVG.ConnectorPosition;
-        endConnectorType?: GraphTableSVG.ConnectorPosition;
-    };
-    type TableOption = GObjectAttributes & {
-        rowCount?: number;
-        columnCount?: number;
-        rowHeight?: number;
-        columnWidth?: number;
-        table?: LogicTable;
-    };
-    namespace openSVGFunctions {
-        function getTNodes(e: Element): HTMLElement[] | null;
-    }
-    function openCustomElement(id: string | SVGElement): GObject | null;
-    function openSVG(id?: string | Element | null, output?: GObject[], shrink?: boolean): GObject[];
-    function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option?: any): GObject;
-    function createVertex(parent: GGraph, option?: GTextBoxAttributes): GVertex;
-    function toHTMLUnknownElement(e: Element): void;
-}
-declare namespace GraphTableSVG {
-    namespace CustomAttributeNames {
-        namespace Style {
-            const autoSizeShapeToFitText: string;
-            const beginConnectorType: string;
-            const endConnectorType: string;
-            const defaultLineClass: string;
-            const markerStart: string;
-            const markerEnd: string;
-            const defaultVertexClass: string;
-            const defaultEdgeClass: string;
-            const vertexXInterval: string;
-            const vertexYInterval: string;
-            const defaultRadius = "--default-radius";
-            const defaultWidth = "--default-width";
-            const defaultHeight = "--default-height";
-            const defaultTextClass: string;
-            const defaultPathClass: string;
-            const defaulSurfaceClass: string;
-            const defaultSurfaceType: string;
-            const defaultCellClass: string;
-            const defaultBorderClass: string;
-            const paddingTop: string;
-            const paddingLeft: string;
-            const paddingRight: string;
-            const paddingBottom: string;
-            const marginTop: string;
-            const marginLeft: string;
-            const marginRight: string;
-            const marginBottom: string;
-            const VerticalAnchor: string;
-            const HorizontalAnchor: string;
-            const PathTextAlignment: string;
-            const msoDashStyleName = "--stroke-style";
-        }
-        const beginNodeName: string;
-        const endNodeName: string;
-        const controlPointName: string;
-        const connectPositionChangedEventName = "connect_position_changed";
-        const resizeName = "resized";
-        const vertexCreatedEventName = "vertex_created";
-        const objectCreatedEventName = "object_created";
-        const GroupAttribute = "data-group-type";
-        const objectIDName: string;
-        const customElement: string;
-        let defaultCircleRadius: number;
     }
 }
 declare namespace GraphTableSVG {
@@ -1010,6 +571,224 @@ declare namespace GraphTableSVG {
         readonly leaves: GVertex[];
     }
 }
+declare namespace GraphTableSVG {
+    enum DirectionType {
+        top = 0,
+        left = 1,
+        right = 2,
+        bottom = 3,
+    }
+    enum DirectionType2 {
+        topLeft = 0,
+        bottomLeft = 1,
+        bottomRight = 2,
+        topRight = 3,
+    }
+    class Cell {
+        private static readonly defaultBackgroundClassName;
+        static readonly emphasisCellClass: string;
+        static readonly emphasisBorderClass: string;
+        static readonly temporaryBorderClass: string;
+        static readonly cellXName: string;
+        static readonly cellYName: string;
+        static readonly borderXName: string;
+        static readonly borderYName: string;
+        static readonly borderTypeName: string;
+        static readonly masterIDName: string;
+        static readonly masterDiffXName: string;
+        static readonly masterDiffYName: string;
+        static readonly elementTypeName: string;
+        private _observer;
+        private _observerFunc;
+        private tmpStyle;
+        isEmphasized: boolean;
+        constructor(parent: GTable, _px: number, _py: number, option?: CellOption);
+        private readonly innerExtraPaddingLeft;
+        private readonly innerExtraPaddingRight;
+        readonly masterDiffX: number;
+        private setMasterDiffX(id);
+        readonly masterDiffY: number;
+        private setMasterDiffY(id);
+        readonly masterCellX: number;
+        private setMasterCellX(id);
+        readonly masterCellY: number;
+        private setMasterCellY(id);
+        readonly masterID: number;
+        readonly master: Cell;
+        private _borders;
+        svgTopBorder: SVGLineElement;
+        svgLeftBorder: SVGLineElement;
+        svgRightBorder: SVGLineElement;
+        svgBottomBorder: SVGLineElement;
+        private _table;
+        readonly table: GTable;
+        private _svgBackground;
+        readonly svgBackground: SVGRectElement;
+        private _svgText;
+        readonly svgText: SVGTextElement;
+        private _svgGroup;
+        readonly svgGroup: SVGGElement;
+        readonly fontSize: number;
+        readonly paddingLeft: number;
+        readonly paddingRight: number;
+        readonly paddingTop: number;
+        readonly paddingBottom: number;
+        horizontalAnchor: HorizontalAnchor;
+        verticalAnchor: VerticalAnchor;
+        cellX: number;
+        cellY: number;
+        readonly defaultTextClass: string | null;
+        readonly defaultBackgroundClass: string | null;
+        readonly logicalWidth: number;
+        readonly logicalHeight: number;
+        readonly isLocated: boolean;
+        readonly calculatedWidthUsingText: number;
+        readonly calculatedHeightUsingText: number;
+        calculatedSizeUsingGroup(): [number, number];
+        private computeSidePosition(dir);
+        readonly isMaster: boolean;
+        readonly isSlave: boolean;
+        readonly ID: number;
+        getNextCell(direction: DirectionType): Cell | null;
+        getNextMasterCell(direction: DirectionType): Cell | null;
+        readonly topCell: Cell | null;
+        readonly leftCell: Cell | null;
+        readonly rightCell: Cell | null;
+        readonly bottomCell: Cell | null;
+        readonly bottomRightCell: Cell | null;
+        readonly topRightCell: Cell | null;
+        readonly bottomLeftCell: Cell | null;
+        readonly topLeftCell: Cell | null;
+        readonly topMasterCell: Cell | null;
+        readonly leftMasterCell: Cell | null;
+        readonly rightMasterCell: Cell | null;
+        readonly bottomMasterCell: Cell | null;
+        readonly computeGroupWidth: number;
+        readonly computeGroupHeight: number;
+        readonly GroupRowCount: number;
+        readonly GroupColumnCount: number;
+        readonly cellsInGroup: Cell[][];
+        readonly cellArrayInGroup: Cell[];
+        readonly isSingleCell: boolean;
+        readonly isRowSingleCell: boolean;
+        readonly isColumnSingleCell: boolean;
+        private static computeOverlapRange(v, w);
+        static computeDisjunction(v: [number, number], w: [number, number]): [number, number] | null;
+        readonly groupColumnRange: [number, number];
+        readonly groupRowRange: [number, number];
+        private computeBorderLength2(dir);
+        canMerge(w: number, h: number): boolean;
+        merge(w: number, h: number): void;
+        getMergedRangeRight(): [number, number] | null;
+        getMergedRangeBottom(): [number, number] | null;
+        readonly canMergeRight: boolean;
+        readonly canMergeBottom: boolean;
+        readonly mostRightCellX: number;
+        readonly mostBottomCellY: number;
+        private getNextGroupCells(direction);
+        private readonly leftSideGroupCells;
+        readonly upperSideGroupCells: Cell[];
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        readonly region: Rectangle;
+        toPlainText(): string;
+        update(): void;
+        private groupUpdate();
+        private resize();
+        private localUpdate();
+        removeBorder(dir: DirectionType): void;
+        removeFromTable(isColumn: boolean): void;
+        private relocateTopBorder();
+        private relocateLeftBorder();
+        private relocateRightBorder();
+        private relocateBottomBorder();
+        relocation(): void;
+        mergeRight(): void;
+        mergeBottom(): void;
+        private decomposeRow(upperRowCount);
+        private decomposeColomn(leftColumnCount);
+        updateBorderAttributes(): void;
+    }
+}
+declare namespace GraphTableSVG {
+    class Column {
+        private readonly table;
+        static readonly rowWidthName: string;
+        private _svgGroup;
+        cellX: number;
+        width: number;
+        private setWidthToCells();
+        readonly cells: Cell[];
+        constructor(_table: GTable, _x: number, _width?: number);
+        private getMaxWidth();
+        update(): void;
+        resize(): void;
+        fitWidthToOriginalCell(allowShrink: boolean): void;
+        setX(posX: number): void;
+        readonly leftBorders: SVGLineElement[];
+        readonly rightBorders: SVGLineElement[];
+        readonly topBorder: SVGLineElement;
+        readonly bottomBorder: SVGLineElement;
+        remove(isUnit?: boolean): void;
+        relocation(): void;
+        readonly groupColumnRange: [number, number];
+    }
+}
+declare namespace GraphTableSVG {
+    class Row {
+        private readonly table;
+        private _svgGroup;
+        static readonly columnHeightName: string;
+        cellY: number;
+        height: number;
+        constructor(_table: GTable, _y: number, _height?: number);
+        readonly cells: Cell[];
+        readonly topBorders: SVGLineElement[];
+        readonly bottomBorders: SVGLineElement[];
+        readonly leftBorder: SVGLineElement;
+        readonly rightBorder: SVGLineElement;
+        setHeightToCells(): void;
+        update(): void;
+        resize(): void;
+        fitHeightToOriginalCell(allowShrink: boolean): void;
+        setY(posY: number): void;
+        private getMaxHeight();
+        remove(isUnit?: boolean): void;
+        relocation(): void;
+        readonly groupRowRange: [number, number];
+    }
+}
+declare namespace GraphTableSVG {
+    type VBAObjectType = SVGPathElement | SVGTextElement | GObject;
+    class SVGToVBA {
+        static create(items: VBAObjectType[] | VBAObjectType): string;
+        static count(items: VBAObjectType[] | VBAObjectType): number;
+        private static createVBACodeOfSVGPath(path, id);
+        private static createVBACodeOfTextElement(element, id);
+        static cellFunctionCode: string;
+    }
+    function parseInteger(value: string): number;
+    function visible(value: string): number;
+    class VBATranslateFunctions {
+        static grouping80(codes: string[][]): string[];
+        static splitCode(codes: string[][], subArg: string, callArg: string, id: number): [string, string];
+        static ToFontBold(bold: string): string;
+        static ToVerticalAnchor(value: string): string;
+        static ToHorizontalAnchor(value: string): string;
+        static createStringFunction(item: string): string;
+        static createArrayFunction(items: any[]): string;
+        static createStringArrayFunction(items: string[]): string;
+        static createJagArrayFunction(items: any[][]): string;
+        static joinLines(lines: string[]): string;
+        static colorToVBA(color: string): string;
+        static ToVBAFont(font: string): string;
+        static TranslateSVGTextElement(sub: string[][], item: SVGTextElement, range: string): void;
+        private static getFont(css);
+        static TranslateSVGTextElement2(item: SVGTextElement, range: string): string[];
+    }
+}
 declare namespace HTMLFunctions {
     function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;
     function isShow(e: HTMLElement | SVGElement): boolean;
@@ -1031,6 +810,38 @@ interface SVGLineElement {
 interface SVGPathElement {
     setPathLocations(points: [number, number][]): void;
     getPathLocations(): [number, number][];
+}
+declare namespace GraphTableSVG {
+    namespace SVG {
+        let idCounter: number;
+        function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
+        function createText(className?: string | null): SVGTextElement;
+        function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
+        function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement;
+        function resetStyle(style: CSSStyleDeclaration): void;
+        function createCircle(parent: SVGElement, className?: string | null): SVGCircleElement;
+        function createMarker(option?: {
+            className?: string;
+            strokeWidth?: string;
+            color?: string;
+        }): [SVGMarkerElement, SVGPathElement];
+        function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
+        function createTextPath2(className?: string | null): SVGTextPathElement;
+        function setClass(svg: SVGElement, className?: string | null): void;
+        function setCSSToStyle(svg: HTMLElement, isComplete?: boolean): void;
+        function getAllElementStyleMap(item: HTMLElement | string): {
+            [key: number]: string;
+        };
+        function setAllElementStyleMap(item: HTMLElement | string, dic: {
+            [key: number]: string;
+        }): void;
+        function setCSSToAllElementStyles(item: HTMLElement | string, isComplete?: boolean): void;
+        function getStyleSheet(name: string): CSSStyleDeclaration | null;
+        function getRegion2(e: SVGElement): Rectangle;
+        function getSVGSVG(e: SVGElement): SVGSVGElement;
+        function isSVGSVGHidden(e: SVGElement): boolean;
+        function isSVGHidden(e: SVGElement): boolean;
+    }
 }
 interface SVGGElement {
     getX(): number;
@@ -1088,9 +899,202 @@ declare namespace GraphTableSVG {
     namespace SVGTextBox {
         function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexMode: boolean): void;
         function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean): void;
-        function sortText(svgText: SVGTextElement, rect: GraphTableSVG.Rectangle | null, vAnchor: GraphTableSVG.VerticalAnchor, hAnchor: GraphTableSVG.HorizontalAnchor): void;
-        function setTextToSVGText2(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean): void;
+        function sortText(svgText: SVGTextElement, hAnchor: GraphTableSVG.HorizontalAnchor): void;
+        function constructSVGTextByHTMLElements(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean): void;
         function getSize(svgText: SVGTextElement): Rectangle;
         function getComputedTextLengthsOfTSpans(svgText: SVGTextElement): Size[];
+    }
+}
+declare namespace GraphTableSVG {
+    type GObjectAttributes = {
+        cx?: number;
+        cy?: number;
+        x?: number;
+        y?: number;
+        width?: number;
+        height?: number;
+        id?: string;
+        groupClass?: string;
+        surfaceClass?: string;
+        groupStyle?: string;
+        surfaceStyle?: string;
+    };
+    type GObjectMaps = {
+        groupAttributes?: Map<string, string>;
+        surfaceAttributes?: Map<string, string>;
+        textAttributes?: Map<string, string>;
+    };
+    type GTextBoxAttributes = GObjectAttributes & {
+        text?: string | HTMLElement[];
+        isAutoSizeShapeToFitText?: boolean;
+        verticalAnchor?: VerticalAnchor;
+        horizontalAnchor?: HorizontalAnchor;
+        textClass?: string;
+        textStyle?: string;
+    };
+    type GShapeArrowCalloutAttributes = GTextBoxAttributes & {
+        arrowHeadWidth?: number;
+        arrowHeadHeight?: number;
+        arrowNeckWidth?: number;
+        arrowNeckHeight?: number;
+        direction?: Direction;
+    };
+    type GCalloutAttributes = GTextBoxAttributes & {
+        speakerX?: number;
+        speakerY?: number;
+    };
+    type GEdgeAttributes = GTextBoxAttributes & {
+        startMarker?: boolean;
+        endMarker?: boolean;
+        x1?: number;
+        x2?: number;
+        x3?: number;
+        y1?: number;
+        y2?: number;
+        y3?: number;
+        beginConnectorType?: ConnectorPosition;
+        endConnectorType?: ConnectorPosition;
+        beginVertex?: GVertex | string;
+        endVertex?: GVertex | string;
+        pathTextAlignment?: PathTextAlighnment;
+    };
+    type CellOption = {
+        cellClass?: string;
+        borderClass?: string;
+    };
+    type ConnectOption = {
+        outcomingInsertIndex?: number;
+        incomingInsertIndex?: number;
+        beginConnectorType?: GraphTableSVG.ConnectorPosition;
+        endConnectorType?: GraphTableSVG.ConnectorPosition;
+    };
+    type TableOption = GObjectAttributes & {
+        rowCount?: number;
+        columnCount?: number;
+        rowHeight?: number;
+        columnWidth?: number;
+        table?: LogicTable;
+    };
+    namespace openSVGFunctions {
+        function getTNodes(e: Element): HTMLElement[] | null;
+    }
+    function openCustomElement(id: string | SVGElement): GObject | null;
+    function openSVG(id?: string | Element | null, output?: GObject[], shrink?: boolean): GObject[];
+    function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option?: any): GObject;
+    function createVertex(parent: GGraph, option?: GTextBoxAttributes): GVertex;
+    function toHTMLUnknownElement(e: Element): void;
+}
+declare namespace GraphTableSVG {
+    namespace CustomAttributeNames {
+        namespace Style {
+            const autoSizeShapeToFitText: string;
+            const beginConnectorType: string;
+            const endConnectorType: string;
+            const defaultLineClass: string;
+            const markerStart: string;
+            const markerEnd: string;
+            const defaultVertexClass: string;
+            const defaultEdgeClass: string;
+            const vertexXInterval: string;
+            const vertexYInterval: string;
+            const defaultRadius = "--default-radius";
+            const defaultWidth = "--default-width";
+            const defaultHeight = "--default-height";
+            const defaultTextClass: string;
+            const defaultPathClass: string;
+            const defaulSurfaceClass: string;
+            const defaultSurfaceType: string;
+            const defaultCellClass: string;
+            const defaultBorderClass: string;
+            const paddingTop: string;
+            const paddingLeft: string;
+            const paddingRight: string;
+            const paddingBottom: string;
+            const marginTop: string;
+            const marginLeft: string;
+            const marginRight: string;
+            const marginBottom: string;
+            const VerticalAnchor: string;
+            const HorizontalAnchor: string;
+            const PathTextAlignment: string;
+            const msoDashStyleName = "--stroke-style";
+        }
+        const beginNodeName: string;
+        const endNodeName: string;
+        const controlPointName: string;
+        const connectPositionChangedEventName = "connect_position_changed";
+        const resizeName = "resized";
+        const vertexCreatedEventName = "vertex_created";
+        const objectCreatedEventName = "object_created";
+        const GroupAttribute = "data-group-type";
+        const objectIDName: string;
+        const customElement: string;
+        let defaultCircleRadius: number;
+    }
+}
+declare namespace GraphTableSVG {
+    class LogicCell {
+        text: string | null;
+        cellClass: string | null;
+        textClass: string | null;
+        backgroundClass: string | null;
+        topBorderClass: string | null;
+        leftBorderClass: string | null;
+        rightBorderClass: string | null;
+        bottomBorderClass: string | null;
+        svgText: SVGTextElement | null;
+        connectedColumnCount: number;
+        connectedRowCount: number;
+        tTexts: HTMLElement[] | null;
+        item: any;
+        isLatexMode: boolean;
+        constructor();
+        set(text?: string | undefined, isLatexMode?: boolean, cellClass?: string | undefined, backgroundClass?: string | undefined, textClass?: string | undefined, topBorderClass?: string | undefined, leftBorderClass?: string | undefined, rightBorderClass?: string | undefined, bottomBorderClass?: string | undefined): void;
+        createTextElement(svgText: SVGTextElement): void;
+    }
+    class LogicTable {
+        cells: LogicCell[][];
+        columnWidths: (number | null)[];
+        rowHeights: (number | null)[];
+        tableClassName: string | null;
+        x: number | null;
+        y: number | null;
+        readonly rowCount: number;
+        readonly columnCount: number;
+        constructor(option?: {
+            columnCount?: number;
+            rowCount?: number;
+            tableClassName?: string;
+            x?: number;
+            y?: number;
+        });
+        readonly cellArray: LogicCell[];
+        getColumn(i: number): LogicCell[];
+        getRow(i: number): LogicCell[];
+        static parse(str: string, delimiter: string): string[][];
+        static create(str: string[][], tableClassName?: string | null): LogicTable;
+    }
+}
+declare namespace GraphTableSVG {
+    class LogicTree {
+        vertexText: string | null;
+        parentEdgeText: string | null;
+        vertexClass: string | null;
+        parentEdgeClass: string | null;
+        children: (LogicTree | null)[];
+        item: any;
+        constructor(option?: {
+            item?: any;
+            children?: (LogicTree | null)[];
+            vertexText?: string;
+            parentEdgeText?: string;
+        });
+        getOrderedNodes(order: VertexOrder): LogicTree[];
+    }
+    class BinaryLogicTree extends LogicTree {
+        item: any;
+        left: BinaryLogicTree | null;
+        right: BinaryLogicTree | null;
+        constructor(item?: any, left?: BinaryLogicTree | null, right?: BinaryLogicTree | null, nodeText?: string | null, edgeLabel?: string | null);
     }
 }

@@ -34,7 +34,7 @@ namespace GraphTableSVG {
         }
         public createTextElement(svgText : SVGTextElement){
             if(this.tTexts != null){
-                GraphTableSVG.SVGTextBox.setTextToSVGText2(svgText, this.tTexts, this.isLatexMode);   
+                GraphTableSVG.SVGTextBox.constructSVGTextByHTMLElements(svgText, this.tTexts, this.isLatexMode);   
             }else if (this.text != null) {
                 svgText.setTextContent(this.text, this.isLatexMode);
             }

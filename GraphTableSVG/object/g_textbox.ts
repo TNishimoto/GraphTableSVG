@@ -30,7 +30,7 @@ namespace GraphTableSVG {
             if(typeof _option.text == "string"){
                 this.svgText.setTextContent(_option.text);
             }else if(Array.isArray(_option.text)){
-                GraphTableSVG.SVGTextBox.setTextToSVGText2(this.svgText, _option.text, false);   
+                GraphTableSVG.SVGTextBox.constructSVGTextByHTMLElements(this.svgText, _option.text, false);   
             }else{
 
             }
@@ -196,7 +196,7 @@ namespace GraphTableSVG {
             this._observer.disconnect();
 
 
-            SVGTextBox.sortText(this.svgText, null, this.verticalAnchor, this.horizontalAnchor);
+            SVGTextBox.sortText(this.svgText, this.horizontalAnchor);
 
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();

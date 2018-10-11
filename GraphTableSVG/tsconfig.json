@@ -10,19 +10,8 @@
         "strict": true
         //"declarationDir" : "../"
     },
-    "files": [
-        "color.ts",
-        "enums.ts",
-        "gui.ts",
-        "logic_tree.ts",
-        "logic_table.ts",
-
-        "svg.ts",
-        "vline.ts"
-
-    ],
     "include": [
-        "table", "common", "object", "interface"
+        "common", "object", "svghtml", "options"
     ],
     "exclude": [
         "out"

@@ -167,35 +167,10 @@ namespace GraphTableSVG {
                 return r;
             }
         }
-        export function sortText(svgText: SVGTextElement, rect: GraphTableSVG.Rectangle | null, vAnchor: GraphTableSVG.VerticalAnchor, hAnchor: GraphTableSVG.HorizontalAnchor) {
-            
+        function alignTextByHorizontalAnchor(svgText: SVGTextElement, hAnchor: GraphTableSVG.HorizontalAnchor){
+
             const lineSpans = getLines(svgText);
-            const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
-            const fs = parseInt(fontSize);
-
             let dx = 0;
-            let dy = fs;
-            let c = 0;
-            const lengths = getComputedTextLengthsOfTSpans(svgText);
-            for (let y = 0; y < lineSpans.length; y++) {
-                let width = 0;
-                let heightMax = fs;
-                let fstObj : SVGTSpanElement | null = null;
-                for (let x = 0; x < lineSpans[y].length; x++) {
-                    const v = lineSpans[y][x];
-                    //const tLen = v.getComputedTextLength();
-                    const size = lengths[c++];
-                    if(size.height > heightMax) heightMax = size.height;
-
-                    if (x == 0) v.setAttribute("dx", dx.toString());
-                    if(x == 0) fstObj = v;
-                    width += size.width;
-                }
-                if (y != 0 && fstObj != null) fstObj.setAttribute("dy", heightMax.toString());
-
-                dx -= width;
-                //dy += fs;
-            }
 
             if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
                 const tl = getComputedTextLengthsOfTSpans(svgText);
@@ -234,18 +209,51 @@ namespace GraphTableSVG {
             } else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
 
             }
-            
         }
-        export function setTextToSVGText2(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean) {
-            svgText.textContent = "";
-            //const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
-            //const fs = Common.toPX(fontSize);
-            let dx = 0;
-            const spans = text.map((v, i) => {
+        function alignTextAsText(svgText: SVGTextElement){
+            const lineSpans = getLines(svgText);
+            const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
+            const fs = parseInt(fontSize);
 
+            let dx = 0;
+            let dy = fs;
+            let c = 0;
+            const lengths = getComputedTextLengthsOfTSpans(svgText);
+            for (let y = 0; y < lineSpans.length; y++) {
+                let width = 0;
+                let heightMax = fs;
+                let fstObj : SVGTSpanElement | null = null;
+                for (let x = 0; x < lineSpans[y].length; x++) {
+                    const v = lineSpans[y][x];
+                    //const tLen = v.getComputedTextLength();
+                    const size = lengths[c++];
+                    if(size.height > heightMax) heightMax = size.height;
+
+                    if (x == 0) v.setAttribute("dx", dx.toString());
+                    if(x == 0) fstObj = v;
+                    width += size.width;
+                }
+                if (y != 0 && fstObj != null) fstObj.setAttribute("dy", heightMax.toString());
+
+                dx -= width;
+                //dy += fs;
+            }
+        }
+
+        /**
+         * SVGTextElement
+         * @param svgText 
+         * @param hAnchor 
+         */
+        export function sortText(svgText: SVGTextElement, hAnchor: GraphTableSVG.HorizontalAnchor) {
+            alignTextAsText(svgText);
+            alignTextByHorizontalAnchor(svgText,hAnchor);            
+        }
+        export function constructSVGTextByHTMLElements(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean) {
+            svgText.textContent = "";
+            const spans = text.map((v, i) => {
                 const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                 tspan.innerHTML = v.innerHTML;
-                //const span = createSingleTextSpan(v.textContent!, null);
                 copy(v, tspan);
                 return tspan;
             })
@@ -254,20 +262,6 @@ namespace GraphTableSVG {
             spans.forEach((v, i) => {
                 svgText.appendChild(v);
             })
-            /*
-            spans.forEach((v,i)=>{                
-                v.setAttribute("dx", dx.toString());
-                v.setAttribute("dy", dy.toString());
-
-                const rect = v.getBoundingClientRect();
-                if(v.hasAttribute("newline")){
-                    dy += fs;                    
-                    dx -= rect.width;
-                }else{
-                }
-
-            })
-            */
         }
         let ura : SVGSVGElement | null = null;
 
@@ -324,7 +318,6 @@ namespace GraphTableSVG {
                     const fs = Common.toPX(fontSize);
                     return new Size(w, fs);
                 })
-                console.log(r);
 
                 return r;
             }else{
