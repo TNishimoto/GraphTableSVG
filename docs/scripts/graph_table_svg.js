@@ -1017,7 +1017,7 @@ var GraphTableSVG;
             this._svgSurface = null;
             this.groupObserverOption = { attributes: true, childList: true, subtree: true };
             this.pUpdateFunc = () => {
-                this.update();
+                this.resizeUpdate();
             };
             this.observerFunc = (x) => {
                 this.observerFunction(x);
@@ -1058,6 +1058,9 @@ var GraphTableSVG;
         }
         addResizeEvent() {
             this.svgGroup.addEventListener(GraphTableSVG.CustomAttributeNames.resizeName, this.pUpdateFunc);
+        }
+        resizeUpdate() {
+            this.update();
         }
         initializeOption(option) {
             const _option = Object.assign({}, option);
@@ -3316,10 +3319,10 @@ var GraphTableSVG;
             this.relocate();
         }
         get relocateAttribute() {
-            return this.svgGroup.getPropertyStyleValue("--relocate");
+            return this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.relocateName);
         }
         set relocateAttribute(value) {
-            this.svgGroup.setPropertyStyleValue("--relocate", value);
+            this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.relocateName, value);
         }
         relocate() {
             const value = this.relocateAttribute;
@@ -3451,6 +3454,9 @@ var GraphTableSVG;
         }
         get type() {
             return GraphTableSVG.ShapeObjectType.Graph;
+        }
+        resizeUpdate() {
+            this.relocate();
         }
     }
     GraphTableSVG.GGraph = GGraph;
@@ -3649,6 +3655,8 @@ var GraphTableSVG;
             }
         }
         function alignVerticeByChildren(graph) {
+            if (!graph.isShow)
+                return;
             const [xi, yi] = getXYIntervals(graph);
             if (graph.rootVertex != null) {
                 const rootTree = graph.rootVertex.tree;
@@ -3739,6 +3747,8 @@ var GraphTableSVG;
         }
         TreeArrangement.alignVerticeByLeaveSub = alignVerticeByLeaveSub;
         function alignVerticeByLeave(graph) {
+            if (!graph.isShow)
+                return;
             graph.vertices.forEach((v) => { v.cx = 0; v.cy = 0; });
             const [xi, yi] = getXYIntervals(graph);
             alignVerticeByLeaveSub(graph, xi, yi);
@@ -7543,6 +7553,7 @@ var GraphTableSVG;
             Style.HorizontalAnchor = "--horizontal-anchor";
             Style.PathTextAlignment = "--path-text-alignment";
             Style.msoDashStyleName = "--stroke-style";
+            Style.relocateName = "--relocate";
         })(Style = CustomAttributeNames.Style || (CustomAttributeNames.Style = {}));
         CustomAttributeNames.beginNodeName = "data-begin-node";
         CustomAttributeNames.endNodeName = "data-end-node";

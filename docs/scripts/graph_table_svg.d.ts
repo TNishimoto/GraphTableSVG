@@ -190,6 +190,7 @@ declare namespace GraphTableSVG {
         private removeResizeEvent();
         private addResizeEvent();
         private pUpdateFunc;
+        protected resizeUpdate(): void;
         initializeOption(option: GObjectAttributes): GObjectAttributes;
         static constructAttributes(e: Element, removeAttributes?: boolean, output?: GObjectAttributes): GObjectAttributes;
         tag: any;
@@ -456,6 +457,7 @@ declare namespace GraphTableSVG {
         setRootIndex(vertex: GVertex, rootIndex: number): void;
         protected observerFunction(x: MutationRecord[]): void;
         readonly type: ShapeObjectType;
+        protected resizeUpdate(): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -1018,6 +1020,7 @@ declare namespace GraphTableSVG {
             const HorizontalAnchor: string;
             const PathTextAlignment: string;
             const msoDashStyleName = "--stroke-style";
+            const relocateName = "--relocate";
         }
         const beginNodeName: string;
         const endNodeName: string;

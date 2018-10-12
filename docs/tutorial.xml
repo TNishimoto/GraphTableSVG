@@ -249,68 +249,99 @@
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox8" />
-					<comment>
+				</page>
+			</tab>
+			<comment>
 						HorizontalAnchorとVerticalAnchorでテキストの配置位置を指定することが出来る。
 						paddingとmarginは図形とテキスト間の余白を表す。
 						autosize-shape-to-fit-textはtrueにすると、図形のサイズがテキストに合うように自動的に計算される。
-					</comment>
-				</page>
-			</tab>
+			</comment>
+
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox9" type="code" />
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox9" />
-					<comment>
+				</page>
+			</tab>
+			<comment>
 						--begin-connector-typeと--end-connector-typeで辺の接続位置を設定できる。
 						ただし、接続位置はPowerpointに準拠しているので、オブジェクトと接続位置の組み合わせによっては直感的な位置に配置されないことに注意する。
 						例えば、g-rectとtoprightを組み合わせても右上の角が辺の接続位置になるわけではない。
-					</comment>
-					<comment>
+			</comment>
+			<comment>
 						--marker-startと--marker-endはそれぞれ辺の開始位置と終了位置の矢印の有無を表す。
-					</comment>
-				</page>
-			</tab>
+			</comment>
+
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox10" type="code" />
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox10" />
-					<comment>
-						--stroke-styleで辺もしくは図形の輪郭を点線に変更することが出来る。
-					</comment>
 				</page>
 			</tab>
+			<comment>
+						--stroke-styleで辺もしくは図形の輪郭を点線に変更することが出来る。
+			</comment>
+
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox11" type="code" />
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox11" />
-					<comment>
-						--path-text-alignmentで辺上のテキストの配置方法を指定できる。
-					</comment>
 				</page>
+
 			</tab>
+			<comment>
+						--path-text-alignmentで辺上のテキストの配置方法を指定できる。
+			</comment>
+
 			<tab>
 				<page title="code">
 					<load path="svg/svg.html" id="svgbox12" type="code" />
 				</page>
 				<page title="svg" checked="1">
 					<load path="svg/svg.html" id="svgbox12" />
-					<comment>
-						g-tableの--widthsと各rowの--heightで各列の横幅と各行の縦幅を設定できる。
-						ただしセル内のテキストの幅がそれよりも大きい場合は最大テキスト幅になる。
-					</comment>
 				</page>
 			</tab>
+			<comment>
+						g-tableの--widthsと各rowの--heightで各列の横幅と各行の縦幅を設定できる。
+						ただしセル内のテキストの幅がそれよりも大きい場合は最大テキスト幅になる。
+			</comment>
+
+			<tab>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox22" type="code" />
+				</page>
+				<page title="svg" checked="1">
+					<load path="svg/svg.html" id="svgbox22" />
+				</page>
+				<page title="code">
+					<load path="svg/svg.html" id="svgbox23" type="code" />
+				</page>
+				<page title="svg">
+					<load path="svg/svg.html" id="svgbox23" />
+				</page>
+
+			</tab>
+			<comment>
+			--relocateカスタムスタイル属性でg-graph内の頂点を整列させることができる。
+				<rhref module="true" method="true">TreeArrangement.alignVerticeByChildren</rhref>
+			を指定すると兄弟頂点が同じ高さになるように整列される。
+				<rhref module="true" method="true">TreeArrangement.alignVerticeByLeave</rhref>
+			は葉が同じ高さになるように整列される。
+			このときの各頂点の水平間隔と垂直間隔は
+			--vertex-x-intervalと--vertex-y-intervalカスタムスタイル属性で設定できる。
+			</comment>
+
 		</yarticle>
 		<yarticle title="マクロと画像出力">
-					<comment>
+			<comment>
 			このライブラリで作成した表やグラフはVBAマクロによってPowerpointの図形に変換することが出来る。
-					</comment>
+			</comment>
 		</yarticle>
 	</body>
 </html>

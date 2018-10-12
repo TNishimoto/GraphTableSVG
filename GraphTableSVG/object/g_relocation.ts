@@ -59,6 +59,7 @@ namespace GraphTableSVG {
          * @param graph 
          */
         export function alignVerticeByChildren(graph: GGraph): void {
+            if(!graph.isShow) return;
             const [xi, yi] = getXYIntervals(graph);
 
             if (graph.rootVertex != null) {
@@ -100,6 +101,7 @@ namespace GraphTableSVG {
         export function standardTreeWidthArrangement(graph: GGraph): void {
             //const xInterval = graph.vertexXInterval;
             //const yInterval = graph.vertexYInterval;
+            
             const [xi, yi] = getXYIntervals(graph);
 
             if (graph.rootVertex != null) {
@@ -163,6 +165,7 @@ namespace GraphTableSVG {
          * @param yInterval 
          */
         export function alignVerticeByLeaveSub(forest: GGraph, xInterval: number, yInterval: number): void {
+
             let leafCounter = 0;
             forest.getOrderedVertices(VertexOrder.Postorder).forEach((v) => {
                 let x = 0;
@@ -192,6 +195,8 @@ namespace GraphTableSVG {
          * @param graph 
          */
         export function alignVerticeByLeave(graph: GGraph): void {
+            if(!graph.isShow) return;
+
             graph.vertices.forEach((v) => { v.cx = 0; v.cy = 0 });
             const [xi, yi] = getXYIntervals(graph);
             alignVerticeByLeaveSub(graph, xi, yi);

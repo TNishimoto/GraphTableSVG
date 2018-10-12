@@ -56,6 +56,9 @@ namespace GraphTableSVG {
             this.svgGroup.addEventListener(CustomAttributeNames.resizeName, this.pUpdateFunc);
         }        
         private pUpdateFunc = () => {
+            this.resizeUpdate();
+        }
+        protected resizeUpdate(){
             this.update();
         }
         initializeOption(option: GObjectAttributes): GObjectAttributes {
@@ -355,5 +358,6 @@ namespace GraphTableSVG {
             rect.height = this.height;
             return rect;
         }
+
     }
 }

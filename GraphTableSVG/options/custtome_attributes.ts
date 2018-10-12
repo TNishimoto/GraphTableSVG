@@ -34,6 +34,8 @@ namespace GraphTableSVG {
             export const HorizontalAnchor: string = "--horizontal-anchor";
             export const PathTextAlignment: string = "--path-text-alignment";
             export const msoDashStyleName = "--stroke-style";
+            export const relocateName = "--relocate";
+            
     
         }
         export const beginNodeName: string = "data-begin-node";

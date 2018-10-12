@@ -208,7 +208,7 @@ namespace GraphTableSVG {
         }
         */
         public get relocateAttribute() : string | null{
-            return this.svgGroup.getPropertyStyleValue("--relocate")
+            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.relocateName)
             /*
             if(this.svgGroup.hasAttribute("relocate")){
                 return this.svgGroup.getAttribute("relocate");
@@ -218,7 +218,7 @@ namespace GraphTableSVG {
             */
         }
         public set relocateAttribute(value : string | null){
-            this.svgGroup.setPropertyStyleValue("--relocate", value);
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.relocateName, value);
         }
 
         public relocate() {
@@ -386,16 +386,16 @@ namespace GraphTableSVG {
         public get type(): ShapeObjectType {
             return ShapeObjectType.Graph;
         }
+        protected resizeUpdate(){
+            this.relocate();
+        }
         /*
-        protected update() {
-            if(!this._isUpdating){
-                this._isUpdating = true;
-                //this.relocate();
-                this._isUpdating = false;
-    
-            }
+        public update() {
+            super.update();
+            
         }
         */
+        
     }
 
 

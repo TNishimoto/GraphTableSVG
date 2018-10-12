@@ -1544,6 +1544,13 @@
                 <cell>Row</cell>
                 <cell>-</cell>
             </row>
+            <row>
+                <cell>--relocate</cell>
+                <cell>string</cell>
+                <cell>頂点の配置関数</cell>
+                <cell>GGraph.svgGroup</cell>
+                <cell>-</cell>
+            </row>
 
         </g-table>
 
@@ -1635,13 +1642,13 @@
         </g-rect>
     </svg>
             <br/>
-            <section ignore-format="true" class="sample-commentary">　
+         </div>
+      </div>
+      <section ignore-format="true" class="sample-commentary">　
 						HorizontalAnchorとVerticalAnchorでテキストの配置位置を指定することが出来る。
 						paddingとmarginは図形とテキスト間の余白を表す。
 						autosize-shape-to-fit-textはtrueにすると、図形のサイズがテキストに合うように自動的に計算される。
-					</section>
-         </div>
-      </div>
+			</section>
       <div class="tabs">
          <input id="tab-13-0" type="radio" name="tab-radio13"/>
          <label class="tab-label" for="tab-13-0">code</label>
@@ -1781,16 +1788,16 @@
 
     </svg>
             <br/>
-            <section ignore-format="true" class="sample-commentary">　
+         </div>
+      </div>
+      <section ignore-format="true" class="sample-commentary">　
 						--begin-connector-typeと--end-connector-typeで辺の接続位置を設定できる。
 						ただし、接続位置はPowerpointに準拠しているので、オブジェクトと接続位置の組み合わせによっては直感的な位置に配置されないことに注意する。
 						例えば、g-rectとtoprightを組み合わせても右上の角が辺の接続位置になるわけではない。
-					</section>
-            <section ignore-format="true" class="sample-commentary">　
+			</section>
+      <section ignore-format="true" class="sample-commentary">　
 						--marker-startと--marker-endはそれぞれ辺の開始位置と終了位置の矢印の有無を表す。
-					</section>
-         </div>
-      </div>
+			</section>
       <div class="tabs">
          <input id="tab-14-0" type="radio" name="tab-radio14"/>
          <label class="tab-label" for="tab-14-0">code</label>
@@ -1944,11 +1951,11 @@
 
     </svg>
             <br/>
-            <section ignore-format="true" class="sample-commentary">　
-						--stroke-styleで辺もしくは図形の輪郭を点線に変更することが出来る。
-					</section>
          </div>
       </div>
+      <section ignore-format="true" class="sample-commentary">　
+						--stroke-styleで辺もしくは図形の輪郭を点線に変更することが出来る。
+			</section>
       <div class="tabs">
          <input id="tab-15-0" type="radio" name="tab-radio15"/>
          <label class="tab-label" for="tab-15-0">code</label>
@@ -2014,11 +2021,11 @@
 
     </svg>
             <br/>
-            <section ignore-format="true" class="sample-commentary">　
-						--path-text-alignmentで辺上のテキストの配置方法を指定できる。
-					</section>
          </div>
       </div>
+      <section ignore-format="true" class="sample-commentary">　
+						--path-text-alignmentで辺上のテキストの配置方法を指定できる。
+			</section>
       <div class="tabs">
          <input id="tab-16-0" type="radio" name="tab-radio16"/>
          <label class="tab-label" for="tab-16-0">code</label>
@@ -2078,18 +2085,167 @@
         </g-table>
     </svg>
             <br/>
-            <section ignore-format="true" class="sample-commentary">　
-						g-tableの--widthsと各rowの--heightで各列の横幅と各行の縦幅を設定できる。
-						ただしセル内のテキストの幅がそれよりも大きい場合は最大テキスト幅になる。
-					</section>
          </div>
       </div>
+      <section ignore-format="true" class="sample-commentary">　
+						g-tableの--widthsと各rowの--heightで各列の横幅と各行の縦幅を設定できる。
+						ただしセル内のテキストの幅がそれよりも大きい場合は最大テキスト幅になる。
+			</section>
+      <div class="tabs">
+         <input id="tab-17-0" type="radio" name="tab-radio17"/>
+         <label class="tab-label" for="tab-17-0">code</label>
+         <input id="tab-17-1" type="radio" name="tab-radio17" checked="1"/>
+         <label class="tab-label" for="tab-17-1">svg</label>
+         <input id="tab-17-2" type="radio" name="tab-radio17"/>
+         <label class="tab-label" for="tab-17-2">code</label>
+         <input id="tab-17-3" type="radio" name="tab-radio17"/>
+         <label class="tab-label" for="tab-17-3">svg</label>
+         <div class="tab-content tab-17-0-content">
+            <div class="code-div">
+               <h4 class="code-filename">svg/svg.html</h4>
+               <pre><code>&lt;svg id="svgbox22" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true"&gt;
+        &lt;g-graph style="--relocate:GraphTableSVG.TreeArrangement.alignVerticeByChildren"&gt;
+        &lt;g-ellipse id="22v01"&gt;1&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v02"&gt;2&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v03"&gt;3&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v04"&gt;4&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v05"&gt;5&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v06"&gt;6&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v07"&gt;7&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v08"&gt;8&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v09"&gt;9&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v10"&gt;10&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v11"&gt;11&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="22v12"&gt;12&lt;/g-ellipse&gt;
+
+        &lt;g-edge begin-vertex="22v01" end-vertex="22v02" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="22v01" end-vertex="22v03" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="22v02" end-vertex="22v06" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="22v02" end-vertex="22v07" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="22v02" end-vertex="22v08" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="22v02" end-vertex="22v09" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="22v03" end-vertex="22v04" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="22v04" end-vertex="22v05" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="22v08" end-vertex="22v10" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="22v08" end-vertex="22v11" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="22v08" end-vertex="22v12" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;/g-graph&gt;
+    &lt;/svg&gt;</code></pre>
+            </div>
+            <br/>
+         </div>
+         <div class="tab-content tab-17-1-content">
+            <svg id="svgbox22" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
+        <g-graph style="--relocate:GraphTableSVG.TreeArrangement.alignVerticeByChildren">
+        <g-ellipse id="22v01">1</g-ellipse>
+        <g-ellipse id="22v02">2</g-ellipse>
+        <g-ellipse id="22v03">3</g-ellipse>
+        <g-ellipse id="22v04">4</g-ellipse>
+        <g-ellipse id="22v05">5</g-ellipse>
+        <g-ellipse id="22v06">6</g-ellipse>
+        <g-ellipse id="22v07">7</g-ellipse>
+        <g-ellipse id="22v08">8</g-ellipse>
+        <g-ellipse id="22v09">9</g-ellipse>
+        <g-ellipse id="22v10">10</g-ellipse>
+        <g-ellipse id="22v11">11</g-ellipse>
+        <g-ellipse id="22v12">12</g-ellipse>
+
+        <g-edge begin-vertex="22v01" end-vertex="22v02" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="22v01" end-vertex="22v03" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="22v02" end-vertex="22v06" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="22v02" end-vertex="22v07" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="22v02" end-vertex="22v08" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="22v02" end-vertex="22v09" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="22v03" end-vertex="22v04" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="22v04" end-vertex="22v05" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="22v08" end-vertex="22v10" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="22v08" end-vertex="22v11" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="22v08" end-vertex="22v12" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        </g-graph>
+    </svg>
+            <br/>
+         </div>
+         <div class="tab-content tab-17-2-content">
+            <div class="code-div">
+               <h4 class="code-filename">svg/svg.html</h4>
+               <pre><code>&lt;svg id="svgbox23" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true"&gt;
+        &lt;g-graph style="--relocate:GraphTableSVG.TreeArrangement.alignVerticeByLeave"&gt;
+        &lt;g-ellipse id="23v01"&gt;1&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v02"&gt;2&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v03"&gt;3&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v04"&gt;4&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v05"&gt;5&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v06"&gt;6&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v07"&gt;7&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v08"&gt;8&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v09"&gt;9&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v10"&gt;10&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v11"&gt;11&lt;/g-ellipse&gt;
+        &lt;g-ellipse id="23v12"&gt;12&lt;/g-ellipse&gt;
+
+        &lt;g-edge begin-vertex="23v01" end-vertex="23v02" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="23v01" end-vertex="23v03" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="23v02" end-vertex="23v06" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="23v02" end-vertex="23v07" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="23v02" end-vertex="23v08" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="23v02" end-vertex="23v09" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="23v03" end-vertex="23v04" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="23v04" end-vertex="23v05" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="23v08" end-vertex="23v10" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="23v08" end-vertex="23v11" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;g-edge begin-vertex="23v08" end-vertex="23v12" style="--begin-connector-type:bottom;--end-connector-type:top"&gt;&lt;/g-edge&gt;
+        &lt;/g-graph&gt;
+    &lt;/svg&gt;</code></pre>
+            </div>
+            <br/>
+         </div>
+         <div class="tab-content tab-17-3-content">
+            <svg id="svgbox23" xmlns="http://www.w3.org/2000/svg" class="svgbox" g-shrink="true" ignore-format="true">
+        <g-graph style="--relocate:GraphTableSVG.TreeArrangement.alignVerticeByLeave">
+        <g-ellipse id="23v01">1</g-ellipse>
+        <g-ellipse id="23v02">2</g-ellipse>
+        <g-ellipse id="23v03">3</g-ellipse>
+        <g-ellipse id="23v04">4</g-ellipse>
+        <g-ellipse id="23v05">5</g-ellipse>
+        <g-ellipse id="23v06">6</g-ellipse>
+        <g-ellipse id="23v07">7</g-ellipse>
+        <g-ellipse id="23v08">8</g-ellipse>
+        <g-ellipse id="23v09">9</g-ellipse>
+        <g-ellipse id="23v10">10</g-ellipse>
+        <g-ellipse id="23v11">11</g-ellipse>
+        <g-ellipse id="23v12">12</g-ellipse>
+
+        <g-edge begin-vertex="23v01" end-vertex="23v02" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="23v01" end-vertex="23v03" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="23v02" end-vertex="23v06" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="23v02" end-vertex="23v07" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="23v02" end-vertex="23v08" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="23v02" end-vertex="23v09" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="23v03" end-vertex="23v04" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="23v04" end-vertex="23v05" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="23v08" end-vertex="23v10" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="23v08" end-vertex="23v11" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        <g-edge begin-vertex="23v08" end-vertex="23v12" style="--begin-connector-type:bottom;--end-connector-type:top"></g-edge>
+        </g-graph>
+    </svg>
+            <br/>
+         </div>
+      </div>
+      <section ignore-format="true" class="sample-commentary">　
+			--relocateカスタムスタイル属性でg-graph内の頂点を整列させることができる。
+				<a href="./typedoc/modules/graphtablesvg.treearrangement.html#alignverticebychildren" target="_blank">TreeArrangement.alignVerticeByChildren</a>
+			を指定すると兄弟頂点が同じ高さになるように整列される。
+				<a href="./typedoc/modules/graphtablesvg.treearrangement.html#alignverticebyleave" target="_blank">TreeArrangement.alignVerticeByLeave</a>
+			は葉が同じ高さになるように整列される。
+			このときの各頂点の水平間隔と垂直間隔は
+			--vertex-x-intervalと--vertex-y-intervalカスタムスタイル属性で設定できる。
+			</section>
    </article>
    <article title="マクロと画像出力" after="article" class="sample-article">
       <h2>マクロと画像出力</h2>
       <section ignore-format="true" class="sample-commentary">　
 			このライブラリで作成した表やグラフはVBAマクロによってPowerpointの図形に変換することが出来る。
-					</section>
+			</section>
    </article>
 </body>
 </html>
