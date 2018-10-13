@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>
-			Tutorial
+			Tutorial(HTML)
 		</title>
 		<OUTPUT path="./tutorial.html" remove="" macro="html" />
 		<MACRO path="./tutorial.js" remove="" />
@@ -16,16 +16,15 @@
 	</head>
 	<body>
 		<table_of_contents />
-		<xarticle title="はじめに">
+		<yarticle title="はじめに">
+			<comment>
 			GraphTableSVGはSVGで表とグラフ（グラフ理論）を描画するライブラリである。
 			このチュートリアルは利用者がHTMLとSVGをある程度理解していることを想定して書いている。
-			<dbr />
 			SVG入門の参考として
 			<a href="http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo.htm" target="_blank">
 				svg要素の基本的な使い方まとめ
 			</a>
 			を挙げておく。
-			<dbr />
 			このライブラリの
 			<a href="./typedoc/globals.html" target="_blank">
 				リファレンス
@@ -38,8 +37,9 @@
 				Table Sample 8 : Powerpointへ出力
 			</a>
 			に書いてある。
-			<dbr />
-		</xarticle>
+			</comment>
+
+		</yarticle>
 		<yarticle title="hello world">
 			<tab>
 				<page title="code">

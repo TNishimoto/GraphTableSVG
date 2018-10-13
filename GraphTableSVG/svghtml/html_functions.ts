@@ -10,21 +10,36 @@ namespace HTMLFunctions {
             }
         }
     }
-    export function isShow(e: HTMLElement | SVGElement): boolean {
-        const p = getComputedStyle(e);
+
+    function isShow2(e: HTMLElement | SVGElement, isParentWindow : boolean = false): boolean {
+        
+        const p = isParentWindow ? window.parent.getComputedStyle(e) : window.getComputedStyle(e);
         const disp = p.display;
         const vis = p.visibility;
-
         if (disp == "none" || vis == "hidden") {
             return false;
         } else {
             const parent = e.parentElement;
             if (parent == null) {
-                return true;
+                if(isParentWindow){
+                    return true;
+                }else{
+                    if(window == window.parent){
+                        return true;
+                    }else{
+                        return isShow2(<HTMLElement>window.frameElement, true);
+                    }    
+                }
             } else {
-                return isShow(parent);
+                return isShow2(parent, isParentWindow);
             }
         }
+
+    }
+
+
+    export function isShow(e: HTMLElement | SVGElement): boolean {
+        return isShow2(e);
 
     }
 

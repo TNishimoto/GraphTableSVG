@@ -38,8 +38,13 @@ namespace GraphTableSVG {
             GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, padding);
         }
         export function observeSVGSVG(svgBox: SVGSVGElement, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {
+            if(isObserved(svgBox)){
+                return;
+            }
+
             let _observer: MutationObserver;
             let observeFunction: MutationCallback = (x: MutationRecord[]) => {
+                const gShrink = svgBox.gtGetAttributeBooleanWithUndefined("g-shrink");
                 let b = false;
 
                 for (let i = 0; i < x.length; i++) {
@@ -49,7 +54,7 @@ namespace GraphTableSVG {
                     }
                 }
 
-                if (b) {
+                if (gShrink === true && b) {
                     resizeSVGSVG(svgBox, padding);
                 }
             }
@@ -66,6 +71,14 @@ namespace GraphTableSVG {
                 setTimeout(observeSVGSVGTimer, 500);
             }
         }
+        export function isObserved(svgBox: SVGSVGElement) : boolean {
+            for(let i=0;i<dic.length;i++){
+                if(dic[i].svgsvg === svgBox){
+                    return true;
+                }
+            }
+            return false;
+        }
         function observeSVGSVGTimer() {
             dic.forEach((v, i) => {
                 const nowVisible = !SVG.isSVGSVGHidden(v.svgsvg);
@@ -77,7 +90,8 @@ namespace GraphTableSVG {
                 else {
                     if (nowVisible) {
                         dispatchResizeEvent(v.svgsvg);
-                        resizeSVGSVG(v.svgsvg, v.padding);
+                        const b = v.svgsvg.gtGetAttributeBooleanWithUndefined("g-shrink");
+                        if(b !== undefined && b === true)resizeSVGSVG(v.svgsvg, v.padding);
                         v.visible = true;
                     }
                 }

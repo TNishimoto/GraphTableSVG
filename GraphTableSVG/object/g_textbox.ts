@@ -193,6 +193,7 @@ namespace GraphTableSVG {
         }
         protected update() {
             this._isUpdating = true;
+            if(!this.isShow) return;
             this._observer.disconnect();
 
 

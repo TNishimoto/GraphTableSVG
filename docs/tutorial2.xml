@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+	<head>
+		<title>
+			Tutorial(javascript)
+		</title>
+		<OUTPUT path="./tutorial2.html" remove="" macro="html" />
+		<MACRO path="./tutorial.js" remove="" />
+		<stylesheet path="tutorial.css" />
+		<stylesheet path="svg/sample_graph.css" />
+		<stylesheet path="tutorial2_tab.css" />
+		<script src="scripts/graph_table_svg.js">
+		</script>
+		<script src="tutorial_script.js">
+		</script>
+	</head>
+	<body>
+		<table_of_contents />
+				<yarticle title="hello world">
+			<tab>
+				<page title="js">
+					<a href="javascript_samples/hello.html">
+						実行結果
+					</a>
+					<load path="javascript_samples/hello.js" />
+				</page>
+				<page title="html">
+					<load path="javascript_samples/hello.html" />
+				</page>
+
+				<page title="result" checked="1">
+					<iframe src="javascript_samples/hello.html"  width="500px" height="500px"></iframe>
+				</page>
+			</tab>
+			<comment>
+			hogheoge
+			</comment>
+		</yarticle>
+
+	</body>
+</html>

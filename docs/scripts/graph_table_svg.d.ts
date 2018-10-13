@@ -127,6 +127,7 @@ declare namespace GraphTableSVG {
     namespace GUI {
         function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => GraphTableSVG.Rectangle, padding?: GraphTableSVG.Padding): void;
         function observeSVGSVG(svgBox: SVGSVGElement, padding?: GraphTableSVG.Padding): void;
+        function isObserved(svgBox: SVGSVGElement): boolean;
     }
 }
 declare namespace GraphTableSVG {

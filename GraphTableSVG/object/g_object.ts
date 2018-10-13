@@ -11,6 +11,9 @@ namespace GraphTableSVG {
         public constructor(svgbox: SVGElement | string, option: GObjectAttributes = {}) {
 
             let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
+            if(parentElement instanceof SVGSVGElement && !GUI.isObserved(parentElement)){
+                GUI.observeSVGSVG(parentElement);
+            }
             /*
             if(!HTMLFunctions.isShow(parentElement)){
                 throw Error("The parent element of the instance must be displayed when the instance is created");

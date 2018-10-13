@@ -695,8 +695,12 @@ var GraphTableSVG;
             GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, padding);
         }
         function observeSVGSVG(svgBox, padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {
+            if (isObserved(svgBox)) {
+                return;
+            }
             let _observer;
             let observeFunction = (x) => {
+                const gShrink = svgBox.gtGetAttributeBooleanWithUndefined("g-shrink");
                 let b = false;
                 for (let i = 0; i < x.length; i++) {
                     const item = x[i];
@@ -704,7 +708,7 @@ var GraphTableSVG;
                         b = true;
                     }
                 }
-                if (b) {
+                if (gShrink === true && b) {
                     resizeSVGSVG(svgBox, padding);
                 }
             };
@@ -720,6 +724,15 @@ var GraphTableSVG;
             }
         }
         GUI.observeSVGSVG = observeSVGSVG;
+        function isObserved(svgBox) {
+            for (let i = 0; i < dic.length; i++) {
+                if (dic[i].svgsvg === svgBox) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        GUI.isObserved = isObserved;
         function observeSVGSVGTimer() {
             dic.forEach((v, i) => {
                 const nowVisible = !GraphTableSVG.SVG.isSVGSVGHidden(v.svgsvg);
@@ -731,7 +744,9 @@ var GraphTableSVG;
                 else {
                     if (nowVisible) {
                         dispatchResizeEvent(v.svgsvg);
-                        resizeSVGSVG(v.svgsvg, v.padding);
+                        const b = v.svgsvg.gtGetAttributeBooleanWithUndefined("g-shrink");
+                        if (b !== undefined && b === true)
+                            resizeSVGSVG(v.svgsvg, v.padding);
                         v.visible = true;
                     }
                 }
@@ -1027,6 +1042,9 @@ var GraphTableSVG;
                 "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",
                 "data-arrow-head-width", "data-arrow-head-height"];
             let parentElement = svgbox instanceof SVGElement ? svgbox : document.getElementById(svgbox);
+            if (parentElement instanceof SVGSVGElement && !GraphTableSVG.GUI.isObserved(parentElement)) {
+                GraphTableSVG.GUI.observeSVGSVG(parentElement);
+            }
             this._svgGroup = GraphTableSVG.SVG.createGroup(parentElement);
             if (option.groupClass !== undefined)
                 this._svgGroup.setAttribute("class", option.groupClass);
@@ -1469,6 +1487,8 @@ var GraphTableSVG;
         }
         update() {
             this._isUpdating = true;
+            if (!this.isShow)
+                return;
             this._observer.disconnect();
             GraphTableSVG.SVGTextBox.sortText(this.svgText, this.horizontalAnchor);
             if (this.isAutoSizeShapeToFitText)
@@ -6216,8 +6236,8 @@ var HTMLFunctions;
         }
     }
     HTMLFunctions.getAncestorAttribute = getAncestorAttribute;
-    function isShow(e) {
-        const p = getComputedStyle(e);
+    function isShow2(e, isParentWindow = false) {
+        const p = isParentWindow ? window.parent.getComputedStyle(e) : window.getComputedStyle(e);
         const disp = p.display;
         const vis = p.visibility;
         if (disp == "none" || vis == "hidden") {
@@ -6226,12 +6246,25 @@ var HTMLFunctions;
         else {
             const parent = e.parentElement;
             if (parent == null) {
-                return true;
+                if (isParentWindow) {
+                    return true;
+                }
+                else {
+                    if (window == window.parent) {
+                        return true;
+                    }
+                    else {
+                        return isShow2(window.frameElement, true);
+                    }
+                }
             }
             else {
-                return isShow(parent);
+                return isShow2(parent, isParentWindow);
             }
         }
+    }
+    function isShow(e) {
+        return isShow2(e);
     }
     HTMLFunctions.isShow = isShow;
     function getDescendants(e) {

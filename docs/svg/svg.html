@@ -444,7 +444,7 @@
             <row>
                 <cell>--autosize-shape-to-fit-text</cell>
                 <cell>boolean</cell>
-                <cell>hogehoge</cell>
+                <cell>図形のサイズをテキストに合わせる</cell>
                 <cell>GObject.svgGroup</cell>
                 <cell>-</cell>
             </row>
@@ -463,13 +463,6 @@
                 <cell>-</cell>
             </row>
             <row>
-                <cell>--default-line-class</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
                 <cell>--marker-start</cell>
                 <cell>boolean</cell>
                 <cell>辺の始点に矢印をつける</cell>
@@ -483,97 +476,7 @@
                 <cell>GEdge.svgGroup</cell>
                 <cell>-</cell>
             </row>
-            <row>
-                <cell>--default-vertex-class</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--default-edge-class</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--vertex-x-interval</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--vertex-y-interval</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--default-radius</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--default-width</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--default-height</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--default-text-class</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--default-path-class</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--default-surface-class</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--default-surface-type</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--default-cell-class</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
-            <row>
-                <cell>--default-border-class</cell>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-                <cell>-</cell>
-            </row>
+            
             <row>
                 <cell>--padding-top</cell>
                 <cell>number</cell>
@@ -685,7 +588,105 @@
                 <cell>GGraph.svgGroup</cell>
                 <cell>-</cell>
             </row>
+            <row>
+                <cell>--vertex-x-interval</cell>
+                <cell>number</cell>
+                <cell>relocateで使われる値</cell>
+                <cell>GGraph.svgGroup</cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--vertex-y-interval</cell>
+                <cell>number</cell>
+                <cell>relocateで使われる値</cell>
+                <cell>GGraph.svgGroup</cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-line-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-vertex-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-edge-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
 
+            <row>
+                <cell>--default-radius</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-width</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-height</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-text-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-path-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-surface-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-surface-type</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-cell-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
+            <row>
+                <cell>--default-border-class</cell>
+                <cell></cell>
+                <cell></cell>
+                <cell></cell>
+                <cell>-</cell>
+            </row>
         </g-table>
 
     </svg>
