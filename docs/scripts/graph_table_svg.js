@@ -707,9 +707,10 @@ var GraphTableSVG;
                 rect.width = 1;
             if (rect.height == 0)
                 rect.height = 1;
+            console.log(rect);
             GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, padding);
         }
-        function observeSVGSVG(svgBox, padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {
+        function observeSVGSVG(svgBox, padding = new GraphTableSVG.Padding(0, 0, 0, 0)) {
             if (isObserved(svgBox)) {
                 return;
             }

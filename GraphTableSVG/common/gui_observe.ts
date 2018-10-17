@@ -34,10 +34,10 @@ namespace GraphTableSVG {
             const rect = SVG.getRegion2(svgBox);
             if (rect.width == 0) rect.width = 1;
             if (rect.height == 0) rect.height = 1;
-
+            console.log(rect);
             GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, padding);
         }
-        export function observeSVGSVG(svgBox: SVGSVGElement, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {
+        export function observeSVGSVG(svgBox: SVGSVGElement, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(0, 0, 0, 0)) {
             if(isObserved(svgBox)){
                 return;
             }
