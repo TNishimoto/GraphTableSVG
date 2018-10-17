@@ -33,7 +33,9 @@
 				</page>
 			</tab>
 			<comment>
-			hogheoge
+				<rhref method="true">
+				createShape
+				</rhref>関数で図形オブジェクトを作成することができる。
 			</comment>
 		</yarticle>
 

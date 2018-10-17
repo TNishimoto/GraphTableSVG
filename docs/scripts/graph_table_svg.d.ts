@@ -110,7 +110,8 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     namespace GUI {
-        function createMacroModal(vbaCode: string): void;
+        function showMacroModal(id: string | GObject): void;
+        function createMacroModal(vbaCode: string | GObject): void;
         function removeMacroModal(): void;
         function copyAndCloseMacroModal(): void;
         function setSVGBoxSize(box: SVGSVGElement, w: number, h: number): void;
@@ -927,7 +928,7 @@ declare namespace GraphTableSVG {
         surfaceAttributes?: Map<string, string>;
         textAttributes?: Map<string, string>;
     };
-    type GTextBoxAttributes = GObjectAttributes & {
+    type _GTextBoxAttribute = {
         text?: string | HTMLElement[];
         isAutoSizeShapeToFitText?: boolean;
         verticalAnchor?: VerticalAnchor;
@@ -935,6 +936,7 @@ declare namespace GraphTableSVG {
         textClass?: string;
         textStyle?: string;
     };
+    type GTextBoxAttributes = GObjectAttributes & _GTextBoxAttribute;
     type GShapeArrowCalloutAttributes = GTextBoxAttributes & {
         arrowHeadWidth?: number;
         arrowHeadHeight?: number;
@@ -983,7 +985,13 @@ declare namespace GraphTableSVG {
     }
     function openCustomElement(id: string | SVGElement): GObject | null;
     function openSVG(id?: string | Element | null, output?: GObject[], shrink?: boolean): GObject[];
-    function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option?: any): GObject;
+    function createShape(parent: SVGElement | string | GObject, type: "g-rect", option?: GTextBoxAttributes): GRect;
+    function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GEdgeAttributes): GEdge;
+    function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GTextBoxAttributes): GEllipse;
+    function createShape(parent: SVGElement | string | GObject, type: "g-callout", option?: GTextBoxAttributes): GCallout;
+    function createShape(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GTextBoxAttributes): GArrowCallout;
+    function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GTextBoxAttributes): GGraph;
+    function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: TableOption): GTable;
     function createVertex(parent: GGraph, option?: GTextBoxAttributes): GVertex;
     function toHTMLUnknownElement(e: Element): void;
 }

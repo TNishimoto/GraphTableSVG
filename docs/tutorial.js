@@ -99,6 +99,29 @@ function replaceXMLText(e, text) {
     e.remove();
     //e.addChild(result.root());
 }
+function toChars(str) {
+    const r = [];
+    for (let i = 0; i < str.length; i++) {
+        r.push(str.charCodeAt(i));
+    }
+    return r;
+}
+function toString(str) {
+    let r = "";
+    for (let i = 0; i < str.length; i++) {
+        r += String.fromCharCode(str[i]);
+    }
+    return r;
+}
+function removeSpace(str) {
+    let spaces = [9, 10];
+    const r = toChars(str).filter((v) => {
+        const c = String.fromCharCode(v);
+        const b = spaces.some((w) => w == v);
+        return !b;
+    });
+    return toString(r);
+}
 let increment = 1;
 pack.preMacros.elements["incr"] = (e) => {
     e.isTagErased = true;
@@ -125,7 +148,7 @@ pack.midMacros.elements["rhref"] = (e, info) => {
     const isMethod = e.attr("method") != null;
     const isModule = e.attr("module") != null;
     const isInterface = e.attr("interface") != null;
-    const text = e.text();
+    const text = removeSpace(e.text());
     let prefix = "";
     let className = "";
     if (isModule) {
@@ -139,7 +162,7 @@ pack.midMacros.elements["rhref"] = (e, info) => {
     }
     if (isMethod) {
         const texts = text.split(".");
-        const methodName = texts[texts.length - 1].toLowerCase();
+        const methodName = removeSpace(texts[texts.length - 1]).toLowerCase();
         if (texts.length == 2) {
             className = texts[0].toLowerCase();
             replaceXMLText(e, `<a href="./typedoc/${prefix}${className}.html#${methodName}" target="_blank">${text}</a>`);

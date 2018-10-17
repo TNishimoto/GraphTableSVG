@@ -22,16 +22,17 @@ namespace GraphTableSVG {
         textAttributes? : Map<string,string>;
     }
 
-    export type GTextBoxAttributes = GObjectAttributes & {
+    export type _GTextBoxAttribute = {
         text?: string | HTMLElement[],
         isAutoSizeShapeToFitText?: boolean,
         verticalAnchor? : VerticalAnchor,
         horizontalAnchor? : HorizontalAnchor
         textClass? : string
         textStyle? : string
-
-
     }
+    export type GTextBoxAttributes = GObjectAttributes & _GTextBoxAttribute
+
+
     export type GShapeArrowCalloutAttributes = GTextBoxAttributes & {
         arrowHeadWidth?: number,
         arrowHeadHeight?: number,
@@ -254,6 +255,13 @@ namespace GraphTableSVG {
             return output;
         }
     }
+    export function createShape(parent: SVGElement | string | GObject, type: "g-rect", option?: GTextBoxAttributes) : GRect
+    export function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GEdgeAttributes) : GEdge
+    export function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GTextBoxAttributes) : GEllipse
+    export function createShape(parent: SVGElement | string | GObject, type: "g-callout", option?: GTextBoxAttributes) : GCallout
+    export function createShape(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GTextBoxAttributes) : GArrowCallout
+    export function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GTextBoxAttributes) : GGraph
+    export function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: TableOption) : GTable
     export function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option: any = {}): GObject {
         let _parent: SVGElement;
         if (parent instanceof GObject) {

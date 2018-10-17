@@ -532,10 +532,24 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     let GUI;
     (function (GUI) {
+        function showMacroModal(id) {
+            if (id instanceof GraphTableSVG.GObject) {
+                const p = GraphTableSVG.SVGToVBA.create(id);
+                createMacroModal(p);
+            }
+            else {
+            }
+        }
+        GUI.showMacroModal = showMacroModal;
         function createMacroModal(vbaCode) {
-            const mainDiv = document.createElement("div");
-            mainDiv.id = "macro-modal";
-            mainDiv.innerHTML = `
+            if (vbaCode instanceof GraphTableSVG.GObject) {
+                const p = GraphTableSVG.SVGToVBA.create(vbaCode);
+                createMacroModal(p);
+            }
+            else {
+                const mainDiv = document.createElement("div");
+                mainDiv.id = "macro-modal";
+                mainDiv.innerHTML = `
     使い方（Powerpoint 2013）<br>
         新規ファイル<br>
         →表示→マクロ→作成<br>
@@ -549,29 +563,30 @@ var GraphTableSVG;
             クリップボードにコピー
         </button>
     `;
-            mainDiv.style.position = "fixed";
-            mainDiv.style.zIndex = "16";
-            mainDiv.style.width = "900px";
-            mainDiv.style.height = "400px";
-            mainDiv.style.left = `${((window.outerWidth - parseInt(mainDiv.style.width)) / 2)}px`;
-            mainDiv.style.top = `${((window.outerHeight - parseInt(mainDiv.style.height)) / 2)}px`;
-            mainDiv.style.display = "inline";
-            mainDiv.style.backgroundColor = "#ffffff";
-            document.body.appendChild(mainDiv);
-            const cnt = document.getElementById("codeBox");
-            cnt.value = vbaCode;
-            const bgDiv = document.createElement("div");
-            document.body.appendChild(bgDiv);
-            bgDiv.style.width = "100%";
-            bgDiv.style.height = "100%";
-            bgDiv.style.backgroundColor = "rgba(0,0,0,0.5)";
-            bgDiv.style.position = "fixed";
-            bgDiv.style.top = "0";
-            bgDiv.style.left = "0";
-            bgDiv.id = "modal-bg";
-            bgDiv.style.zIndex = "5";
-            bgDiv.style.display = "inline";
-            bgDiv.onclick = removeMacroModal;
+                mainDiv.style.position = "fixed";
+                mainDiv.style.zIndex = "16";
+                mainDiv.style.width = "900px";
+                mainDiv.style.height = "400px";
+                mainDiv.style.left = `${((window.outerWidth - parseInt(mainDiv.style.width)) / 2)}px`;
+                mainDiv.style.top = `${((window.outerHeight - parseInt(mainDiv.style.height)) / 2)}px`;
+                mainDiv.style.display = "inline";
+                mainDiv.style.backgroundColor = "#ffffff";
+                document.body.appendChild(mainDiv);
+                const cnt = document.getElementById("codeBox");
+                cnt.value = vbaCode;
+                const bgDiv = document.createElement("div");
+                document.body.appendChild(bgDiv);
+                bgDiv.style.width = "100%";
+                bgDiv.style.height = "100%";
+                bgDiv.style.backgroundColor = "rgba(0,0,0,0.5)";
+                bgDiv.style.position = "fixed";
+                bgDiv.style.top = "0";
+                bgDiv.style.left = "0";
+                bgDiv.id = "modal-bg";
+                bgDiv.style.zIndex = "5";
+                bgDiv.style.display = "inline";
+                bgDiv.onclick = removeMacroModal;
+            }
         }
         GUI.createMacroModal = createMacroModal;
         function removeMacroModal() {
@@ -3390,7 +3405,7 @@ var GraphTableSVG;
             if (logicVertex.vertexText != null)
                 GraphTableSVG.SVGTextBox.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
             if (parent != null) {
-                const edge = GraphTableSVG.createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass });
+                const edge = GraphTableSVG.createShape(this, 'g-edge', { groupClass: logicVertex.parentEdgeClass });
                 if (logicVertex.parentEdgeText != null) {
                     edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
                     edge.pathTextAlignment = GraphTableSVG.PathTextAlighnment.regularInterval;

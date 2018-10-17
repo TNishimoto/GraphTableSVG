@@ -102,6 +102,31 @@ function replaceXMLText(e: libxmljs.Element, text: string) {
     e.remove();
     //e.addChild(result.root());
 }
+function toChars(str : string) : number[]{
+    const r : number[] = [];
+    for(let i=0;i<str.length;i++){
+        r.push(str.charCodeAt(i));
+    }
+    return r;
+}
+function toString(str : number[]) : string{
+    let r : string = "";
+    for(let i=0;i<str.length;i++){
+        r += String.fromCharCode(str[i]);
+    }
+    return r;
+
+}
+function removeSpace(str : string) : string {
+    let spaces : number[] = [9, 10];
+    const r = toChars(str).filter((v)=>{
+        const c = String.fromCharCode(v);
+        const b = spaces.some((w)=>w==v);
+        return !b;
+    })
+    return toString(r);
+}
+
 let increment = 1;
 pack.preMacros.elements["incr"] = (e: Macroup.PremacroArg) => {
     e.isTagErased = true;
@@ -129,7 +154,7 @@ pack.midMacros.elements["rhref"] = (e: libxmljs.Element, info: Macroup.Setting) 
     const isModule = e.attr("module") != null;
     const isInterface = e.attr("interface") != null;
 
-    const text = e.text();
+    const text = removeSpace(e.text());
     let prefix = "";
     let className = "";
     if (isModule) {
@@ -143,7 +168,7 @@ pack.midMacros.elements["rhref"] = (e: libxmljs.Element, info: Macroup.Setting) 
 
     if (isMethod) {
         const texts = text.split(".");
-        const methodName = texts[texts.length - 1].toLowerCase();
+        const methodName = removeSpace(texts[texts.length - 1]).toLowerCase();
         if (texts.length == 2) {
             className = texts[0].toLowerCase();
             replaceXMLText(e, `<a href="./typedoc/${prefix}${className}.html#${methodName}" target="_blank">${text}</a>`);
