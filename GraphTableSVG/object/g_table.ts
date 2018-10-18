@@ -33,6 +33,7 @@ namespace GraphTableSVG {
             this.svgGroup.appendChild(this.svgHiddenGroup);
             this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             this.updateAttributes = [];
+            this.isConstructing = true;
             if (option.table === undefined) {
                 if (option.rowCount == undefined) option.rowCount = 5;
                 if (option.columnCount == undefined) option.columnCount = 5;
@@ -56,9 +57,13 @@ namespace GraphTableSVG {
 
             if (option.cx !== undefined) this.cx = option.cx;
             if (option.cy !== undefined) this.cy = option.cy;
+            console.log("construct");
+            this.renumbering();
             this.update();
+            this.isConstructing = false;
 
         }
+        private isConstructing = false;
         get width(): number {
             let width = 0;
             this.columns.forEach((v) => width += v.width);
@@ -192,7 +197,8 @@ namespace GraphTableSVG {
                     }
                 }
             }
-            if (b2) {
+            if (b2 && !this.isConstructing) {
+                //if(this.cellArray.some((v)=>v.isErrorCell)) throw new Error("err!");
                 this.fitSizeToOriginalCells(false);
             }
             if (b) this.update();
@@ -695,6 +701,7 @@ namespace GraphTableSVG {
         Update
         */
         private prevShow : boolean = false;
+
         /**
         各セルのサイズを再計算します。
         */
@@ -703,6 +710,7 @@ namespace GraphTableSVG {
             const display = this.svgGroup.getPropertyStyleValue("display");
             //const style = getComputedStyle(this.svgGroup);            
             //const style2 = getComputedStyle(this.svgGroup.parentElement!.parentElement!);            
+            //this.renumbering();
 
             if(display == "none") return;
             const b = HTMLFunctions.isShow(this.svgGroup); 
@@ -710,9 +718,9 @@ namespace GraphTableSVG {
                 this.prevShow = true;
                 return;
             }
+            //if(this.cellArray.some((v)=>v.isErrorCell)) throw new Error("Logical Error!");
 
             this._isDrawing = true;
-            this.renumbering();
             if(this.prevShow){
                 this.cellArray.forEach((v)=>v.update());            
                 this.fitSizeToOriginalCells(false);
@@ -725,7 +733,6 @@ namespace GraphTableSVG {
             //if (this._updateCounter > 100) throw Error("error");
             this._isDrawing = false;
             this._observer.observe(this.svgGroup, this.groupObserverOption);
-
 
         }
         /**
@@ -804,6 +811,7 @@ namespace GraphTableSVG {
             }
             this.isSetSize = false;
 
+            this.renumbering();
             this.update();
 
         }
@@ -821,6 +829,8 @@ namespace GraphTableSVG {
                 this.columns[this.columns.length - 1].remove(true);
             }
             if (this.columnCount != this.columns.length) throw Error("clear error2");
+            this.renumbering();
+
         }
 
 
@@ -879,6 +889,7 @@ namespace GraphTableSVG {
                     this.cells[i - 1][x].svgBottomBorder = this.cells[i][x].svgTopBorder;
                 }
             }
+            this.renumbering();
 
             if(!this.isSetSize)this.update();
 

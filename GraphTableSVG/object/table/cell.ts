@@ -30,6 +30,7 @@ namespace GraphTableSVG {
 
         private _observer: MutationObserver;
         private _observerFunc: MutationCallback = (x: MutationRecord[]) => {
+
             for (let i = 0; i < x.length; i++) {                
                 const p = x[i];
                 if (p.attributeName == "style" || p.attributeName == "class") {
@@ -213,6 +214,7 @@ namespace GraphTableSVG {
         セルの上にある枠を設定します
         */
         set svgTopBorder(line: SVGLineElement) {
+
             this._borders[DirectionType.top] = line;
         }
         /**
@@ -503,6 +505,10 @@ namespace GraphTableSVG {
         */
         get ID(): number {
             return this.cellX + (this.cellY * this.table.columnCount);
+        }
+
+        get isErrorCell() : boolean {
+            return this.table.cells[this.cellY][this.cellX] != this;
         }
         /**
          * 与えられた方向にあるセルを返します。
@@ -868,11 +874,16 @@ namespace GraphTableSVG {
          */
         private getNextGroupCells(direction: DirectionType): Cell[] {
             if (this.isMaster) {
+                //if(this.isErrorCell) throw new Error("error!");
                 let w: Cell[] = [this];
                 let now: Cell | null = this.getNextCell(direction);
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
+
                     now = now.getNextCell(direction);
+                    if(this.table.columnCount < w.length && (direction == DirectionType.left || direction == DirectionType.right )){
+                        throw new Error("Invalid getNextGroupCells-Loop!");
+                    }
 
                 }
                 return w;

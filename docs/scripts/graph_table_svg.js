@@ -3833,6 +3833,7 @@ var GraphTableSVG;
             this._rows = new Array(0);
             this._columns = new Array(0);
             this._cells = [];
+            this.isConstructing = false;
             this._isDrawing = false;
             this._isAutoResized = false;
             this._cellTextObserverFunc = (x) => {
@@ -3852,7 +3853,7 @@ var GraphTableSVG;
                         }
                     }
                 }
-                if (b2) {
+                if (b2 && !this.isConstructing) {
                     this.fitSizeToOriginalCells(false);
                 }
                 if (b)
@@ -3867,6 +3868,7 @@ var GraphTableSVG;
             this.svgGroup.appendChild(this.svgHiddenGroup);
             this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             this.updateAttributes = [];
+            this.isConstructing = true;
             if (option.table === undefined) {
                 if (option.rowCount == undefined)
                     option.rowCount = 5;
@@ -3892,7 +3894,10 @@ var GraphTableSVG;
                 this.cx = option.cx;
             if (option.cy !== undefined)
                 this.cy = option.cy;
+            console.log("construct");
+            this.renumbering();
             this.update();
+            this.isConstructing = false;
         }
         get width() {
             let width = 0;
@@ -4320,7 +4325,6 @@ var GraphTableSVG;
                 return;
             }
             this._isDrawing = true;
-            this.renumbering();
             if (this.prevShow) {
                 this.cellArray.forEach((v) => v.update());
                 this.fitSizeToOriginalCells(false);
@@ -4374,6 +4378,7 @@ var GraphTableSVG;
                 this.insertColumn(this.columnCount);
             }
             this.isSetSize = false;
+            this.renumbering();
             this.update();
         }
         clear() {
@@ -4387,6 +4392,7 @@ var GraphTableSVG;
             }
             if (this.columnCount != this.columns.length)
                 throw Error("clear error2");
+            this.renumbering();
         }
         insertRow(i) {
             this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
@@ -4424,6 +4430,7 @@ var GraphTableSVG;
                     this.cells[i - 1][x].svgBottomBorder = this.cells[i][x].svgTopBorder;
                 }
             }
+            this.renumbering();
             if (!this.isSetSize)
                 this.update();
         }
@@ -4869,6 +4876,9 @@ var GraphTableSVG;
         get ID() {
             return this.cellX + (this.cellY * this.table.columnCount);
         }
+        get isErrorCell() {
+            return this.table.cells[this.cellY][this.cellX] != this;
+        }
         getNextCell(direction) {
             switch (direction) {
                 case DirectionType.top: return this.cellY != 0 ? this.table.cells[this.cellY - 1][this.cellX] : null;
@@ -5116,6 +5126,9 @@ var GraphTableSVG;
                 while (now != null && this.ID == now.masterID) {
                     w.push(now);
                     now = now.getNextCell(direction);
+                    if (this.table.columnCount < w.length && (direction == DirectionType.left || direction == DirectionType.right)) {
+                        throw new Error("Invalid getNextGroupCells-Loop!");
+                    }
                 }
                 return w;
             }
@@ -5508,6 +5521,7 @@ var GraphTableSVG;
         }
         getMaxWidth() {
             let width = 0;
+            console.log("w" + this.width);
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
                 if (cell.isColumnSingleCell) {

@@ -297,6 +297,30 @@ import fs = require('fs');
 let bTab = false;
 let tabCounter = 0;
 
+pack.midMacros.elements["tab2"] = (e: libxmljs.Element, info: Macroup.Setting) => {
+    e.attr("data_is_processed").remove();
+    const path = e.attr("path").value();
+    const html = path + ".html";
+    const js = path + ".js";
+
+    e.mrename("tab")
+    .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "js")
+        .addChild(new libxmljs.Element(e.doc(), "a", "実行結果").maddAttr("href", html))
+        .addChild(new libxmljs.Element(e.doc(), "load", undefined).maddAttr("path", js))    
+    )
+    .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "html")
+        .addChild(new libxmljs.Element(e.doc(), "load", undefined).maddAttr("path", html))    
+    )
+    .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "result").maddAttr("checked", "1")
+        .addChild(new libxmljs.Element(e.doc(), "iframe", undefined)
+            .maddAttr("src", html).maddAttr("width", "500px").maddAttr("height", "500px")
+        )
+    )
+    
+
+
+}
+
 pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) => {
     //console.log(e.hasBRChild());
     

@@ -496,6 +496,7 @@ declare namespace GraphTableSVG {
         private _columns;
         private _cells;
         constructor(svgbox: SVGElement, option?: TableOption);
+        private isConstructing;
         width: number;
         height: number;
         static constructAttributes(e: Element, removeAttributes?: boolean, output?: TableOption): TableOption;
@@ -653,6 +654,7 @@ declare namespace GraphTableSVG {
         readonly isMaster: boolean;
         readonly isSlave: boolean;
         readonly ID: number;
+        readonly isErrorCell: boolean;
         getNextCell(direction: DirectionType): Cell | null;
         getNextMasterCell(direction: DirectionType): Cell | null;
         readonly topCell: Cell | null;

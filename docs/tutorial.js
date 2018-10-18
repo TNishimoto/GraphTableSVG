@@ -279,6 +279,21 @@ pack.midMacros.elements["comment"] = (e, info) => {
 const fs = require("fs");
 let bTab = false;
 let tabCounter = 0;
+pack.midMacros.elements["tab2"] = (e, info) => {
+    e.attr("data_is_processed").remove();
+    const path = e.attr("path").value();
+    const html = path + ".html";
+    const js = path + ".js";
+    e.mrename("tab")
+        .addChild(new macroup_1.libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "js")
+        .addChild(new macroup_1.libxmljs.Element(e.doc(), "a", "実行結果").maddAttr("href", html))
+        .addChild(new macroup_1.libxmljs.Element(e.doc(), "load", undefined).maddAttr("path", js)))
+        .addChild(new macroup_1.libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "html")
+        .addChild(new macroup_1.libxmljs.Element(e.doc(), "load", undefined).maddAttr("path", html)))
+        .addChild(new macroup_1.libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "result").maddAttr("checked", "1")
+        .addChild(new macroup_1.libxmljs.Element(e.doc(), "iframe", undefined)
+        .maddAttr("src", html).maddAttr("width", "500px").maddAttr("height", "500px")));
+};
 pack.midMacros.elements["tab"] = (e, info) => {
     //console.log(e.hasBRChild());
     const pages = e.childNodes().filter((v) => v.name() == "page");

@@ -11,15 +11,16 @@ window.onload = () => {
     }
 
     /* 各セルのスタイルの編集 */
-    table.cells[3][2].topBorder.style = "stroke:green;stroke-width:4pt";    
+
+    table.cells[3][2].svgTopBorder.style = "stroke:green;stroke-width:4pt";    
     table.cells[3][2].svgBackground.style = "fill:aqua";    
     table.cells[0][0].svgText.style = "stroke:blue";    
 
     /* SVG要素はクラス名を設定することでスタイルをCSSファイルで設定することが出来る 
     けれどスタイルに直書きしているとそちらのほうが優先？されるようなので一旦消している。    
     */
-    table.cells[1][2].topBorder.removeAttribute("style");
-    table.cells[1][2].topBorder.setAttribute("class","border");
+    table.cells[1][2].svgTopBorder.removeAttribute("style");
+    table.cells[1][2].svgTopBorder.setAttribute("class","border");
 
     table.cells[1][2].svgBackground.removeAttribute("style");
     table.cells[1][2].svgBackground.setAttribute("class","background");

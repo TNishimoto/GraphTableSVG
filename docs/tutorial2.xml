@@ -16,7 +16,7 @@
 	</head>
 	<body>
 		<table_of_contents />
-				<yarticle title="hello world">
+		<yarticle title="hello world">
 			<tab>
 				<page title="js">
 					<a href="javascript_samples/hello.html">
@@ -27,16 +27,46 @@
 				<page title="html">
 					<load path="javascript_samples/hello.html" />
 				</page>
-
 				<page title="result" checked="1">
-					<iframe src="javascript_samples/hello.html"  width="500px" height="500px"></iframe>
+					<iframe src="javascript_samples/hello.html" width="500px" height="500px">
+					</iframe>
 				</page>
 			</tab>
 			<comment>
 				<rhref method="true">
-				createShape
-				</rhref>関数で図形オブジェクトを作成することができる。
+					createShape
+				</rhref>
+				関数で図形オブジェクトを作成することができる。
+				ここでオブジェクト一覧の例
+				オブジェクトのパラメータをクラスから操作できる話とリンク
 			</comment>
+		</yarticle>
+		<yarticle title="dynamic table">
+		</yarticle>
+		<yarticle title="Logic Table">
+		</yarticle>
+		<yarticle title="Logic Tree">
+		</yarticle>
+		<yarticle title="xxから操作できるメソッド一覧">
+		</yarticle>
+		<yarticle title="ギャラリー">
+
+			<tab2 path="table/sample_table_hello">
+			</tab2>
+			<tab2 path="table/sample_table_style">
+			</tab2>
+			<tab2 path="table/sample_table_style_select">
+			</tab2>
+			<tab2 path="table/sample_table_anchor">
+			</tab2>
+
+			<tab2 path="table/sample_table_width">
+			</tab2>
+			<tab2 path="table/sample_table_logic">
+			</tab2>
+			<tab2 path="table/sample_table_merge">
+			</tab2>
+
 		</yarticle>
 
 	</body>
