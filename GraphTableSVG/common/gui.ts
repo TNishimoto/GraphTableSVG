@@ -171,7 +171,13 @@
                 return tmp;
             }
         }
-
+        export function getClientRectangle() : Rectangle{
+            const x = window.pageXOffset;
+            const y = window.pageYOffset;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            return new Rectangle(x, y, width, height);
+        }
 
 
 

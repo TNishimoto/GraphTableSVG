@@ -122,6 +122,7 @@ declare namespace GraphTableSVG {
         function setURLParametersToHTMLElements(): void;
         function getInputText(elementID: string): string;
         function getNonNullElementById(id: string): HTMLElement;
+        function getClientRectangle(): Rectangle;
     }
 }
 declare namespace GraphTableSVG {
@@ -129,6 +130,7 @@ declare namespace GraphTableSVG {
         function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => GraphTableSVG.Rectangle, padding?: GraphTableSVG.Padding): void;
         function observeSVGSVG(svgBox: SVGSVGElement, padding?: GraphTableSVG.Padding): void;
         function isObserved(svgBox: SVGSVGElement): boolean;
+        function observeChangeElement(): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -801,6 +803,7 @@ declare namespace HTMLFunctions {
     function getDescendants(e: Element): Element[];
     function getChildren(e: Element): Element[];
     function getChildByNodeName(e: Element, name: string): Element | null;
+    function isInsideElement(element: Element): boolean;
 }
 interface CSSStyleDeclaration {
     tryGetPropertyValue(name: string): string | null;
@@ -986,7 +989,11 @@ declare namespace GraphTableSVG {
         function getTNodes(e: Element): HTMLElement[] | null;
     }
     function openCustomElement(id: string | SVGElement): GObject | null;
-    function openSVG(id?: string | Element | null, output?: GObject[], shrink?: boolean): GObject[];
+    function lazyOpenSVG(): void;
+    function openSVG(id: string, output?: GObject[]): GObject[];
+    function openSVG(element: Element, output?: GObject[]): GObject[];
+    function openSVG(empty: null, output?: GObject[]): GObject[];
+    function openSVG(svgsvg: SVGSVGElement, output?: GObject[]): GObject[];
     function createShape(parent: SVGElement | string | GObject, type: "g-rect", option?: GTextBoxAttributes): GRect;
     function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GEdgeAttributes): GEdge;
     function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GTextBoxAttributes): GEllipse;

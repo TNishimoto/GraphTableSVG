@@ -34,7 +34,6 @@ namespace GraphTableSVG {
             const rect = SVG.getRegion2(svgBox);
             if (rect.width == 0) rect.width = 1;
             if (rect.height == 0) rect.height = 1;
-            console.log(rect);
             GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, padding);
         }
         export function observeSVGSVG(svgBox: SVGSVGElement, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(0, 0, 0, 0)) {
@@ -79,9 +78,13 @@ namespace GraphTableSVG {
             }
             return false;
         }
+
         function observeSVGSVGTimer() {
             dic.forEach((v, i) => {
+                
                 const nowVisible = !SVG.isSVGSVGHidden(v.svgsvg);
+                //const nowVisible = (!SVG.isSVGSVGHidden(v.svgsvg) ) && isInsideElement(v.svgsvg);
+
                 if (v.visible) {
                     if (!nowVisible) {
                         v.visible = false;
@@ -99,6 +102,7 @@ namespace GraphTableSVG {
             setTimeout(observeSVGSVGTimer, 500);
         }
         function dispatchResizeEvent(e: Element): void {
+
             const children = HTMLFunctions.getChildren(e);
             children.forEach((v)=>{
                 dispatchResizeEvent(v);
@@ -112,5 +116,34 @@ namespace GraphTableSVG {
             }
 
         }
+
+        let changeElementDic: HTMLElement[] = [];
+        export function observeChangeElement(){
+            var result = document.evaluate("//iframe[@g-src]", document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+            for(var i=0; i<result.snapshotLength; i++){
+                var node = <HTMLElement>result.snapshotItem(i);
+                changeElementDic.push(node);
+              }
+              if(changeElementDic.length > 0)setTimeout(observeChangeElementTimer, 500);
+        }
+        function observeChangeElementTimer() {
+            for(let i=0;i<changeElementDic.length;i++){
+                const element = changeElementDic[i];
+
+                if(HTMLFunctions.isInsideElement(element)){
+                    const url = element.getAttribute("g-src")!;
+                    
+                    
+                    element.setAttribute("src", url);
+                    element.removeAttribute("g-src");
+                    changeElementDic.splice(i, 1);
+                    i=-1;
+                    
+                }
+
+            }
+            if(changeElementDic.length > 0)setTimeout(observeChangeElementTimer, 500);
+        }
+
     }
 }

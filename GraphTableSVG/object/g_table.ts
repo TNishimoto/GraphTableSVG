@@ -57,7 +57,6 @@ namespace GraphTableSVG {
 
             if (option.cx !== undefined) this.cx = option.cx;
             if (option.cy !== undefined) this.cy = option.cy;
-            console.log("construct");
             this.renumbering();
             this.update();
             this.isConstructing = false;

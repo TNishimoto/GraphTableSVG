@@ -1,34 +1,34 @@
 namespace GraphTableSVG {
-        
+
 
     export type GObjectAttributes = {
         //class?: string,
         cx?: number,
         cy?: number,
-        x? : number,
-        y? : number,
+        x?: number,
+        y?: number,
         width?: number,
         height?: number,
         id?: string,
-        groupClass? : string,
-        surfaceClass? : string,
-        groupStyle? : string,
-        surfaceStyle? : string
+        groupClass?: string,
+        surfaceClass?: string,
+        groupStyle?: string,
+        surfaceStyle?: string
 
     }
     export type GObjectMaps = {
-        groupAttributes? : Map<string,string>;
-        surfaceAttributes? : Map<string,string>;
-        textAttributes? : Map<string,string>;
+        groupAttributes?: Map<string, string>;
+        surfaceAttributes?: Map<string, string>;
+        textAttributes?: Map<string, string>;
     }
 
     export type _GTextBoxAttribute = {
         text?: string | HTMLElement[],
         isAutoSizeShapeToFitText?: boolean,
-        verticalAnchor? : VerticalAnchor,
-        horizontalAnchor? : HorizontalAnchor
-        textClass? : string
-        textStyle? : string
+        verticalAnchor?: VerticalAnchor,
+        horizontalAnchor?: HorizontalAnchor
+        textClass?: string
+        textStyle?: string
     }
     export type GTextBoxAttributes = GObjectAttributes & _GTextBoxAttribute
 
@@ -62,7 +62,7 @@ namespace GraphTableSVG {
         pathTextAlignment?: PathTextAlighnment
     }
     export type CellOption = {
-        cellClass?: string, 
+        cellClass?: string,
         borderClass?: string
     }
 
@@ -80,7 +80,7 @@ namespace GraphTableSVG {
         //y?: number,
         rowHeight?: number,
         columnWidth?: number,
-        table? : LogicTable
+        table?: LogicTable
     }
 
     /*
@@ -111,8 +111,8 @@ namespace GraphTableSVG {
     }
     */
 
-    export namespace openSVGFunctions{
-        export function getTNodes(e : Element) : HTMLElement[] | null {
+    export namespace openSVGFunctions {
+        export function getTNodes(e: Element): HTMLElement[] | null {
             const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "t");
             if (tNodes.length > 0) {
                 tNodes.forEach((v, i) => {
@@ -122,12 +122,21 @@ namespace GraphTableSVG {
                 }
                 )
                 return tNodes;
-            }else{
+            } else {
                 return null;
             }
         }
     }
+    function isGCustomElement(element: SVGElement): boolean {
+        const gObjectTypeAttr = element.getAttribute(CustomAttributeNames.customElement);
+        if (gObjectTypeAttr != null) {
+            const gObjectType = ShapeObjectType.toShapeObjectType(gObjectTypeAttr);
+            return gObjectType != null;
+        } else {
+            return false;
+        }
 
+    }
     export function openCustomElement(id: string | SVGElement): GObject | null {
 
         if (typeof id == "string") {
@@ -140,20 +149,23 @@ namespace GraphTableSVG {
         } else {
             const element = id;
             //const shapeType = GraphTableSVG.ShapeObjectType.toShapeObjectType(element.nodeName);
-            const type2 = element.getAttribute(CustomAttributeNames.customElement);
-            const type = ShapeObjectType.toShapeObjectType(element.nodeName);
-            if(type2 != null){
-                const type3 = ShapeObjectType.toShapeObjectType(type2);
-                if(type3 != null){
-                    return createCustomElement(element, type3);
-                }else{
+            const gObjectTypeAttr = element.getAttribute(CustomAttributeNames.customElement);
+            if (gObjectTypeAttr != null) {
+                const gObjectType = ShapeObjectType.toShapeObjectType(gObjectTypeAttr);
+                if (gObjectType != null) {
+                    return createCustomElement(element, gObjectType);
+                } else {
                     return null;
                 }
-            }
-            else if (type != null) {
-                return createCustomElement(element, type);
-            }else{
-                return null;
+            } else {
+                const type = ShapeObjectType.toShapeObjectType(element.nodeName);
+
+                if (type != null) {
+                    return createCustomElement(element, type);
+                } else {
+                    return null;
+                }
+
             }
         }
     }
@@ -185,7 +197,7 @@ namespace GraphTableSVG {
             } else if (type == ShapeObjectType.Graph) {
                 const option = GTextBox.constructAttributes(e, true);
                 r = new GGraph(parent, option);
-            } else if(type == ShapeObjectType.Table){
+            } else if (type == ShapeObjectType.Table) {
                 const option = GTable.constructAttributes(e, true);
                 r = new GTable(parent, option);
 
@@ -203,65 +215,91 @@ namespace GraphTableSVG {
             throw Error("error!");
         }
     }
-    export function openSVG(id: string | Element | null = null, output: GObject[] = [], shrink : boolean = false): GObject[] {
-        if (typeof id == "string") {
-            const item = document.getElementById(id);
+    export function lazyOpenSVG() {
+        const p = document.getElementsByTagName("svg");
+        const svgElements: SVGSVGElement[] = [];
+        for (let i = 0; i < p.length; i++) {
+            const svgNode = p.item(i);
+            if (svgNode instanceof SVGSVGElement) svgElements.push(svgNode);
+        }
+        svgElements.forEach((svgsvg) => lazyElementDic.push(svgsvg));
+        if(lazyElementDic.length > 0)setTimeout(observelazyElementTimer, 500);
+
+    }
+    let lazyElementDic: SVGSVGElement[] = [];
+    function observelazyElementTimer() {
+        for(let i=0;i<lazyElementDic.length;i++){
+            const element = lazyElementDic[i];
+
+            if(HTMLFunctions.isInsideElement(element)){
+                openSVG(element);
+                lazyElementDic.splice(i, 1);
+                i=-1;
+                
+            }
+
+        }
+        if(lazyElementDic.length > 0)setTimeout(observelazyElementTimer, 500);
+    }
+
+
+
+    export function openSVG(id: string, output?: GObject[]): GObject[];
+    export function openSVG(element: Element, output?: GObject[]): GObject[];
+    export function openSVG(empty: null, output?: GObject[]): GObject[];
+    export function openSVG(svgsvg: SVGSVGElement, output?: GObject[]): GObject[];
+    export function openSVG(inputItem: string | Element | null = null, output: GObject[] = []): GObject[] {
+        if (typeof inputItem == "string") {
+            const item = document.getElementById(inputItem);
             if (item != null && item instanceof SVGSVGElement) {
                 return GraphTableSVG.openSVG(item, output);
             } else {
                 return [];
             }
-        } else if(id === null){
+        } else if (inputItem === null) {
             const p = document.getElementsByTagName("svg");
-            const svgElements : SVGSVGElement[] = [];
-            for(let i=0;i<p.length;i++){
+            const svgElements: SVGSVGElement[] = [];
+            for (let i = 0; i < p.length; i++) {
                 const svgNode = p.item(i);
-                if(svgNode instanceof SVGSVGElement) svgElements.push(svgNode);
+                if (svgNode instanceof SVGSVGElement) svgElements.push(svgNode);
             }
-            svgElements.forEach((v)=> openSVG(v, output));
+            svgElements.forEach((svgsvg) => openSVG(svgsvg, output));
             return output;
-        }
-        else {
-            const element = id;
+        } else if (inputItem instanceof SVGSVGElement) {
+            
+            const svgsvg: SVGSVGElement = inputItem;
+            HTMLFunctions.getDescendants(svgsvg).forEach(v => {
+                const shapeType = GraphTableSVG.ShapeObjectType.toShapeObjectType(v.nodeName);
+                if (shapeType != null) {
+                    toHTMLUnknownElement(v);
+                }
+            })
 
-            while (true) {
-                let b = false;
-                HTMLFunctions.getChildren(element).forEach((v) => {
-                    const shapeType = GraphTableSVG.ShapeObjectType.toShapeObjectType(v.nodeName);
-                    if(shapeType != null){
-                        toHTMLUnknownElement(v);
-                        b = true;
-                        //throw Error("error")
-
-                    } else if (v instanceof SVGElement) {
+            HTMLFunctions.getDescendants(svgsvg).forEach((v) => {
+                if(v instanceof SVGElement){
+                    if(isGCustomElement(v)){
                         const p = GraphTableSVG.openCustomElement(v);
                         if (p != null) {
                             output.push(p);
-                            b = true;
-                        } else {
-                            openSVG(v, output);
                         }
-                        //throw Error("error");
                     }
-                });
-                if (!b) break;
-            }
-
-            if(element instanceof SVGSVGElement){
-                const sh = element.getAttribute("g-shrink");
-                if(sh != null) shrink = sh == "true";
-                if(shrink)GraphTableSVG.GUI.observeSVGSVG(element, new Padding(0,0,0,0));  
-            }
-            return output;
+    
+                }
+            })
+            GraphTableSVG.GUI.observeSVGSVG(svgsvg);
+        } else {
+            throw Error("errror");
         }
+        return output;
+
     }
-    export function createShape(parent: SVGElement | string | GObject, type: "g-rect", option?: GTextBoxAttributes) : GRect
-    export function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GEdgeAttributes) : GEdge
-    export function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GTextBoxAttributes) : GEllipse
-    export function createShape(parent: SVGElement | string | GObject, type: "g-callout", option?: GTextBoxAttributes) : GCallout
-    export function createShape(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GTextBoxAttributes) : GArrowCallout
-    export function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GTextBoxAttributes) : GGraph
-    export function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: TableOption) : GTable
+    export function createShape(parent: SVGElement | string | GObject, type: "g-rect", option?: GTextBoxAttributes): GRect
+    export function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GEdgeAttributes): GEdge
+    export function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GTextBoxAttributes): GEllipse
+    export function createShape(parent: SVGElement | string | GObject, type: "g-callout", option?: GTextBoxAttributes): GCallout
+    export function createShape(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GTextBoxAttributes): GArrowCallout
+    export function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GTextBoxAttributes): GGraph
+    export function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: TableOption): GTable
     export function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option: any = {}): GObject {
         let _parent: SVGElement;
         if (parent instanceof GObject) {
@@ -299,27 +337,27 @@ namespace GraphTableSVG {
         return new GEllipse(_parent, option);
 
     }
-    export function toHTMLUnknownElement(e : Element){
+    export function toHTMLUnknownElement(e: Element) {
         const type = ShapeObjectType.toShapeObjectTypeOrCustomTag(e.nodeName);
 
-        if(type == null){
+        if (type == null) {
 
-        }else{
-            const ns = document.createElementNS('http://www.w3.org/2000/svg', "g");        
+        } else {
+            const ns = document.createElementNS('http://www.w3.org/2000/svg', "g");
             ns.setAttribute(CustomAttributeNames.customElement, e.nodeName);
-            for(let i=0;i<e.attributes.length;i++){
+            for (let i = 0; i < e.attributes.length; i++) {
                 const attr = e.attributes.item(i);
                 ns.setAttribute(attr!.name, attr!.value);
             }
             ns.innerHTML = e.innerHTML;
             //HTMLFunctions.getChildren(e).forEach((v)=>ns.appendChild(v));
             const p = e.parentElement;
-            if(p != null){
+            if (p != null) {
                 p.insertBefore(ns, e);
                 e.remove();
             }
             const children = HTMLFunctions.getChildren(ns);
-            children.forEach((v)=>toHTMLUnknownElement(v));    
+            children.forEach((v) => toHTMLUnknownElement(v));
         }
     }
 }

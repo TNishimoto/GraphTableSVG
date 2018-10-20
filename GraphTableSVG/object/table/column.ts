@@ -102,7 +102,6 @@ namespace GraphTableSVG {
          */
         private getMaxWidth(): number {
             let width = 0;
-            console.log("w"+this.width);
 
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];

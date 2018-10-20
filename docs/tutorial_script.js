@@ -1,4 +1,4 @@
 window.onload = () => {        
-    GraphTableSVG.openSVG();
+    GraphTableSVG.lazyOpenSVG();
 
     };

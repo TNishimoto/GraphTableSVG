@@ -292,7 +292,7 @@ pack.midMacros.elements["tab2"] = (e, info) => {
         .addChild(new macroup_1.libxmljs.Element(e.doc(), "load", undefined).maddAttr("path", html)))
         .addChild(new macroup_1.libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "result").maddAttr("checked", "1")
         .addChild(new macroup_1.libxmljs.Element(e.doc(), "iframe", undefined)
-        .maddAttr("src", html).maddAttr("width", "500px").maddAttr("height", "500px")));
+        .maddAttr("g-src", html).maddAttr("width", "500px").maddAttr("height", "500px")));
 };
 pack.midMacros.elements["tab"] = (e, info) => {
     //console.log(e.hasBRChild());

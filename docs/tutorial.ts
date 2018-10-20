@@ -30,16 +30,16 @@ function createLoadCode(e: libxmljs.Element, dir: string): libxmljs.Element {
     const typeAttr = e.attr("type");
     const type = typeAttr == null ? null : typeAttr.value();
 
-    if(type == "code"){
+    if (type == "code") {
         if (e.attr("id") != null) {
             const id: string = e.attr("id").value()!;
             const node = TextLoader.loadTextByID(filePath, dir, id);
             const nodeText = node.toString();
-            return HTMLLib.createCodeTag(nodeText,e.doc()).createReferenceCodeTag({title : filePath});
+            return HTMLLib.createCodeTag(nodeText, e.doc()).createReferenceCodeTag({ title: filePath });
         } else {
             return HTMLLib.createReferenceCodeTag(filePath, dir, e.doc());
         }
-    }else{
+    } else {
         if (ext == ".png") {
             const img = new libxmljs.Element(e.doc(), "img", "");
             img.attr({ src: filePath, "style": "max-width:100%" });
@@ -54,7 +54,7 @@ function createLoadCode(e: libxmljs.Element, dir: string): libxmljs.Element {
         } else {
             return HTMLLib.createReferenceCodeTag(filePath, dir, e.doc());
         }
-    
+
     }
 }
 
@@ -102,26 +102,26 @@ function replaceXMLText(e: libxmljs.Element, text: string) {
     e.remove();
     //e.addChild(result.root());
 }
-function toChars(str : string) : number[]{
-    const r : number[] = [];
-    for(let i=0;i<str.length;i++){
+function toChars(str: string): number[] {
+    const r: number[] = [];
+    for (let i = 0; i < str.length; i++) {
         r.push(str.charCodeAt(i));
     }
     return r;
 }
-function toString(str : number[]) : string{
-    let r : string = "";
-    for(let i=0;i<str.length;i++){
+function toString(str: number[]): string {
+    let r: string = "";
+    for (let i = 0; i < str.length; i++) {
         r += String.fromCharCode(str[i]);
     }
     return r;
 
 }
-function removeSpace(str : string) : string {
-    let spaces : number[] = [9, 10];
-    const r = toChars(str).filter((v)=>{
+function removeSpace(str: string): string {
+    let spaces: number[] = [9, 10];
+    const r = toChars(str).filter((v) => {
         const c = String.fromCharCode(v);
-        const b = spaces.some((w)=>w==v);
+        const b = spaces.some((w) => w == v);
         return !b;
     })
     return toString(r);
@@ -258,7 +258,7 @@ pack.midMacros.elements["load"] = (e: libxmljs.Element, info: Macroup.Setting) =
     e.addNextSibling(br);
     e.addNextSibling(newNode);
     e.remove();
-    
+
 }
 
 pack.midMacros.elements["yarticle"] = (e: libxmljs.Element, info: Macroup.Setting) => {
@@ -304,26 +304,26 @@ pack.midMacros.elements["tab2"] = (e: libxmljs.Element, info: Macroup.Setting) =
     const js = path + ".js";
 
     e.mrename("tab")
-    .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "js")
-        .addChild(new libxmljs.Element(e.doc(), "a", "実行結果").maddAttr("href", html))
-        .addChild(new libxmljs.Element(e.doc(), "load", undefined).maddAttr("path", js))    
-    )
-    .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "html")
-        .addChild(new libxmljs.Element(e.doc(), "load", undefined).maddAttr("path", html))    
-    )
-    .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "result").maddAttr("checked", "1")
-        .addChild(new libxmljs.Element(e.doc(), "iframe", undefined)
-            .maddAttr("src", html).maddAttr("width", "500px").maddAttr("height", "500px")
+        .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "js")
+            .addChild(new libxmljs.Element(e.doc(), "a", "実行結果").maddAttr("href", html))
+            .addChild(new libxmljs.Element(e.doc(), "load", undefined).maddAttr("path", js))
         )
-    )
-    
+        .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "html")
+            .addChild(new libxmljs.Element(e.doc(), "load", undefined).maddAttr("path", html))
+        )
+        .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "result").maddAttr("checked", "1")
+            .addChild(new libxmljs.Element(e.doc(), "iframe", undefined)
+                .maddAttr("g-src", html).maddAttr("width", "500px").maddAttr("height", "500px")
+            )
+        )
+
 
 
 }
 
 pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) => {
     //console.log(e.hasBRChild());
-    
+
 
     const pages = e.childNodes().filter((v) => v.name() == "page");
     const tab = new libxmljs.Element(e.doc(), "div");
@@ -332,15 +332,15 @@ pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) =>
         const tabInput = new libxmljs.Element(e.doc(), "input");
         const tabLabel = new libxmljs.Element(e.doc(), "label");
         const title = v.attr("title");
-        if(title != null){
+        if (title != null) {
             MacroupLib.setText(tabLabel, title.value());
-        }else{
+        } else {
             MacroupLib.setText(tabLabel, `page${i}`);
         }
 
         tabInput.attr({ id: `tab-${tabCounter}-${i}`, type: "radio", name: `tab-radio${tabCounter}` })
         const checkAttr = v.attr("checked");
-        if(checkAttr != null){
+        if (checkAttr != null) {
             const p = {};
             p[checkAttr.name()] = checkAttr.value();
             tabInput.attr(p);
@@ -359,7 +359,7 @@ pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) =>
     })
     e.addPrevSibling(tab);
     e.remove();
-    
+
     let cssPath = path.basename(info.outputPath, ".html") + "_tab.css";
 
     if (!bTab) {
@@ -420,7 +420,7 @@ pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) =>
             }
         });
     }
-    
+
     tabCounter++;
 }
 

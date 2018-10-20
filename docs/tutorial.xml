@@ -7,7 +7,7 @@
 		<OUTPUT path="./tutorial.html" remove="" macro="html" />
 		<MACRO path="./tutorial.js" remove="" />
 		<stylesheet path="tutorial.css" />
-		<stylesheet path="svg/sample_graph.css" />
+		<stylesheet path="samples/svg/sample_graph.css" />
 		<stylesheet path="tutorial_tab.css" />
 		<script src="scripts/graph_table_svg.js">
 		</script>
@@ -43,13 +43,13 @@
 		<yarticle title="hello world">
 			<tab>
 				<page title="code">
-					<a href="svg/sample_hello1.html">
+					<a href="samples/svg/sample_hello1.html">
 						実行結果
 					</a>
-					<load path="svg/sample_hello1.html" />
+					<load path="samples/svg/sample_hello1.html" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/sample_hello1.html" id="svgbox" />
+					<load path="samples/svg/sample_hello1.html" id="svgbox" />
 				</page>
 			</tab>
 			<comment>
@@ -65,10 +65,10 @@
 
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox21" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox21" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox21" />
+					<load path="samples/svg/svg.html" id="svgbox21" />
 				</page>
 			</tab>
 			<comment>
@@ -83,10 +83,10 @@
 			</comment>
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox14" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox14" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox14" />
+					<load path="samples/svg/svg.html" id="svgbox14" />
 					<comment>
 						要素の内容のテキストに含まれている改行は無視される。
 						二行以上記述したい場合はt要素を利用する。
@@ -103,13 +103,13 @@
 			</comment>
 			<tab>
 				<page title="code">
-					<a href="svg/sample_hello2.html">
+					<a href="samples/svg/sample_hello2.html">
 						実行結果
 					</a>
-					<load path="svg/sample_hello2.html" />
+					<load path="samples/svg/sample_hello2.html" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/sample_hello2.html" id="svgbox" />
+					<load path="samples/svg/sample_hello2.html" id="svgbox" />
 				</page>
 			</tab>
 			<comment>
@@ -117,7 +117,7 @@
 			</comment>
 			<tab>
 				<page title="表" checked="1">
-					<load path="svg/svg.html" id="svgbox3" />
+					<load path="samples/svg/svg.html" id="svgbox3" />
 				</page>
 				<page title="継承">
 					<load path="images/extend.png" />
@@ -125,10 +125,10 @@
 			</tab>
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox18" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox18" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox18" />
+					<load path="samples/svg/svg.html" id="svgbox18" />
 				</page>
 			</tab>
 			<comment>
@@ -137,10 +137,10 @@
 			</comment>
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox19" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox19" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox19" />
+					<load path="samples/svg/svg.html" id="svgbox19" />
 				</page>
 			</tab>
 			<comment>
@@ -151,10 +151,10 @@
 			</comment>
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox20" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox20" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox20" />
+					<load path="samples/svg/svg.html" id="svgbox20" />
 				</page>
 			</tab>
 			<comment>
@@ -169,16 +169,16 @@
 				これをカスタム属性と呼ぶ。
 				指定できる属性は以下の通り。
 			</comment>
-			<load path="svg/svg.html" id="svgbox5" />
+			<load path="samples/svg/svg.html" id="svgbox5" />
 			<comment>
 				カスタム属性の例を以下に載せる。
 			</comment>
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox7" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox7" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox7" />
+					<load path="samples/svg/svg.html" id="svgbox7" />
 					<comment>
 						cx, cy属性を指定することで、要素の中心座標を指定できる。
 						またx, y属性を指定することで、要素の左上端の座標を指定できる。
@@ -190,10 +190,10 @@
 			</tab>
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox15" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox15" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox15" />
+					<load path="samples/svg/svg.html" id="svgbox15" />
 				</page>
 			</tab>
 			<comment>
@@ -202,10 +202,10 @@
 			</comment>
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox16" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox16" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox16" />
+					<load path="samples/svg/svg.html" id="svgbox16" />
 					<comment>
 						x1,x2,y1,y2属性を指定することで辺の開始位置と終了位置の座標を設定できる。
 						さらにx3, y3属性を指定することで制御点を設定できる。
@@ -216,10 +216,10 @@
 			</tab>
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox17" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox17" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox17" />
+					<load path="samples/svg/svg.html" id="svgbox17" />
 					<comment>
 						speaker-x, speaker-y属性を指定することで、GCallout要素の吹き出しの開始位置を設定できる。
 					</comment>
@@ -239,16 +239,16 @@
 				これをカスタムスタイル属性と呼ぶ。
 				指定できるカスタムスタイル属性は以下の通り。
 			</comment>
-			<load path="svg/svg.html" id="svgbox6" />
+			<load path="samples/svg/svg.html" id="svgbox6" />
 			<comment>
 				カスタムスタイル属性の例を以下に載せる。
 			</comment>
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox8" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox8" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox8" />
+					<load path="samples/svg/svg.html" id="svgbox8" />
 				</page>
 			</tab>
 			<comment>
@@ -259,10 +259,10 @@
 
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox9" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox9" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox9" />
+					<load path="samples/svg/svg.html" id="svgbox9" />
 				</page>
 			</tab>
 			<comment>
@@ -276,10 +276,10 @@
 
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox10" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox10" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox10" />
+					<load path="samples/svg/svg.html" id="svgbox10" />
 				</page>
 			</tab>
 			<comment>
@@ -288,10 +288,10 @@
 
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox11" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox11" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox11" />
+					<load path="samples/svg/svg.html" id="svgbox11" />
 				</page>
 
 			</tab>
@@ -301,10 +301,10 @@
 
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox12" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox12" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox12" />
+					<load path="samples/svg/svg.html" id="svgbox12" />
 				</page>
 			</tab>
 			<comment>
@@ -314,16 +314,16 @@
 
 			<tab>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox22" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox22" type="code" />
 				</page>
 				<page title="svg" checked="1">
-					<load path="svg/svg.html" id="svgbox22" />
+					<load path="samples/svg/svg.html" id="svgbox22" />
 				</page>
 				<page title="code">
-					<load path="svg/svg.html" id="svgbox23" type="code" />
+					<load path="samples/svg/svg.html" id="svgbox23" type="code" />
 				</page>
 				<page title="svg">
-					<load path="svg/svg.html" id="svgbox23" />
+					<load path="samples/svg/svg.html" id="svgbox23" />
 				</page>
 
 			</tab>
