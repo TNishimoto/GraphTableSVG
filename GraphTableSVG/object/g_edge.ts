@@ -375,7 +375,9 @@ namespace GraphTableSVG {
         private addVertexEvent(vertex: GTextBox) {
             vertex.svgGroup.addEventListener(CustomAttributeNames.connectPositionChangedEventName, this.pUpdateFunc2);
         }
-        private pUpdateFunc2 = () => this.update();
+        private pUpdateFunc2 = () => {
+            this.update();
+        }
 
         /**
         開始接点を返します。

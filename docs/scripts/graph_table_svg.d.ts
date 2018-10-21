@@ -443,7 +443,7 @@ declare namespace GraphTableSVG {
         appendChild(parent: GVertex, child: GVertex | null, option?: {
             insertIndex?: number;
         }): void;
-        relocateAttribute: string | null;
+        relocateStyle: string | null;
         relocate(): void;
         constructFromLogicTree(roots: LogicTree[] | LogicTree, option?: {
             x?: number;
@@ -497,11 +497,11 @@ declare namespace GraphTableSVG {
         private _rows;
         private _columns;
         private _cells;
-        constructor(svgbox: SVGElement, option?: TableOption);
+        constructor(svgbox: SVGElement, option?: GTableOption);
         private isConstructing;
         width: number;
         height: number;
-        static constructAttributes(e: Element, removeAttributes?: boolean, output?: TableOption): TableOption;
+        static constructAttributes(e: Element, removeAttributes?: boolean, output?: GTableOption): GTableOption;
         readonly svgHiddenGroup: SVGGElement;
         readonly type: ShapeObjectType;
         readonly rows: Row[];
@@ -798,9 +798,15 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace HTMLFunctions {
+    enum NodeOrder {
+        Preorder = 0,
+        Postorder = 1,
+    }
     function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null;
     function isShow(e: HTMLElement | SVGElement): boolean;
-    function getDescendants(e: Element): Element[];
+    function getDescendantsByPreorder(e: Element): Element[];
+    function getDescendantsByPostorder(e: Element): Element[];
+    function getDescendants(e: Element, order?: NodeOrder): Element[];
     function getChildren(e: Element): Element[];
     function getChildByNodeName(e: Element, name: string): Element | null;
     function isInsideElement(element: Element): boolean;
@@ -942,18 +948,19 @@ declare namespace GraphTableSVG {
         textStyle?: string;
     };
     type GTextBoxAttributes = GObjectAttributes & _GTextBoxAttribute;
-    type GShapeArrowCalloutAttributes = GTextBoxAttributes & {
+    type _GShapeArrowCalloutAttributes = {
         arrowHeadWidth?: number;
         arrowHeadHeight?: number;
         arrowNeckWidth?: number;
         arrowNeckHeight?: number;
         direction?: Direction;
     };
+    type GShapeArrowCalloutAttributes = GTextBoxAttributes & _GShapeArrowCalloutAttributes;
     type GCalloutAttributes = GTextBoxAttributes & {
         speakerX?: number;
         speakerY?: number;
     };
-    type GEdgeAttributes = GTextBoxAttributes & {
+    type _GEdgeAttributes = {
         startMarker?: boolean;
         endMarker?: boolean;
         x1?: number;
@@ -968,6 +975,7 @@ declare namespace GraphTableSVG {
         endVertex?: GVertex | string;
         pathTextAlignment?: PathTextAlighnment;
     };
+    type GEdgeAttributes = GTextBoxAttributes & _GEdgeAttributes;
     type CellOption = {
         cellClass?: string;
         borderClass?: string;
@@ -978,13 +986,14 @@ declare namespace GraphTableSVG {
         beginConnectorType?: GraphTableSVG.ConnectorPosition;
         endConnectorType?: GraphTableSVG.ConnectorPosition;
     };
-    type TableOption = GObjectAttributes & {
+    type _GTableOption = {
         rowCount?: number;
         columnCount?: number;
         rowHeight?: number;
         columnWidth?: number;
         table?: LogicTable;
     };
+    type GTableOption = GObjectAttributes & _GTableOption;
     namespace openSVGFunctions {
         function getTNodes(e: Element): HTMLElement[] | null;
     }
@@ -1000,7 +1009,7 @@ declare namespace GraphTableSVG {
     function createShape(parent: SVGElement | string | GObject, type: "g-callout", option?: GTextBoxAttributes): GCallout;
     function createShape(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GTextBoxAttributes): GArrowCallout;
     function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GTextBoxAttributes): GGraph;
-    function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: TableOption): GTable;
+    function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: GTableOption): GTable;
     function createVertex(parent: GGraph, option?: GTextBoxAttributes): GVertex;
     function toHTMLUnknownElement(e: Element): void;
 }

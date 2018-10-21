@@ -302,7 +302,7 @@ pack.midMacros.elements["tab2"] = (e: libxmljs.Element, info: Macroup.Setting) =
     const path = e.attr("path").value();
     const html = path + ".html";
     const js = path + ".js";
-
+    
     e.mrename("tab")
         .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "js")
             .addChild(new libxmljs.Element(e.doc(), "a", "実行結果").maddAttr("href", html))
@@ -316,9 +316,6 @@ pack.midMacros.elements["tab2"] = (e: libxmljs.Element, info: Macroup.Setting) =
                 .maddAttr("g-src", html).maddAttr("width", "500px").maddAttr("height", "500px")
             )
         )
-
-
-
 }
 
 pack.midMacros.elements["tab"] = (e: libxmljs.Element, info: Macroup.Setting) => {

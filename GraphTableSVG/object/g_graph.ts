@@ -197,39 +197,20 @@ namespace GraphTableSVG {
             this.relocate();    
 
         }
-        /*
-        private _relocateFunction: ((Tree: GGraph) => void) | null = null;
-        public get relocateFunction(): ((Tree: GGraph) => void) | null {
-            return this._relocateFunction;
-        }
-        public set relocateFunction(func: ((Tree: GGraph) => void) | null) {
-            this._relocateFunction = func;
-            this.relocate();
-        }
-        */
-        public get relocateAttribute() : string | null{
+        public get relocateStyle() : string | null{
             return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.relocateName)
-            /*
-            if(this.svgGroup.hasAttribute("relocate")){
-                return this.svgGroup.getAttribute("relocate");
-            }else{
-                return null;
-            }
-            */
         }
-        public set relocateAttribute(value : string | null){
+        public set relocateStyle(value : string | null){
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.relocateName, value);
         }
 
         public relocate() {
-            const value = this.relocateAttribute;
+            const value = this.relocateStyle;
             if(value != null){
                 const p = Function("v", `return ${value}(v)`);
                 const f = <any>Function("graph", `${value}(graph)`);
                 f(this);
             }
-
-            //if (this._relocateFunction != null) this._relocateFunction(this);
         }
 
 
@@ -248,13 +229,6 @@ namespace GraphTableSVG {
                     }
                 });
                 this.relocate();
-                /*
-                if (this.relocateFunction == null) {
-                this.relocateFunction = GraphTableSVG.GTreeArrangement.alignVerticeByChildren;
-                } else {
-                    this.relocate();
-                }
-                */
 
             } else {
                 this.constructFromLogicTree([roots], option);
@@ -378,6 +352,7 @@ namespace GraphTableSVG {
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
                 if (p.attributeName == "style") {
+                    console.log("observer : relocate");
                     this.relocate();
                 }
             }

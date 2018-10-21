@@ -107,7 +107,7 @@
 					<div class="tsd-signature tsd-kind-icon">cell<wbr>Function<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&#x60;Sub EditTable(table_ As table, cellInfo_() As Variant)Dim x As IntegerDim y As IntegerFor x &#x3D; 1 To UBound(cellInfo_, 1)For y &#x3D; 1 To UBound(cellInfo_, 2)Call EditCell(table_.cell(x, y), CStr(cellInfo_(x, y)(0)))NextNextEnd SubSub EditCell(cell_ As cell, text_ As String, backColor As Variant)cell_.Shape.TextFrame.TextRange.text &#x3D; text_cell_.Shape.Fill.ForeColor.RGB &#x3D; RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))End SubSub EditCellFont(frame_ As TextFrame, fontSize As Double, fontName As String, color As Variant, fontBold As Integer)frame_.TextRange.Font.Size &#x3D; fontSizeframe_.TextRange.Font.name &#x3D; fontNameframe_.TextRange.Font.color.RGB &#x3D; RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))frame_.TextRange.Font.Bold &#x3D; fontBoldEnd SubSub EditRow(row_ As Row, height As Integer)row_.height &#x3D; heightEnd SubSub EditColumn(column_ As Column, width As Integer)column_.width &#x3D; widthEnd SubSub EditCellTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, vAnchor As Integer, hAnchor As Integer)frame_.marginLeft &#x3D; marginLeftframe_.marginRight &#x3D; marginRightframe_.marginTop &#x3D; marginTopframe_.marginBottom &#x3D; marginBottomframe_.VerticalAnchor &#x3D; vAnchorframe_.TextRange.ParagraphFormat.Alignment &#x3D; hAnchorEnd SubSub EditTextRange(range_ As TextRange, text As String)range_.text &#x3D; textEnd SubSub EditTextRangeSub(range_ As TextRange, subBeg As Integer, subLen As Integer, script As String, color As Variant, fontName As String, fontSize As Double, fontBold As Integer)range_.Characters(subBeg, subLen).Font.color.RGB &#x3D; RGB(CInt(color(0)), CInt(color(1)), CInt(color(2)))range_.Characters(subBeg, subLen).Font.Size &#x3D; fontSizerange_.Characters(subBeg, subLen).Font.name &#x3D; fontNamerange_.Characters(subBeg, subLen).Font.Bold &#x3D; fontBoldIf script &#x3D; &quot;subscript&quot; Thenrange_.Characters(subBeg, subLen).Font.Subscript &#x3D; TrueEnd IfIf script &#x3D; &quot;superscript&quot; Thenrange_.Characters(subBeg, subLen).Font.Superscript &#x3D; TrueEnd IfEnd SubSub EditShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)shape_.name &#x3D; nameshape_.Fill.visible &#x3D; visibleshape_.Fill.ForeColor.RGB &#x3D; RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))End SubSub EditCellBorder(line_ As LineFormat, foreColor As Variant, weight As Integer, transparent As Double)line_.foreColor.RGB &#x3D; RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))line_.weight &#x3D; weightline_.Transparency &#x3D; transparentEnd SubSub EditConnector(connector_ As ConnectorFormat, begShape As Shape, endShape As Shape, begPos As Integer, endPos As Integer)Call connector_.BeginConnect(begShape, begPos)Call connector_.EndConnect(endShape, endPos)End SubSub EditTextFrame(frame_ As TextFrame, marginTop As Double, marginBottom As Double, marginLeft As Double, marginRight As Double, wordWrap As Boolean, autoSize As Integer)frame_.autoSize &#x3D; autoSizeframe_.wordWrap &#x3D; wordWrapframe_.marginLeft &#x3D; marginLeftframe_.marginRight &#x3D; marginRightframe_.marginTop &#x3D; marginTopframe_.marginBottom &#x3D; marginBottomEnd SubSub EditAnchor(frame_ As TextFrame, vAnchor As Integer, hAnchor As Integer)frame_.VerticalAnchor &#x3D; vAnchorframe_.TextRange.ParagraphFormat.Alignment &#x3D; hAnchorEnd SubSub EditTextEffect(effect_ As TextEffectFormat, fontSize As Double, fontName As String)effect_.fontSize &#x3D; fontSizeeffect_.fontName &#x3D; fontNameEnd SubSub EditVertexShape(shape_ As Shape, name As String, visible As Integer, backColor As Variant)shape_.name &#x3D; nameshape_.Fill.visible &#x3D; visibleshape_.Fill.ForeColor.RGB &#x3D; RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))End SubSub EditLine(line_ As LineFormat, foreColor As Variant, dashStyle As Integer, transparent As Double, weight As Integer, visible As Integer)line_.foreColor.RGB &#x3D; RGB(CInt(foreColor(0)), CInt(foreColor(1)), CInt(foreColor(2)))line_.dashStyle &#x3D; dashStyleline_.Transparency &#x3D; transparentline_.weight &#x3D; weightline_.visible &#x3D; visibleEnd SubSub EditCallOut(shape_ As Shape, name As String, visible As Integer, backColor As Variant)shape_.name &#x3D; nameshape_.Fill.visible &#x3D; visibleshape_.Fill.ForeColor.RGB &#x3D; RGB(CInt(backColor(0)), CInt(backColor(1)), CInt(backColor(2)))End Sub&#x60;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/f601e9b/GraphTableSVG/object/table/vba.ts#L122">object/table/vba.ts:122</a></li>
+							<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3514369/GraphTableSVG/object/table/vba.ts#L122">object/table/vba.ts:122</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -124,7 +124,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/f601e9b/GraphTableSVG/object/table/vba.ts#L59">object/table/vba.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3514369/GraphTableSVG/object/table/vba.ts#L59">object/table/vba.ts:59</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -147,7 +147,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/f601e9b/GraphTableSVG/object/table/vba.ts#L10">object/table/vba.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3514369/GraphTableSVG/object/table/vba.ts#L10">object/table/vba.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -177,7 +177,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/f601e9b/GraphTableSVG/object/table/vba.ts#L82">object/table/vba.ts:82</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3514369/GraphTableSVG/object/table/vba.ts#L82">object/table/vba.ts:82</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -203,7 +203,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/f601e9b/GraphTableSVG/object/table/vba.ts#L101">object/table/vba.ts:101</a></li>
+									<li>Defined in <a href="https://github.com/MKLemma/GraphTableSVG/blob/3514369/GraphTableSVG/object/table/vba.ts#L101">object/table/vba.ts:101</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>

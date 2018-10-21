@@ -24,7 +24,7 @@ namespace GraphTableSVG {
          * コンストラクタです。
          */
         constructor(svgbox: SVGElement,
-            option: TableOption = {}) {
+            option: GTableOption = {}) {
             super(svgbox, option)
             if (Common.getGraphTableCSS() == null) Common.setGraphTableCSS("yellow", "red");
 
@@ -79,7 +79,7 @@ namespace GraphTableSVG {
         set height(value: number) {
         }
         static constructAttributes(e: Element,
-            removeAttributes: boolean = false, output: TableOption = {}): TableOption {
+            removeAttributes: boolean = false, output: GTableOption = {}): GTableOption {
             const widthsStr = e.getPropertyStyleValue("--widths");
             
             GObject.constructAttributes(e, removeAttributes, output);

@@ -112,9 +112,13 @@ namespace GraphTableSVG {
             const option1: MutationObserverInit = { childList: true, subtree: true };
             this.table.cellTextObserver.observe(this.svgText, option1);
 
+            
             this._observer = new MutationObserver(this._observerFunc);
+            
             const option2: MutationObserverInit = { attributes: true };
             this._observer.observe(this.svgGroup, option2);
+            
+
             /*
             this.verticalAnchor = VerticalAnchor.Middle;
             this.horizontalAnchor = HorizontalAnchor.Left;

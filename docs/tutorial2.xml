@@ -54,6 +54,26 @@
 			</tab2>
 			<tab2 path="samples/table/sample_table_merge">
 			</tab2>
+			<tab2 path="samples/graph/sample_graph_class">
+			</tab2>
+			<tab2 path="samples/graph/sample_graph_connector">
+			</tab2>
+			<tab2 path="samples/graph/sample_graph_dash_style">
+			</tab2>
+			<tab2 path="samples/graph/sample_graph_edge">
+			</tab2>
+			<tab2 path="samples/graph/sample_graph_edge2">
+			</tab2>
+			<tab2 path="samples/graph/sample_graph_hello">
+			</tab2>
+			<tab2 path="samples/graph/sample_graph_logictree">
+			</tab2>
+			<tab2 path="samples/graph/sample_graph_textpath">
+			</tab2>
+			<tab2 path="samples/graph/sample_graph_tree">
+			</tab2>
+			<tab2 path="samples/graph/sample_graph_vertex">
+			</tab2>
 
 		</yarticle>
 

@@ -32,19 +32,20 @@ namespace GraphTableSVG {
     }
     export type GTextBoxAttributes = GObjectAttributes & _GTextBoxAttribute
 
-
-    export type GShapeArrowCalloutAttributes = GTextBoxAttributes & {
+    export type _GShapeArrowCalloutAttributes = {
         arrowHeadWidth?: number,
         arrowHeadHeight?: number,
         arrowNeckWidth?: number,
         arrowNeckHeight?: number,
         direction?: Direction
     }
+
+    export type GShapeArrowCalloutAttributes = GTextBoxAttributes & _GShapeArrowCalloutAttributes
     export type GCalloutAttributes = GTextBoxAttributes & {
         speakerX?: number,
         speakerY?: number,
     }
-    export type GEdgeAttributes = GTextBoxAttributes & {
+    export type _GEdgeAttributes = {
         startMarker?: boolean,
         endMarker?: boolean,
         x1?: number,
@@ -61,6 +62,7 @@ namespace GraphTableSVG {
         endVertex?: GVertex | string,
         pathTextAlignment?: PathTextAlighnment
     }
+    export type GEdgeAttributes = GTextBoxAttributes & _GEdgeAttributes
     export type CellOption = {
         cellClass?: string,
         borderClass?: string
@@ -72,16 +74,14 @@ namespace GraphTableSVG {
         beginConnectorType?: GraphTableSVG.ConnectorPosition,
         endConnectorType?: GraphTableSVG.ConnectorPosition
     }
-    export type TableOption = GObjectAttributes & {
-        //tableClassName?: string,
+    export type _GTableOption = {
         rowCount?: number,
         columnCount?: number,
-        //x?: number,
-        //y?: number,
         rowHeight?: number,
         columnWidth?: number,
         table?: LogicTable
     }
+    export type GTableOption = GObjectAttributes & _GTableOption;
 
     /*
     export namespace ShapeAttributes{
@@ -129,6 +129,7 @@ namespace GraphTableSVG {
     }
     function isGCustomElement(element: SVGElement): boolean {
         const gObjectTypeAttr = element.getAttribute(CustomAttributeNames.customElement);
+
         if (gObjectTypeAttr != null) {
             const gObjectType = ShapeObjectType.toShapeObjectType(gObjectTypeAttr);
             return gObjectType != null;
@@ -274,8 +275,9 @@ namespace GraphTableSVG {
                     toHTMLUnknownElement(v);
                 }
             })
+            const startTime = performance.now();
 
-            HTMLFunctions.getDescendants(svgsvg).forEach((v) => {
+            HTMLFunctions.getDescendantsByPostorder(svgsvg).forEach((v) => {
                 if(v instanceof SVGElement){
                     if(isGCustomElement(v)){
                         const p = GraphTableSVG.openCustomElement(v);
@@ -286,6 +288,10 @@ namespace GraphTableSVG {
     
                 }
             })
+            const endTime = performance.now();
+            const time = endTime - startTime;
+            console.log("create " + svgsvg.id + " : " + time + "ms");
+
             GraphTableSVG.GUI.observeSVGSVG(svgsvg);
         } else {
             throw Error("errror");
@@ -299,7 +305,7 @@ namespace GraphTableSVG {
     export function createShape(parent: SVGElement | string | GObject, type: "g-callout", option?: GTextBoxAttributes): GCallout
     export function createShape(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GTextBoxAttributes): GArrowCallout
     export function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GTextBoxAttributes): GGraph
-    export function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: TableOption): GTable
+    export function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: GTableOption): GTable
     export function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option: any = {}): GObject {
         let _parent: SVGElement;
         if (parent instanceof GObject) {

@@ -1,4 +1,8 @@
 namespace HTMLFunctions {
+    export enum NodeOrder {
+        Preorder, Postorder
+    }
+
     export function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null {
         if (e.hasAttribute(attr)) {
             return e.getAttribute(attr);
@@ -43,16 +47,37 @@ namespace HTMLFunctions {
 
     }
 
-    export function getDescendants(e: Element): Element[] {
+    export function getDescendantsByPreorder(e: Element): Element[] {
         const r: Element[] = [];
         r.push(e);
         for (let i = 0; i < e.children.length; i++) {
             const p = e.children.item(i);
             if (p instanceof Element) {
-                getDescendants(p).forEach((v) => r.push(v));
+                getDescendantsByPreorder(p).forEach((v) => r.push(v));
             }
         }
         return r;
+    }
+    export function getDescendantsByPostorder(e: Element): Element[] {
+        const r: Element[] = [];
+        for (let i = 0; i < e.children.length; i++) {
+            const p = e.children.item(i);
+            if (p instanceof Element) {
+                getDescendantsByPostorder(p).forEach((v) => r.push(v));
+            }
+        }
+        r.push(e);
+
+        return r;
+    }
+
+
+    export function getDescendants(e: Element, order : NodeOrder = NodeOrder.Preorder): Element[] {
+        if(order == NodeOrder.Preorder){
+            return getDescendantsByPreorder(e);
+        }else{
+            return getDescendantsByPostorder(e);
+        }
     }
     export function getChildren(e: Element): Element[] {
         const r: Element[] = [];

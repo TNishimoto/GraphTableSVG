@@ -313,8 +313,8 @@ namespace GraphTableSVG {
         protected dispatchConnectPositionChangedEvent(): void {
             if (this.svgSurface != null) {
                 var event = document.createEvent("HTMLEvents");
-                event.initEvent(CustomAttributeNames.connectPositionChangedEventName, true, true)
-                this.svgSurface.dispatchEvent(event);
+                event.initEvent(CustomAttributeNames.connectPositionChangedEventName, false, true)
+                this.svgGroup.dispatchEvent(event);
             }
         }
         public get hasSize() : boolean{

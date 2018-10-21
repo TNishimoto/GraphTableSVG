@@ -19,9 +19,10 @@ window.onload = () => {
         edgeR.svgPath.style.strokeWidth="6px";
 
         /* 点線の設定　*/
-        GraphTableSVG.msoDashStyle.setStyle(edgeL.svgPath, dashStyles[i]);
-        GraphTableSVG.msoDashStyle.setStyle(edgeC.svgPath, dashStyles[i]);
-        GraphTableSVG.msoDashStyle.setStyle(edgeR.svgPath, dashStyles[i]);
+        edgeL.svgPath.style.setProperty("--stroke-style", dashStyles[i]);
+        edgeC.svgPath.style.setProperty("--stroke-style", dashStyles[i]);
+        edgeR.svgPath.style.setProperty("--stroke-style", dashStyles[i]);
+
 
     }
     

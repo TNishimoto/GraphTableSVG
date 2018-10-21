@@ -16,5 +16,6 @@ window.onload = () => {
 
     graph = GraphTableSVG.createShape('svgbox', 'g-graph');
     graph.constructFromLogicTree(node1, {x : 50, y : 50});
+    graph.relocateStyle="GraphTableSVG.TreeArrangement.alignVerticeByChildren"
     
 };
