@@ -67,7 +67,7 @@ namespace GraphTableSVG {
             dic.push({ svgsvg: svgBox, visible: false, padding: padding });
             if (!createdObserveSVGSVGTimer) {
                 createdObserveSVGSVGTimer = true;
-                setTimeout(observeSVGSVGTimer, 500);
+                setTimeout(observeSVGSVGTimer, timerInterval);
             }
         }
         export function isObserved(svgBox: SVGSVGElement) : boolean {
@@ -93,7 +93,7 @@ namespace GraphTableSVG {
                 else {
                     if (nowVisible) {
                         const startTime = performance.now();
-                        dispatchResizeEvent(v.svgsvg);
+                        //dispatchResizeEvent(v.svgsvg);
                         const endTime = performance.now();
                         const time = endTime - startTime;
                         console.log("dispatch " + v.svgsvg.id + " : " + time + "ms");
@@ -104,7 +104,7 @@ namespace GraphTableSVG {
                     }
                 }
             })
-            setTimeout(observeSVGSVGTimer, 500);
+            setTimeout(observeSVGSVGTimer, timerInterval);
         }
         function dispatchResizeEvent(e: Element): void {
 
@@ -123,13 +123,14 @@ namespace GraphTableSVG {
         }
 
         let changeElementDic: HTMLElement[] = [];
+        let timerInterval = 100;
         export function observeChangeElement(){
             var result = document.evaluate("//iframe[@g-src]", document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
             for(var i=0; i<result.snapshotLength; i++){
                 var node = <HTMLElement>result.snapshotItem(i);
                 changeElementDic.push(node);
               }
-              if(changeElementDic.length > 0)setTimeout(observeChangeElementTimer, 500);
+              if(changeElementDic.length > 0)setTimeout(observeChangeElementTimer, timerInterval);
         }
         function observeChangeElementTimer() {
             for(let i=0;i<changeElementDic.length;i++){
@@ -147,7 +148,7 @@ namespace GraphTableSVG {
                 }
 
             }
-            if(changeElementDic.length > 0)setTimeout(observeChangeElementTimer, 500);
+            if(changeElementDic.length > 0)setTimeout(observeChangeElementTimer, timerInterval);
         }
 
     }

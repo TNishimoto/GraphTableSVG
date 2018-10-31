@@ -56,21 +56,21 @@ namespace GraphTableSVG {
             let b = false;
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
-                if (cell.isColumnSingleCell && cell.width != width) {
+                if (cell.isMasterCellOfColumnCountOne && cell.width != width) {
                     cell.width = width;
                     b = true;
                 }
             }
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
-                if (!cell.isColumnSingleCell) {
+                if (!cell.isMasterCellOfColumnCountOne) {
                     cell.update();
                     //cell.resize();
                     b = true;
                 }
             }
-
-            if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
+            // TODO : implement the event of the below code.
+            //if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
             
         }
         /**
@@ -105,7 +105,7 @@ namespace GraphTableSVG {
 
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
-                if (cell.isColumnSingleCell) {
+                if (cell.isMasterCellOfColumnCountOne) {
                     if (width < cell.calculatedWidthUsingText) width = cell.calculatedWidthUsingText;
                     if (width < cell.width) width = cell.width;
                 }
@@ -116,14 +116,19 @@ namespace GraphTableSVG {
         /**
          * この列を更新します。
          */
-        public update() {
+        /*
+         public update() {
             this.setWidthToCells();
             //this.width = this.getMaxWidth();
         }
+        */
         /**
          * 列内のセルのサイズを再計算します。
          */
         public resize() {
+            
+            this.cells.forEach((v)=>v.update());
+            
             this.setWidthToCells();
             //this.width = (this.getMaxWidth());
         }

@@ -7,6 +7,16 @@
         //private readonly _cellY: number;
         private _svgGroup: SVGGElement;
         public static readonly columnHeightName = "data-height";
+        constructor(_table: GTable, _y: number, _height: number = 30) {
+            this.table = _table;
+            this._svgGroup = SVG.createGroup(this.table.svgGroup);
+
+
+            this.cellY = _y;
+            this._svgGroup.setAttribute(Row.columnHeightName, `${_height}`);
+            //this.height = this.getMaxHeight();
+
+        }
 
         /**
         列の単位セルのY座標を返します。
@@ -51,16 +61,6 @@
             */
         }
 
-        constructor(_table: GTable, _y: number, _height: number = 30) {
-            this.table = _table;
-            this._svgGroup = SVG.createGroup(this.table.svgGroup);
-
-
-            this.cellY = _y;
-            this._svgGroup.setAttribute(Row.columnHeightName, `${_height}`);
-            //this.height = this.getMaxHeight();
-
-        }
         /**
          * この行のセル配列を返します。
          */
@@ -116,32 +116,37 @@
             let b = false;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                if (cell.isRowSingleCell && cell.height != height) {
+                if (cell.isMasterCellOfRowCountOne && cell.height != height) {
                     cell.height = height;
                     b = true;
                 }
             }
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                if (!cell.isRowSingleCell) {
+                //console.log(`${cell.cellX} ${cell.cellY} ${cell.isMasterCellOfColumnCountOne}`)
+                if (!cell.isMasterCellOfRowCountOne) {
                     cell.update();
                     //cell.resize();
                     b = true;
                 }
             }
-            if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
+            // TODO : implement the event of the below code.
+            //if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
         }
         /**
          * この行を更新します。
          */
-        public update() {
+        /*
+         public update() {
             this.setHeightToCells();
             //this.height = this.getMaxHeight();
         }
+        */
         /**
          * 行内のセルのサイズを再計算します。
          */
         public resize() {
+            this.cells.forEach((v)=>v.update());
             this.setHeightToCells();
             //this.height = this.getMaxHeight();
         }
@@ -173,7 +178,7 @@
             let height = 0;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                if (cell.isRowSingleCell) {
+                if (cell.isMasterCellOfRowCountOne) {
                     if (height < cell.calculatedHeightUsingText) height = cell.calculatedHeightUsingText;
                     if (height < cell.height) height = cell.height;
                 }
@@ -219,9 +224,10 @@
         /**
          * この行の各セルを再配置します。
          */
-        public relocation() {
-            this.cells.forEach((v) => v.relocation());
-        }
+        //public relocation() {
+        //    this.cells.forEach((v) => v.relocation());
+        //}
+
         /**
          * この行に属しているグループセルによって関係している行の範囲を返します。
          */

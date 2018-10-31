@@ -743,7 +743,7 @@ var GraphTableSVG;
             dic.push({ svgsvg: svgBox, visible: false, padding: padding });
             if (!createdObserveSVGSVGTimer) {
                 createdObserveSVGSVGTimer = true;
-                setTimeout(observeSVGSVGTimer, 500);
+                setTimeout(observeSVGSVGTimer, timerInterval);
             }
         }
         GUI.observeSVGSVG = observeSVGSVG;
@@ -767,7 +767,6 @@ var GraphTableSVG;
                 else {
                     if (nowVisible) {
                         const startTime = performance.now();
-                        dispatchResizeEvent(v.svgsvg);
                         const endTime = performance.now();
                         const time = endTime - startTime;
                         console.log("dispatch " + v.svgsvg.id + " : " + time + "ms");
@@ -778,7 +777,7 @@ var GraphTableSVG;
                     }
                 }
             });
-            setTimeout(observeSVGSVGTimer, 500);
+            setTimeout(observeSVGSVGTimer, timerInterval);
         }
         function dispatchResizeEvent(e) {
             const children = HTMLFunctions.getChildren(e);
@@ -792,6 +791,7 @@ var GraphTableSVG;
             }
         }
         let changeElementDic = [];
+        let timerInterval = 100;
         function observeChangeElement() {
             var result = document.evaluate("//iframe[@g-src]", document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
             for (var i = 0; i < result.snapshotLength; i++) {
@@ -799,7 +799,7 @@ var GraphTableSVG;
                 changeElementDic.push(node);
             }
             if (changeElementDic.length > 0)
-                setTimeout(observeChangeElementTimer, 500);
+                setTimeout(observeChangeElementTimer, timerInterval);
         }
         GUI.observeChangeElement = observeChangeElement;
         function observeChangeElementTimer() {
@@ -814,7 +814,7 @@ var GraphTableSVG;
                 }
             }
             if (changeElementDic.length > 0)
-                setTimeout(observeChangeElementTimer, 500);
+                setTimeout(observeChangeElementTimer, timerInterval);
         }
     })(GUI = GraphTableSVG.GUI || (GraphTableSVG.GUI = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
@@ -3898,8 +3898,8 @@ var GraphTableSVG;
                 if (b)
                     this.update();
             };
-            this.prevShow = false;
             this.isSetSize = false;
+            this.prevShow = false;
             if (GraphTableSVG.Common.getGraphTableCSS() == null)
                 GraphTableSVG.Common.setGraphTableCSS("yellow", "red");
             this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -3925,6 +3925,8 @@ var GraphTableSVG;
                         this.updateCellByLogicCell(null, x, y);
                     }
                 }
+                console.log("update constructor");
+                this.update();
             }
             else {
                 this.constructFromLogicTable(option.table);
@@ -3933,23 +3935,7 @@ var GraphTableSVG;
                 this.cx = option.cx;
             if (option.cy !== undefined)
                 this.cy = option.cy;
-            this.renumbering();
-            this.update();
             this.isConstructing = false;
-        }
-        get width() {
-            let width = 0;
-            this.columns.forEach((v) => width += v.width);
-            return width;
-        }
-        set width(value) {
-        }
-        get height() {
-            let height = 0;
-            this.rows.forEach((v) => height += v.height);
-            return height;
-        }
-        set height(value) {
         }
         static constructAttributes(e, removeAttributes = false, output = {}) {
             const widthsStr = e.getPropertyStyleValue("--widths");
@@ -4001,6 +3987,20 @@ var GraphTableSVG;
             }
             return output;
         }
+        get width() {
+            let width = 0;
+            this.columns.forEach((v) => width += v.width);
+            return width;
+        }
+        set width(value) {
+        }
+        get height() {
+            let height = 0;
+            this.rows.forEach((v) => height += v.height);
+            return height;
+        }
+        set height(value) {
+        }
         get svgHiddenGroup() {
             return this._svgHiddenGroup;
         }
@@ -4031,16 +4031,6 @@ var GraphTableSVG;
         get cellTextObserver() {
             return this._cellTextObserver;
         }
-        fitSizeToOriginalCells(allowShrink) {
-            this.rows.forEach((v) => v.fitHeightToOriginalCell(allowShrink));
-            this.columns.forEach((v) => v.fitWidthToOriginalCell(allowShrink));
-        }
-        get defaultCellClass() {
-            return this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultCellClass);
-        }
-        get defaultBorderClass() {
-            return this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultBorderClass);
-        }
         get columnCount() {
             if (this.cells.length == 0) {
                 return 0;
@@ -4052,28 +4042,11 @@ var GraphTableSVG;
         get rowCount() {
             return this.cells.length;
         }
-        getTryCell(x, y) {
-            if (x < 0 || x >= this.columnCount || y < 0 || y >= this.rowCount) {
-                return null;
-            }
-            else {
-                return this.cells[y][x];
-            }
+        get defaultCellClass() {
+            return this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultCellClass);
         }
-        getRangeCells(x, y, width, height) {
-            let cells = new Array(height);
-            for (let i = 0; i < cells.length; i++) {
-                cells[i] = new Array(0);
-                for (let j = 0; j < width; j++) {
-                    cells[i].push(this.cells[y + i][x + j]);
-                }
-            }
-            return cells;
-        }
-        getRangeCellArray(x, y, width, height) {
-            let cells = new Array();
-            this.getRangeCells(x, y, width, height).forEach((v) => { v.forEach((w) => { cells.push(w); }); });
-            return cells;
+        get defaultBorderClass() {
+            return this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultBorderClass);
         }
         get cellArray() {
             const arr = new Array(0);
@@ -4104,6 +4077,33 @@ var GraphTableSVG;
             }
             return arr;
         }
+        fitSizeToOriginalCells(allowShrink) {
+            this.rows.forEach((v) => v.fitHeightToOriginalCell(allowShrink));
+            this.columns.forEach((v) => v.fitWidthToOriginalCell(allowShrink));
+        }
+        getTryCell(x, y) {
+            if (x < 0 || x >= this.columnCount || y < 0 || y >= this.rowCount) {
+                return null;
+            }
+            else {
+                return this.cells[y][x];
+            }
+        }
+        getRangeCells(x, y, width, height) {
+            let cells = new Array(height);
+            for (let i = 0; i < cells.length; i++) {
+                cells[i] = new Array(0);
+                for (let j = 0; j < width; j++) {
+                    cells[i].push(this.cells[y + i][x + j]);
+                }
+            }
+            return cells;
+        }
+        getRangeCellArray(x, y, width, height) {
+            let cells = new Array();
+            this.getRangeCells(x, y, width, height).forEach((v) => { v.forEach((w) => { cells.push(w); }); });
+            return cells;
+        }
         getRegion() {
             let rect = new GraphTableSVG.Rectangle();
             rect.x = this.svgGroup.getX();
@@ -4112,9 +4112,31 @@ var GraphTableSVG;
             rect.height = this.height;
             return rect;
         }
+        getEmphasizedCells() {
+            return this.cellArray.filter((v) => v.isEmphasized);
+        }
+        toPlainText() {
+            const plainTable = this.cells.map((v) => v.map((w) => w.toPlainText()));
+            const widtharr = new Array(this.columnCount);
+            for (let x = 0; x < this.columnCount; x++) {
+                widtharr[x] = 0;
+            }
+            for (let y = 0; y < this.rowCount; y++) {
+                for (let x = 0; x < this.columnCount; x++) {
+                    const width = plainTable[y][x].length;
+                    if (widtharr[x] < width)
+                        widtharr[x] = width;
+                }
+            }
+            for (let y = 0; y < this.rowCount; y++) {
+                for (let x = 0; x < this.columnCount; x++) {
+                    plainTable[y][x] = GraphTableSVG.Common.paddingLeft(plainTable[y][x], widtharr[x], " ");
+                }
+            }
+            return plainTable.map((v) => v.join(",")).join("\n");
+        }
         updateCellByLogicCell(table, x, y) {
             const cell = this.cells[y][x];
-            const isShow = HTMLFunctions.isShow(this.svgGroup);
             if (table != null) {
                 const cellInfo = table.cells[y][x];
                 if (cellInfo != null) {
@@ -4132,43 +4154,25 @@ var GraphTableSVG;
                     }
                     cellInfo.createTextElement(cell.svgText);
                     if (cellInfo.topBorderClass != null) {
-                        const topCellInfo = y > 0 ? table.cells[y - 1][x] : null;
                         let borderClass = cellInfo.topBorderClass;
-                        if (topCellInfo != null && topCellInfo.bottomBorderClass != null) {
-                            borderClass = topCellInfo.bottomBorderClass;
-                        }
                         GraphTableSVG.SVG.resetStyle(cell.svgTopBorder.style);
                         cell.svgTopBorder.setAttribute("class", borderClass);
                     }
                     if (cellInfo.leftBorderClass != null) {
-                        const leftCellInfo = x > 0 ? table.cells[y][x - 1] : null;
                         let borderClass = cellInfo.leftBorderClass;
-                        if (leftCellInfo != null && leftCellInfo.rightBorderClass != null) {
-                            borderClass = leftCellInfo.rightBorderClass;
-                        }
                         GraphTableSVG.SVG.resetStyle(cell.svgLeftBorder.style);
                         cell.svgLeftBorder.setAttribute("class", borderClass);
                     }
                     if (cellInfo.rightBorderClass != null) {
-                        const rightCellInfo = x + 1 < table.columnCount ? table.cells[y][x + 1] : null;
                         let borderClass = cellInfo.rightBorderClass;
-                        if (rightCellInfo != null && rightCellInfo.leftBorderClass != null) {
-                            borderClass = rightCellInfo.leftBorderClass;
-                        }
                         GraphTableSVG.SVG.resetStyle(cell.svgRightBorder.style);
                         cell.svgRightBorder.setAttribute("class", borderClass);
                     }
                     if (cellInfo.bottomBorderClass != null) {
-                        const bottomCellInfo = y + 1 < table.rowCount ? table.cells[y + 1][x] : null;
                         let borderClass = cellInfo.bottomBorderClass;
-                        if (bottomCellInfo != null && bottomCellInfo.topBorderClass != null) {
-                            borderClass = bottomCellInfo.topBorderClass;
-                        }
                         GraphTableSVG.SVG.resetStyle(cell.svgBottomBorder.style);
                         cell.svgBottomBorder.setAttribute("class", borderClass);
                     }
-                    if (isShow)
-                        cell.update();
                 }
             }
             if (!cell.svgGroup.hasStyleAttribute(GraphTableSVG.CustomAttributeNames.Style.paddingLeft))
@@ -4329,72 +4333,6 @@ var GraphTableSVG;
             const [x1, y1] = GraphTableSVG.VBATranslateFunctions.splitCode(lines, `${tableName} as Table`, `${tableName}`, id);
             return [GraphTableSVG.VBATranslateFunctions.joinLines([x0, x1]), y1];
         }
-        toPlainText() {
-            const plainTable = this.cells.map((v) => v.map((w) => w.toPlainText()));
-            const widtharr = new Array(this.columnCount);
-            for (let x = 0; x < this.columnCount; x++) {
-                widtharr[x] = 0;
-            }
-            for (let y = 0; y < this.rowCount; y++) {
-                for (let x = 0; x < this.columnCount; x++) {
-                    const width = plainTable[y][x].length;
-                    if (widtharr[x] < width)
-                        widtharr[x] = width;
-                }
-            }
-            for (let y = 0; y < this.rowCount; y++) {
-                for (let x = 0; x < this.columnCount; x++) {
-                    plainTable[y][x] = GraphTableSVG.Common.paddingLeft(plainTable[y][x], widtharr[x], " ");
-                }
-            }
-            return plainTable.map((v) => v.join(",")).join("\n");
-        }
-        getEmphasizedCells() {
-            return this.cellArray.filter((v) => v.isEmphasized);
-        }
-        update() {
-            this._observer.disconnect();
-            const display = this.svgGroup.getPropertyStyleValue("display");
-            if (display == "none")
-                return;
-            const b = HTMLFunctions.isShow(this.svgGroup);
-            if (!b) {
-                this.prevShow = true;
-                return;
-            }
-            this._isDrawing = true;
-            if (this.prevShow) {
-                this.cellArray.forEach((v) => v.update());
-                this.fitSizeToOriginalCells(false);
-                this.prevShow = false;
-            }
-            this.resize();
-            this.relocation();
-            this._isDrawing = false;
-            this._observer.observe(this.svgGroup, this.groupObserverOption);
-        }
-        renumbering() {
-            this.rows.forEach((v, i) => v.cellY = i);
-            this.columns.forEach((v, i) => v.cellX = i);
-            this.cellArray.forEach((v) => v.updateBorderAttributes());
-        }
-        resize() {
-            this.rows.forEach((v) => v.resize());
-            this.columns.forEach((v) => v.resize());
-        }
-        relocation() {
-            let height = 0;
-            this.rows.forEach(function (x, i, arr) {
-                x.setY(height);
-                height += x.height;
-            });
-            let width = 0;
-            this.columns.forEach(function (x, i, arr) {
-                x.setX(width);
-                width += x.width;
-            });
-            this.rows.forEach((v) => v.relocation());
-        }
         createCell() {
             const cellClass = this.defaultCellClass == null ? undefined : this.defaultCellClass;
             const borderClass = this.defaultBorderClass == null ? undefined : this.defaultBorderClass;
@@ -4416,8 +4354,6 @@ var GraphTableSVG;
                 this.insertColumn(this.columnCount);
             }
             this.isSetSize = false;
-            this.renumbering();
-            this.update();
         }
         clear() {
             if (this.columnCount != this.columns.length)
@@ -4477,6 +4413,49 @@ var GraphTableSVG;
         }
         appendRow() {
             this.insertRow(this.rowCount);
+        }
+        update() {
+            this._observer.disconnect();
+            const display = this.svgGroup.getPropertyStyleValue("display");
+            if (display == "none")
+                return;
+            const b = HTMLFunctions.isShow(this.svgGroup);
+            if (!b) {
+                this.prevShow = true;
+                return;
+            }
+            this._isDrawing = true;
+            if (this.prevShow) {
+                this.cellArray.forEach((v) => v.update());
+                this.fitSizeToOriginalCells(false);
+                this.prevShow = false;
+            }
+            console.log("update : " + this.columnCount + "/" + this.rowCount);
+            this.resize();
+            this.relocation();
+            this._isDrawing = false;
+            this._observer.observe(this.svgGroup, this.groupObserverOption);
+        }
+        renumbering() {
+            this.rows.forEach((v, i) => v.cellY = i);
+            this.columns.forEach((v, i) => v.cellX = i);
+        }
+        resize() {
+            this.rows.forEach((v) => v.resize());
+            this.columns.forEach((v) => v.resize());
+        }
+        relocation() {
+            let height = 0;
+            this.rows.forEach(function (x, i, arr) {
+                x.setY(height);
+                height += x.height;
+            });
+            let width = 0;
+            this.columns.forEach(function (x, i, arr) {
+                x.setX(width);
+                width += x.width;
+            });
+            this.cellArray.forEach((v) => v.relocation());
         }
     }
     GraphTableSVG.GTable = GTable;
@@ -4645,15 +4624,15 @@ var GraphTableSVG;
     })(DirectionType2 = GraphTableSVG.DirectionType2 || (GraphTableSVG.DirectionType2 = {}));
     class Cell {
         constructor(parent, _px, _py, option = {}) {
+            this.tmpStyle = null;
             this._observerFunc = (x) => {
                 for (let i = 0; i < x.length; i++) {
                     const p = x[i];
                     if (p.attributeName == "style" || p.attributeName == "class") {
-                        this.localUpdate();
+                        this.locateSVGText();
                     }
                 }
             };
-            this.tmpStyle = null;
             this._borders = new Array(4);
             this._svgGroup = GraphTableSVG.SVG.createGroup(null);
             this._table = parent;
@@ -4706,6 +4685,51 @@ var GraphTableSVG;
                 }
             }
         }
+        get fontSize() {
+            const p = this.svgText.getPropertyStyleValueWithDefault("font-size", "24");
+            const p2 = parseInt(p);
+            return p2;
+        }
+        get paddingLeft() {
+            return this.svgGroup.getPaddingLeft();
+        }
+        get paddingRight() {
+            return this.svgGroup.getPaddingRight();
+        }
+        get paddingTop() {
+            return this.svgGroup.getPaddingTop();
+        }
+        get paddingBottom() {
+            return this.svgGroup.getPaddingBottom();
+        }
+        get horizontalAnchor() {
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.HorizontalAnchor, "center");
+            return GraphTableSVG.HorizontalAnchor.toHorizontalAnchor(b);
+        }
+        set horizontalAnchor(value) {
+            if (this.horizontalAnchor != value)
+                this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.HorizontalAnchor, value);
+        }
+        get verticalAnchor() {
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.VerticalAnchor, "middle");
+            return GraphTableSVG.VerticalAnchor.toVerticalAnchor(b);
+        }
+        set verticalAnchor(value) {
+            if (this.verticalAnchor != value)
+                this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.VerticalAnchor, value);
+        }
+        get table() {
+            return this._table;
+        }
+        get svgBackground() {
+            return this._svgBackground;
+        }
+        get svgText() {
+            return this._svgText;
+        }
+        get svgGroup() {
+            return this._svgGroup;
+        }
         get innerExtraPaddingLeft() {
             const p = this.fontSize;
             return p / 16;
@@ -4744,75 +4768,6 @@ var GraphTableSVG;
         get master() {
             return this.table.cellArray[this.masterID];
         }
-        get svgTopBorder() {
-            return this._borders[DirectionType.top];
-        }
-        set svgTopBorder(line) {
-            this._borders[DirectionType.top] = line;
-        }
-        get svgLeftBorder() {
-            return this._borders[DirectionType.left];
-        }
-        set svgLeftBorder(line) {
-            this._borders[DirectionType.left] = line;
-        }
-        get svgRightBorder() {
-            return this._borders[DirectionType.right];
-        }
-        set svgRightBorder(line) {
-            this._borders[DirectionType.right] = line;
-        }
-        get svgBottomBorder() {
-            return this._borders[DirectionType.bottom];
-        }
-        set svgBottomBorder(line) {
-            this._borders[DirectionType.bottom] = line;
-        }
-        get table() {
-            return this._table;
-        }
-        get svgBackground() {
-            return this._svgBackground;
-        }
-        get svgText() {
-            return this._svgText;
-        }
-        get svgGroup() {
-            return this._svgGroup;
-        }
-        get fontSize() {
-            const p = this.svgText.getPropertyStyleValueWithDefault("font-size", "24");
-            const p2 = parseInt(p);
-            return p2;
-        }
-        get paddingLeft() {
-            return this.svgGroup.getPaddingLeft();
-        }
-        get paddingRight() {
-            return this.svgGroup.getPaddingRight();
-        }
-        get paddingTop() {
-            return this.svgGroup.getPaddingTop();
-        }
-        get paddingBottom() {
-            return this.svgGroup.getPaddingBottom();
-        }
-        get horizontalAnchor() {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.HorizontalAnchor, "center");
-            return GraphTableSVG.HorizontalAnchor.toHorizontalAnchor(b);
-        }
-        set horizontalAnchor(value) {
-            if (this.horizontalAnchor != value)
-                this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.HorizontalAnchor, value);
-        }
-        get verticalAnchor() {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.VerticalAnchor, "middle");
-            return GraphTableSVG.VerticalAnchor.toVerticalAnchor(b);
-        }
-        set verticalAnchor(value) {
-            if (this.verticalAnchor != value)
-                this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.VerticalAnchor, value);
-        }
         get cellX() {
             return Number(this.svgGroup.getAttribute(Cell.cellXName));
         }
@@ -4834,76 +4789,8 @@ var GraphTableSVG;
         get defaultBackgroundClass() {
             return this.svgGroup.getPropertyStyleValue(Cell.defaultBackgroundClassName);
         }
-        get logicalWidth() {
-            if (this.isMaster) {
-                let w = 0;
-                let now = this;
-                while (now != null && this.ID == now.masterID) {
-                    now = this.rightCell;
-                    w++;
-                }
-                return w;
-            }
-            else {
-                return 0;
-            }
-        }
-        get logicalHeight() {
-            if (this.isMaster) {
-                let h = 0;
-                let now = this;
-                while (now != null && this.ID == now.masterID) {
-                    now = this.bottomCell;
-                    h++;
-                }
-                return h;
-            }
-            else {
-                return 0;
-            }
-        }
         get isLocated() {
             return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
-        }
-        get calculatedWidthUsingText() {
-            if (this.isLocated) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
-                return textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
-                    + this.paddingLeft + this.paddingRight;
-            }
-            else {
-                return 0;
-            }
-        }
-        get calculatedHeightUsingText() {
-            if (this.isLocated) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
-                return textRect.height + this.paddingTop + this.paddingBottom;
-            }
-            else {
-                return 0;
-            }
-        }
-        calculatedSizeUsingGroup() {
-            if (this.isLocated) {
-                let w = 0;
-                let h = 0;
-                this.leftSideGroupCells.forEach((v) => h += this.table.rows[v.cellY].height);
-                this.upperSideGroupCells.forEach((v) => w += this.table.columns[v.cellX].width);
-                return [w, h];
-            }
-            else {
-                return [0, 0];
-            }
-        }
-        computeSidePosition(dir) {
-            switch (dir) {
-                case DirectionType2.topLeft: return [this.x, this.y];
-                case DirectionType2.topRight: return [this.x + this.width, this.y];
-                case DirectionType2.bottomLeft: return [this.x, this.y + this.height];
-                case DirectionType2.bottomRight: return [this.x + this.width, this.y + this.height];
-            }
-            throw Error("error");
         }
         get isMaster() {
             return this.ID == this.masterID;
@@ -4916,74 +4803,6 @@ var GraphTableSVG;
         }
         get isErrorCell() {
             return this.table.cells[this.cellY][this.cellX] != this;
-        }
-        getNextCell(direction) {
-            switch (direction) {
-                case DirectionType.top: return this.cellY != 0 ? this.table.cells[this.cellY - 1][this.cellX] : null;
-                case DirectionType.left: return this.cellX != 0 ? this.table.cells[this.cellY][this.cellX - 1] : null;
-                case DirectionType.right: return this.cellX + 1 != this.table.columnCount ? this.table.cells[this.cellY][this.cellX + 1] : null;
-                case DirectionType.bottom: return this.cellY + 1 != this.table.rowCount ? this.table.cells[this.cellY + 1][this.cellX] : null;
-            }
-            throw Error("error");
-        }
-        getNextMasterCell(direction) {
-            const nextCell = this.getNextCell(direction);
-            return nextCell == null ? null :
-                nextCell.masterID != this.masterID ? nextCell.master : nextCell.getNextMasterCell(direction);
-        }
-        get topCell() {
-            return this.getNextCell(DirectionType.top);
-        }
-        get leftCell() {
-            return this.getNextCell(DirectionType.left);
-        }
-        get rightCell() {
-            return this.getNextCell(DirectionType.right);
-        }
-        get bottomCell() {
-            return this.getNextCell(DirectionType.bottom);
-        }
-        get bottomRightCell() {
-            return this.bottomCell == null ? null : this.bottomCell.rightCell == null ? null : this.bottomCell.rightCell;
-        }
-        get topRightCell() {
-            return this.topCell == null ? null : this.topCell.rightCell == null ? null : this.topCell.rightCell;
-        }
-        get bottomLeftCell() {
-            return this.bottomCell == null ? null : this.bottomCell.leftCell == null ? null : this.bottomCell.leftCell;
-        }
-        get topLeftCell() {
-            return this.topCell == null ? null : this.topCell.leftCell == null ? null : this.topCell.leftCell;
-        }
-        get topMasterCell() {
-            return this.getNextMasterCell(DirectionType.top);
-        }
-        get leftMasterCell() {
-            return this.getNextMasterCell(DirectionType.left);
-        }
-        get rightMasterCell() {
-            return this.getNextMasterCell(DirectionType.right);
-        }
-        get bottomMasterCell() {
-            return this.getNextMasterCell(DirectionType.bottom);
-        }
-        get computeGroupWidth() {
-            const p = this.master.upperSideGroupCells;
-            const x2 = p[p.length - 1].cellX;
-            let w = 0;
-            for (let i = this.cellX; i <= x2; i++) {
-                w += this.table.columns[i].width;
-            }
-            return w;
-        }
-        get computeGroupHeight() {
-            const p = this.master.leftSideGroupCells;
-            const y2 = p[p.length - 1].cellY;
-            let w = 0;
-            for (let i = this.cellY; i <= y2; i++) {
-                w += this.table.rows[i].height;
-            }
-            return w;
         }
         get GroupRowCount() {
             if (!this.isMaster)
@@ -5014,11 +4833,57 @@ var GraphTableSVG;
         get isSingleCell() {
             return this.isMaster && this.leftSideGroupCells.length == 1 && this.upperSideGroupCells.length == 1;
         }
-        get isRowSingleCell() {
+        get isMasterCellOfRowCountOne() {
             return this.isMaster && this.leftSideGroupCells.length == 1;
         }
-        get isColumnSingleCell() {
+        get isMasterCellOfColumnCountOne() {
             return this.isMaster && this.upperSideGroupCells.length == 1;
+        }
+        get x() {
+            return this.svgGroup.getX();
+        }
+        set x(value) {
+            this.svgGroup.setX(value);
+        }
+        get y() {
+            return this.svgGroup.getY();
+        }
+        set y(value) {
+            this.svgGroup.setY(value);
+        }
+        get width() {
+            return this.svgBackground.width.baseVal.value;
+        }
+        set width(value) {
+            this.svgBackground.width.baseVal.value = value;
+        }
+        get height() {
+            return this.svgBackground.height.baseVal.value;
+        }
+        set height(value) {
+            this.svgBackground.height.baseVal.value = value;
+        }
+        get region() {
+            const p = new GraphTableSVG.Rectangle(this.x, this.y, this.width, this.height);
+            return p;
+        }
+        get computeGroupWidth() {
+            const p = this.master.upperSideGroupCells;
+            const x2 = p[p.length - 1].cellX;
+            let w = 0;
+            for (let i = this.cellX; i <= x2; i++) {
+                w += this.table.columns[i].width;
+            }
+            return w;
+        }
+        get computeGroupHeight() {
+            const p = this.master.leftSideGroupCells;
+            const y2 = p[p.length - 1].cellY;
+            let w = 0;
+            for (let i = this.cellY; i <= y2; i++) {
+                w += this.table.rows[i].height;
+            }
+            return w;
         }
         static computeOverlapRange(v, w) {
             if (w[0] < v[0]) {
@@ -5076,80 +4941,147 @@ var GraphTableSVG;
                 return d2 - d1;
             }
         }
-        canMerge(w, h) {
-            const range = this.table.getRangeCells(this.cellX, this.cellY, w, h);
-            for (let x = 0; x < w; x++) {
-                const topCell = range[0][x].topCell;
-                if (topCell != null) {
-                    if (range[0][x].masterID == topCell.masterID)
-                        return false;
-                }
-                const bottomCell = range[h - 1][x].bottomCell;
-                if (bottomCell != null) {
-                    if (range[h - 1][x].masterID == bottomCell.masterID)
-                        return false;
-                }
-            }
-            for (let y = 0; y < h; y++) {
-                const leftCell = range[y][0].leftCell;
-                if (leftCell != null) {
-                    if (range[y][0].masterID == leftCell.masterID)
-                        return false;
-                }
-                const rightCell = range[y][w - 1].rightCell;
-                if (rightCell != null) {
-                    if (range[y][w - 1].masterID == rightCell.masterID)
-                        return false;
-                }
-            }
-            return true;
+        get svgTopBorder() {
+            return this._borders[DirectionType.top];
         }
-        merge(w, h) {
-            if (!this.isMaster)
-                throw Error("Error");
-            const range = this.table.getRangeCellArray(this.cellX, this.cellY, w, h);
-            range.forEach((v) => { v.setMasterCellX(this.masterCellX); v.setMasterCellY(this.masterCellY); });
-            range.forEach((v) => { v.groupUpdate(); });
+        set svgTopBorder(line) {
+            this._borders[DirectionType.top] = line;
         }
-        getMergedRangeRight() {
-            if (!this.isMaster)
-                return null;
-            if (this.rightMasterCell != null) {
-                const b1 = this.cellY == this.rightMasterCell.cellY;
-                const b2 = this.GroupRowCount == this.rightMasterCell.GroupRowCount;
-                if (b1 && b2) {
-                    return [this.GroupColumnCount + this.rightMasterCell.GroupColumnCount, this.GroupRowCount];
+        get svgLeftBorder() {
+            return this._borders[DirectionType.left];
+        }
+        set svgLeftBorder(line) {
+            this._borders[DirectionType.left] = line;
+        }
+        get svgRightBorder() {
+            return this._borders[DirectionType.right];
+        }
+        set svgRightBorder(line) {
+            this._borders[DirectionType.right] = line;
+        }
+        get svgBottomBorder() {
+            return this._borders[DirectionType.bottom];
+        }
+        set svgBottomBorder(line) {
+            this._borders[DirectionType.bottom] = line;
+        }
+        get logicalWidth() {
+            if (this.isMaster) {
+                let w = 0;
+                let now = this;
+                while (now != null && this.ID == now.masterID) {
+                    now = this.rightCell;
+                    w++;
                 }
-                else {
-                    return null;
-                }
+                return w;
             }
             else {
-                return null;
+                return 0;
             }
         }
-        getMergedRangeBottom() {
-            if (!this.isMaster)
-                return null;
-            if (this.bottomMasterCell != null) {
-                const b1 = this.cellX == this.bottomMasterCell.cellX;
-                const b2 = this.GroupColumnCount == this.bottomMasterCell.GroupColumnCount;
-                if (b1 && b2) {
-                    return [this.GroupColumnCount, this.GroupRowCount + this.bottomMasterCell.GroupRowCount];
+        get logicalHeight() {
+            if (this.isMaster) {
+                let h = 0;
+                let now = this;
+                while (now != null && this.ID == now.masterID) {
+                    now = this.bottomCell;
+                    h++;
                 }
-                else {
-                    return null;
-                }
+                return h;
             }
             else {
-                return null;
+                return 0;
             }
         }
-        get canMergeRight() {
-            return this.getMergedRangeRight() != null;
+        get calculatedWidthUsingText() {
+            if (this.isLocated) {
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+                return textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
+                    + this.paddingLeft + this.paddingRight;
+            }
+            else {
+                return 0;
+            }
         }
-        get canMergeBottom() {
-            return this.getMergedRangeBottom() != null;
+        get calculatedHeightUsingText() {
+            if (this.isLocated) {
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+                return textRect.height + this.paddingTop + this.paddingBottom;
+            }
+            else {
+                return 0;
+            }
+        }
+        calculatedSizeUsingGroup() {
+            if (this.isLocated) {
+                let w = 0;
+                let h = 0;
+                this.leftSideGroupCells.forEach((v) => h += this.table.rows[v.cellY].height);
+                this.upperSideGroupCells.forEach((v) => w += this.table.columns[v.cellX].width);
+                return [w, h];
+            }
+            else {
+                return [0, 0];
+            }
+        }
+        computeSidePosition(dir) {
+            switch (dir) {
+                case DirectionType2.topLeft: return [this.x, this.y];
+                case DirectionType2.topRight: return [this.x + this.width, this.y];
+                case DirectionType2.bottomLeft: return [this.x, this.y + this.height];
+                case DirectionType2.bottomRight: return [this.x + this.width, this.y + this.height];
+            }
+            throw Error("error");
+        }
+        getNextCell(direction) {
+            switch (direction) {
+                case DirectionType.top: return this.cellY != 0 ? this.table.cells[this.cellY - 1][this.cellX] : null;
+                case DirectionType.left: return this.cellX != 0 ? this.table.cells[this.cellY][this.cellX - 1] : null;
+                case DirectionType.right: return this.cellX + 1 != this.table.columnCount ? this.table.cells[this.cellY][this.cellX + 1] : null;
+                case DirectionType.bottom: return this.cellY + 1 != this.table.rowCount ? this.table.cells[this.cellY + 1][this.cellX] : null;
+            }
+            throw Error("error");
+        }
+        getNextMasterCell(direction) {
+            const nextCell = this.getNextCell(direction);
+            return nextCell == null ? null :
+                nextCell.masterID != this.masterID ? nextCell.master : nextCell.getNextMasterCell(direction);
+        }
+        get topCell() {
+            return this.getNextCell(DirectionType.top);
+        }
+        get leftCell() {
+            return this.getNextCell(DirectionType.left);
+        }
+        get rightCell() {
+            return this.getNextCell(DirectionType.right);
+        }
+        get bottomCell() {
+            return this.getNextCell(DirectionType.bottom);
+        }
+        get bottomRightCell() {
+            return this.bottomCell == null ? null : this.bottomCell.rightCell == null ? null : this.bottomCell.rightCell;
+        }
+        get topRightCell() {
+            return this.topCell == null ? null : this.topCell.rightCell == null ? null : this.topCell.rightCell;
+        }
+        get bottomLeftCell() {
+            return this.bottomCell == null ? null : this.bottomCell.leftCell == null ? null : this.bottomCell.leftCell;
+        }
+        get topLeftCell() {
+            return this.topCell == null ? null : this.topCell.leftCell == null ? null : this.topCell.leftCell;
+        }
+        get topMasterCell() {
+            return this.getNextMasterCell(DirectionType.top);
+        }
+        get leftMasterCell() {
+            return this.getNextMasterCell(DirectionType.left);
+        }
+        get rightMasterCell() {
+            return this.getNextMasterCell(DirectionType.right);
+        }
+        get bottomMasterCell() {
+            return this.getNextMasterCell(DirectionType.bottom);
         }
         get mostRightCellX() {
             return this.cellX + this.GroupColumnCount - 1;
@@ -5180,34 +5112,6 @@ var GraphTableSVG;
         get upperSideGroupCells() {
             return this.getNextGroupCells(DirectionType.right);
         }
-        get x() {
-            return this.svgGroup.getX();
-        }
-        set x(value) {
-            this.svgGroup.setX(value);
-        }
-        get y() {
-            return this.svgGroup.getY();
-        }
-        set y(value) {
-            this.svgGroup.setY(value);
-        }
-        get width() {
-            return this.svgBackground.width.baseVal.value;
-        }
-        set width(value) {
-            this.svgBackground.width.baseVal.value = value;
-        }
-        get height() {
-            return this.svgBackground.height.baseVal.value;
-        }
-        set height(value) {
-            this.svgBackground.height.baseVal.value = value;
-        }
-        get region() {
-            const p = new GraphTableSVG.Rectangle(this.x, this.y, this.width, this.height);
-            return p;
-        }
         toPlainText() {
             if (this.isMaster) {
                 const textContext = this.svgText.textContent != null ? this.svgText.textContent : "";
@@ -5223,42 +5127,56 @@ var GraphTableSVG;
             }
         }
         update() {
-            this.groupUpdate();
+            this.updateSVGGroupParent();
+            this.updateBorderParent();
+            this.updateBorderAttributes();
+            this.resize();
+            this.relocation();
         }
-        groupUpdate() {
+        updateSVGGroupParent() {
             if (this.isMaster) {
-                this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
+                if (this.svgGroup.parentNode != this.table.svgGroup) {
+                    this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
+                }
             }
             else {
                 this.table.svgHiddenGroup.appendChild(this.svgGroup);
                 this.svgText.textContent = "";
             }
+        }
+        updateBorderParent() {
             if (this.isMaster || (this.topCell != null && this.topCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.svgTopBorder);
+                if (this.table.svgGroup != this.svgTopBorder.parentNode)
+                    this.table.svgGroup.appendChild(this.svgTopBorder);
             }
             else {
-                this.table.svgHiddenGroup.appendChild(this.svgTopBorder);
+                if (this.table.svgHiddenGroup != this.svgTopBorder.parentNode)
+                    this.table.svgHiddenGroup.appendChild(this.svgTopBorder);
             }
             if (this.isMaster || (this.leftCell != null && this.leftCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.svgLeftBorder);
+                if (this.table.svgGroup != this.svgLeftBorder.parentNode)
+                    this.table.svgGroup.appendChild(this.svgLeftBorder);
             }
             else {
-                this.table.svgHiddenGroup.appendChild(this.svgLeftBorder);
+                if (this.table.svgHiddenGroup != this.svgLeftBorder.parentNode)
+                    this.table.svgHiddenGroup.appendChild(this.svgLeftBorder);
             }
             if (this.isMaster || (this.rightCell != null && this.rightCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.svgRightBorder);
+                if (this.table.svgGroup != this.svgRightBorder.parentNode)
+                    this.table.svgGroup.appendChild(this.svgRightBorder);
             }
             else {
-                this.table.svgHiddenGroup.appendChild(this.svgRightBorder);
+                if (this.table.svgHiddenGroup != this.svgRightBorder.parentNode)
+                    this.table.svgHiddenGroup.appendChild(this.svgRightBorder);
             }
             if (this.isMaster || (this.bottomCell != null && this.bottomCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.svgBottomBorder);
+                if (this.table.svgGroup != this.svgBottomBorder.parentNode)
+                    this.table.svgGroup.appendChild(this.svgBottomBorder);
             }
             else {
-                this.table.svgHiddenGroup.appendChild(this.svgBottomBorder);
+                if (this.table.svgHiddenGroup != this.svgBottomBorder.parentNode)
+                    this.table.svgHiddenGroup.appendChild(this.svgBottomBorder);
             }
-            this.resize();
-            this.relocation();
         }
         resize() {
             GraphTableSVG.SVGTextBox.sortText(this.svgText, this.horizontalAnchor);
@@ -5276,7 +5194,7 @@ var GraphTableSVG;
                 this.height = this.calculatedHeightUsingText;
             }
         }
-        localUpdate() {
+        locateSVGText() {
             const innerRect = new GraphTableSVG.Rectangle();
             innerRect.x = this.innerExtraPaddingLeft + this.paddingLeft;
             innerRect.y = this.paddingTop;
@@ -5329,6 +5247,36 @@ var GraphTableSVG;
                 if (this.bottomCell == null)
                     this.removeBorder(DirectionType.bottom);
             }
+        }
+        updateBorderAttributes() {
+            if (this.leftCell != null && this.leftCell.svgRightBorder != this.svgLeftBorder) {
+                this.removeBorder(DirectionType.left);
+                this.svgLeftBorder = this.leftCell.svgRightBorder;
+            }
+            if (this.topCell != null && this.topCell.svgBottomBorder != this.svgTopBorder) {
+                this.removeBorder(DirectionType.top);
+                this.svgTopBorder = this.topCell.svgBottomBorder;
+            }
+            if (this.rightCell != null && this.rightCell.svgLeftBorder != this.svgRightBorder) {
+                this.rightCell.removeBorder(DirectionType.left);
+                this.rightCell.svgLeftBorder = this.svgRightBorder;
+            }
+            if (this.bottomCell != null && this.bottomCell.svgTopBorder != this.svgBottomBorder) {
+                this.bottomCell.removeBorder(DirectionType.top);
+                this.bottomCell.svgTopBorder = this.svgBottomBorder;
+            }
+            this.svgTopBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            this.svgTopBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            this.svgTopBorder.setAttribute(Cell.borderTypeName, "horizontal");
+            this.svgLeftBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            this.svgLeftBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            this.svgLeftBorder.setAttribute(Cell.borderTypeName, "vertical");
+            this.svgRightBorder.setAttribute(Cell.borderXName, `${this.cellX + 1}`);
+            this.svgRightBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            this.svgRightBorder.setAttribute(Cell.borderTypeName, "vertical");
+            this.svgBottomBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            this.svgBottomBorder.setAttribute(Cell.borderYName, `${this.cellY + 1}`);
+            this.svgBottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
         }
         relocateTopBorder() {
             if (!this.isMaster)
@@ -5409,7 +5357,7 @@ var GraphTableSVG;
             this.relocateLeftBorder();
             this.relocateRightBorder();
             this.relocateBottomBorder();
-            this.localUpdate();
+            this.locateSVGText();
         }
         mergeRight() {
             const range = this.getMergedRangeRight();
@@ -5429,6 +5377,81 @@ var GraphTableSVG;
                 throw Error("Error");
             }
         }
+        canMerge(w, h) {
+            const range = this.table.getRangeCells(this.cellX, this.cellY, w, h);
+            for (let x = 0; x < w; x++) {
+                const topCell = range[0][x].topCell;
+                if (topCell != null) {
+                    if (range[0][x].masterID == topCell.masterID)
+                        return false;
+                }
+                const bottomCell = range[h - 1][x].bottomCell;
+                if (bottomCell != null) {
+                    if (range[h - 1][x].masterID == bottomCell.masterID)
+                        return false;
+                }
+            }
+            for (let y = 0; y < h; y++) {
+                const leftCell = range[y][0].leftCell;
+                if (leftCell != null) {
+                    if (range[y][0].masterID == leftCell.masterID)
+                        return false;
+                }
+                const rightCell = range[y][w - 1].rightCell;
+                if (rightCell != null) {
+                    if (range[y][w - 1].masterID == rightCell.masterID)
+                        return false;
+                }
+            }
+            return true;
+        }
+        merge(w, h) {
+            if (!this.isMaster)
+                throw Error("Error");
+            const range = this.table.getRangeCellArray(this.cellX, this.cellY, w, h);
+            range.forEach((v) => { v.setMasterCellX(this.masterCellX); v.setMasterCellY(this.masterCellY); });
+            range.forEach((v) => { v.update(); });
+        }
+        getMergedRangeRight() {
+            if (!this.isMaster)
+                return null;
+            if (this.rightMasterCell != null) {
+                const b1 = this.cellY == this.rightMasterCell.cellY;
+                const b2 = this.GroupRowCount == this.rightMasterCell.GroupRowCount;
+                if (b1 && b2) {
+                    return [this.GroupColumnCount + this.rightMasterCell.GroupColumnCount, this.GroupRowCount];
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        }
+        getMergedRangeBottom() {
+            if (!this.isMaster)
+                return null;
+            if (this.bottomMasterCell != null) {
+                const b1 = this.cellX == this.bottomMasterCell.cellX;
+                const b2 = this.GroupColumnCount == this.bottomMasterCell.GroupColumnCount;
+                if (b1 && b2) {
+                    return [this.GroupColumnCount, this.GroupRowCount + this.bottomMasterCell.GroupRowCount];
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        }
+        get canMergeRight() {
+            return this.getMergedRangeRight() != null;
+        }
+        get canMergeBottom() {
+            return this.getMergedRangeBottom() != null;
+        }
         decomposeRow(upperRowCount) {
             if (this.isMaster) {
                 const upperSide = this.table.getRangeCellArray(this.cellX, this.cellY, this.GroupColumnCount, upperRowCount);
@@ -5438,8 +5461,8 @@ var GraphTableSVG;
                     v.setMasterCellX(lowerMaster.cellX);
                     v.setMasterCellY(lowerMaster.cellY);
                 });
-                upperSide.forEach((v) => v.groupUpdate());
-                lowerSide.forEach((v) => v.groupUpdate());
+                upperSide.forEach((v) => v.update());
+                lowerSide.forEach((v) => v.update());
             }
             else {
                 throw Error("Slave Error");
@@ -5454,42 +5477,12 @@ var GraphTableSVG;
                     v.setMasterCellX(rightMaster.cellX);
                     v.setMasterCellY(rightMaster.cellY);
                 });
-                leftSide.forEach((v) => v.groupUpdate());
-                rightSide.forEach((v) => v.groupUpdate());
+                leftSide.forEach((v) => v.update());
+                rightSide.forEach((v) => v.update());
             }
             else {
                 throw Error("Slave Error");
             }
-        }
-        updateBorderAttributes() {
-            if (this.leftCell != null && this.leftCell.svgRightBorder != this.svgLeftBorder) {
-                this.removeBorder(DirectionType.left);
-                this.svgLeftBorder = this.leftCell.svgRightBorder;
-            }
-            if (this.topCell != null && this.topCell.svgBottomBorder != this.svgTopBorder) {
-                this.removeBorder(DirectionType.top);
-                this.svgTopBorder = this.topCell.svgBottomBorder;
-            }
-            if (this.rightCell != null && this.rightCell.svgLeftBorder != this.svgRightBorder) {
-                this.rightCell.removeBorder(DirectionType.left);
-                this.rightCell.svgLeftBorder = this.svgRightBorder;
-            }
-            if (this.bottomCell != null && this.bottomCell.svgTopBorder != this.svgBottomBorder) {
-                this.bottomCell.removeBorder(DirectionType.top);
-                this.bottomCell.svgTopBorder = this.svgBottomBorder;
-            }
-            this.svgTopBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.svgTopBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.svgTopBorder.setAttribute(Cell.borderTypeName, "horizontal");
-            this.svgLeftBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.svgLeftBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.svgLeftBorder.setAttribute(Cell.borderTypeName, "vertical");
-            this.svgRightBorder.setAttribute(Cell.borderXName, `${this.cellX + 1}`);
-            this.svgRightBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.svgRightBorder.setAttribute(Cell.borderTypeName, "vertical");
-            this.svgBottomBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.svgBottomBorder.setAttribute(Cell.borderYName, `${this.cellY + 1}`);
-            this.svgBottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
         }
     }
     Cell.defaultBackgroundClassName = "--default-background-class";
@@ -5535,20 +5528,18 @@ var GraphTableSVG;
             let b = false;
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
-                if (cell.isColumnSingleCell && cell.width != width) {
+                if (cell.isMasterCellOfColumnCountOne && cell.width != width) {
                     cell.width = width;
                     b = true;
                 }
             }
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
-                if (!cell.isColumnSingleCell) {
+                if (!cell.isMasterCellOfColumnCountOne) {
                     cell.update();
                     b = true;
                 }
             }
-            if (b && !this.table.isDrawing && this.table.isAutoResized)
-                this.table.update();
         }
         get cells() {
             const items = [];
@@ -5561,7 +5552,7 @@ var GraphTableSVG;
             let width = 0;
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
-                if (cell.isColumnSingleCell) {
+                if (cell.isMasterCellOfColumnCountOne) {
                     if (width < cell.calculatedWidthUsingText)
                         width = cell.calculatedWidthUsingText;
                     if (width < cell.width)
@@ -5570,10 +5561,8 @@ var GraphTableSVG;
             }
             return width;
         }
-        update() {
-            this.setWidthToCells();
-        }
         resize() {
+            this.cells.forEach((v) => v.update());
             this.setWidthToCells();
         }
         fitWidthToOriginalCell(allowShrink) {
@@ -5742,25 +5731,21 @@ var GraphTableSVG;
             let b = false;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                if (cell.isRowSingleCell && cell.height != height) {
+                if (cell.isMasterCellOfRowCountOne && cell.height != height) {
                     cell.height = height;
                     b = true;
                 }
             }
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                if (!cell.isRowSingleCell) {
+                if (!cell.isMasterCellOfRowCountOne) {
                     cell.update();
                     b = true;
                 }
             }
-            if (b && !this.table.isDrawing && this.table.isAutoResized)
-                this.table.update();
-        }
-        update() {
-            this.setHeightToCells();
         }
         resize() {
+            this.cells.forEach((v) => v.update());
             this.setHeightToCells();
         }
         fitHeightToOriginalCell(allowShrink) {
@@ -5781,7 +5766,7 @@ var GraphTableSVG;
             let height = 0;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                if (cell.isRowSingleCell) {
+                if (cell.isMasterCellOfRowCountOne) {
                     if (height < cell.calculatedHeightUsingText)
                         height = cell.calculatedHeightUsingText;
                     if (height < cell.height)
@@ -5816,9 +5801,6 @@ var GraphTableSVG;
                     this.table.rows[y].remove(true);
                 }
             }
-        }
-        relocation() {
-            this.cells.forEach((v) => v.relocation());
         }
         get groupRowRange() {
             let range = this.cells[0].groupRowRange;
@@ -7546,6 +7528,7 @@ var GraphTableSVG;
             throw Error("error!");
         }
     }
+    let timerInterval = 100;
     function lazyOpenSVG() {
         const p = document.getElementsByTagName("svg");
         const svgElements = [];
@@ -7556,7 +7539,7 @@ var GraphTableSVG;
         }
         svgElements.forEach((svgsvg) => lazyElementDic.push(svgsvg));
         if (lazyElementDic.length > 0)
-            setTimeout(observelazyElementTimer, 500);
+            setTimeout(observelazyElementTimer, timerInterval);
     }
     GraphTableSVG.lazyOpenSVG = lazyOpenSVG;
     let lazyElementDic = [];
@@ -7570,7 +7553,7 @@ var GraphTableSVG;
             }
         }
         if (lazyElementDic.length > 0)
-            setTimeout(observelazyElementTimer, 500);
+            setTimeout(observelazyElementTimer, timerInterval);
     }
     function openSVG(inputItem = null, output = []) {
         if (typeof inputItem == "string") {

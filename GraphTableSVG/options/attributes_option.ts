@@ -216,6 +216,7 @@ namespace GraphTableSVG {
             throw Error("error!");
         }
     }
+    let timerInterval = 100;
     export function lazyOpenSVG() {
         const p = document.getElementsByTagName("svg");
         const svgElements: SVGSVGElement[] = [];
@@ -224,7 +225,7 @@ namespace GraphTableSVG {
             if (svgNode instanceof SVGSVGElement) svgElements.push(svgNode);
         }
         svgElements.forEach((svgsvg) => lazyElementDic.push(svgsvg));
-        if(lazyElementDic.length > 0)setTimeout(observelazyElementTimer, 500);
+        if(lazyElementDic.length > 0)setTimeout(observelazyElementTimer, timerInterval);
 
     }
     let lazyElementDic: SVGSVGElement[] = [];
@@ -240,7 +241,7 @@ namespace GraphTableSVG {
             }
 
         }
-        if(lazyElementDic.length > 0)setTimeout(observelazyElementTimer, 500);
+        if(lazyElementDic.length > 0)setTimeout(observelazyElementTimer, timerInterval);
     }
 
 

@@ -11,37 +11,45 @@ namespace GraphTableSVG {
      * セルをSVGで表現するためのクラスです。
      */
     export class Cell {
-        private static readonly defaultBackgroundClassName: string = "--default-background-class";
-        public static readonly emphasisCellClass: string = "___cell-emphasis";
-        public static readonly emphasisBorderClass: string = "___border-emphasis";
-        public static readonly temporaryBorderClass: string = "___temporary-class";
 
-        public static readonly cellXName = "data-cellX";
-        public static readonly cellYName = "data-cellY";
-        public static readonly borderXName = "data-borderX";
-        public static readonly borderYName = "data-borderY";
-        public static readonly borderTypeName = "data-borderType";
+        constructor(parent: GTable, _px: number, _py: number, option: CellOption = {}) {
+            this._svgGroup = SVG.createGroup(null);
+            this._table = parent;
+            this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
+            if (option.cellClass !== undefined) this.svgGroup.setAttribute("class", option.cellClass);
+            this.svgGroup.setAttribute(Cell.elementTypeName, "cell-group");
+            this.svgGroup.setAttribute(Cell.cellXName, `${_px}`);
+            this.svgGroup.setAttribute(Cell.cellYName, `${_py}`);
+            this.setMasterDiffX(0);
+            this.setMasterDiffY(0);
+            this._svgBackground = SVG.createRectangle(this.svgGroup, this.defaultBackgroundClass);
+            this._svgText = SVG.createText(this.defaultTextClass);
+            this.svgGroup.appendChild(this.svgText);
 
-        public static readonly masterIDName = "data-masterID";
-        public static readonly masterDiffXName = "data-masterDiffX";
-        public static readonly masterDiffYName = "data-masterDiffY";
+            const borderClass = option.borderClass === undefined ? null : option.borderClass;
 
-        public static readonly elementTypeName = "data-elementType";
+            this.svgTopBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            this.svgLeftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            this.svgRightBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            this.svgBottomBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            //this.updateBorderAttributes();
+            this.table.svgGroup.appendChild(this.svgTopBorder);
+            this.table.svgGroup.appendChild(this.svgLeftBorder);
+            this.table.svgGroup.appendChild(this.svgRightBorder);
+            this.table.svgGroup.appendChild(this.svgBottomBorder);
 
-        private _observer: MutationObserver;
-        private _observerFunc: MutationCallback = (x: MutationRecord[]) => {
-
-            for (let i = 0; i < x.length; i++) {                
-                const p = x[i];
-                if (p.attributeName == "style" || p.attributeName == "class") {
-                    this.localUpdate();
-                }
-
-            }
-        };
+            const option1: MutationObserverInit = { childList: true, subtree: true };
+            this.table.cellTextObserver.observe(this.svgText, option1);
 
 
-        private tmpStyle: string | null = null;
+            this._observer = new MutationObserver(this._observerFunc);
+            const option2: MutationObserverInit = { attributes: true };
+            this._observer.observe(this.svgGroup, option2);
+
+
+        }
+        // #region style
+        
         /**
          * このセルが強調してるかどうかを返します。
          */
@@ -68,63 +76,131 @@ namespace GraphTableSVG {
                 }
             }
         }
-
-
-        constructor(parent: GTable, _px: number, _py: number, option : CellOption = {}) {
-            this._svgGroup = SVG.createGroup(null);
-            this._table = parent;
-            this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
-            if (option.cellClass !== undefined) this.svgGroup.setAttribute("class", option.cellClass);
-            this.svgGroup.setAttribute(Cell.elementTypeName, "cell-group");
-            //this.padding = new Padding();
-            this.svgGroup.setAttribute(Cell.cellXName, `${_px}`);
-            this.svgGroup.setAttribute(Cell.cellYName, `${_py}`);
-            //this.cellX = _px;
-            //this.cellY = _py;
-            this.setMasterDiffX(0);
-            this.setMasterDiffY(0);
-            this._svgBackground = SVG.createRectangle(this.svgGroup, this.defaultBackgroundClass);
-            this._svgText = SVG.createText(this.defaultTextClass);
-            //this.svgGroup.appendChild(this.svgBackground);
-            //SVG.setDefaultValue(this.svgBackground);
-            this.svgGroup.appendChild(this.svgText);
-
-            /*
-            const circle = createRectangle();
-            circle.style.fill = "blue";
-            this.rect = circle;
-            this.svgGroup.appendChild(circle);
-            */
-
-            //this.parent.svgGroup.appendChild(this.svgGroup);
-            const borderClass = option.borderClass === undefined ? null : option.borderClass;
-
-            this.svgTopBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
-            this.svgLeftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
-            this.svgRightBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
-            this.svgBottomBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
-            //this.updateBorderAttributes();
-            this.table.svgGroup.appendChild(this.svgTopBorder);
-            this.table.svgGroup.appendChild(this.svgLeftBorder);
-            this.table.svgGroup.appendChild(this.svgRightBorder);
-            this.table.svgGroup.appendChild(this.svgBottomBorder);
-
-            const option1: MutationObserverInit = { childList: true, subtree: true };
-            this.table.cellTextObserver.observe(this.svgText, option1);
-
-            
-            this._observer = new MutationObserver(this._observerFunc);
-            
-            const option2: MutationObserverInit = { attributes: true };
-            this._observer.observe(this.svgGroup, option2);
-            
-
-            /*
-            this.verticalAnchor = VerticalAnchor.Middle;
-            this.horizontalAnchor = HorizontalAnchor.Left;
-            */
-
+        
+        /**
+         * テキストのフォントサイズを返します。
+         */
+        get fontSize(): number {
+            const p = this.svgText.getPropertyStyleValueWithDefault("font-size", "24");
+            const p2 = parseInt(p);
+            return p2;
         }
+        /**
+        テキストとセル間の左のパディング値を返します。
+        */
+        get paddingLeft(): number {
+            return this.svgGroup.getPaddingLeft();
+        }
+
+        /**
+        テキストとセル間の右のパディング値を返します。
+        */
+        get paddingRight(): number {
+            return this.svgGroup.getPaddingRight();
+        }
+        /**
+        テキストとセル間の上のパディング値を返します。
+        */
+        get paddingTop(): number {
+            return this.svgGroup.getPaddingTop();
+        }
+        /**
+        テキストとセル間の下のパディング値を返します。
+        */
+        get paddingBottom(): number {
+            return this.svgGroup.getPaddingBottom();
+        }
+
+
+        get horizontalAnchor(): HorizontalAnchor {
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.HorizontalAnchor, "center");
+            return HorizontalAnchor.toHorizontalAnchor(b);
+        }
+        /**
+        テキストの水平方向の配置設定を設定します。
+        */
+        set horizontalAnchor(value: HorizontalAnchor) {
+            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor, value);
+        }
+        /**
+        テキストの垂直方向の配置設定を返します。
+        */
+        get verticalAnchor(): VerticalAnchor {
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.VerticalAnchor, "middle");
+            return VerticalAnchor.toVerticalAnchor(b);
+        }
+        /**
+        テキストの垂直方向の配置設定を設定します。
+        */
+        set verticalAnchor(value: VerticalAnchor) {
+            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor, value);
+        }
+        // #endregion
+
+        // #region field
+        private static readonly defaultBackgroundClassName: string = "--default-background-class";
+        public static readonly emphasisCellClass: string = "___cell-emphasis";
+        public static readonly emphasisBorderClass: string = "___border-emphasis";
+        public static readonly temporaryBorderClass: string = "___temporary-class";
+
+        public static readonly cellXName = "data-cellX";
+        public static readonly cellYName = "data-cellY";
+        public static readonly borderXName = "data-borderX";
+        public static readonly borderYName = "data-borderY";
+        public static readonly borderTypeName = "data-borderType";
+
+        public static readonly masterIDName = "data-masterID";
+        public static readonly masterDiffXName = "data-masterDiffX";
+        public static readonly masterDiffYName = "data-masterDiffY";
+
+        public static readonly elementTypeName = "data-elementType";
+        private tmpStyle: string | null = null;
+        private _table: GTable;
+        /**
+        所属しているTableを返します。
+        */
+        public get table(): GTable {
+            return this._table;
+        }
+        private _svgBackground: SVGRectElement;
+        /**
+        セルの背景を表現しているSVGRectElementを返します。
+        */
+        public get svgBackground(): SVGRectElement {
+            return this._svgBackground;
+        }
+        private _svgText: SVGTextElement;
+        /**
+        セルのテキストを表現しているSVGTextElementを返します。
+        */
+        public get svgText(): SVGTextElement {
+            return this._svgText;
+        }
+        private _svgGroup: SVGGElement;
+        /**
+        セルを表しているSVGGElementを返します。
+        */
+        public get svgGroup(): SVGGElement {
+            return this._svgGroup;
+        }
+        private _observer: MutationObserver;
+        private _observerFunc: MutationCallback = (x: MutationRecord[]) => {
+
+            for (let i = 0; i < x.length; i++) {
+                const p = x[i];
+                if (p.attributeName == "style" || p.attributeName == "class") {
+                    this.locateSVGText();
+                }
+
+            }
+        };
+        // #endregion
+
+        // #region property
+
+
+
+
 
         private get innerExtraPaddingLeft(): number {
             const p = this.fontSize;
@@ -204,7 +280,284 @@ namespace GraphTableSVG {
         public get master(): Cell {
             return this.table.cellArray[this.masterID];
         }
+        /**
+        単位セルを基準にした自身のX座標を返します。
+        */
+        get cellX(): number {
+            return Number(this.svgGroup.getAttribute(Cell.cellXName));
+        }
+        /**
+        単位セルを基準にした自身のX座標を設定します。
+        */
+        set cellX(value: number) {
+            if (this.cellX != value) this.svgGroup.setAttribute(Cell.cellXName, value.toString());
+        }
+        /**
+        単位セルを基準にした自身のY座標を返します。
+        */
+        get cellY(): number {
+            return Number(this.svgGroup.getAttribute(Cell.cellYName));
+        }
+        /**
+        単位セルを基準にした自身のY座標を設定します。
+        */
+        set cellY(value: number) {
+            if (this.cellY != value) this.svgGroup.setAttribute(Cell.cellYName, value.toString());
+        }
+        /**
+        SVGTextElement生成時に設定するクラス名を返します。
+        */
+        get defaultTextClass(): string | null {
+            const r = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
+            return r;
+        }
+        /**
+        SVGBackElement生成時に設定するクラス名を返します。
+        */
+        get defaultBackgroundClass(): string | null {
+            return this.svgGroup.getPropertyStyleValue(Cell.defaultBackgroundClassName);
+        }
+        /**
+        CellがDocumentのDOMに所属しているかどうかを返します。
+        */
+        get isLocated(): boolean {
+            return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
+        }
+        /**
+         * このセルがマスターセルのときに限りTrueを返します。
+         */
+        get isMaster(): boolean {
+            return this.ID == this.masterID;
+        }
+        /**
+         * このセルが奴隷セルのときに限りTrueを返します。
+         */
+        get isSlave(): boolean {
+            return !this.isMaster;
+        }
+        /**
+        セルのIDを返します。
+        */
+        get ID(): number {
+            return this.cellX + (this.cellY * this.table.columnCount);
+        }
 
+        get isErrorCell(): boolean {
+            return this.table.cells[this.cellY][this.cellX] != this;
+        }
+
+        /**
+         * グループセルの行数を返します。
+         */
+        get GroupRowCount(): number {
+            if (!this.isMaster) throw Error("Slave Error");
+            return this.leftSideGroupCells.length;
+        }
+        /**
+         * グループセルの列数を返します。
+         */
+        get GroupColumnCount(): number {
+            if (!this.isMaster) throw Error("Slave Error");
+            return this.upperSideGroupCells.length;
+        }
+        /**
+         * グループセルを構成しているセルを2次元配列で返します。
+         */
+        get cellsInGroup(): Cell[][] {
+            if (this.isMaster) {
+                return this.table.getRangeCells(this.cellX, this.cellY, this.GroupColumnCount, this.GroupRowCount);
+            } else {
+                throw Error("Slave Error");
+            }
+        }
+        /**
+         * グループセルを構成しているセルを配列で返します。
+         */
+        get cellArrayInGroup(): Cell[] {
+            if (this.isMaster) {
+                return this.table.getRangeCellArray(this.cellX, this.cellY, this.GroupColumnCount, this.GroupRowCount);
+            } else {
+                throw Error("Slave Error");
+            }
+        }
+
+        /**
+         * このセルがグループセルであるときに限りTrueを返します。
+         */
+        get isSingleCell(): boolean {
+            return this.isMaster && this.leftSideGroupCells.length == 1 && this.upperSideGroupCells.length == 1;
+        }
+        /**
+         * マスターセルかつ行数が１のときに限りTrueを返します。
+         */
+        get isMasterCellOfRowCountOne(): boolean {
+            return this.isMaster && this.leftSideGroupCells.length == 1;
+        }
+        /**
+         * マスターセルかつ列数が１のときに限りTrueを返します。
+         */
+        get isMasterCellOfColumnCountOne(): boolean {
+            return this.isMaster && this.upperSideGroupCells.length == 1;
+        }
+
+        /**
+        セルのX座標を返します。
+        */
+        get x(): number {
+            return this.svgGroup.getX();
+        }
+        /**
+        セルのX座標を設定します。
+        */
+        set x(value: number) {
+            this.svgGroup.setX(value);
+        }
+        /**
+        セルのY座標を返します。
+        */
+        get y(): number {
+            return this.svgGroup.getY();
+        }
+        /**
+        セルのY座標を設定します。
+        */
+        set y(value: number) {
+            this.svgGroup.setY(value);
+        }
+
+        /**
+        セルの幅を返します。
+        */
+        get width(): number {
+            return this.svgBackground.width.baseVal.value;
+        }
+        /**
+        セルの幅を設定します。
+        */
+        set width(value: number) {
+            this.svgBackground.width.baseVal.value = value;
+        }
+        /**
+        セルの高さを返します。
+        */
+        get height(): number {
+            return this.svgBackground.height.baseVal.value;
+        }
+        /**
+        セルの高さを設定します。
+        */
+        set height(value: number) {
+            this.svgBackground.height.baseVal.value = value;
+        }
+        /**
+        セルの領域を表すRectangleを返します。領域の基準は属しているテーブルのSVGGElementです。
+        */
+        get region(): Rectangle {
+            const p = new Rectangle(this.x, this.y, this.width, this.height);
+            return p;
+        }
+
+        /**
+         * グループセルの横幅を返します。
+         */
+        get computeGroupWidth(): number {
+            const p = this.master.upperSideGroupCells;
+            const x2 = p[p.length - 1].cellX;
+            let w = 0;
+            for (let i = this.cellX; i <= x2; i++) {
+                w += this.table.columns[i].width;
+            }
+            return w;
+        }
+        /**
+         * グループセルの縦幅を返します。
+         */
+        get computeGroupHeight(): number {
+            const p = this.master.leftSideGroupCells;
+            const y2 = p[p.length - 1].cellY;
+            let w = 0;
+            for (let i = this.cellY; i <= y2; i++) {
+                w += this.table.rows[i].height;
+            }
+            return w;
+
+        }
+
+
+        /**
+         * ２つの線分がオーバーラップしている部分の線分を返します。
+         * @param v 
+         * @param w 
+         */
+        private static computeOverlapRange(v: [number, number], w: [number, number]): [number, number] | null {
+            if (w[0] < v[0]) {
+                return Cell.computeOverlapRange(w, v);
+            } else {
+                if (v[1] < w[0]) {
+                    return null;
+                } else {
+                    if (w[1] < v[1]) {
+                        return [w[0], w[1]];
+                    } else {
+                        return [w[0], v[1]];
+                    }
+                }
+            }
+        }
+        /**
+         * ２つの線分がオーバーラップしているときに限り、その結合した線分を返します。
+         * @param v 
+         * @param w 
+         */
+        public static computeDisjunction(v: [number, number], w: [number, number]): [number, number] | null {
+            if (w[0] < v[0]) {
+                return Cell.computeDisjunction(w, v);
+            } else {
+                if (v[1] < w[0]) {
+                    return null;
+                } else {
+                    return [v[0], Math.max(v[1], w[1])];
+                }
+            }
+        }
+        /**
+         * このグループセルの左上のX座標と右上のX座標を返します。
+         */
+        public get groupColumnRange(): [number, number] {
+            return [this.master.cellX, this.master.mostRightCellX];
+        }
+
+        /**
+         * このグループセルの左上のY座標と左下のY座標を返します。
+         */
+        public get groupRowRange(): [number, number] {
+            return [this.master.cellY, this.master.mostBottomCellY];
+        }
+
+        private computeBorderLength2(dir: DirectionType): number {
+            //const andFunc = ((v, w) => v);
+
+            const d1 = dir == DirectionType.top || dir == DirectionType.bottom ? this.master.x : this.master.y;
+            const d2 = dir == DirectionType.top || dir == DirectionType.bottom ? this.master.x + this.computeGroupWidth : this.master.y + this.computeGroupHeight;
+
+            const nextCell = this.getNextMasterCell(dir);
+            if (nextCell != null) {
+                const e1 = dir == DirectionType.top || dir == DirectionType.bottom ? nextCell.x : nextCell.y;
+                const e2 = dir == DirectionType.top || dir == DirectionType.bottom ? nextCell.x + nextCell.computeGroupWidth : nextCell.y + nextCell.computeGroupHeight;
+
+                const range = Cell.computeOverlapRange([d1, d2], [e1, e2]);
+                if (range == null) {
+                    throw Error("error");
+                } else {
+                    return range[1] - range[0];
+                }
+            } else {
+                return d2 - d1;
+            }
+
+        }
+        // #endregion
+        // #region border
         private _borders: SVGLineElement[] = new Array(4);
         //private _topBorder: SVGLineElement;
         /**
@@ -260,147 +613,9 @@ namespace GraphTableSVG {
             this._borders[DirectionType.bottom] = line;
 
         }
-        private _table: GTable;
-        /**
-        所属しているTableを返します。
-        */
-        public get table(): GTable {
-            return this._table;
-        }
-        private _svgBackground: SVGRectElement;
-        /**
-        セルの背景を表現しているSVGRectElementを返します。
-        */
-        public get svgBackground(): SVGRectElement {
-            return this._svgBackground;
-        }
-        private _svgText: SVGTextElement;
-        /**
-        セルのテキストを表現しているSVGTextElementを返します。
-        */
-        public get svgText(): SVGTextElement {
-            return this._svgText;
-        }
-        private _svgGroup: SVGGElement;
-        /**
-        セルを表しているSVGGElementを返します。
-        */
-        public get svgGroup(): SVGGElement {
-            return this._svgGroup;
-        }
+        // #endregion
 
-        /**
-         * テキストのフォントサイズを返します。
-         */
-        get fontSize(): number {
-            const p = this.svgText.getPropertyStyleValueWithDefault("font-size", "24");
-            const p2 = parseInt(p);
-            return p2;
-        }
-        /**
-        テキストとセル間の左のパディング値を返します。
-        */
-        get paddingLeft(): number {
-            return this.svgGroup.getPaddingLeft();
-        }
-
-        /**
-        テキストとセル間の右のパディング値を返します。
-        */
-        get paddingRight(): number {
-            return this.svgGroup.getPaddingRight();
-        }
-        /**
-        テキストとセル間の上のパディング値を返します。
-        */
-        get paddingTop(): number {
-            return this.svgGroup.getPaddingTop();
-        }
-        /**
-        テキストとセル間の下のパディング値を返します。
-        */
-        get paddingBottom(): number {
-            return this.svgGroup.getPaddingBottom();
-        }
-
-
-        get horizontalAnchor(): HorizontalAnchor {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.HorizontalAnchor, "center");
-            return HorizontalAnchor.toHorizontalAnchor(b);
-        }
-        /**
-        テキストの水平方向の配置設定を設定します。
-        */
-        set horizontalAnchor(value: HorizontalAnchor) {
-            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor, value);
-        }
-        /**
-        テキストの垂直方向の配置設定を返します。
-        */
-        get verticalAnchor(): VerticalAnchor {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.VerticalAnchor, "middle");
-            return VerticalAnchor.toVerticalAnchor(b);
-        }
-        /**
-        テキストの垂直方向の配置設定を設定します。
-        */
-        set verticalAnchor(value: VerticalAnchor) {
-            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor, value);
-        }
-
-        /*
-        get horizontalAnchor(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor);
-        }
-        set horizontalAnchor(value: string | null) {
-            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor, value);
-        }
-        get verticalAnchor(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor);
-        }
-        set verticalAnchor(value: string | null) {
-            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor, value);
-        }
-        */
-        /**
-        単位セルを基準にした自身のX座標を返します。
-        */
-        get cellX(): number {
-            return Number(this.svgGroup.getAttribute(Cell.cellXName));
-        }
-        /**
-        単位セルを基準にした自身のX座標を設定します。
-        */
-        set cellX(value: number) {
-            if (this.cellX != value) this.svgGroup.setAttribute(Cell.cellXName, value.toString());
-        }
-        /**
-        単位セルを基準にした自身のY座標を返します。
-        */
-        get cellY(): number {
-            return Number(this.svgGroup.getAttribute(Cell.cellYName));
-        }
-        /**
-        単位セルを基準にした自身のY座標を設定します。
-        */
-        set cellY(value: number) {
-            if (this.cellY != value) this.svgGroup.setAttribute(Cell.cellYName, value.toString());
-        }
-
-        /**
-        SVGTextElement生成時に設定するクラス名を返します。
-        */
-        get defaultTextClass(): string | null {
-            const r = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
-            return r;
-        }
-        /**
-        SVGBackElement生成時に設定するクラス名を返します。
-        */
-        get defaultBackgroundClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(Cell.defaultBackgroundClassName);
-        }
-
+        // #region other
         /**
         未定義
         */
@@ -434,12 +649,6 @@ namespace GraphTableSVG {
             }
         }
 
-        /**
-        CellがDocumentのDOMに所属しているかどうかを返します。
-        */
-        get isLocated(): boolean {
-            return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
-        }
 
         /**
         セルが取るべき幅を返します。
@@ -491,29 +700,9 @@ namespace GraphTableSVG {
             }
             throw Error("error");
         }
+        // #endregion
 
-        /**
-         * このセルがマスターセルのときに限りTrueを返します。
-         */
-        get isMaster(): boolean {
-            return this.ID == this.masterID;
-        }
-        /**
-         * このセルが奴隷セルのときに限りTrueを返します。
-         */
-        get isSlave(): boolean {
-            return !this.isMaster;
-        }
-        /**
-        セルのIDを返します。
-        */
-        get ID(): number {
-            return this.cellX + (this.cellY * this.table.columnCount);
-        }
-
-        get isErrorCell() : boolean {
-            return this.table.cells[this.cellY][this.cellX] != this;
-        }
+        // #region NextCell
         /**
          * 与えられた方向にあるセルを返します。
          * @param direction 
@@ -614,251 +803,7 @@ namespace GraphTableSVG {
             return this.getNextMasterCell(DirectionType.bottom);
 
         }
-        /**
-         * グループセルの横幅を返します。
-         */
-        get computeGroupWidth(): number {
-            const p = this.master.upperSideGroupCells;
-            const x2 = p[p.length - 1].cellX;
-            let w = 0;
-            for (let i = this.cellX; i <= x2; i++) {
-                w += this.table.columns[i].width;
-            }
-            return w;
-        }
-        /**
-         * グループセルの縦幅を返します。
-         */
-        get computeGroupHeight(): number {
-            const p = this.master.leftSideGroupCells;
-            const y2 = p[p.length - 1].cellY;
-            let w = 0;
-            for (let i = this.cellY; i <= y2; i++) {
-                w += this.table.rows[i].height;
-            }
-            return w;
-
-        }
-        /**
-         * グループセルの行数を返します。
-         */
-        get GroupRowCount(): number {
-            if (!this.isMaster) throw Error("Slave Error");
-            return this.leftSideGroupCells.length;
-        }
-        /**
-         * グループセルの列数を返します。
-         */
-        get GroupColumnCount(): number {
-            if (!this.isMaster) throw Error("Slave Error");
-            return this.upperSideGroupCells.length;
-        }
-        /**
-         * グループセルを構成しているセルを2次元配列で返します。
-         */
-        get cellsInGroup(): Cell[][] {
-            if (this.isMaster) {
-                return this.table.getRangeCells(this.cellX, this.cellY, this.GroupColumnCount, this.GroupRowCount);
-            } else {
-                throw Error("Slave Error");
-            }
-        }
-        /**
-         * グループセルを構成しているセルを配列で返します。
-         */
-        get cellArrayInGroup(): Cell[] {
-            if (this.isMaster) {
-                return this.table.getRangeCellArray(this.cellX, this.cellY, this.GroupColumnCount, this.GroupRowCount);
-            } else {
-                throw Error("Slave Error");
-            }
-        }
-
-        /**
-         * このセルがグループセルであるときに限りTrueを返します。
-         */
-        get isSingleCell(): boolean {
-            return this.isMaster && this.leftSideGroupCells.length == 1 && this.upperSideGroupCells.length == 1;
-        }
-        /**
-         * マスターセルかつ行数が１のときに限りTrueを返します。
-         */
-        get isRowSingleCell(): boolean {
-            return this.isMaster && this.leftSideGroupCells.length == 1;
-        }
-        /**
-         * マスターセルかつ列数が１のときに限りTrueを返します。
-         */
-        get isColumnSingleCell(): boolean {
-            return this.isMaster && this.upperSideGroupCells.length == 1;
-        }
-
-
-        /**
-         * ２つの線分がオーバーラップしている部分の線分を返します。
-         * @param v 
-         * @param w 
-         */
-        private static computeOverlapRange(v: [number, number], w: [number, number]): [number, number] | null {
-            if (w[0] < v[0]) {
-                return Cell.computeOverlapRange(w, v);
-            } else {
-                if (v[1] < w[0]) {
-                    return null;
-                } else {
-                    if (w[1] < v[1]) {
-                        return [w[0], w[1]];
-                    } else {
-                        return [w[0], v[1]];
-                    }
-                }
-            }
-        }
-        /**
-         * ２つの線分がオーバーラップしているときに限り、その結合した線分を返します。
-         * @param v 
-         * @param w 
-         */
-        public static computeDisjunction(v: [number, number], w: [number, number]): [number, number] | null {
-            if (w[0] < v[0]) {
-                return Cell.computeDisjunction(w, v);
-            } else {
-                if (v[1] < w[0]) {
-                    return null;
-                } else {
-                    return [v[0], Math.max(v[1], w[1])];
-                }
-            }
-        }
-        /**
-         * このグループセルの左上のX座標と右上のX座標を返します。
-         */
-        public get groupColumnRange(): [number, number] {
-            return [this.master.cellX, this.master.mostRightCellX];
-        }
-
-        /**
-         * このグループセルの左上のY座標と左下のY座標を返します。
-         */
-        public get groupRowRange(): [number, number] {
-            return [this.master.cellY, this.master.mostBottomCellY];
-        }
-
-        private computeBorderLength2(dir: DirectionType): number {
-            //const andFunc = ((v, w) => v);
-
-            const d1 = dir == DirectionType.top || dir == DirectionType.bottom ? this.master.x : this.master.y;
-            const d2 = dir == DirectionType.top || dir == DirectionType.bottom ? this.master.x + this.computeGroupWidth : this.master.y + this.computeGroupHeight;
-
-            const nextCell = this.getNextMasterCell(dir);
-            if (nextCell != null) {
-                const e1 = dir == DirectionType.top || dir == DirectionType.bottom ? nextCell.x : nextCell.y;
-                const e2 = dir == DirectionType.top || dir == DirectionType.bottom ? nextCell.x + nextCell.computeGroupWidth : nextCell.y + nextCell.computeGroupHeight;
-
-                const range = Cell.computeOverlapRange([d1, d2], [e1, e2]);
-                if (range == null) {
-                    throw Error("error");
-                } else {
-                    return range[1] - range[0];
-                }
-            } else {
-                return d2 - d1;
-            }
-
-        }
-        /**
-         * このセルをマスターセルとした横セル数wかつ縦セル数hのグループセルを作成できるとき、Trueを返します。
-         * @param w 
-         * @param h 
-         */
-        canMerge(w: number, h: number): boolean {
-            const range = this.table.getRangeCells(this.cellX, this.cellY, w, h);
-
-            for (let x = 0; x < w; x++) {
-                const topCell = range[0][x].topCell;
-                if (topCell != null) {
-                    if (range[0][x].masterID == topCell.masterID) return false;
-                }
-                const bottomCell = range[h - 1][x].bottomCell;
-                if (bottomCell != null) {
-                    if (range[h - 1][x].masterID == bottomCell.masterID) return false;
-                }
-            }
-            for (let y = 0; y < h; y++) {
-                const leftCell = range[y][0].leftCell;
-                if (leftCell != null) {
-                    if (range[y][0].masterID == leftCell.masterID) return false;
-                }
-                const rightCell = range[y][w - 1].rightCell;
-                if (rightCell != null) {
-                    if (range[y][w - 1].masterID == rightCell.masterID) return false;
-                }
-            }
-            return true;
-        }
-        /**
-         * このセルをマスターセルとした横セル数wかつ縦セル数hのグループセルを作成します。
-         * @param w 
-         * @param h 
-         */
-        merge(w: number, h: number) {
-            if (!this.isMaster) throw Error("Error");
-            const range = this.table.getRangeCellArray(this.cellX, this.cellY, w, h);
-            range.forEach((v) => { v.setMasterCellX(this.masterCellX); v.setMasterCellY(this.masterCellY) });
-            range.forEach((v) => { v.groupUpdate() });
-        }
-        /**
-         * このセルから見て右にあるグループセルとこのセルが属しているグループセルが結合できるとき、そのグループセルの左上のY座標と左下のY座標を返します。
-         * さもなければnullを返します。
-         */
-        getMergedRangeRight(): [number, number] | null {
-            if (!this.isMaster) return null;
-            if (this.rightMasterCell != null) {
-                const b1 = this.cellY == this.rightMasterCell.cellY;
-                const b2 = this.GroupRowCount == this.rightMasterCell.GroupRowCount;
-                if (b1 && b2) {
-                    return [this.GroupColumnCount + this.rightMasterCell.GroupColumnCount, this.GroupRowCount];
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
-            }
-        }
-        /**
-         * このセルから見て下にあるグループセルとこのセルが属しているグループセルが結合できるとき、そのグループセルの左上のX座標と右上のX座標を返します。
-         * さもなければnullを返します。
-         */
-        getMergedRangeBottom(): [number, number] | null {
-            if (!this.isMaster) return null;
-            if (this.bottomMasterCell != null) {
-                const b1 = this.cellX == this.bottomMasterCell.cellX;
-                const b2 = this.GroupColumnCount == this.bottomMasterCell.GroupColumnCount;
-
-                if (b1 && b2) {
-                    return [this.GroupColumnCount, this.GroupRowCount + this.bottomMasterCell.GroupRowCount];
-                } else {
-                    return null;
-                }
-
-
-            } else {
-                return null;
-            }
-        }
-        /**
-         * 右のセルと結合できるときTrueを返します。
-         */
-        get canMergeRight(): boolean {
-            return this.getMergedRangeRight() != null;
-        }
-        /**
-         * 下のセルと結合できるときTrueを返します。
-         */
-        get canMergeBottom(): boolean {
-            return this.getMergedRangeBottom() != null;
-        }
-
+        
         /**
          * グループセル内の右端にあるせるセルのX座標を返します。
          */
@@ -885,7 +830,7 @@ namespace GraphTableSVG {
                     w.push(now);
 
                     now = now.getNextCell(direction);
-                    if(this.table.columnCount < w.length && (direction == DirectionType.left || direction == DirectionType.right )){
+                    if (this.table.columnCount < w.length && (direction == DirectionType.left || direction == DirectionType.right)) {
                         throw new Error("Invalid getNextGroupCells-Loop!");
                     }
 
@@ -910,72 +855,8 @@ namespace GraphTableSVG {
             return this.getNextGroupCells(DirectionType.right);
 
         }
-        /**
-        セルのX座標を返します。
-        */
-        get x(): number {
-            return this.svgGroup.getX();
-        }
-        /**
-        セルのX座標を設定します。
-        */
-        set x(value: number) {
-            this.svgGroup.setX(value);
-        }
-        /**
-        セルのY座標を返します。
-        */
-        get y(): number {
-            return this.svgGroup.getY();
-        }
-        /**
-        セルのY座標を設定します。
-        */
-        set y(value: number) {
-            this.svgGroup.setY(value);
-        }
+        // #endregion
 
-        /**
-        セルの幅を返します。
-        */
-        get width(): number {
-            return this.svgBackground.width.baseVal.value;
-        }
-        /**
-        セルの幅を設定します。
-        */
-        set width(value: number) {
-            this.svgBackground.width.baseVal.value = value;
-        }
-        /**
-        セルの高さを返します。
-        */
-        get height(): number {
-            return this.svgBackground.height.baseVal.value;
-        }
-        /**
-        セルの高さを設定します。
-        */
-        set height(value: number) {
-            this.svgBackground.height.baseVal.value = value;
-        }
-        /**
-        セルの領域を表すRectangleを返します。領域の基準は属しているテーブルのSVGGElementです。
-        */
-        get region(): Rectangle {
-            const p = new Rectangle(this.x, this.y, this.width, this.height);
-            return p;
-        }
-
-
-        /*
-        get fill(): string {
-            return this.backRect.style.fill;
-        }
-        set fill(value : string) {
-            this.backRect.style.fill = value;
-        }
-        */
 
         /**
          * セルの背景を表すSVGRectElementを作成します。
@@ -1008,63 +889,71 @@ namespace GraphTableSVG {
             }
         }
 
-        /*
-        update
-        */
+       // #region update
+
+        public updateNodeRelations(){
+            this.updateSVGGroupParent();            
+            this.updateBorderParent();            
+            this.updateBorderAttributes();
+        }
 
         /**
          * このセルを更新します。
          */
         public update() {
-            //this.updateBorder();
-            this.groupUpdate();
-            //this.updateBorderAttributes();
-            //this.resize();
-            //this.relocation();
+            //this.groupUpdate();
+            //console.log(`update cell : ${this.cellX} ${this.cellY}`);
+
+            
+            
+            this.resize();
+            this.relocation();
+            
+
         }
 
         /**
-         * グループセルを更新します。
+         * svgGroupの親関係を更新します。
          */
-        private groupUpdate() {
-
+        private updateSVGGroupParent(){
             if (this.isMaster) {
-                this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
+                if(this.svgGroup.parentNode != this.table.svgGroup){
+                    this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
+                }
 
             } else {
                 this.table.svgHiddenGroup.appendChild(this.svgGroup);
                 this.svgText.textContent = "";
 
             }
-            //this.svgGroup.style.visibility = this.isMaster ? "visible" : "hidden";
-
+        }
+        /**
+         * 枠の親関係を更新します。
+         */
+        private updateBorderParent(){
             if (this.isMaster || (this.topCell != null && this.topCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.svgTopBorder);
+                if(this.table.svgGroup != this.svgTopBorder.parentNode) this.table.svgGroup.appendChild(this.svgTopBorder);
             } else {
-                this.table.svgHiddenGroup.appendChild(this.svgTopBorder);
+                if(this.table.svgHiddenGroup != this.svgTopBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgTopBorder);
             }
 
             if (this.isMaster || (this.leftCell != null && this.leftCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.svgLeftBorder);
+                if(this.table.svgGroup != this.svgLeftBorder.parentNode) this.table.svgGroup.appendChild(this.svgLeftBorder);
             } else {
-                this.table.svgHiddenGroup.appendChild(this.svgLeftBorder);
+                if(this.table.svgHiddenGroup != this.svgLeftBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgLeftBorder);
             }
 
             if (this.isMaster || (this.rightCell != null && this.rightCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.svgRightBorder);
+                if(this.table.svgGroup != this.svgRightBorder.parentNode) this.table.svgGroup.appendChild(this.svgRightBorder);
             } else {
-                this.table.svgHiddenGroup.appendChild(this.svgRightBorder);
+                if(this.table.svgHiddenGroup != this.svgRightBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgRightBorder);
             }
 
             if (this.isMaster || (this.bottomCell != null && this.bottomCell.isMaster)) {
-                this.table.svgGroup.appendChild(this.svgBottomBorder);
+                if(this.table.svgGroup != this.svgBottomBorder.parentNode) this.table.svgGroup.appendChild(this.svgBottomBorder);
             } else {
-                this.table.svgHiddenGroup.appendChild(this.svgBottomBorder);
+                if(this.table.svgHiddenGroup != this.svgBottomBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgBottomBorder);
             }
-
-            this.resize();
-            this.relocation();
-
         }
 
         /**
@@ -1091,7 +980,7 @@ namespace GraphTableSVG {
         /**
          * テキストを再描画します。
          */
-        private localUpdate() {
+        private locateSVGText() {
             const innerRect = new Rectangle();
             innerRect.x = this.innerExtraPaddingLeft + this.paddingLeft;
             innerRect.y = this.paddingTop;
@@ -1147,6 +1036,53 @@ namespace GraphTableSVG {
             }
         }
 
+        
+        /**
+         * このセルが持つ枠の情報を更新します。
+         */
+        private updateBorderAttributes(): void {
+            if (this.leftCell != null && this.leftCell.svgRightBorder != this.svgLeftBorder) {
+                this.removeBorder(DirectionType.left);
+                this.svgLeftBorder = this.leftCell.svgRightBorder;
+            }
+
+            if (this.topCell != null && this.topCell.svgBottomBorder != this.svgTopBorder) {
+                this.removeBorder(DirectionType.top);
+                this.svgTopBorder = this.topCell.svgBottomBorder;
+            }
+
+            if (this.rightCell != null && this.rightCell.svgLeftBorder != this.svgRightBorder) {
+                this.rightCell.removeBorder(DirectionType.left);
+                this.rightCell.svgLeftBorder = this.svgRightBorder;
+            }
+
+            if (this.bottomCell != null && this.bottomCell.svgTopBorder != this.svgBottomBorder) {
+                this.bottomCell.removeBorder(DirectionType.top);
+                this.bottomCell.svgTopBorder = this.svgBottomBorder;
+            }
+            this.svgTopBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            this.svgTopBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            this.svgTopBorder.setAttribute(Cell.borderTypeName, "horizontal");
+            //this.topBorder.setAttribute("data-border", "top");
+
+
+            this.svgLeftBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            this.svgLeftBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            this.svgLeftBorder.setAttribute(Cell.borderTypeName, "vertical");
+
+
+            this.svgRightBorder.setAttribute(Cell.borderXName, `${this.cellX + 1}`);
+            this.svgRightBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            this.svgRightBorder.setAttribute(Cell.borderTypeName, "vertical");
+
+
+            this.svgBottomBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            this.svgBottomBorder.setAttribute(Cell.borderYName, `${this.cellY + 1}`);
+            this.svgBottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
+        }
+        // #endregion
+        // #region relocate
+        
         /**
          * 上枠の位置を再計算します。
          */
@@ -1223,7 +1159,6 @@ namespace GraphTableSVG {
                 }
             }
         }
-
         /**
          *セルの位置を再計算します。
          */
@@ -1236,11 +1171,14 @@ namespace GraphTableSVG {
             this.relocateBottomBorder();
 
 
-            this.localUpdate();
+            this.locateSVGText();
 
 
 
         }
+        // #endregion
+
+        // #region merge
         /**
          * 右のグループセルと結合します。
          */
@@ -1263,6 +1201,102 @@ namespace GraphTableSVG {
                 throw Error("Error");
             }
         }
+        /**
+         * このセルをマスターセルとした横セル数wかつ縦セル数hのグループセルを作成できるとき、Trueを返します。
+         * @param w 
+         * @param h 
+         */
+        canMerge(w: number, h: number): boolean {
+            const range = this.table.getRangeCells(this.cellX, this.cellY, w, h);
+
+            for (let x = 0; x < w; x++) {
+                const topCell = range[0][x].topCell;
+                if (topCell != null) {
+                    if (range[0][x].masterID == topCell.masterID) return false;
+                }
+                const bottomCell = range[h - 1][x].bottomCell;
+                if (bottomCell != null) {
+                    if (range[h - 1][x].masterID == bottomCell.masterID) return false;
+                }
+            }
+            for (let y = 0; y < h; y++) {
+                const leftCell = range[y][0].leftCell;
+                if (leftCell != null) {
+                    if (range[y][0].masterID == leftCell.masterID) return false;
+                }
+                const rightCell = range[y][w - 1].rightCell;
+                if (rightCell != null) {
+                    if (range[y][w - 1].masterID == rightCell.masterID) return false;
+                }
+            }
+            return true;
+        }
+        /**
+         * このセルをマスターセルとした横セル数wかつ縦セル数hのグループセルを作成します。
+         * @param w 
+         * @param h 
+         */
+        merge(w: number, h: number) {
+            if (!this.isMaster) throw Error("Error");
+            const range = this.table.getRangeCellArray(this.cellX, this.cellY, w, h);
+            range.forEach((v) => { v.setMasterCellX(this.masterCellX); v.setMasterCellY(this.masterCellY) });
+            range.forEach((v) => { v.update() });
+        }
+        /**
+         * このセルから見て右にあるグループセルとこのセルが属しているグループセルが結合できるとき、そのグループセルの左上のY座標と左下のY座標を返します。
+         * さもなければnullを返します。
+         */
+        getMergedRangeRight(): [number, number] | null {
+            if (!this.isMaster) return null;
+            if (this.rightMasterCell != null) {
+                const b1 = this.cellY == this.rightMasterCell.cellY;
+                const b2 = this.GroupRowCount == this.rightMasterCell.GroupRowCount;
+                if (b1 && b2) {
+                    return [this.GroupColumnCount + this.rightMasterCell.GroupColumnCount, this.GroupRowCount];
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+        /**
+         * このセルから見て下にあるグループセルとこのセルが属しているグループセルが結合できるとき、そのグループセルの左上のX座標と右上のX座標を返します。
+         * さもなければnullを返します。
+         */
+        getMergedRangeBottom(): [number, number] | null {
+            if (!this.isMaster) return null;
+            if (this.bottomMasterCell != null) {
+                const b1 = this.cellX == this.bottomMasterCell.cellX;
+                const b2 = this.GroupColumnCount == this.bottomMasterCell.GroupColumnCount;
+
+                if (b1 && b2) {
+                    return [this.GroupColumnCount, this.GroupRowCount + this.bottomMasterCell.GroupRowCount];
+                } else {
+                    return null;
+                }
+
+
+            } else {
+                return null;
+            }
+        }
+        /**
+         * 右のセルと結合できるときTrueを返します。
+         */
+        get canMergeRight(): boolean {
+            return this.getMergedRangeRight() != null;
+        }
+        /**
+         * 下のセルと結合できるときTrueを返します。
+         */
+        get canMergeBottom(): boolean {
+            return this.getMergedRangeBottom() != null;
+        }
+
+        // #endregion
+
+        // #region decompose
         private decomposeRow(upperRowCount: number) {
             if (this.isMaster) {
                 const upperSide = this.table.getRangeCellArray(this.cellX, this.cellY, this.GroupColumnCount, upperRowCount);
@@ -1273,8 +1307,8 @@ namespace GraphTableSVG {
                     v.setMasterCellY(lowerMaster.cellY);
                 });
 
-                upperSide.forEach((v) => v.groupUpdate());
-                lowerSide.forEach((v) => v.groupUpdate());
+                upperSide.forEach((v) => v.update());
+                lowerSide.forEach((v) => v.update());
 
             } else {
                 throw Error("Slave Error");
@@ -1291,65 +1325,16 @@ namespace GraphTableSVG {
                     v.setMasterCellY(rightMaster.cellY);
                 });
 
-                leftSide.forEach((v) => v.groupUpdate());
-                rightSide.forEach((v) => v.groupUpdate());
+                leftSide.forEach((v) => v.update());
+                rightSide.forEach((v) => v.update());
 
             } else {
                 throw Error("Slave Error");
             }
 
         }
-
-        /*
-        public renumbering() {
-            this.updateBorderAttributes();
-        }
-        */
-
-        /**
-         * このセルが持つ枠の情報を更新します。
-         */
-        public updateBorderAttributes(): void {
-            if (this.leftCell != null && this.leftCell.svgRightBorder != this.svgLeftBorder) {
-                this.removeBorder(DirectionType.left);
-                this.svgLeftBorder = this.leftCell.svgRightBorder;
-            }
-
-            if (this.topCell != null && this.topCell.svgBottomBorder != this.svgTopBorder) {
-                this.removeBorder(DirectionType.top);
-                this.svgTopBorder = this.topCell.svgBottomBorder;
-            }
-
-            if (this.rightCell != null && this.rightCell.svgLeftBorder != this.svgRightBorder) {
-                this.rightCell.removeBorder(DirectionType.left);
-                this.rightCell.svgLeftBorder = this.svgRightBorder;
-            }
-
-            if (this.bottomCell != null && this.bottomCell.svgTopBorder != this.svgBottomBorder) {
-                this.bottomCell.removeBorder(DirectionType.top);
-                this.bottomCell.svgTopBorder = this.svgBottomBorder;
-            }
-
-            this.svgTopBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.svgTopBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.svgTopBorder.setAttribute(Cell.borderTypeName, "horizontal");
-            //this.topBorder.setAttribute("data-border", "top");
+        // #endregion
 
 
-            this.svgLeftBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.svgLeftBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.svgLeftBorder.setAttribute(Cell.borderTypeName, "vertical");
-
-
-            this.svgRightBorder.setAttribute(Cell.borderXName, `${this.cellX + 1}`);
-            this.svgRightBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.svgRightBorder.setAttribute(Cell.borderTypeName, "vertical");
-
-
-            this.svgBottomBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.svgBottomBorder.setAttribute(Cell.borderYName, `${this.cellY + 1}`);
-            this.svgBottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
-        }
-        
     }
 }
