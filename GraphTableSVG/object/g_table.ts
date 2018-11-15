@@ -770,13 +770,21 @@ namespace GraphTableSVG {
             const borderColumnCount = columnCount + 1;
             if (this.rowCount == 0 || this.columnCount == 0) throw Error("Table Empty Error");
 
-
+            /*
             while (this._borderRows.length < rowCount + 1) {
-                const i = this._borderRows.length + 1;
+                const i = this._borderRows.length;
                 this.createRowBorder(i);
                 this.insertLineIntoColumns(i)
-                console.log("www : " + this.borderColumns[0].borders.length + "/" + this.borderRows.length);
+                //this.createRow(i-1);
             }
+            */
+            while (this.rowCount < rowCount) {
+                this.primitiveInsertRow(this._borderRows.length, false);
+            }
+            while (this.columnCount < columnCount) {
+                this.primitiveInsertColumn(this._borderColumns.length, false);
+            }
+            /*
             this.borderSizeCheck(1, rowCount);
             while (this._borderColumns.length < columnCount + 1) {
                 const i = this._borderColumns.length + 1;
@@ -785,15 +793,16 @@ namespace GraphTableSVG {
             }
             this.borderSizeCheck(columnCount, rowCount);
 
-            console.log(`set sa ${this.borderColumns[0].borders.length} ${rowCount}`)
-
             while (this.columnCount < columnCount) {
                 this.createColumn(this.columnCount);
             }
+            */
 
+            /*
             while (this.rowCount < rowCount) {
                 this.createRow(this.rowCount);
             }
+            */
 
 
 
@@ -809,6 +818,31 @@ namespace GraphTableSVG {
             */
 
         }
+        private primitiveInsertRow(i: number, b: boolean) {
+            const rowi = b ? i : i - 1;
+            if (rowi < 0 || rowi > this.rowCount) throw new Error("primitive insert row error");
+            //const i = this._borderRows.length;
+            console.log("fe" + i + "/" + this.rows.length);
+            this.createRowBorder(i);
+            this.insertYVerticalBorders(i)
+            this.createRow(rowi);
+        }
+        private primitiveInsertColumn(i: number, b: boolean) {
+            const columni = b ? i : i - 1;
+            if (columni < 0 || columni > this.columnCount) throw new Error("primitive insert column error");
+
+            this.createColumnBorder(i);
+            this.insertXHorizontalBorders(i);
+            this.createColumn(columni);
+        }
+
+        public get borderColumnCount(): number {
+            return this.columnCount + 1;
+        }
+        public get borderRowCount(): number {
+            return this.rowCount + 1;
+        }
+
         /**
          * rowCount = 0, columnCount = 0のテーブルを作成します。
          */
@@ -816,6 +850,17 @@ namespace GraphTableSVG {
             console.log(`clear ${this.columnCount} ${this.rowCount}`)
             if (this.rowCount == 0 || this.columnCount == 0) throw Error("Table Empty Error");
             if (this.columnCount != this.columns.length) throw Error("clear error");
+            
+            while(this.rowCount > 1){
+                this.primitiveRemoveRow(1, false);
+            }
+            while(this.columnCount > 1){
+                this.primitiveRemoveColumn(1, false);
+            }
+            
+
+
+            /*
             while (this.rowCount > 1) {
                 this.rows[this.rows.length - 1].remove(true);
             }
@@ -826,45 +871,80 @@ namespace GraphTableSVG {
 
             while (this._borderRows.length > 2) this.removeRowBorder(0);
             while (this._borderColumns.length > 2) this.removeColumnBorder(0);
+            */
 
-            console.log("updo");
+            /*
+            while (this.rowCount > 1) {
+                this.rows[this.rows.length - 1].remove(true);
+                this.removeRowBorder(1);
+            }
+            while (this.columnCount > 1) {
+                this.columns[this.columns.length - 1].remove(true);
+                this.removeColumnBorder(1);
+            }
+            */
+
+            console.log(`cleare ${this.borderRows.length} ${this.borderColumns.length} ${this.borderRows[0].borders.length} ${this.borderColumns[0].borders.length} ${this.rows.length} ${this.rows[0].cells.length}`);
+
+
             this.updateNodeRelations();
-            console.log(`clear end ${this.columnCount} ${this.rowCount}`)
 
         }
-        public get borderColumnCount(): number {
-            return this.columnCount + 1;
-        }
-        public get borderRowCount(): number {
-            return this.rowCount + 1;
+        private primitiveRemoveRow(i: number, b: boolean) {
+            const rowi = b ? i : i - 1;
+            if (rowi < 0 || rowi > this.rowCount) throw new Error("error");
+
+            this.removeRow(rowi);
+            this.removeRowBorder(i);
+            this.deleteYVerticalBorders(i);
         }
 
+        private primitiveRemoveColumn(i: number, b: boolean) {
+            const columni = b ? i : i - 1;
+            if (columni < 0 || columni > this.columnCount) throw new Error("primitive insert column error");
+
+            this.removeColumn(columni);
+            this.removeColumnBorder(i);
+            this.deleteXHorizontalBorders(i);
+
+        }
+        
         private removeColumnBorder(i: number) {
-            console.log("remove CB");
-            this._borderRows.forEach((v) => v.removeBorder(i));
+            //this._borderRows.forEach((v) => v.removeBorder(i));
             this._borderColumns[i].remove();
             this._borderColumns.splice(i, 1);
         }
         private removeRowBorder(i: number) {
-            console.log("remove RB");
-
-            this._borderColumns.forEach((v) => v.removeBorder(i));
+            //this._borderColumns.forEach((v) => v.removeBorder(i));
             this._borderRows[i].remove();
             this._borderRows.splice(i, 1);
         }
+        
 
         private removeRow(i: number) {
             this.rows[i].remove(true);
         }
+        private removeColumn(i: number) {
+            this.columns[i].remove(true);
+        }
+        private deleteXHorizontalBorders(i: number) {
+            this._borderRows.forEach((v) => {
+                v.removeBorder(i);
+            })
+        }
+        private deleteYVerticalBorders(i: number) {
+            this._borderColumns.forEach((v) => {
+                v.removeBorder(i);
+            })
+        }
 
-        private createColumnBorder(i: number, borderRowCount: number = this.borderRows.length-1) {
+        private createColumnBorder(i: number, borderRowCount: number = this.borderRows.length - 1) {
             const column = new BorderColumn(this, i, borderRowCount, undefined);
             this._borderColumns.splice(i, 0, column);
         }
-        private createRowBorder(i: number, borderColumnCount: number = this.borderColumns.length-1) {
+        private createRowBorder(i: number, borderColumnCount: number = this.borderColumns.length - 1) {
             const row = new BorderRow(this, i, borderColumnCount, undefined);
             this._borderRows.splice(i, 0, row);
-            console.log("create Riw VIrder")
         }
 
         private createRow(i: number) {
@@ -888,12 +968,12 @@ namespace GraphTableSVG {
             }
             this._columns.splice(i, 0, new Column(this, i));
         }
-        private insertLineIntoRows(i: number) {
+        private insertXHorizontalBorders(i: number) {
             this._borderRows.forEach((v) => {
                 v.insertBorder(i, undefined);
             })
         }
-        private insertLineIntoColumns(i: number) {
+        private insertYVerticalBorders(i: number) {
             this._borderColumns.forEach((v) => {
                 v.insertBorder(i, undefined);
             })

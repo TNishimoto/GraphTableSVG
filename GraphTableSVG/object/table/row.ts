@@ -240,6 +240,7 @@
         public remove(isUnit: boolean = false) {
             while (this.cells.length > 0) this.removeCell(this.cells.length - 1);
             this.svgGroup.remove();
+            console.log("remove" + this.selfy);
             this.table.rows.splice(this.selfy, 1);
             /*
             for(let i=0;this.table.rowCount;i++){

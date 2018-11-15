@@ -554,7 +554,8 @@ namespace GraphTableSVG {
 
                 const range = Cell.computeOverlapRange([d1, d2], [e1, e2]);
                 if (range == null) {
-                    throw Error("error");
+                    return 0;
+                    //throw Error(`error ${d1} ${d2} ${e1} ${e2}`);
                 } else {
                     return range[1] - range[0];
                 }
