@@ -87,6 +87,7 @@ namespace GraphTableSVG {
         constructor(_table: GTable, _x: number, _width : number = 30) {
             this.table = _table;
             this._svgGroup = SVG.createGroup(this.table.svgGroup);
+            this._svgGroup.setAttribute("name", "cell_column");
 
 
             //this.table.svgGroup.appendChild(this._svgGroup);
@@ -199,11 +200,25 @@ namespace GraphTableSVG {
             const cells = this.cells;
             return cells[cells.length - 1].svgBottomBorder;
         }
+        private get selfx() : number{
+            for(let i=0;i<this.table.columnCount;i++){
+                if(this.table.columns[i] == this){
+                    return i;
+                }
+            }
+            throw new Error("error");
+        }
+
         /**
          * この列を取り除きます。
          * @param isUnit 
          */
         public remove(isUnit: boolean = false) {
+            const x = this.selfx;
+            this.table.rows.forEach((v, i) => v.removeCell(x));
+            this._svgGroup.remove();
+            this.table.columns.splice(x, 1);
+            /*
             if (isUnit) {
                 if (this.table.columns.length > 1) {
                     this.table.columns[this.cellX].cells.forEach((v) => {
@@ -230,6 +245,7 @@ namespace GraphTableSVG {
                     this.table.columns[x].remove(true);
                 }
             }
+            */
         }
         /**
          * この列のセルの位置を再計算します。

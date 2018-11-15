@@ -21,6 +21,9 @@ namespace GraphTableSVG {
             this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             this.updateAttributes = [];
             this.isConstructing = true;
+
+            this.firstSetSize();
+
             if (option.table === undefined) {
                 if (option.rowCount == undefined) option.rowCount = 5;
                 if (option.columnCount == undefined) option.columnCount = 5;
@@ -37,8 +40,6 @@ namespace GraphTableSVG {
                         this.updateCellByLogicCell(null, x, y);
                     }
                 }
-                //this.renumbering();
-                console.log("update constructor")
                 this.update();
 
             } else {
@@ -112,7 +113,18 @@ namespace GraphTableSVG {
         各列を表す配列を返します。読み取り専用です。
         */
         private _columns: Column[] = new Array(0);
-        private _cells: Cell[][] = [];
+
+        private _borderRows: BorderRow[] = new Array(0);
+        private _borderColumns: BorderColumn[] = new Array(0);
+
+        public get borderRows(): BorderRow[] {
+            return this._borderRows;
+        }
+        public get borderColumns(): BorderColumn[] {
+            return this._borderColumns;
+        }
+
+        //private _cells: Cell[][] = [];
 
         private isConstructing = false;
         get width(): number {
@@ -156,9 +168,11 @@ namespace GraphTableSVG {
         /**
         各セルを格納している二次元ジャグ配列を返します。
         */
+
         get cells(): Cell[][] {
-            return this._cells;
+            return this.rows.map((v) => v.cells);
         }
+
 
         private _isDrawing: boolean = false;
         public get isDrawing(): boolean {
@@ -689,13 +703,15 @@ namespace GraphTableSVG {
         /**
          * 新しいセルを作成します。
          */
-        private createCell(): Cell {
+        /*
+        private createCell(cellX: number, cellY: number): Cell {
             const cellClass = this.defaultCellClass == null ? undefined : this.defaultCellClass;
             const borderClass = this.defaultBorderClass == null ? undefined : this.defaultBorderClass;
 
             const option: CellOption = { cellClass: cellClass, borderClass: borderClass };
-            return new Cell(this, 0, 0, option);
+            return new Cell(this, cellX, cellY, option);
         }
+        */
         /*
         Dynamic Method
         */
@@ -709,7 +725,37 @@ namespace GraphTableSVG {
                 svg.removeChild(this.svgGroup);
             }
         }
+
         private isSetSize = false;
+
+        private firstSetSize() {
+            this.createRowBorder(0, 1);
+            this.createRowBorder(0, 1);
+            this.createColumnBorder(0, 1);
+            this.createColumnBorder(0, 1);
+            this._rows.splice(0, 0, new Row(this, 0, undefined));
+            this._rows[0].appendCell();
+            this._columns.splice(0, 0, new Column(this, 0));
+            console.log("first set end");
+        }
+
+        private borderSizeCheck(_w: number, _h: number): void {
+            const w = this.borderRows[0].borders.length;
+            const h = this.borderColumns[0].borders.length;
+            if (w != _w) throw Error(`error ${_w} ${_h} ${w} ${h}`);
+            if (h != _h) throw Error(`error ${_w} ${_h} ${w} ${h}`);
+
+            this.borderRows.forEach((v, i) => {
+                if (w != v.borders.length) throw Error("border rows error");
+            })
+            console.log(this.borderColumns);
+            this.borderColumns.forEach((v, i) => {
+                if (h != v.borders.length) throw Error(`border column error ${h} ${v.borders.length} ${i}`);
+            })
+            console.log(`check : ${w} ${h}`);
+
+            //return [w, h];
+        }
         /**
          * 表の列数と行数を変更します。
          * @param columnCount 列数 
@@ -717,15 +763,46 @@ namespace GraphTableSVG {
          */
         public setSize(columnCount: number, rowCount: number) {
 
+            console.log(`set size ${columnCount} ${rowCount}`)
             this.clear();
             this.isSetSize = true;
-            while (this.rowCount < rowCount) {
-                this.insertRowFunction(this.rowCount, columnCount);
+            const borderRowCount = rowCount + 1;
+            const borderColumnCount = columnCount + 1;
+            if (this.rowCount == 0 || this.columnCount == 0) throw Error("Table Empty Error");
+
+
+            while (this._borderRows.length < rowCount + 1) {
+                const i = this._borderRows.length + 1;
+                this.createRowBorder(i);
+                this.insertLineIntoColumns(i)
+                console.log("www : " + this.borderColumns[0].borders.length + "/" + this.borderRows.length);
             }
+            this.borderSizeCheck(1, rowCount);
+            while (this._borderColumns.length < columnCount + 1) {
+                const i = this._borderColumns.length + 1;
+                this.createColumnBorder(i);
+                this.insertLineIntoRows(i);
+            }
+            this.borderSizeCheck(columnCount, rowCount);
+
+            console.log(`set sa ${this.borderColumns[0].borders.length} ${rowCount}`)
+
             while (this.columnCount < columnCount) {
-                this.insertColumn(this.columnCount);
+                this.createColumn(this.columnCount);
             }
+
+            while (this.rowCount < rowCount) {
+                this.createRow(this.rowCount);
+            }
+
+
+
+
+            console.log(`end size ${columnCount} ${rowCount}`)
+
+            this.updateNodeRelations();
             this.isSetSize = false;
+
             /*
             this.renumbering();
             this.update();
@@ -736,19 +813,92 @@ namespace GraphTableSVG {
          * rowCount = 0, columnCount = 0のテーブルを作成します。
          */
         public clear() {
+            console.log(`clear ${this.columnCount} ${this.rowCount}`)
+            if (this.rowCount == 0 || this.columnCount == 0) throw Error("Table Empty Error");
             if (this.columnCount != this.columns.length) throw Error("clear error");
             while (this.rowCount > 1) {
-
                 this.rows[this.rows.length - 1].remove(true);
-
             }
-            while (this.columnCount > 0) {
+            while (this.columnCount > 1) {
                 this.columns[this.columns.length - 1].remove(true);
             }
             if (this.columnCount != this.columns.length) throw Error("clear error2");
-            this.renumbering();
+
+            while (this._borderRows.length > 2) this.removeRowBorder(0);
+            while (this._borderColumns.length > 2) this.removeColumnBorder(0);
+
+            console.log("updo");
+            this.updateNodeRelations();
+            console.log(`clear end ${this.columnCount} ${this.rowCount}`)
 
         }
+        public get borderColumnCount(): number {
+            return this.columnCount + 1;
+        }
+        public get borderRowCount(): number {
+            return this.rowCount + 1;
+        }
+
+        private removeColumnBorder(i: number) {
+            console.log("remove CB");
+            this._borderRows.forEach((v) => v.removeBorder(i));
+            this._borderColumns[i].remove();
+            this._borderColumns.splice(i, 1);
+        }
+        private removeRowBorder(i: number) {
+            console.log("remove RB");
+
+            this._borderColumns.forEach((v) => v.removeBorder(i));
+            this._borderRows[i].remove();
+            this._borderRows.splice(i, 1);
+        }
+
+        private removeRow(i: number) {
+            this.rows[i].remove(true);
+        }
+
+        private createColumnBorder(i: number, borderRowCount: number = this.borderRows.length-1) {
+            const column = new BorderColumn(this, i, borderRowCount, undefined);
+            this._borderColumns.splice(i, 0, column);
+        }
+        private createRowBorder(i: number, borderColumnCount: number = this.borderColumns.length-1) {
+            const row = new BorderRow(this, i, borderColumnCount, undefined);
+            this._borderRows.splice(i, 0, row);
+            console.log("create Riw VIrder")
+        }
+
+        private createRow(i: number) {
+            const cell: Cell[] = [];
+            //this.cells.splice(i, 0, cell);
+            const row = new Row(this, i, undefined);
+            this._rows.splice(i, 0, row);
+            row.appendCell(this.columnCount);
+            /*
+            for (let x = 0; x < this.columnCount; x++) {
+                cell[x] = this.createCell(x, i);
+                if (this._columns.length <= x) this._columns.push(new Column(this, 0));
+            }
+            */
+        }
+        private createColumn(i: number) {
+            for (let y = 0; y < this.rowCount; y++) {
+                this.rows[y].insertCell(i);
+                //const cell = this.createCell(i, y);
+                //this.cells[y].splice(i, 0, cell);
+            }
+            this._columns.splice(i, 0, new Column(this, i));
+        }
+        private insertLineIntoRows(i: number) {
+            this._borderRows.forEach((v) => {
+                v.insertBorder(i, undefined);
+            })
+        }
+        private insertLineIntoColumns(i: number) {
+            this._borderColumns.forEach((v) => {
+                v.insertBorder(i, undefined);
+            })
+        }
+
 
 
         /**
@@ -756,16 +906,21 @@ namespace GraphTableSVG {
         * @param 挿入行の行番号
         */
         public insertRow(i: number) {
-            this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
+            throw new Error("error");
+            //this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
         }
         /**
         * 新しい列をi番目の列に挿入します。
         * @param i 挿入列の列番号
         */
         public insertColumn(i: number) {
+            this.createColumn(i);
+            /*
             if (this.rowCount > 0) {
+
+
                 for (let y = 0; y < this.rowCount; y++) {
-                    const cell = this.createCell();
+                    const cell = this.createCell(i, y);
                     this.cells[y].splice(i, 0, cell);
                 }
                 this._columns.splice(i, 0, new Column(this, i));
@@ -774,43 +929,33 @@ namespace GraphTableSVG {
 
                     this.columns[i].cells.forEach((v, j) => {
                         //v.cellY = j;
-                        this.cells[j][i - 1].svgRightBorder = v.svgLeftBorder;
-                        /*
-                        if (v.leftCell != null && v.rightCell != null) {
-                            v.leftCell.rightBorder = v.leftBorder;
-                        }
-                        */
+                        //this.cells[j][i - 1].svgRightBorder = v.svgLeftBorder;
                     });
                 }
             } else {
                 this.insertRow(0);
             }
             if (!this.isSetSize) this.update();
-
+            */
         }
         /**
          * 新しい行を作って挿入します。
          * @param i 挿入行の行番号
          * @param columnCount 挿入行の列数
          */
+        /*
         private insertRowFunction(i: number, columnCount: number = this.columnCount) {
             const cell: Cell[] = [];
-            for (let x = 0; x < columnCount; x++) {
-                cell[x] = this.createCell();
-                if (this._columns.length <= x) this._columns.push(new Column(this, 0));
-            }
+
             this.cells.splice(i, 0, cell);
             this._rows.splice(i, 0, new Row(this, i));
-            if (i > 0 && i < this.rowCount - 1) {
-                for (let x = 0; x < columnCount; x++) {
-                    this.cells[i - 1][x].svgBottomBorder = this.cells[i][x].svgTopBorder;
-                }
+            for (let x = 0; x < columnCount; x++) {
+                cell[x] = this.createCell(x, i);
+                if (this._columns.length <= x) this._columns.push(new Column(this, 0));
             }
-            this.renumbering();
-
-            if (!this.isSetSize) this.update();
 
         }
+        */
         /**
         新しい列を最後の列に追加します。
         */
@@ -823,6 +968,7 @@ namespace GraphTableSVG {
         */
         public appendRow() {
             this.insertRow(this.rowCount);
+            //this.update();
         }
         // #endregion
 
@@ -849,7 +995,6 @@ namespace GraphTableSVG {
                 this.fitSizeToOriginalCells(false);
                 this.prevShow = false;
             }
-            console.log("update : " + this.columnCount + "/" + this.rowCount);
             this.resize();
             this.relocation();
             this._isDrawing = false;
@@ -859,6 +1004,7 @@ namespace GraphTableSVG {
         /**
          * セル番号を振り直します。
          */
+        /*
         private renumbering() {
 
             this.rows.forEach((v, i) => v.cellY = i);
@@ -866,6 +1012,31 @@ namespace GraphTableSVG {
             //this.cellArray.forEach((v) => v.updateBorderAttributes());
 
         }
+        */
+
+        private updateNodeRelations() {
+            this.rows.forEach((v, i) => v.cellY = i);
+            this.columns.forEach((v, i) => v.cellX = i);
+            console.log(`pd ${this.rowCount} ${this.columnCount} ${this.borderRows.length} ${this.borderColumns.length}`);
+            console.log(this.borderRows);
+            console.log(this.borderColumns);
+            this.borderRows.forEach((v, i) => {
+                if (v.borders.length != this.columnCount) {
+                    throw new Error(`error row ${i} ${v.borders.length} ${this.columnCount}`);
+                }
+            })
+            this.borderColumns.forEach((v, i) => {
+                if (v.borders.length != this.rowCount) {
+                    throw new Error(`error column ${i} ${v.borders.length} ${this.rowCount}`);
+
+                }
+            })
+
+            this.cellArray.forEach((v) => v.updateNodeRelations());
+
+        }
+
+
         /**
          * サイズを再計算します。
          */

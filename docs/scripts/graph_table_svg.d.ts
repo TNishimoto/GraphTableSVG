@@ -498,7 +498,10 @@ declare namespace GraphTableSVG {
         private _svgHiddenGroup;
         private _rows;
         private _columns;
-        private _cells;
+        private _borderRows;
+        private _borderColumns;
+        readonly borderRows: BorderRow[];
+        readonly borderColumns: BorderColumn[];
         private isConstructing;
         width: number;
         height: number;
@@ -539,19 +542,30 @@ declare namespace GraphTableSVG {
         }): void;
         createVBACode2(id: number, slide: string): string[];
         private createVBAMainCode(slideName, id);
-        private createCell();
         removeTable(svg: SVGElement): void;
         private isSetSize;
+        private firstSetSize();
+        private borderSizeCheck(_w, _h);
         setSize(columnCount: number, rowCount: number): void;
         clear(): void;
+        readonly borderColumnCount: number;
+        readonly borderRowCount: number;
+        private removeColumnBorder(i);
+        private removeRowBorder(i);
+        private removeRow(i);
+        private createColumnBorder(i, borderRowCount?);
+        private createRowBorder(i, borderColumnCount?);
+        private createRow(i);
+        private createColumn(i);
+        private insertLineIntoRows(i);
+        private insertLineIntoColumns(i);
         insertRow(i: number): void;
         insertColumn(i: number): void;
-        private insertRowFunction(i, columnCount?);
         appendColumn(): void;
         appendRow(): void;
         private prevShow;
         update(): void;
-        private renumbering();
+        private updateNodeRelations();
         private resize();
         private relocation();
     }
@@ -576,6 +590,32 @@ declare namespace GraphTableSVG {
         setRectangleLocation(_x: number, _y: number): void;
         setRootLocation(_x: number, _y: number): void;
         readonly leaves: GVertex[];
+    }
+}
+declare namespace GraphTableSVG {
+    class BorderRow {
+        private readonly table;
+        private _svgGroup;
+        readonly svgGroup: SVGGElement;
+        borderY: number;
+        constructor(_table: GTable, _y: number, columnSize: number, borderClass?: string);
+        private _borders;
+        readonly borders: SVGLineElement[];
+        insertBorder(coromni: number, borderClass?: string): void;
+        removeBorder(i: number): void;
+        remove(): void;
+    }
+    class BorderColumn {
+        private readonly table;
+        private _svgGroup;
+        borderX: number;
+        readonly svgGroup: SVGGElement;
+        constructor(_table: GTable, _x: number, rowSize: number, borderClass?: string);
+        private _borders;
+        readonly borders: SVGLineElement[];
+        insertBorder(rowi: number, borderClass?: string): void;
+        removeBorder(i: number): void;
+        remove(): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -665,11 +705,10 @@ declare namespace GraphTableSVG {
         readonly groupColumnRange: [number, number];
         readonly groupRowRange: [number, number];
         private computeBorderLength2(dir);
-        private _borders;
-        svgTopBorder: SVGLineElement;
-        svgLeftBorder: SVGLineElement;
-        svgRightBorder: SVGLineElement;
-        svgBottomBorder: SVGLineElement;
+        readonly svgTopBorder: SVGLineElement;
+        readonly svgLeftBorder: SVGLineElement;
+        readonly svgRightBorder: SVGLineElement;
+        readonly svgBottomBorder: SVGLineElement;
         readonly logicalWidth: number;
         readonly logicalHeight: number;
         readonly calculatedWidthUsingText: number;
@@ -696,6 +735,7 @@ declare namespace GraphTableSVG {
         private readonly leftSideGroupCells;
         readonly upperSideGroupCells: Cell[];
         toPlainText(): string;
+        updateNodeRelations(): void;
         update(): void;
         private updateSVGGroupParent();
         private updateBorderParent();
@@ -739,6 +779,7 @@ declare namespace GraphTableSVG {
         readonly rightBorders: SVGLineElement[];
         readonly topBorder: SVGLineElement;
         readonly bottomBorder: SVGLineElement;
+        private readonly selfx;
         remove(isUnit?: boolean): void;
         relocation(): void;
         readonly groupColumnRange: [number, number];
@@ -750,9 +791,15 @@ declare namespace GraphTableSVG {
         private _svgGroup;
         static readonly columnHeightName: string;
         constructor(_table: GTable, _y: number, _height?: number);
+        private createCell(cellX, cellY);
+        insertCell(i: number): void;
+        appendCell(num?: number): void;
+        removeCell(i: number): void;
+        private _cells;
+        readonly cells: Cell[];
+        readonly svgGroup: SVGElement;
         cellY: number;
         height: number;
-        readonly cells: Cell[];
         readonly topBorders: SVGLineElement[];
         readonly bottomBorders: SVGLineElement[];
         readonly leftBorder: SVGLineElement;
@@ -762,6 +809,7 @@ declare namespace GraphTableSVG {
         fitHeightToOriginalCell(allowShrink: boolean): void;
         setY(posY: number): void;
         private getMaxHeight();
+        private readonly selfy;
         remove(isUnit?: boolean): void;
         readonly groupRowRange: [number, number];
     }

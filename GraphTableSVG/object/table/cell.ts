@@ -15,7 +15,10 @@ namespace GraphTableSVG {
         constructor(parent: GTable, _px: number, _py: number, option: CellOption = {}) {
             this._svgGroup = SVG.createGroup(null);
             this._table = parent;
-            this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
+
+
+            this.table.rows[_py].svgGroup.appendChild(this.svgGroup);
+            //this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
             if (option.cellClass !== undefined) this.svgGroup.setAttribute("class", option.cellClass);
             this.svgGroup.setAttribute(Cell.elementTypeName, "cell-group");
             this.svgGroup.setAttribute(Cell.cellXName, `${_px}`);
@@ -28,15 +31,19 @@ namespace GraphTableSVG {
 
             const borderClass = option.borderClass === undefined ? null : option.borderClass;
 
+            /*
             this.svgTopBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.svgLeftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.svgRightBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
             this.svgBottomBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            */
             //this.updateBorderAttributes();
+            /*
             this.table.svgGroup.appendChild(this.svgTopBorder);
             this.table.svgGroup.appendChild(this.svgLeftBorder);
             this.table.svgGroup.appendChild(this.svgRightBorder);
             this.table.svgGroup.appendChild(this.svgBottomBorder);
+            */
 
             const option1: MutationObserverInit = { childList: true, subtree: true };
             this.table.cellTextObserver.observe(this.svgText, option1);
@@ -558,61 +565,62 @@ namespace GraphTableSVG {
         }
         // #endregion
         // #region border
-        private _borders: SVGLineElement[] = new Array(4);
+        //private _borders: SVGLineElement[] = new Array(4);
         //private _topBorder: SVGLineElement;
         /**
         セルの上にある枠を返します
         */
         get svgTopBorder(): SVGLineElement {
-
-            return this._borders[DirectionType.top];
+            return this._table.borderRows[this.cellY].borders[this.cellX];
+            //return this._borders[DirectionType.top];
         }
-        /**
-        セルの上にある枠を設定します
-        */
+        /*
         set svgTopBorder(line: SVGLineElement) {
 
             this._borders[DirectionType.top] = line;
         }
+        */
         /**
         セルの左にある枠を返します
         */
         get svgLeftBorder(): SVGLineElement {
-            return this._borders[DirectionType.left];
+            return this._table.borderColumns[this.cellX].borders[this.cellY];
+            //return this._borders[DirectionType.left];
         }
-        /**
-        セルの左にある枠を設定します
-        */
+        /*
         set svgLeftBorder(line: SVGLineElement) {
             this._borders[DirectionType.left] = line;
         }
+        */
         /**
         セルの右にある枠を返します
         */
         get svgRightBorder(): SVGLineElement {
-            return this._borders[DirectionType.right];
+            return this._table.borderColumns[this.cellX+1].borders[this.cellY];
+
+            //return this._borders[DirectionType.right];
         }
-        /**
-        セルの右にある枠を設定します
-        */
+        /*
         set svgRightBorder(line: SVGLineElement) {
             this._borders[DirectionType.right] = line;
 
         }
+        */
         /**
         セルの下にある枠を返します
         */
         get svgBottomBorder(): SVGLineElement {
-            return this._borders[DirectionType.bottom];
+            return this._table.borderRows[this.cellY+1].borders[this.cellX];
+
+            //return this._borders[DirectionType.bottom];
 
         }
-        /**
-        セルの下にある枠を設定します
-        */
+        /*
         set svgBottomBorder(line: SVGLineElement) {
             this._borders[DirectionType.bottom] = line;
 
         }
+        */
         // #endregion
 
         // #region other
@@ -892,9 +900,12 @@ namespace GraphTableSVG {
        // #region update
 
         public updateNodeRelations(){
+            
             this.updateSVGGroupParent();            
+            
             this.updateBorderParent();            
-            this.updateBorderAttributes();
+            //this.updateBorderAttributes();
+            
         }
 
         /**
@@ -917,8 +928,8 @@ namespace GraphTableSVG {
          */
         private updateSVGGroupParent(){
             if (this.isMaster) {
-                if(this.svgGroup.parentNode != this.table.svgGroup){
-                    this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
+                if(this.table.rows[this.cellY].svgGroup != this.table.svgGroup){
+                    this.table.rows[this.cellY].svgGroup.appendChild(this.svgGroup);
                 }
 
             } else {
@@ -932,25 +943,25 @@ namespace GraphTableSVG {
          */
         private updateBorderParent(){
             if (this.isMaster || (this.topCell != null && this.topCell.isMaster)) {
-                if(this.table.svgGroup != this.svgTopBorder.parentNode) this.table.svgGroup.appendChild(this.svgTopBorder);
+                if(this.table.borderRows[this.cellY].svgGroup != this.svgTopBorder.parentNode) this.table.borderRows[this.cellY].svgGroup.appendChild(this.svgTopBorder);
             } else {
                 if(this.table.svgHiddenGroup != this.svgTopBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgTopBorder);
             }
 
             if (this.isMaster || (this.leftCell != null && this.leftCell.isMaster)) {
-                if(this.table.svgGroup != this.svgLeftBorder.parentNode) this.table.svgGroup.appendChild(this.svgLeftBorder);
+                if(this.table.borderColumns[this.cellX].svgGroup != this.svgLeftBorder.parentNode) this.table.borderColumns[this.cellX].svgGroup.appendChild(this.svgLeftBorder);
             } else {
                 if(this.table.svgHiddenGroup != this.svgLeftBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgLeftBorder);
             }
 
             if (this.isMaster || (this.rightCell != null && this.rightCell.isMaster)) {
-                if(this.table.svgGroup != this.svgRightBorder.parentNode) this.table.svgGroup.appendChild(this.svgRightBorder);
+                if(this.table.borderColumns[this.cellX+1].svgGroup != this.svgRightBorder.parentNode) this.table.borderColumns[this.cellX+1].svgGroup.appendChild(this.svgRightBorder);
             } else {
                 if(this.table.svgHiddenGroup != this.svgRightBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgRightBorder);
             }
 
             if (this.isMaster || (this.bottomCell != null && this.bottomCell.isMaster)) {
-                if(this.table.svgGroup != this.svgBottomBorder.parentNode) this.table.svgGroup.appendChild(this.svgBottomBorder);
+                if(this.table.borderRows[this.cellY+1].svgGroup != this.svgBottomBorder.parentNode) this.table.borderRows[this.cellY+1].svgGroup.appendChild(this.svgBottomBorder);
             } else {
                 if(this.table.svgHiddenGroup != this.svgBottomBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgBottomBorder);
             }
@@ -997,6 +1008,7 @@ namespace GraphTableSVG {
          * @param dir 
          */
         public removeBorder(dir: DirectionType) {
+            /*
             const border = this._borders[dir];
             if (this.table.svgHiddenGroup.contains(border)) {
                 this.table.svgHiddenGroup.removeChild(border);
@@ -1005,13 +1017,15 @@ namespace GraphTableSVG {
             } else {
                 throw Error("error");
             }
+            */
         }
         /**
          * このセルを取り除きます。
          * @param isColumn 
          */
         public removeFromTable(isColumn: boolean) {
-
+            this.svgGroup.remove();
+            /*
             if (this.table.svgGroup.contains(this.svgGroup)) {
                 this.table.svgGroup.removeChild(this.svgGroup);
             } else if (this.table.svgHiddenGroup.contains(this.svgGroup)) {
@@ -1019,6 +1033,8 @@ namespace GraphTableSVG {
             } else {
                 throw Error("error");
             }
+            */
+           /*
             if (isColumn) {
                 this.removeBorder(DirectionType.top);
                 if (this.table.svgGroup.contains(this.svgTopBorder)) {
@@ -1034,6 +1050,7 @@ namespace GraphTableSVG {
                 if (this.topCell == null) this.removeBorder(DirectionType.top);
                 if (this.bottomCell == null) this.removeBorder(DirectionType.bottom);
             }
+            */
         }
 
         
@@ -1041,6 +1058,7 @@ namespace GraphTableSVG {
          * このセルが持つ枠の情報を更新します。
          */
         private updateBorderAttributes(): void {
+            /*
             if (this.leftCell != null && this.leftCell.svgRightBorder != this.svgLeftBorder) {
                 this.removeBorder(DirectionType.left);
                 this.svgLeftBorder = this.leftCell.svgRightBorder;
@@ -1060,25 +1078,36 @@ namespace GraphTableSVG {
                 this.bottomCell.removeBorder(DirectionType.top);
                 this.bottomCell.svgTopBorder = this.svgBottomBorder;
             }
-            this.svgTopBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.svgTopBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.svgTopBorder.setAttribute(Cell.borderTypeName, "horizontal");
+            */
+
+            const topCellX = this.svgTopBorder.getAttribute(Cell.borderXName);
+            const topCellY = this.svgTopBorder.getAttribute(Cell.borderYName);
+            const topCellAttr = this.svgTopBorder.getAttribute(Cell.borderTypeName);
+            if(topCellX != `${this.cellX}`)this.svgTopBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            if(topCellY != `${this.cellY}`)this.svgTopBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            if(topCellAttr != `horizontal`)this.svgTopBorder.setAttribute(Cell.borderTypeName, "horizontal");
             //this.topBorder.setAttribute("data-border", "top");
 
+            const leftCellX = this.svgLeftBorder.getAttribute(Cell.borderXName);
+            const leftCellY = this.svgLeftBorder.getAttribute(Cell.borderYName);
+            const leftCellAttr = this.svgLeftBorder.getAttribute(Cell.borderTypeName);
+            if(leftCellX != `${this.cellX}`)this.svgLeftBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            if(leftCellY != `${this.cellY}`)this.svgLeftBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            if(leftCellAttr != `vertical`)this.svgLeftBorder.setAttribute(Cell.borderTypeName, "vertical");
 
-            this.svgLeftBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.svgLeftBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.svgLeftBorder.setAttribute(Cell.borderTypeName, "vertical");
+            const rightCellX = this.svgRightBorder.getAttribute(Cell.borderXName);
+            const rightCellY = this.svgRightBorder.getAttribute(Cell.borderYName);
+            const rightCellAttr = this.svgRightBorder.getAttribute(Cell.borderTypeName);
+            if(rightCellX != `${this.cellX+1}`)this.svgRightBorder.setAttribute(Cell.borderXName, `${this.cellX + 1}`);
+            if(rightCellY != `${this.cellY}`)this.svgRightBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
+            if(rightCellAttr != `vertical`)this.svgRightBorder.setAttribute(Cell.borderTypeName, "vertical");
 
-
-            this.svgRightBorder.setAttribute(Cell.borderXName, `${this.cellX + 1}`);
-            this.svgRightBorder.setAttribute(Cell.borderYName, `${this.cellY}`);
-            this.svgRightBorder.setAttribute(Cell.borderTypeName, "vertical");
-
-
-            this.svgBottomBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
-            this.svgBottomBorder.setAttribute(Cell.borderYName, `${this.cellY + 1}`);
-            this.svgBottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
+            const bottomCellX = this.svgBottomBorder.getAttribute(Cell.borderXName);
+            const bottomCellY = this.svgBottomBorder.getAttribute(Cell.borderYName);
+            const bottomCellAttr = this.svgBottomBorder.getAttribute(Cell.borderTypeName);
+            if(bottomCellX != `${this.cellX}`)this.svgBottomBorder.setAttribute(Cell.borderXName, `${this.cellX}`);
+            if(bottomCellY != `${this.cellY+1}`)this.svgBottomBorder.setAttribute(Cell.borderYName, `${this.cellY + 1}`);
+            if(bottomCellAttr != `horizontal`)this.svgBottomBorder.setAttribute(Cell.borderTypeName, "horizontal");
         }
         // #endregion
         // #region relocate

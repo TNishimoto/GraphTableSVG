@@ -10,12 +10,50 @@
         constructor(_table: GTable, _y: number, _height: number = 30) {
             this.table = _table;
             this._svgGroup = SVG.createGroup(this.table.svgGroup);
-
+            this.svgGroup.setAttribute("name", "cell_row");
 
             this.cellY = _y;
             this._svgGroup.setAttribute(Row.columnHeightName, `${_height}`);
+            /*
+            for(let i=0;i<cellCount;i++){
+                this._cells.push(this.createCell(i, _y));
+            }
+            */
             //this.height = this.getMaxHeight();
 
+        }
+        private createCell(cellX: number, cellY: number): Cell {
+            const cellClass = this.table.defaultCellClass == null ? undefined : this.table.defaultCellClass;
+            const borderClass = this.table.defaultBorderClass == null ? undefined : this.table.defaultBorderClass;
+
+            const option: CellOption = { cellClass: cellClass, borderClass: borderClass };
+            return new Cell(this.table, cellX, cellY, option);
+        }
+        public insertCell(i: number) {
+            const cell = this.createCell(i, this.cellY);
+            this.cells.splice(i, 0, cell);
+        }
+        public appendCell(num: number = 1) {
+            for (let i = 0; i < num; i++) {
+                const cell = this.createCell(this.cells.length, this.cellY);
+                this.cells.push(cell);
+            }
+        }
+
+        public removeCell(i: number) {
+            this.cells[i].removeFromTable(false);
+            //this.cells.forEach((v) => v.removeFromTable(false));
+            this.cells.splice(i, 1);
+        }
+
+
+        private _cells: Cell[] = [];
+        public get cells(): Cell[] {
+            return this._cells;
+        }
+
+        public get svgGroup(): SVGElement {
+            return this._svgGroup;
         }
 
         /**
@@ -64,9 +102,11 @@
         /**
          * この行のセル配列を返します。
          */
-        public get cells(): Cell[] {
+        /*
+         public get cells(): Cell[] {
             return this.table.cells[this.cellY];
         }
+        */
         /**
          * この行のセルの上にある枠の配列を返します。
          */
@@ -146,7 +186,7 @@
          * 行内のセルのサイズを再計算します。
          */
         public resize() {
-            this.cells.forEach((v)=>v.update());
+            this.cells.forEach((v) => v.update());
             this.setHeightToCells();
             //this.height = this.getMaxHeight();
         }
@@ -185,11 +225,30 @@
             }
             return height;
         }
+        private get selfy(): number {
+            for (let i = 0; i < this.table.rowCount; i++) {
+                if (this.table.rows[i] == this) {
+                    return i;
+                }
+            }
+            throw new Error("error");
+        }
         /**
          * この行を取り除きます。
          * @param isUnit 
          */
         public remove(isUnit: boolean = false) {
+            while (this.cells.length > 0) this.removeCell(this.cells.length - 1);
+            this.svgGroup.remove();
+            this.table.rows.splice(this.selfy, 1);
+            /*
+            for(let i=0;this.table.rowCount;i++){
+                if(this.table.rows[i] == this){
+                    break;
+                }
+            }
+            */
+            /*
             if (isUnit) {
                 if (this.table.rows.length > 1 || (this.table.rows.length == 1 && this.table.columns.length == 1)) {
                     this.cells.forEach((v) => v.removeFromTable(false));
@@ -215,6 +274,7 @@
                     this.table.rows[y].remove(true);
                 }
             }
+            */
         }
         /*
         public updateBorders() {
