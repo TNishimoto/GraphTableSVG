@@ -3904,8 +3904,14 @@ var GraphTableSVG;
             if (GraphTableSVG.Common.getGraphTableCSS() == null)
                 GraphTableSVG.Common.setGraphTableCSS("yellow", "red");
             this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            this._svgRowBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            this._svgRowBorderGroup.setAttribute("name", "rowBorderGroup");
+            this._svgColumnBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            this._svgColumnBorderGroup.setAttribute("name", "columnBorderGroup");
             this._svgHiddenGroup.style.visibility = "hidden";
             this.svgGroup.appendChild(this.svgHiddenGroup);
+            this.svgGroup.appendChild(this.svgRowBorderGroup);
+            this.svgGroup.appendChild(this.svgColumnBorderGroup);
             this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             this.updateAttributes = [];
             this.isConstructing = true;
@@ -3987,6 +3993,12 @@ var GraphTableSVG;
                     e.removeChild(e.childNodes.item(0));
             }
             return output;
+        }
+        get svgRowBorderGroup() {
+            return this._svgRowBorderGroup;
+        }
+        get svgColumnBorderGroup() {
+            return this._svgColumnBorderGroup;
         }
         get borderRows() {
             return this._borderRows;
@@ -4395,7 +4407,6 @@ var GraphTableSVG;
             const rowi = b ? i : i - 1;
             if (rowi < 0 || rowi > this.rowCount)
                 throw new Error("primitive insert row error");
-            console.log("fe" + i + "/" + this.rows.length);
             this.createRowBorder(i);
             this.insertYVerticalBorders(i);
             this.createRow(rowi);
@@ -4426,7 +4437,6 @@ var GraphTableSVG;
             while (this.columnCount > 1) {
                 this.primitiveRemoveColumn(1, false);
             }
-            console.log(`cleare ${this.borderRows.length} ${this.borderColumns.length} ${this.borderRows[0].borders.length} ${this.borderColumns[0].borders.length} ${this.rows.length} ${this.rows[0].cells.length}`);
             this.updateNodeRelations();
         }
         primitiveRemoveRow(i, b) {
@@ -4722,7 +4732,7 @@ var GraphTableSVG;
         constructor(_table, _y, columnSize, borderClass) {
             this._borders = new Array(0);
             this.table = _table;
-            this._svgGroup = GraphTableSVG.SVG.createGroup(this.table.svgGroup);
+            this._svgGroup = GraphTableSVG.SVG.createGroup(this.table.svgRowBorderGroup);
             this._svgGroup.setAttribute("name", "border_row");
             this.borderY = _y;
             for (let x = 0; x < columnSize; x++) {
@@ -4759,7 +4769,7 @@ var GraphTableSVG;
         constructor(_table, _x, rowSize, borderClass) {
             this._borders = new Array(0);
             this.table = _table;
-            this._svgGroup = GraphTableSVG.SVG.createGroup(this.table.svgGroup);
+            this._svgGroup = GraphTableSVG.SVG.createGroup(this.table.svgColumnBorderGroup);
             this._svgGroup.setAttribute("name", "border_column");
             this.borderX = _x;
             for (let y = 0; y < rowSize; y++) {

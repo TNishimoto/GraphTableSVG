@@ -16,8 +16,16 @@ namespace GraphTableSVG {
             if (Common.getGraphTableCSS() == null) Common.setGraphTableCSS("yellow", "red");
 
             this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            this._svgRowBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            this._svgRowBorderGroup.setAttribute("name", "rowBorderGroup");
+            this._svgColumnBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            this._svgColumnBorderGroup.setAttribute("name", "columnBorderGroup");
+
             this._svgHiddenGroup.style.visibility = "hidden";
             this.svgGroup.appendChild(this.svgHiddenGroup);
+            this.svgGroup.appendChild(this.svgRowBorderGroup);
+            this.svgGroup.appendChild(this.svgColumnBorderGroup);
+
             this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             this.updateAttributes = [];
             this.isConstructing = true;
@@ -105,6 +113,15 @@ namespace GraphTableSVG {
         }
         // #region field
         private _svgHiddenGroup: SVGGElement;
+        private _svgRowBorderGroup: SVGGElement;
+        private _svgColumnBorderGroup: SVGGElement;
+        public get svgRowBorderGroup(){
+            return this._svgRowBorderGroup;
+        }
+        public get svgColumnBorderGroup(){
+            return this._svgColumnBorderGroup;
+        }
+
         /**
         各行を表す配列を返します。読み取り専用です。
         */
@@ -821,8 +838,6 @@ namespace GraphTableSVG {
         private primitiveInsertRow(i: number, b: boolean) {
             const rowi = b ? i : i - 1;
             if (rowi < 0 || rowi > this.rowCount) throw new Error("primitive insert row error");
-            //const i = this._borderRows.length;
-            console.log("fe" + i + "/" + this.rows.length);
             this.createRowBorder(i);
             this.insertYVerticalBorders(i)
             this.createRow(rowi);
@@ -858,35 +873,6 @@ namespace GraphTableSVG {
                 this.primitiveRemoveColumn(1, false);
             }
             
-
-
-            /*
-            while (this.rowCount > 1) {
-                this.rows[this.rows.length - 1].remove(true);
-            }
-            while (this.columnCount > 1) {
-                this.columns[this.columns.length - 1].remove(true);
-            }
-            if (this.columnCount != this.columns.length) throw Error("clear error2");
-
-            while (this._borderRows.length > 2) this.removeRowBorder(0);
-            while (this._borderColumns.length > 2) this.removeColumnBorder(0);
-            */
-
-            /*
-            while (this.rowCount > 1) {
-                this.rows[this.rows.length - 1].remove(true);
-                this.removeRowBorder(1);
-            }
-            while (this.columnCount > 1) {
-                this.columns[this.columns.length - 1].remove(true);
-                this.removeColumnBorder(1);
-            }
-            */
-
-            console.log(`cleare ${this.borderRows.length} ${this.borderColumns.length} ${this.borderRows[0].borders.length} ${this.borderColumns[0].borders.length} ${this.rows.length} ${this.rows[0].cells.length}`);
-
-
             this.updateNodeRelations();
 
         }

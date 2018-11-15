@@ -496,6 +496,10 @@ declare namespace GraphTableSVG {
         constructor(svgbox: SVGElement, option?: GTableOption);
         static constructAttributes(e: Element, removeAttributes?: boolean, output?: GTableOption): GTableOption;
         private _svgHiddenGroup;
+        private _svgRowBorderGroup;
+        private _svgColumnBorderGroup;
+        readonly svgRowBorderGroup: SVGGElement;
+        readonly svgColumnBorderGroup: SVGGElement;
         private _rows;
         private _columns;
         private _borderRows;
