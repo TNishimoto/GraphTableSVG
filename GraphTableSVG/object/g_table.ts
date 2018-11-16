@@ -125,11 +125,11 @@ namespace GraphTableSVG {
         /**
         各行を表す配列を返します。読み取り専用です。
         */
-        private _rows: Row[] = new Array(0);
+        private _rows: CellRow[] = new Array(0);
         /**
         各列を表す配列を返します。読み取り専用です。
         */
-        private _columns: Column[] = new Array(0);
+        private _columns: CellColumn[] = new Array(0);
 
         private _borderRows: BorderRow[] = new Array(0);
         private _borderColumns: BorderColumn[] = new Array(0);
@@ -173,13 +173,13 @@ namespace GraphTableSVG {
         /**
         各行を表す配列を返します。読み取り専用です。
         */
-        get rows(): Row[] {
+        get rows(): CellRow[] {
             return this._rows;
         }
         /**
         各列を表す配列を返します。読み取り専用です。
         */
-        get columns(): Column[] {
+        get columns(): CellColumn[] {
             return this._columns;
         }
         /**
@@ -752,9 +752,9 @@ namespace GraphTableSVG {
             this.createRowBorder(0, 1);
             this.createColumnBorder(0, 1);
             this.createColumnBorder(0, 1);
-            this._rows.splice(0, 0, new Row(this, 0, undefined));
-            this._rows[0].appendCell();
-            this._columns.splice(0, 0, new Column(this, 0));
+            this._rows.splice(0, 0, new CellRow(this, 0, undefined));
+            this._rows[0]._appendCell();
+            this._columns.splice(0, 0, new CellColumn(this, 0));
         }
 
         private borderSizeCheck(_w: number, _h: number): void {
@@ -878,12 +878,28 @@ namespace GraphTableSVG {
             this.updateNodeRelations();
 
         }
+        /*
+        public removeCell(i: number) {
+            this.cells[i].removeFromTable(false);
+            //this.cells.forEach((v) => v.removeFromTable(false));
+            this.cells.splice(i, 1);
+        }
+        */
+        private removeCellRow(i : number) {
+           this.rows[i]._dispose();
+            this.rows.splice(i, 1);
+        }
+        private removeCellColumn(i : number) {
+            this.columns[i]._dispose();
+             this.columns.splice(i, 1);
+         }
+ 
         private primitiveRemoveRow(ithRow: number, removeTopBorders: boolean) {
             const ithBorderRow = removeTopBorders ? ithRow : ithRow + 1;
             if (ithRow < 0 || ithRow >= this.rowCount) throw new Error("error");
 
             //this.removeRow(rowi);
-            this.rows[ithRow].remove(true);
+            this.removeCellRow(ithRow);;
             this.removeRowBorder(ithBorderRow);
             this.deleteYVerticalBorders(ithRow);
         }
@@ -892,7 +908,11 @@ namespace GraphTableSVG {
             const ithborderColumn = removeLeftBorders ? ithColumn : ithColumn + 1;
             if (ithColumn < 0 || ithColumn >= this.columnCount) throw new Error("primitive insert column error");
 
-            this.columns[ithColumn].remove(true);
+            this.removeCellColumn(ithColumn);
+            //this.columns[ithColumn].remove(true);
+            //this.table.columns.splice(x, 1);
+
+
             this.removeColumnBorder(ithborderColumn);
             this.deleteXHorizontalBorders(ithColumn);
 
@@ -947,9 +967,9 @@ namespace GraphTableSVG {
             //const cell: Cell[] = [];
             //this.cells.splice(i, 0, cell);
             const columnCount = this.columnCount;
-            const row = new Row(this, i, undefined);
+            const row = new CellRow(this, i, undefined);
             this._rows.splice(i, 0, row);
-            row.appendCell(columnCount);
+            row._appendCell(columnCount);
             /*
             for (let x = 0; x < this.columnCount; x++) {
                 cell[x] = this.createCell(x, i);
@@ -959,11 +979,11 @@ namespace GraphTableSVG {
         }
         private createColumn(i: number) {
             for (let y = 0; y < this.rowCount; y++) {
-                this.rows[y].insertCell(i);
+                this.rows[y]._insertCell(i);
                 //const cell = this.createCell(i, y);
                 //this.cells[y].splice(i, 0, cell);
             }
-            this._columns.splice(i, 0, new Column(this, i));
+            this._columns.splice(i, 0, new CellColumn(this, i));
         }
         private insertXHorizontalBorders(i: number) {
             this._borderRows.forEach((v) => {

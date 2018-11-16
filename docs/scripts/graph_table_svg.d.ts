@@ -511,8 +511,8 @@ declare namespace GraphTableSVG {
         height: number;
         readonly svgHiddenGroup: SVGGElement;
         readonly type: ShapeObjectType;
-        readonly rows: Row[];
-        readonly columns: Column[];
+        readonly rows: CellRow[];
+        readonly columns: CellColumn[];
         readonly cells: Cell[][];
         private _isDrawing;
         readonly isDrawing: boolean;
@@ -556,6 +556,8 @@ declare namespace GraphTableSVG {
         readonly borderColumnCount: number;
         readonly borderRowCount: number;
         clear(): void;
+        private removeCellRow(i);
+        private removeCellColumn(i);
         private primitiveRemoveRow(ithRow, removeTopBorders);
         private primitiveRemoveColumn(ithColumn, removeLeftBorders);
         private removeColumnBorder(i);
@@ -773,7 +775,7 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class Column {
+    class CellColumn {
         private readonly table;
         static readonly rowWidthName: string;
         private _svgGroup;
@@ -792,21 +794,20 @@ declare namespace GraphTableSVG {
         readonly topBorder: SVGLineElement;
         readonly bottomBorder: SVGLineElement;
         private readonly selfx;
-        remove(isUnit?: boolean): void;
+        _dispose(): void;
         relocation(): void;
         readonly groupColumnRange: [number, number];
     }
 }
 declare namespace GraphTableSVG {
-    class Row {
+    class CellRow {
         private readonly table;
         private _svgGroup;
         static readonly columnHeightName: string;
         constructor(_table: GTable, _y: number, _height?: number);
         private createCell(cellX, cellY);
-        insertCell(i: number): void;
-        appendCell(num?: number): void;
-        removeCell(i: number): void;
+        _insertCell(i: number): void;
+        _appendCell(num?: number): void;
         private _cells;
         readonly cells: Cell[];
         readonly length: number;
@@ -823,7 +824,8 @@ declare namespace GraphTableSVG {
         setY(posY: number): void;
         private getMaxHeight();
         private readonly selfy;
-        remove(isUnit?: boolean): void;
+        _dispose(): void;
+        _removeCell(i: number): void;
         readonly groupRowRange: [number, number];
     }
 }

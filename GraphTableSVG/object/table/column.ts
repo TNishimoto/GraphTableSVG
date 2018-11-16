@@ -2,7 +2,7 @@ namespace GraphTableSVG {
     /**
      * 表の列を表現するクラスです。
      */
-    export class Column {
+    export class CellColumn {
         private readonly table: GTable;
         //private readonly _cellX: number;
         public static readonly rowWidthName = "data-width";
@@ -22,13 +22,13 @@ namespace GraphTableSVG {
         列の幅を返します。
         */
         get width(): number {
-            return Number(this._svgGroup.getAttribute(Column.rowWidthName));
+            return Number(this._svgGroup.getAttribute(CellColumn.rowWidthName));
         }
         /**
         列の幅を設定します。
         */
         set width(value: number) {
-            this._svgGroup.setAttribute(Column.rowWidthName, `${value}`);
+            this._svgGroup.setAttribute(CellColumn.rowWidthName, `${value}`);
             this.setWidthToCells();
             /*
             let b = false;
@@ -96,7 +96,7 @@ namespace GraphTableSVG {
 
             //this.table.svgGroup.appendChild(this._svgGroup);
             this.cellX = _x;
-            this._svgGroup.setAttribute(Column.rowWidthName, `${_width}`);
+            this._svgGroup.setAttribute(CellColumn.rowWidthName, `${_width}`);
             //this.width = this.getMaxWidth();
 
 
@@ -217,11 +217,17 @@ namespace GraphTableSVG {
          * この列を取り除きます。
          * @param isUnit 
          */
-        public remove(isUnit: boolean = false) {
+        public _dispose() {
+            /*
+            while (this.length > 0){
+                const x = this.length - 1;
+                this.cells[x].removeFromTable(false);
+                this.cells.splice(x, 1);
+            } 
+            */
             const x = this.selfx;
-            this.table.rows.forEach((v, i) => v.removeCell(x));
+            this.table.rows.forEach((v, i) => v._removeCell(x));
             this._svgGroup.remove();
-            this.table.columns.splice(x, 1);
             /*
             if (isUnit) {
                 if (this.table.columns.length > 1) {

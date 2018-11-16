@@ -4359,9 +4359,9 @@ var GraphTableSVG;
             this.createRowBorder(0, 1);
             this.createColumnBorder(0, 1);
             this.createColumnBorder(0, 1);
-            this._rows.splice(0, 0, new GraphTableSVG.Row(this, 0, undefined));
-            this._rows[0].appendCell();
-            this._columns.splice(0, 0, new GraphTableSVG.Column(this, 0));
+            this._rows.splice(0, 0, new GraphTableSVG.CellRow(this, 0, undefined));
+            this._rows[0]._appendCell();
+            this._columns.splice(0, 0, new GraphTableSVG.CellColumn(this, 0));
         }
         borderSizeCheck(_w, _h) {
             const w = this.borderRows[0].borders.length;
@@ -4438,11 +4438,20 @@ var GraphTableSVG;
             }
             this.updateNodeRelations();
         }
+        removeCellRow(i) {
+            this.rows[i]._dispose();
+            this.rows.splice(i, 1);
+        }
+        removeCellColumn(i) {
+            this.columns[i]._dispose();
+            this.columns.splice(i, 1);
+        }
         primitiveRemoveRow(ithRow, removeTopBorders) {
             const ithBorderRow = removeTopBorders ? ithRow : ithRow + 1;
             if (ithRow < 0 || ithRow >= this.rowCount)
                 throw new Error("error");
-            this.rows[ithRow].remove(true);
+            this.removeCellRow(ithRow);
+            ;
             this.removeRowBorder(ithBorderRow);
             this.deleteYVerticalBorders(ithRow);
         }
@@ -4450,7 +4459,7 @@ var GraphTableSVG;
             const ithborderColumn = removeLeftBorders ? ithColumn : ithColumn + 1;
             if (ithColumn < 0 || ithColumn >= this.columnCount)
                 throw new Error("primitive insert column error");
-            this.columns[ithColumn].remove(true);
+            this.removeCellColumn(ithColumn);
             this.removeColumnBorder(ithborderColumn);
             this.deleteXHorizontalBorders(ithColumn);
         }
@@ -4492,15 +4501,15 @@ var GraphTableSVG;
         }
         createRow(i) {
             const columnCount = this.columnCount;
-            const row = new GraphTableSVG.Row(this, i, undefined);
+            const row = new GraphTableSVG.CellRow(this, i, undefined);
             this._rows.splice(i, 0, row);
-            row.appendCell(columnCount);
+            row._appendCell(columnCount);
         }
         createColumn(i) {
             for (let y = 0; y < this.rowCount; y++) {
-                this.rows[y].insertCell(i);
+                this.rows[y]._insertCell(i);
             }
-            this._columns.splice(i, 0, new GraphTableSVG.Column(this, i));
+            this._columns.splice(i, 0, new GraphTableSVG.CellColumn(this, i));
         }
         insertXHorizontalBorders(i) {
             this._borderRows.forEach((v) => {
@@ -5656,13 +5665,13 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    class Column {
+    class CellColumn {
         constructor(_table, _x, _width = 30) {
             this.table = _table;
             this._svgGroup = GraphTableSVG.SVG.createGroup(this.table.svgGroup);
             this._svgGroup.setAttribute("name", "cell_column");
             this.cellX = _x;
-            this._svgGroup.setAttribute(Column.rowWidthName, `${_width}`);
+            this._svgGroup.setAttribute(CellColumn.rowWidthName, `${_width}`);
         }
         get cellX() {
             return Number(this._svgGroup.getAttribute(GraphTableSVG.Cell.cellXName));
@@ -5672,10 +5681,10 @@ var GraphTableSVG;
             this.cells.forEach((w) => w.cellX = v);
         }
         get width() {
-            return Number(this._svgGroup.getAttribute(Column.rowWidthName));
+            return Number(this._svgGroup.getAttribute(CellColumn.rowWidthName));
         }
         set width(value) {
-            this._svgGroup.setAttribute(Column.rowWidthName, `${value}`);
+            this._svgGroup.setAttribute(CellColumn.rowWidthName, `${value}`);
             this.setWidthToCells();
         }
         setWidthToCells() {
@@ -5780,11 +5789,10 @@ var GraphTableSVG;
             }
             throw new Error("error");
         }
-        remove(isUnit = false) {
+        _dispose() {
             const x = this.selfx;
-            this.table.rows.forEach((v, i) => v.removeCell(x));
+            this.table.rows.forEach((v, i) => v._removeCell(x));
             this._svgGroup.remove();
-            this.table.columns.splice(x, 1);
         }
         relocation() {
             this.cells.forEach((v) => v.relocation());
@@ -5804,19 +5812,19 @@ var GraphTableSVG;
             }
         }
     }
-    Column.rowWidthName = "data-width";
-    GraphTableSVG.Column = Column;
+    CellColumn.rowWidthName = "data-width";
+    GraphTableSVG.CellColumn = CellColumn;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    class Row {
+    class CellRow {
         constructor(_table, _y, _height = 30) {
             this._cells = [];
             this.table = _table;
             this._svgGroup = GraphTableSVG.SVG.createGroup(this.table.svgGroup);
             this.svgGroup.setAttribute("name", "cell_row");
             this.cellY = _y;
-            this._svgGroup.setAttribute(Row.columnHeightName, `${_height}`);
+            this._svgGroup.setAttribute(CellRow.columnHeightName, `${_height}`);
         }
         createCell(cellX, cellY) {
             const cellClass = this.table.defaultCellClass == null ? undefined : this.table.defaultCellClass;
@@ -5824,19 +5832,15 @@ var GraphTableSVG;
             const option = { cellClass: cellClass, borderClass: borderClass };
             return new GraphTableSVG.Cell(this.table, cellX, cellY, option);
         }
-        insertCell(i) {
+        _insertCell(i) {
             const cell = this.createCell(i, this.cellY);
             this.cells.splice(i, 0, cell);
         }
-        appendCell(num = 1) {
+        _appendCell(num = 1) {
             for (let i = 0; i < num; i++) {
                 const cell = this.createCell(this.cells.length, this.cellY);
                 this.cells.push(cell);
             }
-        }
-        removeCell(i) {
-            this.cells[i].removeFromTable(false);
-            this.cells.splice(i, 1);
         }
         get cells() {
             return this._cells;
@@ -5855,10 +5859,10 @@ var GraphTableSVG;
             this.cells.forEach((w) => w.cellY = v);
         }
         get height() {
-            return Number(this._svgGroup.getAttribute(Row.columnHeightName));
+            return Number(this._svgGroup.getAttribute(CellRow.columnHeightName));
         }
         set height(value) {
-            this._svgGroup.setAttribute(Row.columnHeightName, `${value}`);
+            this._svgGroup.setAttribute(CellRow.columnHeightName, `${value}`);
             this.setHeightToCells();
         }
         get topBorders() {
@@ -5953,11 +5957,16 @@ var GraphTableSVG;
             }
             throw new Error("error");
         }
-        remove(isUnit = false) {
-            while (this.cells.length > 0)
-                this.removeCell(this.cells.length - 1);
+        _dispose() {
+            while (this.length > 0) {
+                const x = this.length - 1;
+                this._removeCell(x);
+            }
             this.svgGroup.remove();
-            this.table.rows.splice(this.selfy, 1);
+        }
+        _removeCell(i) {
+            this.cells[i].removeFromTable(false);
+            this.cells.splice(i, 1);
         }
         get groupRowRange() {
             let range = this.cells[0].groupRowRange;
@@ -5974,8 +5983,8 @@ var GraphTableSVG;
             }
         }
     }
-    Row.columnHeightName = "data-height";
-    GraphTableSVG.Row = Row;
+    CellRow.columnHeightName = "data-height";
+    GraphTableSVG.CellRow = CellRow;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {

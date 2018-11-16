@@ -2,7 +2,7 @@
     /**
      * 表の行を表現するクラスです。
      */
-    export class Row {
+    export class CellRow {
         private readonly table: GTable;
         //private readonly _cellY: number;
         private _svgGroup: SVGGElement;
@@ -13,7 +13,7 @@
             this.svgGroup.setAttribute("name", "cell_row");
 
             this.cellY = _y;
-            this._svgGroup.setAttribute(Row.columnHeightName, `${_height}`);
+            this._svgGroup.setAttribute(CellRow.columnHeightName, `${_height}`);
             /*
             for(let i=0;i<cellCount;i++){
                 this._cells.push(this.createCell(i, _y));
@@ -29,24 +29,25 @@
             const option: CellOption = { cellClass: cellClass, borderClass: borderClass };
             return new Cell(this.table, cellX, cellY, option);
         }
-        public insertCell(i: number) {
+        public _insertCell(i: number) {
             const cell = this.createCell(i, this.cellY);
             this.cells.splice(i, 0, cell);
         }
-        public appendCell(num: number = 1) {
+        public _appendCell(num: number = 1) {
             for (let i = 0; i < num; i++) {
                 const cell = this.createCell(this.cells.length, this.cellY);
                 this.cells.push(cell);
             }
         }
 
+        /*
         public removeCell(i: number) {
             this.cells[i].removeFromTable(false);
             //this.cells.forEach((v) => v.removeFromTable(false));
             this.cells.splice(i, 1);
         }
 
-
+        */
         private _cells: Cell[] = [];
         public get cells(): Cell[] {
             return this._cells;
@@ -73,13 +74,13 @@
         行の高さを返します。
         */
         get height(): number {
-            return Number(this._svgGroup.getAttribute(Row.columnHeightName));
+            return Number(this._svgGroup.getAttribute(CellRow.columnHeightName));
         }
         /**
         行の高さを設定します。
         */
         set height(value: number) {
-            this._svgGroup.setAttribute(Row.columnHeightName, `${value}`);
+            this._svgGroup.setAttribute(CellRow.columnHeightName, `${value}`);
             this.setHeightToCells();
             /*
             let b = false;
@@ -235,49 +236,31 @@
             }
             throw new Error("error");
         }
+        public _dispose(){
+            while (this.length > 0){
+                const x = this.length - 1;
+                this._removeCell(x);
+            } 
+            this.svgGroup.remove();
+            //this.rows.splice(this.rows[i].selfy, 1);
+        }
+        public _removeCell(i : number){
+            this.cells[i].removeFromTable(false);
+            this.cells.splice(i, 1);
+
+        }
+
         /**
          * この行を取り除きます。
          * @param isUnit 
          */
+        /*
         public remove(isUnit: boolean = false) {
             while (this.cells.length > 0) this.removeCell(this.cells.length - 1);
             this.svgGroup.remove();
             this.table.rows.splice(this.selfy, 1);
-            /*
-            for(let i=0;this.table.rowCount;i++){
-                if(this.table.rows[i] == this){
-                    break;
-                }
-            }
-            */
-            /*
-            if (isUnit) {
-                if (this.table.rows.length > 1 || (this.table.rows.length == 1 && this.table.columns.length == 1)) {
-                    this.cells.forEach((v) => v.removeFromTable(false));
-                    this.table.cells.splice(this.cellY, 1);
-
-
-                    this.table.rows.splice(this.cellY, 1);
-
-                    this.table.rows.forEach((v, i) => v.cellY = i);
-                    this.table.svgGroup.removeChild(this._svgGroup);
-                    this.table.update();
-                } else if (this.table.rows.length == 1) {
-                    while (this.table.columns.length > 1) {
-                        this.table.columns[this.table.columns.length - 1].remove(true);
-                    }
-                    this.table.rows[0].remove(true);
-                } else {
-                    throw Error("Error");
-                }
-            } else {
-                const [b, e] = this.groupRowRange;
-                for (let y = e; y >= b; y--) {
-                    this.table.rows[y].remove(true);
-                }
-            }
-            */
         }
+        */
         /*
         public updateBorders() {
             this.cells.forEach((v) => v.updateBorder());
