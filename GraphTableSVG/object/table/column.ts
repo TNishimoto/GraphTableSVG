@@ -15,7 +15,6 @@ namespace GraphTableSVG {
             return Number(this._svgGroup.getAttribute(Cell.cellXName));
         }
         public set cellX(v: number) {
-            console.log("column"+this.cellX);
             this._svgGroup.setAttribute(Cell.cellXName, `${v}`);
             this.cells.forEach((w) => w.cellX = v);
         }

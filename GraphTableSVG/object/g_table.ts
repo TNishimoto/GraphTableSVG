@@ -794,10 +794,10 @@ namespace GraphTableSVG {
             }
             */
             while (this.rowCount < rowCount) {
-                this.primitiveInsertRow(this._borderRows.length, false);
+                this.primitiveInsertRow(this.rowCount, false);
             }
             while (this.columnCount < columnCount) {
-                this.primitiveInsertColumn(this._borderColumns.length, false);
+                this.primitiveInsertColumn(this.columnCount, false);
             }
             /*
             this.borderSizeCheck(1, rowCount);
@@ -832,20 +832,26 @@ namespace GraphTableSVG {
             */
 
         }
-        private primitiveInsertRow(i: number, b: boolean) {
-            const rowi = b ? i : i - 1;
-            if (rowi < 0 || rowi > this.rowCount) throw new Error("primitive insert row error");
-            this.createRowBorder(i);
-            this.insertYVerticalBorders(i)
-            this.createRow(rowi);
-        }
-        private primitiveInsertColumn(i: number, b: boolean) {
-            const columni = b ? i : i - 1;
-            if (columni < 0 || columni > this.columnCount) throw new Error("primitive insert column error");
+        private primitiveInsertRow(ithRow: number, insertTopBorders: boolean) {
+            let ithRowBorder = insertTopBorders ? ithRow : ithRow + 1;
+            if (ithRow < 0 || ithRow > this.rowCount) throw new Error("primitive insert row error");
+            if(ithRow == 0) ithRowBorder = 0;
+            if(ithRow == this.rowCount) ithRowBorder = this.borderRows.length;
 
-            this.createColumnBorder(i);
-            this.insertXHorizontalBorders(i);
-            this.createColumn(columni);
+
+            this.createRowBorder(ithRowBorder);
+            this.insertYVerticalBorders(ithRow)
+            this.createRow(ithRow);
+        }
+        private primitiveInsertColumn(ithColumn: number, insertLeftBorders: boolean) {
+            let ithColumnBorder = insertLeftBorders ? ithColumn : ithColumn + 1;
+            if (ithColumn < 0 || ithColumn > this.columnCount) throw new Error("primitive insert column error");
+            if(ithColumn == 0) ithColumnBorder = 0;
+            if(ithColumn == this.columnCount) ithColumnBorder = this.borderColumns.length;
+
+            this.createColumnBorder(ithColumnBorder);
+            this.insertXHorizontalBorders(ithColumn);
+            this.createColumn(ithColumn);
         }
 
         public get borderColumnCount(): number {
@@ -872,22 +878,23 @@ namespace GraphTableSVG {
             this.updateNodeRelations();
 
         }
-        private primitiveRemoveRow(i: number, b: boolean) {
-            const rowi = b ? i : i - 1;
-            if (rowi < 0 || rowi > this.rowCount) throw new Error("error");
+        private primitiveRemoveRow(ithRow: number, removeTopBorders: boolean) {
+            const ithBorderRow = removeTopBorders ? ithRow : ithRow + 1;
+            if (ithRow < 0 || ithRow >= this.rowCount) throw new Error("error");
 
-            this.removeRow(rowi);
-            this.removeRowBorder(i);
-            this.deleteYVerticalBorders(i);
+            //this.removeRow(rowi);
+            this.rows[ithRow].remove(true);
+            this.removeRowBorder(ithBorderRow);
+            this.deleteYVerticalBorders(ithRow);
         }
 
-        private primitiveRemoveColumn(i: number, b: boolean) {
-            const columni = b ? i : i - 1;
-            if (columni < 0 || columni > this.columnCount) throw new Error("primitive insert column error");
+        private primitiveRemoveColumn(ithColumn: number, removeLeftBorders: boolean) {
+            const ithborderColumn = removeLeftBorders ? ithColumn : ithColumn + 1;
+            if (ithColumn < 0 || ithColumn >= this.columnCount) throw new Error("primitive insert column error");
 
-            this.removeColumn(columni);
-            this.removeColumnBorder(i);
-            this.deleteXHorizontalBorders(i);
+            this.columns[ithColumn].remove(true);
+            this.removeColumnBorder(ithborderColumn);
+            this.deleteXHorizontalBorders(ithColumn);
 
         }
         
@@ -902,13 +909,20 @@ namespace GraphTableSVG {
             this._borderRows.splice(i, 1);
         }
         
-
-        private removeRow(i: number) {
-            this.rows[i].remove(true);
+        
+        public removeRow(ithRow: number) {
+            this.primitiveRemoveRow(ithRow, false);
+            this.updateNodeRelations();
+            this.update();
         }
-        private removeColumn(i: number) {
-            this.columns[i].remove(true);
+        
+       
+        public removeColumn(ithColumn: number) {
+            this.primitiveRemoveColumn(ithColumn, false);
+            this.updateNodeRelations();
+            this.update();
         }
+        
         private deleteXHorizontalBorders(i: number) {
             this._borderRows.forEach((v) => {
                 v.removeBorder(i);
@@ -968,19 +982,18 @@ namespace GraphTableSVG {
         * 新しい行をi番目の行に挿入します
         * @param 挿入行の行番号
         */
-        public insertRow(i: number) {
-            console.log("iinsert"+i);
-            this.primitiveInsertRow(i+1, false);
+        public insertRow(ithRow: number) {
+            this.primitiveInsertRow(ithRow, false);
             this.updateNodeRelations();
             this.update();
 
         }
         /**
         * 新しい列をi番目の列に挿入します。
-        * @param i 挿入列の列番号
+        * @param ithColumn 挿入列の列番号
         */
-        public insertColumn(i: number) {
-            this.primitiveInsertColumn(i+1,false)
+        public insertColumn(ithColumn: number) {
+            this.primitiveInsertColumn(ithColumn,false)
             this.updateNodeRelations();
             this.update();
         }
@@ -1007,7 +1020,7 @@ namespace GraphTableSVG {
         */
         public appendColumn() {
             //this.insertColumn(this.columnCount);
-            this.primitiveInsertColumn(this.columnCount+1,false)
+            this.primitiveInsertColumn(this.columnCount,false)
             this.updateNodeRelations();
             this.update();
 
@@ -1018,7 +1031,7 @@ namespace GraphTableSVG {
         */
         public appendRow() {
             //this.insertRow(this.rowCount);
-            this.primitiveInsertRow(this.rowCount+1, false);
+            this.primitiveInsertRow(this.rowCount, false);
             this.updateNodeRelations();
             this.update();
             //this.update();
