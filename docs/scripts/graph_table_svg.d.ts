@@ -781,6 +781,7 @@ declare namespace GraphTableSVG {
         width: number;
         private setWidthToCells();
         readonly cells: Cell[];
+        readonly length: number;
         constructor(_table: GTable, _x: number, _width?: number);
         private getMaxWidth();
         resize(): void;
@@ -808,6 +809,7 @@ declare namespace GraphTableSVG {
         removeCell(i: number): void;
         private _cells;
         readonly cells: Cell[];
+        readonly length: number;
         readonly svgGroup: SVGElement;
         cellY: number;
         height: number;

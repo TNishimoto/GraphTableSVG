@@ -15,6 +15,7 @@ namespace GraphTableSVG {
             return Number(this._svgGroup.getAttribute(Cell.cellXName));
         }
         public set cellX(v: number) {
+            console.log("column"+this.cellX);
             this._svgGroup.setAttribute(Cell.cellXName, `${v}`);
             this.cells.forEach((w) => w.cellX = v);
         }
@@ -79,9 +80,13 @@ namespace GraphTableSVG {
         public get cells(): Cell[] {
             const items: Cell[] = [];
             for (let i = 0; i < this.table.rowCount; i++) {
-                items.push(this.table.cells[i][this.cellX]);
+                //if(this.table.rows[i].cells.length <= this.cellX) throw new Error("error");
+                items.push(this.table.rows[i].cells[this.cellX]);
             }
             return items;
+        }
+        public get length(){
+            return this.cells.length;
         }
 
         constructor(_table: GTable, _x: number, _width : number = 30) {

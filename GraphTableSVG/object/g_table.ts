@@ -242,7 +242,8 @@ namespace GraphTableSVG {
             if (this.cells.length == 0) {
                 return 0;
             } else {
-                return this.cells[0].length;
+                if(this.rows.length > 2 && (this.rows[0].length != this.rows[1].length) ) throw new Error("Invalid length error");
+                return this.rows[0].length;
             }
         }
         /**
@@ -250,6 +251,7 @@ namespace GraphTableSVG {
         * @returns 表の行数
         */
         get rowCount(): number {
+
             return this.cells.length;
         }
 
@@ -753,7 +755,6 @@ namespace GraphTableSVG {
             this._rows.splice(0, 0, new Row(this, 0, undefined));
             this._rows[0].appendCell();
             this._columns.splice(0, 0, new Column(this, 0));
-            console.log("first set end");
         }
 
         private borderSizeCheck(_w: number, _h: number): void {
@@ -765,11 +766,9 @@ namespace GraphTableSVG {
             this.borderRows.forEach((v, i) => {
                 if (w != v.borders.length) throw Error("border rows error");
             })
-            console.log(this.borderColumns);
             this.borderColumns.forEach((v, i) => {
                 if (h != v.borders.length) throw Error(`border column error ${h} ${v.borders.length} ${i}`);
             })
-            console.log(`check : ${w} ${h}`);
 
             //return [w, h];
         }
@@ -780,7 +779,6 @@ namespace GraphTableSVG {
          */
         public setSize(columnCount: number, rowCount: number) {
 
-            console.log(`set size ${columnCount} ${rowCount}`)
             this.clear();
             this.isSetSize = true;
             const borderRowCount = rowCount + 1;
@@ -824,8 +822,7 @@ namespace GraphTableSVG {
 
 
 
-            console.log(`end size ${columnCount} ${rowCount}`)
-
+    
             this.updateNodeRelations();
             this.isSetSize = false;
 
@@ -862,7 +859,6 @@ namespace GraphTableSVG {
          * rowCount = 0, columnCount = 0のテーブルを作成します。
          */
         public clear() {
-            console.log(`clear ${this.columnCount} ${this.rowCount}`)
             if (this.rowCount == 0 || this.columnCount == 0) throw Error("Table Empty Error");
             if (this.columnCount != this.columns.length) throw Error("clear error");
             
@@ -934,11 +930,12 @@ namespace GraphTableSVG {
         }
 
         private createRow(i: number) {
-            const cell: Cell[] = [];
+            //const cell: Cell[] = [];
             //this.cells.splice(i, 0, cell);
+            const columnCount = this.columnCount;
             const row = new Row(this, i, undefined);
             this._rows.splice(i, 0, row);
-            row.appendCell(this.columnCount);
+            row.appendCell(columnCount);
             /*
             for (let x = 0; x < this.columnCount; x++) {
                 cell[x] = this.createCell(x, i);
@@ -972,37 +969,20 @@ namespace GraphTableSVG {
         * @param 挿入行の行番号
         */
         public insertRow(i: number) {
-            throw new Error("error");
-            //this.insertRowFunction(i, this.columnCount == 0 ? 1 : this.columnCount);
+            console.log("iinsert"+i);
+            this.primitiveInsertRow(i+1, false);
+            this.updateNodeRelations();
+            this.update();
+
         }
         /**
         * 新しい列をi番目の列に挿入します。
         * @param i 挿入列の列番号
         */
         public insertColumn(i: number) {
-            this.createColumn(i);
-            /*
-            if (this.rowCount > 0) {
-
-
-                for (let y = 0; y < this.rowCount; y++) {
-                    const cell = this.createCell(i, y);
-                    this.cells[y].splice(i, 0, cell);
-                }
-                this._columns.splice(i, 0, new Column(this, i));
-                //this.columns[i].cellX = i;
-                if (i > 0 && i != this.columnCount - 1) {
-
-                    this.columns[i].cells.forEach((v, j) => {
-                        //v.cellY = j;
-                        //this.cells[j][i - 1].svgRightBorder = v.svgLeftBorder;
-                    });
-                }
-            } else {
-                this.insertRow(0);
-            }
-            if (!this.isSetSize) this.update();
-            */
+            this.primitiveInsertColumn(i+1,false)
+            this.updateNodeRelations();
+            this.update();
         }
         /**
          * 新しい行を作って挿入します。
@@ -1026,14 +1006,21 @@ namespace GraphTableSVG {
         新しい列を最後の列に追加します。
         */
         public appendColumn() {
-            this.insertColumn(this.columnCount);
+            //this.insertColumn(this.columnCount);
+            this.primitiveInsertColumn(this.columnCount+1,false)
+            this.updateNodeRelations();
+            this.update();
+
         }
 
         /**
         新しい行を行の最後に追加します。
         */
         public appendRow() {
-            this.insertRow(this.rowCount);
+            //this.insertRow(this.rowCount);
+            this.primitiveInsertRow(this.rowCount+1, false);
+            this.updateNodeRelations();
+            this.update();
             //this.update();
         }
         // #endregion
@@ -1083,9 +1070,6 @@ namespace GraphTableSVG {
         private updateNodeRelations() {
             this.rows.forEach((v, i) => v.cellY = i);
             this.columns.forEach((v, i) => v.cellX = i);
-            console.log(`pd ${this.rowCount} ${this.columnCount} ${this.borderRows.length} ${this.borderColumns.length}`);
-            console.log(this.borderRows);
-            console.log(this.borderColumns);
             this.borderRows.forEach((v, i) => {
                 if (v.borders.length != this.columnCount) {
                     throw new Error(`error row ${i} ${v.borders.length} ${this.columnCount}`);
@@ -1108,19 +1092,7 @@ namespace GraphTableSVG {
          */
         private resize() {
             this.rows.forEach((v) => v.resize());
-            /*
-            this.rows.forEach((v) => {
-                console.log(`row : ${v.cellY} / ${v.height}`);
-            }
-            );
-            */
             this.columns.forEach((v) => v.resize());
-            /*
-            this.columns.forEach((v) => {
-                console.log(`column : ${v.cellX} / ${v.width}`);
-            }
-            );
-            */
 
         }
         /**

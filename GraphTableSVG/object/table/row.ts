@@ -51,6 +51,9 @@
         public get cells(): Cell[] {
             return this._cells;
         }
+        public get length(){
+            return this.cells.length;
+        }
 
         public get svgGroup(): SVGElement {
             return this._svgGroup;
@@ -163,7 +166,6 @@
             }
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                //console.log(`${cell.cellX} ${cell.cellY} ${cell.isMasterCellOfColumnCountOne}`)
                 if (!cell.isMasterCellOfRowCountOne) {
                     cell.update();
                     //cell.resize();
@@ -240,7 +242,6 @@
         public remove(isUnit: boolean = false) {
             while (this.cells.length > 0) this.removeCell(this.cells.length - 1);
             this.svgGroup.remove();
-            console.log("remove" + this.selfy);
             this.table.rows.splice(this.selfy, 1);
             /*
             for(let i=0;this.table.rowCount;i++){

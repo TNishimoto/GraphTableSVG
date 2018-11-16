@@ -913,8 +913,6 @@ namespace GraphTableSVG {
          * このセルを更新します。
          */
         public update() {
-            //this.groupUpdate();
-            //console.log(`update cell : ${this.cellX} ${this.cellY}`);
 
             
             

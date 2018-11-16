@@ -92,11 +92,11 @@ namespace GraphTableSVG {
                 }
                 else {
                     if (nowVisible) {
-                        const startTime = performance.now();
+                        //const startTime = performance.now();
                         //dispatchResizeEvent(v.svgsvg);
-                        const endTime = performance.now();
-                        const time = endTime - startTime;
-                        console.log("dispatch " + v.svgsvg.id + " : " + time + "ms");
+                        //const endTime = performance.now();
+                        //const time = endTime - startTime;
+                        //console.log("dispatch " + v.svgsvg.id + " : " + time + "ms");
 
                         const b = v.svgsvg.gtGetAttributeBooleanWithUndefined("g-shrink");
                         if(b !== undefined && b === true)resizeSVGSVG(v.svgsvg, v.padding);
