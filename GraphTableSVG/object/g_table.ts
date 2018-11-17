@@ -542,7 +542,6 @@ namespace GraphTableSVG {
                 if (w != null) this.columns[x].width = w;
             }
 
-            this.update();
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
                     const cell = this.cells[y][x];
@@ -554,6 +553,10 @@ namespace GraphTableSVG {
                     }
                 }
             }
+
+            //this.updateNodeRelations();
+            this.update();
+
 
         }
 

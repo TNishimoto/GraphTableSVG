@@ -937,30 +937,43 @@ namespace GraphTableSVG {
 
             }
         }
+        private get topBorderRow() : BorderRow{
+            return this.table.borderRows[this.cellY];
+        }
+        private get bottomBorderRow() : BorderRow{
+            return this.table.borderRows[this.cellY+1];
+        }
+        private get leftBorderColumn() : BorderColumn{
+            return this.table.borderColumns[this.cellX];
+        }
+        private get rightBorderColumn() : BorderColumn{
+            return this.table.borderColumns[this.cellX+1];
+        }
+
         /**
          * 枠の親関係を更新します。
          */
         private updateBorderParent(){
             if (this.isMaster || (this.topCell != null && this.topCell.isMaster)) {
-                if(this.table.borderRows[this.cellY].svgGroup != this.svgTopBorder.parentNode) this.table.borderRows[this.cellY].svgGroup.appendChild(this.svgTopBorder);
+                if(this.topBorderRow.svgGroup != this.svgTopBorder.parentNode) this.topBorderRow.svgGroup.appendChild(this.svgTopBorder);
             } else {
                 if(this.table.svgHiddenGroup != this.svgTopBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgTopBorder);
             }
 
             if (this.isMaster || (this.leftCell != null && this.leftCell.isMaster)) {
-                if(this.table.borderColumns[this.cellX].svgGroup != this.svgLeftBorder.parentNode) this.table.borderColumns[this.cellX].svgGroup.appendChild(this.svgLeftBorder);
+                if(this.leftBorderColumn.svgGroup != this.svgLeftBorder.parentNode) this.leftBorderColumn.svgGroup.appendChild(this.svgLeftBorder);
             } else {
                 if(this.table.svgHiddenGroup != this.svgLeftBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgLeftBorder);
             }
 
             if (this.isMaster || (this.rightCell != null && this.rightCell.isMaster)) {
-                if(this.table.borderColumns[this.cellX+1].svgGroup != this.svgRightBorder.parentNode) this.table.borderColumns[this.cellX+1].svgGroup.appendChild(this.svgRightBorder);
+                if(this.rightBorderColumn.svgGroup != this.svgRightBorder.parentNode) this.rightBorderColumn.svgGroup.appendChild(this.svgRightBorder);
             } else {
                 if(this.table.svgHiddenGroup != this.svgRightBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgRightBorder);
             }
 
             if (this.isMaster || (this.bottomCell != null && this.bottomCell.isMaster)) {
-                if(this.table.borderRows[this.cellY+1].svgGroup != this.svgBottomBorder.parentNode) this.table.borderRows[this.cellY+1].svgGroup.appendChild(this.svgBottomBorder);
+                if(this.bottomBorderRow.svgGroup != this.svgBottomBorder.parentNode) this.bottomBorderRow.svgGroup.appendChild(this.svgBottomBorder);
             } else {
                 if(this.table.svgHiddenGroup != this.svgBottomBorder.parentNode) this.table.svgHiddenGroup.appendChild(this.svgBottomBorder);
             }
@@ -1268,7 +1281,7 @@ namespace GraphTableSVG {
             if (!this.isMaster) throw Error("Error");
             const range = this.table.getRangeCellArray(this.cellX, this.cellY, w, h);
             range.forEach((v) => { v.setMasterCellX(this.masterCellX); v.setMasterCellY(this.masterCellY) });
-            range.forEach((v) => { v.update() });
+            range.forEach((v) => { v.updateNodeRelations(); v.update() });
         }
         /**
          * このセルから見て右にあるグループセルとこのセルが属しているグループセルが結合できるとき、そのグループセルの左上のY座標と左下のY座標を返します。

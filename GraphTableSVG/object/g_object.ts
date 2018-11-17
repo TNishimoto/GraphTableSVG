@@ -44,8 +44,11 @@ namespace GraphTableSVG {
             if(_option.y !== undefined) this.fixedY = _option.y;
             
             this._observer = new MutationObserver(this.observerFunc);
+            
             this._observerOption = { attributes: true, childList: true, subtree: true };
+            
             this._observer.observe(this.svgGroup, this._observerOption);
+            
 
             this.dispatchObjectCreatedEvent();
             this.addResizeEvent();

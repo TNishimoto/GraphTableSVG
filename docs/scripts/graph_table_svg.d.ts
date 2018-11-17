@@ -425,11 +425,11 @@ declare namespace GraphTableSVG {
 }
 declare namespace GraphTableSVG {
     class GGraph extends GObject {
+        constructor(box: SVGElement | string, option?: GTextBoxAttributes);
         readonly vertices: GVertex[];
         readonly edges: GEdge[];
         readonly roots: GVertex[];
         protected _roots: GVertex[];
-        constructor(box: SVGElement | string, option?: GTextBoxAttributes);
         vertexXInterval: number | null;
         vertexYInterval: number | null;
         defaultVertexClass: string | null;
@@ -751,6 +751,10 @@ declare namespace GraphTableSVG {
         updateNodeRelations(): void;
         update(): void;
         private updateSVGGroupParent();
+        private readonly topBorderRow;
+        private readonly bottomBorderRow;
+        private readonly leftBorderColumn;
+        private readonly rightBorderColumn;
         private updateBorderParent();
         private resize();
         private locateSVGText();

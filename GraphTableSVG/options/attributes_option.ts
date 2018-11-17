@@ -198,6 +198,7 @@ namespace GraphTableSVG {
             } else if (type == ShapeObjectType.Graph) {
                 const option = GTextBox.constructAttributes(e, true);
                 r = new GGraph(parent, option);
+                //(<GGraph>r).relocate();
             } else if (type == ShapeObjectType.Table) {
                 const option = GTable.constructAttributes(e, true);
                 r = new GTable(parent, option);
@@ -211,6 +212,11 @@ namespace GraphTableSVG {
 
             e.remove();
             attrs.forEach((v) => r.svgGroup.setAttribute(v.name, v.value));
+
+            if(r instanceof GGraph){
+                r.relocate();
+            }
+
             return r;
         } else {
             throw Error("error!");

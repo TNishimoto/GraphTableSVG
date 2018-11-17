@@ -14,12 +14,13 @@ namespace GraphTableSVG {
 
                 if (b) GraphTableSVG.GUI.setSVGBoxSize(svgBox, sizeFunc(), padding);
             }
-
+            
             _observer = new MutationObserver(observeFunction);
             const option: MutationObserverInit = {
                 subtree: true, attributes: true
             };
             _observer.observe(svgBox, option);
+            
         }
 
         type ObserveSVGSVGInfo = {

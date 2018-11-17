@@ -5,6 +5,10 @@ namespace GraphTableSVG {
     */
     export class GGraph extends GObject {
 
+        constructor(box: SVGElement | string, option: GTextBoxAttributes = {}) {
+            super(box, option)
+            //this.svgGroup.addEventListener(CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);
+        }
 
         public get vertices(): GVertex[] {
             const r: GVertex[] = [];
@@ -31,10 +35,6 @@ namespace GraphTableSVG {
         }
 
         protected _roots: GVertex[] = [];
-        constructor(box: SVGElement | string, option: GTextBoxAttributes = {}) {
-            super(box, option)
-            this.svgGroup.addEventListener(CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);
-        }
         public get vertexXInterval(): number | null {
             const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.vertexXInterval);
             if (v == null) {

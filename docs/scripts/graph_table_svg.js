@@ -3243,7 +3243,6 @@ var GraphTableSVG;
                 else {
                 }
             };
-            this.svgGroup.addEventListener(GraphTableSVG.CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);
         }
         get vertices() {
             const r = [];
@@ -4227,7 +4226,6 @@ var GraphTableSVG;
                 if (w != null)
                     this.columns[x].width = w;
             }
-            this.update();
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
                     const cell = this.cells[y][x];
@@ -4239,6 +4237,7 @@ var GraphTableSVG;
                     }
                 }
             }
+            this.update();
         }
         construct(table, option = {}) {
             if (option.isLatexMode == undefined)
@@ -5338,34 +5337,46 @@ var GraphTableSVG;
                 this.svgText.textContent = "";
             }
         }
+        get topBorderRow() {
+            return this.table.borderRows[this.cellY];
+        }
+        get bottomBorderRow() {
+            return this.table.borderRows[this.cellY + 1];
+        }
+        get leftBorderColumn() {
+            return this.table.borderColumns[this.cellX];
+        }
+        get rightBorderColumn() {
+            return this.table.borderColumns[this.cellX + 1];
+        }
         updateBorderParent() {
             if (this.isMaster || (this.topCell != null && this.topCell.isMaster)) {
-                if (this.table.borderRows[this.cellY].svgGroup != this.svgTopBorder.parentNode)
-                    this.table.borderRows[this.cellY].svgGroup.appendChild(this.svgTopBorder);
+                if (this.topBorderRow.svgGroup != this.svgTopBorder.parentNode)
+                    this.topBorderRow.svgGroup.appendChild(this.svgTopBorder);
             }
             else {
                 if (this.table.svgHiddenGroup != this.svgTopBorder.parentNode)
                     this.table.svgHiddenGroup.appendChild(this.svgTopBorder);
             }
             if (this.isMaster || (this.leftCell != null && this.leftCell.isMaster)) {
-                if (this.table.borderColumns[this.cellX].svgGroup != this.svgLeftBorder.parentNode)
-                    this.table.borderColumns[this.cellX].svgGroup.appendChild(this.svgLeftBorder);
+                if (this.leftBorderColumn.svgGroup != this.svgLeftBorder.parentNode)
+                    this.leftBorderColumn.svgGroup.appendChild(this.svgLeftBorder);
             }
             else {
                 if (this.table.svgHiddenGroup != this.svgLeftBorder.parentNode)
                     this.table.svgHiddenGroup.appendChild(this.svgLeftBorder);
             }
             if (this.isMaster || (this.rightCell != null && this.rightCell.isMaster)) {
-                if (this.table.borderColumns[this.cellX + 1].svgGroup != this.svgRightBorder.parentNode)
-                    this.table.borderColumns[this.cellX + 1].svgGroup.appendChild(this.svgRightBorder);
+                if (this.rightBorderColumn.svgGroup != this.svgRightBorder.parentNode)
+                    this.rightBorderColumn.svgGroup.appendChild(this.svgRightBorder);
             }
             else {
                 if (this.table.svgHiddenGroup != this.svgRightBorder.parentNode)
                     this.table.svgHiddenGroup.appendChild(this.svgRightBorder);
             }
             if (this.isMaster || (this.bottomCell != null && this.bottomCell.isMaster)) {
-                if (this.table.borderRows[this.cellY + 1].svgGroup != this.svgBottomBorder.parentNode)
-                    this.table.borderRows[this.cellY + 1].svgGroup.appendChild(this.svgBottomBorder);
+                if (this.bottomBorderRow.svgGroup != this.svgBottomBorder.parentNode)
+                    this.bottomBorderRow.svgGroup.appendChild(this.svgBottomBorder);
             }
             else {
                 if (this.table.svgHiddenGroup != this.svgBottomBorder.parentNode)
@@ -5573,7 +5584,7 @@ var GraphTableSVG;
                 throw Error("Error");
             const range = this.table.getRangeCellArray(this.cellX, this.cellY, w, h);
             range.forEach((v) => { v.setMasterCellX(this.masterCellX); v.setMasterCellY(this.masterCellY); });
-            range.forEach((v) => { v.update(); });
+            range.forEach((v) => { v.updateNodeRelations(); v.update(); });
         }
         getMergedRangeRight() {
             if (!this.isMaster)
@@ -7688,6 +7699,9 @@ var GraphTableSVG;
             HTMLFunctions.getChildren(e).forEach((v) => r.svgGroup.appendChild(v));
             e.remove();
             attrs.forEach((v) => r.svgGroup.setAttribute(v.name, v.value));
+            if (r instanceof GraphTableSVG.GGraph) {
+                r.relocate();
+            }
             return r;
         }
         else {
