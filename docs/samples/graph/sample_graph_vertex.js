@@ -14,8 +14,8 @@ window.onload = () => {
     /* x:400, y:200の位置に制御点の設定 */
     edge1.controlPoint = [[400, 200]];
     /* 終了頂点の方向に矢印を作成　*/
-    edge1.markerEnd = GraphTableSVG.Edge.createEndMarker();
+    edge1.markerEnd = GraphTableSVG.GEdge.createEndMarker();
     /* 開始頂点の方向に矢印を作成　*/
-    edge2.markerStart = GraphTableSVG.Edge.createStartMarker();
+    edge2.markerStart = GraphTableSVG.GEdge.createStartMarker();
     
 };

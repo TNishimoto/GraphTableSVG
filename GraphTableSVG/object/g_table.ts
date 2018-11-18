@@ -421,7 +421,7 @@ namespace GraphTableSVG {
         // #region construct2
         private updateCellByLogicCell(table: LogicTable | null, x: number, y: number) {
             const cell = this.cells[y][x];
-            //const isShow = HTMLFunctions.isShow(this.svgGroup);
+            //const isShow = HTMLFunctions.(this.svgGroup);
             if (table != null) {
                 const cellInfo = table.cells[y][x];
                 if (cellInfo != null) {
@@ -1071,12 +1071,14 @@ namespace GraphTableSVG {
             this._observer.disconnect();
             const display = this.svgGroup.getPropertyStyleValue("display");
 
-            if (display == "none") return;
             const b = HTMLFunctions.isShow(this.svgGroup);
             if (!b) {
                 this.prevShow = true;
                 return;
             }
+
+
+            //if (display == "none") return;
 
             this._isDrawing = true;
             if (this.prevShow) {

@@ -222,6 +222,7 @@ namespace GraphTableSVG {
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
             this._observer.observe(this.svgGroup, this.groupObserverOption);
+
         }
 
         protected updateSurface() {

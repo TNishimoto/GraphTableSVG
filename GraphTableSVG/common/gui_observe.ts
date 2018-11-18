@@ -94,7 +94,7 @@ namespace GraphTableSVG {
                 else {
                     if (nowVisible) {
                         //const startTime = performance.now();
-                        //dispatchResizeEvent(v.svgsvg);
+                        dispatchResizeEvent(v.svgsvg);
                         //const endTime = performance.now();
                         //const time = endTime - startTime;
                         //console.log("dispatch " + v.svgsvg.id + " : " + time + "ms");

@@ -766,6 +766,7 @@ var GraphTableSVG;
                 }
                 else {
                     if (nowVisible) {
+                        dispatchResizeEvent(v.svgsvg);
                         const b = v.svgsvg.gtGetAttributeBooleanWithUndefined("g-shrink");
                         if (b !== undefined && b === true)
                             resizeSVGSVG(v.svgsvg, v.padding);
@@ -4543,8 +4544,6 @@ var GraphTableSVG;
         update() {
             this._observer.disconnect();
             const display = this.svgGroup.getPropertyStyleValue("display");
-            if (display == "none")
-                return;
             const b = HTMLFunctions.isShow(this.svgGroup);
             if (!b) {
                 this.prevShow = true;
@@ -6467,35 +6466,9 @@ var HTMLFunctions;
         }
     }
     HTMLFunctions.getAncestorAttribute = getAncestorAttribute;
-    function isShow2(e, isParentWindow = false) {
-        const p = isParentWindow ? window.parent.getComputedStyle(e) : window.getComputedStyle(e);
-        const disp = p.display;
-        const vis = p.visibility;
-        if (disp == "none" || vis == "hidden") {
-            return false;
-        }
-        else {
-            const parent = e.parentElement;
-            if (parent == null) {
-                if (isParentWindow) {
-                    return true;
-                }
-                else {
-                    if (window == window.parent) {
-                        return true;
-                    }
-                    else {
-                        return isShow2(window.frameElement, true);
-                    }
-                }
-            }
-            else {
-                return isShow2(parent, isParentWindow);
-            }
-        }
-    }
     function isShow(e) {
-        return isShow2(e);
+        const p = e.getBoundingClientRect();
+        return !(p.top == 0 && p.left == 0 && p.width == 0 && p.height == 0);
     }
     HTMLFunctions.isShow = isShow;
     function getDescendantsByPreorder(e) {

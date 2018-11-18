@@ -14,7 +14,7 @@ namespace HTMLFunctions {
             }
         }
     }
-
+    /*
     function isShow2(e: HTMLElement | SVGElement, isParentWindow : boolean = false): boolean {
         
         const p = isParentWindow ? window.parent.getComputedStyle(e) : window.getComputedStyle(e);
@@ -40,10 +40,14 @@ namespace HTMLFunctions {
         }
 
     }
+    */
 
 
     export function isShow(e: HTMLElement | SVGElement): boolean {
-        return isShow2(e);
+        const p = e.getBoundingClientRect();
+        return !(p.top == 0 && p.left == 0 && p.width == 0 && p.height == 0)
+
+        //return isShow2(e);
 
     }
 
