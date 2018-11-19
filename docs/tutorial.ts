@@ -311,9 +311,9 @@ pack.midMacros.elements["tab2"] = (e: libxmljs.Element, info: Macroup.Setting) =
         .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "html")
             .addChild(new libxmljs.Element(e.doc(), "load", undefined).maddAttr("path", html))
         )
-        .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "result").maddAttr("checked", "1")
+        .addChild(new libxmljs.Element(e.doc(), "page", undefined).maddAttr("title", "preview").maddAttr("checked", "1")
             .addChild(new libxmljs.Element(e.doc(), "iframe", undefined)
-                .maddAttr("g-src", html).maddAttr("width", "500px").maddAttr("height", "500px")
+                .maddAttr("g-src", html).maddAttr("width", "800px").maddAttr("height", "500px")
             )
         )
 }

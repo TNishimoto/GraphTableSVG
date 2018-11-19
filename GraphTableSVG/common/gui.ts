@@ -41,6 +41,8 @@
                 mainDiv.style.height = "400px";
                 mainDiv.style.left = `${((window.outerWidth - parseInt(mainDiv.style.width)) / 2)}px`;
                 mainDiv.style.top = `${((window.outerHeight - parseInt(mainDiv.style.height)) / 2)}px`;
+
+
                 mainDiv.style.display = "inline";
                 mainDiv.style.backgroundColor = "#ffffff";
                 document.body.appendChild(mainDiv);

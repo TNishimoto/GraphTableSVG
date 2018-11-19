@@ -494,6 +494,8 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     class GTable extends GObject {
         constructor(svgbox: SVGElement, option?: GTableOption);
+        private _isNoneMode;
+        readonly isNoneMode: boolean;
         static constructAttributes(e: Element, removeAttributes?: boolean, output?: GTableOption): GTableOption;
         private _svgHiddenGroup;
         private _svgRowBorderGroup;
@@ -534,6 +536,8 @@ declare namespace GraphTableSVG {
         getRegion(): Rectangle;
         getEmphasizedCells(): GraphTableSVG.Cell[];
         toPlainText(): string;
+        private _isTextObserved;
+        isTextObserved: boolean;
         private updateCellByLogicCell(table, x, y);
         constructFromLogicTable(table: LogicTable): void;
         construct(table: string[][], option?: {
@@ -876,6 +880,9 @@ declare namespace HTMLFunctions {
     function getChildByNodeName(e: Element, name: string): Element | null;
     function isInsideElement(element: Element): boolean;
 }
+declare namespace HTMLFunctions {
+    function createHTMLTable(e: HTMLElement): HTMLTableElement;
+}
 interface CSSStyleDeclaration {
     tryGetPropertyValue(name: string): string | null;
 }
@@ -981,8 +988,8 @@ declare namespace GraphTableSVG {
         function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean): void;
         function sortText(svgText: SVGTextElement, hAnchor: GraphTableSVG.HorizontalAnchor): void;
         function constructSVGTextByHTMLElements(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean): void;
-        function getSize(svgText: SVGTextElement): Rectangle;
-        function getComputedTextLengthsOfTSpans(svgText: SVGTextElement): Size[];
+        function getSize(svgText: SVGTextElement, showChecked?: boolean): Rectangle;
+        function getComputedTextLengthsOfTSpans(svgText: SVGTextElement, showChecked: boolean): Size[];
     }
 }
 declare namespace GraphTableSVG {
@@ -1076,7 +1083,9 @@ declare namespace GraphTableSVG {
     function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GTextBoxAttributes): GGraph;
     function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: GTableOption): GTable;
     function createVertex(parent: GGraph, option?: GTextBoxAttributes): GVertex;
-    function toHTMLUnknownElement(e: Element): void;
+    function toSVGUnknownElement(e: Element): void;
+    function toDivElement(e: Element): HTMLElement | null;
+    function openHTML(id: string): void;
 }
 declare namespace GraphTableSVG {
     namespace CustomAttributeNames {
@@ -1168,6 +1177,7 @@ declare namespace GraphTableSVG {
         getRow(i: number): LogicCell[];
         static parse(str: string, delimiter: string): string[][];
         static create(str: string[][], tableClassName?: string | null): LogicTable;
+        static constructLogicTable(e: Element): LogicTable | null;
     }
 }
 declare namespace GraphTableSVG {

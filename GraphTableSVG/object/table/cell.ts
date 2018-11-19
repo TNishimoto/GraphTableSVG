@@ -31,22 +31,8 @@ namespace GraphTableSVG {
 
             const borderClass = option.borderClass === undefined ? null : option.borderClass;
 
-            /*
-            this.svgTopBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
-            this.svgLeftBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
-            this.svgRightBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
-            this.svgBottomBorder = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
-            */
-            //this.updateBorderAttributes();
-            /*
-            this.table.svgGroup.appendChild(this.svgTopBorder);
-            this.table.svgGroup.appendChild(this.svgLeftBorder);
-            this.table.svgGroup.appendChild(this.svgRightBorder);
-            this.table.svgGroup.appendChild(this.svgBottomBorder);
-            */
-
-            const option1: MutationObserverInit = { childList: true, subtree: true };
-            this.table.cellTextObserver.observe(this.svgText, option1);
+            //const option1: MutationObserverInit = { childList: true, subtree: true };
+            //this.table.cellTextObserver.observe(this.svgText, option1);
 
 
             this._observer = new MutationObserver(this._observerFunc);
@@ -56,6 +42,8 @@ namespace GraphTableSVG {
 
         }
         // #region style
+
+
         
         /**
          * このセルが強調してるかどうかを返します。
@@ -664,7 +652,7 @@ namespace GraphTableSVG {
         */
         get calculatedWidthUsingText(): number {
             if (this.isLocated) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, true);
                 return textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
                     + this.paddingLeft + this.paddingRight;
             } else {
@@ -676,7 +664,7 @@ namespace GraphTableSVG {
         */
         get calculatedHeightUsingText(): number {
             if (this.isLocated) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, true);
 
                 return textRect.height + this.paddingTop + this.paddingBottom;
             } else {
@@ -913,7 +901,7 @@ namespace GraphTableSVG {
          * このセルを更新します。
          */
         public update() {
-
+            if(this.table.isNoneMode) return;
             
             
             this.resize();

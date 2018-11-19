@@ -46,7 +46,7 @@ SVGTextElement.prototype.gtSetXY = function (rect: GraphTableSVG.Rectangle, vAnc
     text.setAttribute('x', x.toString());
     text.setAttribute('y', y.toString());
 
-    const b2 =GraphTableSVG.SVGTextBox.getSize(text);
+    const b2 =GraphTableSVG.SVGTextBox.getSize(text, true);
 
     const dy = b2.y - y;
     const dx = b2.x - x;

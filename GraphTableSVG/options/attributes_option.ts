@@ -279,7 +279,7 @@ namespace GraphTableSVG {
             HTMLFunctions.getDescendants(svgsvg).forEach(v => {
                 const shapeType = GraphTableSVG.ShapeObjectType.toShapeObjectType(v.nodeName);
                 if (shapeType != null) {
-                    toHTMLUnknownElement(v);
+                    toSVGUnknownElement(v);
                 }
             })
             const startTime = performance.now();
@@ -350,7 +350,7 @@ namespace GraphTableSVG {
         return new GEllipse(_parent, option);
 
     }
-    export function toHTMLUnknownElement(e: Element) {
+    export function toSVGUnknownElement(e: Element) {
         const type = ShapeObjectType.toShapeObjectTypeOrCustomTag(e.nodeName);
 
         if (type == null) {
@@ -370,7 +370,46 @@ namespace GraphTableSVG {
                 e.remove();
             }
             const children = HTMLFunctions.getChildren(ns);
-            children.forEach((v) => toHTMLUnknownElement(v));
+            children.forEach((v) => toSVGUnknownElement(v));
+        }
+    }
+    export function toDivElement(e: Element) :HTMLElement | null {
+
+        const type = e.nodeName == "G-TABLE" ? "g-table" : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell"  : null;
+
+        if (type == null) {
+            return null;
+        } else {
+            const ns = document.createElement("div");
+            ns.setAttribute(CustomAttributeNames.customElement, type);
+            for (let i = 0; i < e.attributes.length; i++) {
+                const attr = e.attributes.item(i);
+                ns.setAttribute(attr!.name, attr!.value);
+            }
+            ns.innerHTML = e.innerHTML;
+            //HTMLFunctions.getChildren(e).forEach((v)=>ns.appendChild(v));
+            const p = e.parentElement;
+            if (p != null) {
+                p.insertBefore(ns, e);
+                e.remove();
+            }
+            const children = HTMLFunctions.getChildren(ns);
+            children.forEach((v) => toDivElement(v));
+            return ns;
+        }
+    }
+
+
+
+    export function openHTML(id : string){
+        const e = document.getElementById(id);
+        if(e instanceof HTMLElement){
+            const newE = toDivElement(e);
+            if(newE != null){
+                const table = HTMLFunctions.createHTMLTable(newE);
+                newE.insertAdjacentElement('beforebegin', table);    
+                newE.remove();
+            }
         }
     }
 }

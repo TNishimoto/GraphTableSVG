@@ -24,9 +24,9 @@
 				<rhref method="true">
 					createShape
 				</rhref>
-				関数で図形オブジェクトを作成することができる。
-				ここでオブジェクト一覧の例
-				オブジェクトのパラメータをクラスから操作できる話とリンク
+				ライブラリの関数から図形オブジェクトを作成することができる。
+				図形オブジェクトを作成したあとはインスタンスのプロパティを設定することで図形のサイズや装飾を設定することができる。
+				各図形オブジェクトのプロパティについては<a href="samples/svg/table1.html" target="_blank">こちら</a>のリンクから確認できる。
 			</comment>
 		</yarticle>
 		<yarticle title="dynamic table">

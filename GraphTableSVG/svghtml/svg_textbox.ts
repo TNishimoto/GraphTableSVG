@@ -173,7 +173,7 @@ namespace GraphTableSVG {
             let dx = 0;
 
             if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
-                const tl = getComputedTextLengthsOfTSpans(svgText);
+                const tl = getComputedTextLengthsOfTSpans(svgText, true);
                 let p=0;
                 let maxWidth = 0;
                 const widths = lineSpans.map((v) => {
@@ -218,7 +218,7 @@ namespace GraphTableSVG {
             let dx = 0;
             let dy = fs;
             let c = 0;
-            const lengths = getComputedTextLengthsOfTSpans(svgText);
+            const lengths = getComputedTextLengthsOfTSpans(svgText, true);
             for (let y = 0; y < lineSpans.length; y++) {
                 let width = 0;
                 let heightMax = fs;
@@ -266,9 +266,24 @@ namespace GraphTableSVG {
         let ura : SVGSVGElement | null = null;
 
         
-        export function getSize(svgText:SVGTextElement) : Rectangle {
+        export function getSize(svgText:SVGTextElement, showChecked : boolean = false) : Rectangle {
             let r = new Rectangle();
-            if(HTMLFunctions.isShow(svgText)){
+
+            /*
+            try{
+                const rect = svgText.getBBox();
+                r.x = rect.x;
+                r.y = rect.y;
+                r.width = rect.width;
+                r.height = rect.height;
+                return r;
+            }catch(e){
+                return new Rectangle();
+            }
+            */
+           const b = showChecked ? true : HTMLFunctions.isShow(svgText);
+
+            if(b){
                 const rect = svgText.getBBox();
                 r.x = rect.x;
                 r.y = rect.y;
@@ -308,8 +323,10 @@ namespace GraphTableSVG {
             
         }
         
-        export function getComputedTextLengthsOfTSpans(svgText:SVGTextElement) : Size[] {
-            if(HTMLFunctions.isShow(svgText)){
+        export function getComputedTextLengthsOfTSpans(svgText:SVGTextElement, showChecked : boolean) : Size[] {
+            const b = showChecked ? true : HTMLFunctions.isShow(svgText);
+
+            if(b){
                 const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v)=>v.nodeName=="tspan");
                 const r = tspans.map((v)=> {
                     const w = v.getComputedTextLength();
