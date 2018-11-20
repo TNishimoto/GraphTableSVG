@@ -118,8 +118,9 @@
 			<tab>
 				<page title="表" checked="1">
 				
-				<iframe g-src="samples/svg/table1.html" width="1000px" height="1000px"></iframe>
-				
+				<!-- <iframe g-src="samples/svg/table1.html" width="1000px" height="1000px"></iframe> -->
+				<load path="samples/svg/html_table1.html" id="html_table1" />
+
 				</page>
 				<page title="継承">
 					<load path="images/extend.png" />
@@ -171,7 +172,7 @@
 				これをカスタム属性と呼ぶ。
 				指定できる属性は以下の通り。
 			</comment>
-			 <iframe g-src="samples/svg/table2.html" width="1000px" height="1000px"></iframe>
+					<load path="samples/svg/html_table2.html" id="html_table2" />
 
 			<comment>
 				カスタム属性の例を以下に載せる。
@@ -242,7 +243,8 @@
 				これをカスタムスタイル属性と呼ぶ。
 				指定できるカスタムスタイル属性は以下の通り。
 			</comment>
-				<iframe g-src="samples/svg/table3.html" width="1000px" height="1000px"></iframe>
+									<load path="samples/svg/html_table3.html" id="html_table3" />
+
 			<comment>
 				カスタムスタイル属性の例を以下に載せる。
 			</comment>

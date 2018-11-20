@@ -1085,7 +1085,7 @@ declare namespace GraphTableSVG {
     function createVertex(parent: GGraph, option?: GTextBoxAttributes): GVertex;
     function toSVGUnknownElement(e: Element): void;
     function toDivElement(e: Element): HTMLElement | null;
-    function openHTML(id: string): void;
+    function openHTML(id?: string | HTMLElement | null): void;
 }
 declare namespace GraphTableSVG {
     namespace CustomAttributeNames {
@@ -1178,6 +1178,7 @@ declare namespace GraphTableSVG {
         static parse(str: string, delimiter: string): string[][];
         static create(str: string[][], tableClassName?: string | null): LogicTable;
         static constructLogicTable(e: Element): LogicTable | null;
+        static constructHTMLLogicTable(e: Element): LogicTable | null;
     }
 }
 declare namespace GraphTableSVG {

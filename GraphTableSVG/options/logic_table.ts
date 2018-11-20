@@ -1,5 +1,15 @@
 namespace GraphTableSVG {
     
+    /*
+    export class HTMLLogicCell{
+        public text: string | null = null;
+        public cellClass: string | null = null;
+        public connectedColumnCount: number = 1;
+        public connectedRowCount: number = 1;
+        public item: any;
+    }
+    */
+
     export class LogicCell {
 
         public text: string | null = null;
@@ -176,7 +186,6 @@ namespace GraphTableSVG {
             const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
             const widthsStr = e.getPropertyStyleValue("--widths");
 
-            console.log(e.children.length);
             if(rows.length == 0) return null;
 
             const cells: Element[][] = new Array(rows.length);
@@ -212,6 +221,49 @@ namespace GraphTableSVG {
                     }
                     const tNodes = openSVGFunctions.getTNodes(cells[y][x]);
                     if (tNodes != null) logicTable.cells[y][x].tTexts = tNodes;
+
+                }
+            }
+            return logicTable;
+        }
+        public static constructHTMLLogicTable(e: Element) : LogicTable | null {
+            const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
+            const widthsStr = e.getPropertyStyleValue("--widths");
+
+            if(rows.length == 0) return null;
+
+            const cells: Element[][] = new Array(rows.length);
+            let columnSize = 0;
+            rows.forEach((v, i) => {
+                const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "cell");
+                cellArray.forEach((v) => v.removeAttribute(CustomAttributeNames.customElement));
+                cells[i] = cellArray;
+                if (columnSize < cellArray.length) columnSize = cellArray.length;
+            });
+            const logicTable = new LogicTable({ rowCount: rows.length, columnCount: columnSize });;
+
+            if (widthsStr != null) {
+                const widths: (number | null)[] = JSON.parse(widthsStr);
+                widths.forEach((v, i) => logicTable.columnWidths[i] = v);
+            }
+
+            for (let y = 0; y < cells.length; y++) {
+                const h = rows[y].getPropertyStyleNumberValue("--height", null);
+                logicTable.rowHeights[y] = h;
+
+                for (let x = 0; x < cells[y].length; x++) {
+                    logicTable.cells[y][x].text = cells[y][x].innerHTML;
+                    if (cells[y][x].hasAttribute("w")) {
+                        const w = Number(cells[y][x].getAttribute("w"));
+                        logicTable.cells[y][x].connectedColumnCount = w;
+                    }
+                    if (cells[y][x].hasAttribute("h")) {
+                        const h = Number(cells[y][x].getAttribute("h"));
+                        logicTable.cells[y][x].connectedRowCount = h;
+                    }
+                    //const tNodes = openSVGFunctions.getTNodes(cells[y][x]);
+                    
+                    logicTable.cells[y][x].text = cells[y][x].innerHTML;
 
                 }
             }

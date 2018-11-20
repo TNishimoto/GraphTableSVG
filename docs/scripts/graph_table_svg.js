@@ -6532,17 +6532,52 @@ var HTMLFunctions;
 var HTMLFunctions;
 (function (HTMLFunctions) {
     function createHTMLTable(e) {
-        const table = GraphTableSVG.LogicTable.constructLogicTable(e);
+        const table = GraphTableSVG.LogicTable.constructHTMLLogicTable(e);
         const tableTag = document.createElement("table");
-        console.log(table);
+        tableTag.setAttribute("border", "1");
+        tableTag.setAttribute("cellspacing", "0");
+        tableTag.setAttribute("bordercolor", "black");
         if (table != null) {
+            const cellConnectChecker = new Array();
+            for (let y = 0; y < table.rowCount; y++) {
+                cellConnectChecker.push(new Array(table.columnCount));
+                for (let x = 0; x < table.columnCount; x++) {
+                    cellConnectChecker[y][x] = true;
+                }
+            }
             for (let y = 0; y < table.rowCount; y++) {
                 const tr = document.createElement("tr");
                 tableTag.appendChild(tr);
                 for (let x = 0; x < table.columnCount; x++) {
-                    const td = document.createElement("td");
-                    td.textContent = table.cells[y][x].text;
-                    tr.appendChild(td);
+                    if (cellConnectChecker[y][x]) {
+                        const td = document.createElement("td");
+                        const cell = table.cells[y][x];
+                        if (cell.connectedRowCount > 1) {
+                            td.setAttribute("rowspan", cell.connectedRowCount.toString());
+                        }
+                        if (cell.connectedColumnCount > 1) {
+                            td.setAttribute("columnspan", cell.connectedColumnCount.toString());
+                        }
+                        for (let ty = 0; ty < cell.connectedRowCount; ty++) {
+                            for (let tx = 0; tx < cell.connectedColumnCount; tx++) {
+                                if (tx != 0 || ty != 0) {
+                                    cellConnectChecker[ty + y][tx + x] = false;
+                                }
+                            }
+                        }
+                        const tTexts = cell.tTexts;
+                        if (tTexts != null) {
+                            tTexts.forEach((v) => {
+                                td.appendChild(v);
+                            });
+                        }
+                        else {
+                            const text = cell.text;
+                            if (text != null)
+                                td.innerHTML = text;
+                        }
+                        tr.appendChild(td);
+                    }
                 }
             }
         }
@@ -7860,10 +7895,40 @@ var GraphTableSVG;
         }
     }
     GraphTableSVG.toDivElement = toDivElement;
-    function openHTML(id) {
-        const e = document.getElementById(id);
-        if (e instanceof HTMLElement) {
-            const newE = toDivElement(e);
+    function isSVGElement(e) {
+        if (e.parentElement == null) {
+            return false;
+        }
+        else {
+            if (e.parentElement instanceof SVGSVGElement) {
+                return true;
+            }
+            else {
+                return isSVGElement(e.parentElement);
+            }
+        }
+    }
+    function openHTML(id = null) {
+        if (id == null) {
+            const p = document.getElementsByTagName("g-table");
+            const svgElements = [];
+            for (let i = 0; i < p.length; i++) {
+                const svgNode = p.item(i);
+                if (svgNode != null) {
+                    if (!isSVGElement(svgNode) && svgNode instanceof HTMLElement)
+                        svgElements.push(svgNode);
+                }
+            }
+            svgElements.forEach((e) => openHTML(e));
+        }
+        else if (typeof (id) == "string") {
+            const e = document.getElementById(id);
+            if (e instanceof HTMLElement) {
+                openHTML(e);
+            }
+        }
+        else {
+            const newE = toDivElement(id);
             if (newE != null) {
                 const table = HTMLFunctions.createHTMLTable(newE);
                 newE.insertAdjacentElement('beforebegin', table);
@@ -8067,7 +8132,6 @@ var GraphTableSVG;
         static constructLogicTable(e) {
             const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(GraphTableSVG.CustomAttributeNames.customElement) == "row").map((v) => v);
             const widthsStr = e.getPropertyStyleValue("--widths");
-            console.log(e.children.length);
             if (rows.length == 0)
                 return null;
             const cells = new Array(rows.length);
@@ -8101,6 +8165,44 @@ var GraphTableSVG;
                     const tNodes = GraphTableSVG.openSVGFunctions.getTNodes(cells[y][x]);
                     if (tNodes != null)
                         logicTable.cells[y][x].tTexts = tNodes;
+                }
+            }
+            return logicTable;
+        }
+        static constructHTMLLogicTable(e) {
+            const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(GraphTableSVG.CustomAttributeNames.customElement) == "row").map((v) => v);
+            const widthsStr = e.getPropertyStyleValue("--widths");
+            if (rows.length == 0)
+                return null;
+            const cells = new Array(rows.length);
+            let columnSize = 0;
+            rows.forEach((v, i) => {
+                const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(GraphTableSVG.CustomAttributeNames.customElement) == "cell");
+                cellArray.forEach((v) => v.removeAttribute(GraphTableSVG.CustomAttributeNames.customElement));
+                cells[i] = cellArray;
+                if (columnSize < cellArray.length)
+                    columnSize = cellArray.length;
+            });
+            const logicTable = new LogicTable({ rowCount: rows.length, columnCount: columnSize });
+            ;
+            if (widthsStr != null) {
+                const widths = JSON.parse(widthsStr);
+                widths.forEach((v, i) => logicTable.columnWidths[i] = v);
+            }
+            for (let y = 0; y < cells.length; y++) {
+                const h = rows[y].getPropertyStyleNumberValue("--height", null);
+                logicTable.rowHeights[y] = h;
+                for (let x = 0; x < cells[y].length; x++) {
+                    logicTable.cells[y][x].text = cells[y][x].innerHTML;
+                    if (cells[y][x].hasAttribute("w")) {
+                        const w = Number(cells[y][x].getAttribute("w"));
+                        logicTable.cells[y][x].connectedColumnCount = w;
+                    }
+                    if (cells[y][x].hasAttribute("h")) {
+                        const h = Number(cells[y][x].getAttribute("h"));
+                        logicTable.cells[y][x].connectedRowCount = h;
+                    }
+                    logicTable.cells[y][x].text = cells[y][x].innerHTML;
                 }
             }
             return logicTable;

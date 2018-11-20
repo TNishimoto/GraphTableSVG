@@ -375,7 +375,8 @@ namespace GraphTableSVG {
     }
     export function toDivElement(e: Element) :HTMLElement | null {
 
-        const type = e.nodeName == "G-TABLE" ? "g-table" : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell"  : null;
+        //const type = e.nodeName == "G-TABLE" ? "g-table" : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell" : e.nodeName == "T" ? "t" : null;
+        const type = e.nodeName == "G-TABLE" ? "g-table" : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell" : null;
 
         if (type == null) {
             return null;
@@ -399,12 +400,38 @@ namespace GraphTableSVG {
         }
     }
 
+    function isSVGElement(e : Element) : boolean {
+        if(e.parentElement == null){
+            return false;
+        }else{
+            if(e.parentElement instanceof SVGSVGElement){
+                return true;
+            }else{
+                return isSVGElement(e.parentElement);
+            }
+        }
+    }
 
-
-    export function openHTML(id : string){
-        const e = document.getElementById(id);
-        if(e instanceof HTMLElement){
-            const newE = toDivElement(e);
+    export function openHTML(id : string | HTMLElement | null = null){
+        if(id == null){
+            const p = document.getElementsByTagName("g-table");
+            const svgElements: HTMLElement[] = [];
+            for (let i = 0; i < p.length; i++) {
+                const svgNode = p.item(i);
+                if(svgNode != null){
+                    if(!isSVGElement(svgNode) && svgNode instanceof HTMLElement) svgElements.push(svgNode);
+                }
+            }
+            svgElements.forEach((e) => openHTML(e));
+        }
+        else if(typeof(id) == "string"){
+            const e = document.getElementById(id);
+            if(e instanceof HTMLElement){
+                openHTML(e);
+            }    
+        }
+        else{
+            const newE = toDivElement(id);
             if(newE != null){
                 const table = HTMLFunctions.createHTMLTable(newE);
                 newE.insertAdjacentElement('beforebegin', table);    

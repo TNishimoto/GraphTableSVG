@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Sample</title>
+    <link rel="stylesheet" href="sample_graph.css" type="text/css" />
+    <script src="../../scripts/graph_table_svg.js"></script>
+    <script>
+    window.onload = () => {        
+    GraphTableSVG.openHTML();
+    };
+    </script>
+</head>
+<body>
+    <g-table id="html_table1" x="0" y="0">
+        <row>
+            <cell>カスタム要素</cell>
+            <cell>図形の説明</cell>
+            <cell>構成SVG要素名</cell>
+            <cell>SVG要素</cell>
+            <cell>補足</cell>
+        </row>
+        <row>
+            <cell w="1" h="3">
+                g-rect<br/>
+                (<a href="../../typedoc/classes/graphtablesvg.grect.html" target="_blank">GRect</a>)
+            </cell>
+            <cell w="1" h="3">矩形</cell>
+            <cell>svgGroup</cell>
+            <cell>SVGGElement</cell>
+            <cell>他のSVG要素を子に持つ</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgSurface</cell>
+            <cell>SVGRectElement</cell>
+            <cell>枠部分</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgText</cell>
+            <cell>SVGTextElement</cell>
+            <cell>枠内テキスト部分</cell>
+        </row>
+        <row>
+            <cell w="1" h="3">
+                g-ellipse<br/>
+                (<a href="../../typedoc/classes/graphtablesvg.gellipse.html" target="_blank">GEllipse</a>)
+            </cell>
+            <cell w="1" h="3">楕円</cell>
+            <cell>svgGroup</cell>
+            <cell>SVGGElement</cell>
+            <cell>他のSVG要素を子に持つ</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgSurface</cell>
+            <cell>SVGEllipseElement</cell>
+            <cell>枠部分</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgText</cell>
+            <cell>SVGTextElement</cell>
+            <cell>枠内テキスト部分</cell>
+        </row>
+        <row>
+            <cell w="1" h="3">
+                g-callout<br/>
+                (<a href="../../typedoc/classes/graphtablesvg.gcallout.html" target="_blank">GCallout</a>)
+            </cell>
+            <cell w="1" h="3">吹き出し</cell>
+            <cell>svgGroup</cell>
+            <cell>SVGGElement</cell>
+            <cell>他のSVG要素を子に持つ</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgSurface</cell>
+            <cell>SVGPathElement</cell>
+            <cell>枠部分</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgText</cell>
+            <cell>SVGTextElement</cell>
+            <cell>枠内テキスト部分</cell>
+        </row>
+        <row>
+            <cell w="1" h="3">
+                g-arrow-callout<br/>
+                (<a href="../../typedoc/classes/graphtablesvg.garrowcallout.html" target="_blank">GArrowCallout</a>)
+            </cell>
+            <cell w="1" h="3">矢印のついた矩形</cell>
+            <cell>svgGroup</cell>
+            <cell>SVGGElement</cell>
+            <cell>他のSVG要素を子に持つ</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgSurface</cell>
+            <cell>SVGPathElement</cell>
+            <cell>枠部分</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgText</cell>
+            <cell>SVGTextElement</cell>
+            <cell>枠内テキスト部分</cell>
+        </row>
+        <row>
+            <cell w="1" h="3">
+                g-edge<br/>
+                (<a href="../../typedoc/classes/graphtablesvg.gedge.html" target="_blank">GEdge</a>)
+            </cell>
+            <cell w="1" h="3">辺</cell>
+            <cell>svgGroup</cell>
+            <cell>SVGGElement</cell>
+            <cell>他のSVG要素を子に持つ</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgSurface</cell>
+            <cell>SVGPathElement</cell>
+            <cell>辺部分</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgText</cell>
+            <cell>SVGTextElement</cell>
+            <cell>子にSVGTextPathElementを持っている</cell>
+        </row>
+        <row>
+            <cell>
+                g-graph<br/>
+                (<a href="../../typedoc/classes/graphtablesvg.ggraph.html" target="_blank">GGraph</a>)
+            </cell>
+            <cell>辺と頂点の集合</cell>
+            <cell>svgGroup</cell>
+            <cell>SVGGElement</cell>
+            <cell>-</cell>
+        </row>
+        <row>
+            <cell w="1" h="2">
+                g-table<br/>
+                (<a href="../../typedoc/classes/graphtablesvg.gtable.html" target="_blank">GTable</a>)
+            </cell>
+            <cell w="1" h="2">表</cell>
+            <cell>svgGroup</cell>
+            <cell>SVGGElement</cell>
+            <cell>他のSVG要素を子に持つ</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>cells</cell>
+            <cell>Cell[][]</cell>
+            <cell>各セルを表現</cell>
+        </row>
+        <row>
+            <cell w="1" h="7">
+                (<a href="../../typedoc/classes/graphtablesvg.cell.html" target="_blank">Cell</a>)
+            </cell>
+            <cell w="1" h="7">表中の矩形</cell>
+            <cell>svgGroup</cell>
+            <cell>SVGGElement</cell>
+            <cell>他のSVG要素を子に持つ</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgBackground</cell>
+            <cell>SVGRectElement</cell>
+            <cell>各セルを表現</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgText</cell>
+            <cell>SVGTextElement</cell>
+            <cell>枠内テキスト部分</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgTopBorder</cell>
+            <cell>SVGLineElement</cell>
+            <cell>上枠</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgLeftBorder</cell>
+            <cell>SVGLineElement</cell>
+            <cell>左枠</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgRightBorder</cell>
+            <cell>SVGLineElement</cell>
+            <cell>右枠</cell>
+        </row>
+        <row>
+            <cell></cell>
+            <cell></cell>
+            <cell>svgBottomBorder</cell>
+            <cell>SVGLineElement</cell>
+            <cell>下枠</cell>
+        </row>
+
+
+    </g-table>
+
+</body>
+</html>
