@@ -185,7 +185,6 @@ namespace GraphTableSVG {
         public static constructLogicTable(e: Element) : LogicTable | null {
             const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
             const widthsStr = e.getPropertyStyleValue("--widths");
-
             if(rows.length == 0) return null;
 
             const cells: Element[][] = new Array(rows.length);

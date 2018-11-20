@@ -3938,22 +3938,21 @@ var GraphTableSVG;
                 this.constructFromLogicTable(option.table);
                 this._isNoneMode = false;
                 this.svgGroup.style.removeProperty("display");
+                this.isTextObserved = true;
             }
             if (option.cx !== undefined)
                 this.cx = option.cx;
             if (option.cy !== undefined)
                 this.cy = option.cy;
             this.isConstructing = false;
-            this.isTextObserved = true;
             this.update();
         }
         get isNoneMode() {
             return this._isNoneMode;
         }
         static constructAttributes(e, removeAttributes = false, output = {}) {
-            const widthsStr = e.getPropertyStyleValue("--widths");
-            GraphTableSVG.GObject.constructAttributes(e, removeAttributes, output);
             const table = GraphTableSVG.LogicTable.constructLogicTable(e);
+            GraphTableSVG.GObject.constructAttributes(e, removeAttributes, output);
             if (table != null) {
                 output.table = table;
             }
@@ -4540,11 +4539,10 @@ var GraphTableSVG;
             const display = this.svgGroup.getPropertyStyleValue("display");
             const b = HTMLFunctions.isShow(this.svgGroup);
             if (!b) {
-                this.prevShow = true;
                 return;
             }
             this._isDrawing = true;
-            if (this.prevShow) {
+            if (true) {
                 this.cellArray.forEach((v) => v.update());
                 this.fitSizeToOriginalCells(false);
                 this.prevShow = false;

@@ -53,10 +53,12 @@ namespace GraphTableSVG {
             } else {
                 this.svgGroup.style.display = "none"
                 this._isNoneMode = true;
+
                 this.constructFromLogicTable(option.table);
                 this._isNoneMode = false;
 
                 this.svgGroup.style.removeProperty("display");
+                this.isTextObserved = true;
 
             }
 
@@ -64,7 +66,6 @@ namespace GraphTableSVG {
             if (option.cy !== undefined) this.cy = option.cy;
             this.isConstructing = false;
 
-            this.isTextObserved = true;
             this.update();
 
         }
@@ -76,10 +77,11 @@ namespace GraphTableSVG {
         
         static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: GTableOption = {}): GTableOption {
-            const widthsStr = e.getPropertyStyleValue("--widths");
+            //const widthsStr = e.getPropertyStyleValue("--widths");
 
-            GObject.constructAttributes(e, removeAttributes, output);
             const table = LogicTable.constructLogicTable(e);
+            GObject.constructAttributes(e, removeAttributes, output);
+
             if(table != null){
                 output.table = table;
             }
@@ -496,6 +498,7 @@ namespace GraphTableSVG {
             }
             for (let x = 0; x < this.columnCount; x++) {
                 const w = table.columnWidths[x];
+                //this.columns[x].defaultWidth = w;
                 if (w != null) this.columns[x].width = w;
             }
 
@@ -1030,7 +1033,7 @@ namespace GraphTableSVG {
 
             const b = HTMLFunctions.isShow(this.svgGroup);
             if (!b) {
-                this.prevShow = true;
+                //this.prevShow = true;
                 return;
             }
 
@@ -1038,7 +1041,7 @@ namespace GraphTableSVG {
             //if (display == "none") return;
 
             this._isDrawing = true;
-            if (this.prevShow) {
+            if (true) {
                 this.cellArray.forEach((v) => v.update());
                 this.fitSizeToOriginalCells(false);
                 this.prevShow = false;

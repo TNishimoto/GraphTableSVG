@@ -18,6 +18,9 @@ namespace GraphTableSVG {
             this._svgGroup.setAttribute(Cell.cellXName, `${v}`);
             this.cells.forEach((w) => w.cellX = v);
         }
+
+        //public defaultWidth : number | null = null;
+
         /**
         列の幅を返します。
         */
@@ -51,6 +54,8 @@ namespace GraphTableSVG {
             */
         }
         private setWidthToCells(){
+            //const width = this.defaultWidth == null ? this.width : this.defaultWidth;
+
             const width = this.width;
             
             let b = false;
