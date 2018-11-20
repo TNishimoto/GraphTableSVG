@@ -652,19 +652,21 @@ namespace GraphTableSVG {
         */
         get calculatedWidthUsingText(): number {
             if (this.isLocated) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, true);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, this._assurancevisibility);
                 return textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
                     + this.paddingLeft + this.paddingRight;
             } else {
                 return 0;
             }
         }
+        private _assurancevisibility : boolean = false;
+
         /**
         セルが取るべき高さを返します。
         */
         get calculatedHeightUsingText(): number {
             if (this.isLocated) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, true);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, this._assurancevisibility);
 
                 return textRect.height + this.paddingTop + this.paddingBottom;
             } else {
@@ -971,7 +973,7 @@ namespace GraphTableSVG {
          *セルのサイズを再計算します。
          */
         private resize() {
-            SVGTextBox.sortText(this.svgText, this.horizontalAnchor);
+            SVGTextBox.sortText(this.svgText, this.horizontalAnchor, this._assurancevisibility);
             const [w, h] = this.calculatedSizeUsingGroup();
             if (this.width != w) {
                 this.width = w;

@@ -729,6 +729,7 @@ declare namespace GraphTableSVG {
         readonly logicalWidth: number;
         readonly logicalHeight: number;
         readonly calculatedWidthUsingText: number;
+        private _assurancevisibility;
         readonly calculatedHeightUsingText: number;
         calculatedSizeUsingGroup(): [number, number];
         private computeSidePosition(dir);
@@ -986,7 +987,7 @@ declare namespace GraphTableSVG {
     namespace SVGTextBox {
         function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexMode: boolean): void;
         function setTextToTextPath(path: SVGTextPathElement, text: string, isLatexMode: boolean): void;
-        function sortText(svgText: SVGTextElement, hAnchor: GraphTableSVG.HorizontalAnchor): void;
+        function sortText(svgText: SVGTextElement, hAnchor: GraphTableSVG.HorizontalAnchor, showChecked: boolean): void;
         function constructSVGTextByHTMLElements(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean): void;
         function getSize(svgText: SVGTextElement, showChecked?: boolean): Rectangle;
         function getComputedTextLengthsOfTSpans(svgText: SVGTextElement, showChecked: boolean): Size[];

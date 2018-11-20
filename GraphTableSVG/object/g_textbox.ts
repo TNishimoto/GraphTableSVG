@@ -197,7 +197,7 @@ namespace GraphTableSVG {
             this._observer.disconnect();
 
 
-            SVGTextBox.sortText(this.svgText, this.horizontalAnchor);
+            SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
 
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();
             this.updateSurface();

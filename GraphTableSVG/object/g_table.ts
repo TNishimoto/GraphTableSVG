@@ -65,7 +65,7 @@ namespace GraphTableSVG {
             this.isConstructing = false;
 
             this.isTextObserved = true;
-            //this.update();
+            this.update();
 
         }
         private _isNoneMode : boolean = false;

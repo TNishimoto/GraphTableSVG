@@ -210,7 +210,7 @@ namespace GraphTableSVG {
 
             }
         }
-        function alignTextAsText(svgText: SVGTextElement){
+        function alignTextAsText(svgText: SVGTextElement, showChecked : boolean){
             const lineSpans = getLines(svgText);
             const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
             const fs = parseInt(fontSize);
@@ -218,7 +218,7 @@ namespace GraphTableSVG {
             let dx = 0;
             let dy = fs;
             let c = 0;
-            const lengths = getComputedTextLengthsOfTSpans(svgText, true);
+            const lengths = getComputedTextLengthsOfTSpans(svgText, showChecked);
             for (let y = 0; y < lineSpans.length; y++) {
                 let width = 0;
                 let heightMax = fs;
@@ -245,8 +245,8 @@ namespace GraphTableSVG {
          * @param svgText 
          * @param hAnchor 
          */
-        export function sortText(svgText: SVGTextElement, hAnchor: GraphTableSVG.HorizontalAnchor) {
-            alignTextAsText(svgText);
+        export function sortText(svgText: SVGTextElement, hAnchor: GraphTableSVG.HorizontalAnchor, showChecked : boolean) {
+            alignTextAsText(svgText, showChecked);
             alignTextByHorizontalAnchor(svgText,hAnchor);            
         }
         export function constructSVGTextByHTMLElements(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean) {

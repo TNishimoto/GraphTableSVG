@@ -1539,7 +1539,7 @@ var GraphTableSVG;
             if (!this.isShow)
                 return;
             this._observer.disconnect();
-            GraphTableSVG.SVGTextBox.sortText(this.svgText, this.horizontalAnchor);
+            GraphTableSVG.SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
             if (this.isAutoSizeShapeToFitText)
                 this.updateToFitText();
             this.updateSurface();
@@ -3945,6 +3945,7 @@ var GraphTableSVG;
                 this.cy = option.cy;
             this.isConstructing = false;
             this.isTextObserved = true;
+            this.update();
         }
         get isNoneMode() {
             return this._isNoneMode;
@@ -4838,6 +4839,7 @@ var GraphTableSVG;
                     }
                 }
             };
+            this._assurancevisibility = false;
             this._svgGroup = GraphTableSVG.SVG.createGroup(null);
             this._table = parent;
             this.table.rows[_py].svgGroup.appendChild(this.svgGroup);
@@ -5177,7 +5179,7 @@ var GraphTableSVG;
         }
         get calculatedWidthUsingText() {
             if (this.isLocated) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, true);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, this._assurancevisibility);
                 return textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
                     + this.paddingLeft + this.paddingRight;
             }
@@ -5187,7 +5189,7 @@ var GraphTableSVG;
         }
         get calculatedHeightUsingText() {
             if (this.isLocated) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, true);
+                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, this._assurancevisibility);
                 return textRect.height + this.paddingTop + this.paddingBottom;
             }
             else {
@@ -5376,7 +5378,7 @@ var GraphTableSVG;
             }
         }
         resize() {
-            GraphTableSVG.SVGTextBox.sortText(this.svgText, this.horizontalAnchor);
+            GraphTableSVG.SVGTextBox.sortText(this.svgText, this.horizontalAnchor, this._assurancevisibility);
             const [w, h] = this.calculatedSizeUsingGroup();
             if (this.width != w) {
                 this.width = w;
@@ -7532,14 +7534,14 @@ var GraphTableSVG;
             else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
             }
         }
-        function alignTextAsText(svgText) {
+        function alignTextAsText(svgText, showChecked) {
             const lineSpans = getLines(svgText);
             const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
             const fs = parseInt(fontSize);
             let dx = 0;
             let dy = fs;
             let c = 0;
-            const lengths = getComputedTextLengthsOfTSpans(svgText, true);
+            const lengths = getComputedTextLengthsOfTSpans(svgText, showChecked);
             for (let y = 0; y < lineSpans.length; y++) {
                 let width = 0;
                 let heightMax = fs;
@@ -7560,8 +7562,8 @@ var GraphTableSVG;
                 dx -= width;
             }
         }
-        function sortText(svgText, hAnchor) {
-            alignTextAsText(svgText);
+        function sortText(svgText, hAnchor, showChecked) {
+            alignTextAsText(svgText, showChecked);
             alignTextByHorizontalAnchor(svgText, hAnchor);
         }
         SVGTextBox.sortText = sortText;
