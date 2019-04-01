@@ -256,6 +256,14 @@ declare namespace GraphTableSVG {
         readonly marginPaddingLeft: number;
         readonly marginPaddingRight: number;
         readonly marginPaddingBottom: number;
+        paddingTop: number;
+        paddingLeft: number;
+        paddingRight: number;
+        paddingBottom: number;
+        marginTop: number;
+        marginLeft: number;
+        marginRight: number;
+        marginBottom: number;
         readonly innerRectangle: Rectangle;
         private readonly innerRectangleWithoutMargin;
         readonly svgElements: SVGElement[];

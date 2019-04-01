@@ -255,6 +255,59 @@ namespace GraphTableSVG {
             return this.svgText.getMarginBottom() + this.svgGroup.getPaddingBottom();
         }
 
+        get paddingTop() : number{
+            return this.svgGroup.getPaddingTop();
+        }
+        set paddingTop(value : number){
+            this.svgGroup.setPaddingTop(value);
+        }
+        get paddingLeft() : number{
+            return this.svgGroup.getPaddingLeft();
+        }
+        set paddingLeft(value : number){
+            this.svgGroup.setPaddingLeft(value);
+        }
+        get paddingRight() : number{
+            return this.svgGroup.getPaddingRight();
+        }
+        set paddingRight(value : number){
+            this.svgGroup.setPaddingRight(value);
+        }
+        get paddingBottom() : number{
+            return this.svgGroup.getPaddingBottom();
+        }
+        set paddingBottom(value : number){
+            this.svgGroup.setPaddingBottom(value);
+        }
+
+        get marginTop() : number{
+            return this.svgText.getMarginTop();
+        }
+        set marginTop(value : number){
+            this.svgText.setMarginTop(value);
+        }
+
+        get marginLeft() : number{
+            return this.svgText.getMarginLeft();
+        }
+        set marginLeft(value : number){
+            this.svgText.setMarginLeft(value);
+        }
+        get marginRight() : number{
+            return this.svgText.getMarginRight();
+        }
+        set marginRight(value : number){
+            this.svgText.setMarginRight(value);
+        }
+        get marginBottom() : number{
+            return this.svgText.getMarginBottom();
+        }
+        set marginBottom(value : number){
+            this.svgText.setMarginBottom(value);
+        }
+
+
+
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
             rect.width = 0;

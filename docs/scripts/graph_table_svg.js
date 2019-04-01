@@ -1579,6 +1579,54 @@ var GraphTableSVG;
         get marginPaddingBottom() {
             return this.svgText.getMarginBottom() + this.svgGroup.getPaddingBottom();
         }
+        get paddingTop() {
+            return this.svgGroup.getPaddingTop();
+        }
+        set paddingTop(value) {
+            this.svgGroup.setPaddingTop(value);
+        }
+        get paddingLeft() {
+            return this.svgGroup.getPaddingLeft();
+        }
+        set paddingLeft(value) {
+            this.svgGroup.setPaddingLeft(value);
+        }
+        get paddingRight() {
+            return this.svgGroup.getPaddingRight();
+        }
+        set paddingRight(value) {
+            this.svgGroup.setPaddingRight(value);
+        }
+        get paddingBottom() {
+            return this.svgGroup.getPaddingBottom();
+        }
+        set paddingBottom(value) {
+            this.svgGroup.setPaddingBottom(value);
+        }
+        get marginTop() {
+            return this.svgText.getMarginTop();
+        }
+        set marginTop(value) {
+            this.svgText.setMarginTop(value);
+        }
+        get marginLeft() {
+            return this.svgText.getMarginLeft();
+        }
+        set marginLeft(value) {
+            this.svgText.setMarginLeft(value);
+        }
+        get marginRight() {
+            return this.svgText.getMarginRight();
+        }
+        set marginRight(value) {
+            this.svgText.setMarginRight(value);
+        }
+        get marginBottom() {
+            return this.svgText.getMarginBottom();
+        }
+        set marginBottom(value) {
+            this.svgText.setMarginBottom(value);
+        }
         get innerRectangle() {
             const rect = new GraphTableSVG.Rectangle();
             rect.width = 0;
