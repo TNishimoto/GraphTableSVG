@@ -11,6 +11,7 @@
             this.table = _table;
             this._svgGroup = SVG.createGroup(this.table.svgGroup);
             this.svgGroup.setAttribute("name", "cell_row");
+            this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgRowBorderGroup);
 
             this.cellY = _y;
             this._svgGroup.setAttribute(CellRow.columnHeightName, `${_height}`);

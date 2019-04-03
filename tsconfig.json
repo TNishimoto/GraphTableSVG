@@ -3,7 +3,9 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "outFile": "./bin/graph_table_svg.js",
+        "outFile": "./dist/graph_table_svg.js",
+        //"outFile": "./docs/scripts/graph_table_svg.js",
+
         "sourceMap": true,
         "target" : "ES6",
         "declaration" : true,

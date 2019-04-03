@@ -54,6 +54,9 @@
 			</tab2>
 			<tab2 path="samples/table/sample_table_merge">
 			</tab2>
+			<tab2 path="samples/table/sample_logic_table">
+			</tab2>
+			
 			<tab2 path="samples/graph/sample_graph_class">
 			</tab2>
 			<tab2 path="samples/graph/sample_graph_connector">
