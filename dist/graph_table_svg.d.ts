@@ -670,6 +670,7 @@ declare namespace GraphTableSVG {
         static readonly emphasisCellClass: string;
         static readonly emphasisBorderClass: string;
         static readonly temporaryBorderClass: string;
+        static readonly defaultCellClass: string;
         static readonly cellXName: string;
         static readonly cellYName: string;
         static readonly borderXName: string;

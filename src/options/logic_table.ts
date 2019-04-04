@@ -13,7 +13,7 @@ namespace GraphTableSVG {
     export class LogicCell {
 
         public text: string | null = null;
-        public cellClass: string | null = null;
+        public cellClass: string | null = Cell.defaultCellClass;
         public textClass: string | null = null;
         public backgroundClass: string | null = null;
         public topBorderClass: string | null = null;

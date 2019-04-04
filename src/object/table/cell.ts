@@ -137,6 +137,7 @@ namespace GraphTableSVG {
         public static readonly emphasisCellClass: string = "___cell-emphasis";
         public static readonly emphasisBorderClass: string = "___border-emphasis";
         public static readonly temporaryBorderClass: string = "___temporary-class";
+        public static readonly defaultCellClass: string = "___cell-default";
 
         public static readonly cellXName = "data-cellX";
         public static readonly cellYName = "data-cellY";

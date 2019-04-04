@@ -161,7 +161,16 @@ var GraphTableSVG;
             .${GraphTableSVG.Cell.emphasisBorderClass}{
             stroke : ${borderColor} !important;
             }
+            .${GraphTableSVG.Cell.defaultCellClass}{
+                ${GraphTableSVG.CustomAttributeNames.Style.paddingTop} : 5px !important;
+                ${GraphTableSVG.CustomAttributeNames.Style.paddingLeft} : 5px !important;
+                ${GraphTableSVG.CustomAttributeNames.Style.paddingRight} : 5px !important;
+                ${GraphTableSVG.CustomAttributeNames.Style.paddingBottom} : 5px !important;
+                ${GraphTableSVG.CustomAttributeNames.Style.VerticalAnchor} : ${GraphTableSVG.VerticalAnchor.Middle}
+                ${GraphTableSVG.CustomAttributeNames.Style.HorizontalAnchor} : ${GraphTableSVG.HorizontalAnchor.Center}
 
+            }
+    
             `;
             blankStyle.type = "text/css";
             blankStyle.setAttribute("class", CSSName);
@@ -4232,18 +4241,6 @@ var GraphTableSVG;
                     }
                 }
             }
-            if (!cell.svgGroup.hasStyleAttribute(GraphTableSVG.CustomAttributeNames.Style.paddingLeft))
-                cell.svgGroup.setPaddingLeft(10);
-            if (!cell.svgGroup.hasStyleAttribute(GraphTableSVG.CustomAttributeNames.Style.paddingRight))
-                cell.svgGroup.setPaddingRight(10);
-            if (!cell.svgGroup.hasStyleAttribute(GraphTableSVG.CustomAttributeNames.Style.paddingTop))
-                cell.svgGroup.setPaddingTop(10);
-            if (!cell.svgGroup.hasStyleAttribute(GraphTableSVG.CustomAttributeNames.Style.paddingBottom))
-                cell.svgGroup.setPaddingBottom(10);
-            if (!cell.svgGroup.hasStyleAttribute(GraphTableSVG.CustomAttributeNames.Style.VerticalAnchor))
-                cell.verticalAnchor = GraphTableSVG.VerticalAnchor.Middle;
-            if (!cell.svgGroup.hasStyleAttribute(GraphTableSVG.CustomAttributeNames.Style.HorizontalAnchor))
-                cell.horizontalAnchor = GraphTableSVG.HorizontalAnchor.Center;
         }
         constructFromLogicTable(table) {
             if (table.tableClassName != null)
@@ -5703,6 +5700,7 @@ var GraphTableSVG;
     Cell.emphasisCellClass = "___cell-emphasis";
     Cell.emphasisBorderClass = "___border-emphasis";
     Cell.temporaryBorderClass = "___temporary-class";
+    Cell.defaultCellClass = "___cell-default";
     Cell.cellXName = "data-cellX";
     Cell.cellYName = "data-cellY";
     Cell.borderXName = "data-borderX";
@@ -6785,10 +6783,6 @@ var GraphTableSVG;
             style.fontSize = null;
             style.fontWeight = null;
             style.fontFamily = null;
-            style.removeProperty(GraphTableSVG.CustomAttributeNames.Style.paddingTop);
-            style.removeProperty(GraphTableSVG.CustomAttributeNames.Style.paddingLeft);
-            style.removeProperty(GraphTableSVG.CustomAttributeNames.Style.paddingRight);
-            style.removeProperty(GraphTableSVG.CustomAttributeNames.Style.paddingBottom);
         }
         SVG.resetStyle = resetStyle;
         function createCircle(parent, className = null) {
@@ -8048,7 +8042,7 @@ var GraphTableSVG;
     class LogicCell {
         constructor() {
             this.text = null;
-            this.cellClass = null;
+            this.cellClass = GraphTableSVG.Cell.defaultCellClass;
             this.textClass = null;
             this.backgroundClass = null;
             this.topBorderClass = null;

@@ -79,7 +79,16 @@
             .${Cell.emphasisBorderClass}{
             stroke : ${borderColor} !important;
             }
+            .${Cell.defaultCellClass}{
+                ${CustomAttributeNames.Style.paddingTop} : 5px !important;
+                ${CustomAttributeNames.Style.paddingLeft} : 5px !important;
+                ${CustomAttributeNames.Style.paddingRight} : 5px !important;
+                ${CustomAttributeNames.Style.paddingBottom} : 5px !important;
+                ${CustomAttributeNames.Style.VerticalAnchor} : ${VerticalAnchor.Middle}
+                ${CustomAttributeNames.Style.HorizontalAnchor} : ${HorizontalAnchor.Center}
 
+            }
+    
             `
             blankStyle.type = "text/css";
             blankStyle.setAttribute("class", CSSName);
@@ -89,6 +98,9 @@
             head.item(0)!.appendChild(blankStyle);
 
         }
+        //export function setCellCSS(){
+
+        //}
         export function getGraphTableCSS(): HTMLElement | null {
             const item = document.getElementById(CSSName);
             return item;
