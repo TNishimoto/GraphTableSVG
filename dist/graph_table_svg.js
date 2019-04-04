@@ -6057,17 +6057,17 @@ var GraphTableSVG;
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
                     if (item instanceof GraphTableSVG.GTable) {
-                        const lines = item.createVBACode2(id++, "createdSlide");
+                        const lines = item.createVBACode2(id, "createdSlide");
                         lines.forEach((v) => s.push(v));
                         id++;
                     }
                     else if (item instanceof SVGPathElement) {
-                        const lines = SVGToVBA.createVBACodeOfSVGPath(item, id++);
+                        const lines = SVGToVBA.createVBACodeOfSVGPath(item, id);
                         lines.forEach((v) => s.push(v));
                         id++;
                     }
                     else if (item instanceof SVGTextElement) {
-                        const lines = SVGToVBA.createVBACodeOfTextElement(item, id++);
+                        const lines = SVGToVBA.createVBACodeOfTextElement(item, id);
                         lines.forEach((v) => s.push(v));
                         id++;
                     }
@@ -6785,6 +6785,10 @@ var GraphTableSVG;
             style.fontSize = null;
             style.fontWeight = null;
             style.fontFamily = null;
+            style.removeProperty(GraphTableSVG.CustomAttributeNames.Style.paddingTop);
+            style.removeProperty(GraphTableSVG.CustomAttributeNames.Style.paddingLeft);
+            style.removeProperty(GraphTableSVG.CustomAttributeNames.Style.paddingRight);
+            style.removeProperty(GraphTableSVG.CustomAttributeNames.Style.paddingBottom);
         }
         SVG.resetStyle = resetStyle;
         function createCircle(parent, className = null) {

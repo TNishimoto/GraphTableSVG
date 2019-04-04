@@ -117,6 +117,10 @@ namespace GraphTableSVG {
             style.fontSize = null;
             style.fontWeight = null;
             style.fontFamily = null;
+            style.removeProperty(CustomAttributeNames.Style.paddingTop);
+            style.removeProperty(CustomAttributeNames.Style.paddingLeft);
+            style.removeProperty(CustomAttributeNames.Style.paddingRight);
+            style.removeProperty(CustomAttributeNames.Style.paddingBottom);
         }
 
         /**

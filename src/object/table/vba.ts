@@ -27,16 +27,22 @@ namespace GraphTableSVG {
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
                     if (item instanceof GTable) {
-                        const lines = item.createVBACode2(id++, "createdSlide");
+                        //const lines = item.createVBACode2(id++, "createdSlide");
+                        const lines = item.createVBACode2(id, "createdSlide");
+                        
                         lines.forEach((v) => s.push(v));
                         id++;
                     } else if (item instanceof SVGPathElement) {
-                        const lines = SVGToVBA.createVBACodeOfSVGPath(item, id++);
+                        //const lines = SVGToVBA.createVBACodeOfSVGPath(item, id++);
+                        const lines = SVGToVBA.createVBACodeOfSVGPath(item, id);
+                        
                         lines.forEach((v) => s.push(v));
                         id++;
 
                     } else if (item instanceof SVGTextElement) {
-                        const lines = SVGToVBA.createVBACodeOfTextElement(item, id++);
+                        //const lines = SVGToVBA.createVBACodeOfTextElement(item, id++);
+                        const lines = SVGToVBA.createVBACodeOfTextElement(item, id);
+                        
                         lines.forEach((v) => s.push(v));
                         id++;
                     } else if(item instanceof GGraph){
