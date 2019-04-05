@@ -62,6 +62,7 @@ namespace GraphTableSVG {
             }
             const svgBox = document.getElementById(id);
             if (svgBox == null) throw Error("Error");
+            //console.log(svgBox.outerHTML);
             const styleMap = GraphTableSVG.SVG.getAllElementStyleMap(svgBox);
             copyCSStoStyle(svgBox);
 
@@ -75,8 +76,14 @@ namespace GraphTableSVG {
 
         function getPadding(svgBox: HTMLElement) : number[]{
             const r : number[] = new Array(4);
-            if(svgBox.style.padding != null){
-                const strs = svgBox.style.padding.split(" ");
+            r[0]=0;
+            r[1]=0;
+            r[2]=0;
+            r[3]=0;
+            var style = window.getComputedStyle(svgBox);
+
+            if(style.padding != null){
+                const strs = style.padding.split(" ");
                 for(let i=0;i<strs.length;i++){
                     const num = Common.toPX(strs[i]);
                     r[i] = num;
@@ -88,7 +95,8 @@ namespace GraphTableSVG {
             const padding = getPadding(svgBox);
             const width = svgBox.style.width == null ? 0 : Common.toPX(svgBox.style.width);
             const height = svgBox.style.height == null ? 0 : Common.toPX(svgBox.style.height);
-            return new Size(width + padding[1] + padding[3], height + padding[0] + padding[2]);
+            //return new Size(Math.round(width + padding[1] + padding[3]), Math.round(height + padding[0] + padding[2] ) );
+            return new Size(width + padding[1] + padding[3], height + padding[0] + padding[2]  );
         }
         function getViewBox(svgBox: HTMLElement) : number[]{
             const r : number[] = new Array(4);
@@ -131,6 +139,7 @@ namespace GraphTableSVG {
                 img.style.height = svgBox.style.height;
 
                 img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgBox.outerHTML)));
+
 
                 svgBox.style.width = originalWidthStyle;
                 svgBox.style.height = originalHeightStyle;

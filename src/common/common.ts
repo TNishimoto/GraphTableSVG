@@ -112,7 +112,7 @@
         export function parseUnit(text : string) : [number, string]{
             let str1="", str2="";
             for(let i=0;i<text.length;i++){
-                if(isNaN(<any>text[i])){
+                if(isNaN(<any>text[i]) && text[i] != "." ){
                     str2 += text[i];
                 }else{
                     str1 += text[i];

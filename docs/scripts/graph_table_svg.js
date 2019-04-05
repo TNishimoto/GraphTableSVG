@@ -186,7 +186,7 @@ var GraphTableSVG;
         function parseUnit(text) {
             let str1 = "", str2 = "";
             for (let i = 0; i < text.length; i++) {
-                if (isNaN(text[i])) {
+                if (isNaN(text[i]) && text[i] != ".") {
                     str2 += text[i];
                 }
                 else {
@@ -879,8 +879,13 @@ var GraphTableSVG;
         PNG.createPNGFromSVG = createPNGFromSVG;
         function getPadding(svgBox) {
             const r = new Array(4);
-            if (svgBox.style.padding != null) {
-                const strs = svgBox.style.padding.split(" ");
+            r[0] = 0;
+            r[1] = 0;
+            r[2] = 0;
+            r[3] = 0;
+            var style = window.getComputedStyle(svgBox);
+            if (style.padding != null) {
+                const strs = style.padding.split(" ");
                 for (let i = 0; i < strs.length; i++) {
                     const num = GraphTableSVG.Common.toPX(strs[i]);
                     r[i] = num;
