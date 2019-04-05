@@ -879,18 +879,11 @@ var GraphTableSVG;
         PNG.createPNGFromSVG = createPNGFromSVG;
         function getPadding(svgBox) {
             const r = new Array(4);
-            r[0] = 0;
-            r[1] = 0;
-            r[2] = 0;
-            r[3] = 0;
             var style = window.getComputedStyle(svgBox);
-            if (style.padding != null) {
-                const strs = style.padding.split(" ");
-                for (let i = 0; i < strs.length; i++) {
-                    const num = GraphTableSVG.Common.toPX(strs[i]);
-                    r[i] = num;
-                }
-            }
+            r[0] = style.paddingTop == null ? 0 : GraphTableSVG.Common.toPX(style.paddingTop);
+            r[1] = style.paddingLeft == null ? 0 : GraphTableSVG.Common.toPX(style.paddingLeft);
+            r[2] = style.paddingBottom == null ? 0 : GraphTableSVG.Common.toPX(style.paddingBottom);
+            r[3] = style.paddingRight == null ? 0 : GraphTableSVG.Common.toPX(style.paddingRight);
             return r;
         }
         function getSizeWidthPadding(svgBox) {

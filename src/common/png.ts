@@ -76,19 +76,24 @@ namespace GraphTableSVG {
 
         function getPadding(svgBox: HTMLElement) : number[]{
             const r : number[] = new Array(4);
-            r[0]=0;
-            r[1]=0;
-            r[2]=0;
-            r[3]=0;
             var style = window.getComputedStyle(svgBox);
 
+            r[0] = style.paddingTop == null ? 0 : Common.toPX(style.paddingTop); 
+            r[1] = style.paddingLeft == null ? 0 : Common.toPX(style.paddingLeft); 
+            r[2] = style.paddingBottom == null ? 0 : Common.toPX(style.paddingBottom); 
+            r[3] = style.paddingRight == null ? 0 : Common.toPX(style.paddingRight); 
+            /*
             if(style.padding != null){
                 const strs = style.padding.split(" ");
+                console.log(strs);
+                console.log(`${style.paddingLeft} ${style.paddingRight}`);
+
                 for(let i=0;i<strs.length;i++){
                     const num = Common.toPX(strs[i]);
                     r[i] = num;
                 }
             }
+            */
             return r;
         }
         function getSizeWidthPadding(svgBox: HTMLElement){
