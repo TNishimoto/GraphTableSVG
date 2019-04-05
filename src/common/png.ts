@@ -29,7 +29,9 @@ namespace GraphTableSVG {
         export function createCanvasFromImage(img : HTMLImageElement) : HTMLCanvasElement {
             const canvas = document.createElement("canvas");
             if(img.style.width != null && img.style.height != null){
-            canvas.setAttribute("width", img.style.width);
+                
+                
+            canvas.setAttribute("width", img.style.width );
             canvas.setAttribute("height", img.style.height);
             }
             //canvas.style.height = img.style.height;    
@@ -70,6 +72,37 @@ namespace GraphTableSVG {
             return canvas;
             //return canvas;
         }
+
+        function getPadding(svgBox: HTMLElement) : number[]{
+            const r : number[] = new Array(4);
+            if(svgBox.style.padding != null){
+                const strs = svgBox.style.padding.split(" ");
+                for(let i=0;i<strs.length;i++){
+                    const num = Common.toPX(strs[i]);
+                    r[i] = num;
+                }
+            }
+            return r;
+        }
+        function getSizeWidthPadding(svgBox: HTMLElement){
+            const padding = getPadding(svgBox);
+            const width = svgBox.style.width == null ? 0 : Common.toPX(svgBox.style.width);
+            const height = svgBox.style.height == null ? 0 : Common.toPX(svgBox.style.height);
+            return new Size(width + padding[1] + padding[3], height + padding[0] + padding[2]);
+        }
+        function getViewBox(svgBox: HTMLElement) : number[]{
+            const r : number[] = new Array(4);
+            const viewbox = svgBox.getAttribute("viewBox");
+            if(viewbox != null){
+                const strs = viewbox.split(" ");
+                for(let i=0;i<strs.length;i++){
+                    const num = Common.toPX(strs[i]);
+                    r[i] = num;
+                }
+            }
+            return r;
+        }
+
         /**
          * svg要素をHTMLImageElementに変換します。
          * @param svgBox 
@@ -77,9 +110,46 @@ namespace GraphTableSVG {
         export function getImage(svgBox: HTMLElement): HTMLImageElement {
             const img: HTMLImageElement = document.createElement("img");
             if (window.btoa) {
+                const realSize = getSizeWidthPadding(svgBox);
+                let originalWidthAttr = svgBox.getAttribute("width");
+                let originalHeightAttr = svgBox.getAttribute("height");
+                let originalWidthStyle = svgBox.style.width;
+                let originalHeightStyle = svgBox.style.height;
+
+                let originalViewBox = svgBox.getAttribute("viewBox");
+                let viewBoxValue = getViewBox(svgBox);
+                let viewBox = `${viewBoxValue[0]} ${viewBoxValue[1]} ${realSize.width} ${realSize.height}`
+
+                svgBox.style.width = realSize.width.toString();
+                svgBox.style.height = realSize.height.toString();
+
+                svgBox.setAttribute("width", realSize.width.toString() );
+                svgBox.setAttribute("height", realSize.height.toString() );
+                svgBox.setAttribute("viewBox", viewBox );
+
                 img.style.width = svgBox.style.width;
                 img.style.height = svgBox.style.height;
+
                 img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgBox.outerHTML)));
+
+                svgBox.style.width = originalWidthStyle;
+                svgBox.style.height = originalHeightStyle;
+                if(originalWidthAttr != null){
+                    svgBox.setAttribute("width", originalWidthAttr );
+                }else{
+                    svgBox.removeAttribute("width");
+                }
+                if(originalHeightAttr != null){
+                    svgBox.setAttribute("height", originalHeightAttr );
+                }else{
+                    svgBox.removeAttribute("height")
+                }
+                if(originalViewBox != null){
+                    svgBox.setAttribute("viewBox", originalViewBox);
+                }else{
+                    svgBox.removeAttribute("viewBox")
+                }
+
 
             } else {
                 throw Error("Error");
