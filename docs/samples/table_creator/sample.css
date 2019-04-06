@@ -1,0 +1,31 @@
+﻿
+.table-text {
+    fill: black;
+    font-size: 24px;
+    font-family: 'Times New Roman';
+}
+.background {
+    fill: white;
+}
+.textarea-cell {
+    --horizontal-anchor: left;
+    --vertical-anchor: middle;
+}
+.sa-table{
+    --default-cell-class : cell;
+}
+.cell{
+    --default-text-class : table-text;
+    --default-background-class : background;    
+    --horizontal-anchor: center;
+    --vertical-anchor: middle;
+}
+
+.svgbox{
+    border:#000000 solid 1px;
+    background:#e9e9e9;
+    padding: 30px 30px 30px 30px;
+    width : 1000px;
+    height : 800px
+
+}
