@@ -84,9 +84,18 @@
                 ${CustomAttributeNames.Style.paddingLeft} : 5px !important;
                 ${CustomAttributeNames.Style.paddingRight} : 5px !important;
                 ${CustomAttributeNames.Style.paddingBottom} : 5px !important;
-                ${CustomAttributeNames.Style.VerticalAnchor} : ${VerticalAnchor.Middle}
-                ${CustomAttributeNames.Style.HorizontalAnchor} : ${HorizontalAnchor.Center}
+                ${CustomAttributeNames.Style.VerticalAnchor} : ${VerticalAnchor.Middle};
+                ${CustomAttributeNames.Style.HorizontalAnchor} : ${HorizontalAnchor.Center};
+                ${CustomAttributeNames.Style.defaultTextClass} : ${CustomAttributeNames.StyleValue.defaultTextClass};
+                ${CustomAttributeNames.Style.defaultCellBackgroundClass} : ${CustomAttributeNames.StyleValue.defaultCellBackgroungClass};
 
+            }
+            .${CustomAttributeNames.StyleValue.defaultTextClass}{
+                fill : black;
+                font-size: 18px;
+            }
+            .${CustomAttributeNames.StyleValue.defaultCellBackgroungClass}{
+                fill : white;
             }
     
             `

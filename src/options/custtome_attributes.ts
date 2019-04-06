@@ -35,8 +35,12 @@ namespace GraphTableSVG {
             export const PathTextAlignment: string = "--path-text-alignment";
             export const msoDashStyleName = "--stroke-style";
             export const relocateName = "--relocate";
-            
+            export const defaultCellBackgroundClass: string = "--default-background-class";
     
+        }
+        export namespace StyleValue {
+            export let defaultTextClass: string = "___text-default";
+            export let defaultCellBackgroungClass: string = "___cell-background-default";            
         }
         export const beginNodeName: string = "data-begin-node";
         export const endNodeName: string = "data-end-node";

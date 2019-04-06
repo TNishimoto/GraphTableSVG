@@ -45,10 +45,13 @@ namespace GraphTableSVG {
             _svgText.setAttribute(CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             //_svgText.style.textAnchor = "middle";
             if (className == null) {
+                //_svgText.setAttribute("class", SVG.defaultTextClass);
+                
                 _svgText.style.fill = "black";
                 _svgText.style.fontSize = "14px";
                 _svgText.style.fontWeight = "bold";
                 _svgText.style.fontFamily = 'Times New Roman';
+                
             } else {
                 _svgText.setAttribute("class", className);
                 //_svgText.className = className;
@@ -85,6 +88,25 @@ namespace GraphTableSVG {
                     rect.height.baseVal.value = height;
                 }
 
+            }
+            return rect;
+        }
+        /**
+         * SVGRectElementを生成します。
+         * @param parent 生成したSVG要素を子に追加する要素
+         * @param className 生成するSVG要素のクラス属性名
+         * @returns 生成されたSVGRectElement
+         */
+        export function createCellRectangle(parent: SVGElement, className: string | null = null): SVGRectElement {
+            const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            parent.appendChild(rect);
+            if (className == null) {
+                rect.style.fill = "white";
+
+
+                //rect.setAttribute("class", SVG.defaultCellBackgroungClass);
+            } else {
+                rect.setAttribute("class", className);
             }
             return rect;
         }

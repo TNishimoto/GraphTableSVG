@@ -25,8 +25,12 @@ namespace GraphTableSVG {
             this.svgGroup.setAttribute(Cell.cellYName, `${_py}`);
             this.setMasterDiffX(0);
             this.setMasterDiffY(0);
-            this._svgBackground = SVG.createRectangle(this.svgGroup, this.defaultBackgroundClass);
-            this._svgText = SVG.createText(this.defaultTextClass);
+
+            const backGroundClass = this.defaultBackgroundClass == null ? CustomAttributeNames.StyleValue.defaultCellBackgroungClass : this.defaultBackgroundClass;
+            this._svgBackground = SVG.createCellRectangle(this.svgGroup, backGroundClass);
+            
+            const textClass = this.defaultTextClass == null ? CustomAttributeNames.StyleValue.defaultTextClass : this.defaultTextClass;            
+            this._svgText = SVG.createText(textClass);
             this.svgGroup.appendChild(this.svgText);
 
             const borderClass = option.borderClass === undefined ? null : option.borderClass;
@@ -42,8 +46,27 @@ namespace GraphTableSVG {
 
         }
         // #region style
+        private recomputeDefaultProperties(){
+            if(this.defaultBackgroundClass != null){
+                this._svgBackground.setAttribute("class", this.defaultBackgroundClass);
+            }
+            if(this.defaultTextClass != null){
+                this._svgText.setAttribute("class", this.defaultTextClass);
+            }    
 
-
+        }
+        /*
+        public get class() : string | null{
+            return this.svgGroup.getAttribute("class");
+        }
+        public set class(value : string | null){
+            if(value == null){
+                this.svgGroup.removeAttribute("class");
+            }else{
+                this.svgGroup.setAttribute("class", value);
+            }
+        }
+        */
         
         /**
          * このセルが強調してるかどうかを返します。
@@ -133,7 +156,7 @@ namespace GraphTableSVG {
         // #endregion
 
         // #region field
-        private static readonly defaultBackgroundClassName: string = "--default-background-class";
+        //private static readonly defaultBackgroundClassName: string = "--default-background-class";
         public static readonly emphasisCellClass: string = "___cell-emphasis";
         public static readonly emphasisBorderClass: string = "___border-emphasis";
         public static readonly temporaryBorderClass: string = "___temporary-class";
@@ -185,6 +208,9 @@ namespace GraphTableSVG {
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
                 if (p.attributeName == "style" || p.attributeName == "class") {
+                    if(p.attributeName == "class"){
+                        this.recomputeDefaultProperties();
+                    }
                     this.locateSVGText();
                 }
 
@@ -311,7 +337,8 @@ namespace GraphTableSVG {
         SVGBackElement生成時に設定するクラス名を返します。
         */
         get defaultBackgroundClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(Cell.defaultBackgroundClassName);
+            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultCellBackgroundClass);
+            return v;
         }
         /**
         CellがDocumentのDOMに所属しているかどうかを返します。

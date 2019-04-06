@@ -658,6 +658,7 @@ declare namespace GraphTableSVG {
     }
     class Cell {
         constructor(parent: GTable, _px: number, _py: number, option?: CellOption);
+        private recomputeDefaultProperties();
         isEmphasized: boolean;
         readonly fontSize: number;
         readonly paddingLeft: number;
@@ -666,7 +667,6 @@ declare namespace GraphTableSVG {
         readonly paddingBottom: number;
         horizontalAnchor: HorizontalAnchor;
         verticalAnchor: VerticalAnchor;
-        private static readonly defaultBackgroundClassName;
         static readonly emphasisCellClass: string;
         static readonly emphasisBorderClass: string;
         static readonly temporaryBorderClass: string;
@@ -914,6 +914,7 @@ declare namespace GraphTableSVG {
         function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
         function createText(className?: string | null): SVGTextElement;
         function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
+        function createCellRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
         function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement;
         function resetStyle(style: CSSStyleDeclaration): void;
         function createCircle(parent: SVGElement, className?: string | null): SVGCircleElement;
@@ -1132,6 +1133,11 @@ declare namespace GraphTableSVG {
             const PathTextAlignment: string;
             const msoDashStyleName = "--stroke-style";
             const relocateName = "--relocate";
+            const defaultCellBackgroundClass: string;
+        }
+        namespace StyleValue {
+            let defaultTextClass: string;
+            let defaultCellBackgroungClass: string;
         }
         const beginNodeName: string;
         const endNodeName: string;
