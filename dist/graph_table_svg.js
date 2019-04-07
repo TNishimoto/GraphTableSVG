@@ -725,6 +725,20 @@ var GraphTableSVG;
             _observer.observe(svgBox, option);
         }
         GUI.observeSVGBox = observeSVGBox;
+        function autostrech(svgBox, objects) {
+            objects.forEach((v) => {
+                if (v instanceof GraphTableSVG.GObject) {
+                    v.update();
+                }
+            });
+            const rect = GraphTableSVG.Common.getRegion(objects);
+            GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, new GraphTableSVG.Padding(5, 5, 5, 5));
+        }
+        GUI.autostrech = autostrech;
+        function autostretchObserve(svgBox, objects) {
+            throw "NotImplementedException";
+        }
+        GUI.autostretchObserve = autostretchObserve;
         let dic = [];
         let createdObserveSVGSVGTimer = false;
         function resizeSVGSVG(svgBox, padding) {
@@ -4942,13 +4956,18 @@ var GraphTableSVG;
     })(DirectionType2 = GraphTableSVG.DirectionType2 || (GraphTableSVG.DirectionType2 = {}));
     class Cell {
         constructor(parent, _px, _py, option = {}) {
+            this.__currentClass = null;
             this.tmpStyle = null;
             this._observerFunc = (x) => {
                 for (let i = 0; i < x.length; i++) {
                     const p = x[i];
                     if (p.attributeName == "style" || p.attributeName == "class") {
                         if (p.attributeName == "class") {
-                            this.recomputeDefaultProperties();
+                            const className = this.svgGroup.getAttribute("class");
+                            if (className != this.__currentClass) {
+                                this.recomputeDefaultProperties();
+                                this.__currentClass = className;
+                            }
                         }
                         this.locateSVGText();
                     }
@@ -5443,6 +5462,11 @@ var GraphTableSVG;
         update() {
             if (this.table.isNoneMode)
                 return;
+            const className = this.svgGroup.getAttribute("class");
+            if (className != this.__currentClass) {
+                this.recomputeDefaultProperties();
+                this.__currentClass = className;
+            }
             this.resize();
             this.relocation();
         }
@@ -7942,7 +7966,6 @@ var GraphTableSVG;
             });
             const endTime = performance.now();
             const time = endTime - startTime;
-            console.log("create " + svgsvg.id + " : " + time + "ms");
             GraphTableSVG.GUI.observeSVGSVG(svgsvg);
         }
         else {

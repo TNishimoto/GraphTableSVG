@@ -191,7 +191,7 @@ namespace GraphTableSVG {
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
 
         }
-        protected update() {
+        public update() {
             this._isUpdating = true;
             if(!this.isShow) return;
             this._observer.disconnect();

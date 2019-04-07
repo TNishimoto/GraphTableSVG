@@ -128,6 +128,8 @@ declare namespace GraphTableSVG {
 declare namespace GraphTableSVG {
     namespace GUI {
         function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => GraphTableSVG.Rectangle, padding?: GraphTableSVG.Padding): void;
+        function autostrech(svgBox: SVGSVGElement, objects: VBAObjectType[]): void;
+        function autostretchObserve(svgBox: SVGSVGElement, objects: VBAObjectType[]): void;
         function observeSVGSVG(svgBox: SVGSVGElement, padding?: GraphTableSVG.Padding): void;
         function isObserved(svgBox: SVGSVGElement): boolean;
         function observeChangeElement(): void;
@@ -222,7 +224,7 @@ declare namespace GraphTableSVG {
         readonly VBAObjectNum: number;
         protected dispatchObjectCreatedEvent(): void;
         protected _isUpdating: boolean;
-        protected update(): void;
+        update(): void;
         protected updateAttributes: string[];
         protected dispatchConnectPositionChangedEvent(): void;
         readonly hasSize: boolean;
@@ -249,7 +251,7 @@ declare namespace GraphTableSVG {
         horizontalAnchor: HorizontalAnchor;
         verticalAnchor: VerticalAnchor;
         isAutoSizeShapeToFitText: boolean;
-        protected update(): void;
+        update(): void;
         protected updateSurface(): void;
         protected updateToFitText(): void;
         readonly marginPaddingTop: number;
@@ -327,7 +329,7 @@ declare namespace GraphTableSVG {
         protected readonly boxHeight: number;
         protected readonly boxWidth: number;
         protected updateToFitText(): void;
-        protected update(): void;
+        update(): void;
         readonly shape: string;
         protected readonly VBAAdjustments: number[];
         getLocation(type: ConnectorPosition, x: number, y: number): [number, number];
@@ -339,7 +341,7 @@ declare namespace GraphTableSVG {
         constructor(svgbox: SVGElement | string, option?: GCalloutAttributes);
         static constructAttributes(e: Element, removeAttributes?: boolean, output?: GCalloutAttributes): GCalloutAttributes;
         readonly type: ShapeObjectType;
-        protected update(): void;
+        update(): void;
         speakerX: number;
         speakerY: number;
         readonly speakerPosition: SpeakerPosition;
@@ -658,6 +660,8 @@ declare namespace GraphTableSVG {
     }
     class Cell {
         constructor(parent: GTable, _px: number, _py: number, option?: CellOption);
+        private recomputeDefaultProperties();
+        private __currentClass;
         isEmphasized: boolean;
         readonly fontSize: number;
         readonly paddingLeft: number;
@@ -666,7 +670,6 @@ declare namespace GraphTableSVG {
         readonly paddingBottom: number;
         horizontalAnchor: HorizontalAnchor;
         verticalAnchor: VerticalAnchor;
-        private static readonly defaultBackgroundClassName;
         static readonly emphasisCellClass: string;
         static readonly emphasisBorderClass: string;
         static readonly temporaryBorderClass: string;
@@ -914,6 +917,7 @@ declare namespace GraphTableSVG {
         function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
         function createText(className?: string | null): SVGTextElement;
         function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
+        function createCellRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
         function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement;
         function resetStyle(style: CSSStyleDeclaration): void;
         function createCircle(parent: SVGElement, className?: string | null): SVGCircleElement;
@@ -1132,6 +1136,11 @@ declare namespace GraphTableSVG {
             const PathTextAlignment: string;
             const msoDashStyleName = "--stroke-style";
             const relocateName = "--relocate";
+            const defaultCellBackgroundClass: string;
+        }
+        namespace StyleValue {
+            let defaultTextClass: string;
+            let defaultCellBackgroungClass: string;
         }
         const beginNodeName: string;
         const endNodeName: string;

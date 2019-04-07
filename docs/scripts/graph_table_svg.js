@@ -166,9 +166,18 @@ var GraphTableSVG;
                 ${GraphTableSVG.CustomAttributeNames.Style.paddingLeft} : 5px !important;
                 ${GraphTableSVG.CustomAttributeNames.Style.paddingRight} : 5px !important;
                 ${GraphTableSVG.CustomAttributeNames.Style.paddingBottom} : 5px !important;
-                ${GraphTableSVG.CustomAttributeNames.Style.VerticalAnchor} : ${GraphTableSVG.VerticalAnchor.Middle}
-                ${GraphTableSVG.CustomAttributeNames.Style.HorizontalAnchor} : ${GraphTableSVG.HorizontalAnchor.Center}
+                ${GraphTableSVG.CustomAttributeNames.Style.VerticalAnchor} : ${GraphTableSVG.VerticalAnchor.Middle};
+                ${GraphTableSVG.CustomAttributeNames.Style.HorizontalAnchor} : ${GraphTableSVG.HorizontalAnchor.Center};
+                ${GraphTableSVG.CustomAttributeNames.Style.defaultTextClass} : ${GraphTableSVG.CustomAttributeNames.StyleValue.defaultTextClass};
+                ${GraphTableSVG.CustomAttributeNames.Style.defaultCellBackgroundClass} : ${GraphTableSVG.CustomAttributeNames.StyleValue.defaultCellBackgroungClass};
 
+            }
+            .${GraphTableSVG.CustomAttributeNames.StyleValue.defaultTextClass}{
+                fill : black;
+                font-size: 18px;
+            }
+            .${GraphTableSVG.CustomAttributeNames.StyleValue.defaultCellBackgroungClass}{
+                fill : white;
             }
     
             `;
@@ -716,6 +725,20 @@ var GraphTableSVG;
             _observer.observe(svgBox, option);
         }
         GUI.observeSVGBox = observeSVGBox;
+        function autostrech(svgBox, objects) {
+            objects.forEach((v) => {
+                if (v instanceof GraphTableSVG.GObject) {
+                    v.update();
+                }
+            });
+            const rect = GraphTableSVG.Common.getRegion(objects);
+            GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, new GraphTableSVG.Padding(5, 5, 5, 5));
+        }
+        GUI.autostrech = autostrech;
+        function autostretchObserve(svgBox, objects) {
+            throw "NotImplementedException";
+        }
+        GUI.autostretchObserve = autostretchObserve;
         let dic = [];
         let createdObserveSVGSVGTimer = false;
         function resizeSVGSVG(svgBox, padding) {
@@ -4933,11 +4956,19 @@ var GraphTableSVG;
     })(DirectionType2 = GraphTableSVG.DirectionType2 || (GraphTableSVG.DirectionType2 = {}));
     class Cell {
         constructor(parent, _px, _py, option = {}) {
+            this.__currentClass = null;
             this.tmpStyle = null;
             this._observerFunc = (x) => {
                 for (let i = 0; i < x.length; i++) {
                     const p = x[i];
                     if (p.attributeName == "style" || p.attributeName == "class") {
+                        if (p.attributeName == "class") {
+                            const className = this.svgGroup.getAttribute("class");
+                            if (className != this.__currentClass) {
+                                this.recomputeDefaultProperties();
+                                this.__currentClass = className;
+                            }
+                        }
                         this.locateSVGText();
                     }
                 }
@@ -4953,13 +4984,23 @@ var GraphTableSVG;
             this.svgGroup.setAttribute(Cell.cellYName, `${_py}`);
             this.setMasterDiffX(0);
             this.setMasterDiffY(0);
-            this._svgBackground = GraphTableSVG.SVG.createRectangle(this.svgGroup, this.defaultBackgroundClass);
-            this._svgText = GraphTableSVG.SVG.createText(this.defaultTextClass);
+            const backGroundClass = this.defaultBackgroundClass == null ? GraphTableSVG.CustomAttributeNames.StyleValue.defaultCellBackgroungClass : this.defaultBackgroundClass;
+            this._svgBackground = GraphTableSVG.SVG.createCellRectangle(this.svgGroup, backGroundClass);
+            const textClass = this.defaultTextClass == null ? GraphTableSVG.CustomAttributeNames.StyleValue.defaultTextClass : this.defaultTextClass;
+            this._svgText = GraphTableSVG.SVG.createText(textClass);
             this.svgGroup.appendChild(this.svgText);
             const borderClass = option.borderClass === undefined ? null : option.borderClass;
             this._observer = new MutationObserver(this._observerFunc);
             const option2 = { attributes: true };
             this._observer.observe(this.svgGroup, option2);
+        }
+        recomputeDefaultProperties() {
+            if (this.defaultBackgroundClass != null) {
+                this._svgBackground.setAttribute("class", this.defaultBackgroundClass);
+            }
+            if (this.defaultTextClass != null) {
+                this._svgText.setAttribute("class", this.defaultTextClass);
+            }
         }
         get isEmphasized() {
             const cellClass = this.svgBackground.getAttribute("class");
@@ -5086,7 +5127,8 @@ var GraphTableSVG;
             return r;
         }
         get defaultBackgroundClass() {
-            return this.svgGroup.getPropertyStyleValue(Cell.defaultBackgroundClassName);
+            const v = this.svgGroup.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultCellBackgroundClass);
+            return v;
         }
         get isLocated() {
             return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
@@ -5420,6 +5462,11 @@ var GraphTableSVG;
         update() {
             if (this.table.isNoneMode)
                 return;
+            const className = this.svgGroup.getAttribute("class");
+            if (className != this.__currentClass) {
+                this.recomputeDefaultProperties();
+                this.__currentClass = className;
+            }
             this.resize();
             this.relocation();
         }
@@ -5756,7 +5803,6 @@ var GraphTableSVG;
             }
         }
     }
-    Cell.defaultBackgroundClassName = "--default-background-class";
     Cell.emphasisCellClass = "___cell-emphasis";
     Cell.emphasisBorderClass = "___border-emphasis";
     Cell.temporaryBorderClass = "___temporary-class";
@@ -6828,6 +6874,18 @@ var GraphTableSVG;
             return rect;
         }
         SVG.createRectangle = createRectangle;
+        function createCellRectangle(parent, className = null) {
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            parent.appendChild(rect);
+            if (className == null) {
+                rect.style.fill = "white";
+            }
+            else {
+                rect.setAttribute("class", className);
+            }
+            return rect;
+        }
+        SVG.createCellRectangle = createCellRectangle;
         function createGroup(parent) {
             const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             g.setAttribute(GraphTableSVG.CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
@@ -7908,7 +7966,6 @@ var GraphTableSVG;
             });
             const endTime = performance.now();
             const time = endTime - startTime;
-            console.log("create " + svgsvg.id + " : " + time + "ms");
             GraphTableSVG.GUI.observeSVGSVG(svgsvg);
         }
         else {
@@ -8083,7 +8140,13 @@ var GraphTableSVG;
             Style.PathTextAlignment = "--path-text-alignment";
             Style.msoDashStyleName = "--stroke-style";
             Style.relocateName = "--relocate";
+            Style.defaultCellBackgroundClass = "--default-background-class";
         })(Style = CustomAttributeNames.Style || (CustomAttributeNames.Style = {}));
+        let StyleValue;
+        (function (StyleValue) {
+            StyleValue.defaultTextClass = "___text-default";
+            StyleValue.defaultCellBackgroungClass = "___cell-background-default";
+        })(StyleValue = CustomAttributeNames.StyleValue || (CustomAttributeNames.StyleValue = {}));
         CustomAttributeNames.beginNodeName = "data-begin-node";
         CustomAttributeNames.endNodeName = "data-end-node";
         CustomAttributeNames.controlPointName = "data-control-point";

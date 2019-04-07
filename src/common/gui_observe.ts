@@ -1,5 +1,11 @@
 namespace GraphTableSVG {
     export namespace GUI {
+        /**
+         * 
+         * @param svgBox 
+         * @param sizeFunc 
+         * @param padding 
+         */
         export function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => GraphTableSVG.Rectangle, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {
             let _observer: MutationObserver;
             let observeFunction: MutationCallback = (x: MutationRecord[]) => {
@@ -7,6 +13,7 @@ namespace GraphTableSVG {
 
                 for (let i = 0; i < x.length; i++) {
                     const item = x[i];
+                    //console.log(item.target);
                     if (svgBox != item.target) {
                         b = true;
                     }
@@ -19,9 +26,26 @@ namespace GraphTableSVG {
             const option: MutationObserverInit = {
                 subtree: true, attributes: true
             };
-            _observer.observe(svgBox, option);
-            
+            _observer.observe(svgBox, option);            
         }
+
+        export function autostrech(svgBox: SVGSVGElement, objects : VBAObjectType[]){
+            objects.forEach((v)=>
+            {
+                if(v instanceof GObject){
+                    v.update();
+                }
+            }
+            )
+            const rect = GraphTableSVG.Common.getRegion(objects);
+
+            GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, new Padding(5,5,5,5));
+        }
+
+        export function autostretchObserve(svgBox: SVGSVGElement, objects : VBAObjectType[]) {
+            throw "NotImplementedException";
+        }
+
 
         type ObserveSVGSVGInfo = {
             svgsvg: SVGSVGElement;
@@ -53,8 +77,8 @@ namespace GraphTableSVG {
                         b = true;
                     }
                 }
-
                 if (gShrink === true && b) {
+
                     resizeSVGSVG(svgBox, padding);
                 }
             }

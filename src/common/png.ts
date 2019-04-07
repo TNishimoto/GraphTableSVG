@@ -82,18 +82,7 @@ namespace GraphTableSVG {
             r[1] = style.paddingLeft == null ? 0 : Common.toPX(style.paddingLeft); 
             r[2] = style.paddingBottom == null ? 0 : Common.toPX(style.paddingBottom); 
             r[3] = style.paddingRight == null ? 0 : Common.toPX(style.paddingRight); 
-            /*
-            if(style.padding != null){
-                const strs = style.padding.split(" ");
-                console.log(strs);
-                console.log(`${style.paddingLeft} ${style.paddingRight}`);
 
-                for(let i=0;i<strs.length;i++){
-                    const num = Common.toPX(strs[i]);
-                    r[i] = num;
-                }
-            }
-            */
             return r;
         }
         function getSizeWidthPadding(svgBox: HTMLElement){

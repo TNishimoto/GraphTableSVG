@@ -297,7 +297,7 @@ namespace GraphTableSVG {
             })
             const endTime = performance.now();
             const time = endTime - startTime;
-            console.log("create " + svgsvg.id + " : " + time + "ms");
+            //console.log("create " + svgsvg.id + " : " + time + "ms");
 
             GraphTableSVG.GUI.observeSVGSVG(svgsvg);
         } else {

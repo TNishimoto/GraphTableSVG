@@ -6,12 +6,12 @@ namespace GraphTableSVG {
         protected _tag: any;
         private _svgGroup: SVGGElement;
         protected _observer: MutationObserver;
-        protected _observerOption : MutationObserverInit;
+        protected _observerOption: MutationObserverInit;
 
         public constructor(svgbox: SVGElement | string, option: GObjectAttributes = {}) {
 
             let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
-            if(parentElement instanceof SVGSVGElement && !GUI.isObserved(parentElement)){
+            if (parentElement instanceof SVGSVGElement && !GUI.isObserved(parentElement)) {
                 GUI.observeSVGSVG(parentElement);
             }
             /*
@@ -22,9 +22,9 @@ namespace GraphTableSVG {
 
 
             this._svgGroup = SVG.createGroup(parentElement);
-            if(option.groupClass !== undefined)this._svgGroup.setAttribute("class", option.groupClass);
-            if(option.groupStyle !== undefined)this._svgGroup.setAttribute("style", option.groupStyle);
-            
+            if (option.groupClass !== undefined) this._svgGroup.setAttribute("class", option.groupClass);
+            if (option.groupStyle !== undefined) this._svgGroup.setAttribute("style", option.groupStyle);
+
             this.setClassNameOfSVGGroup();
 
             GObject.setObjectFromObjectID(this);
@@ -40,31 +40,31 @@ namespace GraphTableSVG {
             this.height = _option.height!;
             this.cx = _option.cx!;
             this.cy = _option.cy!;
-            if(_option.x !== undefined) this.fixedX = _option.x;
-            if(_option.y !== undefined) this.fixedY = _option.y;
-            
+            if (_option.x !== undefined) this.fixedX = _option.x;
+            if (_option.y !== undefined) this.fixedY = _option.y;
+
             this._observer = new MutationObserver(this.observerFunc);
-            
+
             this._observerOption = { attributes: true, childList: true, subtree: true };
-            
+
             this._observer.observe(this.svgGroup, this._observerOption);
-            
+
 
             this.dispatchObjectCreatedEvent();
             this.addResizeEvent();
         }
-        protected groupObserverOption : MutationObserverInit = { attributes: true, childList: true, subtree: true };
+        protected groupObserverOption: MutationObserverInit = { attributes: true, childList: true, subtree: true };
 
         private removeResizeEvent() {
             this.svgGroup.removeEventListener(CustomAttributeNames.resizeName, this.pUpdateFunc);
         }
         private addResizeEvent() {
             this.svgGroup.addEventListener(CustomAttributeNames.resizeName, this.pUpdateFunc);
-        }        
+        }
         private pUpdateFunc = () => {
             this.resizeUpdate();
         }
-        protected resizeUpdate(){
+        protected resizeUpdate() {
             this.update();
         }
         initializeOption(option: GObjectAttributes): GObjectAttributes {
@@ -79,16 +79,16 @@ namespace GraphTableSVG {
             if (_option.height === undefined) _option.height = 25;
             if (_option.cx === undefined) _option.cx = 0;
             if (_option.cy === undefined) _option.cy = 0;
-            if(_option.surfaceClass === undefined) _option.surfaceClass = this.svgGroup.gtGetAttributeStringWithUndefined(CustomAttributeNames.Style.defaulSurfaceClass)
+            if (_option.surfaceClass === undefined) _option.surfaceClass = this.svgGroup.gtGetAttributeStringWithUndefined(CustomAttributeNames.Style.defaulSurfaceClass)
             return _option;
         }
         static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: GObjectAttributes = {}): GObjectAttributes {
             output.groupClass = e.gtGetAttributeStringWithUndefined("class");
-            if(output.groupClass === undefined) e.gtGetAttributeStringWithUndefined("group:class");
+            if (output.groupClass === undefined) e.gtGetAttributeStringWithUndefined("group:class");
             output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface:class");
             output.groupStyle = e.gtGetAttributeStringWithUndefined("group:style");
-            if(e.hasAttribute("style")) output.groupStyle = e.gtGetAttributeStringWithUndefined("style");
+            if (e.hasAttribute("style")) output.groupStyle = e.gtGetAttributeStringWithUndefined("style");
             output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface:style");
 
             output.cx = e.gtGetAttributeNumberWithUndefined("cx");
@@ -122,7 +122,7 @@ namespace GraphTableSVG {
         public set tag(v: any) {
             this._tag = v;
         }
-        public get isShow(){
+        public get isShow() {
             return HTMLFunctions.isShow(this.svgGroup);
         }
 
@@ -165,17 +165,17 @@ namespace GraphTableSVG {
             }
         }
         /**
-頂点の幅を返します。
-*/
+        頂点の幅を返します。
+        */
         get width(): number {
-            if(this.hasSize){
+            if (this.hasSize) {
                 return <number>this.svgGroup.gtGetAttributeNumber("data-width", 0);
-            }else{
+            } else {
                 return 0;
             }
         }
         set width(value: number) {
-            if(this.hasSize){
+            if (this.hasSize) {
                 if (this.width != value && value != null) this.svgGroup.setAttribute("data-width", value.toString());
             }
         }
@@ -183,49 +183,49 @@ namespace GraphTableSVG {
         頂点の高さを返します。
         */
         get height(): number {
-            if(this.hasSize){
+            if (this.hasSize) {
                 return <number>this.svgGroup.gtGetAttributeNumber("data-height", 0);
-            }else{
+            } else {
                 return 0;
             }
         }
         set height(value: number) {
-            if(this.hasSize){
+            if (this.hasSize) {
                 if (this.height != value && value != null) this.svgGroup.setAttribute("data-height", value.toString());
             }
         }
-        public get fixedX() : number | null {
+        public get fixedX(): number | null {
             return this.svgGroup.gtGetAttributeNumber("data-fixedX", null);
         }
-        public set fixedX(v : number | null)  {
-            if(v == null){
+        public set fixedX(v: number | null) {
+            if (v == null) {
                 this.svgGroup.removeAttribute("data-fixedX");
-            }else{
+            } else {
                 this.svgGroup.setAttribute("data-fixedX", v.toString());
             }
         }
-        public get fixedY() : number | null {
+        public get fixedY(): number | null {
             return this.svgGroup.gtGetAttributeNumber("data-fixedY", null);
         }
-        public set fixedY(v : number | null)  {
-            if(v == null){
+        public set fixedY(v: number | null) {
+            if (v == null) {
                 this.svgGroup.removeAttribute("data-fixedY");
-            }else{
+            } else {
                 this.svgGroup.setAttribute("data-fixedY", v.toString());
             }
         }
-        
+
         public get x(): number {
             return this.cx - (this.width / 2);
         }
         public get y(): number {
             return this.cy - (this.height / 2);
         }
-        public set x(v : number){
-            this.cx = v + (this.width/2);
+        public set x(v: number) {
+            this.cx = v + (this.width / 2);
         }
-        public set y(v : number){
-            this.cy = v + (this.height/2);
+        public set y(v: number) {
+            this.cy = v + (this.height / 2);
         }
 
         public get type(): ShapeObjectType {
@@ -242,10 +242,9 @@ namespace GraphTableSVG {
             this.observerFunction(x);
         };
 
-        protected observerFunction(x: MutationRecord[]) 
-        {
+        protected observerFunction(x: MutationRecord[]) {
             //throw Error("error1");
-            
+
             let b = false;
             if (!this.isLocated) return;
 
@@ -261,9 +260,9 @@ namespace GraphTableSVG {
             }
 
             if (b) this.update();
-            
+
         }
-        
+
 
         /**
          * この頂点を廃棄します。廃棄された頂点はグラフから取り除かれます。
@@ -306,7 +305,7 @@ namespace GraphTableSVG {
 
         }
         protected _isUpdating: boolean = false;
-        protected update() {
+        public update() {
             this._isUpdating = true;
             this._isUpdating = false;
         }
@@ -320,7 +319,7 @@ namespace GraphTableSVG {
                 this.svgGroup.dispatchEvent(event);
             }
         }
-        public get hasSize() : boolean{
+        public get hasSize(): boolean {
             return false;
         }
 

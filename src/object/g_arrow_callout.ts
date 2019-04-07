@@ -138,7 +138,7 @@ namespace GraphTableSVG {
                 this.height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;
             }
         }
-        protected update() {
+        public update() {
             super.update();
 
 

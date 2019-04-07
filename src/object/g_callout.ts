@@ -45,7 +45,7 @@ namespace GraphTableSVG {
             return "g-callout";
         }
 
-        protected update() {
+        public update() {
             super.update();
             const x1 = - (this.width / 2);
             const y1 = - (this.height / 2);

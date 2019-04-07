@@ -69,12 +69,12 @@ namespace GraphTableSVG {
             this.update();
 
         }
-        private _isNoneMode : boolean = false;
-        get isNoneMode() : boolean{
+        private _isNoneMode: boolean = false;
+        get isNoneMode(): boolean {
             return this._isNoneMode;
         }
 
-        
+
         static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: GTableOption = {}): GTableOption {
             //const widthsStr = e.getPropertyStyleValue("--widths");
@@ -82,7 +82,7 @@ namespace GraphTableSVG {
             const table = LogicTable.constructLogicTable(e);
             GObject.constructAttributes(e, removeAttributes, output);
 
-            if(table != null){
+            if (table != null) {
                 output.table = table;
             }
 
@@ -97,10 +97,10 @@ namespace GraphTableSVG {
         private _svgHiddenGroup: SVGGElement;
         private _svgRowBorderGroup: SVGGElement;
         private _svgColumnBorderGroup: SVGGElement;
-        public get svgRowBorderGroup(){
+        public get svgRowBorderGroup() {
             return this._svgRowBorderGroup;
         }
-        public get svgColumnBorderGroup(){
+        public get svgColumnBorderGroup() {
             return this._svgColumnBorderGroup;
         }
 
@@ -224,7 +224,7 @@ namespace GraphTableSVG {
             if (this.cells.length == 0) {
                 return 0;
             } else {
-                if(this.rows.length > 2 && (this.rows[0].length != this.rows[1].length) ) throw new Error("Invalid length error");
+                if (this.rows.length > 2 && (this.rows[0].length != this.rows[1].length)) throw new Error("Invalid length error");
                 return this.rows[0].length;
             }
         }
@@ -400,17 +400,17 @@ namespace GraphTableSVG {
         }
         // #endregion
 
-        private _isTextObserved : boolean = false;
-        public get isTextObserved() : boolean{
+        private _isTextObserved: boolean = false;
+        public get isTextObserved(): boolean {
             return this._isTextObserved;
         }
-        public set isTextObserved(b : boolean){
-            if(this._isTextObserved != b){
-                if(this._isTextObserved){
+        public set isTextObserved(b: boolean) {
+            if (this._isTextObserved != b) {
+                if (this._isTextObserved) {
                     this.cellTextObserver.disconnect();
-                }else{
+                } else {
                     const option1: MutationObserverInit = { childList: true, subtree: true };
-                    this.cellArray.forEach((v)=>{
+                    this.cellArray.forEach((v) => {
                         this.cellTextObserver.observe(v.svgText, option1);
                     })
                 }
@@ -786,7 +786,7 @@ namespace GraphTableSVG {
 
 
 
-    
+
             this.updateNodeRelations();
             this.isSetSize = false;
 
@@ -799,8 +799,8 @@ namespace GraphTableSVG {
         private primitiveInsertRow(ithRow: number, insertTopBorders: boolean) {
             let ithRowBorder = insertTopBorders ? ithRow : ithRow + 1;
             if (ithRow < 0 || ithRow > this.rowCount) throw new Error("primitive insert row error");
-            if(ithRow == 0) ithRowBorder = 0;
-            if(ithRow == this.rowCount) ithRowBorder = this.borderRows.length;
+            if (ithRow == 0) ithRowBorder = 0;
+            if (ithRow == this.rowCount) ithRowBorder = this.borderRows.length;
 
 
             this.createRowBorder(ithRowBorder);
@@ -810,8 +810,8 @@ namespace GraphTableSVG {
         private primitiveInsertColumn(ithColumn: number, insertLeftBorders: boolean) {
             let ithColumnBorder = insertLeftBorders ? ithColumn : ithColumn + 1;
             if (ithColumn < 0 || ithColumn > this.columnCount) throw new Error("primitive insert column error");
-            if(ithColumn == 0) ithColumnBorder = 0;
-            if(ithColumn == this.columnCount) ithColumnBorder = this.borderColumns.length;
+            if (ithColumn == 0) ithColumnBorder = 0;
+            if (ithColumn == this.columnCount) ithColumnBorder = this.borderColumns.length;
 
             this.createColumnBorder(ithColumnBorder);
             this.insertXHorizontalBorders(ithColumn);
@@ -831,14 +831,14 @@ namespace GraphTableSVG {
         public clear() {
             if (this.rowCount == 0 || this.columnCount == 0) throw Error("Table Empty Error");
             if (this.columnCount != this.columns.length) throw Error("clear error");
-            
-            while(this.rowCount > 1){
+
+            while (this.rowCount > 1) {
                 this.primitiveRemoveRow(1, false);
             }
-            while(this.columnCount > 1){
+            while (this.columnCount > 1) {
                 this.primitiveRemoveColumn(1, false);
             }
-            
+
             this.updateNodeRelations();
 
         }
@@ -849,15 +849,15 @@ namespace GraphTableSVG {
             this.cells.splice(i, 1);
         }
         */
-        private removeCellRow(i : number) {
-           this.rows[i]._dispose();
+        private removeCellRow(i: number) {
+            this.rows[i]._dispose();
             this.rows.splice(i, 1);
         }
-        private removeCellColumn(i : number) {
+        private removeCellColumn(i: number) {
             this.columns[i]._dispose();
-             this.columns.splice(i, 1);
-         }
- 
+            this.columns.splice(i, 1);
+        }
+
         private primitiveRemoveRow(ithRow: number, removeTopBorders: boolean) {
             const ithBorderRow = removeTopBorders ? ithRow : ithRow + 1;
             if (ithRow < 0 || ithRow >= this.rowCount) throw new Error("error");
@@ -881,7 +881,7 @@ namespace GraphTableSVG {
             this.deleteXHorizontalBorders(ithColumn);
 
         }
-        
+
         private removeColumnBorder(i: number) {
             //this._borderRows.forEach((v) => v.removeBorder(i));
             this._borderColumns[i].remove();
@@ -892,21 +892,21 @@ namespace GraphTableSVG {
             this._borderRows[i].remove();
             this._borderRows.splice(i, 1);
         }
-        
-        
+
+
         public removeRow(ithRow: number) {
             this.primitiveRemoveRow(ithRow, false);
             this.updateNodeRelations();
             this.update();
         }
-        
-       
+
+
         public removeColumn(ithColumn: number) {
             this.primitiveRemoveColumn(ithColumn, false);
             this.updateNodeRelations();
             this.update();
         }
-        
+
         private deleteXHorizontalBorders(i: number) {
             this._borderRows.forEach((v) => {
                 v.removeBorder(i);
@@ -977,7 +977,7 @@ namespace GraphTableSVG {
         * @param ithColumn 挿入列の列番号
         */
         public insertColumn(ithColumn: number) {
-            this.primitiveInsertColumn(ithColumn,false)
+            this.primitiveInsertColumn(ithColumn, false)
             this.updateNodeRelations();
             this.update();
         }
@@ -1004,7 +1004,7 @@ namespace GraphTableSVG {
         */
         public appendColumn() {
             //this.insertColumn(this.columnCount);
-            this.primitiveInsertColumn(this.columnCount,false)
+            this.primitiveInsertColumn(this.columnCount, false)
             this.updateNodeRelations();
             this.update();
 
@@ -1034,12 +1034,8 @@ namespace GraphTableSVG {
 
             const b = HTMLFunctions.isShow(this.svgGroup);
             if (!b) {
-                //this.prevShow = true;
                 return;
             }
-
-
-            //if (display == "none") return;
 
             this._isDrawing = true;
             if (true) {

@@ -55,6 +55,7 @@ namespace GraphTableSVG {
             }    
 
         }
+        private __currentClass : string | null = null;
         /*
         public get class() : string | null{
             return this.svgGroup.getAttribute("class");
@@ -209,7 +210,11 @@ namespace GraphTableSVG {
                 const p = x[i];
                 if (p.attributeName == "style" || p.attributeName == "class") {
                     if(p.attributeName == "class"){
-                        this.recomputeDefaultProperties();
+                        const className = this.svgGroup.getAttribute("class");
+                        if(className != this.__currentClass){
+                            this.recomputeDefaultProperties();
+                            this.__currentClass = className;
+                        }
                     }
                     this.locateSVGText();
                 }
@@ -932,7 +937,11 @@ namespace GraphTableSVG {
          */
         public update() {
             if(this.table.isNoneMode) return;
-            
+            const className = this.svgGroup.getAttribute("class"); 
+            if(className != this.__currentClass){
+                this.recomputeDefaultProperties();
+                this.__currentClass = className;
+            }
             
             this.resize();
             this.relocation();
