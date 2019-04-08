@@ -4,7 +4,7 @@
 ## Introduction
 表とグラフ（頂点と枝のあれ）をSVGで描画するためのtypescriptライブラリ
 
-[reference](https://mklemma.github.io/GraphTableSVG/typedoc/index.html "reference")
+[reference](https://TNishimoto.github.io/GraphTableSVG/typedoc/index.html "reference")
 いろいろと未完成
 
 ## What can GraphtableSVG do?
@@ -15,7 +15,7 @@
 3はおまけ
 
 ## Tutorial
-[tutorial](https://mklemma.github.io/GraphTableSVG/tutorial.html "tutorial")
+[tutorial](https://TNishimoto.github.io/GraphTableSVG/tutorial.html "tutorial")
 
 ## License？
 MIT License
