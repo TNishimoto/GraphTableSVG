@@ -9,10 +9,11 @@ namespace GraphTableSVG {
             //this.update();
         }
         protected createSurface(svgbox : SVGElement, option :GObjectAttributes = {}) : void {
+            if(option.surfaceClass === undefined) option.surfaceClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultSurfaceClass;
             this._svgSurface = GEllipse.createEllipse(this.svgGroup, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
         }
-        private static createEllipse(parent: SVGElement, className: string | undefined, style : string | undefined): SVGEllipseElement {
+        private static createEllipse(parent: SVGElement, className: string, style : string | undefined): SVGEllipseElement {
             const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
             parent.appendChild(circle);
             if(style !== undefined) circle.setAttribute("style", style);
@@ -21,21 +22,21 @@ namespace GraphTableSVG {
             circle.rx.baseVal.value = CustomAttributeNames.defaultCircleRadius;
             circle.ry.baseVal.value = CustomAttributeNames.defaultCircleRadius;
 
+            circle.setAttribute("class", className);
+            const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadius, null);
+            if (radius != null) {
+                circle.rx.baseVal.value = radius;
+                circle.ry.baseVal.value = radius;
+            }
+            /*
             if (className == null) {
                 if(circle.style.stroke == null || circle.style.stroke == "")circle.style.stroke = "black";
                 if(circle.style.strokeWidth == null || circle.style.strokeWidth == "")circle.style.strokeWidth = "1pt";
                 if(circle.style.fill == null || circle.style.fill == "")circle.style.fill = "white";
             } else {
-                circle.setAttribute("class", className);
-                const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadius, null);
-                if (radius != null) {
-                    circle.rx.baseVal.value = radius;
-                    circle.ry.baseVal.value = radius;
-                }
 
-                //const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
-                //if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
             }
+            */
             circle.cx.baseVal.value = 0;
             circle.cy.baseVal.value = 0;
 

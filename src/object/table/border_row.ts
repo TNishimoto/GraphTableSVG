@@ -23,7 +23,7 @@ namespace GraphTableSVG {
             this._svgGroup.setAttribute("name", "border_row");
             this.borderY = _y;
             for (let x = 0; x < columnSize; x++) {
-                this.insertBorder(x, borderClass);
+                this.insertBorder(x, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
             }
         }
         private _borders: SVGLineElement[] = new Array(0);
@@ -32,7 +32,7 @@ namespace GraphTableSVG {
         }
 
         public insertBorder(coromni: number, borderClass?: string) {
-            const line = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            const line = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
             this._svgGroup.appendChild(line);
             this._borders.splice(coromni, 0, line);
         }
@@ -70,7 +70,7 @@ namespace GraphTableSVG {
             this.borderX = _x;
 
             for (let y = 0; y < rowSize; y++) {
-                this.insertBorder(y, borderClass);
+                this.insertBorder(y, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
 
             }
 
@@ -80,7 +80,7 @@ namespace GraphTableSVG {
             return this._borders;
         }
         public insertBorder(rowi: number, borderClass?: string) {
-            const line = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass);
+            const line = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
             this._svgGroup.appendChild(line);
             this._borders.splice(rowi, 0, line);
         }

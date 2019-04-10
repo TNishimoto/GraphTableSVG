@@ -64,7 +64,7 @@ SVGLineElement.prototype.getEmphasis = function () {
     }
 };
 SVGLineElement.prototype.setEmphasis = function (value: boolean) {
-    if (GraphTableSVG.Common.getGraphTableCSS() == null) GraphTableSVG.Common.setGraphTableCSS("yellow", "red");
+    GraphTableSVG.Common.setGraphTableCSS();
 
     const p: SVGLineElement = this;
     if (p.getEmphasis() && !value) {

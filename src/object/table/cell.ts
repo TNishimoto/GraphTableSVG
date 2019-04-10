@@ -19,21 +19,21 @@ namespace GraphTableSVG {
 
             this.table.rows[_py].svgGroup.appendChild(this.svgGroup);
             //this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
-            if (option.cellClass !== undefined) this.svgGroup.setAttribute("class", option.cellClass);
-            this.svgGroup.setAttribute(Cell.elementTypeName, "cell-group");
+            this.svgGroup.setAttribute("class", option.cellClass !== undefined ? option.cellClass : CustomAttributeNames.StyleValue.defaultCellClass);
+            this.svgGroup.setAttribute(CustomAttributeNames.GroupAttribute, "cell");
             this.svgGroup.setAttribute(Cell.cellXName, `${_px}`);
             this.svgGroup.setAttribute(Cell.cellYName, `${_py}`);
             this.setMasterDiffX(0);
             this.setMasterDiffY(0);
 
-            const backGroundClass = this.defaultBackgroundClass == null ? CustomAttributeNames.StyleValue.defaultCellBackgroungClass : this.defaultBackgroundClass;
+            const backGroundClass = CustomAttributeNames.StyleValue.defaultCellBackgroungClass;
             this._svgBackground = SVG.createCellRectangle(this.svgGroup, backGroundClass);
             
-            const textClass = this.defaultTextClass == null ? CustomAttributeNames.StyleValue.defaultTextClass : this.defaultTextClass;            
+            const textClass = CustomAttributeNames.StyleValue.defaultTextClass;            
             this._svgText = SVG.createText(textClass);
             this.svgGroup.appendChild(this.svgText);
 
-            const borderClass = option.borderClass === undefined ? null : option.borderClass;
+            //const borderClass = option.borderClass === undefined ? null : option.borderClass;
 
             //const option1: MutationObserverInit = { childList: true, subtree: true };
             //this.table.cellTextObserver.observe(this.svgText, option1);
@@ -47,12 +47,15 @@ namespace GraphTableSVG {
         }
         // #region style
         private recomputeDefaultProperties(){
+            /*
             if(this.defaultBackgroundClass != null){
                 this._svgBackground.setAttribute("class", this.defaultBackgroundClass);
             }
             if(this.defaultTextClass != null){
                 this._svgText.setAttribute("class", this.defaultTextClass);
-            }    
+            }
+            */
+            
 
         }
         private __currentClass : string | null = null;
@@ -173,7 +176,6 @@ namespace GraphTableSVG {
         public static readonly masterDiffXName = "data-masterDiffX";
         public static readonly masterDiffYName = "data-masterDiffY";
 
-        public static readonly elementTypeName = "data-elementType";
         private tmpStyle: string | null = null;
         private _table: GTable;
         /**
@@ -331,20 +333,16 @@ namespace GraphTableSVG {
         set cellY(value: number) {
             if (this.cellY != value) this.svgGroup.setAttribute(Cell.cellYName, value.toString());
         }
-        /**
-        SVGTextElement生成時に設定するクラス名を返します。
-        */
+        /*
         get defaultTextClass(): string | null {
             const r = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
             return r;
         }
-        /**
-        SVGBackElement生成時に設定するクラス名を返します。
-        */
         get defaultBackgroundClass(): string | null {
             const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultCellBackgroundClass);
             return v;
         }
+        */
         /**
         CellがDocumentのDOMに所属しているかどうかを返します。
         */

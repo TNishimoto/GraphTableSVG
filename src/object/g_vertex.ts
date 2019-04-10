@@ -5,7 +5,7 @@ namespace GraphTableSVG {
         protected setClassNameOfSVGGroup() {
             const parent = this.svgGroup.parentElement;
             if (parent instanceof SVGElement) {
-                const className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultVertexClass);
+                const className = GraphTableSVG.CustomAttributeNames.StyleValue.defaultVertexClass;
                 if (className != null && !this.svgGroup.hasAttribute("class") ) {
                     this.svgGroup.setAttribute("class", className);
                 }

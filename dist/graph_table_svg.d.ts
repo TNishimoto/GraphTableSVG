@@ -20,11 +20,16 @@ declare namespace GraphTableSVG {
         function IsDescendantOfBody(node: Node): boolean;
         function getRegion(items: VBAObjectType[]): Rectangle;
         function paddingLeft(text: string, length: number, leftChar: string): string;
-        function setGraphTableCSS(cellColor: string, borderColor: string): void;
+        function setGraphTableCSS(): void;
         function getGraphTableCSS(): HTMLElement | null;
         function parseUnit(text: string): [number, string];
         function toPX(value: string): number;
         function bezierLocation([px1, py1]: [number, number], [px2, py2]: [number, number], [px3, py3]: [number, number], t: number): [number, number];
+    }
+}
+declare namespace GraphTableSVG {
+    namespace Common {
+        function createCSS(): string;
     }
 }
 declare namespace GraphTableSVG {
@@ -33,7 +38,7 @@ declare namespace GraphTableSVG {
         Postorder = 1,
     }
     type CustomTag = "row" | "cell" | "t";
-    type ShapeObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox";
+    type ShapeObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox" | "g-rect-button";
     namespace ShapeObjectType {
         const Callout: ShapeObjectType;
         const ArrowCallout: ShapeObjectType;
@@ -44,6 +49,7 @@ declare namespace GraphTableSVG {
         const Table: ShapeObjectType;
         const Object: ShapeObjectType;
         const PathTextBox: ShapeObjectType;
+        const RectButton: ShapeObjectType;
         function toShapeObjectType(value: string): ShapeObjectType | null;
         function toShapeObjectTypeOrCustomTag(value: string): ShapeObjectType | CustomTag | null;
     }
@@ -442,8 +448,6 @@ declare namespace GraphTableSVG {
         protected _roots: GVertex[];
         vertexXInterval: number | null;
         vertexYInterval: number | null;
-        defaultVertexClass: string | null;
-        defaultEdgeClass: string | null;
         readonly rootVertex: GVertex | null;
         add(item: GVertex | GEdge): void;
         remove(item: GVertex | GEdge): void;
@@ -492,6 +496,12 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    class GRectButton extends GRect {
+        constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
+        initializeOption(option: GObjectAttributes): GObjectAttributes;
+    }
+}
+declare namespace GraphTableSVG {
     namespace TreeArrangement {
         function reverse(graph: GGraph, isX: boolean, isY: boolean): void;
         function alignVerticeByChildren(graph: GGraph): void;
@@ -535,8 +545,6 @@ declare namespace GraphTableSVG {
         private _cellTextObserverFunc;
         readonly columnCount: number;
         readonly rowCount: number;
-        readonly defaultCellClass: string | null;
-        readonly defaultBorderClass: string | null;
         readonly cellArray: Cell[];
         readonly borders: SVGLineElement[];
         fitSizeToOriginalCells(allowShrink: boolean): void;
@@ -682,7 +690,6 @@ declare namespace GraphTableSVG {
         static readonly masterIDName: string;
         static readonly masterDiffXName: string;
         static readonly masterDiffYName: string;
-        static readonly elementTypeName: string;
         private tmpStyle;
         private _table;
         readonly table: GTable;
@@ -708,8 +715,6 @@ declare namespace GraphTableSVG {
         readonly master: Cell;
         cellX: number;
         cellY: number;
-        readonly defaultTextClass: string | null;
-        readonly defaultBackgroundClass: string | null;
         readonly isLocated: boolean;
         readonly isMaster: boolean;
         readonly isSlave: boolean;
@@ -914,8 +919,8 @@ interface SVGPathElement {
 declare namespace GraphTableSVG {
     namespace SVG {
         let idCounter: number;
-        function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
-        function createText(className?: string | null): SVGTextElement;
+        function createLine(x: number, y: number, x2: number, y2: number, className: string): SVGLineElement;
+        function createText(className: string): SVGTextElement;
         function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
         function createCellRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
         function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement;
@@ -927,7 +932,7 @@ declare namespace GraphTableSVG {
             color?: string;
         }): [SVGMarkerElement, SVGPathElement];
         function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
-        function createTextPath2(className?: string | null): SVGTextPathElement;
+        function createTextPath2(className: string): SVGTextPathElement;
         function setClass(svg: SVGElement, className?: string | null): void;
         function setCSSToStyle(svg: HTMLElement, isComplete?: boolean): void;
         function getAllElementStyleMap(item: HTMLElement | string): {
@@ -1089,6 +1094,7 @@ declare namespace GraphTableSVG {
     function openSVG(element: Element, output?: GObject[]): GObject[];
     function openSVG(empty: null, output?: GObject[]): GObject[];
     function openSVG(svgsvg: SVGSVGElement, output?: GObject[]): GObject[];
+    function createShape(parent: SVGElement | string | GObject, type: "g-rect-button", option?: GTextBoxAttributes): GRectButton;
     function createShape(parent: SVGElement | string | GObject, type: "g-rect", option?: GTextBoxAttributes): GRect;
     function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GEdgeAttributes): GEdge;
     function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GTextBoxAttributes): GEllipse;
@@ -1107,22 +1113,14 @@ declare namespace GraphTableSVG {
             const autoSizeShapeToFitText: string;
             const beginConnectorType: string;
             const endConnectorType: string;
-            const defaultLineClass: string;
             const markerStart: string;
             const markerEnd: string;
-            const defaultVertexClass: string;
-            const defaultEdgeClass: string;
             const vertexXInterval: string;
             const vertexYInterval: string;
             const defaultRadius = "--default-radius";
             const defaultWidth = "--default-width";
             const defaultHeight = "--default-height";
-            const defaultTextClass: string;
-            const defaultPathClass: string;
-            const defaulSurfaceClass: string;
             const defaultSurfaceType: string;
-            const defaultCellClass: string;
-            const defaultBorderClass: string;
             const paddingTop: string;
             const paddingLeft: string;
             const paddingRight: string;
@@ -1136,11 +1134,18 @@ declare namespace GraphTableSVG {
             const PathTextAlignment: string;
             const msoDashStyleName = "--stroke-style";
             const relocateName = "--relocate";
-            const defaultCellBackgroundClass: string;
         }
         namespace StyleValue {
-            let defaultTextClass: string;
-            let defaultCellBackgroungClass: string;
+            const defaultTextClass: string;
+            const defaultCellClass: string;
+            const defaultSurfaceClass: string;
+            const defaultEdgePathClass: string;
+            const defaultTextboxPathClass: string;
+            const defaultCellBackgroungClass: string;
+            const defaultCellBorderClass: string;
+            const defaultRectButtonSurfaceClass: string;
+            const defaultEdgeClass: string;
+            const defaultVertexClass: string;
         }
         const beginNodeName: string;
         const endNodeName: string;
@@ -1149,7 +1154,7 @@ declare namespace GraphTableSVG {
         const resizeName = "resized";
         const vertexCreatedEventName = "vertex_created";
         const objectCreatedEventName = "object_created";
-        const GroupAttribute = "data-group-type";
+        const GroupAttribute = "data-type";
         const objectIDName: string;
         const customElement: string;
         let defaultCircleRadius: number;

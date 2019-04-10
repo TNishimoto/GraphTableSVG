@@ -13,7 +13,7 @@ namespace GraphTableSVG {
         constructor(svgbox: SVGElement,
             option: GTableOption = {}) {
             super(svgbox, option)
-            if (Common.getGraphTableCSS() == null) Common.setGraphTableCSS("yellow", "red");
+            Common.setGraphTableCSS();
 
             this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this._svgRowBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -240,18 +240,17 @@ namespace GraphTableSVG {
         // #endregion
 
         // #region property
-        /**
-        セルのインスタント生成時にこの値がインスタントのクラス名にセットされます。
-        */
+        
+       /*
         get defaultCellClass(): string | null {
             return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultCellClass);
         }
-        /**
-        ボーダーのインスタント生成時にこの値がインスタントのクラス名にセットされます。
         */
+       /*
         get defaultBorderClass(): string | null {
             return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultBorderClass);
         }
+        */
         /**
         各セルを表す配列を返します。テーブルの左上のセルから右に向かってインデックスが割り当てられ、
         テーブル右下のセルが配列の最後の値となります。読み取り専用です。

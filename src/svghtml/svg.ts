@@ -12,18 +12,20 @@ namespace GraphTableSVG {
          * @param className SVGLineElementのクラス属性名
          * @returns 生成されたSVGLineElement
          */
-        export function createLine(x: number, y: number, x2: number, y2: number, className: string | null = null): SVGLineElement {
+        export function createLine(x: number, y: number, x2: number, y2: number, className: string): SVGLineElement {
             const line1 = <SVGLineElement>document.createElementNS('http://www.w3.org/2000/svg', 'line');
             line1.x1.baseVal.value = x;
             line1.x2.baseVal.value = x2;
             line1.y1.baseVal.value = y;
             line1.y2.baseVal.value = y2;
             //line1.style.color = "black";
+            line1.setAttribute("class", className)
+            /*
             if (className != null) {
-                line1.setAttribute("class", className)
             } else {
                 line1.style.stroke = "black";
             }
+            */
 
             //line1.style.visibility = "hidden";
             //line1.style.strokeWidth = `${5}`
@@ -39,23 +41,18 @@ namespace GraphTableSVG {
          * @param className 生成するSVG要素のクラス属性名
          * @returns 生成されたSVGTextElement
          */
-        export function createText(className: string | null = null): SVGTextElement {
+        export function createText(className: string): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
             _svgText.setAttribute(CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
             //_svgText.style.textAnchor = "middle";
+            _svgText.setAttribute("class", className);
+            /*
             if (className == null) {
-                //_svgText.setAttribute("class", SVG.defaultTextClass);
-                
-                _svgText.style.fill = "black";
-                _svgText.style.fontSize = "14px";
-                _svgText.style.fontWeight = "bold";
-                _svgText.style.fontFamily = 'Times New Roman';
                 
             } else {
-                _svgText.setAttribute("class", className);
-                //_svgText.className = className;
             }
+            */
             return _svgText;
         }
 
@@ -100,12 +97,7 @@ namespace GraphTableSVG {
         export function createCellRectangle(parent: SVGElement, className: string | null = null): SVGRectElement {
             const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             parent.appendChild(rect);
-            if (className == null) {
-                rect.style.fill = "white";
-
-
-                //rect.setAttribute("class", SVG.defaultCellBackgroungClass);
-            } else {
+            if (className != null) {
                 rect.setAttribute("class", className);
             }
             return rect;
@@ -257,17 +249,18 @@ namespace GraphTableSVG {
  * @param className 生成するSVGTextPathElementのクラス属性名
  * @returns 生成されたSVGTextElementとSVGTextPathElement
  */
-        export function createTextPath2(className: string | null = null): SVGTextPathElement {
+        export function createTextPath2(className: string): SVGTextPathElement {
             const path = <SVGTextPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
-
+            path.setAttribute("class", className);
+            /*
             if (className == null) {
                 path.style.fill = "black";
                 path.style.fontSize = "14px";
                 path.style.fontWeight = "bold";
                 path.style.fontFamily = 'Times New Roman';
             } else {
-                path.setAttribute("class", className);
             }
+            */
             return path;
         }
 

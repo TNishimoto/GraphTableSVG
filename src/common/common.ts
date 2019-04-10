@@ -65,47 +65,28 @@
             return text;
         }
         const CSSName: string = "___GraphTableCSS";
-        export function setGraphTableCSS(cellColor: string, borderColor : string) {
+        let createdGraphTableCSS : boolean = false;
+        export function setGraphTableCSS() {
+            if(createdGraphTableCSS) return;
             const item = document.head!.getElementsByClassName(CSSName);
             if (item.length > 0) {
                 document.head!.removeChild(item[0]);
             }
             var blankStyle: HTMLStyleElement = document.createElement('style');
 
-            blankStyle.innerHTML = `
-            .${Cell.emphasisCellClass}{
-            fill : ${cellColor} !important;
-            }
-            .${Cell.emphasisBorderClass}{
-            stroke : ${borderColor} !important;
-            }
-            .${Cell.defaultCellClass}{
-                ${CustomAttributeNames.Style.paddingTop} : 5px !important;
-                ${CustomAttributeNames.Style.paddingLeft} : 5px !important;
-                ${CustomAttributeNames.Style.paddingRight} : 5px !important;
-                ${CustomAttributeNames.Style.paddingBottom} : 5px !important;
-                ${CustomAttributeNames.Style.VerticalAnchor} : ${VerticalAnchor.Middle};
-                ${CustomAttributeNames.Style.HorizontalAnchor} : ${HorizontalAnchor.Center};
-                ${CustomAttributeNames.Style.defaultTextClass} : ${CustomAttributeNames.StyleValue.defaultTextClass};
-                ${CustomAttributeNames.Style.defaultCellBackgroundClass} : ${CustomAttributeNames.StyleValue.defaultCellBackgroungClass};
-
-            }
-            .${CustomAttributeNames.StyleValue.defaultTextClass}{
-                fill : black;
-                font-size: 18px;
-            }
-            .${CustomAttributeNames.StyleValue.defaultCellBackgroungClass}{
-                fill : white;
-            }
-    
-            `
+            blankStyle.innerHTML = Common.createCSS();
             blankStyle.type = "text/css";
             blankStyle.setAttribute("class", CSSName);
 
             const head = document.getElementsByTagName('head');
-            
-            head.item(0)!.appendChild(blankStyle);
+            const fstItem = head.item(0)!.firstChild;
+            if(fstItem == null){
+                head.item(0)!.appendChild(blankStyle);
 
+            }else{
+                head.item(0)!.insertBefore(blankStyle, fstItem);
+            }
+            createdGraphTableCSS = true;
         }
         //export function setCellCSS(){
 

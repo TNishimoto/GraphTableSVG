@@ -9,7 +9,7 @@ namespace GraphTableSVG {
         protected _observerOption: MutationObserverInit;
 
         public constructor(svgbox: SVGElement | string, option: GObjectAttributes = {}) {
-
+            Common.setGraphTableCSS();
             let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
             if (parentElement instanceof SVGSVGElement && !GUI.isObserved(parentElement)) {
                 GUI.observeSVGSVG(parentElement);
@@ -79,7 +79,7 @@ namespace GraphTableSVG {
             if (_option.height === undefined) _option.height = 25;
             if (_option.cx === undefined) _option.cx = 0;
             if (_option.cy === undefined) _option.cy = 0;
-            if (_option.surfaceClass === undefined) _option.surfaceClass = this.svgGroup.gtGetAttributeStringWithUndefined(CustomAttributeNames.Style.defaulSurfaceClass)
+            if (_option.surfaceClass === undefined) _option.surfaceClass = CustomAttributeNames.StyleValue.defaultSurfaceClass;
             return _option;
         }
         static constructAttributes(e: Element,

@@ -57,32 +57,25 @@ namespace GraphTableSVG {
         public set vertexYInterval(value: number | null) {
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.vertexYInterval, value == null ? null : value.toString());
         }
-
-        /**
-        Vertexインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
-        */
+        /*
         get defaultVertexClass(): string | null {
             return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultVertexClass);
         }
-        /**
-        Vertexインスタンスの生成時のクラス名を設定します。
-        */
         set defaultVertexClass(value: string | null) {
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.defaultVertexClass, value);
         }
-
-        /**
-        Edgeインスタンスの生成時、この値がインスタンスのクラス名にセットされます。
         */
+
+       /*
         get defaultEdgeClass(): string | null {
             return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultEdgeClass);
         }
-        /**
-        Edgeインスタンスの生成時のクラス名を設定します。
         */
+       /*
         set defaultEdgeClass(value: string | null) {
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.defaultEdgeClass, value);
         }
+        */
         /**
         根を返します。
         */

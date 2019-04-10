@@ -22,7 +22,7 @@
     export type CustomTag = "row" | "cell" | "t";
 
     export type ShapeObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" |
-     "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox";
+     "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox" | "g-rect-button";
     export namespace ShapeObjectType {
         export const Callout: ShapeObjectType = "g-callout"
         export const ArrowCallout: ShapeObjectType = "g-arrow-callout"
@@ -33,6 +33,7 @@
         export const Table: ShapeObjectType = "g-table"
         export const Object: ShapeObjectType = "g-object"
         export const PathTextBox: ShapeObjectType = "g-path-textbox"
+        export const RectButton: ShapeObjectType = "g-rect-button"
 
         const typeDic: { [key: string]: boolean; } = {
             "g-callout": true,
@@ -43,7 +44,8 @@
             "g-graph": true,
             "g-table": true,
             "g-object": true,
-            "g-path-textbox": true
+            "g-path-textbox": true,
+            "g-rect-button": true
         }
         const customTypeDic: { [key: string]: boolean; } = {
             "row": true,

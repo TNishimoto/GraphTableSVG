@@ -13,8 +13,9 @@ namespace GraphTableSVG {
             //this._svgGroup = SVG.createGroup(svgbox);
             const _option = <GEdgeAttributes>this.initializeOption(option);
             this.svgText.textContent = "";
-            const textClass = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
-            this._svgTextPath = SVG.createTextPath2(textClass);
+            //const textClass = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
+            if( option.textClass === undefined) option.textClass = CustomAttributeNames.StyleValue.defaultTextClass;
+            this._svgTextPath = SVG.createTextPath2(option.textClass);
             this.svgPath.id = `path-${this.objectID}`;
 
             this.svgText.appendChild(this._svgTextPath);
@@ -178,7 +179,7 @@ namespace GraphTableSVG {
         protected setClassNameOfSVGGroup() {
             const parent = this.svgGroup.parentElement;
             if (parent instanceof SVGElement) {
-                const className = parent.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.defaultEdgeClass);
+                const className = GraphTableSVG.CustomAttributeNames.StyleValue.defaultEdgeClass;
                 if (className != null) {
                     this.svgGroup.setAttribute("class", className);
                 }
@@ -194,9 +195,8 @@ namespace GraphTableSVG {
             return this._svgTextPath;
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
-
-            const _className = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
-            if (_className != null) option.surfaceClass = _className;
+            if(option.surfaceClass === undefined) option.surfaceClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultEdgePathClass;
+            //if (_className != null) option.surfaceClass = _className;
 
             this._svgSurface = GEdge.createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
@@ -212,26 +212,22 @@ namespace GraphTableSVG {
              * @returns 生成されたSVGPathElement
              */
         private static createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number,
-            className: string | undefined, style: string | undefined): SVGPathElement {
+            className: string, style: string | undefined): SVGPathElement {
             const path = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             parent.appendChild(path);
             path.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
 
             if (style !== undefined) path.setAttribute("style", style);
 
-            if (className !== undefined) {
-                path.setAttribute("class", className)
+            path.setAttribute("class", className)
                 /*
-                const dashStyle = path.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
-                if (dashStyle != null) {
-                    msoDashStyle.setStyle(path, dashStyle);
-                }
-                */
+            if (className !== undefined) {
             } else {
                 if (path.style.stroke == null || path.style.stroke == "") path.style.stroke = "black";
                 if (path.style.fill == null || path.style.fill == "") path.style.fill = "none";
                 if (path.style.strokeWidth == null || path.style.strokeWidth == "") path.style.strokeWidth = "1pt";
             }
+            */
 
             return path;
         }

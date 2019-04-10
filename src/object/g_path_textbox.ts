@@ -19,32 +19,30 @@ namespace GraphTableSVG {
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
 
-            const _className = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
-            if(_className != null) option.surfaceClass = _className;
+            if(option.surfaceClass === undefined) option.surfaceClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultTextboxPathClass;
+            //const _className = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
+            //if(_className != null) option.surfaceClass = _className;
 
             this._svgSurface = GPathTextBox.createSurfacePath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         private static createSurfacePath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, 
-            className: string | undefined, style : string | undefined): SVGPathElement {
+            className: string, style : string | undefined): SVGPathElement {
             const path = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             parent.appendChild(path);
             path.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
             if(style !== undefined) path.setAttribute("style", style);
 
-            if (className != null) {
-                path.setAttribute("class", className)
-                const dashStyle = path.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+            path.setAttribute("class", className)
                 /*
-                if (dashStyle != null) {
-                    msoDashStyle.setStyle(path, dashStyle);
-                }
-                */
+            if (className != null) {
+                const dashStyle = path.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
             } else {
                 if(path.style.stroke == null || path.style.stroke == "")path.style.stroke = "black";
                 if(path.style.fill == null || path.style.fill == "")path.style.fill = "white";
                 if(path.style.strokeWidth == null || path.style.strokeWidth == "")path.style.strokeWidth = "1pt";
             }
+            */
             return path;
         }
         initializeOption(option: GObjectAttributes) : GObjectAttributes {

@@ -24,8 +24,9 @@
 
         }
         private createCell(cellX: number, cellY: number): Cell {
-            const cellClass = this.table.defaultCellClass == null ? undefined : this.table.defaultCellClass;
-            const borderClass = this.table.defaultBorderClass == null ? undefined : this.table.defaultBorderClass;
+            const cellClass = undefined; //this.table.defaultCellClass == null ? undefined : this.table.defaultCellClass;
+            const borderClass = undefined
+            //this.table.defaultBorderClass == null ? undefined : this.table.defaultBorderClass;
 
             const option: CellOption = { cellClass: cellClass, borderClass: borderClass };
             return new Cell(this.table, cellX, cellY, option);

@@ -204,6 +204,11 @@ namespace GraphTableSVG {
                 r = new GTable(parent, option);
 
             }
+            else if(type == ShapeObjectType.RectButton){
+                const option = GTextBox.constructAttributes(e, true);
+                r = new GRectButton(parent, option);
+
+            }
             else {
                 return null;
             }
@@ -306,6 +311,7 @@ namespace GraphTableSVG {
         return output;
 
     }
+    export function createShape(parent: SVGElement | string | GObject, type: "g-rect-button", option?: GTextBoxAttributes): GRectButton
     export function createShape(parent: SVGElement | string | GObject, type: "g-rect", option?: GTextBoxAttributes): GRect
     export function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GEdgeAttributes): GEdge
     export function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GTextBoxAttributes): GEllipse
@@ -331,13 +337,14 @@ namespace GraphTableSVG {
             case ShapeObjectType.Edge: return new GEdge(_parent, option);
             case ShapeObjectType.Graph: return new GGraph(_parent, option);
             case ShapeObjectType.Table: return new GTable(_parent, option);
+            case ShapeObjectType.RectButton: return new GRectButton(_parent, option);
 
         }
         throw Error("error");
     }
     export function createVertex(parent: GGraph, option: GTextBoxAttributes = {}): GVertex {
         let _parent = parent.svgGroup;
-        if (option.groupClass == undefined && parent.defaultVertexClass != null) option.groupClass = parent.defaultVertexClass;
+        if (option.groupClass == undefined) option.groupClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultVertexClass;
         const type = option.groupClass == undefined ? null : parent.getStyleValue(option.groupClass, CustomAttributeNames.Style.defaultSurfaceType);
         if (type != null) {
             switch (type) {

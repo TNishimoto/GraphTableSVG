@@ -55,7 +55,7 @@ namespace GraphTableSVG {
             if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
             if(_option.verticalAnchor === undefined) _option.verticalAnchor = VerticalAnchor.Middle;
             if(_option.horizontalAnchor === undefined) _option.horizontalAnchor = HorizontalAnchor.Center;
-            if(_option.textClass === undefined) _option.textClass = this.svgGroup.gtGetAttributeStringWithUndefined(CustomAttributeNames.Style.defaultTextClass);
+            if(_option.textClass === undefined) _option.textClass = CustomAttributeNames.StyleValue.defaultTextClass;
 
             
             return _option;
