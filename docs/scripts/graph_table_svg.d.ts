@@ -448,8 +448,6 @@ declare namespace GraphTableSVG {
         protected _roots: GVertex[];
         vertexXInterval: number | null;
         vertexYInterval: number | null;
-        defaultVertexClass: string | null;
-        defaultEdgeClass: string | null;
         readonly rootVertex: GVertex | null;
         add(item: GVertex | GEdge): void;
         remove(item: GVertex | GEdge): void;
@@ -921,8 +919,8 @@ interface SVGPathElement {
 declare namespace GraphTableSVG {
     namespace SVG {
         let idCounter: number;
-        function createLine(x: number, y: number, x2: number, y2: number, className?: string | null): SVGLineElement;
-        function createText(className?: string | null): SVGTextElement;
+        function createLine(x: number, y: number, x2: number, y2: number, className: string): SVGLineElement;
+        function createText(className: string): SVGTextElement;
         function createRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
         function createCellRectangle(parent: SVGElement, className?: string | null): SVGRectElement;
         function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement;
@@ -934,7 +932,7 @@ declare namespace GraphTableSVG {
             color?: string;
         }): [SVGMarkerElement, SVGPathElement];
         function createTextPath(className?: string | null): [SVGTextElement, SVGTextPathElement];
-        function createTextPath2(className?: string | null): SVGTextPathElement;
+        function createTextPath2(className: string): SVGTextPathElement;
         function setClass(svg: SVGElement, className?: string | null): void;
         function setCSSToStyle(svg: HTMLElement, isComplete?: boolean): void;
         function getAllElementStyleMap(item: HTMLElement | string): {
@@ -1022,9 +1020,9 @@ declare namespace GraphTableSVG {
         width?: number;
         height?: number;
         id?: string;
-        groupClass?: string;
+        class?: string;
         surfaceClass?: string;
-        groupStyle?: string;
+        style?: string;
         surfaceStyle?: string;
     };
     type GObjectMaps = {
@@ -1115,17 +1113,13 @@ declare namespace GraphTableSVG {
             const autoSizeShapeToFitText: string;
             const beginConnectorType: string;
             const endConnectorType: string;
-            const defaultLineClass: string;
             const markerStart: string;
             const markerEnd: string;
-            const defaultVertexClass: string;
-            const defaultEdgeClass: string;
             const vertexXInterval: string;
             const vertexYInterval: string;
             const defaultRadius = "--default-radius";
             const defaultWidth = "--default-width";
             const defaultHeight = "--default-height";
-            const defaultTextClass: string;
             const defaultSurfaceType: string;
             const paddingTop: string;
             const paddingLeft: string;
@@ -1150,6 +1144,8 @@ declare namespace GraphTableSVG {
             const defaultCellBackgroungClass: string;
             const defaultCellBorderClass: string;
             const defaultRectButtonSurfaceClass: string;
+            const defaultEdgeClass: string;
+            const defaultVertexClass: string;
         }
         const beginNodeName: string;
         const endNodeName: string;

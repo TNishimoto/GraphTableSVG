@@ -22,8 +22,8 @@ namespace GraphTableSVG {
 
 
             this._svgGroup = SVG.createGroup(parentElement);
-            if (option.groupClass !== undefined) this._svgGroup.setAttribute("class", option.groupClass);
-            if (option.groupStyle !== undefined) this._svgGroup.setAttribute("style", option.groupStyle);
+            if (option.class !== undefined) this._svgGroup.setAttribute("class", option.class);
+            if (option.style !== undefined) this._svgGroup.setAttribute("style", option.style);
 
             this.setClassNameOfSVGGroup();
 
@@ -84,11 +84,11 @@ namespace GraphTableSVG {
         }
         static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: GObjectAttributes = {}): GObjectAttributes {
-            output.groupClass = e.gtGetAttributeStringWithUndefined("class");
-            if (output.groupClass === undefined) e.gtGetAttributeStringWithUndefined("group:class");
+            output.class = e.gtGetAttributeStringWithUndefined("class");
+            if (output.class === undefined) e.gtGetAttributeStringWithUndefined("group:class");
             output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface:class");
-            output.groupStyle = e.gtGetAttributeStringWithUndefined("group:style");
-            if (e.hasAttribute("style")) output.groupStyle = e.gtGetAttributeStringWithUndefined("style");
+            output.style = e.gtGetAttributeStringWithUndefined("group:style");
+            if (e.hasAttribute("style")) output.style = e.gtGetAttributeStringWithUndefined("style");
             output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface:style");
 
             output.cx = e.gtGetAttributeNumberWithUndefined("cx");

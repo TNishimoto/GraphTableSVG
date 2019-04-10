@@ -88,7 +88,7 @@ namespace GraphTableSVG {
 
             if (output.x !== undefined) output.table!.x = output.x;
             if (output.y !== undefined) output.table!.y = output.y;
-            if (output.groupClass !== undefined) output.table!.tableClassName = output.groupClass;
+            if (output.class !== undefined) output.table!.tableClassName = output.class;
             while (e.childNodes.length > 0) e.removeChild(e.childNodes.item(0));
 
             return output;

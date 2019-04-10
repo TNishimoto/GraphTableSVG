@@ -10,9 +10,9 @@ namespace GraphTableSVG {
         width?: number,
         height?: number,
         id?: string,
-        groupClass?: string,
+        class?: string,
         surfaceClass?: string,
-        groupStyle?: string,
+        style?: string,
         surfaceStyle?: string
 
     }
@@ -344,8 +344,8 @@ namespace GraphTableSVG {
     }
     export function createVertex(parent: GGraph, option: GTextBoxAttributes = {}): GVertex {
         let _parent = parent.svgGroup;
-        if (option.groupClass == undefined) option.groupClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultVertexClass;
-        const type = option.groupClass == undefined ? null : parent.getStyleValue(option.groupClass, CustomAttributeNames.Style.defaultSurfaceType);
+        if (option.class == undefined) option.class = GraphTableSVG.CustomAttributeNames.StyleValue.defaultVertexClass;
+        const type = option.class == undefined ? null : parent.getStyleValue(option.class, CustomAttributeNames.Style.defaultSurfaceType);
         if (type != null) {
             switch (type) {
                 case ShapeObjectType.Callout: return new GCallout(_parent, option);

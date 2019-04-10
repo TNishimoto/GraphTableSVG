@@ -1020,9 +1020,9 @@ declare namespace GraphTableSVG {
         width?: number;
         height?: number;
         id?: string;
-        groupClass?: string;
+        class?: string;
         surfaceClass?: string;
-        groupStyle?: string;
+        style?: string;
         surfaceStyle?: string;
     };
     type GObjectMaps = {

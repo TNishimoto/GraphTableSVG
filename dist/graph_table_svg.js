@@ -1248,10 +1248,10 @@ var GraphTableSVG;
                 GraphTableSVG.GUI.observeSVGSVG(parentElement);
             }
             this._svgGroup = GraphTableSVG.SVG.createGroup(parentElement);
-            if (option.groupClass !== undefined)
-                this._svgGroup.setAttribute("class", option.groupClass);
-            if (option.groupStyle !== undefined)
-                this._svgGroup.setAttribute("style", option.groupStyle);
+            if (option.class !== undefined)
+                this._svgGroup.setAttribute("class", option.class);
+            if (option.style !== undefined)
+                this._svgGroup.setAttribute("style", option.style);
             this.setClassNameOfSVGGroup();
             GObject.setObjectFromObjectID(this);
             this.svgGroup.setAttribute(GraphTableSVG.CustomAttributeNames.GroupAttribute, this.type);
@@ -1305,13 +1305,13 @@ var GraphTableSVG;
             return _option;
         }
         static constructAttributes(e, removeAttributes = false, output = {}) {
-            output.groupClass = e.gtGetAttributeStringWithUndefined("class");
-            if (output.groupClass === undefined)
+            output.class = e.gtGetAttributeStringWithUndefined("class");
+            if (output.class === undefined)
                 e.gtGetAttributeStringWithUndefined("group:class");
             output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface:class");
-            output.groupStyle = e.gtGetAttributeStringWithUndefined("group:style");
+            output.style = e.gtGetAttributeStringWithUndefined("group:style");
             if (e.hasAttribute("style"))
-                output.groupStyle = e.gtGetAttributeStringWithUndefined("style");
+                output.style = e.gtGetAttributeStringWithUndefined("style");
             output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface:style");
             output.cx = e.gtGetAttributeNumberWithUndefined("cx");
             output.cy = e.gtGetAttributeNumberWithUndefined("cy");
@@ -3595,11 +3595,11 @@ var GraphTableSVG;
         createChildFromLogicTree(parent = null, logicVertex, option = {}) {
             if (option.isLatexMode == undefined)
                 option.isLatexMode = false;
-            const node = GraphTableSVG.createVertex(this, { groupClass: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
+            const node = GraphTableSVG.createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
             if (logicVertex.vertexText != null)
                 GraphTableSVG.SVGTextBox.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
             if (parent != null) {
-                const edge = GraphTableSVG.createShape(this, 'g-edge', { groupClass: logicVertex.parentEdgeClass });
+                const edge = GraphTableSVG.createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass });
                 if (logicVertex.parentEdgeText != null) {
                     edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
                     edge.pathTextAlignment = GraphTableSVG.PathTextAlighnment.regularInterval;
@@ -4139,8 +4139,8 @@ var GraphTableSVG;
                 output.table.x = output.x;
             if (output.y !== undefined)
                 output.table.y = output.y;
-            if (output.groupClass !== undefined)
-                output.table.tableClassName = output.groupClass;
+            if (output.class !== undefined)
+                output.table.tableClassName = output.class;
             while (e.childNodes.length > 0)
                 e.removeChild(e.childNodes.item(0));
             return output;
@@ -7995,9 +7995,9 @@ var GraphTableSVG;
     GraphTableSVG.createShape = createShape;
     function createVertex(parent, option = {}) {
         let _parent = parent.svgGroup;
-        if (option.groupClass == undefined)
-            option.groupClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultVertexClass;
-        const type = option.groupClass == undefined ? null : parent.getStyleValue(option.groupClass, GraphTableSVG.CustomAttributeNames.Style.defaultSurfaceType);
+        if (option.class == undefined)
+            option.class = GraphTableSVG.CustomAttributeNames.StyleValue.defaultVertexClass;
+        const type = option.class == undefined ? null : parent.getStyleValue(option.class, GraphTableSVG.CustomAttributeNames.Style.defaultSurfaceType);
         if (type != null) {
             switch (type) {
                 case GraphTableSVG.ShapeObjectType.Callout: return new GraphTableSVG.GCallout(_parent, option);
