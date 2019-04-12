@@ -6985,19 +6985,10 @@ var GraphTableSVG;
             }
         }
         SVG.setClass = setClass;
-        function getCSSStyle(svg) {
-            if (svg.getAttribute("class") == null) {
-                return null;
-            }
-            else {
-                const css = getComputedStyle(svg);
-                return css;
-            }
-        }
         const exceptionStyleNames = ["marker-start", "marker-mid", "marker-end"];
         function setCSSToStyle(svg, isComplete = true) {
             if (isComplete) {
-                const css = getCSSStyle(svg);
+                const css = getComputedStyle(svg);
                 if (css != null) {
                     for (let i = 0; i < css.length; i++) {
                         const name = css.item(i);

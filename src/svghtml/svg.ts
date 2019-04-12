@@ -323,14 +323,20 @@ namespace GraphTableSVG {
          * SVG要素のクラス属性名からCSSStyleDeclarationを取得します。
          * @param svg 取得されるSVG要素
          */
+        /*
         function getCSSStyle(svg: HTMLElement): CSSStyleDeclaration | null {
+            const css = getComputedStyle(svg);
+            return css;
+            
             if (svg.getAttribute("class") == null) {
                 return null;
             } else {
                 const css = getComputedStyle(svg);
                 return css;
             }
+            
         }
+        */
         const exceptionStyleNames = ["marker-start", "marker-mid", "marker-end"];
         /**
          * SVG要素のクラス属性名から取得できるCSSStyleDeclarationを要素のスタイル属性にセットします。
@@ -338,7 +344,7 @@ namespace GraphTableSVG {
          */
         export function setCSSToStyle(svg: HTMLElement, isComplete: boolean = true) {
             if (isComplete) {
-                const css: CSSStyleDeclaration | null = getCSSStyle(svg);
+                const css: CSSStyleDeclaration | null = getComputedStyle(svg);
                 if (css != null) {
                     for (let i = 0; i < css.length; i++) {
                         const name = css.item(i);

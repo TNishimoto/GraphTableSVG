@@ -65,6 +65,7 @@ namespace GraphTableSVG {
             //console.log(svgBox.outerHTML);
             const styleMap = GraphTableSVG.SVG.getAllElementStyleMap(svgBox);
             copyCSStoStyle(svgBox);
+            //console.log(svgBox.outerHTML);
 
             const img = getImage(svgBox);
             const canvas = createCanvasFromImage(img);
