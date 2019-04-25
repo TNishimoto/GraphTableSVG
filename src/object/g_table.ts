@@ -48,7 +48,7 @@ namespace GraphTableSVG {
                         this.updateCellByLogicCell(null, x, y);
                     }
                 }
-                this.update();
+                //this.update();
 
             } else {
                 this.svgGroup.style.display = "none"
@@ -62,11 +62,12 @@ namespace GraphTableSVG {
 
             }
 
-            if (option.cx !== undefined) this.cx = option.cx;
-            if (option.cy !== undefined) this.cy = option.cy;
+            //if (option.cx !== undefined) this.cx = option.cx;
+            //if (option.cy !== undefined) this.cy = option.cy;
             this.isConstructing = false;
 
-            this.update();
+            //this.update();
+            if(this.type == ShapeObjectType.Table) this.firstFunctionAfterInitialized();
 
         }
         private _isNoneMode: boolean = false;
@@ -74,6 +75,9 @@ namespace GraphTableSVG {
             return this._isNoneMode;
         }
 
+        public get isCenterBased(){
+            return false;
+        }
 
         static constructAttributes(e: Element,
             removeAttributes: boolean = false, output: GTableOption = {}): GTableOption {
@@ -1028,6 +1032,7 @@ namespace GraphTableSVG {
         各セルのサイズを再計算します。
         */
         public update() {
+            super.update();
             this._observer.disconnect();
             const display = this.svgGroup.getPropertyStyleValue("display");
 

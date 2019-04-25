@@ -47,22 +47,34 @@ namespace GraphTableSVG {
             .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}{
                 fill: #8EB8FF; 
                 stroke: black;
+            }
+            .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}[disabled]{
+                fill: #aaaaaa; 
+            }
+            .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}:not([disabled]):hover{
+                fill:#A4C6FF; 
+            }
+            .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}:not([disabled]):active{
+                fill:#8EB8FF; 
+            }
+
+
+            g[data-type="g-rect-button"] > rect {
                 stroke-width: 1px;
                 transition-duration: 0.2s;
             }
 
-            .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}[disabled]{
-                fill: #aaaaaa; 
-                stroke: black;
+            g[data-type="g-rect-button"] > rect[disabled]{
                 stroke-width: 1px;
             }
-            .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}:not([disabled]):hover {
-                fill:#A4C6FF; 
+            g[data-type="g-rect-button"] > rect:not([disabled]):hover {
                 stroke-width: 3px;
             }
-            .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}:not([disabled]):active {
-                fill:#8EB8FF; 
+            g[data-type="g-rect-button"] > rect:not([disabled]):active {
                 stroke-width: 1px;
+            }
+            g[data-type="g-rect-button"] > text {
+                pointer-events: none;
             }
     
             `

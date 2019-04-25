@@ -9,6 +9,7 @@ namespace GraphTableSVG {
 
             this.speakerX = option.speakerX == undefined ? defaultSX : option.speakerX;
             this.speakerY = option.speakerY == undefined ? defaultSY : option.speakerY;
+            if(this.type == ShapeObjectType.Callout) this.firstFunctionAfterInitialized();
         }
 
         static constructAttributes(e : Element, removeAttributes : boolean = false, output : GCalloutAttributes = {}) : GCalloutAttributes {        

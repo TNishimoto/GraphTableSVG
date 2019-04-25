@@ -323,7 +323,7 @@ namespace GraphTableSVG {
          * SVG要素のクラス属性名からCSSStyleDeclarationを取得します。
          * @param svg 取得されるSVG要素
          */
-        /*
+        
         function getCSSStyle(svg: HTMLElement): CSSStyleDeclaration | null {
             const css = getComputedStyle(svg);
             return css;
@@ -336,7 +336,7 @@ namespace GraphTableSVG {
             }
             
         }
-        */
+        
         const exceptionStyleNames = ["marker-start", "marker-mid", "marker-end"];
         /**
          * SVG要素のクラス属性名から取得できるCSSStyleDeclarationを要素のスタイル属性にセットします。

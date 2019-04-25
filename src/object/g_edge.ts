@@ -57,6 +57,7 @@ namespace GraphTableSVG {
                 this.pathTextAlignment = PathTextAlighnment.center;
             }
             this.update();
+            if(this.type == ShapeObjectType.Edge) this.firstFunctionAfterInitialized();
         }
         /*
         protected createObjects(svgbox: SVGElement, option: GObjectAttributes = {}): void {
@@ -175,7 +176,7 @@ namespace GraphTableSVG {
             }
         }
 
-
+        /*
         protected setClassNameOfSVGGroup() {
             const parent = this.svgGroup.parentElement;
             if (parent instanceof SVGElement) {
@@ -184,6 +185,11 @@ namespace GraphTableSVG {
                     this.svgGroup.setAttribute("class", className);
                 }
             }
+        }
+        */
+        
+        public get defaultClassName() : string | undefined {
+            return GraphTableSVG.CustomAttributeNames.StyleValue.defaultEdgeClass;
         }
 
         //private _svgPath: SVGPathElement | null;
@@ -639,6 +645,7 @@ namespace GraphTableSVG {
          * 再描画します。
          */
         public update(): boolean {
+            super.update();
             this.updateConnectorInfo();
 
             this._observer.disconnect();

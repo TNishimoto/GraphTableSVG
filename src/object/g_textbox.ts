@@ -42,6 +42,7 @@ namespace GraphTableSVG {
 
             //if(_option.x !== undefined) this.x = _option.x;
             //if(_option.y !== undefined) this.y = _option.y;
+            if(this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
         }
         
         initializeOption(option: GObjectAttributes): GObjectAttributes {
@@ -192,11 +193,14 @@ namespace GraphTableSVG {
 
         }
         public update() {
+            super.update();
             this._isUpdating = true;
             if(!this.isShow) return;
             this._observer.disconnect();
 
-
+            if(this.svgText == null){
+                throw new TypeError("svgText is null");
+            }
             SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
 
             if (this.isAutoSizeShapeToFitText) this.updateToFitText();

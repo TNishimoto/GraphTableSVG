@@ -376,7 +376,7 @@ End Sub
                 let pos = 1;
                 for (let i = 0; i < item.children.length; i++) {
                     const child = item.children.item(i);
-                    if (child.textContent != null && child.textContent.length > 0) {
+                    if (child != null && child.textContent != null && child.textContent.length > 0) {
                         const css = getComputedStyle(child);
                         const childColor = Color.createRGBFromColorName(css.fill == null ? "black" : css.fill);
                         const fontName = this.getFont(css);
@@ -431,7 +431,7 @@ End Sub
                 let pos = 1;
                 for (let i = 0; i < item.children.length; i++) {
                     const child = item.children.item(i);
-                    if (child.textContent != null && child.textContent.length > 0) {
+                    if (child != null && child.textContent != null && child.textContent.length > 0) {
                         const css = getComputedStyle(child);
                         if(css.fontSize == null) throw Error("error");
                         if(css.fill == null) throw Error("error");

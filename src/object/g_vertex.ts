@@ -2,6 +2,7 @@
 namespace GraphTableSVG {
 
     export class GVertex extends GTextBox {
+        /*
         protected setClassNameOfSVGGroup() {
             const parent = this.svgGroup.parentElement;
             if (parent instanceof SVGElement) {
@@ -11,7 +12,11 @@ namespace GraphTableSVG {
                 }
             }
         }
+        */
 
+        public get defaultClassName() : string | undefined {
+            return GraphTableSVG.CustomAttributeNames.StyleValue.defaultVertexClass;
+        }
         /**
         * 接続部分のXY座標を返します。
         * @param type

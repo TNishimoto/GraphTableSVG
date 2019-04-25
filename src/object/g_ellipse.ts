@@ -6,6 +6,7 @@ namespace GraphTableSVG {
 
         public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(svgbox, option);
+            if(this.type == ShapeObjectType.Ellipse) this.firstFunctionAfterInitialized();
             //this.update();
         }
         protected createSurface(svgbox : SVGElement, option :GObjectAttributes = {}) : void {

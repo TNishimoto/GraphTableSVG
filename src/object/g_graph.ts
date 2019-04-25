@@ -7,6 +7,7 @@ namespace GraphTableSVG {
 
         constructor(box: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(box, option)
+            if(this.type == ShapeObjectType.Graph) this.firstFunctionAfterInitialized();
             //this.svgGroup.addEventListener(CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);
         }
 

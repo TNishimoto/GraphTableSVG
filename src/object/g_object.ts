@@ -22,10 +22,14 @@ namespace GraphTableSVG {
 
 
             this._svgGroup = SVG.createGroup(parentElement);
-            if (option.class !== undefined) this._svgGroup.setAttribute("class", option.class);
+            if (option.class !== undefined){
+                this._svgGroup.setAttribute("class", option.class);
+            }else if(this.defaultClassName !== undefined){
+                this._svgGroup.setAttribute("class", this.defaultClassName);
+            }
             if (option.style !== undefined) this._svgGroup.setAttribute("style", option.style);
 
-            this.setClassNameOfSVGGroup();
+            //this.setClassNameOfSVGGroup();
 
             GObject.setObjectFromObjectID(this);
 
@@ -38,21 +42,57 @@ namespace GraphTableSVG {
 
             this.width = _option.width!;
             this.height = _option.height!;
-            this.cx = _option.cx!;
-            this.cy = _option.cy!;
-            if (_option.x !== undefined) this.fixedX = _option.x;
-            if (_option.y !== undefined) this.fixedY = _option.y;
 
             this._observer = new MutationObserver(this.observerFunc);
-
             this._observerOption = { attributes: true, childList: true, subtree: true };
-
             this._observer.observe(this.svgGroup, this._observerOption);
-
 
             this.dispatchObjectCreatedEvent();
             this.addResizeEvent();
+
+            
+            this.__x = option.x;
+            this.__y = option.y;
+            this.__cx = option.cx;
+            this.__cy = option.cy;
+
+            
+
+            /*
+            if (_option.x !== undefined) this.fixedX = _option.x;
+            if (_option.y !== undefined) this.fixedY = _option.y;
+            */
+            if(this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
         }
+        /*
+        public get shape() : ShapeObjectType {
+            return ShapeObjectType.Object;
+        }
+        */
+        private isInitialized = false;
+        private __x : number | undefined;
+        private __y : number | undefined;
+        private __cx : number | undefined;
+        private __cy : number | undefined;
+
+        public get defaultClassName() : string | undefined {
+            return undefined;
+        }
+
+        protected firstFunctionAfterInitialized(){
+            if(this.isInitialized){
+                throw new Error("This function is already called");
+            }
+            this.isInitialized = true;
+
+            this.update();
+            if (this.__cx !== undefined) this.cx = this.__cx;
+            if (this.__cy !== undefined) this.cy = this.__cy;
+
+            if (this.__x !== undefined) this.x = this.__x;
+            if (this.__y !== undefined) this.y = this.__y;
+        }
+
         protected groupObserverOption: MutationObserverInit = { attributes: true, childList: true, subtree: true };
 
         private removeResizeEvent() {
@@ -64,6 +104,11 @@ namespace GraphTableSVG {
         private pUpdateFunc = () => {
             this.resizeUpdate();
         }
+
+        protected firstResizeUpdate() {
+
+        }
+
         protected resizeUpdate() {
             this.update();
         }
@@ -146,23 +191,41 @@ namespace GraphTableSVG {
     このVertexのX座標を返します。
     */
         public get cx(): number {
-            return this.svgGroup.getX();
+            if (this.isCenterBased) {
+                return this.svgGroup.getX();
+            } else {
+                return this.svgGroup.getX() + (this.width / 2);
+            }
         }
         public set cx(value: number) {
-            if (this.svgGroup.getX() != value) {
-                this.svgGroup.setX(value);
+            if (this.isCenterBased) {
+                if (this.svgGroup.getX() != value) {
+                    this.svgGroup.setX(value);
+                }
+            } else {
+                this.svgGroup.setX(value - (this.width / 2));
             }
+
         }
         /**
         このVertexのY座標を返します。
         */
         public get cy(): number {
-            return this.svgGroup.getY();
+            if (this.isCenterBased) {
+                return this.svgGroup.getY();
+            } else {
+                return this.svgGroup.getY() + (this.height / 2);
+            }
         }
         public set cy(value: number) {
-            if (this.svgGroup.getY() != value) {
-                this.svgGroup.setY(value);
+            if (this.isCenterBased) {
+                if (this.svgGroup.getY() != value) {
+                    this.svgGroup.setY(value);
+                }
+            } else {
+                this.svgGroup.setY(value - (this.height / 2));
             }
+
         }
         /**
         頂点の幅を返します。
@@ -214,18 +277,37 @@ namespace GraphTableSVG {
                 this.svgGroup.setAttribute("data-fixedY", v.toString());
             }
         }
-
+        public get isCenterBased() {
+            return true;
+        }
         public get x(): number {
-            return this.cx - (this.width / 2);
+            if (this.isCenterBased) {
+                return this.svgGroup.getX() - (this.width / 2);
+            } else {
+                return this.svgGroup.getX();
+            }
         }
         public get y(): number {
-            return this.cy - (this.height / 2);
+            if (this.isCenterBased) {
+                return this.cy - (this.height / 2);
+            } else {
+                return this.svgGroup.getY();
+            }
         }
         public set x(v: number) {
-            this.cx = v + (this.width / 2);
+            if (this.isCenterBased) {
+                this.svgGroup.setX(v + (this.width / 2));
+            } else {
+                this.svgGroup.setX(v);
+            }
+
         }
         public set y(v: number) {
-            this.cy = v + (this.height / 2);
+            if (this.isCenterBased) {
+                this.svgGroup.setY(v + (this.height / 2));
+            } else {
+                this.svgGroup.setY(v);
+            }
         }
 
         public get type(): ShapeObjectType {
@@ -306,6 +388,9 @@ namespace GraphTableSVG {
         }
         protected _isUpdating: boolean = false;
         public update() {
+            if(!this.isInitialized){
+                throw new Error("This instance have not been initialized!");
+            }
             this._isUpdating = true;
             this._isUpdating = false;
         }

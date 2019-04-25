@@ -13,6 +13,7 @@ namespace GraphTableSVG {
             this.svgGroup.setAttribute("data-direction", option.direction == undefined ? "down" : option.direction);
 
             this.updateAttributes.push("data-direction");
+            if(this.type == ShapeObjectType.ArrowCallout) this.firstFunctionAfterInitialized();
         }
         static constructAttributes(e : Element, removeAttributes : boolean = false, output : GShapeArrowCalloutAttributes = {}) : GShapeArrowCalloutAttributes {        
             GTextBox.constructAttributes(e, removeAttributes, output);

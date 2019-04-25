@@ -4,21 +4,34 @@ namespace GraphTableSVG {
             super(svgbox, option);
 
 
-            this.update();
+            //this.update();
+            if(this.type == ShapeObjectType.RectButton) this.firstFunctionAfterInitialized();
         }
         initializeOption(option: GObjectAttributes): GObjectAttributes {
             let b = false;
             if (option.width !== undefined || option.height !== undefined) {
                 b = true;
             }
+            
+            
             if(option.surfaceClass === undefined){
                 option.surfaceClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass;
             }
+            
+            
 
             const _option = <GTextBoxAttributes>super.initializeOption(option);
             
 
             return _option;
+        }
+        
+        public get defaultClassName() : string | undefined {
+            return undefined;
+            //return GraphTableSVG.CustomAttributeNames.StyleValue.defaultRectButtonClass;
+        }
+        public get type(): ShapeObjectType {
+            return ShapeObjectType.RectButton;
         }
     }
 }

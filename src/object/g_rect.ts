@@ -9,7 +9,8 @@ namespace GraphTableSVG {
             this.updateAttributes.push("width");
             this.updateAttributes.push("height");
             //throw Error("error2");
-            this.update();
+            //this.update();
+            if(this.type == ShapeObjectType.Rect) this.firstFunctionAfterInitialized();
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
             this._svgSurface = GRect.createRectangle(this.svgGroup, option.surfaceClass, option.surfaceStyle);

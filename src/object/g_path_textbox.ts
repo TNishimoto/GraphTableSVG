@@ -16,6 +16,7 @@ namespace GraphTableSVG {
             */
 
             //this.update();
+            if(this.type == ShapeObjectType.PathTextBox) this.firstFunctionAfterInitialized();
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
 
