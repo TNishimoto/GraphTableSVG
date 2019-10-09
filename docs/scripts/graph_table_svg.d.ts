@@ -137,6 +137,8 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+}
+declare namespace GraphTableSVG {
     namespace PNG {
         function copyCSStoStyle(svg: HTMLElement): void;
         function createCanvasFromImage(img: HTMLImageElement): HTMLCanvasElement;

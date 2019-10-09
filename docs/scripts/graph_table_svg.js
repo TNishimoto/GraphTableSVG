@@ -8337,7 +8337,17 @@ var GraphTableSVG;
             const attrs = e.gtGetAttributes();
             HTMLFunctions.getChildren(e).forEach((v) => r.svgGroup.appendChild(v));
             e.remove();
-            attrs.forEach((v) => r.svgGroup.setAttribute(v.name, v.value));
+            attrs.forEach((v) => {
+                var items = v.name.split(":");
+                if (items.length == 2 && items[0] == "surface") {
+                    if (r.svgSurface != null) {
+                        r.svgSurface.setAttribute(items[1], v.value);
+                    }
+                }
+                else {
+                    r.svgGroup.setAttribute(v.name, v.value);
+                }
+            });
             if (r instanceof GraphTableSVG.GGraph) {
                 r.relocate();
             }

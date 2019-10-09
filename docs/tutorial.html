@@ -58,40 +58,40 @@
 					</a>
             <div class="code-div">
                <h4 class="code-filename">samples/svg/sample_hello1.html</h4>
-               <pre><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-    &lt;meta charset="utf-8" /&gt;
-    &lt;title&gt;Sample&lt;/title&gt;
-    &lt;link rel="stylesheet" href="sample_graph.css" type="text/css" /&gt;
-    &lt;script src="../../scripts/graph_table_svg.js"&gt;&lt;/script&gt;
-    &lt;script&gt;
-    window.onload = () =&gt; {        
-    GraphTableSVG.openSVG("svgbox");
-    };
-    &lt;/script&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;svg viewBox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox"&gt;
-        &lt;g-rect cx="100" cy="100"&gt;hello world!&lt;/g-rect&gt;
-        &lt;!--
-            openSVGによって以下のように展開される。
-            &lt;g data-group-type="g-rect" transform="matrix(1 0 0 1 100 100)"&gt;
-                &lt;rect width="25" height="25" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); stroke-width: 1pt;" x="-12.5" y="-12.5"&gt;&lt;/rect&gt;
-                &lt;text style="fill: black; font-size: 14px; font-weight: bold; font-family: Times New Roman;" x="-35.96666717529297" y="4.5"&gt;
-                    &lt;tspan&gt;hello world!&lt;/tspan&gt;
-                &lt;/text&gt;
-            &lt;/g&gt;
-        --&gt;
-    &lt;/svg&gt;
-&lt;/body&gt;
+               <pre><code>&lt;!DOCTYPE html&gt;&#13;
+&lt;html&gt;&#13;
+&lt;head&gt;&#13;
+    &lt;meta charset="utf-8" /&gt;&#13;
+    &lt;title&gt;Sample&lt;/title&gt;&#13;
+    &lt;link rel="stylesheet" href="sample_graph.css" type="text/css" /&gt;&#13;
+    &lt;script src="../../scripts/graph_table_svg.js"&gt;&lt;/script&gt;&#13;
+    &lt;script&gt;&#13;
+    window.onload = () =&gt; {        &#13;
+    GraphTableSVG.openSVG("svgbox");&#13;
+    };&#13;
+    &lt;/script&gt;&#13;
+&lt;/head&gt;&#13;
+&lt;body&gt;&#13;
+    &lt;svg viewBox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox"&gt;&#13;
+        &lt;g-rect cx="100" cy="100"&gt;hello world!&lt;/g-rect&gt;&#13;
+        &lt;!--&#13;
+            openSVGによって以下のように展開される。&#13;
+            &lt;g data-group-type="g-rect" transform="matrix(1 0 0 1 100 100)"&gt;&#13;
+                &lt;rect width="25" height="25" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); stroke-width: 1pt;" x="-12.5" y="-12.5"&gt;&lt;/rect&gt;&#13;
+                &lt;text style="fill: black; font-size: 14px; font-weight: bold; font-family: Times New Roman;" x="-35.96666717529297" y="4.5"&gt;&#13;
+                    &lt;tspan&gt;hello world!&lt;/tspan&gt;&#13;
+                &lt;/text&gt;&#13;
+            &lt;/g&gt;&#13;
+        --&gt;&#13;
+    &lt;/svg&gt;&#13;
+&lt;/body&gt;&#13;
 &lt;/html&gt;</code></pre>
             </div>
             <br/>
          </div>
          <div class="tab-content tab-0-1-content">
-            <svg viewbox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">
-        <g-rect cx="100" cy="100">hello world!</g-rect>
+            <svg viewbox="0 0 300 300" width="300px" height="300px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">&#13;
+        <g-rect cx="100" cy="100">hello world!</g-rect>&#13;
         <!--
             openSVGによって以下のように展開される。
             <g data-group-type="g-rect" transform="matrix(1 0 0 1 100 100)">
@@ -100,7 +100,7 @@
                     <tspan>hello world!</tspan>
                 </text>
             </g>
-        -->
+        -->&#13;
     </svg>
             <br/>
          </div>
@@ -229,129 +229,129 @@
 					</a>
             <div class="code-div">
                <h4 class="code-filename">samples/svg/sample_hello2.html</h4>
-               <pre><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-
-&lt;head&gt;
-    &lt;meta charset="utf-8" /&gt;
-    &lt;title&gt;Sample&lt;/title&gt;
-    &lt;link rel="stylesheet" href="sample_graph.css" type="text/css" /&gt;
-    &lt;script src="../../scripts/graph_table_svg.js"&gt;&lt;/script&gt;
-    &lt;script&gt;
-        window.onload = () =&gt; {
-            GraphTableSVG.openSVG("svgbox");
-        };
-    &lt;/script&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-    &lt;svg viewBox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox"&gt;
-        &lt;g-rect cx="100" cy="100"&gt;g-rect&lt;/g-rect&gt;
-        &lt;!--
-            &lt;g data-group-type="g-rect" ...&gt;
-                &lt;rect ...&gt;&lt;/rect&gt;
-                &lt;text ...&gt;
-                    &lt;tspan&gt;g-rect&lt;/tspan&gt;
-                &lt;/text&gt;
-            &lt;/g&gt;
-        --&gt;
-        &lt;g-ellipse cx="100" cy="200"&gt;g-ellipse&lt;/g-ellipse&gt;
-        &lt;!--
-            &lt;g data-group-type="g-ellipse" ...&gt;
-                &lt;ellipse ...&gt;&lt;/ellipse&gt;
-                &lt;text ...&gt;
-                    &lt;tspan&gt;g-ellipse&lt;/tspan&gt;
-                &lt;/text&gt;
-            &lt;/g&gt;
-        --&gt;
-        &lt;g-callout cx="200" cy="100"&gt;g-callout&lt;/g-callout&gt;
-        &lt;!--
-            &lt;g data-group-type="g-callout" ...&gt;
-                &lt;path ...&gt;&lt;/path&gt;
-                &lt;text ...&gt;
-                    &lt;tspan&gt;g-callout&lt;/tspan&gt;
-                &lt;/text&gt;
-            &lt;/g&gt;
-        --&gt;
-        &lt;g-arrow-callout cx="300" cy="100"&gt;g-arrowcallout&lt;/g-arrow-callout&gt;
-        &lt;!--
-            &lt;g data-group-type="g-arrow-callout" ...&gt;
-                &lt;path ...&gt;&lt;/path&gt;
-                &lt;text ...&gt;
-                    &lt;tspan&gt;g-sarrowcallout&lt;/tspan&gt;
-                &lt;/text&gt;
-            &lt;/g&gt;
-        --&gt;
-        &lt;g-edge x1="100" y1="300" x2="300" y2="300"&gt;g-edge&lt;/g-edge&gt;
-        &lt;!--
-            &lt;g data-group-type="g-edge" ...&gt;
-                &lt;path ...&gt;&lt;/path&gt;
-                &lt;text ...&gt;
-                    &lt;textPath ...&gt;
-                        &lt;tspan&gt;g-edge&lt;/tspan&gt;
-                    &lt;/textPath&gt;
-                &lt;/text&gt;
-            &lt;/g&gt;
-        --&gt;
-        &lt;g-table cx="300" cy="400"&gt;
-            &lt;row&gt;
-                &lt;cell&gt;g-table&lt;/cell&gt;
-                &lt;cell&gt;&lt;/cell&gt;
-                &lt;cell&gt;&lt;/cell&gt;
-            &lt;/row&gt;
-            &lt;row&gt;
-                &lt;cell&gt;&lt;/cell&gt;
-                &lt;cell&gt;&lt;/cell&gt;
-                &lt;cell&gt;&lt;/cell&gt;
-            &lt;/row&gt;
-        &lt;/g-table&gt;
-        &lt;!--
-            &lt;g data-group-type="g-table" ...&gt;
-                //cells
-                &lt;g ...&gt;
-                    &lt;rect ...&gt;&lt;/rect&gt;
-                    &lt;text ...&gt;&lt;tspan&gt;&lt;/tspan&gt;&lt;/text&gt;
-                &lt;/g&gt;
-                &lt;g  ...&gt;
-                    &lt;rect ...&gt;&lt;/rect&gt;
-                    &lt;text ...&gt;&lt;tspan&gt;&lt;/tspan&gt;&lt;/text&gt;
-                &lt;/g&gt;
-                ...
-                //borders
-                &lt;line ...&gt;&lt;/line&gt;
-                &lt;line ...&gt;&lt;/line&gt;
-                &lt;line ...&gt;&lt;/line&gt;
-                &lt;line ...&gt;&lt;/line&gt;
-                ...
-            &lt;/g&gt;
-        --&gt;
-        &lt;g-graph cx="100" cy="400"&gt;
-            &lt;g-ellipse id="g1" cx="0" cy="0"&gt;g-graph&lt;/g-ellipse&gt;
-            &lt;g-ellipse id="g2" cx="-50" cy="100"&gt;&lt;/g-ellipse&gt;
-            &lt;g-ellipse id="g3" cx="50" cy="100"&gt;&lt;/g-ellipse&gt;
-            &lt;g-edge begin-vertex="g1" end-vertex="g2"&gt;&lt;/g-edge&gt;
-            &lt;g-edge begin-vertex="g1" end-vertex="g3"&gt;&lt;/g-edge&gt;
-        &lt;/g-graph&gt;
-        &lt;!--
-            &lt;g data-group-type="g-graph" ..."&gt;
-                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;
-                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;
-                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;
-                &lt;g-edge&gt;...&lt;/g-edge&gt;
-                &lt;g-edge&gt;...&lt;/g-edge&gt;
-            &lt;/g&gt;
-        --&gt;
-
-    &lt;/svg&gt;
-&lt;/body&gt;
-
+               <pre><code>&lt;!DOCTYPE html&gt;&#13;
+&lt;html&gt;&#13;
+&#13;
+&lt;head&gt;&#13;
+    &lt;meta charset="utf-8" /&gt;&#13;
+    &lt;title&gt;Sample&lt;/title&gt;&#13;
+    &lt;link rel="stylesheet" href="sample_graph.css" type="text/css" /&gt;&#13;
+    &lt;script src="../../scripts/graph_table_svg.js"&gt;&lt;/script&gt;&#13;
+    &lt;script&gt;&#13;
+        window.onload = () =&gt; {&#13;
+            GraphTableSVG.openSVG("svgbox");&#13;
+        };&#13;
+    &lt;/script&gt;&#13;
+&lt;/head&gt;&#13;
+&#13;
+&lt;body&gt;&#13;
+    &lt;svg viewBox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox"&gt;&#13;
+        &lt;g-rect cx="100" cy="100"&gt;g-rect&lt;/g-rect&gt;&#13;
+        &lt;!--&#13;
+            &lt;g data-group-type="g-rect" ...&gt;&#13;
+                &lt;rect ...&gt;&lt;/rect&gt;&#13;
+                &lt;text ...&gt;&#13;
+                    &lt;tspan&gt;g-rect&lt;/tspan&gt;&#13;
+                &lt;/text&gt;&#13;
+            &lt;/g&gt;&#13;
+        --&gt;&#13;
+        &lt;g-ellipse cx="100" cy="200"&gt;g-ellipse&lt;/g-ellipse&gt;&#13;
+        &lt;!--&#13;
+            &lt;g data-group-type="g-ellipse" ...&gt;&#13;
+                &lt;ellipse ...&gt;&lt;/ellipse&gt;&#13;
+                &lt;text ...&gt;&#13;
+                    &lt;tspan&gt;g-ellipse&lt;/tspan&gt;&#13;
+                &lt;/text&gt;&#13;
+            &lt;/g&gt;&#13;
+        --&gt;&#13;
+        &lt;g-callout cx="200" cy="100"&gt;g-callout&lt;/g-callout&gt;&#13;
+        &lt;!--&#13;
+            &lt;g data-group-type="g-callout" ...&gt;&#13;
+                &lt;path ...&gt;&lt;/path&gt;&#13;
+                &lt;text ...&gt;&#13;
+                    &lt;tspan&gt;g-callout&lt;/tspan&gt;&#13;
+                &lt;/text&gt;&#13;
+            &lt;/g&gt;&#13;
+        --&gt;&#13;
+        &lt;g-arrow-callout cx="300" cy="100"&gt;g-arrowcallout&lt;/g-arrow-callout&gt;&#13;
+        &lt;!--&#13;
+            &lt;g data-group-type="g-arrow-callout" ...&gt;&#13;
+                &lt;path ...&gt;&lt;/path&gt;&#13;
+                &lt;text ...&gt;&#13;
+                    &lt;tspan&gt;g-sarrowcallout&lt;/tspan&gt;&#13;
+                &lt;/text&gt;&#13;
+            &lt;/g&gt;&#13;
+        --&gt;&#13;
+        &lt;g-edge x1="100" y1="300" x2="300" y2="300"&gt;g-edge&lt;/g-edge&gt;&#13;
+        &lt;!--&#13;
+            &lt;g data-group-type="g-edge" ...&gt;&#13;
+                &lt;path ...&gt;&lt;/path&gt;&#13;
+                &lt;text ...&gt;&#13;
+                    &lt;textPath ...&gt;&#13;
+                        &lt;tspan&gt;g-edge&lt;/tspan&gt;&#13;
+                    &lt;/textPath&gt;&#13;
+                &lt;/text&gt;&#13;
+            &lt;/g&gt;&#13;
+        --&gt;&#13;
+        &lt;g-table cx="300" cy="400"&gt;&#13;
+            &lt;row&gt;&#13;
+                &lt;cell&gt;g-table&lt;/cell&gt;&#13;
+                &lt;cell&gt;&lt;/cell&gt;&#13;
+                &lt;cell&gt;&lt;/cell&gt;&#13;
+            &lt;/row&gt;&#13;
+            &lt;row&gt;&#13;
+                &lt;cell&gt;&lt;/cell&gt;&#13;
+                &lt;cell&gt;&lt;/cell&gt;&#13;
+                &lt;cell&gt;&lt;/cell&gt;&#13;
+            &lt;/row&gt;&#13;
+        &lt;/g-table&gt;&#13;
+        &lt;!--&#13;
+            &lt;g data-group-type="g-table" ...&gt;&#13;
+                //cells&#13;
+                &lt;g ...&gt;&#13;
+                    &lt;rect ...&gt;&lt;/rect&gt;&#13;
+                    &lt;text ...&gt;&lt;tspan&gt;&lt;/tspan&gt;&lt;/text&gt;&#13;
+                &lt;/g&gt;&#13;
+                &lt;g  ...&gt;&#13;
+                    &lt;rect ...&gt;&lt;/rect&gt;&#13;
+                    &lt;text ...&gt;&lt;tspan&gt;&lt;/tspan&gt;&lt;/text&gt;&#13;
+                &lt;/g&gt;&#13;
+                ...&#13;
+                //borders&#13;
+                &lt;line ...&gt;&lt;/line&gt;&#13;
+                &lt;line ...&gt;&lt;/line&gt;&#13;
+                &lt;line ...&gt;&lt;/line&gt;&#13;
+                &lt;line ...&gt;&lt;/line&gt;&#13;
+                ...&#13;
+            &lt;/g&gt;&#13;
+        --&gt;&#13;
+        &lt;g-graph cx="100" cy="400"&gt;&#13;
+            &lt;g-ellipse id="g1" cx="0" cy="0"&gt;g-graph&lt;/g-ellipse&gt;&#13;
+            &lt;g-ellipse id="g2" cx="-50" cy="100"&gt;&lt;/g-ellipse&gt;&#13;
+            &lt;g-ellipse id="g3" cx="50" cy="100"&gt;&lt;/g-ellipse&gt;&#13;
+            &lt;g-edge begin-vertex="g1" end-vertex="g2"&gt;&lt;/g-edge&gt;&#13;
+            &lt;g-edge begin-vertex="g1" end-vertex="g3"&gt;&lt;/g-edge&gt;&#13;
+        &lt;/g-graph&gt;&#13;
+        &lt;!--&#13;
+            &lt;g data-group-type="g-graph" ..."&gt;&#13;
+                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;&#13;
+                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;&#13;
+                &lt;g-ellipse&gt;...&lt;/g-ellipse&gt;&#13;
+                &lt;g-edge&gt;...&lt;/g-edge&gt;&#13;
+                &lt;g-edge&gt;...&lt;/g-edge&gt;&#13;
+            &lt;/g&gt;&#13;
+        --&gt;&#13;
+&#13;
+    &lt;/svg&gt;&#13;
+&lt;/body&gt;&#13;
+&#13;
 &lt;/html&gt;</code></pre>
             </div>
             <br/>
          </div>
          <div class="tab-content tab-3-1-content">
-            <svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">
-        <g-rect cx="100" cy="100">g-rect</g-rect>
+            <svg viewbox="0 0 600 600" width="600px" height="600px" id="svgbox" xmlns="http://www.w3.org/2000/svg" class="svgbox" ignore-format="true">&#13;
+        <g-rect cx="100" cy="100">g-rect</g-rect>&#13;
         <!--
             <g data-group-type="g-rect" ...>
                 <rect ...></rect>
@@ -359,8 +359,8 @@
                     <tspan>g-rect</tspan>
                 </text>
             </g>
-        -->
-        <g-ellipse cx="100" cy="200">g-ellipse</g-ellipse>
+        -->&#13;
+        <g-ellipse cx="100" cy="200">g-ellipse</g-ellipse>&#13;
         <!--
             <g data-group-type="g-ellipse" ...>
                 <ellipse ...></ellipse>
@@ -368,8 +368,8 @@
                     <tspan>g-ellipse</tspan>
                 </text>
             </g>
-        -->
-        <g-callout cx="200" cy="100">g-callout</g-callout>
+        -->&#13;
+        <g-callout cx="200" cy="100">g-callout</g-callout>&#13;
         <!--
             <g data-group-type="g-callout" ...>
                 <path ...></path>
@@ -377,8 +377,8 @@
                     <tspan>g-callout</tspan>
                 </text>
             </g>
-        -->
-        <g-arrow-callout cx="300" cy="100">g-arrowcallout</g-arrow-callout>
+        -->&#13;
+        <g-arrow-callout cx="300" cy="100">g-arrowcallout</g-arrow-callout>&#13;
         <!--
             <g data-group-type="g-arrow-callout" ...>
                 <path ...></path>
@@ -386,8 +386,8 @@
                     <tspan>g-sarrowcallout</tspan>
                 </text>
             </g>
-        -->
-        <g-edge x1="100" y1="300" x2="300" y2="300">g-edge</g-edge>
+        -->&#13;
+        <g-edge x1="100" y1="300" x2="300" y2="300">g-edge</g-edge>&#13;
         <!--
             <g data-group-type="g-edge" ...>
                 <path ...></path>
@@ -397,19 +397,19 @@
                     </textPath>
                 </text>
             </g>
-        -->
-        <g-table cx="300" cy="400">
-            <row>
-                <cell>g-table</cell>
-                <cell></cell>
-                <cell></cell>
-            </row>
-            <row>
-                <cell></cell>
-                <cell></cell>
-                <cell></cell>
-            </row>
-        </g-table>
+        -->&#13;
+        <g-table cx="300" cy="400">&#13;
+            <row>&#13;
+                <cell>g-table</cell>&#13;
+                <cell></cell>&#13;
+                <cell></cell>&#13;
+            </row>&#13;
+            <row>&#13;
+                <cell></cell>&#13;
+                <cell></cell>&#13;
+                <cell></cell>&#13;
+            </row>&#13;
+        </g-table>&#13;
         <!--
             <g data-group-type="g-table" ...>
                 //cells
@@ -429,14 +429,14 @@
                 <line ...></line>
                 ...
             </g>
-        -->
-        <g-graph cx="100" cy="400">
-            <g-ellipse id="g1" cx="0" cy="0">g-graph</g-ellipse>
-            <g-ellipse id="g2" cx="-50" cy="100"></g-ellipse>
-            <g-ellipse id="g3" cx="50" cy="100"></g-ellipse>
-            <g-edge begin-vertex="g1" end-vertex="g2"></g-edge>
-            <g-edge begin-vertex="g1" end-vertex="g3"></g-edge>
-        </g-graph>
+        -->&#13;
+        <g-graph cx="100" cy="400">&#13;
+            <g-ellipse id="g1" cx="0" cy="0">g-graph</g-ellipse>&#13;
+            <g-ellipse id="g2" cx="-50" cy="100"></g-ellipse>&#13;
+            <g-ellipse id="g3" cx="50" cy="100"></g-ellipse>&#13;
+            <g-edge begin-vertex="g1" end-vertex="g2"></g-edge>&#13;
+            <g-edge begin-vertex="g1" end-vertex="g3"></g-edge>&#13;
+        </g-graph>&#13;
         <!--
             <g data-group-type="g-graph" ...">
                 <g-ellipse>...</g-ellipse>
@@ -445,8 +445,8 @@
                 <g-edge>...</g-edge>
                 <g-edge>...</g-edge>
             </g>
-        -->
-
+        -->&#13;
+&#13;
     </svg>
             <br/>
          </div>
