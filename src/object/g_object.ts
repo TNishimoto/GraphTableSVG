@@ -56,6 +56,8 @@ namespace GraphTableSVG {
             this.__cx = option.cx;
             this.__cy = option.cy;
 
+            const __svg = <any>this.svgGroup
+            __svg.operator = this;
             
 
             /*
