@@ -1445,6 +1445,11 @@ var GraphTableSVG;
                 if (this.updateAttributes.some((v) => v == p.attributeName)) {
                     b = true;
                 }
+                if (p.target == this.svgGroup) {
+                    if (p.attributeName == "x" || p.attributeName == "y") {
+                        this.dispatchConnectPositionChangedEvent();
+                    }
+                }
                 if (p.attributeName == "transform") {
                     this.dispatchConnectPositionChangedEvent();
                 }
@@ -1482,10 +1487,11 @@ var GraphTableSVG;
         }
         update() {
             if (!this._isInitialized) {
-                throw new Error("This instance have not been initialized!");
             }
-            this._isUpdating = true;
-            this._isUpdating = false;
+            else {
+                this._isUpdating = true;
+                this._isUpdating = false;
+            }
         }
         dispatchConnectPositionChangedEvent() {
             if (this.svgSurface != null) {
@@ -1547,6 +1553,9 @@ var GraphTableSVG;
             super(svgbox, option);
             this.isFixTextSize = false;
             this.surfaceAttributes = [];
+            this._isSpecialTextBox = false;
+            this._minimumWidth = 10;
+            this._minimumHeight = 10;
             this.textObserverFunc = (x) => {
                 if (!this.isLocated)
                     return;
@@ -1709,7 +1718,9 @@ var GraphTableSVG;
             if (this.fixedY != null && Math.abs(this.y - this.fixedY) > 20) {
                 this.y = this.fixedY;
             }
-            this.svgText.gtSetXY(this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+            if (!this._isSpecialTextBox) {
+                this.svgText.gtSetXY(this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+            }
             this._isUpdating = false;
             this._observer.observe(this.svgGroup, this.groupObserverOption);
         }
@@ -1724,8 +1735,10 @@ var GraphTableSVG;
         updateToFitText() {
             this.isFixTextSize = true;
             const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
-            this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;
-            this.height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;
+            const textWidth = textRect.width < this._minimumWidth ? this._minimumWidth : textRect.width;
+            const textHeight = textRect.height < this._minimumHeight ? this._minimumHeight : textRect.height;
+            this.width = textWidth + this.marginPaddingLeft + this.marginPaddingRight;
+            this.height = textHeight + this.marginPaddingTop + this.marginPaddingBottom;
         }
         get marginPaddingTop() {
             return this.svgText.getMarginTop() + this.svgGroup.getPaddingTop();
@@ -2598,10 +2611,11 @@ var GraphTableSVG;
     class GEdge extends GraphTableSVG.GTextBox {
         constructor(svgbox, option = {}) {
             super(svgbox, option);
-            this.pUpdateFunc2 = () => {
+            this.connectPositionChangedFunc = () => {
                 this.update();
             };
             this.VBAConnectorNumber = 1;
+            this._isSpecialTextBox = true;
             this.updateAttributes.push(GraphTableSVG.CustomAttributeNames.beginNodeName);
             this.updateAttributes.push(GraphTableSVG.CustomAttributeNames.endNodeName);
             const _option = this.initializeOption(option);
@@ -2644,7 +2658,6 @@ var GraphTableSVG;
             if (this.svgText.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.PathTextAlignment) == null) {
                 this.pathTextAlignment = GraphTableSVG.PathTextAlighnment.center;
             }
-            this.update();
             if (this.type == GraphTableSVG.ShapeObjectType.Edge)
                 this.firstFunctionAfterInitialized();
         }
@@ -2871,10 +2884,10 @@ var GraphTableSVG;
             }
         }
         removeVertexEvent(vertex) {
-            vertex.svgGroup.removeEventListener(GraphTableSVG.CustomAttributeNames.connectPositionChangedEventName, this.pUpdateFunc2);
+            vertex.svgGroup.removeEventListener(GraphTableSVG.CustomAttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
         }
         addVertexEvent(vertex) {
-            vertex.svgGroup.addEventListener(GraphTableSVG.CustomAttributeNames.connectPositionChangedEventName, this.pUpdateFunc2);
+            vertex.svgGroup.addEventListener(GraphTableSVG.CustomAttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
         }
         get beginVertex() {
             if (this.beginVertexID == null) {

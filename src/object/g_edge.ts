@@ -6,6 +6,7 @@ namespace GraphTableSVG {
 
         constructor(svgbox: SVGElement | string, option: GEdgeAttributes = {}) {
             super(svgbox, option);
+            this._isSpecialTextBox = true;
             this.updateAttributes.push(CustomAttributeNames.beginNodeName);
             this.updateAttributes.push(CustomAttributeNames.endNodeName);
 
@@ -40,6 +41,7 @@ namespace GraphTableSVG {
             this.pathPoints = [[_option.x1!, _option.y1!], [_option.x2!, _option.y2!]];
 
             if (_option.beginVertex instanceof GVertex) this.beginVertex = _option.beginVertex;
+
             if (_option.endVertex instanceof GVertex) this.endVertex = _option.endVertex;
 
             if(_option.x3 !== undefined && _option.y3 !== undefined){
@@ -56,7 +58,8 @@ namespace GraphTableSVG {
             if(this.svgText.getPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment) == null){
                 this.pathTextAlignment = PathTextAlighnment.center;
             }
-            this.update();
+
+            //this.update();
             if(this.type == ShapeObjectType.Edge) this.firstFunctionAfterInitialized();
         }
         /*
@@ -372,12 +375,12 @@ namespace GraphTableSVG {
             }
         }
         private removeVertexEvent(vertex: GTextBox) {
-            vertex.svgGroup.removeEventListener(CustomAttributeNames.connectPositionChangedEventName, this.pUpdateFunc2);
+            vertex.svgGroup.removeEventListener(CustomAttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
         }
         private addVertexEvent(vertex: GTextBox) {
-            vertex.svgGroup.addEventListener(CustomAttributeNames.connectPositionChangedEventName, this.pUpdateFunc2);
+            vertex.svgGroup.addEventListener(CustomAttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
         }
-        private pUpdateFunc2 = () => {
+        private connectPositionChangedFunc = () => {
             this.update();
         }
 
@@ -645,7 +648,9 @@ namespace GraphTableSVG {
          * 再描画します。
          */
         public update(): boolean {
+
             super.update();
+
             this.updateConnectorInfo();
 
             this._observer.disconnect();
@@ -654,6 +659,7 @@ namespace GraphTableSVG {
                 msoDashStyle.setCpmoutedDashArray(this.svgPath);
             }
             this._observer.observe(this.svgGroup, this._observerOption);
+
             
             const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
             const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];

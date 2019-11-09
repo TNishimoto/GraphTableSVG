@@ -339,7 +339,12 @@ namespace GraphTableSVG {
                 if (this.updateAttributes.some((v) => v == p.attributeName)) {
                     b = true;
                 }
-
+                
+                if(p.target == this.svgGroup){
+                    if(p.attributeName == "x" || p.attributeName == "y"){
+                        this.dispatchConnectPositionChangedEvent();
+                    }
+                }
                 if (p.attributeName == "transform") {
                     this.dispatchConnectPositionChangedEvent();
                 }
@@ -393,10 +398,11 @@ namespace GraphTableSVG {
         protected _isUpdating: boolean = false;
         public update() {
             if(!this._isInitialized){
-                throw new Error("This instance have not been initialized!");
+                //throw new Error("This instance have not been initialized!");
+            }else{
+                this._isUpdating = true;
+                this._isUpdating = false;    
             }
-            this._isUpdating = true;
-            this._isUpdating = false;
         }
         protected updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y",
             "data-width", "data-height", "data-arrow-neck-width", "data-arrow-neck-height",

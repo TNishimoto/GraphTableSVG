@@ -255,6 +255,9 @@ declare namespace GraphTableSVG {
         protected surfaceAttributes: string[];
         private _textObserver;
         private static updateTextAttributes;
+        protected _isSpecialTextBox: boolean;
+        protected _minimumWidth: number;
+        protected _minimumHeight: number;
         constructor(svgbox: SVGElement | string, option?: GTextBoxAttributes);
         initializeOption(option: GObjectAttributes): GObjectAttributes;
         private static createSVGText;
@@ -388,7 +391,7 @@ declare namespace GraphTableSVG {
         markerEnd: SVGMarkerElement | null;
         private removeVertexEvent;
         private addVertexEvent;
-        private pUpdateFunc2;
+        private connectPositionChangedFunc;
         beginVertex: GVertex | null;
         endVertex: GVertex | null;
         dispose(): void;

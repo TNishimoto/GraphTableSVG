@@ -23,7 +23,7 @@ namespace GraphTableSVG {
         * @param x
         * @param y
         */
-        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {      
             return [this.cx, this.cy];
         }
 
