@@ -71,7 +71,7 @@ namespace GraphTableSVG {
             return ShapeObjectType.Object;
         }
         */
-        private isInitialized = false;
+        private _isInitialized = false;
         private __x : number | undefined;
         private __y : number | undefined;
         private __cx : number | undefined;
@@ -80,12 +80,14 @@ namespace GraphTableSVG {
         public get defaultClassName() : string | undefined {
             return undefined;
         }
-
+        protected get isInitialized() : boolean{
+            return this._isInitialized
+        }
         protected firstFunctionAfterInitialized(){
-            if(this.isInitialized){
+            if(this._isInitialized){
                 throw new Error("This function is already called");
             }
-            this.isInitialized = true;
+            this._isInitialized = true;
 
             this.update();
             if (this.__cx !== undefined) this.cx = this.__cx;
@@ -390,7 +392,7 @@ namespace GraphTableSVG {
         }
         protected _isUpdating: boolean = false;
         public update() {
-            if(!this.isInitialized){
+            if(!this._isInitialized){
                 throw new Error("This instance have not been initialized!");
             }
             this._isUpdating = true;

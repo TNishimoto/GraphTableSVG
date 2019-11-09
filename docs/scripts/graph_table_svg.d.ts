@@ -188,12 +188,6 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    interface DObject extends SVGGElement {
-        hello(): void;
-    }
-    function CallDObject(): DObject;
-}
-declare namespace GraphTableSVG {
     class GObject {
         protected _svgSurface: SVGElement | null;
         protected _tag: any;
@@ -201,12 +195,13 @@ declare namespace GraphTableSVG {
         protected _observer: MutationObserver;
         protected _observerOption: MutationObserverInit;
         constructor(svgbox: SVGElement | string, option?: GObjectAttributes);
-        private isInitialized;
+        private _isInitialized;
         private __x;
         private __y;
         private __cx;
         private __cy;
         readonly defaultClassName: string | undefined;
+        protected readonly isInitialized: boolean;
         protected firstFunctionAfterInitialized(): void;
         protected groupObserverOption: MutationObserverInit;
         private removeResizeEvent;
@@ -1234,7 +1229,6 @@ declare namespace GraphTableSVG {
     }
     function openCustomElement(id: string | SVGElement): GObject | null;
     function lazyOpenSVG(): void;
-    function openAllSVG(output?: GObject[]): GObject[];
     function openSVG(id: string, output?: GObject[]): GObject[];
     function openSVG(element: Element, output?: GObject[]): GObject[];
     function openSVG(empty: null, output?: GObject[]): GObject[];

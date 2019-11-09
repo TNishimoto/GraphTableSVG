@@ -1154,19 +1154,10 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    function CallDObject() {
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.hello = () => { console.log("hello"); };
-        return g;
-    }
-    GraphTableSVG.CallDObject = CallDObject;
-})(GraphTableSVG || (GraphTableSVG = {}));
-var GraphTableSVG;
-(function (GraphTableSVG) {
     class GObject {
         constructor(svgbox, option = {}) {
             this._svgSurface = null;
-            this.isInitialized = false;
+            this._isInitialized = false;
             this.groupObserverOption = { attributes: true, childList: true, subtree: true };
             this.pUpdateFunc = () => {
                 this.resizeUpdate();
@@ -1217,11 +1208,14 @@ var GraphTableSVG;
         get defaultClassName() {
             return undefined;
         }
+        get isInitialized() {
+            return this._isInitialized;
+        }
         firstFunctionAfterInitialized() {
-            if (this.isInitialized) {
+            if (this._isInitialized) {
                 throw new Error("This function is already called");
             }
-            this.isInitialized = true;
+            this._isInitialized = true;
             this.update();
             if (this.__cx !== undefined)
                 this.cx = this.__cx;
@@ -1487,7 +1481,7 @@ var GraphTableSVG;
             this.svgGroup.dispatchEvent(event);
         }
         update() {
-            if (!this.isInitialized) {
+            if (!this._isInitialized) {
                 throw new Error("This instance have not been initialized!");
             }
             this._isUpdating = true;
@@ -4413,7 +4407,9 @@ var GraphTableSVG;
                     }
                 }
             }
-            this.update();
+            if (this.isInitialized) {
+                this.update();
+            }
         }
         construct(table, option = {}) {
             if (option.isLatexMode == undefined)
@@ -8263,7 +8259,6 @@ var GraphTableSVG;
     })(openSVGFunctions = GraphTableSVG.openSVGFunctions || (GraphTableSVG.openSVGFunctions = {}));
     function isGCustomElement(element) {
         const gObjectTypeAttr = element.getAttribute(GraphTableSVG.CustomAttributeNames.customElement);
-        console.log(element.nodeType + "/" + gObjectTypeAttr);
         if (gObjectTypeAttr != null) {
             const gObjectType = GraphTableSVG.ShapeObjectType.toShapeObjectType(gObjectTypeAttr);
             return gObjectType != null;
@@ -8396,10 +8391,6 @@ var GraphTableSVG;
         if (lazyElementDic.length > 0)
             setTimeout(observelazyElementTimer, timerInterval);
     }
-    function openAllSVG(output) {
-        return openSVG(null, output);
-    }
-    GraphTableSVG.openAllSVG = openAllSVG;
     function openSVG(inputItem = null, output = []) {
         if (typeof inputItem == "string") {
             const item = document.getElementById(inputItem);
@@ -8432,7 +8423,6 @@ var GraphTableSVG;
             const startTime = performance.now();
             HTMLFunctions.getDescendantsByPostorder(svgsvg).forEach((v) => {
                 if (v instanceof SVGElement) {
-                    console.log(v.nodeName);
                     if (isGCustomElement(v)) {
                         const p = GraphTableSVG.openCustomElement(v);
                         if (p != null) {

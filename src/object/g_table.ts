@@ -29,10 +29,10 @@ namespace GraphTableSVG {
             this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
             this.updateAttributes = [];
             this.isConstructing = true;
-
             this.firstSetSize();
 
             if (option.table === undefined) {
+
                 if (option.rowCount == undefined) option.rowCount = 5;
                 if (option.columnCount == undefined) option.columnCount = 5;
                 this.setSize(option.columnCount, option.rowCount);
@@ -51,10 +51,12 @@ namespace GraphTableSVG {
                 //this.update();
 
             } else {
+
                 this.svgGroup.style.display = "none"
                 this._isNoneMode = true;
 
                 this.constructFromLogicTable(option.table);
+
                 this._isNoneMode = false;
 
                 this.svgGroup.style.removeProperty("display");
@@ -519,7 +521,9 @@ namespace GraphTableSVG {
             }
 
             //this.updateNodeRelations();
-            this.update();
+            if(this.isInitialized){
+                this.update();            
+            }
 
 
         }

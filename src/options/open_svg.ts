@@ -155,12 +155,6 @@ namespace GraphTableSVG {
         if(lazyElementDic.length > 0)setTimeout(observelazyElementTimer, timerInterval);
     }
 
-
-    export function openAllSVG(output?: GObject[]): GObject[]{
-        return openSVG(null, output);
-    }
-
-
     export function openSVG(id: string, output?: GObject[]): GObject[];
     export function openSVG(element: Element, output?: GObject[]): GObject[];
     export function openSVG(empty: null, output?: GObject[]): GObject[];
