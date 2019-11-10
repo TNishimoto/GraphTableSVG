@@ -54,6 +54,13 @@ namespace GraphTableSVG {
 
             export const defaultEdgeClass: string = "__default-edge";
             export const defaultVertexClass: string = "__default-vertex";
+
+            export const defaultConsoleColumnTitleCellClass = "___column_title_cell";
+            export const defaultConsoleColumnTitleCellTextClass = "___column_title_text_cell";
+            export const defaultConsoleColumnTitleCellUndefinedTextClass = "___column_title_undefined_text_cell";
+            export const defaultConsoleColumnTitleCellBackgroundClass = "___column_title_background_cell";
+
+
         }
         export const beginNodeName: string = "data-begin-node";
         export const endNodeName: string = "data-end-node";

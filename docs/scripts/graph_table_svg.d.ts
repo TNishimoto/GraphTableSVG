@@ -898,6 +898,23 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    class TableDictionary {
+        static IndexName: string;
+        static ValueName: string;
+        columnMapper: Map<string, number>;
+        rows: Map<string, any>[];
+        constructor();
+        construct(item: any): void;
+        addValue(i: number, key: string, value: any): void;
+        add(item: any): void;
+        toLogicTable(): GraphTableSVG.LogicTable;
+    }
+    namespace Console {
+        function table(item: any): void;
+        function clear(): void;
+    }
+}
+declare namespace GraphTableSVG {
     namespace Common {
         function createCSS(): string;
     }
@@ -1144,6 +1161,10 @@ declare namespace GraphTableSVG {
             const defaultRectButtonClass: string;
             const defaultEdgeClass: string;
             const defaultVertexClass: string;
+            const defaultConsoleColumnTitleCellClass = "___column_title_cell";
+            const defaultConsoleColumnTitleCellTextClass = "___column_title_text_cell";
+            const defaultConsoleColumnTitleCellUndefinedTextClass = "___column_title_undefined_text_cell";
+            const defaultConsoleColumnTitleCellBackgroundClass = "___column_title_background_cell";
         }
         const beginNodeName: string;
         const endNodeName: string;

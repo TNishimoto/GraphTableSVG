@@ -6640,6 +6640,166 @@ End Sub
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    class TableDictionary {
+        constructor() {
+            this.columnMapper = new Map();
+            this.rows = new Array();
+            this.columnMapper.set(TableDictionary.IndexName, 0);
+        }
+        construct(item) {
+            if (item instanceof Array) {
+                item.forEach((v) => {
+                    this.add(v);
+                });
+            }
+            else {
+                this.add(item);
+            }
+        }
+        addValue(i, key, value) {
+            const column = this.columnMapper.get(key);
+            if (column == undefined) {
+                this.columnMapper.set(key, this.columnMapper.size);
+            }
+            this.rows[i].set(key, value);
+        }
+        add(item) {
+            this.rows.push(new Map());
+            const x = this.rows.length - 1;
+            this.addValue(x, TableDictionary.IndexName, x.toString());
+            if (item instanceof Array) {
+                for (let i = 0; i < item.length; i++) {
+                    const cell = item[i];
+                    if (cell != undefined) {
+                        this.addValue(x, i.toString(), cell);
+                    }
+                }
+            }
+            else {
+                if (typeof item == 'string' || typeof item == 'number' || typeof item == 'boolean') {
+                    this.addValue(x, TableDictionary.ValueName, item.toString());
+                }
+                else if (typeof item == 'object') {
+                    Object.keys(item).forEach((key) => {
+                        const value = item[key];
+                        this.addValue(x, key.toString(), value);
+                    });
+                }
+            }
+        }
+        toLogicTable() {
+            const table = new GraphTableSVG.LogicTable({ columnCount: this.columnMapper.size, rowCount: this.rows.length + 1 });
+            this.columnMapper.forEach((value, key) => {
+                table.cells[0][value].textClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellTextClass;
+                table.cells[0][value].backgroundClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellBackgroundClass;
+                if (key == GraphTableSVG.TableDictionary.IndexName) {
+                    table.cells[0][value].text = "(index)";
+                }
+                else if (key == TableDictionary.ValueName) {
+                    table.cells[0][value].text = "(value)";
+                }
+                else {
+                    table.cells[0][value].text = key;
+                }
+            });
+            this.rows.forEach((map, index) => {
+                const tableIndex = index + 1;
+                for (let i = 0; i < this.columnMapper.size; i++) {
+                    table.cells[tableIndex][i].text = "undefined";
+                    table.cells[tableIndex][i].textClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellUndefinedTextClass;
+                }
+                map.forEach((value, key) => {
+                    const columnIndex = this.columnMapper.get(key);
+                    if (columnIndex != undefined) {
+                        const cell = this.rows[index].get(key);
+                        if (cell == null) {
+                            table.cells[tableIndex][columnIndex].text = "null";
+                        }
+                        else if (cell != undefined) {
+                            table.cells[tableIndex][columnIndex].text = cell.toString();
+                            table.cells[tableIndex][columnIndex].textClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultTextClass;
+                        }
+                    }
+                });
+            });
+            return table;
+        }
+    }
+    TableDictionary.IndexName = "___GraphTableSVG_Console_Index";
+    TableDictionary.ValueName = "___GraphTableSVG_Console_Value";
+    GraphTableSVG.TableDictionary = TableDictionary;
+    let Console;
+    (function (Console) {
+        function getCodeTag() {
+            const collection = document.getElementsByTagName("code");
+            for (let i = 0; i < collection.length; i++) {
+                const item = collection.item(i);
+                if (item != null) {
+                    const name = item.getAttribute("name");
+                    if (name == "GraphTableSVG") {
+                        return item;
+                    }
+                }
+            }
+            return null;
+        }
+        function createCodeTag() {
+            const element = document.createElement("code");
+            document.body.appendChild(element);
+            element.setAttribute("name", "GraphTableSVG");
+            return element;
+        }
+        function getOrCreateCodeElement() {
+            const code = getCodeTag();
+            if (code != null) {
+                return code;
+            }
+            else {
+                return createCodeTag();
+            }
+        }
+        function addSVGSVGElement(code) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            const p = document.createElement("p");
+            code.appendChild(p);
+            p.appendChild(svg);
+            svg.setAttribute("style", "background:#e9e9e9;border:solid 1pt;padding:10px");
+            svg.setAttribute("g-shrink", "true");
+            if (svg instanceof SVGSVGElement) {
+                return svg;
+            }
+            else {
+                throw "error";
+            }
+        }
+        function initialize() {
+            const code = getCodeTag();
+            if (code == null) {
+                createCodeTag();
+            }
+        }
+        function table(item) {
+            GraphTableSVG.Common.setGraphTableCSS();
+            const code = getOrCreateCodeElement();
+            const svg = addSVGSVGElement(code);
+            const gtable = GraphTableSVG.createShape(svg, "g-table");
+            const tableDic = new TableDictionary();
+            tableDic.construct(item);
+            const logicTable = tableDic.toLogicTable();
+            gtable.constructFromLogicTable(logicTable);
+            gtable.x = 0;
+            gtable.y = 0;
+        }
+        Console.table = table;
+        function clear() {
+            const code = getOrCreateCodeElement();
+            code.innerHTML = "";
+        }
+        Console.clear = clear;
+    })(Console = GraphTableSVG.Console || (GraphTableSVG.Console = {}));
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     let Common;
     (function (Common) {
         function createCSS() {
@@ -6697,6 +6857,33 @@ var GraphTableSVG;
             }
             .${GraphTableSVG.CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}:not([disabled]):active{
                 fill:#8EB8FF; 
+            }
+
+            .___column_title_cellaa{
+                --default-text-class : table-text;
+                --default-background-class : background;    
+                --horizontal-anchor: center;
+                --vertical-anchor: middle;
+                --padding-top: 0px;
+                --padding-left: 0px;
+                --padding-right: 0px;
+                --padding-bottom: 0px;
+            }
+
+            .${GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellTextClass} {
+                fill : black;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            .${GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellUndefinedTextClass} {
+                fill : pink;
+                font-size: 18px;
+                font-style: italic;
+            }
+
+            .${GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellBackgroundClass}{
+                fill: #8EB8FF; 
+                stroke: black;
             }
 
 
@@ -7938,6 +8125,10 @@ var GraphTableSVG;
             StyleValue.defaultRectButtonClass = "___rect-button-surface-default";
             StyleValue.defaultEdgeClass = "__default-edge";
             StyleValue.defaultVertexClass = "__default-vertex";
+            StyleValue.defaultConsoleColumnTitleCellClass = "___column_title_cell";
+            StyleValue.defaultConsoleColumnTitleCellTextClass = "___column_title_text_cell";
+            StyleValue.defaultConsoleColumnTitleCellUndefinedTextClass = "___column_title_undefined_text_cell";
+            StyleValue.defaultConsoleColumnTitleCellBackgroundClass = "___column_title_background_cell";
         })(StyleValue = CustomAttributeNames.StyleValue || (CustomAttributeNames.StyleValue = {}));
         CustomAttributeNames.beginNodeName = "data-begin-node";
         CustomAttributeNames.endNodeName = "data-end-node";

@@ -58,6 +58,33 @@ namespace GraphTableSVG {
                 fill:#8EB8FF; 
             }
 
+            .___column_title_cellaa{
+                --default-text-class : table-text;
+                --default-background-class : background;    
+                --horizontal-anchor: center;
+                --vertical-anchor: middle;
+                --padding-top: 0px;
+                --padding-left: 0px;
+                --padding-right: 0px;
+                --padding-bottom: 0px;
+            }
+
+            .${CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellTextClass} {
+                fill : black;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            .${CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellUndefinedTextClass} {
+                fill : pink;
+                font-size: 18px;
+                font-style: italic;
+            }
+
+            .${CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellBackgroundClass}{
+                fill: #8EB8FF; 
+                stroke: black;
+            }
+
 
             g[data-type="g-rect-button"] > rect {
                 stroke-width: 1px;
