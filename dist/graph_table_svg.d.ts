@@ -225,6 +225,8 @@ declare namespace GraphTableSVG {
         readonly isCenterBased: boolean;
         x: number;
         y: number;
+        isProhibitionOutOfRange: boolean;
+        moveInCanvas(): void;
         readonly type: ShapeObjectType;
         protected createSurface(svgbox: SVGElement, option?: GObjectAttributes): void;
         protected setClassNameOfSVGGroup(): void;
@@ -469,6 +471,15 @@ declare namespace GraphTableSVG {
         }): void;
         relocateStyle: string | null;
         relocate(): void;
+        width: number;
+        height: number;
+        Noderegion(): Rectangle;
+        moveInCanvas(): void;
+        constructFromLogicGraph(graph: LogicGraph, option?: {
+            x?: number;
+            y?: number;
+            isLatexMode?: boolean;
+        }): void;
         constructFromLogicTree(roots: LogicTree[] | LogicTree, option?: {
             x?: number;
             y?: number;
@@ -898,20 +909,10 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    class TableDictionary {
-        static IndexName: string;
-        static ValueName: string;
-        columnMapper: Map<string, number>;
-        rows: Map<string, any>[];
-        constructor();
-        construct(item: any): void;
-        addValue(i: number, key: string, value: any): void;
-        add(item: any): void;
-        toLogicTable(): GraphTableSVG.LogicTable;
-    }
     namespace Console {
         function table(item: any): void;
         function clear(): void;
+        function graph(item: any): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -1047,6 +1048,22 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    class TableDictionary {
+        static IndexName: string;
+        static ValueName: string;
+        columnMapper: Map<string, number>;
+        rows: Map<string, any>[];
+        objects: any[];
+        constructor();
+        construct(item: any): void;
+        addValue(i: number, key: string, value: any): void;
+        add(item: any): void;
+        toLogicTable(): GraphTableSVG.LogicTable;
+        createNode(item: any, graph: LogicGraph, dic: Map<object, LogicGraphNode>): LogicGraphNode;
+        toLogicGraph(): LogicGraph;
+    }
+}
+declare namespace GraphTableSVG {
     type GObjectAttributes = {
         cx?: number;
         cy?: number;
@@ -1148,6 +1165,7 @@ declare namespace GraphTableSVG {
             const PathTextAlignment: string;
             const msoDashStyleName = "--stroke-style";
             const relocateName = "--relocate";
+            const prohibitionOutOfRange: string;
         }
         namespace StyleValue {
             const defaultTextClass: string;
@@ -1225,6 +1243,23 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    class LogicGraphEdge {
+        text: string | null;
+        endNodeIndex: number;
+    }
+    class LogicGraphNode {
+        text: string | null;
+        outputEdges: LogicGraphEdge[];
+        addEdge(e: LogicGraphEdge): void;
+    }
+    class LogicGraph {
+        nodes: LogicGraphNode[];
+        edges: LogicGraphEdge[];
+        construct(iten: any): void;
+        addNode(): LogicGraphNode;
+        createEdge(): LogicGraphEdge;
+        getIndex(node: LogicGraphNode): number;
+    }
     class LogicTree {
         vertexText: string | null;
         parentEdgeText: string | null;

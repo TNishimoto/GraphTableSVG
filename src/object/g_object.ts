@@ -314,6 +314,21 @@ namespace GraphTableSVG {
             }
         }
 
+        public get isProhibitionOutOfRange(): boolean {
+            const p = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.prohibitionOutOfRange, "true");
+            return p == "true";
+        }
+        public set isProhibitionOutOfRange(v: boolean) {
+            this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.prohibitionOutOfRange, v.toString());
+
+        }
+        public moveInCanvas(){
+            this.x = (this.width / 2) + 10;
+            this.y = (this.height / 2) + 10;
+        }
+        
+
+
         public get type(): ShapeObjectType {
             return ShapeObjectType.Object;
         }

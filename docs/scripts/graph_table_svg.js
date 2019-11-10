@@ -1429,6 +1429,17 @@ var GraphTableSVG;
                 this.svgGroup.setY(v);
             }
         }
+        get isProhibitionOutOfRange() {
+            const p = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.prohibitionOutOfRange, "true");
+            return p == "true";
+        }
+        set isProhibitionOutOfRange(v) {
+            this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.prohibitionOutOfRange, v.toString());
+        }
+        moveInCanvas() {
+            this.x = (this.width / 2) + 10;
+            this.y = (this.height / 2) + 10;
+        }
         get type() {
             return GraphTableSVG.ShapeObjectType.Object;
         }
@@ -3581,6 +3592,77 @@ var GraphTableSVG;
                 const f = Function("graph", `${value}(graph)`);
                 f(this);
             }
+            this.moveInCanvas();
+            console.log(this.width + "/" + this.height);
+        }
+        get width() {
+            return this.Noderegion().width;
+        }
+        get height() {
+            return this.Noderegion().height;
+        }
+        set width(value) {
+        }
+        set height(value) {
+        }
+        Noderegion() {
+            let left = 0;
+            let right = 0;
+            let top = 0;
+            let bottom = 0;
+            this.vertices.forEach((v) => {
+                if (v.x < left)
+                    left = v.x;
+                if (right < (v.x + v.width))
+                    right = v.x + v.width;
+                if (v.y < top)
+                    top = v.y;
+                if (bottom < (v.y + v.height))
+                    bottom = v.y + v.height;
+            });
+            return new GraphTableSVG.Rectangle(left, top, right - left, bottom - top);
+        }
+        moveInCanvas() {
+            const rect = this.Noderegion();
+            if (rect.x < 0) {
+                this.x = this.x - (rect.x);
+            }
+            if (rect.y < 0) {
+                this.y = this.y - (rect.y);
+            }
+        }
+        constructFromLogicGraph(graph, option = {}) {
+            if (option.isLatexMode == undefined)
+                option.isLatexMode = false;
+            this.clear();
+            const svgsvg = GraphTableSVG.SVG.getSVGSVG(this.svgGroup);
+            const dic = new Map();
+            graph.nodes.forEach((v, i) => {
+                const node = GraphTableSVG.createShape(svgsvg, "g-ellipse");
+                node.svgText.textContent = v.text;
+                this.add(node);
+                dic.set(i, node);
+            });
+            graph.nodes.forEach((v, i) => {
+                v.outputEdges.forEach((e, j) => {
+                    const edge = GraphTableSVG.createShape(svgsvg, "g-edge");
+                    if (e.text != undefined) {
+                        const b = option.isLatexMode == undefined ? false : option.isLatexMode;
+                        edge.svgTextPath.setTextContent(e.text, b);
+                    }
+                    this.add(edge);
+                    const beginNode = dic.get(i);
+                    const endNode = dic.get(e.endNodeIndex);
+                    if (beginNode == undefined || endNode == undefined)
+                        throw Error("error");
+                    this.connect(beginNode, edge, endNode);
+                });
+            });
+            this.relocateStyle = "GraphTableSVG.TreeArrangement.standardTreeWidthArrangement";
+            if (option.x != undefined)
+                this.svgGroup.setX(option.x);
+            if (option.y != undefined)
+                this.svgGroup.setY(option.y);
         }
         constructFromLogicTree(roots, option = {}) {
             if (option.isLatexMode == undefined)
@@ -6640,94 +6722,6 @@ End Sub
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    class TableDictionary {
-        constructor() {
-            this.columnMapper = new Map();
-            this.rows = new Array();
-            this.columnMapper.set(TableDictionary.IndexName, 0);
-        }
-        construct(item) {
-            if (item instanceof Array) {
-                item.forEach((v) => {
-                    this.add(v);
-                });
-            }
-            else {
-                this.add(item);
-            }
-        }
-        addValue(i, key, value) {
-            const column = this.columnMapper.get(key);
-            if (column == undefined) {
-                this.columnMapper.set(key, this.columnMapper.size);
-            }
-            this.rows[i].set(key, value);
-        }
-        add(item) {
-            this.rows.push(new Map());
-            const x = this.rows.length - 1;
-            this.addValue(x, TableDictionary.IndexName, x.toString());
-            if (item instanceof Array) {
-                for (let i = 0; i < item.length; i++) {
-                    const cell = item[i];
-                    if (cell != undefined) {
-                        this.addValue(x, i.toString(), cell);
-                    }
-                }
-            }
-            else {
-                if (typeof item == 'string' || typeof item == 'number' || typeof item == 'boolean') {
-                    this.addValue(x, TableDictionary.ValueName, item.toString());
-                }
-                else if (typeof item == 'object') {
-                    Object.keys(item).forEach((key) => {
-                        const value = item[key];
-                        this.addValue(x, key.toString(), value);
-                    });
-                }
-            }
-        }
-        toLogicTable() {
-            const table = new GraphTableSVG.LogicTable({ columnCount: this.columnMapper.size, rowCount: this.rows.length + 1 });
-            this.columnMapper.forEach((value, key) => {
-                table.cells[0][value].textClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellTextClass;
-                table.cells[0][value].backgroundClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellBackgroundClass;
-                if (key == GraphTableSVG.TableDictionary.IndexName) {
-                    table.cells[0][value].text = "(index)";
-                }
-                else if (key == TableDictionary.ValueName) {
-                    table.cells[0][value].text = "(value)";
-                }
-                else {
-                    table.cells[0][value].text = key;
-                }
-            });
-            this.rows.forEach((map, index) => {
-                const tableIndex = index + 1;
-                for (let i = 0; i < this.columnMapper.size; i++) {
-                    table.cells[tableIndex][i].text = "undefined";
-                    table.cells[tableIndex][i].textClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellUndefinedTextClass;
-                }
-                map.forEach((value, key) => {
-                    const columnIndex = this.columnMapper.get(key);
-                    if (columnIndex != undefined) {
-                        const cell = this.rows[index].get(key);
-                        if (cell == null) {
-                            table.cells[tableIndex][columnIndex].text = "null";
-                        }
-                        else if (cell != undefined) {
-                            table.cells[tableIndex][columnIndex].text = cell.toString();
-                            table.cells[tableIndex][columnIndex].textClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultTextClass;
-                        }
-                    }
-                });
-            });
-            return table;
-        }
-    }
-    TableDictionary.IndexName = "___GraphTableSVG_Console_Index";
-    TableDictionary.ValueName = "___GraphTableSVG_Console_Value";
-    GraphTableSVG.TableDictionary = TableDictionary;
     let Console;
     (function (Console) {
         function getCodeTag() {
@@ -6783,7 +6777,7 @@ var GraphTableSVG;
             const code = getOrCreateCodeElement();
             const svg = addSVGSVGElement(code);
             const gtable = GraphTableSVG.createShape(svg, "g-table");
-            const tableDic = new TableDictionary();
+            const tableDic = new GraphTableSVG.TableDictionary();
             tableDic.construct(item);
             const logicTable = tableDic.toLogicTable();
             gtable.constructFromLogicTable(logicTable);
@@ -6796,6 +6790,18 @@ var GraphTableSVG;
             code.innerHTML = "";
         }
         Console.clear = clear;
+        function graph(item) {
+            GraphTableSVG.Common.setGraphTableCSS();
+            const code = getOrCreateCodeElement();
+            const svg = addSVGSVGElement(code);
+            const ggraph = GraphTableSVG.createShape(svg, "g-graph");
+            const tableDic = new GraphTableSVG.TableDictionary();
+            tableDic.construct(item);
+            const logicGraph = tableDic.toLogicGraph();
+            ggraph.constructFromLogicGraph(logicGraph);
+            console.log(logicGraph);
+        }
+        Console.graph = graph;
     })(Console = GraphTableSVG.Console || (GraphTableSVG.Console = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
@@ -8083,6 +8089,144 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    class TableDictionary {
+        constructor() {
+            this.columnMapper = new Map();
+            this.rows = new Array();
+            this.objects = new Array();
+            this.columnMapper.set(TableDictionary.IndexName, 0);
+        }
+        construct(item) {
+            if (item instanceof Array) {
+                item.forEach((v) => {
+                    this.add(v);
+                });
+            }
+            else {
+                this.add(item);
+            }
+        }
+        addValue(i, key, value) {
+            const column = this.columnMapper.get(key);
+            if (column == undefined) {
+                this.columnMapper.set(key, this.columnMapper.size);
+            }
+            this.rows[i].set(key, value);
+        }
+        add(item) {
+            this.rows.push(new Map());
+            this.objects.push(item);
+            const x = this.rows.length - 1;
+            this.addValue(x, TableDictionary.IndexName, x.toString());
+            if (item instanceof Array) {
+                for (let i = 0; i < item.length; i++) {
+                    const cell = item[i];
+                    if (cell != undefined) {
+                        this.addValue(x, i.toString(), cell);
+                    }
+                }
+            }
+            else {
+                if (typeof item == 'string' || typeof item == 'number' || typeof item == 'boolean') {
+                    this.addValue(x, TableDictionary.ValueName, item.toString());
+                }
+                else if (typeof item == 'object') {
+                    Object.keys(item).forEach((key) => {
+                        const value = item[key];
+                        this.addValue(x, key.toString(), value);
+                    });
+                }
+            }
+        }
+        toLogicTable() {
+            const table = new GraphTableSVG.LogicTable({ columnCount: this.columnMapper.size, rowCount: this.rows.length + 1 });
+            this.columnMapper.forEach((value, key) => {
+                table.cells[0][value].textClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellTextClass;
+                table.cells[0][value].backgroundClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellBackgroundClass;
+                if (key == GraphTableSVG.TableDictionary.IndexName) {
+                    table.cells[0][value].text = "(index)";
+                }
+                else if (key == TableDictionary.ValueName) {
+                    table.cells[0][value].text = "(value)";
+                }
+                else {
+                    table.cells[0][value].text = key;
+                }
+            });
+            this.rows.forEach((map, index) => {
+                const tableIndex = index + 1;
+                for (let i = 0; i < this.columnMapper.size; i++) {
+                    table.cells[tableIndex][i].text = "undefined";
+                    table.cells[tableIndex][i].textClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellUndefinedTextClass;
+                }
+                map.forEach((value, key) => {
+                    const columnIndex = this.columnMapper.get(key);
+                    if (columnIndex != undefined) {
+                        const cell = this.rows[index].get(key);
+                        if (cell == null) {
+                            table.cells[tableIndex][columnIndex].text = "null";
+                        }
+                        else if (cell != undefined) {
+                            table.cells[tableIndex][columnIndex].text = cell.toString();
+                            table.cells[tableIndex][columnIndex].textClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultTextClass;
+                        }
+                    }
+                });
+            });
+            return table;
+        }
+        createNode(item, graph, dic) {
+            if (typeof item == "object") {
+                const node = dic.get(item);
+                if (node != undefined) {
+                    return node;
+                }
+                else {
+                    let node = graph.addNode();
+                    if (item != undefined && item != null) {
+                        dic.set(item, node);
+                        Object.keys(item).forEach((key) => {
+                            const value = item[key];
+                            const child = this.createNode(value, graph, dic);
+                            const edge = graph.createEdge();
+                            edge.endNodeIndex = graph.getIndex(child);
+                            edge.text = key.toString();
+                            node.addEdge(edge);
+                        });
+                    }
+                    else {
+                        node.text = "null";
+                    }
+                    return node;
+                }
+            }
+            else {
+                const node = graph.addNode();
+                if (typeof item == "undefined") {
+                    node.text = "undefined";
+                }
+                else {
+                    node.text = item.toString();
+                }
+                return node;
+            }
+        }
+        toLogicGraph() {
+            const dic = new Map();
+            const graph = new GraphTableSVG.LogicGraph();
+            this.rows.forEach((v, i) => {
+                const obj = this.objects[i];
+                this.createNode(obj, graph, dic);
+            });
+            return graph;
+        }
+    }
+    TableDictionary.IndexName = "___GraphTableSVG_Console_Index";
+    TableDictionary.ValueName = "___GraphTableSVG_Console_Value";
+    GraphTableSVG.TableDictionary = TableDictionary;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     let CustomAttributeNames;
     (function (CustomAttributeNames) {
         let Style;
@@ -8111,6 +8255,7 @@ var GraphTableSVG;
             Style.PathTextAlignment = "--path-text-alignment";
             Style.msoDashStyleName = "--stroke-style";
             Style.relocateName = "--relocate";
+            Style.prohibitionOutOfRange = "--prohibition-out-of-range";
         })(Style = CustomAttributeNames.Style || (CustomAttributeNames.Style = {}));
         let StyleValue;
         (function (StyleValue) {
@@ -8365,6 +8510,45 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    class LogicGraphEdge {
+        constructor() {
+            this.text = null;
+            this.endNodeIndex = -1;
+        }
+    }
+    GraphTableSVG.LogicGraphEdge = LogicGraphEdge;
+    class LogicGraphNode {
+        constructor() {
+            this.text = null;
+            this.outputEdges = [];
+        }
+        addEdge(e) {
+            this.outputEdges.push(e);
+        }
+    }
+    GraphTableSVG.LogicGraphNode = LogicGraphNode;
+    class LogicGraph {
+        constructor() {
+            this.nodes = [];
+            this.edges = [];
+        }
+        construct(iten) {
+        }
+        addNode() {
+            const node = new LogicGraphNode();
+            this.nodes.push(node);
+            return node;
+        }
+        createEdge() {
+            const edge = new LogicGraphEdge();
+            this.edges.push(edge);
+            return edge;
+        }
+        getIndex(node) {
+            return this.nodes.indexOf(node);
+        }
+    }
+    GraphTableSVG.LogicGraph = LogicGraph;
     class LogicTree {
         constructor(option = {}) {
             this.vertexText = null;

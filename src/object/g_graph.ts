@@ -205,8 +205,86 @@ namespace GraphTableSVG {
                 const f = <any>Function("graph", `${value}(graph)`);
                 f(this);
             }
+            //this.relocate();
+            this.moveInCanvas();
+            console.log(this.width + "/" + this.height)
+            
+
+        }
+        get width(): number {
+            return this.Noderegion().width;
         }
 
+        get height(): number {
+            return this.Noderegion().height;
+        }
+        set width(value: number) {
+        }
+        set height(value: number) {
+        }
+        public Noderegion() : Rectangle {
+            let left =0;
+            let right = 0;
+            let top =0;
+            let bottom = 0;
+            this.vertices.forEach((v)=>{
+                if(v.x < left) left = v.x;
+                if(right < (v.x + v.width)) right = v.x + v.width;
+                if(v.y < top) top = v.y;
+                if(bottom < (v.y + v.height)) bottom = v.y + v.height;
+
+            })
+            return new Rectangle(left, top, right-left, bottom-top);
+        }
+
+        public moveInCanvas(){
+            const rect = this.Noderegion();
+            if(rect.x < 0){
+                this.x = this.x - (rect.x);
+            }
+            if(rect.y < 0){
+                this.y = this.y - (rect.y);
+            }
+        }
+
+        public constructFromLogicGraph(graph: LogicGraph, option: { x?: number, y?: number, isLatexMode?: boolean } = {}) {
+            if (option.isLatexMode == undefined) option.isLatexMode = false;
+            this.clear();
+            const svgsvg = GraphTableSVG.SVG.getSVGSVG(this.svgGroup);
+            
+            const dic : Map<number, GVertex> = new Map();
+
+            graph.nodes.forEach((v, i) =>{
+                const node = GraphTableSVG.createShape(svgsvg,"g-ellipse")
+                node.svgText.textContent = v.text;
+                this.add(node);
+                dic.set(i, node);
+            })
+            graph.nodes.forEach((v, i) =>{
+                v.outputEdges.forEach((e, j) =>{
+                    const edge = GraphTableSVG.createShape(svgsvg,"g-edge")
+                    if(e.text!= undefined){
+                        const b = option.isLatexMode == undefined ? false : option.isLatexMode;
+                        edge.svgTextPath.setTextContent(e.text, b);
+
+                    }
+                    this.add(edge);
+                    const beginNode = dic.get(i);
+                    const endNode = dic.get(e.endNodeIndex);
+                    if(beginNode == undefined || endNode == undefined) throw Error("error");
+                    this.connect(beginNode, edge, endNode);
+                })
+            })
+
+            this.relocateStyle = "GraphTableSVG.TreeArrangement.standardTreeWidthArrangement"
+
+            //this.x = 200;
+            //this.y = 200;
+
+            if (option.x != undefined) this.svgGroup.setX(option.x);
+            if (option.y != undefined) this.svgGroup.setY(option.y);
+
+        }   
 
         /**
         * LogicTreeから木を構築します。

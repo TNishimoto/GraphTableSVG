@@ -36,6 +36,8 @@ namespace GraphTableSVG {
             export const PathTextAlignment: string = "--path-text-alignment";
             export const msoDashStyleName = "--stroke-style";
             export const relocateName = "--relocate";
+            export const prohibitionOutOfRange : string = "--prohibition-out-of-range";
+
             //export const defaultCellBackgroundClass: string = "--default-background-class";
     
         }
