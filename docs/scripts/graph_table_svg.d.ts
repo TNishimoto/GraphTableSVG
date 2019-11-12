@@ -311,7 +311,7 @@ declare namespace GraphTableSVG {
         readonly isNoParent: boolean;
         readonly children: GVertex[];
         readonly isLeaf: boolean;
-        readonly tree: VirtualTree;
+        createVirtualTree(excludedEdgeDic?: Set<GEdge>): VirtualTree;
         readonly region: Rectangle;
         readonly shape: string;
         createVBACode(id: number): string[];
@@ -525,16 +525,6 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
-    namespace TreeArrangement {
-        function reverse(graph: GGraph, isX: boolean, isY: boolean): void;
-        function alignVerticeByChildren(graph: GGraph): void;
-        function standardTreeWidthArrangement(graph: GGraph): void;
-        function addOffset(graph: GGraph, x: number, y: number): void;
-        function alignVerticeByLeaveSub(forest: GGraph, xInterval: number, yInterval: number): void;
-        function alignVerticeByLeave(graph: GGraph): void;
-    }
-}
-declare namespace GraphTableSVG {
     class GTable extends GObject {
         constructor(svgbox: SVGElement, option?: GTableOption);
         private _isNoneMode;
@@ -630,16 +620,35 @@ declare namespace GraphTableSVG {
     }
 }
 declare namespace GraphTableSVG {
+    namespace GraphArrangement {
+        function standardTreeWidthArrangement(graph: GGraph): void;
+    }
+}
+declare namespace GraphTableSVG {
     namespace Parse {
         function parseTree(parseText: string): GraphTableSVG.LogicTree;
         function getParseString(tree: GraphTableSVG.GVertex): string;
     }
 }
 declare namespace GraphTableSVG {
+    namespace TreeArrangement {
+        function reverse(graph: GGraph, isX: boolean, isY: boolean): void;
+        function alignVerticeByChildren(graph: GGraph): void;
+        function getXYIntervals(graph: GGraph): [number, number];
+        function addOffset(graph: GGraph, x: number, y: number): void;
+        function alignVerticeByLeaveSub(forest: GGraph, xInterval: number, yInterval: number): void;
+        function alignVerticeByLeave(graph: GGraph): void;
+        function standardTreeWidthArrangement(graph: GGraph): void;
+    }
+}
+declare namespace GraphTableSVG {
     class VirtualTree {
         subTreeRoot: GVertex;
-        constructor(_root: GVertex);
+        externalEdges: Set<GEdge>;
+        constructor(_root: GVertex, _externalEdgeDic?: Set<GEdge>);
+        readonly root: GVertex;
         readonly children: GVertex[];
+        readonly virtualTreeChildren: VirtualTree[];
         readonly parentEdge: GEdge | null;
         getSubtree(result?: GVertex[]): GVertex[];
         getHeight(): number;
@@ -648,6 +657,7 @@ declare namespace GraphTableSVG {
         addOffset(_x: number, _y: number): void;
         setRectangleLocation(_x: number, _y: number): void;
         setRootLocation(_x: number, _y: number): void;
+        setRegionXYLocation(_x: number, _y: number): void;
         readonly leaves: GVertex[];
     }
 }
@@ -1051,9 +1061,9 @@ declare namespace GraphTableSVG {
     class TableDictionary {
         static IndexName: string;
         static ValueName: string;
-        columnMapper: Map<string, number>;
-        rows: Map<string, any>[];
-        objects: any[];
+        private columnMapper;
+        private rows;
+        private objects;
         constructor();
         construct(item: any): void;
         addValue(i: number, key: string, value: any): void;
@@ -1304,4 +1314,11 @@ declare namespace GraphTableSVG {
     function toSVGUnknownElement(e: Element): void;
     function toDivElement(e: Element): HTMLElement | null;
     function openHTML(id?: string | HTMLElement | null): void;
+}
+declare namespace GraphTableSVG {
+    namespace GraphManager {
+        function createRandomObject(size: number): {
+            [key: number]: any;
+        }[];
+    }
 }

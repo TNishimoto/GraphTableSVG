@@ -199,6 +199,7 @@ namespace GraphTableSVG {
         }
 
         public relocate() {
+            console.log("relocate");
             const value = this.relocateStyle;
             if(value != null){
                 const p = Function("v", `return ${value}(v)`);
@@ -276,7 +277,7 @@ namespace GraphTableSVG {
                 })
             })
 
-            this.relocateStyle = "GraphTableSVG.TreeArrangement.standardTreeWidthArrangement"
+            this.relocateStyle = "GraphTableSVG.GraphArrangement.standardTreeWidthArrangement"
 
             //this.x = 200;
             //this.y = 200;

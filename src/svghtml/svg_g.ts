@@ -80,19 +80,19 @@ interface SVGElement {
 }
 SVGElement.prototype.getPaddingTop = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, 5)!;
 };
 SVGElement.prototype.getPaddingLeft = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, 5)!;
 };
 SVGElement.prototype.getPaddingRight = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, 5)!;
 };
 SVGElement.prototype.getPaddingBottom = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, 5)!;
 };
 
 SVGElement.prototype.setPaddingLeft = function (value: number) {

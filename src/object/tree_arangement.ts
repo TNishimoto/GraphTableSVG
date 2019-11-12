@@ -59,11 +59,11 @@ namespace GraphTableSVG {
          * @param graph 
          */
         export function alignVerticeByChildren(graph: GGraph): void {
-            if(!graph.isShow) return;
+            if (!graph.isShow) return;
             const [xi, yi] = getXYIntervals(graph);
 
             if (graph.rootVertex != null) {
-                const rootTree = graph.rootVertex.tree;
+                const rootTree = graph.rootVertex.createVirtualTree();
                 const [x, y] = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y];
                 alignVerticeByChildrenSub(rootTree, xi, yi);
                 rootTree.setRootLocation(x, y);
@@ -82,7 +82,7 @@ namespace GraphTableSVG {
             tree.subTreeRoot.cx = 0;
             tree.subTreeRoot.cy = 0;
             let leaves = 0;
-            const children = tree.children;
+            const children = tree.virtualTreeChildren;
 
             const leaveSizeWidthHalf = (tree.leaves.length * xInterval) / 2;
 
@@ -90,40 +90,24 @@ namespace GraphTableSVG {
 
 
             for (let i = 0; i < children.length; i++) {
-                alignVerticeByChildrenSub(children[i].tree, xInterval, yInterval);
-                const w = (children[i].tree.leaves.length * xInterval) / 2;
-                children[i].tree.setRootLocation(x + w, yInterval);
-                x += children[i].tree.leaves.length * xInterval;
+                alignVerticeByChildrenSub(children[i], xInterval, yInterval);
+                const w = (children[i].leaves.length * xInterval) / 2;
+                children[i].setRootLocation(x + w, yInterval);
+                x += children[i].leaves.length * xInterval;
             }
 
         }
 
-        export function standardTreeWidthArrangement(graph: GGraph): void {
-            //const xInterval = graph.vertexXInterval;
-            //const yInterval = graph.vertexYInterval;
-            
-            const [xi, yi] = getXYIntervals(graph);
-
-            if (graph.rootVertex != null) {
-                const rootTree = graph.rootVertex.tree;
-                const [x, y] = [rootTree.subTreeRoot.cx, rootTree.subTreeRoot.cy];
-                standardTreeWidthArrangementSub(rootTree, xi, yi);
-                rootTree.setRootLocation(x, y);
-
-                //graph.update();
-            }
-
-        }
         /**
          * グラフ内のVertexからVertex間の水平間隔と垂直間隔を自動で算出します。
          * @param graph 
          */
-        function computeAutoXYIntervals(graph : GGraph) : [number, number]{
-            let yMaximalInterval = 30;
-            let xMaximalInterval = 30;
-            graph.vertices.forEach((v)=>{
-                if(v.width > xMaximalInterval) xMaximalInterval = v.width;
-                if(v.height > yMaximalInterval) yMaximalInterval = v.height;
+        function computeAutoXYIntervals(graph: GGraph): [number, number] {
+            let yMaximalInterval = 100;
+            let xMaximalInterval = 100;
+            graph.vertices.forEach((v) => {
+                if (v.width > xMaximalInterval) xMaximalInterval = v.width;
+                if (v.height > yMaximalInterval) yMaximalInterval = v.height;
             })
             return [xMaximalInterval * 2, yMaximalInterval * 2];
         }
@@ -131,7 +115,7 @@ namespace GraphTableSVG {
          * グラフに設定されているVertex間の水平間隔と垂直間隔を算出します。
          * @param graph 
          */
-        function getXYIntervals(graph : GGraph) : [number, number]{
+        export function getXYIntervals(graph: GGraph): [number, number] {
             const [xMaximalInterval, yMaximalInterval] = computeAutoXYIntervals(graph);
             const xi = graph.vertexXInterval != null ? graph.vertexXInterval : xMaximalInterval;
             const yi = graph.vertexYInterval != null ? graph.vertexYInterval : yMaximalInterval;
@@ -141,18 +125,18 @@ namespace GraphTableSVG {
          * グラフ内の森を並べます。最初の木が内接する四角形の左上の座標は[0,0]です。
          * @param graph 
          */
-        function alignTrees(graph: GGraph){
+        function alignTrees(graph: GGraph) {
             let x = 0;
-            graph.roots.forEach((v)=>{
-                const region = v.tree.region();
-                v.tree.setRectangleLocation(x, 0);
+            graph.roots.forEach((v) => {
+                const region = v.createVirtualTree().region();
+                v.createVirtualTree().setRectangleLocation(x, 0);
                 //x += graph.vertexXInterval != null ? graph.vertexXInterval : 0;
                 x += region.width;
             });
         }
 
-        export function addOffset(graph : GGraph, x : number, y : number){
-            graph.vertices.forEach((v)=>{
+        export function addOffset(graph: GGraph, x: number, y: number) {
+            graph.vertices.forEach((v) => {
                 v.cx += x;
                 v.cy += y;
             });
@@ -195,7 +179,7 @@ namespace GraphTableSVG {
          * @param graph 
          */
         export function alignVerticeByLeave(graph: GGraph): void {
-            if(!graph.isShow) return;
+            if (!graph.isShow) return;
 
             graph.vertices.forEach((v) => { v.cx = 0; v.cy = 0 });
             const [xi, yi] = getXYIntervals(graph);
@@ -206,32 +190,48 @@ namespace GraphTableSVG {
             const reg = graph.getRegion();
             const dx = reg.x < 0 ? -reg.x : 0;
             const dy = reg.y < 0 ? -reg.y : 0;
-            
-            addOffset(graph, dx, dy);            
+
+            addOffset(graph, dx, dy);
         }
 
+        export function standardTreeWidthArrangement(graph: GGraph): void {
+            //const xInterval = graph.vertexXInterval;
+            //const yInterval = graph.vertexYInterval;
+
+            const [xi, yi] = getXYIntervals(graph);
+
+            if (graph.rootVertex != null) {
+                const rootTree = graph.rootVertex.createVirtualTree();
+                const [x, y] = [rootTree.subTreeRoot.cx, rootTree.subTreeRoot.cy];
+                standardTreeWidthArrangementSub(rootTree, xi, yi);
+                rootTree.setRootLocation(x, y);
+
+                //graph.update();
+            }
+
+        }
 
         function standardTreeWidthArrangementSub(tree: VirtualTree, xInterval: number, yInterval: number): void {
             tree.subTreeRoot.cx = 0;
             tree.subTreeRoot.cy = 0;
             let centerX = 0;
-            const children = tree.children;
+            const children = tree.virtualTreeChildren;
 
             let x = 0;
 
             if (children.length == 1) {
-                tree.subTreeRoot.cx = children[0].cx;
-                standardTreeWidthArrangementSub(children[0].tree, xInterval, yInterval);
+                tree.subTreeRoot.cx = children[0].root.cx;
+                standardTreeWidthArrangementSub(children[0], xInterval, yInterval);
 
-                children[0].tree.setRootLocation(children[0].x, yInterval);
+                children[0].setRootLocation(children[0].root.x, yInterval);
             } else if (children.length == 0) {
             } else {
                 for (let i = 0; i < children.length; i++) {
-                    standardTreeWidthArrangementSub(children[i].tree, xInterval, yInterval);
-                    const rect = children[i].tree.region();
-                    const diffX = children[i].cx - rect.x;
+                    standardTreeWidthArrangementSub(children[i], xInterval, yInterval);
+                    const rect = children[i].region();
+                    const diffX = children[i].root.cx - rect.x;
 
-                    children[i].tree.setRootLocation(x + diffX, yInterval);
+                    children[i].setRootLocation(x + diffX, yInterval);
                     x += rect.width + xInterval;
                     if (i < children.length - 1) {
                         centerX += x - (xInterval / 2);
@@ -242,8 +242,6 @@ namespace GraphTableSVG {
 
                 tree.subTreeRoot.cx = centerX;
             }
-
-
         }
     }
 }

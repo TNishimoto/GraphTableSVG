@@ -13,7 +13,7 @@
         //"declarationDir" : "../"
     },
     "include": [
-        "src/common", "src/object", "src/svghtml", "src/options"
+        "src/common", "src/object", "src/svghtml", "src/options", "src/debug"
     ],
     "exclude": [
         "src/out"

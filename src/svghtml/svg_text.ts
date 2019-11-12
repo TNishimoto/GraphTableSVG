@@ -74,7 +74,7 @@ SVGTextElement.prototype.gtSetXY = function (rect: GraphTableSVG.Rectangle, vAnc
 
 SVGTextElement.prototype.getMarginLeft = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginLeft, 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginLeft, 5)!;
 };
 SVGTextElement.prototype.setMarginLeft = function (value: number) {
     const p: SVGTextElement = this;    
@@ -82,7 +82,7 @@ SVGTextElement.prototype.setMarginLeft = function (value: number) {
 };
 SVGTextElement.prototype.getMarginTop = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginTop, 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginTop, 5)!;
 };
 SVGTextElement.prototype.setMarginTop = function (value: number) {
     const p: SVGTextElement = this;    
@@ -90,7 +90,7 @@ SVGTextElement.prototype.setMarginTop = function (value: number) {
 };
 SVGTextElement.prototype.getMarginRight = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginRight, 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginRight, 5)!;
 };
 SVGTextElement.prototype.setMarginRight = function (value: number) {
     const p: SVGTextElement = this;    
@@ -98,7 +98,7 @@ SVGTextElement.prototype.setMarginRight = function (value: number) {
 };
 SVGTextElement.prototype.getMarginBottom = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginBottom, 0)!;
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginBottom, 5)!;
 };
 SVGTextElement.prototype.setMarginBottom = function (value: number) {
     const p: SVGTextElement = this;    

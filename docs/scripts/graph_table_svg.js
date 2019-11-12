@@ -3,21 +3,21 @@ var GraphTableSVG;
 (function (GraphTableSVG) {
     let Color;
     (function (Color) {
-        const color_name = new Array("aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred", "darksalmon", "darkseagreen", "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsboro", "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indianred", "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgreen", "lightgrey", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream", "mistyrose", "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow", "springgreen", "steelblue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen");
-        let color_dic;
-        const r_value = new Array("F0", "FA", "00", "7F", "F0", "F5", "FF", "00", "FF", "00", "8A", "A5", "DE", "5F", "7F", "D2", "FF", "64", "FF", "DC", "00", "00", "00", "B8", "A9", "00", "BD", "8B", "55", "FF", "99", "8B", "E9", "8F", "48", "2F", "00", "94", "FF", "00", "69", "1E", "B2", "FF", "22", "FF", "DC", "F8", "FF", "DA", "80", "00", "AD", "F0", "FF", "CD", "4B", "FF", "F0", "E6", "FF", "7C", "FF", "AD", "F0", "E0", "FA", "90", "D3", "FF", "FF", "20", "87", "77", "B0", "FF", "00", "32", "FA", "FF", "80", "66", "00", "BA", "93", "3C", "7B", "00", "48", "C7", "19", "F5", "FF", "FF", "FF", "00", "FD", "80", "6B", "FF", "FF", "DA", "EE", "98", "AF", "DB", "FF", "FF", "CD", "FF", "DD", "B0", "80", "FF", "BC", "41", "8B", "FA", "F4", "2E", "FF", "A0", "C0", "87", "6A", "70", "FF", "00", "46", "D2", "00", "D8", "FF", "40", "EE", "F5", "FF", "F5", "FF", "9A");
-        const g_value = new Array("F8", "EB", "FF", "FF", "FF", "F5", "E4", "00", "EB", "00", "2B", "2A", "B8", "9E", "FF", "69", "7F", "95", "F8", "14", "FF", "00", "8B", "86", "A9", "64", "B7", "00", "6B", "8C", "32", "00", "96", "BC", "3D", "4F", "CE", "00", "14", "BF", "69", "90", "22", "FA", "8B", "00", "DC", "F8", "D7", "A5", "80", "80", "FF", "FF", "69", "5C", "00", "FF", "E6", "E6", "F0", "FC", "FA", "D8", "80", "FF", "FA", "EE", "D3", "B6", "A0", "B2", "CE", "88", "C4", "FF", "FF", "CD", "F0", "00", "00", "CD", "00", "55", "70", "B3", "68", "FA", "D1", "15", "19", "FF", "E4", "E4", "DE", "00", "F5", "80", "8E", "A5", "45", "70", "E8", "FB", "EE", "70", "EF", "DA", "85", "C0", "A0", "E0", "00", "00", "8F", "69", "45", "80", "A4", "8B", "F5", "52", "C0", "CE", "5A", "80", "FA", "FF", "82", "B4", "80", "BF", "63", "E0", "82", "DE", "FF", "F5", "FF", "CD");
-        const b_value = new Array("FF", "D7", "FF", "D4", "FF", "DC", "C4", "00", "CD", "FF", "E2", "2A", "87", "A0", "00", "1E", "50", "ED", "DC", "3C", "FF", "8B", "8B", "0B", "A9", "00", "6B", "8B", "2F", "00", "CC", "00", "7A", "8F", "8B", "4F", "D1", "D3", "93", "FF", "69", "FF", "22", "F0", "22", "FF", "DC", "FF", "00", "20", "80", "00", "2F", "F0", "B4", "5C", "82", "F0", "8C", "FA", "F5", "00", "CD", "E6", "80", "FF", "D2", "90", "D3", "C1", "7A", "AA", "FA", "99", "DE", "E0", "00", "32", "E6", "FF", "00", "AA", "CD", "D3", "DB", "71", "EE", "9A", "CC", "85", "70", "FA", "E1", "B5", "AD", "80", "E6", "00", "23", "00", "00", "D6", "AA", "98", "EE", "93", "D5", "B9", "3F", "CB", "DD", "E6", "80", "00", "8F", "E1", "13", "72", "60", "57", "EE", "2D", "C0", "EB", "CD", "90", "FA", "7F", "B4", "8C", "80", "D8", "47", "D0", "EE", "B3", "FF", "F5", "00", "32");
+        const colorNameArray = new Array("aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred", "darksalmon", "darkseagreen", "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsboro", "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indianred", "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgreen", "lightgrey", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream", "mistyrose", "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow", "springgreen", "steelblue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen");
+        let colorDic;
+        const rValue = new Array("F0", "FA", "00", "7F", "F0", "F5", "FF", "00", "FF", "00", "8A", "A5", "DE", "5F", "7F", "D2", "FF", "64", "FF", "DC", "00", "00", "00", "B8", "A9", "00", "BD", "8B", "55", "FF", "99", "8B", "E9", "8F", "48", "2F", "00", "94", "FF", "00", "69", "1E", "B2", "FF", "22", "FF", "DC", "F8", "FF", "DA", "80", "00", "AD", "F0", "FF", "CD", "4B", "FF", "F0", "E6", "FF", "7C", "FF", "AD", "F0", "E0", "FA", "90", "D3", "FF", "FF", "20", "87", "77", "B0", "FF", "00", "32", "FA", "FF", "80", "66", "00", "BA", "93", "3C", "7B", "00", "48", "C7", "19", "F5", "FF", "FF", "FF", "00", "FD", "80", "6B", "FF", "FF", "DA", "EE", "98", "AF", "DB", "FF", "FF", "CD", "FF", "DD", "B0", "80", "FF", "BC", "41", "8B", "FA", "F4", "2E", "FF", "A0", "C0", "87", "6A", "70", "FF", "00", "46", "D2", "00", "D8", "FF", "40", "EE", "F5", "FF", "F5", "FF", "9A");
+        const gValue = new Array("F8", "EB", "FF", "FF", "FF", "F5", "E4", "00", "EB", "00", "2B", "2A", "B8", "9E", "FF", "69", "7F", "95", "F8", "14", "FF", "00", "8B", "86", "A9", "64", "B7", "00", "6B", "8C", "32", "00", "96", "BC", "3D", "4F", "CE", "00", "14", "BF", "69", "90", "22", "FA", "8B", "00", "DC", "F8", "D7", "A5", "80", "80", "FF", "FF", "69", "5C", "00", "FF", "E6", "E6", "F0", "FC", "FA", "D8", "80", "FF", "FA", "EE", "D3", "B6", "A0", "B2", "CE", "88", "C4", "FF", "FF", "CD", "F0", "00", "00", "CD", "00", "55", "70", "B3", "68", "FA", "D1", "15", "19", "FF", "E4", "E4", "DE", "00", "F5", "80", "8E", "A5", "45", "70", "E8", "FB", "EE", "70", "EF", "DA", "85", "C0", "A0", "E0", "00", "00", "8F", "69", "45", "80", "A4", "8B", "F5", "52", "C0", "CE", "5A", "80", "FA", "FF", "82", "B4", "80", "BF", "63", "E0", "82", "DE", "FF", "F5", "FF", "CD");
+        const bValue = new Array("FF", "D7", "FF", "D4", "FF", "DC", "C4", "00", "CD", "FF", "E2", "2A", "87", "A0", "00", "1E", "50", "ED", "DC", "3C", "FF", "8B", "8B", "0B", "A9", "00", "6B", "8B", "2F", "00", "CC", "00", "7A", "8F", "8B", "4F", "D1", "D3", "93", "FF", "69", "FF", "22", "F0", "22", "FF", "DC", "FF", "00", "20", "80", "00", "2F", "F0", "B4", "5C", "82", "F0", "8C", "FA", "F5", "00", "CD", "E6", "80", "FF", "D2", "90", "D3", "C1", "7A", "AA", "FA", "99", "DE", "E0", "00", "32", "E6", "FF", "00", "AA", "CD", "D3", "DB", "71", "EE", "9A", "CC", "85", "70", "FA", "E1", "B5", "AD", "80", "E6", "00", "23", "00", "00", "D6", "AA", "98", "EE", "93", "D5", "B9", "3F", "CB", "DD", "E6", "80", "00", "8F", "E1", "13", "72", "60", "57", "EE", "2D", "C0", "EB", "CD", "90", "FA", "7F", "B4", "8C", "80", "D8", "47", "D0", "EE", "B3", "FF", "F5", "00", "32");
         function createHexCodeFromColorName(colorName) {
-            if (!color_dic) {
-                color_dic = {};
-                for (let i = 0; i < color_name.length; i++) {
-                    color_dic[color_name[i]] = i;
+            if (!colorDic) {
+                colorDic = {};
+                for (let i = 0; i < colorNameArray.length; i++) {
+                    colorDic[colorNameArray[i]] = i;
                 }
             }
-            if (colorName in color_dic) {
-                const i = color_dic[colorName];
-                return r_value[i] + g_value[i] + b_value[i];
+            if (colorName in colorDic) {
+                const i = colorDic[colorName];
+                return rValue[i] + gValue[i] + bValue[i];
             }
             else {
                 return colorName;
@@ -25,15 +25,15 @@ var GraphTableSVG;
         }
         Color.createHexCodeFromColorName = createHexCodeFromColorName;
         function createHexFromColorName(colorName) {
-            if (!color_dic) {
-                color_dic = {};
-                for (let i = 0; i < color_name.length; i++) {
-                    color_dic[color_name[i]] = i;
+            if (!colorDic) {
+                colorDic = {};
+                for (let i = 0; i < colorNameArray.length; i++) {
+                    colorDic[colorNameArray[i]] = i;
                 }
             }
-            if (colorName in color_dic) {
-                const i = color_dic[colorName];
-                return { r: parseInt(r_value[i], 16), g: parseInt(g_value[i], 16), b: parseInt(b_value[i], 16) };
+            if (colorName in colorDic) {
+                const i = colorDic[colorName];
+                return { r: parseInt(rValue[i], 16), g: parseInt(gValue[i], 16), b: parseInt(bValue[i], 16) };
             }
             else {
                 return null;
@@ -42,11 +42,11 @@ var GraphTableSVG;
         Color.createHexFromColorName = createHexFromColorName;
         function createRGBCodeFromColorName(colorName) {
             colorName = createHexCodeFromColorName(colorName);
-            if (colorName.substr(0, 3) == "rgb") {
+            if (colorName.substr(0, 3) === "rgb") {
                 return colorName;
             }
             else {
-                if (colorName.length == 6) {
+                if (colorNameArray.length === 6) {
                     const r = colorName.substr(0, 2);
                     const g = colorName.substr(2, 2);
                     const b = colorName.substr(4, 2);
@@ -65,22 +65,23 @@ var GraphTableSVG;
                 return v;
             }
             else {
-                if (str.substr(0, 3) == "rgb") {
+                if (str.substr(0, 3) === "rgb") {
                     str = str.replace("rgb(", "");
                     str = str.replace(")", "");
                     const values = str.split(",");
-                    if (values.length == 3) {
-                        return { r: parseInt(values[0]), g: parseInt(values[1]), b: parseInt(values[2]) };
+                    if (values.length === 3) {
+                        return { b: parseInt(values[2], undefined), g: parseInt(values[1], undefined),
+                            r: parseInt(values[0], undefined) };
                     }
                     else {
                         return def;
                     }
                 }
-                else if (str.length == 6) {
+                else if (str.length === 6) {
                     const r = str.substr(0, 2);
                     const g = str.substr(2, 2);
                     const b = str.substr(4, 2);
-                    return { r: parseInt(r), g: parseInt(g), b: parseInt(b) };
+                    return { g: parseInt(g, undefined), b: parseInt(b, undefined), r: parseInt(r, undefined) };
                 }
                 else {
                     return def;
@@ -1989,8 +1990,8 @@ var GraphTableSVG;
         get isLeaf() {
             return this.outcomingEdges.length == 0;
         }
-        get tree() {
-            return new GraphTableSVG.VirtualTree(this);
+        createVirtualTree(excludedEdgeDic) {
+            return new GraphTableSVG.VirtualTree(this, excludedEdgeDic);
         }
         get region() {
             const p = new GraphTableSVG.Rectangle();
@@ -3586,6 +3587,7 @@ var GraphTableSVG;
             this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.relocateName, value);
         }
         relocate() {
+            console.log("relocate");
             const value = this.relocateStyle;
             if (value != null) {
                 const p = Function("v", `return ${value}(v)`);
@@ -3658,7 +3660,7 @@ var GraphTableSVG;
                     this.connect(beginNode, edge, endNode);
                 });
             });
-            this.relocateStyle = "GraphTableSVG.TreeArrangement.standardTreeWidthArrangement";
+            this.relocateStyle = "GraphTableSVG.GraphArrangement.standardTreeWidthArrangement";
             if (option.x != undefined)
                 this.svgGroup.setX(option.x);
             if (option.y != undefined)
@@ -3955,200 +3957,6 @@ var GraphTableSVG;
         }
     }
     GraphTableSVG.GRectButton = GRectButton;
-})(GraphTableSVG || (GraphTableSVG = {}));
-var GraphTableSVG;
-(function (GraphTableSVG) {
-    let TreeArrangement;
-    (function (TreeArrangement) {
-        function reverse(graph, isX, isY) {
-            if (graph.vertices.length > 0) {
-                if (isY) {
-                    const midY = middle(graph.vertices.map((v) => v.cy));
-                    graph.vertices.forEach((v) => {
-                        if (v.cy < midY) {
-                            v.cy += 2 * (midY - v.cy);
-                        }
-                        else {
-                            v.cy -= 2 * (v.cy - midY);
-                        }
-                    });
-                }
-                if (isX) {
-                    const midX = middle(graph.vertices.map((v) => v.cx));
-                    graph.vertices.forEach((v) => {
-                        if (v.cx < midX) {
-                            v.cx += 2 * (midX - v.cx);
-                        }
-                        else {
-                            v.cx -= 2 * (v.cx - midX);
-                        }
-                    });
-                }
-            }
-        }
-        TreeArrangement.reverse = reverse;
-        function average(items) {
-            if (items.length > 0) {
-                let y = 0;
-                items.forEach((v) => {
-                    y += v;
-                });
-                return y / items.length;
-            }
-            else {
-                throw new Error();
-            }
-        }
-        function middle(items) {
-            if (items.length > 0) {
-                let min = items[0];
-                let max = items[0];
-                items.forEach((w) => {
-                    if (min > w)
-                        min = w;
-                    if (max < w)
-                        max = w;
-                });
-                return (min + max) / 2;
-            }
-            else {
-                throw new Error();
-            }
-        }
-        function alignVerticeByChildren(graph) {
-            if (!graph.isShow)
-                return;
-            const [xi, yi] = getXYIntervals(graph);
-            if (graph.rootVertex != null) {
-                const rootTree = graph.rootVertex.tree;
-                const [x, y] = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y];
-                alignVerticeByChildrenSub(rootTree, xi, yi);
-                rootTree.setRootLocation(x, y);
-            }
-            alignTrees(graph);
-        }
-        TreeArrangement.alignVerticeByChildren = alignVerticeByChildren;
-        function alignVerticeByChildrenSub(tree, xInterval, yInterval) {
-            tree.subTreeRoot.cx = 0;
-            tree.subTreeRoot.cy = 0;
-            let leaves = 0;
-            const children = tree.children;
-            const leaveSizeWidthHalf = (tree.leaves.length * xInterval) / 2;
-            let x = -leaveSizeWidthHalf;
-            for (let i = 0; i < children.length; i++) {
-                alignVerticeByChildrenSub(children[i].tree, xInterval, yInterval);
-                const w = (children[i].tree.leaves.length * xInterval) / 2;
-                children[i].tree.setRootLocation(x + w, yInterval);
-                x += children[i].tree.leaves.length * xInterval;
-            }
-        }
-        function standardTreeWidthArrangement(graph) {
-            const [xi, yi] = getXYIntervals(graph);
-            if (graph.rootVertex != null) {
-                const rootTree = graph.rootVertex.tree;
-                const [x, y] = [rootTree.subTreeRoot.cx, rootTree.subTreeRoot.cy];
-                standardTreeWidthArrangementSub(rootTree, xi, yi);
-                rootTree.setRootLocation(x, y);
-            }
-        }
-        TreeArrangement.standardTreeWidthArrangement = standardTreeWidthArrangement;
-        function computeAutoXYIntervals(graph) {
-            let yMaximalInterval = 30;
-            let xMaximalInterval = 30;
-            graph.vertices.forEach((v) => {
-                if (v.width > xMaximalInterval)
-                    xMaximalInterval = v.width;
-                if (v.height > yMaximalInterval)
-                    yMaximalInterval = v.height;
-            });
-            return [xMaximalInterval * 2, yMaximalInterval * 2];
-        }
-        function getXYIntervals(graph) {
-            const [xMaximalInterval, yMaximalInterval] = computeAutoXYIntervals(graph);
-            const xi = graph.vertexXInterval != null ? graph.vertexXInterval : xMaximalInterval;
-            const yi = graph.vertexYInterval != null ? graph.vertexYInterval : yMaximalInterval;
-            return [xi, yi];
-        }
-        function alignTrees(graph) {
-            let x = 0;
-            graph.roots.forEach((v) => {
-                const region = v.tree.region();
-                v.tree.setRectangleLocation(x, 0);
-                x += region.width;
-            });
-        }
-        function addOffset(graph, x, y) {
-            graph.vertices.forEach((v) => {
-                v.cx += x;
-                v.cy += y;
-            });
-        }
-        TreeArrangement.addOffset = addOffset;
-        function alignVerticeByLeaveSub(forest, xInterval, yInterval) {
-            let leafCounter = 0;
-            forest.getOrderedVertices(GraphTableSVG.VertexOrder.Postorder).forEach((v) => {
-                let x = 0;
-                let y = 0;
-                if (v.isLeaf) {
-                    x = leafCounter * xInterval;
-                    leafCounter++;
-                }
-                else {
-                    v.children.forEach((w) => {
-                        x += w.cx;
-                        if (y < w.cy)
-                            y = w.cy;
-                    });
-                    x = x / v.children.length;
-                    y += yInterval;
-                }
-                v.cx = x;
-                v.cy = y;
-            });
-        }
-        TreeArrangement.alignVerticeByLeaveSub = alignVerticeByLeaveSub;
-        function alignVerticeByLeave(graph) {
-            if (!graph.isShow)
-                return;
-            graph.vertices.forEach((v) => { v.cx = 0; v.cy = 0; });
-            const [xi, yi] = getXYIntervals(graph);
-            alignVerticeByLeaveSub(graph, xi, yi);
-            reverse(graph, false, true);
-            const reg = graph.getRegion();
-            const dx = reg.x < 0 ? -reg.x : 0;
-            const dy = reg.y < 0 ? -reg.y : 0;
-            addOffset(graph, dx, dy);
-        }
-        TreeArrangement.alignVerticeByLeave = alignVerticeByLeave;
-        function standardTreeWidthArrangementSub(tree, xInterval, yInterval) {
-            tree.subTreeRoot.cx = 0;
-            tree.subTreeRoot.cy = 0;
-            let centerX = 0;
-            const children = tree.children;
-            let x = 0;
-            if (children.length == 1) {
-                tree.subTreeRoot.cx = children[0].cx;
-                standardTreeWidthArrangementSub(children[0].tree, xInterval, yInterval);
-                children[0].tree.setRootLocation(children[0].x, yInterval);
-            }
-            else if (children.length == 0) {
-            }
-            else {
-                for (let i = 0; i < children.length; i++) {
-                    standardTreeWidthArrangementSub(children[i].tree, xInterval, yInterval);
-                    const rect = children[i].tree.region();
-                    const diffX = children[i].cx - rect.x;
-                    children[i].tree.setRootLocation(x + diffX, yInterval);
-                    x += rect.width + xInterval;
-                    if (i < children.length - 1) {
-                        centerX += x - (xInterval / 2);
-                    }
-                }
-                centerX = centerX / (children.length - 1);
-                tree.subTreeRoot.cx = centerX;
-            }
-        }
-    })(TreeArrangement = GraphTableSVG.TreeArrangement || (GraphTableSVG.TreeArrangement = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
@@ -4863,6 +4671,110 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
+    let GraphArrangement;
+    (function (GraphArrangement) {
+        function standardTreeWidthArrangement(graph) {
+            const [xi, yi] = GraphTableSVG.TreeArrangement.getXYIntervals(graph);
+            const roots = graph.roots.length == 0 ? [graph.vertices[0]] : graph.roots;
+            const externalEdges = createExternalEdgeDicInlevelorder(graph);
+            let [x, y] = [0, 0];
+            roots.forEach((v => {
+                const tree = v.createVirtualTree(externalEdges);
+                standardTreeWidthArrangementSub(tree, xi, yi);
+                tree.setRegionXYLocation(x, y);
+                x += tree.region().width;
+            }));
+        }
+        GraphArrangement.standardTreeWidthArrangement = standardTreeWidthArrangement;
+        function standardTreeWidthArrangementSub(tree, xInterval, yInterval) {
+            tree.subTreeRoot.cx = 0;
+            tree.subTreeRoot.cy = 0;
+            let centerX = 0;
+            const children = tree.virtualTreeChildren;
+            let x = 0;
+            tree.root.svgText.textContent = tree.getHeight().toString();
+            if (children.length == 1) {
+                tree.subTreeRoot.cx = children[0].root.cx;
+                standardTreeWidthArrangementSub(children[0], xInterval, yInterval);
+                children[0].setRootLocation(tree.root.cx, yInterval);
+            }
+            else if (children.length == 0) {
+            }
+            else {
+                for (let i = 0; i < children.length; i++) {
+                    standardTreeWidthArrangementSub(children[i], xInterval, yInterval);
+                    const rect = children[i].region();
+                    const diffX = children[i].root.cx - rect.x;
+                    children[i].setRootLocation(x + diffX, yInterval);
+                    x += rect.width + xInterval;
+                    if (i < children.length - 1) {
+                        centerX += x - (xInterval / 2);
+                    }
+                }
+                centerX = centerX / (children.length - 1);
+                tree.subTreeRoot.cx = centerX;
+            }
+        }
+        function createExternalEdgeDicInPreorder(node, incomingEdge, externalEdges, touchedVertexes) {
+            if (incomingEdge == null) {
+                node.outcomingEdges.forEach((v) => {
+                    const child = v.endVertex;
+                    if (child != null) {
+                        createExternalEdgeDicInPreorder(child, v, externalEdges, touchedVertexes);
+                    }
+                });
+            }
+            else {
+                if (!touchedVertexes.has(node)) {
+                    touchedVertexes.add(node);
+                    node.outcomingEdges.forEach((v) => {
+                        const child = v.endVertex;
+                        if (child != null) {
+                            createExternalEdgeDicInPreorder(child, v, externalEdges, touchedVertexes);
+                        }
+                    });
+                }
+                else {
+                    if (incomingEdge != null) {
+                        externalEdges.add(incomingEdge);
+                    }
+                }
+            }
+        }
+        function createExternalEdgeDicInlevelorder(graph) {
+            const externalEdges = new Set();
+            const touchedVertexes = new Set();
+            const inputEdges = new Array(0);
+            const roots = graph.roots.length == 0 ? [graph.vertices[0]] : graph.roots;
+            roots.forEach((v => {
+                touchedVertexes.add(v);
+                v.outcomingEdges.forEach((w) => inputEdges.push(w));
+            }));
+            createExternalEdgeDicInlevelorderSub(inputEdges, externalEdges, touchedVertexes, 0);
+            return externalEdges;
+        }
+        function createExternalEdgeDicInlevelorderSub(inputEdges, externalEdges, touchedVertexes, level) {
+            const nextEdges = new Array(0);
+            inputEdges.forEach((v) => {
+                if (v.endVertex != null) {
+                    const node = v.endVertex;
+                    if (!touchedVertexes.has(node)) {
+                        touchedVertexes.add(node);
+                        node.outcomingEdges.forEach((w) => nextEdges.push(w));
+                    }
+                    else {
+                        externalEdges.add(v);
+                    }
+                }
+            });
+            if (nextEdges.length > 0) {
+                createExternalEdgeDicInlevelorderSub(nextEdges, externalEdges, touchedVertexes, level + 1);
+            }
+        }
+    })(GraphArrangement = GraphTableSVG.GraphArrangement || (GraphTableSVG.GraphArrangement = {}));
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
     let Parse;
     (function (Parse) {
         function parseTree(parseText) {
@@ -4911,42 +4823,252 @@ var GraphTableSVG;
 })(GraphTableSVG || (GraphTableSVG = {}));
 var GraphTableSVG;
 (function (GraphTableSVG) {
-    class VirtualTree {
-        constructor(_root) {
-            this.subTreeRoot = _root;
+    let TreeArrangement;
+    (function (TreeArrangement) {
+        function reverse(graph, isX, isY) {
+            if (graph.vertices.length > 0) {
+                if (isY) {
+                    const midY = middle(graph.vertices.map((v) => v.cy));
+                    graph.vertices.forEach((v) => {
+                        if (v.cy < midY) {
+                            v.cy += 2 * (midY - v.cy);
+                        }
+                        else {
+                            v.cy -= 2 * (v.cy - midY);
+                        }
+                    });
+                }
+                if (isX) {
+                    const midX = middle(graph.vertices.map((v) => v.cx));
+                    graph.vertices.forEach((v) => {
+                        if (v.cx < midX) {
+                            v.cx += 2 * (midX - v.cx);
+                        }
+                        else {
+                            v.cx -= 2 * (v.cx - midX);
+                        }
+                    });
+                }
+            }
         }
-        get children() {
-            const p = this;
-            return this.subTreeRoot.children.map(function (x, i, arr) {
-                return x;
+        TreeArrangement.reverse = reverse;
+        function average(items) {
+            if (items.length > 0) {
+                let y = 0;
+                items.forEach((v) => {
+                    y += v;
+                });
+                return y / items.length;
+            }
+            else {
+                throw new Error();
+            }
+        }
+        function middle(items) {
+            if (items.length > 0) {
+                let min = items[0];
+                let max = items[0];
+                items.forEach((w) => {
+                    if (min > w)
+                        min = w;
+                    if (max < w)
+                        max = w;
+                });
+                return (min + max) / 2;
+            }
+            else {
+                throw new Error();
+            }
+        }
+        function alignVerticeByChildren(graph) {
+            if (!graph.isShow)
+                return;
+            const [xi, yi] = getXYIntervals(graph);
+            if (graph.rootVertex != null) {
+                const rootTree = graph.rootVertex.createVirtualTree();
+                const [x, y] = [rootTree.subTreeRoot.x, rootTree.subTreeRoot.y];
+                alignVerticeByChildrenSub(rootTree, xi, yi);
+                rootTree.setRootLocation(x, y);
+            }
+            alignTrees(graph);
+        }
+        TreeArrangement.alignVerticeByChildren = alignVerticeByChildren;
+        function alignVerticeByChildrenSub(tree, xInterval, yInterval) {
+            tree.subTreeRoot.cx = 0;
+            tree.subTreeRoot.cy = 0;
+            let leaves = 0;
+            const children = tree.virtualTreeChildren;
+            const leaveSizeWidthHalf = (tree.leaves.length * xInterval) / 2;
+            let x = -leaveSizeWidthHalf;
+            for (let i = 0; i < children.length; i++) {
+                alignVerticeByChildrenSub(children[i], xInterval, yInterval);
+                const w = (children[i].leaves.length * xInterval) / 2;
+                children[i].setRootLocation(x + w, yInterval);
+                x += children[i].leaves.length * xInterval;
+            }
+        }
+        function computeAutoXYIntervals(graph) {
+            let yMaximalInterval = 100;
+            let xMaximalInterval = 100;
+            graph.vertices.forEach((v) => {
+                if (v.width > xMaximalInterval)
+                    xMaximalInterval = v.width;
+                if (v.height > yMaximalInterval)
+                    yMaximalInterval = v.height;
+            });
+            return [xMaximalInterval * 2, yMaximalInterval * 2];
+        }
+        function getXYIntervals(graph) {
+            const [xMaximalInterval, yMaximalInterval] = computeAutoXYIntervals(graph);
+            const xi = graph.vertexXInterval != null ? graph.vertexXInterval : xMaximalInterval;
+            const yi = graph.vertexYInterval != null ? graph.vertexYInterval : yMaximalInterval;
+            return [xi, yi];
+        }
+        TreeArrangement.getXYIntervals = getXYIntervals;
+        function alignTrees(graph) {
+            let x = 0;
+            graph.roots.forEach((v) => {
+                const region = v.createVirtualTree().region();
+                v.createVirtualTree().setRectangleLocation(x, 0);
+                x += region.width;
             });
         }
+        function addOffset(graph, x, y) {
+            graph.vertices.forEach((v) => {
+                v.cx += x;
+                v.cy += y;
+            });
+        }
+        TreeArrangement.addOffset = addOffset;
+        function alignVerticeByLeaveSub(forest, xInterval, yInterval) {
+            let leafCounter = 0;
+            forest.getOrderedVertices(GraphTableSVG.VertexOrder.Postorder).forEach((v) => {
+                let x = 0;
+                let y = 0;
+                if (v.isLeaf) {
+                    x = leafCounter * xInterval;
+                    leafCounter++;
+                }
+                else {
+                    v.children.forEach((w) => {
+                        x += w.cx;
+                        if (y < w.cy)
+                            y = w.cy;
+                    });
+                    x = x / v.children.length;
+                    y += yInterval;
+                }
+                v.cx = x;
+                v.cy = y;
+            });
+        }
+        TreeArrangement.alignVerticeByLeaveSub = alignVerticeByLeaveSub;
+        function alignVerticeByLeave(graph) {
+            if (!graph.isShow)
+                return;
+            graph.vertices.forEach((v) => { v.cx = 0; v.cy = 0; });
+            const [xi, yi] = getXYIntervals(graph);
+            alignVerticeByLeaveSub(graph, xi, yi);
+            reverse(graph, false, true);
+            const reg = graph.getRegion();
+            const dx = reg.x < 0 ? -reg.x : 0;
+            const dy = reg.y < 0 ? -reg.y : 0;
+            addOffset(graph, dx, dy);
+        }
+        TreeArrangement.alignVerticeByLeave = alignVerticeByLeave;
+        function standardTreeWidthArrangement(graph) {
+            const [xi, yi] = getXYIntervals(graph);
+            if (graph.rootVertex != null) {
+                const rootTree = graph.rootVertex.createVirtualTree();
+                const [x, y] = [rootTree.subTreeRoot.cx, rootTree.subTreeRoot.cy];
+                standardTreeWidthArrangementSub(rootTree, xi, yi);
+                rootTree.setRootLocation(x, y);
+            }
+        }
+        TreeArrangement.standardTreeWidthArrangement = standardTreeWidthArrangement;
+        function standardTreeWidthArrangementSub(tree, xInterval, yInterval) {
+            tree.subTreeRoot.cx = 0;
+            tree.subTreeRoot.cy = 0;
+            let centerX = 0;
+            const children = tree.virtualTreeChildren;
+            let x = 0;
+            if (children.length == 1) {
+                tree.subTreeRoot.cx = children[0].root.cx;
+                standardTreeWidthArrangementSub(children[0], xInterval, yInterval);
+                children[0].setRootLocation(children[0].root.x, yInterval);
+            }
+            else if (children.length == 0) {
+            }
+            else {
+                for (let i = 0; i < children.length; i++) {
+                    standardTreeWidthArrangementSub(children[i], xInterval, yInterval);
+                    const rect = children[i].region();
+                    const diffX = children[i].root.cx - rect.x;
+                    children[i].setRootLocation(x + diffX, yInterval);
+                    x += rect.width + xInterval;
+                    if (i < children.length - 1) {
+                        centerX += x - (xInterval / 2);
+                    }
+                }
+                centerX = centerX / (children.length - 1);
+                tree.subTreeRoot.cx = centerX;
+            }
+        }
+    })(TreeArrangement = GraphTableSVG.TreeArrangement || (GraphTableSVG.TreeArrangement = {}));
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    class VirtualTree {
+        constructor(_root, _externalEdgeDic) {
+            this.subTreeRoot = _root;
+            if (_externalEdgeDic !== undefined) {
+                this.externalEdges = _externalEdgeDic;
+            }
+            else {
+                this.externalEdges = new Set();
+            }
+        }
+        get root() {
+            return this.subTreeRoot;
+        }
+        get children() {
+            return this.subTreeRoot.outcomingEdges.filter((v) => !this.externalEdges.has(v) && v.endVertex != null).map((v) => v.endVertex);
+        }
+        get virtualTreeChildren() {
+            return this.children.map((v) => v.createVirtualTree(this.externalEdges));
+        }
         get parentEdge() {
-            return this.subTreeRoot.parentEdge;
+            const p = this.subTreeRoot.incomingEdges.filter((v) => !this.externalEdges.has(v) && v.beginVertex != null);
+            if (p.length != 0) {
+                return p[0];
+            }
+            else {
+                return null;
+            }
         }
         getSubtree(result = []) {
             result.push(this.subTreeRoot);
-            const children = this.children;
+            const children = this.virtualTreeChildren;
             if (children.length == 0) {
                 return result;
             }
             else {
                 children.forEach(function (x, i, arr) {
-                    x.tree.getSubtree(result);
+                    x.getSubtree(result);
                 });
                 return result;
             }
         }
         getHeight() {
-            const children = this.children;
+            const children = this.virtualTreeChildren;
             if (children.length == 0) {
                 return 1;
             }
             else {
                 let max = 0;
                 children.forEach(function (x, i, arr) {
-                    if (max < x.tree.getHeight())
-                        max = x.tree.getHeight();
+                    if (max < x.getHeight())
+                        max = x.getHeight();
                 });
                 return max + 1;
             }
@@ -4998,10 +5120,16 @@ var GraphTableSVG;
             const diffY = _y - y;
             this.addOffset(diffX, diffY);
         }
+        setRegionXYLocation(_x, _y) {
+            const region = this.region();
+            const newX = _x - region.x;
+            const newY = _y - region.y;
+            this.addOffset(newX, newY);
+        }
         get leaves() {
-            const p = this;
-            return this.getSubtree().filter(function (x, i, arr) {
-                return x.outcomingEdges.length == 0;
+            return this.getSubtree().filter((x) => {
+                const r = x.outcomingEdges.filter((v) => !this.externalEdges.has(v) && v.endVertex != null).length;
+                return r == 0;
             });
         }
     }
@@ -7561,19 +7689,19 @@ SVGGElement.prototype.setY = function (value) {
 };
 SVGElement.prototype.getPaddingTop = function () {
     const p = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, 0);
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, 5);
 };
 SVGElement.prototype.getPaddingLeft = function () {
     const p = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, 0);
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, 5);
 };
 SVGElement.prototype.getPaddingRight = function () {
     const p = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, 0);
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, 5);
 };
 SVGElement.prototype.getPaddingBottom = function () {
     const p = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, 0);
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, 5);
 };
 SVGElement.prototype.setPaddingLeft = function (value) {
     const p = this;
@@ -7761,7 +7889,7 @@ SVGTextElement.prototype.gtSetXY = function (rect, vAnchor, hAnchor, isAutoSizeS
 };
 SVGTextElement.prototype.getMarginLeft = function () {
     const p = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginLeft, 0);
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginLeft, 5);
 };
 SVGTextElement.prototype.setMarginLeft = function (value) {
     const p = this;
@@ -7769,7 +7897,7 @@ SVGTextElement.prototype.setMarginLeft = function (value) {
 };
 SVGTextElement.prototype.getMarginTop = function () {
     const p = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginTop, 0);
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginTop, 5);
 };
 SVGTextElement.prototype.setMarginTop = function (value) {
     const p = this;
@@ -7777,7 +7905,7 @@ SVGTextElement.prototype.setMarginTop = function (value) {
 };
 SVGTextElement.prototype.getMarginRight = function () {
     const p = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginRight, 0);
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginRight, 5);
 };
 SVGTextElement.prototype.setMarginRight = function (value) {
     const p = this;
@@ -7785,7 +7913,7 @@ SVGTextElement.prototype.setMarginRight = function (value) {
 };
 SVGTextElement.prototype.getMarginBottom = function () {
     const p = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginBottom, 0);
+    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.marginBottom, 5);
 };
 SVGTextElement.prototype.setMarginBottom = function (value) {
     const p = this;
@@ -8108,7 +8236,7 @@ var GraphTableSVG;
         }
         addValue(i, key, value) {
             const column = this.columnMapper.get(key);
-            if (column == undefined) {
+            if (column === undefined) {
                 this.columnMapper.set(key, this.columnMapper.size);
             }
             this.rows[i].set(key, value);
@@ -8127,10 +8255,10 @@ var GraphTableSVG;
                 }
             }
             else {
-                if (typeof item == 'string' || typeof item == 'number' || typeof item == 'boolean') {
+                if (typeof item === "string" || typeof item === "number" || typeof item === "boolean") {
                     this.addValue(x, TableDictionary.ValueName, item.toString());
                 }
-                else if (typeof item == 'object') {
+                else if (typeof item === "object") {
                     Object.keys(item).forEach((key) => {
                         const value = item[key];
                         this.addValue(x, key.toString(), value);
@@ -8176,14 +8304,14 @@ var GraphTableSVG;
             return table;
         }
         createNode(item, graph, dic) {
-            if (typeof item == "object") {
-                const node = dic.get(item);
-                if (node != undefined) {
+            if (typeof item === "object") {
+                let node = dic.get(item);
+                if (node !== undefined) {
                     return node;
                 }
                 else {
-                    let node = graph.addNode();
-                    if (item != undefined && item != null) {
+                    node = graph.addNode();
+                    if (item !== undefined && item != null) {
                         dic.set(item, node);
                         Object.keys(item).forEach((key) => {
                             const value = item[key];
@@ -8202,7 +8330,7 @@ var GraphTableSVG;
             }
             else {
                 const node = graph.addNode();
-                if (typeof item == "undefined") {
+                if (typeof item === "undefined") {
                     node.text = "undefined";
                 }
                 else {
@@ -8957,5 +9085,37 @@ var GraphTableSVG;
         }
     }
     GraphTableSVG.openHTML = openHTML;
+})(GraphTableSVG || (GraphTableSVG = {}));
+var GraphTableSVG;
+(function (GraphTableSVG) {
+    let GraphManager;
+    (function (GraphManager) {
+        function createRandomObject(size) {
+            const adjacencyMatrix = new Array(size);
+            const nodes = new Array(size);
+            for (let y = 0; y < size; y++) {
+                nodes[y] = {};
+                adjacencyMatrix[y] = new Array(size);
+                for (let x = 0; x < size; x++) {
+                    if (x == y) {
+                        adjacencyMatrix[y][x] = false;
+                    }
+                    else {
+                        const random = Math.floor(Math.random() * 2);
+                        adjacencyMatrix[y][x] = random == 1;
+                    }
+                }
+            }
+            for (let y = 0; y < size; y++) {
+                for (let x = 0; x < size; x++) {
+                    if (adjacencyMatrix[y][x]) {
+                        nodes[y][x] = nodes[x];
+                    }
+                }
+            }
+            return nodes;
+        }
+        GraphManager.createRandomObject = createRandomObject;
+    })(GraphManager = GraphTableSVG.GraphManager || (GraphTableSVG.GraphManager = {}));
 })(GraphTableSVG || (GraphTableSVG = {}));
 //# sourceMappingURL=graph_table_svg.js.map

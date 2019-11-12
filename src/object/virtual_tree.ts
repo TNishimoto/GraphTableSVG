@@ -1,25 +1,48 @@
 namespace GraphTableSVG {
     export class VirtualTree {
         subTreeRoot: GVertex;
+        externalEdges : Set<GEdge>;
 
-        constructor(_root: GVertex) {
+        constructor(_root: GVertex, _externalEdgeDic? : Set<GEdge>) {
             this.subTreeRoot = _root;
+            if(_externalEdgeDic !== undefined){
+                this.externalEdges = _externalEdgeDic;
+            }else{
+                this.externalEdges = new Set();
+            }
+        }
+        get root(){
+            return this.subTreeRoot;
         }
         /**
          * 根の子ノードの配列を返します。
          */
         get children(): GVertex[] {
-            const p = this;
+            //const p = this;
+            return this.subTreeRoot.outcomingEdges.filter((v) => !this.externalEdges.has(v) && v.endVertex != null).map((v) => v.endVertex!)
+            /*
             return this.subTreeRoot.children.map(function (x, i, arr) {
                 return x;
             });
+            */
+        }
+        get virtualTreeChildren() : VirtualTree[]{
+            return this.children.map((v) => v.createVirtualTree(this.externalEdges))
+            //const child = this.children[nth];
+            //return child.createVirtualTree(this.externalEdges);
         }
         
         /**
          * 根の親との間の辺を返します。
          */
         get parentEdge(): GEdge | null {
-            return this.subTreeRoot.parentEdge;
+            const p = this.subTreeRoot.incomingEdges.filter((v) => !this.externalEdges.has(v) && v.beginVertex != null);
+            if(p.length != 0){
+                return p[0];
+            }else{
+                return null;
+            }
+            //return this.subTreeRoot.parentEdge;
         }
         
         /**
@@ -29,12 +52,12 @@ namespace GraphTableSVG {
         public getSubtree(result: GVertex[] = []): GVertex[] {
             result.push(this.subTreeRoot);
 
-            const children = this.children;
+            const children = this.virtualTreeChildren;
             if (children.length == 0) {
                 return result;
             } else {
                 children.forEach(function (x, i, arr) {
-                    x.tree.getSubtree(result);
+                    x.getSubtree(result);
                 });
                 return result;
             }
@@ -48,13 +71,13 @@ namespace GraphTableSVG {
         }
         */
         public getHeight(): number {
-            const children = this.children;
+            const children = this.virtualTreeChildren;
             if (children.length == 0) {
                 return 1;
             } else {
                 let max = 0;
                 children.forEach(function (x, i, arr) {
-                    if (max < x.tree.getHeight()) max = x.tree.getHeight();
+                    if (max < x.getHeight()) max = x.getHeight();
                 })
                 return max + 1;
             }
@@ -116,14 +139,28 @@ namespace GraphTableSVG {
             this.addOffset(diffX, diffY);
             //this.graph.updateEdges();
         }
+        public setRegionXYLocation(_x: number, _y: number) {
+            const region = this.region();
+            const newX = _x - region.x;
+            const newY = _y - region.y;
+
+            this.addOffset(newX,newY);
+            //this.graph.updateEdges();
+        }
         /**
          * 葉の配列を返します。
          */
         get leaves(): GVertex[] {
-            const p = this;
-            return this.getSubtree().filter(function (x, i, arr) {
-                return x.outcomingEdges.length == 0;
-            });
+            //const p = this;
+            return this.getSubtree().filter( (x) =>{
+                const r = x.outcomingEdges.filter((v) => !this.externalEdges.has(v) && v.endVertex != null).length;
+                return r == 0;
+            })
+
+            //return this.getSubtree().filter(function (x, i, arr) {
+            //
+            //    return x.outcomingEdges.length == 0;
+            //});
         }
 
         

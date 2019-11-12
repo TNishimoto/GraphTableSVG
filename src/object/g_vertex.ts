@@ -218,8 +218,12 @@ namespace GraphTableSVG {
         /**
          * このVertexを頂点とする仮想部分木を作成します。
          */
-        get tree(): VirtualTree {
-            return new VirtualTree(this);
+        //get tree(): VirtualTree {
+        //    return new VirtualTree(this);
+        //}
+
+        createVirtualTree(excludedEdgeDic? : Set<GEdge>) : VirtualTree{
+            return new VirtualTree(this, excludedEdgeDic);
         }
         /**
         このVertexの領域を返します。
