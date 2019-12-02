@@ -45,6 +45,8 @@ namespace GraphTableSVG {
             export const defaultTextClass: string = "___text-default";
             export const defaultCellClass: string = "___cell-default";  
             export const defaultSurfaceClass: string = "___surface-default";
+            export const defaultPathSurfaceClass: string = "___path-surface-default";
+
             export const defaultEdgePathClass: string = "___default-edge-path";
             export const defaultTextboxPathClass: string = "___default-textbox-path";
 
@@ -66,6 +68,7 @@ namespace GraphTableSVG {
         }
         export const beginNodeName: string = "data-begin-node";
         export const endNodeName: string = "data-end-node";
+        export const isAppropriatelyReverseTextMode: string = "data-appropriately-reverse-text";
         export const controlPointName: string = "data-control-point";
         export const connectPositionChangedEventName = "connect_position_changed";
         export const resizeName = "resized";

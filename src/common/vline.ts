@@ -96,6 +96,9 @@
 
         }        
     }
+    export type Point = {
+        x : number, y : number
+    }
 
     /**
      * 四角形を表します。

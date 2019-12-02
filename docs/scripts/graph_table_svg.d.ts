@@ -175,6 +175,10 @@ declare namespace GraphTableSVG {
         height: number;
         constructor(width?: number, height?: number);
     }
+    type Point = {
+        x: number;
+        y: number;
+    };
     class Rectangle {
         x: number;
         y: number;
@@ -248,6 +252,7 @@ declare namespace GraphTableSVG {
         static setObjectFromObjectID(obj: GObject): void;
         static getObjectFromID(id: string): GObject | null;
         getRegion(): Rectangle;
+        movable(): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -376,6 +381,7 @@ declare namespace GraphTableSVG {
         private static connectedEndVertexDic;
         static getConnectedVertexFromDic(edge: GEdge, isBegin: boolean): GVertex | null;
         static setConnectedVertexFromDic(edge: GEdge, isBegin: boolean): void;
+        readonly degree: number;
         readonly defaultClassName: string | undefined;
         readonly svgPath: SVGPathElement;
         protected _svgTextPath: SVGTextPathElement;
@@ -389,6 +395,8 @@ declare namespace GraphTableSVG {
         endConnectorType: ConnectorPosition;
         private beginVertexID;
         private endVertexID;
+        isAppropriatelyReverseMode: boolean;
+        side: string | null;
         markerStart: SVGMarkerElement | null;
         markerEnd: SVGMarkerElement | null;
         private removeVertexEvent;
@@ -406,7 +414,9 @@ declare namespace GraphTableSVG {
         private setRegularInterval;
         private pathPoints;
         private updateConnectorInfo;
+        private revTextForApp;
         update(): boolean;
+        private static getRevString;
         pathTextAlignment: PathTextAlighnment;
         save(): void;
         setIndexDictionaryForVBA(vertexDic: {
@@ -475,7 +485,7 @@ declare namespace GraphTableSVG {
         height: number;
         Noderegion(): Rectangle;
         moveInCanvas(): void;
-        constructFromLogicGraph(graph: LogicGraph, option?: {
+        build(graph: LogicGraph | LogicTree, option?: {
             x?: number;
             y?: number;
             isLatexMode?: boolean;
@@ -922,13 +932,17 @@ declare namespace GraphTableSVG {
     namespace Console {
         function table(item: any): void;
         function clear(): void;
-        function graph(item: any): void;
+        function graph(item: any | LogicTree | LogicGraph): void;
     }
 }
 declare namespace GraphTableSVG {
     namespace Common {
         function createCSS(): string;
     }
+}
+declare namespace HTMLFunctions {
+    function draggable(element: SVGElement, g: SVGGElement): void;
+    function appendDragFunctionsToDocument(): void;
 }
 declare namespace HTMLFunctions {
     enum NodeOrder {
@@ -991,6 +1005,8 @@ declare namespace GraphTableSVG {
         function getStyleSheet(name: string): CSSStyleDeclaration | null;
         function getRegion2(e: SVGElement): Rectangle;
         function getSVGSVG(e: SVGElement): SVGSVGElement;
+        function getLeastContainer(e: SVGElement): SVGGElement | SVGSVGElement | null;
+        function getAbsolutePosition(g: SVGGElement | SVGSVGElement): Point;
         function isSVGSVGHidden(e: SVGElement): boolean;
         function isSVGHidden(e: SVGElement): boolean;
     }
@@ -1181,6 +1197,7 @@ declare namespace GraphTableSVG {
             const defaultTextClass: string;
             const defaultCellClass: string;
             const defaultSurfaceClass: string;
+            const defaultPathSurfaceClass: string;
             const defaultEdgePathClass: string;
             const defaultTextboxPathClass: string;
             const defaultCellBackgroungClass: string;
@@ -1196,6 +1213,7 @@ declare namespace GraphTableSVG {
         }
         const beginNodeName: string;
         const endNodeName: string;
+        const isAppropriatelyReverseTextMode: string;
         const controlPointName: string;
         const connectPositionChangedEventName = "connect_position_changed";
         const resizeName = "resized";
@@ -1250,6 +1268,7 @@ declare namespace GraphTableSVG {
         static create(str: string[][], tableClassName?: string | null): LogicTable;
         static constructLogicTable(e: Element): LogicTable | null;
         static constructHTMLLogicTable(e: Element): LogicTable | null;
+        view(): void;
     }
 }
 declare namespace GraphTableSVG {
@@ -1284,6 +1303,7 @@ declare namespace GraphTableSVG {
             parentEdgeText?: string;
         });
         getOrderedNodes(order: VertexOrder): LogicTree[];
+        view(): void;
     }
     class BinaryLogicTree extends LogicTree {
         item: any;

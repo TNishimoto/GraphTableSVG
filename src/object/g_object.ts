@@ -22,9 +22,9 @@ namespace GraphTableSVG {
 
 
             this._svgGroup = SVG.createGroup(parentElement);
-            if (option.class !== undefined){
+            if (option.class !== undefined) {
                 this._svgGroup.setAttribute("class", option.class);
-            }else if(this.defaultClassName !== undefined){
+            } else if (this.defaultClassName !== undefined) {
                 this._svgGroup.setAttribute("class", this.defaultClassName);
             }
             if (option.style !== undefined) this._svgGroup.setAttribute("style", option.style);
@@ -32,6 +32,9 @@ namespace GraphTableSVG {
             //this.setClassNameOfSVGGroup();
 
             GObject.setObjectFromObjectID(this);
+
+            (this.svgGroup as any).operator = this;
+
 
 
             this.svgGroup.setAttribute(CustomAttributeNames.GroupAttribute, this.type);
@@ -50,7 +53,7 @@ namespace GraphTableSVG {
             this.dispatchObjectCreatedEvent();
             this.addResizeEvent();
 
-            
+
             this.__x = option.x;
             this.__y = option.y;
             this.__cx = option.cx;
@@ -58,13 +61,13 @@ namespace GraphTableSVG {
 
             const __svg = <any>this.svgGroup
             __svg.operator = this;
-            
+
 
             /*
             if (_option.x !== undefined) this.fixedX = _option.x;
             if (_option.y !== undefined) this.fixedY = _option.y;
             */
-            if(this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
+            if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
         }
         /*
         public get shape() : ShapeObjectType {
@@ -72,19 +75,19 @@ namespace GraphTableSVG {
         }
         */
         private _isInitialized = false;
-        private __x : number | undefined;
-        private __y : number | undefined;
-        private __cx : number | undefined;
-        private __cy : number | undefined;
+        private __x: number | undefined;
+        private __y: number | undefined;
+        private __cx: number | undefined;
+        private __cy: number | undefined;
 
-        public get defaultClassName() : string | undefined {
+        public get defaultClassName(): string | undefined {
             return undefined;
         }
-        protected get isInitialized() : boolean{
+        protected get isInitialized(): boolean {
             return this._isInitialized
         }
-        protected firstFunctionAfterInitialized(){
-            if(this._isInitialized){
+        protected firstFunctionAfterInitialized() {
+            if (this._isInitialized) {
                 throw new Error("This function is already called");
             }
             this._isInitialized = true;
@@ -322,11 +325,11 @@ namespace GraphTableSVG {
             this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.prohibitionOutOfRange, v.toString());
 
         }
-        public moveInCanvas(){
+        public moveInCanvas() {
             this.x = (this.width / 2) + 10;
             this.y = (this.height / 2) + 10;
         }
-        
+
 
 
         public get type(): ShapeObjectType {
@@ -354,9 +357,9 @@ namespace GraphTableSVG {
                 if (this.updateAttributes.some((v) => v == p.attributeName)) {
                     b = true;
                 }
-                
-                if(p.target == this.svgGroup){
-                    if(p.attributeName == "x" || p.attributeName == "y"){
+
+                if (p.target == this.svgGroup) {
+                    if (p.attributeName == "x" || p.attributeName == "y") {
                         this.dispatchConnectPositionChangedEvent();
                     }
                 }
@@ -412,11 +415,11 @@ namespace GraphTableSVG {
         }
         protected _isUpdating: boolean = false;
         public update() {
-            if(!this._isInitialized){
+            if (!this._isInitialized) {
                 //throw new Error("This instance have not been initialized!");
-            }else{
+            } else {
                 this._isUpdating = true;
-                this._isUpdating = false;    
+                this._isUpdating = false;
             }
         }
         protected updateAttributes = ["style", "transform", "data-speaker-x", "data-speaker-y",
@@ -474,5 +477,10 @@ namespace GraphTableSVG {
             return rect;
         }
 
+        public movable(): void {
+
+            HTMLFunctions.appendDragFunctionsToDocument();
+            HTMLFunctions.draggable(this.svgSurface!, this.svgGroup);
+        }
     }
 }

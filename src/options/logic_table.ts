@@ -268,5 +268,9 @@ namespace GraphTableSVG {
             }
             return logicTable;
         }
+        
+        public view(){
+            GraphTableSVG.Console.table(this);
+        }
     }
 }

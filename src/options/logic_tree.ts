@@ -83,6 +83,11 @@
             }
             return r;
         }
+        public view(){
+            GraphTableSVG.Console.graph(this);
+        }
+
+        
     }
     /**
      * 二分木を表現するクラスです。

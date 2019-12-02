@@ -33,6 +33,12 @@ namespace GraphTableSVG {
                 stroke-width: 1px;
                 fill : white;
             }
+            .${CustomAttributeNames.StyleValue.defaultPathSurfaceClass}{
+                stroke: black;
+                stroke-width: 1px;
+                fill : transparent;
+            }
+
             .${CustomAttributeNames.StyleValue.defaultEdgePathClass}{
                 stroke: black;
                 fill: none;

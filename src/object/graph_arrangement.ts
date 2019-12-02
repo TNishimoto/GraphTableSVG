@@ -29,7 +29,7 @@ namespace GraphTableSVG {
 
             let x = 0;
 
-            tree.root.svgText.textContent = tree.getHeight().toString();
+            //tree.root.svgText.textContent = tree.getHeight().toString();
 
             if (children.length == 1) {
                 tree.subTreeRoot.cx = children[0].root.cx;

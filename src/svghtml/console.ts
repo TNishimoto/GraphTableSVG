@@ -54,17 +54,25 @@ namespace GraphTableSVG {
             }
         }
         export function table(item: any) {
-            GraphTableSVG.Common.setGraphTableCSS();
-            const code = getOrCreateCodeElement();
-            const svg = addSVGSVGElement(code);
-            const gtable = createShape(svg, "g-table");
-            const tableDic = new TableDictionary();
-            tableDic.construct(item);
-            const logicTable = tableDic.toLogicTable();
+            if(item instanceof GraphTableSVG.LogicTable){
+                GraphTableSVG.Common.setGraphTableCSS();
+ 
+                const code = getOrCreateCodeElement();
+                const svg = addSVGSVGElement(code);
+                const gtable = createShape(svg, "g-table");
+
+                gtable.constructFromLogicTable(item);
+                gtable.x = 0;
+                gtable.y = 0;    
+
+            }else{
+
+                const tableDic = new TableDictionary();
+                tableDic.construct(item);
+                const logicTable = tableDic.toLogicTable();
+                table(logicTable);
+            }
             
-            gtable.constructFromLogicTable(logicTable);
-            gtable.x = 0;
-            gtable.y = 0;
 
         }
         export function clear(){
@@ -72,16 +80,27 @@ namespace GraphTableSVG {
             code.innerHTML="";
         }
 
-        export function graph(item : any){
-            GraphTableSVG.Common.setGraphTableCSS();
-            const code = getOrCreateCodeElement();
-            const svg = addSVGSVGElement(code);
-            const ggraph = createShape(svg, "g-graph");
-            const tableDic = new TableDictionary();
-            tableDic.construct(item);
-            const logicGraph = tableDic.toLogicGraph();
-            ggraph.constructFromLogicGraph(logicGraph);
-            console.log(logicGraph);
+        export function graph(item : any | LogicTree | LogicGraph){
+
+            if(item instanceof LogicTree || item instanceof LogicGraph){
+                GraphTableSVG.Common.setGraphTableCSS();
+                const code = getOrCreateCodeElement();
+                const svg = addSVGSVGElement(code);
+                const ggraph = createShape(svg, "g-graph");    
+                ggraph.build(item);
+                /*
+                if(item instanceof LogicGraph){
+                }else{
+                    ggraph.constructFromLogicTree(item);
+                }
+                */
+            }else{
+                const tableDic = new TableDictionary();
+                tableDic.construct(item);
+                const logicGraph = tableDic.toLogicGraph();
+                graph(logicGraph);
+                //console.log(logicGraph);    
+            }
         }
     }
 }

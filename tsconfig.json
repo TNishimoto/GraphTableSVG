@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "noImplicitAny": true,
-        "removeComments": true,
+        "removeComments": false,
         "preserveConstEnums": true,
         "outFile": "./dist/graph_table_svg.js",
         //"outFile": "./docs/scripts/graph_table_svg.js",

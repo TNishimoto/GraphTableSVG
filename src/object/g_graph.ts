@@ -7,7 +7,7 @@ namespace GraphTableSVG {
 
         constructor(box: SVGElement | string, option: GTextBoxAttributes = {}) {
             super(box, option)
-            if(this.type == ShapeObjectType.Graph) this.firstFunctionAfterInitialized();
+            if (this.type == ShapeObjectType.Graph) this.firstFunctionAfterInitialized();
             //this.svgGroup.addEventListener(CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);
         }
 
@@ -67,16 +67,16 @@ namespace GraphTableSVG {
         }
         */
 
-       /*
-        get defaultEdgeClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultEdgeClass);
-        }
-        */
-       /*
-        set defaultEdgeClass(value: string | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.defaultEdgeClass, value);
-        }
-        */
+        /*
+         get defaultEdgeClass(): string | null {
+             return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultEdgeClass);
+         }
+         */
+        /*
+         set defaultEdgeClass(value: string | null) {
+             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.defaultEdgeClass, value);
+         }
+         */
         /**
         根を返します。
         */
@@ -188,28 +188,26 @@ namespace GraphTableSVG {
             const edge: GEdge = <any>GraphTableSVG.createShape(this, 'g-edge');
             this.connect(parent, edge, _child, { beginConnectorType: "bottom", endConnectorType: "top" });
             //this.createdNodeCallback(child);
-            this.relocate();    
+            this.relocate();
 
         }
-        public get relocateStyle() : string | null{
+        public get relocateStyle(): string | null {
             return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.relocateName)
         }
-        public set relocateStyle(value : string | null){
+        public set relocateStyle(value: string | null) {
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.relocateName, value);
         }
 
         public relocate() {
-            console.log("relocate");
             const value = this.relocateStyle;
-            if(value != null){
+            if (value != null) {
                 const p = Function("v", `return ${value}(v)`);
                 const f = <any>Function("graph", `${value}(graph)`);
                 f(this);
             }
             //this.relocate();
-            this.moveInCanvas();
-            console.log(this.width + "/" + this.height)
-            
+            //this.moveInCanvas();
+
 
         }
         get width(): number {
@@ -223,59 +221,96 @@ namespace GraphTableSVG {
         }
         set height(value: number) {
         }
-        public Noderegion() : Rectangle {
-            let left =0;
-            let right = 0;
-            let top =0;
-            let bottom = 0;
-            this.vertices.forEach((v)=>{
-                if(v.x < left) left = v.x;
-                if(right < (v.x + v.width)) right = v.x + v.width;
-                if(v.y < top) top = v.y;
-                if(bottom < (v.y + v.height)) bottom = v.y + v.height;
+        public Noderegion(): Rectangle {
+            const _x = this.svgGroup.getX();
+            const _y = this.svgGroup.getY();
+            let left = _x;
+            let right = _y;
+            let top = _x;
+            let bottom = _y;
+            this.vertices.forEach((v) => {
+                const x = v.x + _x;
+                const y = v.y + _y;
+                if (x < left) left = x;
+                if (right < (x + v.width)) right = x + v.width;
+                if (y < top) top = y;
+                if (bottom < (y + v.height)) bottom = y + v.height;
 
             })
-            return new Rectangle(left, top, right-left, bottom-top);
+            return new Rectangle(left, top, right - left, bottom - top);
         }
 
-        public moveInCanvas(){
+        public moveInCanvas() {
+
             const rect = this.Noderegion();
-            if(rect.x < 0){
+            if (rect.x < 0) {
                 this.x = this.x - (rect.x);
             }
-            if(rect.y < 0){
+            if (rect.y < 0) {
                 this.y = this.y - (rect.y);
             }
         }
 
-        public constructFromLogicGraph(graph: LogicGraph, option: { x?: number, y?: number, isLatexMode?: boolean } = {}) {
+        public build(graph: LogicGraph | LogicTree, option: { x?: number, y?: number, isLatexMode?: boolean } = {}) {
             if (option.isLatexMode == undefined) option.isLatexMode = false;
             this.clear();
             const svgsvg = GraphTableSVG.SVG.getSVGSVG(this.svgGroup);
-            
-            const dic : Map<number, GVertex> = new Map();
 
-            graph.nodes.forEach((v, i) =>{
-                const node = GraphTableSVG.createShape(svgsvg,"g-ellipse")
-                node.svgText.textContent = v.text;
-                this.add(node);
-                dic.set(i, node);
-            })
-            graph.nodes.forEach((v, i) =>{
-                v.outputEdges.forEach((e, j) =>{
-                    const edge = GraphTableSVG.createShape(svgsvg,"g-edge")
-                    if(e.text!= undefined){
-                        const b = option.isLatexMode == undefined ? false : option.isLatexMode;
-                        edge.svgTextPath.setTextContent(e.text, b);
 
-                    }
-                    this.add(edge);
-                    const beginNode = dic.get(i);
-                    const endNode = dic.get(e.endNodeIndex);
-                    if(beginNode == undefined || endNode == undefined) throw Error("error");
-                    this.connect(beginNode, edge, endNode);
+            if (graph instanceof LogicGraph) {
+                const dic: Map<number, GVertex> = new Map();
+
+                graph.nodes.forEach((v, i) => {
+                    const node = GraphTableSVG.createShape(svgsvg, "g-ellipse")
+                    node.svgText.textContent = v.text;
+                    this.add(node);
+                    dic.set(i, node);
                 })
-            })
+                graph.nodes.forEach((v, i) => {
+                    v.outputEdges.forEach((e, j) => {
+                        const edge = GraphTableSVG.createShape(svgsvg, "g-edge")
+                        if (e.text != undefined) {
+                            const b = option.isLatexMode == undefined ? false : option.isLatexMode;
+                            edge.svgTextPath.setTextContent(e.text, b);
+
+                        }
+                        this.add(edge);
+                        const beginNode = dic.get(i);
+                        const endNode = dic.get(e.endNodeIndex);
+                        if (beginNode == undefined || endNode == undefined) throw Error("error");
+                        this.connect(beginNode, edge, endNode);
+                    })
+                })
+            } else {
+                const dic: Map<LogicTree, GVertex> = new Map();
+
+                graph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
+                    const node = GraphTableSVG.createShape(svgsvg, "g-ellipse")
+                    node.svgText.textContent = v.vertexText;
+                    this.add(node);
+                    dic.set(v, node);
+                })
+                graph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
+                        v.children.forEach((e, j) => {
+                            if(e != null){
+                                const edge = GraphTableSVG.createShape(svgsvg, "g-edge")
+                                if (e.parentEdgeText != null) {
+                                    const b = option.isLatexMode == undefined ? false : option.isLatexMode;
+                                    edge.svgTextPath.setTextContent(e.parentEdgeText, b);
+                                    edge.isAppropriatelyReverseMode =  true;
+                                    //edge.setAppropriateText();
+        
+                                }
+                                this.add(edge);
+                                const beginNode = dic.get(v);
+                                const endNode = dic.get(e);
+                                if (beginNode == undefined || endNode == undefined) throw Error("error");
+                                this.connect(beginNode, edge, endNode);
+                            }
+                        
+                    })
+                })
+            }
 
             this.relocateStyle = "GraphTableSVG.GraphArrangement.standardTreeWidthArrangement"
 
@@ -285,7 +320,7 @@ namespace GraphTableSVG {
             if (option.x != undefined) this.svgGroup.setX(option.x);
             if (option.y != undefined) this.svgGroup.setY(option.y);
 
-        }   
+        }
 
         /**
         * LogicTreeから木を構築します。
@@ -335,10 +370,10 @@ namespace GraphTableSVG {
         private createChildFromLogicTree<T>(parent: GVertex | null = null, logicVertex: LogicTree, option: { isLatexMode?: boolean } = {}): GVertex {
             if (option.isLatexMode == undefined) option.isLatexMode = false;
 
-            const node : GVertex = <any>GraphTableSVG.createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
+            const node: GVertex = <any>GraphTableSVG.createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
             if (logicVertex.vertexText != null) GraphTableSVG.SVGTextBox.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
             if (parent != null) {
-                const edge : GEdge = GraphTableSVG.createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass! });
+                const edge: GEdge = GraphTableSVG.createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass! });
                 if (logicVertex.parentEdgeText != null) {
                     edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
                     edge.pathTextAlignment = PathTextAlighnment.regularInterval;
@@ -354,73 +389,73 @@ namespace GraphTableSVG {
             //this.createdNodeCallback(node);
             return node;
         }
-        
-        public createVBACode(id: number): string[] {            
-            const r : string[] = [];
-            this.vertices.forEach((v)=>v.createVBACode(id++).forEach((w)=>r.push(w)));
-            this.edges.forEach((v)=>v.createVBACode(id++).forEach((w)=>r.push(w)));
+
+        public createVBACode(id: number): string[] {
+            const r: string[] = [];
+            this.vertices.forEach((v) => v.createVBACode(id++).forEach((w) => r.push(w)));
+            this.edges.forEach((v) => v.createVBACode(id++).forEach((w) => r.push(w)));
             return r;
         }
-        
-        public get VBAObjectNum() : number{
+
+        public get VBAObjectNum(): number {
             return this.vertices.length + this.edges.length;
         }
 
-        public getStyleValue(className : string, valueName : string) : string | null {
+        public getStyleValue(className: string, valueName: string): string | null {
 
-            if(this.svgGroup.hasAttribute("class")){
-                const oldClass = this.svgGroup.getAttribute("class")!;                
+            if (this.svgGroup.hasAttribute("class")) {
+                const oldClass = this.svgGroup.getAttribute("class")!;
                 this.svgGroup.setAttribute("class", className);
                 const r = this.svgGroup.getPropertyStyleValue(valueName);
                 this.svgGroup.setAttribute("class", oldClass);
                 return r;
-            }else{
+            } else {
                 this.svgGroup.setAttribute("class", className);
                 const r = this.svgGroup.getPropertyStyleValue(valueName);
                 this.svgGroup.removeAttribute("class");
                 return r;
             }
         }
-        protected dispatchVertexCreatedEvent(vertex : GVertex): void {
+        protected dispatchVertexCreatedEvent(vertex: GVertex): void {
             var event = document.createEvent("HTMLEvents");
             event.initEvent(CustomAttributeNames.vertexCreatedEventName, true, true);
             vertex.svgGroup.dispatchEvent(event);
 
         }
-        private objectCreatedFunction = ( e : Event) =>{
+        private objectCreatedFunction = (e: Event) => {
             const obj = GObject.getObjectFromObjectID(<SVGElement>e.target);
-            if(obj instanceof GVertex){
+            if (obj instanceof GVertex) {
                 this.dispatchVertexCreatedEvent(obj);
-            }else if(obj instanceof GEdge){
+            } else if (obj instanceof GEdge) {
 
-            }else{
+            } else {
 
             }
         }
-        public setRootIndex(vertex : GVertex, rootIndex : number){
-            if(vertex.graph == this){
-                if(rootIndex < this.roots.length){
+        public setRootIndex(vertex: GVertex, rootIndex: number) {
+            if (vertex.graph == this) {
+                if (rootIndex < this.roots.length) {
                     this.svgGroup.insertBefore(vertex.svgGroup, this.roots[rootIndex].svgGroup);
-                }else{
-                    if(this.roots.length == 0){
-                        if(this.svgGroup.firstChild == null){
+                } else {
+                    if (this.roots.length == 0) {
+                        if (this.svgGroup.firstChild == null) {
                             this.svgGroup.appendChild(vertex.svgGroup);
-                        }else{
+                        } else {
                             this.svgGroup.insertBefore(vertex.svgGroup, this.svgGroup.firstChild);
                         }
-                    }else{
-                        if(this.roots[this.roots.length-1].svgGroup.nextSibling == null){
+                    } else {
+                        if (this.roots[this.roots.length - 1].svgGroup.nextSibling == null) {
                             this.svgGroup.appendChild(vertex.svgGroup);
-                        }else{
-                            this.svgGroup.insertBefore(vertex.svgGroup, this.roots[this.roots.length-1].svgGroup.nextSibling);
-                        }    
+                        } else {
+                            this.svgGroup.insertBefore(vertex.svgGroup, this.roots[this.roots.length - 1].svgGroup.nextSibling);
+                        }
                     }
                 }
-            }else{
+            } else {
                 throw Error("error!");
             }
         }
-        protected observerFunction(x: MutationRecord[]){
+        protected observerFunction(x: MutationRecord[]) {
             super.observerFunction(x);
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
@@ -429,11 +464,11 @@ namespace GraphTableSVG {
                 }
             }
         }
-        
+
         public get type(): ShapeObjectType {
             return ShapeObjectType.Graph;
         }
-        protected resizeUpdate(){
+        protected resizeUpdate() {
             this.relocate();
         }
         /*
@@ -442,7 +477,7 @@ namespace GraphTableSVG {
             
         }
         */
-        
+
     }
 
 

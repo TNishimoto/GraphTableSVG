@@ -10,12 +10,17 @@ namespace GraphTableSVG {
             this.updateAttributes.push(CustomAttributeNames.beginNodeName);
             this.updateAttributes.push(CustomAttributeNames.endNodeName);
 
+            const pathClass = this.svgSurface!.getAttribute("class");
+            if (pathClass == CustomAttributeNames.StyleValue.defaultSurfaceClass) {
+                this.svgSurface!.setAttribute("class", CustomAttributeNames.StyleValue.defaultPathSurfaceClass);
+            }
+
 
             //this._svgGroup = SVG.createGroup(svgbox);
             const _option = <GEdgeAttributes>this.initializeOption(option);
             this.svgText.textContent = "";
             //const textClass = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
-            if( option.textClass === undefined) option.textClass = CustomAttributeNames.StyleValue.defaultTextClass;
+            if (option.textClass === undefined) option.textClass = CustomAttributeNames.StyleValue.defaultTextClass;
             this._svgTextPath = SVG.createTextPath2(option.textClass);
             this.svgPath.id = `path-${this.objectID}`;
 
@@ -44,7 +49,7 @@ namespace GraphTableSVG {
 
             if (_option.endVertex instanceof GVertex) this.endVertex = _option.endVertex;
 
-            if(_option.x3 !== undefined && _option.y3 !== undefined){
+            if (_option.x3 !== undefined && _option.y3 !== undefined) {
                 this.controlPoint = [[_option.x3, _option.y3]];
             }
 
@@ -54,13 +59,15 @@ namespace GraphTableSVG {
 
             //this.pathTextAlignment = PathTextAlighnment.begin;
             //this.update();
-            if(_option.pathTextAlignment !== undefined)this.pathTextAlignment = _option.pathTextAlignment;
-            if(this.svgText.getPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment) == null){
+            if (_option.pathTextAlignment !== undefined) this.pathTextAlignment = _option.pathTextAlignment;
+            if (this.svgText.getPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment) == null) {
                 this.pathTextAlignment = PathTextAlighnment.center;
             }
 
             //this.update();
-            if(this.type == ShapeObjectType.Edge) this.firstFunctionAfterInitialized();
+            if (this.type == ShapeObjectType.Edge) this.firstFunctionAfterInitialized();
+
+            //this.setAppropriateText();
         }
         /*
         protected createObjects(svgbox: SVGElement, option: GObjectAttributes = {}): void {
@@ -73,10 +80,10 @@ namespace GraphTableSVG {
             _output.x2 = e.gtGetAttributeNumberWithoutNull("x2", 300);
             _output.y1 = e.gtGetAttributeNumberWithoutNull("y1", 0);
             _output.y2 = e.gtGetAttributeNumberWithoutNull("y2", 300);
-            if(e.hasAttribute("x3")){
+            if (e.hasAttribute("x3")) {
                 _output.x3 = e.gtGetAttributeNumberWithoutNull("x3", 0);
             }
-            if(e.hasAttribute("y3")){
+            if (e.hasAttribute("y3")) {
                 _output.y3 = e.gtGetAttributeNumberWithoutNull("y3", 0);
             }
 
@@ -190,8 +197,12 @@ namespace GraphTableSVG {
             }
         }
         */
-        
-        public get defaultClassName() : string | undefined {
+        public get degree() : number {
+            const rad = Math.atan2(this.y2 - this.y1,this.x2 - this.x1);
+            const degree = (180 * rad) / Math.PI;
+            return degree;
+        }
+        public get defaultClassName(): string | undefined {
             return GraphTableSVG.CustomAttributeNames.StyleValue.defaultEdgeClass;
         }
 
@@ -204,7 +215,7 @@ namespace GraphTableSVG {
             return this._svgTextPath;
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
-            if(option.surfaceClass === undefined) option.surfaceClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultEdgePathClass;
+            if (option.surfaceClass === undefined) option.surfaceClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultEdgePathClass;
             //if (_className != null) option.surfaceClass = _className;
 
             this._svgSurface = GEdge.createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
@@ -229,14 +240,14 @@ namespace GraphTableSVG {
             if (style !== undefined) path.setAttribute("style", style);
 
             path.setAttribute("class", className)
-                /*
-            if (className !== undefined) {
-            } else {
-                if (path.style.stroke == null || path.style.stroke == "") path.style.stroke = "black";
-                if (path.style.fill == null || path.style.fill == "") path.style.fill = "none";
-                if (path.style.strokeWidth == null || path.style.strokeWidth == "") path.style.strokeWidth = "1pt";
-            }
-            */
+            /*
+        if (className !== undefined) {
+        } else {
+            if (path.style.stroke == null || path.style.stroke == "") path.style.stroke = "black";
+            if (path.style.fill == null || path.style.fill == "") path.style.fill = "none";
+            if (path.style.strokeWidth == null || path.style.strokeWidth == "") path.style.strokeWidth = "1pt";
+        }
+        */
 
             return path;
         }
@@ -314,6 +325,43 @@ namespace GraphTableSVG {
                 this.svgGroup.setAttribute(CustomAttributeNames.endNodeName, v);
             }
         }
+
+        public get isAppropriatelyReverseMode() : boolean{
+            
+            const p = this.svgGroup.getAttribute(GraphTableSVG.CustomAttributeNames.isAppropriatelyReverseTextMode);
+            if(p == null){
+                return false;
+            }else{
+                return p == "true";
+            }
+            
+
+            //return this.svgGroup.getAttribute(CustomAttributeNames.appropriateEdgeText);
+        }
+        public set isAppropriatelyReverseMode(v: boolean) {
+            this.svgGroup.setAttribute(GraphTableSVG.CustomAttributeNames.isAppropriatelyReverseTextMode, v.toString());
+
+        }
+
+        public get side() : string | null{
+            return this.svgTextPath.getAttribute("side");
+        }
+        public set side(v: string | null) {
+            if (v == null) {
+                this.svgTextPath.removeAttribute("side");
+            } else {
+                this.svgTextPath.setAttribute("side", v);
+            }
+        }
+
+        /*
+        public setAppropriateText(){
+            const text = this.svgTextPath.textContent;
+            if(text != null){
+                this.isAppropriateText = text;
+            }            
+        }
+        */
 
         /**
          * 開始位置の矢印オブジェクトを返します。
@@ -644,6 +692,31 @@ namespace GraphTableSVG {
             }
             //if(this.beginVertexID != )
         }
+        private revTextForApp(){
+            if(this.side == "left" || this.side == null){
+                this.side = "right";
+            }else{
+                this.side = "left";
+            }
+            const tspans : SVGTSpanElement[] = new Array(0); 
+            this.svgTextPath.children.item;
+            for(let i=this.svgTextPath.children.length;i>=0;i--){
+                const tspan = this.svgTextPath.children.item(i);
+                if(tspan instanceof SVGTSpanElement){
+                    tspans.push(tspan);
+                }
+            }
+            tspans.forEach((v) => v.remove());
+            tspans.forEach((v) => {
+                const text = v.textContent;
+                if(text != null){
+                    const revText = GEdge.getRevString(text);
+                    v.textContent = revText;
+                }
+                this.svgTextPath.appendChild(v);
+            })
+
+        }
         /**
          * 再描画します。
          */
@@ -660,7 +733,7 @@ namespace GraphTableSVG {
             }
             this._observer.observe(this.svgGroup, this._observerOption);
 
-            
+
             const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
             const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];
 
@@ -678,6 +751,24 @@ namespace GraphTableSVG {
             points[points.length - 1] = [x2, y2];
             this.pathPoints = points;
 
+            if(this.isAppropriatelyReverseMode){
+                
+                const degree = this.degree;
+                if(degree < -90 || degree > 90){
+                    //Rev
+                    if(this.side == "left" || this.side == null){
+                        this.revTextForApp();
+                    }
+                }else{
+                    if(this.side == "right"){
+                        this.revTextForApp();
+                    }
+                }
+            }
+            
+
+
+
             if (this.markerStart != null) {
                 var node = <SVGPolygonElement>this.markerStart.firstChild;
                 if (this.lineColor != null) {
@@ -690,7 +781,7 @@ namespace GraphTableSVG {
                     node.setAttribute("fill", this.lineColor);
                 }
             }
-            const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");            
+            const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
             if (strokeWidth != null) {
                 const diffy = Common.toPX(strokeWidth) + 3;
                 this.svgText.setAttribute("dy", `-${diffy}`);
@@ -726,7 +817,11 @@ namespace GraphTableSVG {
                 //const box = this.svgText.getBBox();
                 const pathLen = this.svgPath.getTotalLength();
                 const offset = (pathLen - textRect.width) / 2;
-                this.svgTextPath.setAttribute("startOffset", `${offset}`);
+                if(this.side == "right"){
+                    this.svgTextPath.setAttribute("startOffset", `${offset}`);
+                }else{
+                    this.svgTextPath.setAttribute("startOffset", `${offset}`);
+                }
                 //こっちだとEdgeではおかしくなる
                 //this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    
 
@@ -737,7 +832,15 @@ namespace GraphTableSVG {
                 //this.svgText.textLength.baseVal.value = 0;
             }
 
+
             return false;
+        }
+        private static getRevString(text : string) : string{
+            let s = "";
+            for(let i=text.length-1;i>=0;i--){
+                s += text[i];
+            }
+            return s;
         }
         /**
          * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
@@ -906,7 +1009,7 @@ namespace GraphTableSVG {
             textCodes.forEach((v) => v.forEach((w) => r.push(w)));
             return r;
         }
-
+        
         public get hasSize(): boolean {
             return false;
         }

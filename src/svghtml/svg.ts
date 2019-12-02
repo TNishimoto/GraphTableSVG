@@ -702,6 +702,46 @@ namespace GraphTableSVG {
             
 
         }
+        
+        export function getLeastContainer(e :SVGElement) : SVGGElement | SVGSVGElement | null {
+            const parent = e.parentElement;
+                
+            if(parent instanceof SVGSVGElement || parent instanceof SVGGElement){
+                return parent;
+            }else if (parent == null){
+                return null;
+            }else
+            {
+                if(parent instanceof SVGElement){
+                    return getLeastContainer(parent);
+                }else{
+                    return null;
+                }
+    
+            }
+        }
+        export function getAbsolutePosition(g : SVGGElement | SVGSVGElement) : Point {
+            if(g instanceof SVGSVGElement){
+                const rect = g.getBoundingClientRect();
+                return {x : rect.left, y : rect.top} 
+            }else{
+                const parent = getLeastContainer(g);
+                if(parent instanceof SVGSVGElement){
+                    const rect = parent.getBoundingClientRect();
+                    const x = rect.left + g.getX();
+                    const y = rect.top + g.getY();
+                    return {x : x, y : y} 
+                }else if(parent instanceof SVGGElement){
+                    const rect = getAbsolutePosition(parent);
+                    const x = rect.x + g.getX();
+                    const y = rect.y + g.getY();
+                    return {x : x, y : y} 
+                }else{
+                    throw Error("error");
+                }
+    
+            }
+        }
         export function isSVGSVGHidden(e: SVGElement): boolean {
             const svgsvg = getSVGSVG(e);
             return !HTMLFunctions.isShow(svgsvg);
