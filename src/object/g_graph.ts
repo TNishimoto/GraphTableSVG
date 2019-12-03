@@ -8,7 +8,7 @@
     import {HTMLFunctions} from "../svghtml/html_functions"
     import {SVG} from "../svghtml/svg"
 
-    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import { CustomAttributeNames } from "../common/custtome_attributes"
     import { ShapeObjectType, VertexOrder, PathTextAlighnment } from "../common/enums";
     import { createShape, createVertex } from "../options/open_svg";
     import { SVGTextBox } from "../svghtml/svg_textbox";

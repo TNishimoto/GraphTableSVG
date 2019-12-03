@@ -1,5 +1,5 @@
     
-import { CustomAttributeNames } from "../options/custtome_attributes"
+import { CustomAttributeNames } from "../common/custtome_attributes"
 import { HorizontalAnchor, VerticalAnchor} from "../common/enums";
 import { Cell } from "../object/table/cell"
     export namespace Common {

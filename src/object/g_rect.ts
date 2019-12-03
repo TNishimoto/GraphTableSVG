@@ -4,7 +4,7 @@
 
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
     import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes} from "../options/attributes_option"
-    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import { CustomAttributeNames } from "../common/custtome_attributes"
     import {Rectangle, VLine} from "../common/vline"
 
     export class GRect extends GVertex {

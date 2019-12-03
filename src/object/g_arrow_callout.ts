@@ -4,7 +4,7 @@
     import {GTextBox} from "./g_textbox"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction } from "../common/enums";
     import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
-    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import { CustomAttributeNames } from "../common/custtome_attributes"
     import {Rectangle, VLine} from "../common/vline"
     import { SVGTextBox } from "../svghtml/svg_textbox";
 

@@ -1,7 +1,7 @@
 //namespace GraphTableSVG {
     
     import { Padding, Rectangle } from "./vline";
-    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import { CustomAttributeNames } from "./custtome_attributes"
     import * as GUIP  from "../common/gui"
     import { HTMLFunctions } from "../svghtml/html_functions"
     import { SVG } from "../svghtml/svg"

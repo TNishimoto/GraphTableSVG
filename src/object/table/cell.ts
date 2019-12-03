@@ -3,7 +3,7 @@
 
     import {Common} from "../../common/common"
     import {Rectangle} from "../../common/vline"
-    import { CustomAttributeNames } from "../../options/custtome_attributes"
+    import { CustomAttributeNames } from "../../common/custtome_attributes"
     import {GTable} from "../g_table"
     import {SVG} from "../../svghtml/svg"
     import {CellOption} from "../../options/attributes_option"

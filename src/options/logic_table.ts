@@ -8,7 +8,7 @@
         public item: any;
     }
     */
-import { CustomAttributeNames } from "../options/custtome_attributes"
+import { CustomAttributeNames } from "../common/custtome_attributes"
 import { SVGTextBox } from "../svghtml/svg_textbox"
 //import { HTMLFunctions } from "../svghtml/html_table"
 import { HTMLFunctions } from "../svghtml/html_functions"

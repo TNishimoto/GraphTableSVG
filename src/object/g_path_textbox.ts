@@ -4,7 +4,7 @@
     import {GVertex} from "./g_vertex"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
     import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes} from "../options/attributes_option"
-    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import { CustomAttributeNames } from "../common/custtome_attributes"
     import { SVGTextBox } from "../svghtml/svg_textbox"
 
     import {Rectangle, VLine} from "../common/vline"

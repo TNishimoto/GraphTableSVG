@@ -1,5 +1,5 @@
 
-import { CustomAttributeNames } from "../options/custtome_attributes"
+import { CustomAttributeNames } from "../common/custtome_attributes"
 import { ShapeObjectType } from "../common/enums";
 import {HTMLFunctions} from "../svghtml/html_functions"
 import * as HTMLTable from "../svghtml/html_table"

@@ -10,7 +10,7 @@ import "../svghtml/interface"
 import {HTMLFunctions} from "../svghtml/html_functions"
 import * as HTMLFunctions2 from "../svghtml/draggable_object"
 
-import { CustomAttributeNames } from "../options/custtome_attributes"
+import { CustomAttributeNames } from "../common/custtome_attributes"
 import { ShapeObjectType } from "../common/enums";
 
     export class GObject {

@@ -1,5 +1,5 @@
 ﻿//namespace GraphTableSVG {
-import {CustomAttributeNames} from "../options/custtome_attributes"
+import {CustomAttributeNames} from "./custtome_attributes"
     /**
     ノードの並び順です。
     */

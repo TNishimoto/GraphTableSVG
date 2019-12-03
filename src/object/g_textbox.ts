@@ -1,7 +1,7 @@
 /// <reference path="g_object.ts"/>
 import {GObject} from "./g_object"
 import {GTextBoxAttributes, GObjectAttributes} from "../options/attributes_option"
-import { CustomAttributeNames } from "../options/custtome_attributes"
+import { CustomAttributeNames } from "../common/custtome_attributes"
 import { SVGTextBox } from "../svghtml/svg_textbox"
 import { ShapeObjectType, msoDashStyle } from "../common/enums";
 import { HorizontalAnchor, VerticalAnchor } from "../common/enums";

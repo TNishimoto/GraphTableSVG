@@ -3,7 +3,7 @@
     import {GVertex} from "./g_vertex"
     import {GObject} from "./g_object"
 
-    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import { CustomAttributeNames } from "../common/custtome_attributes"
     import {GEdgeAttributes, GObjectAttributes} from "../options/attributes_option"
     import {SVG} from "../svghtml/svg"
     import { ShapeObjectType, PathTextAlighnment,ConnectorPosition,msoDashStyle } from "../common/enums";

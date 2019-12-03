@@ -10,7 +10,7 @@
     import {VirtualTree} from "./virtual_tree"
     
 
-    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import { CustomAttributeNames } from "../common/custtome_attributes"
     import {  ConnectorPosition, msoDashStyle} from "../common/enums";
     export class GVertex extends GTextBox {
         /*

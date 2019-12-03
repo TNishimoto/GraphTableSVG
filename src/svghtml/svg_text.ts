@@ -6,7 +6,7 @@ import { HTMLFunctions } from "./html_functions";
 import { HorizontalAnchor, VerticalAnchor } from "../common/enums";
 import { SVGTextBox } from "./svg_textbox"
 import {  } from "./svg_interface"
-import { CustomAttributeNames } from "../options/custtome_attributes"
+import { CustomAttributeNames } from "../common/custtome_attributes"
 
 declare global {
     export interface SVGTextElement {

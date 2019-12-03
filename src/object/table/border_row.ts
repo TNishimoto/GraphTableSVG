@@ -1,6 +1,6 @@
 //namespace GraphTableSVG {
     import {Cell} from "./cell"
-    import { CustomAttributeNames } from "../../options/custtome_attributes"
+    import { CustomAttributeNames } from "../../common/custtome_attributes"
     import {GTable} from "../g_table"
     import {SVG} from "../../svghtml/svg"
 

@@ -3,7 +3,7 @@
 import { Rectangle, Point } from "../common/vline";
 import { HTMLFunctions } from "./html_functions";
 import {  } from "./svg_interface"
-import { CustomAttributeNames } from "../options/custtome_attributes"
+import { CustomAttributeNames } from "../common/custtome_attributes"
 
     export namespace SVG {
         export let idCounter: number = 0;
@@ -324,168 +324,13 @@ import { CustomAttributeNames } from "../options/custtome_attributes"
                 svg.setAttribute("class", className);
             }
         }
-        /**
-         * SVG要素のクラス属性名からCSSStyleDeclarationを取得します。
-         * @param svg 取得されるSVG要素
-         */
+
         
-        function getCSSStyle(svg: HTMLElement): CSSStyleDeclaration | null {
-            const css = getComputedStyle(svg);
-            return css;
-            
-            if (svg.getAttribute("class") == null) {
-                return null;
-            } else {
-                const css = getComputedStyle(svg);
-                return css;
-            }
-            
-        }
         
-        const exceptionStyleNames = ["marker-start", "marker-mid", "marker-end"];
-        /**
-         * SVG要素のクラス属性名から取得できるCSSStyleDeclarationを要素のスタイル属性にセットします。
-         * @param svg 適用されるSVG要素
-         */
-        export function setCSSToStyle(svg: HTMLElement, isComplete: boolean = true) {
-            if (isComplete) {
-                const css: CSSStyleDeclaration | null = getComputedStyle(svg);
-                if (css != null) {
-                    for (let i = 0; i < css.length; i++) {
-                        const name = css.item(i);
-                        const value = css.getPropertyValue(name);
-                        if (value.length > 0) {
-                            if (!exceptionStyleNames.some((v) => v == name)) {
-                                svg.style.setProperty(name, value);
-                            }
-                        }
-                    }
-                }
-
-            } else {
-                cssPropertyNames.forEach((v) => {
-                    const value = getPropertyStyleValue(svg, v);
-                    if (value != null) {
-                        svg.style.setProperty(v, value);
-                    }
-                });
-            }
-
-            /*
-            const css = getCSSStyle(svg);
-            if (css != null) {
-                let css2: CSSStyleDeclaration = css;
-                cssPropertyNames.forEach((v) => {                    
-                    const value = css2.getPropertyValue(v).trim();
-                    if (value.length > 0) {
-                        svg.style.setProperty(v, value);
-                    }
-                });
-            }
-            */
-        }
-        function getPropertyStyleValue(item: HTMLElement, name: string): string | null {
-            const p = item.style.getPropertyValue(name).trim();
-            if (p.length == 0) {
-                const r = item.getAttribute("class");
-                if (r == null) {
-                    return null;
-                } else {
-                    const css = getCSSStyle(item);
-                    if (css == null) throw Error("error");
-                    //const css = getComputedStyle(item);
-                    const p2 = css.getPropertyValue(name).trim();
-                    if (p2.length == 0) {
-                        return null;
-                    } else {
-                        return p2;
-                    }
-                }
-            } else {
-                return p;
-            }
-        }
-
-        function getAllElementStyleMapSub(item: HTMLElement | string, output: { [key: number]: string | null; }, id: number): number {
-            if (typeof item == 'string') {
-                const svgBox: HTMLElement | null = document.getElementById(item);
-                if (svgBox != null) {
-                    getAllElementStyleMapSub(svgBox, output, id);
-                }
-            }
-            else {
-                const style = item.getAttribute("style");
-                output[id++] = style;
-                for (let i = 0; i < item.children.length; i++) {
-                    const child = <HTMLElement>item.children.item(i);
-                    if (child != null) {
-                        id = getAllElementStyleMapSub(child, output, id);
-                    }
-                }
-            }
-            return id;
-
-        }
-
-        export function getAllElementStyleMap(item: HTMLElement | string): { [key: number]: string; } {
-            const dic: { [key: number]: string; } = {};
-            getAllElementStyleMapSub(item, dic, 0);
-            return dic;
-        }
-        function setAllElementStyleMapSub(item: HTMLElement | string, output: { [key: number]: string | null; }, id: number): number {
-            if (typeof item == 'string') {
-                const svgBox: HTMLElement | null = document.getElementById(item);
-                if (svgBox != null) {
-                    setAllElementStyleMapSub(svgBox, output, id);
-                }
-            }
-            else {
-                const style = output[id++];
-                if (style == null) {
-                    item.removeAttribute("style");
-                } else {
-                    item.setAttribute("style", style);
-                }
-                for (let i = 0; i < item.children.length; i++) {
-                    const child = <HTMLElement>item.children.item(i);
-                    if (child != null) {
-                        id = setAllElementStyleMapSub(child, output, id);
-                    }
-                }
-            }
-            return id;
-
-        }
-
-        export function setAllElementStyleMap(item: HTMLElement | string, dic: { [key: number]: string; }) {
-            setAllElementStyleMapSub(item, dic, 0);
-        }
 
 
-        /**
-         * 入力のSVG要素とその配下の要素全てにsetCSSToStyleを適用します。
-         * @param item SVG要素もしくはそのid
-         */
-        export function setCSSToAllElementStyles(item: HTMLElement | string, isComplete: boolean = true) {
-            if (typeof item == 'string') {
-                const svgBox: HTMLElement | null = document.getElementById(item);
-                if (svgBox != null) {
-                    setCSSToAllElementStyles(svgBox, isComplete);
-                }
-            }
-            else {
-                if (!item.hasAttribute("data-skip")) setCSSToStyle(item, isComplete);
-                for (let i = 0; i < item.children.length; i++) {
-                    const child = <HTMLElement>item.children.item(i);
-                    if (child != null) {
-                        setCSSToAllElementStyles(child, isComplete);
-                    }
-                }
-            }
-        }
-        const cssPropertyNames: string[] = ["font-size", "fill", "stroke",
-            "font-family", "font-weight", "stroke-width", "background", "border", "background-color", "border-bottom-color", "border-bottom-style", "border-bottom-width",
-            "border-left-color", "border-left-style", "border-left-width", "border-right-color", "border-right-style", "border-right-width", "border-top-color", "border-top-style", "border-top-width"];
+
+
 
         /**
          * 未使用。

@@ -1,5 +1,5 @@
 
-import { CustomAttributeNames } from "../options/custtome_attributes"
+import { CustomAttributeNames } from "../common/custtome_attributes"
 
 declare global {
     export interface SVGGElement {
