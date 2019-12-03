@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Callout Samples</title>
+    <script src="https://cdn.jsdelivr.net/gh/TNishimoto/GraphTableSVG@v0.0.14/dist/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.openSVG();
+        };
+    </script>
+</head>
+
+<body>
+    <svg width="600px" height="600px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
+        <g-callout x="300" y="100" speaker-x="100" speaker-y="100">
+            <t>speaker-x="100"</t>
+            <t>speaker-y="100"</t>
+        </g-callout>
+        <g-arrow-callout cx="100" cy="200" direction="up">
+            <t>direction="up"</t>
+        </g-arrow-callout>
+        <g-arrow-callout cx="100" cy="300" direction="left">
+            <t>direction="left"</t>
+        </g-arrow-callout>
+        <g-arrow-callout cx="100" cy="400" direction="right">
+            <t>direction="right"</t>
+        </g-arrow-callout>
+        <g-arrow-callout cx="100" cy="500" direction="down">
+            <t>direction="down"</t>
+        </g-arrow-callout>
+
+        <g-arrow-callout cx="200" cy="600" direction="right" arrow-neck-height="100" arrow-neck-width="40" arrow-head-width="60" arrow-head-height="80">
+            <t>arrow-neck-height="100"</t>
+            <t>arrow-neck-width="15"</t>
+            <t>arrow-head-height="80"</t>
+            <t>arrow-head-width="60"</t>
+
+        </g-arrow-callout>
+    </svg>
+</body>
+
+</html>

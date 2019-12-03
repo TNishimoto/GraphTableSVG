@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Edge Attribute Samples</title>
+    <script src="../scripts/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.openSVG();
+        };
+    </script>
+</head>
+
+<body>
+    <svg width="600px" height="600px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
+        <g-edge x1="50" y1="50" x2="350" y2="50">x1="50" y1="50" x2="350" y2="50"</g-edge>
+
+        <g-edge x1="50" y1="200" x2="350" y2="200" x3="100" y3="0">x1="50" y1="200" x2="350" y2="200" x3="100" y3="0"</g-edge>
+
+        <g-rect x="50" y="250" id="16_1">
+        </g-rect>
+        <g-rect x="350" y="250" id="16_2">
+        </g-rect>
+        <g-edge begin-vertex="16_1" end-vertex="16_2"></g-edge>
+
+        <g-rect x="50" y="450" id="16_3">
+        </g-rect>
+        <g-rect x="350" y="450" id="16_4">
+        </g-rect>
+        <g-edge begin-vertex="16_3" end-vertex="16_4" x3="100" y3="100">x3="100" y3="100"</g-edge>
+    </svg>
+</body>
+
+</html>
