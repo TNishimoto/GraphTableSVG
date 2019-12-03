@@ -1,5 +1,19 @@
 /// <reference path="g_object.ts"/>
-namespace GraphTableSVG {
+import {GObject} from "./g_object"
+import {GTextBoxAttributes, GObjectAttributes} from "../options/attributes_option"
+import { CustomAttributeNames } from "../options/custtome_attributes"
+import { SVGTextBox } from "../svghtml/svg_textbox"
+import { ShapeObjectType, msoDashStyle } from "../common/enums";
+import { HorizontalAnchor, VerticalAnchor } from "../common/enums";
+import {Rectangle} from "../common/vline"
+import {HTMLFunctions} from "../svghtml/html_functions"
+import {SVG} from "../svghtml/svg"
+import { openSVGFunctions} from "../options/open_svg"
+import "../svghtml/svg_interface";
+import "../svghtml/svg_text";
+import "../svghtml/svg_g";
+
+//namespace GraphTableSVG {
 
     export class GTextBox extends GObject {
         private _svgText: SVGTextElement;
@@ -35,7 +49,7 @@ namespace GraphTableSVG {
             if (typeof _option.text == "string") {
                 this.svgText.setTextContent(_option.text);
             } else if (Array.isArray(_option.text)) {
-                GraphTableSVG.SVGTextBox.constructSVGTextByHTMLElements(this.svgText, _option.text, false);
+                SVGTextBox.constructSVGTextByHTMLElements(this.svgText, _option.text, false);
             } else {
 
             }
@@ -74,7 +88,7 @@ namespace GraphTableSVG {
         private static createSVGText(className: string | undefined, style: string | undefined): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-            _svgText.setAttribute(CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
+            _svgText.setAttribute(CustomAttributeNames.objectIDName, (SVG.idCounter++).toString());
             if (style !== undefined) _svgText.setAttribute("style", style);
 
             //_svgText.style.textAnchor = "middle";
@@ -247,7 +261,7 @@ namespace GraphTableSVG {
         protected updateToFitText() {
             this.isFixTextSize = true;
             //const box = this.svgText.getBBox();
-            const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+            const textRect = SVGTextBox.getSize(this.svgText);
 
             const textWidth = textRect.width < this._minimumWidth ? this._minimumWidth : textRect.width;
             const textHeight = textRect.height < this._minimumHeight ? this._minimumHeight : textRect.height;
@@ -371,7 +385,7 @@ namespace GraphTableSVG {
 
         public get msoDashStyle(): msoDashStyle | null {
             if (this.svgSurface != null) {
-                const dashStyle = this.svgSurface.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+                const dashStyle = this.svgSurface.getPropertyStyleValue(CustomAttributeNames.Style.msoDashStyleName);
                 if (dashStyle != null) {
                     return msoDashStyle.toMSODashStyle(dashStyle);
                 } else {
@@ -394,4 +408,4 @@ namespace GraphTableSVG {
     }
 
 
-}
+//}

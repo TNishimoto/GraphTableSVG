@@ -1,4 +1,12 @@
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import {GVertex} from "./g_vertex"
+    import {GTextBox} from "./g_textbox"
+
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
+    import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes} from "../options/attributes_option"
+    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import {Rectangle, VLine} from "../common/vline"
+
     export class GRect extends GVertex {
         public get svgRectangle(): SVGRectElement {
             return <SVGRectElement>this._svgSurface;
@@ -165,4 +173,4 @@ namespace GraphTableSVG {
             return "msoShapeRectangle";
         }
     }
-}
+//}

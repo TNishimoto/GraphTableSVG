@@ -1,5 +1,20 @@
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import {GObject} from "./g_object"
+    import {GVertex} from "./g_vertex"
+    import {GEdge} from "./g_edge"
+    import {Rectangle} from "../common/vline"
+    //import {  ConnectorPosition, msoDashStyle} from "../common/enums";
+    
+    import {HTMLFunctions} from "../svghtml/html_functions"
+    import {SVG} from "../svghtml/svg"
 
+    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import { ShapeObjectType, VertexOrder, PathTextAlighnment } from "../common/enums";
+    import { createShape, createVertex } from "../options/open_svg";
+    import { SVGTextBox } from "../svghtml/svg_textbox";
+    
+    import {GObjectAttributes, GTextBoxAttributes, ConnectOption} from "../options/attributes_option"
+    import {LogicTree, LogicGraph} from "../options/logic_tree"
     /**
     グラフを表します。
     */
@@ -184,8 +199,8 @@ namespace GraphTableSVG {
          * @param option 
          */
         public appendChild(parent: GVertex, child: GVertex | null, option: { insertIndex?: number } = {}) {
-            const _child = child == null ? GraphTableSVG.createVertex(this) : child;
-            const edge: GEdge = <any>GraphTableSVG.createShape(this, 'g-edge');
+            const _child = child == null ? createVertex(this) : child;
+            const edge: GEdge = <any>createShape(this, 'g-edge');
             this.connect(parent, edge, _child, { beginConnectorType: "bottom", endConnectorType: "top" });
             //this.createdNodeCallback(child);
             this.relocate();
@@ -254,21 +269,21 @@ namespace GraphTableSVG {
         public build(graph: LogicGraph | LogicTree, option: { x?: number, y?: number, isLatexMode?: boolean } = {}) {
             if (option.isLatexMode == undefined) option.isLatexMode = false;
             this.clear();
-            const svgsvg = GraphTableSVG.SVG.getSVGSVG(this.svgGroup);
+            const svgsvg = SVG.getSVGSVG(this.svgGroup);
 
 
             if (graph instanceof LogicGraph) {
                 const dic: Map<number, GVertex> = new Map();
 
                 graph.nodes.forEach((v, i) => {
-                    const node = GraphTableSVG.createShape(svgsvg, "g-ellipse")
+                    const node = createShape(svgsvg, "g-ellipse")
                     node.svgText.textContent = v.text;
                     this.add(node);
                     dic.set(i, node);
                 })
                 graph.nodes.forEach((v, i) => {
                     v.outputEdges.forEach((e, j) => {
-                        const edge = GraphTableSVG.createShape(svgsvg, "g-edge")
+                        const edge = createShape(svgsvg, "g-edge")
                         if (e.text != undefined) {
                             const b = option.isLatexMode == undefined ? false : option.isLatexMode;
                             edge.svgTextPath.setTextContent(e.text, b);
@@ -285,7 +300,7 @@ namespace GraphTableSVG {
                 const dic: Map<LogicTree, GVertex> = new Map();
 
                 graph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
-                    const node = GraphTableSVG.createShape(svgsvg, "g-ellipse")
+                    const node = createShape(svgsvg, "g-ellipse")
                     node.svgText.textContent = v.vertexText;
                     this.add(node);
                     dic.set(v, node);
@@ -293,7 +308,7 @@ namespace GraphTableSVG {
                 graph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
                         v.children.forEach((e, j) => {
                             if(e != null){
-                                const edge = GraphTableSVG.createShape(svgsvg, "g-edge")
+                                const edge = createShape(svgsvg, "g-edge")
                                 if (e.parentEdgeText != null) {
                                     const b = option.isLatexMode == undefined ? false : option.isLatexMode;
                                     edge.svgTextPath.setTextContent(e.parentEdgeText, b);
@@ -356,7 +371,7 @@ namespace GraphTableSVG {
          */
         public getRegion(): Rectangle {
             const rects = this.vertices.map((v) => v.region);
-            const rect = GraphTableSVG.Rectangle.merge(rects);
+            const rect = Rectangle.merge(rects);
             rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
             return rect;
         }
@@ -370,10 +385,10 @@ namespace GraphTableSVG {
         private createChildFromLogicTree<T>(parent: GVertex | null = null, logicVertex: LogicTree, option: { isLatexMode?: boolean } = {}): GVertex {
             if (option.isLatexMode == undefined) option.isLatexMode = false;
 
-            const node: GVertex = <any>GraphTableSVG.createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
-            if (logicVertex.vertexText != null) GraphTableSVG.SVGTextBox.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
+            const node: GVertex = <any>createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
+            if (logicVertex.vertexText != null) SVGTextBox.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
             if (parent != null) {
-                const edge: GEdge = GraphTableSVG.createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass! });
+                const edge: GEdge = createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass! });
                 if (logicVertex.parentEdgeText != null) {
                     edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
                     edge.pathTextAlignment = PathTextAlighnment.regularInterval;
@@ -484,4 +499,4 @@ namespace GraphTableSVG {
 
 
 
-}
+//}

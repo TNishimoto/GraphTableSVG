@@ -1,5 +1,10 @@
 ﻿
-namespace GraphTableSVG {
+
+import { Rectangle, Point } from "../common/vline";
+import { HTMLFunctions } from "./html_functions";
+import {  } from "./svg_interface"
+import { CustomAttributeNames } from "../options/custtome_attributes"
+
     export namespace SVG {
         export let idCounter: number = 0;
 
@@ -44,7 +49,7 @@ namespace GraphTableSVG {
         export function createText(className: string): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-            _svgText.setAttribute(CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
+            _svgText.setAttribute(CustomAttributeNames.objectIDName, (SVG.idCounter++).toString());
             //_svgText.style.textAnchor = "middle";
             _svgText.setAttribute("class", className);
             /*
@@ -111,7 +116,7 @@ namespace GraphTableSVG {
          */
         export function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement {
             const g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            g.setAttribute(CustomAttributeNames.objectIDName, (GraphTableSVG.SVG.idCounter++).toString());
+            g.setAttribute(CustomAttributeNames.objectIDName, (SVG.idCounter++).toString());
             /*
             if (className != null) {
                 g.setAttribute("class", className);
@@ -125,12 +130,12 @@ namespace GraphTableSVG {
          * @param style 消去するStyle
          */
         export function resetStyle(style: CSSStyleDeclaration) {
-            style.stroke = null;
-            style.strokeWidth = null;
-            style.fill = null;
-            style.fontSize = null;
-            style.fontWeight = null;
-            style.fontFamily = null;
+            (<any>style).stroke = null;
+            (<any>style).strokeWidth = null;
+            (<any>style).fill = null;
+            (<any>style).fontSize = null;
+            (<any>style).fontWeight = null;
+            (<any>style).fontFamily = null;
             /*
             style.removeProperty(CustomAttributeNames.Style.paddingTop);
             style.removeProperty(CustomAttributeNames.Style.paddingLeft);
@@ -770,4 +775,3 @@ namespace GraphTableSVG {
 
 
     }
-}

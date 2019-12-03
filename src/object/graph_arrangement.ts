@@ -1,4 +1,11 @@
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+import {GEdge} from "./g_edge"
+import {GGraph} from "./g_graph"
+import {GVertex} from "./g_vertex"
+
+import {VirtualTree} from "./virtual_tree"
+
+import {TreeArrangement} from "./tree_arangement"
 
     export namespace GraphArrangement {
         export function standardTreeWidthArrangement(graph: GGraph): void {
@@ -118,4 +125,4 @@ namespace GraphTableSVG {
 
         
     }
-}
+//}

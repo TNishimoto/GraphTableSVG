@@ -1,4 +1,9 @@
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+
+    import {GGraph} from "./g_graph"
+    import { VertexOrder } from "../common/enums";
+
+    import {VirtualTree} from "./virtual_tree"
 
     export namespace TreeArrangement {
         export function reverse(graph: GGraph, isX: boolean, isY: boolean) {
@@ -244,4 +249,4 @@ namespace GraphTableSVG {
             }
         }
     }
-}
+//}

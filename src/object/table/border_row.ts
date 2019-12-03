@@ -1,4 +1,9 @@
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import {Cell} from "./cell"
+    import { CustomAttributeNames } from "../../options/custtome_attributes"
+    import {GTable} from "../g_table"
+    import {SVG} from "../../svghtml/svg"
+
     /**
      * 表の行を表現するクラスです。
      */
@@ -32,7 +37,7 @@ namespace GraphTableSVG {
         }
 
         public insertBorder(coromni: number, borderClass?: string) {
-            const line = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
+            const line = SVG.createLine(0, 0, 0, 0, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
             this._svgGroup.appendChild(line);
             this._borders.splice(coromni, 0, line);
         }
@@ -80,7 +85,7 @@ namespace GraphTableSVG {
             return this._borders;
         }
         public insertBorder(rowi: number, borderClass?: string) {
-            const line = GraphTableSVG.SVG.createLine(0, 0, 0, 0, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
+            const line = SVG.createLine(0, 0, 0, 0, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
             this._svgGroup.appendChild(line);
             this._borders.splice(rowi, 0, line);
         }
@@ -95,5 +100,5 @@ namespace GraphTableSVG {
 
     }
 
-}
+//}
 

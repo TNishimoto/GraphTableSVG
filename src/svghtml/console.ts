@@ -1,4 +1,10 @@
-namespace GraphTableSVG {
+    import {TableDictionary} from "./table_dictionary"
+    import { LogicGraph, LogicGraphNode, LogicTree } from "../options/logic_tree"
+    import { LogicTable } from "../options/logic_table"
+    import { Common } from "../common/common";
+    import { createShape } from "../options/open_svg";
+    import { GTable } from "../object/g_table"
+
     export namespace Console {
         function getCodeTag(): HTMLElement | null {
             const collection = document.getElementsByTagName("code");
@@ -54,8 +60,8 @@ namespace GraphTableSVG {
             }
         }
         export function table(item: any) {
-            if(item instanceof GraphTableSVG.LogicTable){
-                GraphTableSVG.Common.setGraphTableCSS();
+            if(item instanceof LogicTable){
+                Common.setGraphTableCSS();
  
                 const code = getOrCreateCodeElement();
                 const svg = addSVGSVGElement(code);
@@ -83,7 +89,7 @@ namespace GraphTableSVG {
         export function graph(item : any | LogicTree | LogicGraph){
 
             if(item instanceof LogicTree || item instanceof LogicGraph){
-                GraphTableSVG.Common.setGraphTableCSS();
+                Common.setGraphTableCSS();
                 const code = getOrCreateCodeElement();
                 const svg = addSVGSVGElement(code);
                 const ggraph = createShape(svg, "g-graph");    
@@ -103,4 +109,3 @@ namespace GraphTableSVG {
             }
         }
     }
-}

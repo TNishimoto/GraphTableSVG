@@ -1,4 +1,17 @@
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+import {Common} from "../common/common"
+import {GUI} from "../common/gui_observe"
+import {Rectangle} from "../common/vline"
+
+import {GObjectAttributes} from "../options/attributes_option"
+import {SVG} from "../svghtml/svg"
+import "../svghtml/interface"
+
+import {HTMLFunctions} from "../svghtml/html_functions"
+import * as HTMLFunctions2 from "../svghtml/draggable_object"
+
+import { CustomAttributeNames } from "../options/custtome_attributes"
+import { ShapeObjectType } from "../common/enums";
 
     export class GObject {
 
@@ -188,7 +201,7 @@ namespace GraphTableSVG {
 
 
         get isLocated(): boolean {
-            return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
+            return Common.IsDescendantOfBody(this.svgGroup);
         }
         public get svgSurface(): SVGElement | null {
             return this._svgSurface;
@@ -318,11 +331,11 @@ namespace GraphTableSVG {
         }
 
         public get isProhibitionOutOfRange(): boolean {
-            const p = this.svgGroup.getPropertyStyleValueWithDefault(GraphTableSVG.CustomAttributeNames.Style.prohibitionOutOfRange, "true");
+            const p = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.prohibitionOutOfRange, "true");
             return p == "true";
         }
         public set isProhibitionOutOfRange(v: boolean) {
-            this.svgGroup.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.prohibitionOutOfRange, v.toString());
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.prohibitionOutOfRange, v.toString());
 
         }
         public moveInCanvas() {
@@ -479,8 +492,8 @@ namespace GraphTableSVG {
 
         public movable(): void {
 
-            HTMLFunctions.appendDragFunctionsToDocument();
-            HTMLFunctions.draggable(this.svgSurface!, this.svgGroup);
+            HTMLFunctions2.HTMLFunctions.appendDragFunctionsToDocument();
+            HTMLFunctions2.HTMLFunctions.draggable(this.svgSurface!, this.svgGroup);
         }
     }
-}
+//}

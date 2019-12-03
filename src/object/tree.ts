@@ -1,17 +1,20 @@
 
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import {LogicTree} from "../options/logic_tree"
+    import {GVertex} from "./g_vertex"
+
     export namespace Parse{
         /**
          * 入力文字列をパースしてLogicTreeを構築します。
          * @param parseText 
          */
-        export function parseTree(parseText : string) : GraphTableSVG.LogicTree {
+        export function parseTree(parseText : string) : LogicTree {
             const [tree, pos] = parseTreeSub(parseText, 0);
             return tree;
         }
-        function parseTreeSub(str : string, pos : number) : [GraphTableSVG.LogicTree, number] {
+        function parseTreeSub(str : string, pos : number) : [LogicTree, number] {
             
-            const node : GraphTableSVG.LogicTree | null = new GraphTableSVG.LogicTree({ item : "" });
+            const node : LogicTree | null = new LogicTree({ item : "" });
             const c = str[pos];
             if(c != '('){
                 throw Error("Parse Error");
@@ -38,7 +41,7 @@ namespace GraphTableSVG {
          * 入力木構造を表現する文字列を出力します。
          * @param tree 文字列に変換する木構造
          */
-        export function getParseString(tree : GraphTableSVG.GVertex) : string {
+        export function getParseString(tree : GVertex) : string {
             let str = "";
             str += "(";
             tree.outcomingEdges.forEach((v)=>{
@@ -51,4 +54,4 @@ namespace GraphTableSVG {
             return str;
         }
     }
-}
+//}

@@ -1,4 +1,4 @@
-﻿namespace GraphTableSVG {
+﻿//namespace GraphTableSVG {
     /**
      * 傾きや切片を計算できる線です。
      */
@@ -158,4 +158,4 @@
         }
     }
 
-}
+//}

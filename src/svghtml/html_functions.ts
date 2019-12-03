@@ -1,4 +1,6 @@
-namespace HTMLFunctions {
+
+import { GUI } from "../common/gui"
+export namespace HTMLFunctions {
     export enum NodeOrder {
         Preorder, Postorder
     }
@@ -102,7 +104,7 @@ namespace HTMLFunctions {
         }
     }
     export function isInsideElement(element : Element) : boolean {
-        const win = GraphTableSVG.GUI.getClientRectangle();
+        const win = GUI.getClientRectangle();
         const ele = element.getBoundingClientRect();
         const b1 = ele.left <= win.width && ele.top <= win.height; 
         const b2 = ele.right <= win.width && ele.top <= win.height; 

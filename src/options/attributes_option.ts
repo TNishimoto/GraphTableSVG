@@ -1,6 +1,9 @@
-namespace GraphTableSVG {
 
 
+import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, Direction, PathTextAlighnment} from "../common/enums";
+import { LogicTable } from "../options/logic_table"
+
+import { GVertex } from "../object/g_vertex"
     export type GObjectAttributes = {
         //class?: string,
         cx?: number,
@@ -71,8 +74,8 @@ namespace GraphTableSVG {
     export type ConnectOption = {
         outcomingInsertIndex?: number,
         incomingInsertIndex?: number,
-        beginConnectorType?: GraphTableSVG.ConnectorPosition,
-        endConnectorType?: GraphTableSVG.ConnectorPosition
+        beginConnectorType?: ConnectorPosition,
+        endConnectorType?: ConnectorPosition
     }
     export type _GTableOption = {
         rowCount?: number,
@@ -111,4 +114,3 @@ namespace GraphTableSVG {
     }
     */
 
-}

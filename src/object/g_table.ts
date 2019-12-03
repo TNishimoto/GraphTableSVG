@@ -1,5 +1,19 @@
-﻿
-namespace GraphTableSVG {
+﻿import { Color } from "../common/color";
+import { GObject } from "./g_object";
+import {Common} from "../common/common"
+import {GTableOption} from "../options/attributes_option"
+import { ShapeObjectType } from "../common/enums";
+import {LogicTable} from "../options/logic_table"
+import {CellRow} from "./table/row"
+import {CellColumn} from "./table/column"
+import {BorderColumn, BorderRow} from "./table/border_row"
+import {Cell} from "./table/cell"
+import {Rectangle} from "../common/vline"
+import {VBATranslateFunctions, parseInteger, visible} from "./table/vba"
+import {SVG} from "../svghtml/svg"
+import {HTMLFunctions} from "../svghtml/html_functions"
+
+//namespace GraphTableSVG {
 
     /**
     テーブルを表します。
@@ -374,7 +388,7 @@ namespace GraphTableSVG {
         /**
         * 強調セルを全て返します。
         */
-        public getEmphasizedCells(): GraphTableSVG.Cell[] {
+        public getEmphasizedCells(): Cell[] {
             return this.cellArray.filter((v) => v.isEmphasized);
         }
         /**
@@ -397,7 +411,7 @@ namespace GraphTableSVG {
             }
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
-                    plainTable[y][x] = GraphTableSVG.Common.paddingLeft(plainTable[y][x], widtharr[x], " ");
+                    plainTable[y][x] = Common.paddingLeft(plainTable[y][x], widtharr[x], " ");
                 }
             }
 
@@ -431,15 +445,15 @@ namespace GraphTableSVG {
                 const cellInfo = table.cells[y][x];
                 if (cellInfo != null) {
                     if (cellInfo.cellClass != null) {
-                        GraphTableSVG.SVG.resetStyle(cell.svgGroup.style);
+                        SVG.resetStyle(cell.svgGroup.style);
                         cell.svgGroup.setAttribute("class", cellInfo.cellClass);
                     }
                     if (cellInfo.backgroundClass != null) {
-                        GraphTableSVG.SVG.resetStyle(cell.svgBackground.style);
+                        SVG.resetStyle(cell.svgBackground.style);
                         cell.svgBackground.setAttribute("class", cellInfo.backgroundClass);
                     }
                     if (cellInfo.textClass != null) {
-                        GraphTableSVG.SVG.resetStyle(cell.svgText.style);
+                        SVG.resetStyle(cell.svgText.style);
                         cell.svgText.setAttribute("class", cellInfo.textClass);
                     }
                     cellInfo.createTextElement(cell.svgText);
@@ -447,22 +461,22 @@ namespace GraphTableSVG {
 
                         let borderClass = cellInfo.topBorderClass;
 
-                        GraphTableSVG.SVG.resetStyle(cell.svgTopBorder.style);
+                        SVG.resetStyle(cell.svgTopBorder.style);
                         cell.svgTopBorder.setAttribute("class", borderClass);
                     }
                     if (cellInfo.leftBorderClass != null) {
                         let borderClass = cellInfo.leftBorderClass;
-                        GraphTableSVG.SVG.resetStyle(cell.svgLeftBorder.style);
+                        SVG.resetStyle(cell.svgLeftBorder.style);
                         cell.svgLeftBorder.setAttribute("class", borderClass);
                     }
                     if (cellInfo.rightBorderClass != null) {
                         let borderClass = cellInfo.rightBorderClass;
-                        GraphTableSVG.SVG.resetStyle(cell.svgRightBorder.style);
+                        SVG.resetStyle(cell.svgRightBorder.style);
                         cell.svgRightBorder.setAttribute("class", borderClass);
                     }
                     if (cellInfo.bottomBorderClass != null) {
                         let borderClass = cellInfo.bottomBorderClass;
-                        GraphTableSVG.SVG.resetStyle(cell.svgBottomBorder.style);
+                        SVG.resetStyle(cell.svgBottomBorder.style);
                         cell.svgBottomBorder.setAttribute("class", borderClass);
                     }
 
@@ -634,29 +648,29 @@ namespace GraphTableSVG {
                 for (let x = 0; x < this.columnCount; x++) {
                     const cell = this.cells[y][x];
                     const upLineStyle = VBATranslateFunctions.colorToVBA(cell.svgTopBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                    const upLineStrokeWidth = cell.svgTopBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.svgTopBorder.style.strokeWidth) : "";
-                    const upLineVisibility = cell.svgTopBorder.style.visibility != null ? GraphTableSVG.visible(cell.svgTopBorder.style.visibility) : "";
+                    const upLineStrokeWidth = cell.svgTopBorder.style.strokeWidth != null ? parseInteger(cell.svgTopBorder.style.strokeWidth) : "";
+                    const upLineVisibility = cell.svgTopBorder.style.visibility != null ? visible(cell.svgTopBorder.style.visibility) : "";
 
                     lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${upLineStyle}, ${upLineStrokeWidth}, ${upLineVisibility})`]);
 
                     const leftLineStyle = VBATranslateFunctions.colorToVBA(cell.svgLeftBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                    const leftLineStrokeWidth = cell.svgLeftBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.svgLeftBorder.style.strokeWidth) : "";
-                    const leftLineVisibility = cell.svgLeftBorder.style.visibility != null ? GraphTableSVG.visible(cell.svgLeftBorder.style.visibility) : "";
+                    const leftLineStrokeWidth = cell.svgLeftBorder.style.strokeWidth != null ? parseInteger(cell.svgLeftBorder.style.strokeWidth) : "";
+                    const leftLineVisibility = cell.svgLeftBorder.style.visibility != null ? visible(cell.svgLeftBorder.style.visibility) : "";
 
                     lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${leftLineStyle}, ${leftLineStrokeWidth}, ${leftLineVisibility})`]);
                     if (x + 1 == this.columnCount) {
 
                         const rightLineStyle = VBATranslateFunctions.colorToVBA(cell.svgRightBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                        const rightLineStrokeWidth = cell.svgRightBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.svgRightBorder.style.strokeWidth) : "";
-                        const rightLineVisibility = cell.svgRightBorder.style.visibility != null ? GraphTableSVG.visible(cell.svgRightBorder.style.visibility) : "";
+                        const rightLineStrokeWidth = cell.svgRightBorder.style.strokeWidth != null ? parseInteger(cell.svgRightBorder.style.strokeWidth) : "";
+                        const rightLineVisibility = cell.svgRightBorder.style.visibility != null ? visible(cell.svgRightBorder.style.visibility) : "";
 
                         lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderRight), ${rightLineStyle}, ${rightLineStrokeWidth}, ${rightLineVisibility})`]);
                     }
 
                     if (y + 1 == this.rowCount) {
                         const bottomLineStyle = VBATranslateFunctions.colorToVBA(cell.svgBottomBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
-                        const bottomLineStrokeWidth = cell.svgBottomBorder.style.strokeWidth != null ? GraphTableSVG.parseInteger(cell.svgBottomBorder.style.strokeWidth) : "";
-                        const bottomLineVisibility = cell.svgBottomBorder.style.visibility != null ? GraphTableSVG.visible(cell.svgBottomBorder.style.visibility) : "";
+                        const bottomLineStrokeWidth = cell.svgBottomBorder.style.strokeWidth != null ? parseInteger(cell.svgBottomBorder.style.strokeWidth) : "";
+                        const bottomLineVisibility = cell.svgBottomBorder.style.visibility != null ? visible(cell.svgBottomBorder.style.visibility) : "";
 
                         lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderBottom), ${bottomLineStyle}, ${bottomLineStrokeWidth}, ${bottomLineVisibility})`]);
                     }
@@ -1185,4 +1199,4 @@ namespace GraphTableSVG {
         */
 
     }
-}
+//}

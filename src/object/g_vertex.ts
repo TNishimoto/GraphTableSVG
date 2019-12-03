@@ -1,6 +1,17 @@
 /// <reference path="g_textbox.ts"/>
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import {GTextBox} from "./g_textbox"
+    import {GObject} from "./g_object"
+    import {GEdge} from "./g_edge"
+    import {GGraph} from "./g_graph"
+    import {VBATranslateFunctions} from "./table/vba"
 
+    import {Rectangle} from "../common/vline"
+    import {VirtualTree} from "./virtual_tree"
+    
+
+    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import {  ConnectorPosition, msoDashStyle} from "../common/enums";
     export class GVertex extends GTextBox {
         /*
         protected setClassNameOfSVGGroup() {
@@ -15,7 +26,7 @@ namespace GraphTableSVG {
         */
 
         public get defaultClassName() : string | undefined {
-            return GraphTableSVG.CustomAttributeNames.StyleValue.defaultVertexClass;
+            return CustomAttributeNames.StyleValue.defaultVertexClass;
         }
         /**
         * 接続部分のXY座標を返します。
@@ -279,7 +290,7 @@ namespace GraphTableSVG {
         }
         private getVBAEditLine(): string {
             const lineColor = VBATranslateFunctions.colorToVBA(this.svgSurface!.getPropertyStyleValueWithDefault("stroke", "gray"));
-            const lineType = GraphTableSVG.msoDashStyle.getLineType(this.svgSurface!);
+            const lineType = msoDashStyle.getLineType(this.svgSurface!);
             const strokeWidth = parseInt(this.svgSurface!.getPropertyStyleValueWithDefault("stroke-width", "4"));
             const visible = this.svgSurface!.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
             return ` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`;
@@ -298,4 +309,4 @@ namespace GraphTableSVG {
         }
     }
 
-}
+//}

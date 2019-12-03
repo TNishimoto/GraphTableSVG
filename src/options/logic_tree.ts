@@ -1,11 +1,11 @@
-﻿namespace GraphTableSVG {
-    /*
+﻿    /*
     export class BaseLogicTree {
         public edgeLabel: string | null = null;
         public nodeText: string | null = null;
     }
     */
-
+import { Console} from "../svghtml/console"
+import {VertexOrder} from "../common/enums"
    export class LogicGraphEdge{
         public text : string | null = null;
         public endNodeIndex : number = -1;
@@ -84,7 +84,7 @@
             return r;
         }
         public view(){
-            GraphTableSVG.Console.graph(this);
+            Console.graph(this);
         }
 
         
@@ -133,4 +133,3 @@
         */
     }
     
-}

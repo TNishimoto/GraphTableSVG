@@ -1,4 +1,3 @@
-namespace GraphTableSVG {
     
     /*
     export class HTMLLogicCell{
@@ -9,6 +8,14 @@ namespace GraphTableSVG {
         public item: any;
     }
     */
+import { CustomAttributeNames } from "../options/custtome_attributes"
+import { SVGTextBox } from "../svghtml/svg_textbox"
+//import { HTMLFunctions } from "../svghtml/html_table"
+import { HTMLFunctions } from "../svghtml/html_functions"
+import { openSVGFunctions } from "../options/open_svg";
+import { Console} from "../svghtml/console"
+
+import { Cell } from "../object/table/cell"
 
     export class LogicCell {
 
@@ -44,7 +51,7 @@ namespace GraphTableSVG {
         }
         public createTextElement(svgText : SVGTextElement){
             if(this.tTexts != null){
-                GraphTableSVG.SVGTextBox.constructSVGTextByHTMLElements(svgText, this.tTexts, this.isLatexMode);   
+                SVGTextBox.constructSVGTextByHTMLElements(svgText, this.tTexts, this.isLatexMode);   
             }else if (this.text != null) {
                 svgText.setTextContent(this.text, this.isLatexMode);
             }
@@ -270,7 +277,6 @@ namespace GraphTableSVG {
         }
         
         public view(){
-            GraphTableSVG.Console.table(this);
+            Console.table(this);
         }
     }
-}

@@ -1,5 +1,12 @@
-namespace GraphTableSVG {
-    export namespace SVGTextBox {
+
+import { Size, Rectangle } from "../common/vline";
+import { Common } from "../common/common";
+import { HTMLFunctions } from "./html_functions";
+import { HorizontalAnchor, VerticalAnchor} from "../common/enums";
+import {} from "./svg_text"
+import "./svg_interface";
+
+export namespace SVGTextBox {
 
 
         /**
@@ -167,12 +174,12 @@ namespace GraphTableSVG {
                 return r;
             }
         }
-        function alignTextByHorizontalAnchor(svgText: SVGTextElement, hAnchor: GraphTableSVG.HorizontalAnchor){
+        function alignTextByHorizontalAnchor(svgText: SVGTextElement, hAnchor: HorizontalAnchor){
 
             const lineSpans = getLines(svgText);
             let dx = 0;
 
-            if (hAnchor == GraphTableSVG.HorizontalAnchor.Center) {
+            if (hAnchor == HorizontalAnchor.Center) {
                 const tl = getComputedTextLengthsOfTSpans(svgText, true);
                 let p=0;
                 let maxWidth = 0;
@@ -206,13 +213,13 @@ namespace GraphTableSVG {
                     }
                 }
 
-            } else if (hAnchor == GraphTableSVG.HorizontalAnchor.Right) {
+            } else if (hAnchor == HorizontalAnchor.Right) {
 
             }
         }
         function alignTextAsText(svgText: SVGTextElement, showChecked : boolean){
             const lineSpans = getLines(svgText);
-            const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
+            const fontSize = (svgText).getPropertyStyleValueWithDefault("font-size", "24");
             const fs = parseInt(fontSize);
 
             let dx = 0;
@@ -245,7 +252,7 @@ namespace GraphTableSVG {
          * @param svgText 
          * @param hAnchor 
          */
-        export function sortText(svgText: SVGTextElement, hAnchor: GraphTableSVG.HorizontalAnchor, showChecked : boolean) {
+        export function sortText(svgText: SVGTextElement, hAnchor: HorizontalAnchor, showChecked : boolean) {
             alignTextAsText(svgText, showChecked);
             alignTextByHorizontalAnchor(svgText,hAnchor);            
         }
@@ -406,4 +413,3 @@ namespace GraphTableSVG {
         */
 
     }
-}

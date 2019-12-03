@@ -1,5 +1,15 @@
 ﻿
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+
+    import {Common} from "../../common/common"
+    import {Rectangle} from "../../common/vline"
+    import { CustomAttributeNames } from "../../options/custtome_attributes"
+    import {GTable} from "../g_table"
+    import {SVG} from "../../svghtml/svg"
+    import {CellOption} from "../../options/attributes_option"
+    import { HorizontalAnchor, VerticalAnchor } from "../../common/enums";
+    import { SVGTextBox } from "../../svghtml/svg_textbox"
+    import { BorderRow, BorderColumn } from "./border_row"
 
     export enum DirectionType {
         top = 0, left = 1, right = 2, bottom = 3
@@ -347,7 +357,7 @@ namespace GraphTableSVG {
         CellがDocumentのDOMに所属しているかどうかを返します。
         */
         get isLocated(): boolean {
-            return GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup);
+            return Common.IsDescendantOfBody(this.svgGroup);
         }
         /**
          * このセルがマスターセルのときに限りTrueを返します。
@@ -683,7 +693,7 @@ namespace GraphTableSVG {
         */
         get calculatedWidthUsingText(): number {
             if (this.isLocated) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, this._assurancevisibility);
+                const textRect = SVGTextBox.getSize(this.svgText, this._assurancevisibility);
                 return textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
                     + this.paddingLeft + this.paddingRight;
             } else {
@@ -697,7 +707,7 @@ namespace GraphTableSVG {
         */
         get calculatedHeightUsingText(): number {
             if (this.isLocated) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText, this._assurancevisibility);
+                const textRect = SVGTextBox.getSize(this.svgText, this._assurancevisibility);
 
                 return textRect.height + this.paddingTop + this.paddingBottom;
             } else {
@@ -901,7 +911,7 @@ namespace GraphTableSVG {
             if (className == null) {
                 rect.style.fill = "#ffffff";
             } else {
-                GraphTableSVG.SVG.createRectangle(className);
+                SVG.createRectangle(className);
             }
             return rect;
         }
@@ -1229,7 +1239,7 @@ namespace GraphTableSVG {
          *セルの位置を再計算します。
          */
         public relocation() {
-            if (!GraphTableSVG.Common.IsDescendantOfBody(this.svgGroup)) return;
+            if (!Common.IsDescendantOfBody(this.svgGroup)) return;
 
             this.relocateTopBorder();
             this.relocateLeftBorder();
@@ -1403,4 +1413,4 @@ namespace GraphTableSVG {
 
 
     }
-}
+//}

@@ -1,6 +1,13 @@
 /// <reference path="g_vertex.ts"/>
 
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import {GVertex} from "./g_vertex"
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
+    import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes} from "../options/attributes_option"
+    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import { SVGTextBox } from "../svghtml/svg_textbox"
+
+    import {Rectangle, VLine} from "../common/vline"
     export class GPathTextBox extends GVertex {
         //private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {
@@ -20,7 +27,7 @@ namespace GraphTableSVG {
         }
         protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
 
-            if(option.surfaceClass === undefined) option.surfaceClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultTextboxPathClass;
+            if(option.surfaceClass === undefined) option.surfaceClass = CustomAttributeNames.StyleValue.defaultTextboxPathClass;
             //const _className = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
             //if(_className != null) option.surfaceClass = _className;
 
@@ -54,7 +61,7 @@ namespace GraphTableSVG {
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
             if (this.isAutoSizeShapeToFitText) {
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+                const textRect = SVGTextBox.getSize(this.svgText);
                 //const b = this.svgText.getBBox();
                 rect.width = textRect.width;
                 rect.height = textRect.height;
@@ -137,4 +144,4 @@ namespace GraphTableSVG {
         }
 
     }
-}
+//}

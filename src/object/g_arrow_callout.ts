@@ -1,5 +1,13 @@
 /// <reference path="g_path_textbox.ts"/>
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import {GPathTextBox} from "./g_path_textbox"
+    import {GTextBox} from "./g_textbox"
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction } from "../common/enums";
+    import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
+    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import {Rectangle, VLine} from "../common/vline"
+    import { SVGTextBox } from "../svghtml/svg_textbox";
+
     export class GArrowCallout extends GPathTextBox {
 
         public constructor(svgbox: SVGElement | string, option: GShapeArrowCalloutAttributes = {}) {
@@ -93,7 +101,7 @@ namespace GraphTableSVG {
             const rect = new Rectangle();
             if (this.isAutoSizeShapeToFitText) {
                 
-                const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+                const textRect = SVGTextBox.getSize(this.svgText);
                 //const b = this.svgText.getBBox();
                 rect.width = textRect.width;
                 rect.height = textRect.height;
@@ -129,7 +137,7 @@ namespace GraphTableSVG {
 
         protected updateToFitText() {
 
-            const textRect = GraphTableSVG.SVGTextBox.getSize(this.svgText);
+            const textRect = SVGTextBox.getSize(this.svgText);
             //const box = this.svgText.getBBox();
             if (this.direction == "up" || this.direction == "down") {
                 this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;
@@ -355,4 +363,4 @@ namespace GraphTableSVG {
 
         }
     }
-}
+//}

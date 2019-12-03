@@ -1,4 +1,11 @@
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import {GVertex} from "./g_vertex"
+    import {GTextBox} from "./g_textbox"
+
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
+    import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes} from "../options/attributes_option"
+    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import {Rectangle, VLine} from "../common/vline"
     export class GEllipse extends GVertex {
         public get svgEllipse(): SVGEllipseElement {
             return <SVGEllipseElement>this._svgSurface;
@@ -10,7 +17,7 @@ namespace GraphTableSVG {
             //this.update();
         }
         protected createSurface(svgbox : SVGElement, option :GObjectAttributes = {}) : void {
-            if(option.surfaceClass === undefined) option.surfaceClass = GraphTableSVG.CustomAttributeNames.StyleValue.defaultSurfaceClass;
+            if(option.surfaceClass === undefined) option.surfaceClass = CustomAttributeNames.StyleValue.defaultSurfaceClass;
             this._svgSurface = GEllipse.createEllipse(this.svgGroup, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
         }
@@ -188,4 +195,4 @@ namespace GraphTableSVG {
         speakerY? : number,
     }
     */
-}
+//}

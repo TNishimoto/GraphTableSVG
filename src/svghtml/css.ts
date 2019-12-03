@@ -1,4 +1,7 @@
-namespace GraphTableSVG {
+    
+import { CustomAttributeNames } from "../options/custtome_attributes"
+import { HorizontalAnchor, VerticalAnchor} from "../common/enums";
+import { Cell } from "../object/table/cell"
     export namespace Common {
         export function createCSS(): string {
 
@@ -114,4 +117,3 @@ namespace GraphTableSVG {
             return r;
         }
     }
-}

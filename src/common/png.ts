@@ -1,4 +1,8 @@
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import { Common } from "./common";
+    import { Size } from "./vline";
+    import { SVG } from "../svghtml/svg";
+
     /**
      * SVGをPNGに変換するための名前空間です。
      * この名前空間のコードはhttps://st40.xyz/one-run/article/133/を使用しています。
@@ -20,7 +24,7 @@ namespace GraphTableSVG {
             }
             //svgBox.removeAttribute("width");
             //svgBox.removeAttribute("height");
-            GraphTableSVG.SVG.setCSSToAllElementStyles(svg);
+            SVG.setCSSToAllElementStyles(svg);
         }
         /**
          * HTMLImageElementからCanvasElementを作成します。
@@ -63,14 +67,14 @@ namespace GraphTableSVG {
             const svgBox = document.getElementById(id);
             if (svgBox == null) throw Error("Error");
             //console.log(svgBox.outerHTML);
-            const styleMap = GraphTableSVG.SVG.getAllElementStyleMap(svgBox);
+            const styleMap = SVG.getAllElementStyleMap(svgBox);
             copyCSStoStyle(svgBox);
             //console.log(svgBox.outerHTML);
 
             const img = getImage(svgBox);
             const canvas = createCanvasFromImage(img);
             setSaveEvent(img,canvas);
-            GraphTableSVG.SVG.setAllElementStyleMap(svgBox, styleMap);
+            SVG.setAllElementStyleMap(svgBox, styleMap);
             return canvas;
             //return canvas;
         }
@@ -233,4 +237,4 @@ namespace GraphTableSVG {
             a.dispatchEvent(event);
         }
     }
-}
+//}

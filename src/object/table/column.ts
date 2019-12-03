@@ -1,4 +1,11 @@
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import {Cell} from "./cell"
+    //import {BorderRow} from "./border_row"
+    
+    import {CellOption} from "../../options/attributes_option"
+    import {SVG} from "../../svghtml/svg"    
+    import {GTable} from "../g_table"
+
     /**
      * 表の列を表現するクラスです。
      */
@@ -286,4 +293,4 @@ namespace GraphTableSVG {
         }
 
     }
-}
+//}

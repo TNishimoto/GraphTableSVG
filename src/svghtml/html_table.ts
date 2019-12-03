@@ -1,6 +1,8 @@
-namespace HTMLFunctions {
+
+import { LogicTable } from "../options/logic_table"
+export namespace HTMLFunctions {
     export function createHTMLTable(e: HTMLElement): HTMLTableElement {
-        const table = GraphTableSVG.LogicTable.constructHTMLLogicTable(e);
+        const table = LogicTable.constructHTMLLogicTable(e);
         const tableTag: HTMLTableElement = document.createElement("table");
 
         tableTag.setAttribute("border", "1");

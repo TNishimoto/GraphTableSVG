@@ -11,10 +11,55 @@ interface PPTextboxShape {
 }
 */
 
+import { Common } from "../common/common";
+import { SVGTextBox } from "./svg_textbox"
+import { Cell } from "../object/table/cell"
 
-interface CSSStyleDeclaration {
-    tryGetPropertyValue(name: string): string | null;
+//import { } from "./svg_interface"
+
+declare global {
+    export interface CSSStyleDeclaration {
+        tryGetPropertyValue(name: string): string | null;
+    }
+
+    export interface SVGTextPathElement {
+        /**
+         * SVGTextElementのテキストを設定します。
+         * @param text 設定するテキスト
+         * @param isLatexMode TrueのときLatex表記を使用します。
+         */
+        setTextContent(text: string, isLatexMode: boolean): void;
+        setTextContent(text: string): void;
+    }
+    export interface SVGLineElement {
+        /**
+         * SVGLineElementを強調するかどうかを設定します。
+         * @param b Trueなら強調。Falseなら強調しません。
+         */
+        setEmphasis(b: boolean): void;
+        /**
+         * SVGLineElementが強調されているときにかぎりTrueを返します。
+         */
+        getEmphasis(): boolean;
+
+    }
+
+    export interface SVGPathElement {
+        /**
+         * SVGPathElementの位置を設定します。
+         * @param points 
+         */
+        setPathLocations(points: [number, number][]): void;
+        /**
+         * SVGPathElementの位置を取得します。
+         */
+        getPathLocations(): [number, number][];
+
+    }
 }
+SVGTextPathElement.prototype.setTextContent = function (text: string, isLatexMode: boolean = false) {
+    SVGTextBox.setTextToTextPath(this, text, isLatexMode);
+};
 CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name: string) {
     const p: CSSStyleDeclaration = this;
     const r = p.getPropertyValue(name).trim();
@@ -26,82 +71,48 @@ CSSStyleDeclaration.prototype.tryGetPropertyValue = function (name: string) {
 }
 
 
-interface SVGTextPathElement {
-    /**
-     * SVGTextElementのテキストを設定します。
-     * @param text 設定するテキスト
-     * @param isLatexMode TrueのときLatex表記を使用します。
-     */
-    setTextContent(text: string, isLatexMode: boolean): void;
-    setTextContent(text: string): void;
-}
-SVGTextPathElement.prototype.setTextContent = function (text: string, isLatexMode: boolean = false) {
-    GraphTableSVG.SVGTextBox.setTextToTextPath(this, text, isLatexMode);
-};
 
 
-interface SVGLineElement {
-    /**
-     * SVGLineElementを強調するかどうかを設定します。
-     * @param b Trueなら強調。Falseなら強調しません。
-     */
-    setEmphasis(b: boolean): void;
-    /**
-     * SVGLineElementが強調されているときにかぎりTrueを返します。
-     */
-    getEmphasis(): boolean;
 
-}
+
 
 SVGLineElement.prototype.getEmphasis = function () {
     const p: SVGLineElement = this;
 
     const emp = p.getAttribute("class");
     if (emp != null) {
-        return emp == GraphTableSVG.Cell.emphasisBorderClass;
+        return emp == Cell.emphasisBorderClass;
     } else {
         return false;
     }
 };
 SVGLineElement.prototype.setEmphasis = function (value: boolean) {
-    GraphTableSVG.Common.setGraphTableCSS();
+    Common.setGraphTableCSS();
 
     const p: SVGLineElement = this;
     if (p.getEmphasis() && !value) {
-        const tmp = p.getAttribute(GraphTableSVG.Cell.temporaryBorderClass);
+        const tmp = p.getAttribute(Cell.temporaryBorderClass);
         if (tmp != null) {
             p.setAttribute("class", tmp);
-            p.removeAttribute(GraphTableSVG.Cell.temporaryBorderClass);
+            p.removeAttribute(Cell.temporaryBorderClass);
 
         } else {
             p.removeAttribute("class");
 
-            p.removeAttribute(GraphTableSVG.Cell.temporaryBorderClass);
+            p.removeAttribute(Cell.temporaryBorderClass);
 
         }
 
     }
     else if (!p.getEmphasis() && value) {
         const lineClass = p.getAttribute("class");
-        p.setAttribute("class", GraphTableSVG.Cell.emphasisBorderClass);
+        p.setAttribute("class", Cell.emphasisBorderClass);
         if (lineClass != null) {
-            p.setAttribute(GraphTableSVG.Cell.temporaryBorderClass, lineClass);
+            p.setAttribute(Cell.temporaryBorderClass, lineClass);
         }
     }
 };
 
-interface SVGPathElement {
-    /**
-     * SVGPathElementの位置を設定します。
-     * @param points 
-     */
-    setPathLocations(points: [number, number][]): void;
-    /**
-     * SVGPathElementの位置を取得します。
-     */
-    getPathLocations(): [number, number][];
-
-}
 SVGPathElement.prototype.setPathLocations = function (points: [number, number][]) {
 
     const p: SVGPathElement = this;

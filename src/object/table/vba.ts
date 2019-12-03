@@ -1,5 +1,11 @@
 ﻿
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    import {GObject} from "../g_object"
+    import {GTable} from "../g_table"
+    import {GGraph} from "../g_graph"
+    import {Color} from "../../common/color"
+    import {Common} from "../../common/common"
+
     export type VBAObjectType = SVGPathElement | SVGTextElement | GObject;
     export class SVGToVBA {
 
@@ -10,7 +16,7 @@ namespace GraphTableSVG {
         public static create(items: VBAObjectType[] | VBAObjectType): string {
             //const id = 0;
             if (items instanceof Array) {
-                const count = GraphTableSVG.SVGToVBA.count(items);
+                const count = SVGToVBA.count(items);
                 const s: string[] = new Array(0);
 
                 s.push(`Sub create()`);
@@ -472,4 +478,4 @@ End Sub
         }
         */
     }
-}
+//}

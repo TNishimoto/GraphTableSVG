@@ -1,4 +1,3 @@
-namespace GraphTableSVG {
     export namespace CustomAttributeNames {
         export namespace Style {
             export const autoSizeShapeToFitText: string = "--autosize-shape-to-fit-text"
@@ -85,4 +84,3 @@ namespace GraphTableSVG {
         export let defaultCircleRadius = 15;
     }
 
-}

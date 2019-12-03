@@ -1,6 +1,10 @@
 // tslint:disable-next-line: no-namespace
-namespace GraphTableSVG {
-    export class TableDictionary {
+import { LogicGraph, LogicGraphNode } from "../options/logic_tree"
+import { LogicTable } from "../options/logic_table"
+
+import {CustomAttributeNames} from "../options/custtome_attributes"
+
+export class TableDictionary {
         public static IndexName = "___GraphTableSVG_Console_Index";
         public static ValueName = "___GraphTableSVG_Console_Value";
 
@@ -57,13 +61,13 @@ namespace GraphTableSVG {
             }
         }
 
-        public toLogicTable(): GraphTableSVG.LogicTable {
-            const table = new GraphTableSVG.LogicTable({ columnCount: this.columnMapper.size, rowCount: this.rows.length + 1 });
+        public toLogicTable(): LogicTable {
+            const table = new LogicTable({ columnCount: this.columnMapper.size, rowCount: this.rows.length + 1 });
 
             this.columnMapper.forEach((value, key) => {
                 table.cells[0][value].textClass = CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellTextClass;
                 table.cells[0][value].backgroundClass = CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellBackgroundClass;
-                if (key == GraphTableSVG.TableDictionary.IndexName) {
+                if (key == TableDictionary.IndexName) {
                     table.cells[0][value].text = "(index)";
                 } else if (key == TableDictionary.ValueName) {
                     table.cells[0][value].text = "(value)";
@@ -147,4 +151,3 @@ namespace GraphTableSVG {
         }
 
     }
-}

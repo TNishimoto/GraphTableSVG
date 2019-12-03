@@ -1,16 +1,24 @@
-﻿namespace GraphTableSVG {
+﻿//namespace GraphTableSVG {
+    import { Rectangle } from "./vline";
+    import * as CSS from "../svghtml/css"
+    import {GGraph} from "../object/g_graph"
+    import {GTable} from "../object/g_table"
+    import {GObject} from "../object/g_object"
+
+    import {VBAObjectType} from "../object/table/vba"
+    
     export namespace Common {
         /**
          * グラフや表を消去します。
          * @param svg 
          * @param items 
          */
-        export function clearGraphTables(svg: SVGElement, items: (GraphTableSVG.GGraph | GraphTableSVG.GTable)[]) {
+        export function clearGraphTables(svg: SVGElement, items: (GGraph | GTable)[]) {
             for (let i = 0; i < items.length; i++) {
                 var item = items[i];
-                if (item instanceof GraphTableSVG.GGraph) {
+                if (item instanceof GGraph) {
                     item.removeGraph(svg);
-                } else if (item instanceof GraphTableSVG.GTable) {
+                } else if (item instanceof GTable) {
                     item.removeTable(svg);
                 }
             }
@@ -47,7 +55,7 @@
                 }
             });
             if (rects.length > 0) {
-                return GraphTableSVG.Rectangle.merge(rects);
+                return Rectangle.merge(rects);
             } else {
                 return new Rectangle();
             }
@@ -74,7 +82,7 @@
             }
             var blankStyle: HTMLStyleElement = document.createElement('style');
 
-            blankStyle.innerHTML = Common.createCSS();
+            blankStyle.innerHTML = CSS.Common.createCSS();
             blankStyle.type = "text/css";
             blankStyle.setAttribute("class", CSSName);
 
@@ -142,4 +150,4 @@
         }
 
     }
-}
+//}

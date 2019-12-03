@@ -1,20 +1,39 @@
-interface SVGGElement {
-    /**
-     * X座標を取得します。
-     */
-    getX(): number;
-    /**
-     * X座標を設定します。
-     */
-    setX(value: number): void;
-    /**
-     * Y座標を取得します。
-     */
-    getY(): number;
-    /**
-     * Y座標を設定します。
-     */
-    setY(value: number): void;
+
+import { CustomAttributeNames } from "../options/custtome_attributes"
+
+declare global {
+    export interface SVGGElement {
+        /**
+         * X座標を取得します。
+         */
+        getX(): number;
+        /**
+         * X座標を設定します。
+         */
+        setX(value: number): void;
+        /**
+         * Y座標を取得します。
+         */
+        getY(): number;
+        /**
+         * Y座標を設定します。
+         */
+        setY(value: number): void;
+    }
+    export interface SVGElement {
+
+        getPaddingLeft(): number;
+        getPaddingTop(): number;
+        getPaddingRight(): number;
+        getPaddingBottom(): number;
+    
+    
+        setPaddingLeft(value: number): void;
+        setPaddingTop(value: number): void;
+        setPaddingRight(value: number): void;
+        setPaddingBottom(value: number): void;
+    
+    }
 }
 SVGGElement.prototype.getX = function () {
     const p: SVGGElement = this;
@@ -64,50 +83,37 @@ SVGGElement.prototype.setY = function (value: number) {
 
     //this.transform.baseVal.getItem(0).matrix.f = value;
 };
-interface SVGElement {
-    
-    getPaddingLeft() : number;
-    getPaddingTop() : number;
-    getPaddingRight() : number;
-    getPaddingBottom() : number;
 
-    
-    setPaddingLeft(value : number) : void;
-    setPaddingTop(value : number) : void;
-    setPaddingRight(value : number) : void;
-    setPaddingBottom(value : number) : void;
-
-}
 SVGElement.prototype.getPaddingTop = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, 5)!;
+    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.paddingTop, 5)!;
 };
 SVGElement.prototype.getPaddingLeft = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, 5)!;
+    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.paddingLeft, 5)!;
 };
 SVGElement.prototype.getPaddingRight = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, 5)!;
+    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.paddingRight, 5)!;
 };
 SVGElement.prototype.getPaddingBottom = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, 5)!;
+    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.paddingBottom, 5)!;
 };
 
 SVGElement.prototype.setPaddingLeft = function (value: number) {
-    const p: SVGElement = this;    
-    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingLeft, value.toString());
+    const p: SVGElement = this;
+    p.setPropertyStyleValue(CustomAttributeNames.Style.paddingLeft, value.toString());
 };
 SVGElement.prototype.setPaddingTop = function (value: number) {
-    const p: SVGElement = this;    
-    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingTop, value.toString());
+    const p: SVGElement = this;
+    p.setPropertyStyleValue(CustomAttributeNames.Style.paddingTop, value.toString());
 };
 SVGElement.prototype.setPaddingRight = function (value: number) {
-    const p: SVGElement = this;    
-    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingRight, value.toString());
+    const p: SVGElement = this;
+    p.setPropertyStyleValue(CustomAttributeNames.Style.paddingRight, value.toString());
 };
 SVGElement.prototype.setPaddingBottom = function (value: number) {
-    const p: SVGElement = this;    
-    p.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.paddingBottom, value.toString());
+    const p: SVGElement = this;
+    p.setPropertyStyleValue(CustomAttributeNames.Style.paddingBottom, value.toString());
 };

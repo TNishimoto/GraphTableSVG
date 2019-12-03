@@ -1,6 +1,25 @@
-namespace GraphTableSVG {
 
-    export namespace openSVGFunctions {
+import { CustomAttributeNames } from "../options/custtome_attributes"
+import { ShapeObjectType } from "../common/enums";
+import {HTMLFunctions} from "../svghtml/html_functions"
+import * as HTMLTable from "../svghtml/html_table"
+import {GUI} from "../common/gui_observe"
+
+import {GObject} from "../object/g_object"
+import {GCallout} from "../object/g_callout"
+import {GArrowCallout} from "../object/g_arrow_callout"
+import {GEllipse} from "../object/g_ellipse"
+import {GRect} from "../object/g_rect"
+import {GVertex} from "../object/g_vertex"
+
+import {GTextBox} from "../object/g_textbox"
+import {GEdge} from "../object/g_edge"
+import {GTable} from "../object/g_table"
+import {GGraph} from "../object/g_graph"
+import {GRectButton} from "../object/g_rect_button"
+import {GTextBoxAttributes, GObjectAttributes, GEdgeAttributes, GTableOption} from "../options/attributes_option"
+
+export namespace openSVGFunctions {
         export function getTNodes(e: Element): HTMLElement[] | null {
             const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "t");
             if (tNodes.length > 0) {
@@ -32,7 +51,7 @@ namespace GraphTableSVG {
         if (typeof id == "string") {
             const item = document.getElementById(id);
             if (item instanceof SVGElement) {
-                return GraphTableSVG.openCustomElement(item);
+                return openCustomElement(item);
             } else {
                 return null;
             }
@@ -163,7 +182,7 @@ namespace GraphTableSVG {
         if (typeof inputItem == "string") {
             const item = document.getElementById(inputItem);
             if (item != null && item instanceof SVGSVGElement) {
-                return GraphTableSVG.openSVG(item, output);
+                return openSVG(item, output);
             } else {
                 return [];
             }
@@ -180,7 +199,7 @@ namespace GraphTableSVG {
             
             const svgsvg: SVGSVGElement = inputItem;
             HTMLFunctions.getDescendants(svgsvg).forEach(v => {
-                const shapeType = GraphTableSVG.ShapeObjectType.toShapeObjectType(v.nodeName);
+                const shapeType = ShapeObjectType.toShapeObjectType(v.nodeName);
                 if (shapeType != null) {
                     toSVGUnknownElement(v);
                 }
@@ -190,7 +209,7 @@ namespace GraphTableSVG {
             HTMLFunctions.getDescendantsByPostorder(svgsvg).forEach((v) => {
                 if(v instanceof SVGElement){
                     if(isGCustomElement(v)){
-                        const p = GraphTableSVG.openCustomElement(v);
+                        const p = openCustomElement(v);
                         if (p != null) {
                             output.push(p);
                         }
@@ -202,7 +221,7 @@ namespace GraphTableSVG {
             const time = endTime - startTime;
             //console.log("create " + svgsvg.id + " : " + time + "ms");
 
-            GraphTableSVG.GUI.observeSVGSVG(svgsvg);
+            GUI.observeSVGSVG(svgsvg);
         } else {
             throw Error("errror");
         }
@@ -242,7 +261,7 @@ namespace GraphTableSVG {
     }
     export function createVertex(parent: GGraph, option: GTextBoxAttributes = {}): GVertex {
         let _parent = parent.svgGroup;
-        if (option.class == undefined) option.class = GraphTableSVG.CustomAttributeNames.StyleValue.defaultVertexClass;
+        if (option.class == undefined) option.class = CustomAttributeNames.StyleValue.defaultVertexClass;
         const type = option.class == undefined ? null : parent.getStyleValue(option.class, CustomAttributeNames.Style.defaultSurfaceType);
         if (type != null) {
             switch (type) {
@@ -338,10 +357,9 @@ namespace GraphTableSVG {
         else{
             const newE = toDivElement(id);
             if(newE != null){
-                const table = HTMLFunctions.createHTMLTable(newE);
+                const table = HTMLTable.HTMLFunctions.createHTMLTable(newE);
                 newE.insertAdjacentElement('beforebegin', table);    
                 newE.remove();
             }
         }
     }
-}

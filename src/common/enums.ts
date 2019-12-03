@@ -1,5 +1,5 @@
-﻿namespace GraphTableSVG {
-
+﻿//namespace GraphTableSVG {
+import {CustomAttributeNames} from "../options/custtome_attributes"
     /**
     ノードの並び順です。
     */
@@ -183,7 +183,7 @@
         }
 
         export function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElement): msoDashStyle {
-            const typeName = svgLine.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+            const typeName = svgLine.getPropertyStyleValue(CustomAttributeNames.Style.msoDashStyleName);
             if (typeName != null) {
                 const type = toMSODashStyle(typeName);
                 if (type != null) {
@@ -401,4 +401,4 @@
     }
 
 
-}
+//}

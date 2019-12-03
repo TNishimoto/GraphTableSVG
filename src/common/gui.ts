@@ -1,9 +1,13 @@
-﻿namespace GraphTableSVG {
+﻿//namespace GraphTableSVG {
+    import { Padding, Rectangle } from "./vline";
+    import {SVGToVBA} from "../object/table/vba"
+    import {GObject} from "../object/g_object"
+    
     export namespace GUI {
 
         export function showMacroModal(id :string | GObject){
             if (id instanceof GObject) {
-                const p = GraphTableSVG.SVGToVBA.create(id);
+                const p = SVGToVBA.create(id);
                 createMacroModal(p);
             }else{
 
@@ -15,7 +19,7 @@
          */
         export function createMacroModal(vbaCode: string | GObject) {
             if (vbaCode instanceof GObject) {
-                const p = GraphTableSVG.SVGToVBA.create(vbaCode);
+                const p = SVGToVBA.create(vbaCode);
                 createMacroModal(p);
             } else {
                 const mainDiv = document.createElement("div");
@@ -184,4 +188,4 @@
 
 
     }
-}
+//}

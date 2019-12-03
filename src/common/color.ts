@@ -1,5 +1,5 @@
 ﻿// tslint:disable-next-line: no-namespace
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
     /**
      * 色に関する名前空間です。
      */
@@ -148,4 +148,4 @@ namespace GraphTableSVG {
         }
 
     }
-}
+//}

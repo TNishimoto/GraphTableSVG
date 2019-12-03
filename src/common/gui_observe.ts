@@ -1,4 +1,16 @@
-namespace GraphTableSVG {
+//namespace GraphTableSVG {
+    
+    import { Padding, Rectangle } from "./vline";
+    import { CustomAttributeNames } from "../options/custtome_attributes"
+    import * as GUIP  from "../common/gui"
+    import { HTMLFunctions } from "../svghtml/html_functions"
+    import { SVG } from "../svghtml/svg"
+
+    import { Common } from "../common/common";
+    import {VBAObjectType} from "../object/table/vba"
+    import {GObject} from "../object/g_object"
+    
+
     export namespace GUI {
         /**
          * 
@@ -6,7 +18,7 @@ namespace GraphTableSVG {
          * @param sizeFunc 
          * @param padding 
          */
-        export function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => GraphTableSVG.Rectangle, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(5, 5, 5, 5)) {
+        export function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => Rectangle, padding: Padding = new Padding(5, 5, 5, 5)) {
             let _observer: MutationObserver;
             let observeFunction: MutationCallback = (x: MutationRecord[]) => {
                 let b = false;
@@ -19,7 +31,7 @@ namespace GraphTableSVG {
                     }
                 }
 
-                if (b) GraphTableSVG.GUI.setSVGBoxSize(svgBox, sizeFunc(), padding);
+                if (b) GUIP.GUI.setSVGBoxSize(svgBox, sizeFunc(), padding);
             }
             
             _observer = new MutationObserver(observeFunction);
@@ -37,9 +49,9 @@ namespace GraphTableSVG {
                 }
             }
             )
-            const rect = GraphTableSVG.Common.getRegion(objects);
+            const rect = Common.getRegion(objects);
 
-            GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, new Padding(5,5,5,5));
+            GUIP.GUI.setSVGBoxSize(svgBox, rect, new Padding(5,5,5,5));
         }
 
         export function autostretchObserve(svgBox: SVGSVGElement, objects : VBAObjectType[]) {
@@ -54,14 +66,14 @@ namespace GraphTableSVG {
         }
         let dic: ObserveSVGSVGInfo[] = [];
         let createdObserveSVGSVGTimer = false;
-        function resizeSVGSVG(svgBox: SVGSVGElement, padding: GraphTableSVG.Padding) {
+        function resizeSVGSVG(svgBox: SVGSVGElement, padding: Padding) {
             //GraphTableSVG.GUI.setSVGBoxSize(svgBox, new Rectangle(0,0,1000,1000), padding);
             const rect = SVG.getRegion2(svgBox);
             if (rect.width == 0) rect.width = 1;
             if (rect.height == 0) rect.height = 1;
-            GraphTableSVG.GUI.setSVGBoxSize(svgBox, rect, padding);
+            GUIP.GUI.setSVGBoxSize(svgBox, rect, padding);
         }
-        export function observeSVGSVG(svgBox: SVGSVGElement, padding: GraphTableSVG.Padding = new GraphTableSVG.Padding(0, 0, 0, 0)) {
+        export function observeSVGSVG(svgBox: SVGSVGElement, padding: Padding = new Padding(0, 0, 0, 0)) {
             if(isObserved(svgBox)){
                 return;
             }
@@ -177,4 +189,4 @@ namespace GraphTableSVG {
         }
 
     }
-}
+//}
