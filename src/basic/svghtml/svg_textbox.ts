@@ -1,6 +1,6 @@
 
 import { Size, Rectangle } from "../common/vline";
-import { Common } from "../common/common";
+import { CommonFunctions } from "../common/common_functions";
 import { HTMLFunctions } from "./html_functions";
 import { HorizontalAnchor, VerticalAnchor} from "../common/enums";
 import {} from "./svg_text"
@@ -339,7 +339,7 @@ export namespace SVGTextBox {
                     const w = v.getComputedTextLength();
                     //const h = v.getBoundingClientRect().height;
                     const fontSize = v.getPropertyStyleValueWithDefault("font-size", "24");
-                    const fs = Common.toPX(fontSize);
+                    const fs = CommonFunctions.toPX(fontSize);
                     return new Size(w, fs);
                 })
 
@@ -365,7 +365,7 @@ export namespace SVGTextBox {
                     const r = tspans.map((v)=> {
                         const w = v.getComputedTextLength();
                     const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
-                    const fs = Common.toPX(fontSize);
+                    const fs = CommonFunctions.toPX(fontSize);
                         return new Size(w, fs);
                     })
                     ura.removeChild(fst);

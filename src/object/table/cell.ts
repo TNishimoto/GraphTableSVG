@@ -1,14 +1,14 @@
 ﻿
 //namespace GraphTableSVG {
 
-    import {Common} from "../../common/common"
-    import {Rectangle} from "../../common/vline"
-    import { CustomAttributeNames } from "../../common/custtome_attributes"
+    import {CommonFunctions} from "../../basic/common/common_functions"
+    import {Rectangle} from "../../basic/common/vline"
+    import { CustomAttributeNames } from "../../basic/common/custtome_attributes"
     import {GTable} from "../g_table"
-    import {SVG} from "../../svghtml/svg"
+    import {SVG} from "../../basic/svghtml/svg"
     import {CellOption} from "../../options/attributes_option"
-    import { HorizontalAnchor, VerticalAnchor } from "../../common/enums";
-    import { SVGTextBox } from "../../svghtml/svg_textbox"
+    import { HorizontalAnchor, VerticalAnchor } from "../../basic/common/enums";
+    import { SVGTextBox } from "../../basic/svghtml/svg_textbox"
     import { BorderRow, BorderColumn } from "./border_row"
 
     export enum DirectionType {
@@ -87,13 +87,13 @@
          */
         public get isEmphasized(): boolean {
             const cellClass = this.svgBackground.getAttribute("class");
-            return cellClass == Cell.emphasisCellClass;
+            return cellClass == CustomAttributeNames.cellEmphasisCellClass;
         }
         public set isEmphasized(v: boolean) {
             if (v) {
                 if (!this.isEmphasized) {
                     this.tmpStyle = this.svgBackground.getAttribute("class");
-                    this.svgBackground.setAttribute("class", Cell.emphasisCellClass);
+                    this.svgBackground.setAttribute("class", CustomAttributeNames.cellEmphasisCellClass);
                 }
             } else {
                 if (this.isEmphasized) {
@@ -171,9 +171,6 @@
 
         // #region field
         //private static readonly defaultBackgroundClassName: string = "--default-background-class";
-        public static readonly emphasisCellClass: string = "___cell-emphasis";
-        public static readonly emphasisBorderClass: string = "___border-emphasis";
-        public static readonly temporaryBorderClass: string = "___temporary-class";
         public static readonly defaultCellClass: string = "___cell-default";
 
         public static readonly cellXName = "data-cellX";
@@ -357,7 +354,7 @@
         CellがDocumentのDOMに所属しているかどうかを返します。
         */
         get isLocated(): boolean {
-            return Common.IsDescendantOfBody(this.svgGroup);
+            return CommonFunctions.IsDescendantOfBody(this.svgGroup);
         }
         /**
          * このセルがマスターセルのときに限りTrueを返します。
@@ -1239,7 +1236,7 @@
          *セルの位置を再計算します。
          */
         public relocation() {
-            if (!Common.IsDescendantOfBody(this.svgGroup)) return;
+            if (!CommonFunctions.IsDescendantOfBody(this.svgGroup)) return;
 
             this.relocateTopBorder();
             this.relocateLeftBorder();

@@ -2,12 +2,12 @@
 
 //namespace GraphTableSVG {
     import {GVertex} from "./g_vertex"
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
     import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes} from "../options/attributes_option"
-    import { CustomAttributeNames } from "../common/custtome_attributes"
-    import { SVGTextBox } from "../svghtml/svg_textbox"
+    import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+    import { SVGTextBox } from "../basic/svghtml/svg_textbox"
 
-    import {Rectangle, VLine} from "../common/vline"
+    import {Rectangle, VLine} from "../basic/common/vline"
     export class GPathTextBox extends GVertex {
         //private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {

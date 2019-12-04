@@ -3,8 +3,8 @@
     import {GObject} from "../g_object"
     import {GTable} from "../g_table"
     import {GGraph} from "../g_graph"
-    import {Color} from "../../common/color"
-    import {Common} from "../../common/common"
+    import {Color} from "../../basic/common/color"
+    import {CommonFunctions} from "../../basic/common/common_functions"
 
     export type VBAObjectType = SVGPathElement | SVGTextElement | GObject;
     export class SVGToVBA {
@@ -386,7 +386,7 @@ End Sub
                         const css = getComputedStyle(child);
                         const childColor = Color.createRGBFromColorName(css.fill == null ? "black" : css.fill);
                         const fontName = this.getFont(css);
-                        const fontSize = Common.toPX(css.fontSize == null ? "14pt" : css.fontSize);
+                        const fontSize = CommonFunctions.toPX(css.fontSize == null ? "14pt" : css.fontSize);
                         const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
                         const len = child.textContent.length;
 
@@ -408,7 +408,7 @@ End Sub
 
                 const color = Color.createRGBFromColorName(css.fill);
                 const fontName = this.getFont(css);
-                const fontSize = Common.toPX(css.fontSize);
+                const fontSize = CommonFunctions.toPX(css.fontSize);
                 const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
 
                 sub.push([`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}), "${fontName}", ${fontSize}, ${fontBold} )`]);
@@ -444,7 +444,7 @@ End Sub
 
                         const childColor = Color.createRGBFromColorName(css.fill);
                         const fontName = this.getFont(css);
-                        const fontSize = Common.toPX(css.fontSize);
+                        const fontSize = CommonFunctions.toPX(css.fontSize);
                         const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
                         const len = child.textContent.length;
 
@@ -464,7 +464,7 @@ End Sub
 
                 const color = Color.createRGBFromColorName(css.fill);
                 const fontName = this.getFont(css);
-                const fontSize = Common.toPX(css.fontSize);
+                const fontSize = CommonFunctions.toPX(css.fontSize);
                 const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
 
                 lines.push(`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}), "${fontName}", ${fontSize}, ${fontBold} )`);

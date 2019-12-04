@@ -1,5 +1,5 @@
 //namespace GraphTableSVG {
-import { Common } from "./common";
+import { CommonFunctions } from "./common_functions";
 import { Size } from "./vline";
 //import { SVG } from "../svghtml/svg";
 
@@ -245,17 +245,17 @@ export namespace PNG {
         const r: number[] = new Array(4);
         var style = window.getComputedStyle(svgBox);
 
-        r[0] = style.paddingTop == null ? 0 : Common.toPX(style.paddingTop);
-        r[1] = style.paddingLeft == null ? 0 : Common.toPX(style.paddingLeft);
-        r[2] = style.paddingBottom == null ? 0 : Common.toPX(style.paddingBottom);
-        r[3] = style.paddingRight == null ? 0 : Common.toPX(style.paddingRight);
+        r[0] = style.paddingTop == null ? 0 : CommonFunctions.toPX(style.paddingTop);
+        r[1] = style.paddingLeft == null ? 0 : CommonFunctions.toPX(style.paddingLeft);
+        r[2] = style.paddingBottom == null ? 0 : CommonFunctions.toPX(style.paddingBottom);
+        r[3] = style.paddingRight == null ? 0 : CommonFunctions.toPX(style.paddingRight);
 
         return r;
     }
     function getSizeWidthPadding(svgBox: HTMLElement) {
         const padding = getPadding(svgBox);
-        const width = svgBox.style.width == null ? 0 : Common.toPX(svgBox.style.width);
-        const height = svgBox.style.height == null ? 0 : Common.toPX(svgBox.style.height);
+        const width = svgBox.style.width == null ? 0 : CommonFunctions.toPX(svgBox.style.width);
+        const height = svgBox.style.height == null ? 0 : CommonFunctions.toPX(svgBox.style.height);
         //return new Size(Math.round(width + padding[1] + padding[3]), Math.round(height + padding[0] + padding[2] ) );
         return new Size(width + padding[1] + padding[3], height + padding[0] + padding[2]);
     }
@@ -265,7 +265,7 @@ export namespace PNG {
         if (viewbox != null) {
             const strs = viewbox.split(" ");
             for (let i = 0; i < strs.length; i++) {
-                const num = Common.toPX(strs[i]);
+                const num = CommonFunctions.toPX(strs[i]);
                 r[i] = num;
             }
         }

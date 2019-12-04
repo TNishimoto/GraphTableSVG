@@ -1,8 +1,8 @@
 //namespace GraphTableSVG {
     import {GRect} from "./g_rect"
     import {GTextBoxAttributes, GObjectAttributes} from "../options/attributes_option"
-    import { CustomAttributeNames } from "../common/custtome_attributes"
-    import { ShapeObjectType } from "../common/enums";
+    import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+    import { ShapeObjectType } from "../basic/common/enums";
 
     export class GRectButton extends GRect {
         public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {

@@ -3,13 +3,13 @@
     import {GVertex} from "./g_vertex"
     import {GObject} from "./g_object"
 
-    import { CustomAttributeNames } from "../common/custtome_attributes"
+    import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import {GEdgeAttributes, GObjectAttributes} from "../options/attributes_option"
-    import {SVG} from "../svghtml/svg"
-    import { ShapeObjectType, PathTextAlighnment,ConnectorPosition,msoDashStyle } from "../common/enums";
-    import {Common} from "../common/common"
+    import {SVG} from "../basic/svghtml/svg"
+    import { ShapeObjectType, PathTextAlighnment,ConnectorPosition,msoDashStyle } from "../basic/common/enums";
+    import {CommonFunctions} from "../basic/common/common_functions"
     import {VBATranslateFunctions} from "./table/vba"    
-    import { SVGTextBox } from "../svghtml/svg_textbox";
+    import { SVGTextBox } from "../basic/svghtml/svg_textbox";
 
     /**
      * 辺をSVGで表現するためのクラスです。
@@ -795,7 +795,7 @@
             }
             const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
             if (strokeWidth != null) {
-                const diffy = Common.toPX(strokeWidth) + 3;
+                const diffy = CommonFunctions.toPX(strokeWidth) + 3;
                 this.svgText.setAttribute("dy", `-${diffy}`);
             } else {
                 this.svgText.setAttribute("dy", "0");
@@ -958,7 +958,7 @@
 
                 for (let j = 0; j < this.VBAConnectorNumber; j++) {
                     const t = (j + 1) / (this.VBAConnectorNumber + 1);
-                    const centerPoint = Common.bezierLocation([this.x1, this.y1], this.controlPoint[0], [this.x2, this.y2], t);
+                    const centerPoint = CommonFunctions.bezierLocation([this.x1, this.y1], this.controlPoint[0], [this.x2, this.y2], t);
                     r.push(`shapes_.AddShape(msoShapeOval, ${centerPoint[0]}, ${centerPoint[1]}, 0, 0).name = "${this.objectID}_node_${j}"`);
                 }
 

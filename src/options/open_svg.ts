@@ -1,9 +1,9 @@
 
-import { CustomAttributeNames } from "../common/custtome_attributes"
-import { ShapeObjectType } from "../common/enums";
-import {HTMLFunctions} from "../svghtml/html_functions"
-import * as HTMLTable from "../svghtml/html_table"
-import {GUI} from "../common/gui_observe"
+import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import { ShapeObjectType } from "../basic/common/enums";
+import {HTMLFunctions} from "../basic/svghtml/html_functions"
+import * as HTMLTable from "./html_table"
+import {GUIObserver} from "../basic/svghtml/gui_observer"
 
 import {GObject} from "../object/g_object"
 import {GCallout} from "../object/g_callout"
@@ -221,7 +221,7 @@ export namespace openSVGFunctions {
             const time = endTime - startTime;
             //console.log("create " + svgsvg.id + " : " + time + "ms");
 
-            GUI.observeSVGSVG(svgsvg);
+            GUIObserver.observeSVGSVG(svgsvg);
         } else {
             throw Error("errror");
         }

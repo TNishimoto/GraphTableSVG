@@ -1,8 +1,8 @@
 // tslint:disable-next-line: no-namespace
-import { LogicGraph, LogicGraphNode } from "../options/logic_tree"
-import { LogicTable } from "../options/logic_table"
+import { LogicGraph, LogicGraphNode } from "./logic_tree"
+import { LogicTable } from "./logic_table"
 
-import {CustomAttributeNames} from "../common/custtome_attributes"
+import {CustomAttributeNames} from "../basic/common/custtome_attributes"
 
 export class TableDictionary {
         public static IndexName = "___GraphTableSVG_Console_Index";

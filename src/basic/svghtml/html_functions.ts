@@ -1,5 +1,5 @@
 
-import { GUI } from "../common/gui"
+import { GUI } from "./gui"
 export namespace HTMLFunctions {
     export enum NodeOrder {
         Preorder, Postorder

@@ -11,9 +11,10 @@ interface PPTextboxShape {
 }
 */
 
-import { Common } from "../common/common";
+import { CommonFunctions } from "../common/common_functions";
 import { SVGTextBox } from "./svg_textbox"
-import { Cell } from "../object/table/cell"
+import { CustomAttributeNames } from "../common/custtome_attributes"
+//import { Cell } from "../object/table/cell"
 
 //import { } from "./svg_interface"
 
@@ -81,34 +82,34 @@ SVGLineElement.prototype.getEmphasis = function () {
 
     const emp = p.getAttribute("class");
     if (emp != null) {
-        return emp == Cell.emphasisBorderClass;
+        return emp == CustomAttributeNames.cellEmphasisBorderClass;
     } else {
         return false;
     }
 };
 SVGLineElement.prototype.setEmphasis = function (value: boolean) {
-    Common.setGraphTableCSS();
+    CommonFunctions.setGraphTableCSS();
 
     const p: SVGLineElement = this;
     if (p.getEmphasis() && !value) {
-        const tmp = p.getAttribute(Cell.temporaryBorderClass);
+        const tmp = p.getAttribute(CustomAttributeNames.cellTemporaryBorderClass);
         if (tmp != null) {
             p.setAttribute("class", tmp);
-            p.removeAttribute(Cell.temporaryBorderClass);
+            p.removeAttribute(CustomAttributeNames.cellTemporaryBorderClass);
 
         } else {
             p.removeAttribute("class");
 
-            p.removeAttribute(Cell.temporaryBorderClass);
+            p.removeAttribute(CustomAttributeNames.cellTemporaryBorderClass);
 
         }
 
     }
     else if (!p.getEmphasis() && value) {
         const lineClass = p.getAttribute("class");
-        p.setAttribute("class", Cell.emphasisBorderClass);
+        p.setAttribute("class", CustomAttributeNames.cellTemporaryBorderClass);
         if (lineClass != null) {
-            p.setAttribute(Cell.temporaryBorderClass, lineClass);
+            p.setAttribute(CustomAttributeNames.cellTemporaryBorderClass, lineClass);
         }
     }
 };

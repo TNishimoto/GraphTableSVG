@@ -1,29 +1,13 @@
 ﻿//namespace GraphTableSVG {
-    import { Rectangle } from "./vline";
+    //import { Rectangle } from "./vline";
     import * as CSS from "../svghtml/css"
-    import {GGraph} from "../object/g_graph"
-    import {GTable} from "../object/g_table"
-    import {GObject} from "../object/g_object"
+    //import {GGraph} from "../object/g_graph"
+    //import {GTable} from "../object/g_table"
+    //import {GObject} from "../object/g_object"
 
-    import {VBAObjectType} from "../object/table/vba"
+    //import {VBAObjectType} from "../object/table/vba"
     
-    export namespace Common {
-        /**
-         * グラフや表を消去します。
-         * @param svg 
-         * @param items 
-         */
-        export function clearGraphTables(svg: SVGElement, items: (GGraph | GTable)[]) {
-            for (let i = 0; i < items.length; i++) {
-                var item = items[i];
-                if (item instanceof GGraph) {
-                    item.removeGraph(svg);
-                } else if (item instanceof GTable) {
-                    item.removeTable(svg);
-                }
-            }
-            
-        }
+    export namespace CommonFunctions {
         /**
          * 入力要素がdocument.bodyの孫であるときに限りTrueを返します。
          * @param node 判定する要素
@@ -36,30 +20,10 @@
             else if (parent == document.body) {
                 return true;
             } else {
-                return Common.IsDescendantOfBody(parent);
+                return CommonFunctions.IsDescendantOfBody(parent);
             }
         }
-        /**
-         * 領域を取得します。
-         * @param items 
-         */
-        export function getRegion(items: VBAObjectType[]): Rectangle {
-            const rects = items.map((v) => {
-                if (v instanceof GObject) {
-                    return v.getRegion();
-                } else if (v instanceof SVGPathElement || v instanceof SVGTextElement) {
-                    const rect = v.getBBox();
-                    return new Rectangle(rect.x, rect.y, rect.width, rect.height);
-                } else {
-                    return new Rectangle();
-                }
-            });
-            if (rects.length > 0) {
-                return Rectangle.merge(rects);
-            } else {
-                return new Rectangle();
-            }
-        }
+        
         /**
          * 指定された文字数になるまで指定された文字を左に加えます
          * @param text 文字を追加する文字列

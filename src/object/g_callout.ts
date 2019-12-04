@@ -2,9 +2,9 @@
 //namespace GraphTableSVG {
     import {GTextBox} from "./g_textbox"
     import {GPathTextBox} from "./g_path_textbox"
-    import { ShapeObjectType, SpeakerPosition } from "../common/enums";
+    import { ShapeObjectType, SpeakerPosition } from "../basic/common/enums";
     import {GCalloutAttributes} from "../options/attributes_option"
-    import {Rectangle, VLine} from "../common/vline"
+    import {Rectangle, VLine} from "../basic/common/vline"
     export class GCallout extends GPathTextBox {
         public constructor(svgbox: SVGElement | string, option: GCalloutAttributes = {}) {
             super(svgbox, option);

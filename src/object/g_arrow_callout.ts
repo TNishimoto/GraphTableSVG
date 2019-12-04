@@ -2,11 +2,11 @@
 //namespace GraphTableSVG {
     import {GPathTextBox} from "./g_path_textbox"
     import {GTextBox} from "./g_textbox"
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction } from "../common/enums";
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction } from "../basic/common/enums";
     import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
-    import { CustomAttributeNames } from "../common/custtome_attributes"
-    import {Rectangle, VLine} from "../common/vline"
-    import { SVGTextBox } from "../svghtml/svg_textbox";
+    import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+    import {Rectangle, VLine} from "../basic/common/vline"
+    import { SVGTextBox } from "../basic/svghtml/svg_textbox";
 
     export class GArrowCallout extends GPathTextBox {
 

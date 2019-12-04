@@ -1,17 +1,17 @@
 //namespace GraphTableSVG {
-import {Common} from "../common/common"
-import {GUI} from "../common/gui_observe"
-import {Rectangle} from "../common/vline"
+import {CommonFunctions} from "../basic/common/common_functions"
+import {GUIObserver} from "../basic/svghtml/gui_observer"
+import {Rectangle} from "../basic/common/vline"
 
 import {GObjectAttributes} from "../options/attributes_option"
-import {SVG} from "../svghtml/svg"
-import "../svghtml/interface"
+import {SVG} from "../basic/svghtml/svg"
+import "../basic/svghtml/interface"
 
-import {HTMLFunctions} from "../svghtml/html_functions"
-import * as HTMLFunctions2 from "../svghtml/draggable_object"
+import {HTMLFunctions} from "../basic/svghtml/html_functions"
+import * as HTMLFunctions2 from "../options/draggable_object"
 
-import { CustomAttributeNames } from "../common/custtome_attributes"
-import { ShapeObjectType } from "../common/enums";
+import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import { ShapeObjectType } from "../basic/common/enums";
 
     export class GObject {
 
@@ -22,10 +22,10 @@ import { ShapeObjectType } from "../common/enums";
         protected _observerOption: MutationObserverInit;
 
         public constructor(svgbox: SVGElement | string, option: GObjectAttributes = {}) {
-            Common.setGraphTableCSS();
+            CommonFunctions.setGraphTableCSS();
             let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
-            if (parentElement instanceof SVGSVGElement && !GUI.isObserved(parentElement)) {
-                GUI.observeSVGSVG(parentElement);
+            if (parentElement instanceof SVGSVGElement && !GUIObserver.isObserved(parentElement)) {
+                GUIObserver.observeSVGSVG(parentElement);
             }
             /*
             if(!HTMLFunctions.isShow(parentElement)){
@@ -201,7 +201,7 @@ import { ShapeObjectType } from "../common/enums";
 
 
         get isLocated(): boolean {
-            return Common.IsDescendantOfBody(this.svgGroup);
+            return CommonFunctions.IsDescendantOfBody(this.svgGroup);
         }
         public get svgSurface(): SVGElement | null {
             return this._svgSurface;

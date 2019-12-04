@@ -1,6 +1,6 @@
 
 //import { Size, Rectangle } from "../common/vline";
-import { Common } from "../common/common";
+import { CommonFunctions } from "../common/common_functions";
 declare global {
     export interface Element {
         getActiveStyle(): CSSStyleDeclaration;
@@ -163,7 +163,7 @@ declare global {
     const item: Element = this;
     const p = item.getPropertyStyleValue(name);
     if (p != null) {
-        return Common.toPX(p);
+        return CommonFunctions.toPX(p);
     } else {
         return defaultValue;
     }

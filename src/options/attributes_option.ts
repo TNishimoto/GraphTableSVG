@@ -1,6 +1,6 @@
 
 
-import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, Direction, PathTextAlighnment} from "../common/enums";
+import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, Direction, PathTextAlighnment} from "../basic/common/enums";
 import { LogicTable } from "../options/logic_table"
 
 import { GVertex } from "../object/g_vertex"

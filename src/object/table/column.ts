@@ -3,7 +3,7 @@
     //import {BorderRow} from "./border_row"
     
     import {CellOption} from "../../options/attributes_option"
-    import {SVG} from "../../svghtml/svg"    
+    import {SVG} from "../../basic/svghtml/svg"    
     import {GTable} from "../g_table"
 
     /**

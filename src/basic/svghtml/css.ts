@@ -1,15 +1,14 @@
-    
-import { CustomAttributeNames } from "../common/custtome_attributes"
-import { HorizontalAnchor, VerticalAnchor} from "../common/enums";
-import { Cell } from "../object/table/cell"
-    export namespace Common {
-        export function createCSS(): string {
 
-            const r = `
-            .${Cell.emphasisCellClass}{
+import { CustomAttributeNames } from "../common/custtome_attributes"
+import { HorizontalAnchor, VerticalAnchor } from "../common/enums";
+export namespace Common {
+    export function createCSS(): string {
+
+        const r = `
+            .${CustomAttributeNames.cellEmphasisCellClass}{
             fill : yellow !important;
             }
-            .${Cell.emphasisBorderClass}{
+            .${CustomAttributeNames.cellEmphasisBorderClass}{
             stroke : red !important;
             }
             .${CustomAttributeNames.StyleValue.defaultCellClass}{
@@ -114,6 +113,6 @@ import { Cell } from "../object/table/cell"
             }
     
             `
-            return r;
-        }
+        return r;
     }
+}

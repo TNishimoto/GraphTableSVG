@@ -2,10 +2,10 @@
     import {GVertex} from "./g_vertex"
     import {GTextBox} from "./g_textbox"
 
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
     import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes} from "../options/attributes_option"
-    import { CustomAttributeNames } from "../common/custtome_attributes"
-    import {Rectangle, VLine} from "../common/vline"
+    import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+    import {Rectangle, VLine} from "../basic/common/vline"
 
     export class GRect extends GVertex {
         public get svgRectangle(): SVGRectElement {

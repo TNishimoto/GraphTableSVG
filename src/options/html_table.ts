@@ -1,5 +1,5 @@
 
-import { LogicTable } from "../options/logic_table"
+import { LogicTable } from "./logic_table"
 export namespace HTMLFunctions {
     export function createHTMLTable(e: HTMLElement): HTMLTableElement {
         const table = LogicTable.constructHTMLLogicTable(e);

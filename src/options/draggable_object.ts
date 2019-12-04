@@ -1,4 +1,4 @@
-import {SVG} from "./svg"
+import {SVG} from "../basic/svghtml/svg"
 export namespace HTMLFunctions {
     type DragInfo = { target: SVGElement, offsetX: number, offsetY: number, g : SVGGElement, gParentG : SVGGElement | SVGSVGElement }
     let drag: DragInfo | null = null;

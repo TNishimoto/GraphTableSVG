@@ -1,8 +1,8 @@
 //namespace GraphTableSVG {
     import {Cell} from "./cell"
-    import { CustomAttributeNames } from "../../common/custtome_attributes"
+    import { CustomAttributeNames } from "../../basic/common/custtome_attributes"
     import {GTable} from "../g_table"
-    import {SVG} from "../../svghtml/svg"
+    import {SVG} from "../../basic/svghtml/svg"
 
     /**
      * 表の行を表現するクラスです。

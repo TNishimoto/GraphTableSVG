@@ -8,12 +8,12 @@
         public item: any;
     }
     */
-import { CustomAttributeNames } from "../common/custtome_attributes"
-import { SVGTextBox } from "../svghtml/svg_textbox"
+import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import { SVGTextBox } from "../basic/svghtml/svg_textbox"
 //import { HTMLFunctions } from "../svghtml/html_table"
-import { HTMLFunctions } from "../svghtml/html_functions"
+import { HTMLFunctions } from "../basic/svghtml/html_functions"
 import { openSVGFunctions } from "../options/open_svg";
-import { Console} from "../svghtml/console"
+import { Console} from "./console"
 
 import { Cell } from "../object/table/cell"
 

@@ -1,17 +1,17 @@
 //namespace GraphTableSVG {
     
-    import { Padding, Rectangle } from "./vline";
-    import { CustomAttributeNames } from "./custtome_attributes"
-    import * as GUIP  from "../common/gui"
-    import { HTMLFunctions } from "../svghtml/html_functions"
-    import { SVG } from "../svghtml/svg"
+    import { Padding, Rectangle } from "../common/vline";
+    import { CustomAttributeNames } from "../common/custtome_attributes"
+    import {GUI}  from "./gui"
+    import { HTMLFunctions } from "./html_functions"
+    import { SVG } from "./svg"
 
-    import { Common } from "../common/common";
-    import {VBAObjectType} from "../object/table/vba"
-    import {GObject} from "../object/g_object"
+    //import {VBAObjectType} from "../object/table/vba"
+    //import {GObject} from "../object/g_object"
+    //import {VBAObject} from "../object/vba_object"
     
 
-    export namespace GUI {
+    export namespace GUIObserver {
         /**
          * 
          * @param svgBox 
@@ -31,7 +31,7 @@
                     }
                 }
 
-                if (b) GUIP.GUI.setSVGBoxSize(svgBox, sizeFunc(), padding);
+                if (b) GUI.setSVGBoxSize(svgBox, sizeFunc(), padding);
             }
             
             _observer = new MutationObserver(observeFunction);
@@ -40,7 +40,7 @@
             };
             _observer.observe(svgBox, option);            
         }
-
+        /*
         export function autostrech(svgBox: SVGSVGElement, objects : VBAObjectType[]){
             objects.forEach((v)=>
             {
@@ -49,14 +49,15 @@
                 }
             }
             )
-            const rect = Common.getRegion(objects);
+            const rect = VBAObject.getRegion(objects);
 
-            GUIP.GUI.setSVGBoxSize(svgBox, rect, new Padding(5,5,5,5));
+            GUI.setSVGBoxSize(svgBox, rect, new Padding(5,5,5,5));
         }
 
         export function autostretchObserve(svgBox: SVGSVGElement, objects : VBAObjectType[]) {
             throw "NotImplementedException";
         }
+        */
 
 
         type ObserveSVGSVGInfo = {
@@ -71,7 +72,7 @@
             const rect = SVG.getRegion2(svgBox);
             if (rect.width == 0) rect.width = 1;
             if (rect.height == 0) rect.height = 1;
-            GUIP.GUI.setSVGBoxSize(svgBox, rect, padding);
+            GUI.setSVGBoxSize(svgBox, rect, padding);
         }
         export function observeSVGSVG(svgBox: SVGSVGElement, padding: Padding = new Padding(0, 0, 0, 0)) {
             if(isObserved(svgBox)){

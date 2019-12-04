@@ -1,17 +1,17 @@
 /// <reference path="g_object.ts"/>
 import {GObject} from "./g_object"
 import {GTextBoxAttributes, GObjectAttributes} from "../options/attributes_option"
-import { CustomAttributeNames } from "../common/custtome_attributes"
-import { SVGTextBox } from "../svghtml/svg_textbox"
-import { ShapeObjectType, msoDashStyle } from "../common/enums";
-import { HorizontalAnchor, VerticalAnchor } from "../common/enums";
-import {Rectangle} from "../common/vline"
-import {HTMLFunctions} from "../svghtml/html_functions"
-import {SVG} from "../svghtml/svg"
+import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import { SVGTextBox } from "../basic/svghtml/svg_textbox"
+import { ShapeObjectType, msoDashStyle } from "../basic/common/enums";
+import { HorizontalAnchor, VerticalAnchor } from "../basic/common/enums";
+import {Rectangle} from "../basic/common/vline"
+import {HTMLFunctions} from "../basic/svghtml/html_functions"
+import {SVG} from "../basic/svghtml/svg"
 import { openSVGFunctions} from "../options/open_svg"
-import "../svghtml/svg_interface";
-import "../svghtml/svg_text";
-import "../svghtml/svg_g";
+import "../basic/svghtml/svg_interface";
+import "../basic/svghtml/svg_text";
+import "../basic/svghtml/svg_g";
 
 //namespace GraphTableSVG {
 

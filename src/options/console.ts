@@ -1,8 +1,8 @@
     import {TableDictionary} from "./table_dictionary"
-    import { LogicGraph, LogicGraphNode, LogicTree } from "../options/logic_tree"
-    import { LogicTable } from "../options/logic_table"
-    import { Common } from "../common/common";
-    import { createShape } from "../options/open_svg";
+    import { LogicGraph, LogicGraphNode, LogicTree } from "./logic_tree"
+    import { LogicTable } from "./logic_table"
+    import { CommonFunctions } from "../basic/common/common_functions";
+    import { createShape } from "./open_svg";
     import { GTable } from "../object/g_table"
 
     export namespace Console {
@@ -61,7 +61,7 @@
         }
         export function table(item: any) {
             if(item instanceof LogicTable){
-                Common.setGraphTableCSS();
+                CommonFunctions.setGraphTableCSS();
  
                 const code = getOrCreateCodeElement();
                 const svg = addSVGSVGElement(code);
@@ -89,7 +89,7 @@
         export function graph(item : any | LogicTree | LogicGraph){
 
             if(item instanceof LogicTree || item instanceof LogicGraph){
-                Common.setGraphTableCSS();
+                CommonFunctions.setGraphTableCSS();
                 const code = getOrCreateCodeElement();
                 const svg = addSVGSVGElement(code);
                 const ggraph = createShape(svg, "g-graph");    

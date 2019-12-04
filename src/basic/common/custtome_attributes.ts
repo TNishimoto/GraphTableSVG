@@ -77,6 +77,11 @@
 
         export const objectIDName: string = "data-objectID";
         export const customElement : string = "data-custom";
+        export const cellEmphasisCellClass: string = "___cell-emphasis";
+        export const cellEmphasisBorderClass: string = "___border-emphasis";
+        export const cellTemporaryBorderClass: string = "___temporary-class";
+
+
         //export const elementTypeName = "data-element-type";
  
 

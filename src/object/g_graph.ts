@@ -2,16 +2,16 @@
     import {GObject} from "./g_object"
     import {GVertex} from "./g_vertex"
     import {GEdge} from "./g_edge"
-    import {Rectangle} from "../common/vline"
+    import {Rectangle} from "../basic/common/vline"
     //import {  ConnectorPosition, msoDashStyle} from "../common/enums";
     
-    import {HTMLFunctions} from "../svghtml/html_functions"
-    import {SVG} from "../svghtml/svg"
+    import {HTMLFunctions} from "../basic/svghtml/html_functions"
+    import {SVG} from "../basic/svghtml/svg"
 
-    import { CustomAttributeNames } from "../common/custtome_attributes"
-    import { ShapeObjectType, VertexOrder, PathTextAlighnment } from "../common/enums";
+    import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+    import { ShapeObjectType, VertexOrder, PathTextAlighnment } from "../basic/common/enums";
     import { createShape, createVertex } from "../options/open_svg";
-    import { SVGTextBox } from "../svghtml/svg_textbox";
+    import { SVGTextBox } from "../basic/svghtml/svg_textbox";
     
     import {GObjectAttributes, GTextBoxAttributes, ConnectOption} from "../options/attributes_option"
     import {LogicTree, LogicGraph} from "../options/logic_tree"

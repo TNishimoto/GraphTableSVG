@@ -1,7 +1,7 @@
 
 
 import { Size, Rectangle } from "../common/vline";
-import { Common } from "../common/common";
+import { CommonFunctions } from "../common/common_functions";
 import { HTMLFunctions } from "./html_functions";
 import { HorizontalAnchor, VerticalAnchor } from "../common/enums";
 import { SVGTextBox } from "./svg_textbox"

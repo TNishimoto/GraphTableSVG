@@ -6,12 +6,12 @@
     import {GGraph} from "./g_graph"
     import {VBATranslateFunctions} from "./table/vba"
 
-    import {Rectangle} from "../common/vline"
+    import {Rectangle} from "../basic/common/vline"
     import {VirtualTree} from "./virtual_tree"
     
 
-    import { CustomAttributeNames } from "../common/custtome_attributes"
-    import {  ConnectorPosition, msoDashStyle} from "../common/enums";
+    import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+    import {  ConnectorPosition, msoDashStyle} from "../basic/common/enums";
     export class GVertex extends GTextBox {
         /*
         protected setClassNameOfSVGGroup() {

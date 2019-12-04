@@ -1,17 +1,17 @@
-﻿import { Color } from "../common/color";
+﻿import { Color } from "../basic/common/color";
 import { GObject } from "./g_object";
-import {Common} from "../common/common"
+import {CommonFunctions} from "../basic/common/common_functions"
 import {GTableOption} from "../options/attributes_option"
-import { ShapeObjectType } from "../common/enums";
+import { ShapeObjectType } from "../basic/common/enums";
 import {LogicTable} from "../options/logic_table"
 import {CellRow} from "./table/row"
 import {CellColumn} from "./table/column"
 import {BorderColumn, BorderRow} from "./table/border_row"
 import {Cell} from "./table/cell"
-import {Rectangle} from "../common/vline"
+import {Rectangle} from "../basic/common/vline"
 import {VBATranslateFunctions, parseInteger, visible} from "./table/vba"
-import {SVG} from "../svghtml/svg"
-import {HTMLFunctions} from "../svghtml/html_functions"
+import {SVG} from "../basic/svghtml/svg"
+import {HTMLFunctions} from "../basic/svghtml/html_functions"
 
 //namespace GraphTableSVG {
 
@@ -27,7 +27,7 @@ import {HTMLFunctions} from "../svghtml/html_functions"
         constructor(svgbox: SVGElement,
             option: GTableOption = {}) {
             super(svgbox, option)
-            Common.setGraphTableCSS();
+            CommonFunctions.setGraphTableCSS();
 
             this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this._svgRowBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -411,7 +411,7 @@ import {HTMLFunctions} from "../svghtml/html_functions"
             }
             for (let y = 0; y < this.rowCount; y++) {
                 for (let x = 0; x < this.columnCount; x++) {
-                    plainTable[y][x] = Common.paddingLeft(plainTable[y][x], widtharr[x], " ");
+                    plainTable[y][x] = CommonFunctions.paddingLeft(plainTable[y][x], widtharr[x], " ");
                 }
             }
 

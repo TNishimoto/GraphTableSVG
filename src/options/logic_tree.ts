@@ -4,8 +4,8 @@
         public nodeText: string | null = null;
     }
     */
-import { Console} from "../svghtml/console"
-import {VertexOrder} from "../common/enums"
+import { Console} from "./console"
+import {VertexOrder} from "../basic/common/enums"
    export class LogicGraphEdge{
         public text : string | null = null;
         public endNodeIndex : number = -1;
