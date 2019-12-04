@@ -1,10 +1,15 @@
 /// <reference path="g_path_textbox.ts"/>
 //namespace GraphTableSVG {
-    import {GTextBox} from "./g_textbox"
+    import {GTextBox, GTextBoxAttributes} from "./g_textbox"
     import {GPathTextBox} from "./g_path_textbox"
     import { ShapeObjectType, SpeakerPosition } from "../basic/common/enums";
-    import {GCalloutAttributes} from "../options/attributes_option"
     import {Rectangle, VLine} from "../basic/common/vline"
+
+    
+    export type GCalloutAttributes = GTextBoxAttributes & {
+        speakerX?: number,
+        speakerY?: number,
+    }
     export class GCallout extends GPathTextBox {
         public constructor(svgbox: SVGElement | string, option: GCalloutAttributes = {}) {
             super(svgbox, option);

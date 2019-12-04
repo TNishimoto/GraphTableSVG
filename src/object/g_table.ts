@@ -1,7 +1,7 @@
 ﻿import { Color } from "../basic/common/color";
-import { GObject } from "./g_object";
+import { GObject, GObjectAttributes } from "./g_object";
 import {CommonFunctions} from "../basic/common/common_functions"
-import {GTableOption} from "../options/attributes_option"
+//import {GTableOption} from "../options/attributes_option"
 import { ShapeObjectType } from "../basic/common/enums";
 import {LogicTable} from "../options/logic_table"
 import {CellRow} from "./table/row"
@@ -9,12 +9,22 @@ import {CellColumn} from "./table/column"
 import {BorderColumn, BorderRow} from "./table/border_row"
 import {Cell} from "./table/cell"
 import {Rectangle} from "../basic/common/vline"
-import {VBATranslateFunctions, parseInteger, visible} from "./table/vba"
+import {VBATranslateFunctions,parseInteger, visible} from "../basic/common/vba_functions"    
+
 import {SVG} from "../basic/svghtml/svg"
 import {HTMLFunctions} from "../basic/svghtml/html_functions"
 
 //namespace GraphTableSVG {
 
+
+    export type _GTableOption = {
+        rowCount?: number,
+        columnCount?: number,
+        rowHeight?: number,
+        columnWidth?: number,
+        table?: LogicTable
+    }
+    export type GTableOption = GObjectAttributes & _GTableOption;
     /**
     テーブルを表します。
     */

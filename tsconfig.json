@@ -19,7 +19,7 @@
         "src/basic", 
         "src/object", 
         "src/options"
-        //"src/debug"
+        //"src/debug", "src/basic/svghtml/draggable_object.ts"
     ],
     "exclude": [
         "src/out"

@@ -1,6 +1,6 @@
 //namespace GraphTableSVG {
 //import { Padding, Rectangle } from "../common/vline";
-import { SVGToVBA } from "../object/table/vba"
+import { SVGToVBA } from "./svg_to_vba"
 import { GObject } from "../object/g_object"
 
 export namespace VBAMacroModal {

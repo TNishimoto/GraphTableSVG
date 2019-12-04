@@ -6,10 +6,15 @@
     import { CustomAttributeNames } from "../../basic/common/custtome_attributes"
     import {GTable} from "../g_table"
     import {SVG} from "../../basic/svghtml/svg"
-    import {CellOption} from "../../options/attributes_option"
+    //import {CellOption} from "../../options/attributes_option"
     import { HorizontalAnchor, VerticalAnchor } from "../../basic/common/enums";
     import { SVGTextBox } from "../../basic/svghtml/svg_textbox"
     import { BorderRow, BorderColumn } from "./border_row"
+
+    export type CellOption = {
+        cellClass?: string,
+        borderClass?: string
+    }
 
     export enum DirectionType {
         top = 0, left = 1, right = 2, bottom = 3

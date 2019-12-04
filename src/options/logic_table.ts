@@ -12,7 +12,7 @@ import { CustomAttributeNames } from "../basic/common/custtome_attributes"
 import { SVGTextBox } from "../basic/svghtml/svg_textbox"
 //import { HTMLFunctions } from "../svghtml/html_table"
 import { HTMLFunctions } from "../basic/svghtml/html_functions"
-import { openSVGFunctions } from "../options/open_svg";
+//import { openSVGFunctions } from "../options/open_svg";
 import { Console} from "./console"
 
 import { Cell } from "../object/table/cell"
@@ -225,7 +225,7 @@ import { Cell } from "../object/table/cell"
                         const h = Number(cells[y][x].getAttribute("h"));
                         logicTable.cells[y][x].connectedRowCount = h;
                     }
-                    const tNodes = openSVGFunctions.getTNodes(cells[y][x]);
+                    const tNodes = HTMLFunctions.getTNodes(cells[y][x]);
                     if (tNodes != null) logicTable.cells[y][x].tTexts = tNodes;
 
                 }

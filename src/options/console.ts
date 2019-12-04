@@ -3,7 +3,6 @@
     import { LogicTable } from "./logic_table"
     import { CommonFunctions } from "../basic/common/common_functions";
     import { createShape } from "./open_svg";
-    import { GTable } from "../object/g_table"
 
     export namespace Console {
         function getCodeTag(): HTMLElement | null {

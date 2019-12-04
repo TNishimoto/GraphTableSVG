@@ -1,13 +1,14 @@
 /// <reference path="g_vertex.ts"/>
 
 //namespace GraphTableSVG {
+    import {Rectangle, VLine} from "../basic/common/vline"
+    import {GObjectAttributes} from "./g_object"
     import {GVertex} from "./g_vertex"
+    import {GTextBoxAttributes} from "./g_textbox"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
-    import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes} from "../options/attributes_option"
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import { SVGTextBox } from "../basic/svghtml/svg_textbox"
 
-    import {Rectangle, VLine} from "../basic/common/vline"
     export class GPathTextBox extends GVertex {
         //private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {

@@ -1,20 +1,27 @@
 //namespace GraphTableSVG {
     import {GObject} from "./g_object"
+    import {GTextBoxAttributes} from "./g_textbox"
     import {GVertex} from "./g_vertex"
     import {GEdge} from "./g_edge"
     import {Rectangle} from "../basic/common/vline"
-    //import {  ConnectorPosition, msoDashStyle} from "../common/enums";
-    
+    //import {  ConnectorPosition, msoDashStyle} from "../common/enums";    
     import {HTMLFunctions} from "../basic/svghtml/html_functions"
     import {SVG} from "../basic/svghtml/svg"
-
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
-    import { ShapeObjectType, VertexOrder, PathTextAlighnment } from "../basic/common/enums";
+    import { ShapeObjectType, VertexOrder, PathTextAlighnment, ConnectorPosition } from "../basic/common/enums";
     import { createShape, createVertex } from "../options/open_svg";
     import { SVGTextBox } from "../basic/svghtml/svg_textbox";
     
-    import {GObjectAttributes, GTextBoxAttributes, ConnectOption} from "../options/attributes_option"
+    //import {GObjectAttributes, GTextBoxAttributes, ConnectOption} from "../options/attributes_option"
     import {LogicTree, LogicGraph} from "../options/logic_tree"
+
+    export type ConnectOption = {
+        outcomingInsertIndex?: number,
+        incomingInsertIndex?: number,
+        beginConnectorType?: ConnectorPosition,
+        endConnectorType?: ConnectorPosition
+    }
+
     /**
     グラフを表します。
     */

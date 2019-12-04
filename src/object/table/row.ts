@@ -1,6 +1,5 @@
 ﻿//namespace GraphTableSVG {    
-    import {Cell} from "./cell"
-    import {CellOption} from "../../options/attributes_option"
+    import {Cell, CellOption} from "./cell"
     import {SVG} from "../../basic/svghtml/svg"
     import {GTable} from "../g_table"
 

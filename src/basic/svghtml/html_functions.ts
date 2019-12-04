@@ -1,10 +1,24 @@
 
 import { GUI } from "./gui"
+import { CustomAttributeNames} from "../common/custtome_attributes"
 export namespace HTMLFunctions {
     export enum NodeOrder {
         Preorder, Postorder
     }
-
+    export function getTNodes(e: Element): HTMLElement[] | null {
+        const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "t");
+        if (tNodes.length > 0) {
+            tNodes.forEach((v, i) => {
+                v.removeAttribute(CustomAttributeNames.customElement);
+                if (i > 0 && !v.hasAttribute("newline"))
+                    v.setAttribute("newline", "true")
+            }
+            )
+            return tNodes;
+        } else {
+            return null;
+        }
+    }
     export function getAncestorAttribute(e: HTMLElement | SVGElement, attr: string): string | null {
         if (e.hasAttribute(attr)) {
             return e.getAttribute(attr);

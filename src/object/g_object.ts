@@ -1,18 +1,33 @@
 //namespace GraphTableSVG {
+import "../basic/svghtml/interface"
 import {CommonFunctions} from "../basic/common/common_functions"
 import {GUIObserver} from "../basic/svghtml/gui_observer"
 import {Rectangle} from "../basic/common/vline"
-
-import {GObjectAttributes} from "../options/attributes_option"
 import {SVG} from "../basic/svghtml/svg"
-import "../basic/svghtml/interface"
-
 import {HTMLFunctions} from "../basic/svghtml/html_functions"
-import * as HTMLFunctions2 from "../options/draggable_object"
-
+import {DraggableObjectFunctions} from "../basic/svghtml/draggable_object"
 import { CustomAttributeNames } from "../basic/common/custtome_attributes"
 import { ShapeObjectType } from "../basic/common/enums";
+export type GObjectAttributes = {
+    //class?: string,
+    cx?: number,
+    cy?: number,
+    x?: number,
+    y?: number,
+    width?: number,
+    height?: number,
+    id?: string,
+    class?: string,
+    surfaceClass?: string,
+    style?: string,
+    surfaceStyle?: string
 
+}
+export type GObjectMaps = {
+    groupAttributes?: Map<string, string>;
+    surfaceAttributes?: Map<string, string>;
+    textAttributes?: Map<string, string>;
+}
     export class GObject {
 
         protected _svgSurface: SVGElement | null = null;
@@ -492,8 +507,8 @@ import { ShapeObjectType } from "../basic/common/enums";
 
         public movable(): void {
 
-            HTMLFunctions2.HTMLFunctions.appendDragFunctionsToDocument();
-            HTMLFunctions2.HTMLFunctions.draggable(this.svgSurface!, this.svgGroup);
+            DraggableObjectFunctions.appendDragFunctionsToDocument();
+            DraggableObjectFunctions.draggable(this.svgSurface!, this.svgGroup);
         }
     }
 //}

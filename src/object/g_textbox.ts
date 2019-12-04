@@ -1,19 +1,28 @@
 /// <reference path="g_object.ts"/>
-import {GObject} from "./g_object"
-import {GTextBoxAttributes, GObjectAttributes} from "../options/attributes_option"
-import { CustomAttributeNames } from "../basic/common/custtome_attributes"
-import { SVGTextBox } from "../basic/svghtml/svg_textbox"
-import { ShapeObjectType, msoDashStyle } from "../basic/common/enums";
-import { HorizontalAnchor, VerticalAnchor } from "../basic/common/enums";
-import {Rectangle} from "../basic/common/vline"
-import {HTMLFunctions} from "../basic/svghtml/html_functions"
-import {SVG} from "../basic/svghtml/svg"
-import { openSVGFunctions} from "../options/open_svg"
 import "../basic/svghtml/svg_interface";
 import "../basic/svghtml/svg_text";
 import "../basic/svghtml/svg_g";
+import {SVG} from "../basic/svghtml/svg"
+import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../basic/common/enums";
+import {Rectangle} from "../basic/common/vline"
+import {HTMLFunctions} from "../basic/svghtml/html_functions"
+import { SVGTextBox } from "../basic/svghtml/svg_textbox"
+import {GObject, GObjectAttributes } from "./g_object"
 
 //namespace GraphTableSVG {
+
+
+    
+    export type _GTextBoxAttribute = {
+        text?: string | HTMLElement[],
+        isAutoSizeShapeToFitText?: boolean,
+        verticalAnchor?: VerticalAnchor,
+        horizontalAnchor?: HorizontalAnchor
+        textClass?: string
+        textStyle?: string
+    }
+    export type GTextBoxAttributes = GObjectAttributes & _GTextBoxAttribute
 
     export class GTextBox extends GObject {
         private _svgText: SVGTextElement;
@@ -120,7 +129,7 @@ import "../basic/svghtml/svg_g";
             if (e.hasAttribute("text")) {
                 output.text = <string>e.getAttribute("text");
             } else if (e.children.length > 0) {
-                const tNodes = openSVGFunctions.getTNodes(e);
+                const tNodes = HTMLFunctions.getTNodes(e);
                 if (tNodes != null) {
                     tNodes.forEach((v) => v.remove())
                     output.text = tNodes;

@@ -1,5 +1,5 @@
-import {SVG} from "../basic/svghtml/svg"
-export namespace HTMLFunctions {
+import {SVG} from "./svg"
+export namespace DraggableObjectFunctions {
     type DragInfo = { target: SVGElement, offsetX: number, offsetY: number, g : SVGGElement, gParentG : SVGGElement | SVGSVGElement }
     let drag: DragInfo | null = null;
     export function draggable(element: SVGElement, g : SVGGElement) {

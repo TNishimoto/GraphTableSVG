@@ -1,9 +1,9 @@
 //namespace GraphTableSVG {
+    import {GObjectAttributes} from "./g_object"
     import {GVertex} from "./g_vertex"
-    import {GTextBox} from "./g_textbox"
-
+    import {GTextBox, GTextBoxAttributes} from "./g_textbox"
+    import {GCalloutAttributes} from "./g_callout"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
-    import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes} from "../options/attributes_option"
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import {Rectangle, VLine} from "../basic/common/vline"
     export class GEllipse extends GVertex {

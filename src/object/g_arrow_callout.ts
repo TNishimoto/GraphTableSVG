@@ -1,12 +1,22 @@
 /// <reference path="g_path_textbox.ts"/>
 //namespace GraphTableSVG {
     import {GPathTextBox} from "./g_path_textbox"
-    import {GTextBox} from "./g_textbox"
+    import {GTextBox, GTextBoxAttributes} from "./g_textbox"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction } from "../basic/common/enums";
-    import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
+    //import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import {Rectangle, VLine} from "../basic/common/vline"
     import { SVGTextBox } from "../basic/svghtml/svg_textbox";
+
+
+    export type _GShapeArrowCalloutAttributes = {
+        arrowHeadWidth?: number,
+        arrowHeadHeight?: number,
+        arrowNeckWidth?: number,
+        arrowNeckHeight?: number,
+        direction?: Direction
+    }
+    export type GShapeArrowCalloutAttributes = GTextBoxAttributes & _GShapeArrowCalloutAttributes
 
     export class GArrowCallout extends GPathTextBox {
 
