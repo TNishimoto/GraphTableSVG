@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>GraphTableSVG | typedoc-sample</title>
+	<title>VBAObject | typedoc-sample</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="graphtablesvg.html">GraphTableSVG</a>
+					<a href="vbaobject.html">VBAObject</a>
 				</li>
 			</ul>
-			<h1>Module GraphTableSVG</h1>
+			<h1>Module VBAObject</h1>
 		</div>
 	</div>
 </header>
@@ -71,12 +71,79 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Modules</h3>
+							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-module tsd-parent-kind-module"><a href="graphtablesvg.graphmanager.html" class="tsd-kind-icon">Graph<wbr>Manager</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="vbaobject.html#cleargraphtables" class="tsd-kind-icon">clear<wbr>Graph<wbr>Tables</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="vbaobject.html#getregion" class="tsd-kind-icon">get<wbr>Region</a></li>
 							</ul>
 						</section>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="cleargraphtables" class="tsd-anchor"></a>
+					<h3>clear<wbr>Graph<wbr>Tables</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">clear<wbr>Graph<wbr>Tables<span class="tsd-signature-symbol">(</span>svg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SVGElement</span>, items<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="../classes/gtable.html" class="tsd-signature-type">GTable</a><span class="tsd-signature-symbol"> | </span><a href="../classes/ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in options/vba_object.ts:38</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>グラフや表を消去します。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>svg: <span class="tsd-signature-type">SVGElement</span></h5>
+								</li>
+								<li>
+									<h5>items: <span class="tsd-signature-symbol">(</span><a href="../classes/gtable.html" class="tsd-signature-type">GTable</a><span class="tsd-signature-symbol"> | </span><a href="../classes/ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="getregion" class="tsd-anchor"></a>
+					<h3>get<wbr>Region</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Region<span class="tsd-signature-symbol">(</span>items<span class="tsd-signature-symbol">: </span><a href="../globals.html#vbaobjecttype" class="tsd-signature-type">VBAObjectType</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/rectangle.html" class="tsd-signature-type">Rectangle</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in options/vba_object.ts:16</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>領域を取得します。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>items: <a href="../globals.html#vbaobjecttype" class="tsd-signature-type">VBAObjectType</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../classes/rectangle.html" class="tsd-signature-type">Rectangle</a></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -86,18 +153,19 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-module tsd-is-not-exported">
-						<a href="graphtablesvg.html">Graph<wbr>TableSVG</a>
-						<ul>
-							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="graphtablesvg.graphmanager.html">Graph<wbr>Manager</a>
-							</li>
-						</ul>
+					<li class="current tsd-kind-module">
+						<a href="vbaobject.html">VBAObject</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="vbaobject.html#cleargraphtables" class="tsd-kind-icon">clear<wbr>Graph<wbr>Tables</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="vbaobject.html#getregion" class="tsd-kind-icon">get<wbr>Region</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
