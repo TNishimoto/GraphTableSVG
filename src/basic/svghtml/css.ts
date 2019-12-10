@@ -22,6 +22,7 @@ export namespace Common {
             .${CustomAttributeNames.StyleValue.defaultTextClass}{
                 fill : black;
                 font-size: 18px;
+                font-family: "monospace";
             }
             .${CustomAttributeNames.StyleValue.defaultCellBackgroungClass}{
                 fill : white;

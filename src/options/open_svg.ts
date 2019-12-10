@@ -160,6 +160,11 @@ function observelazyElementTimer() {
     if (lazyElementDic.length > 0) setTimeout(observelazyElementTimer, timerInterval);
 }
 
+export function clearSVG(id : string){
+    const box = document.getElementById(id)!;
+    box.innerHTML = "";
+}
+
 export function openSVG(id: string, output?: GObject[]): GObject[];
 export function openSVG(element: Element, output?: GObject[]): GObject[];
 export function openSVG(empty: null, output?: GObject[]): GObject[];

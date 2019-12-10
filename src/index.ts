@@ -16,7 +16,7 @@ import {HTMLFunctions} from "./basic/svghtml/html_functions"
 
 import { CustomAttributeNames } from "./basic/common/custtome_attributes"
 import { ShapeObjectType } from "./basic/common/enums";
-import { openSVG, openHTML, openCustomElement,  lazyOpenSVG } from "./options/open_svg";
+import { openSVG, openHTML, openCustomElement,  lazyOpenSVG, createShape, clearSVG } from "./options/open_svg";
 import { LogicTable } from "./options/logic_table";
 import { LogicTree } from "./options/logic_tree";
 import { Console } from "./options/console";
@@ -28,8 +28,6 @@ import {GPathTextBox} from "./object/g_path_textbox"
 export {
     CommonFunctions, GUIObserver, Rectangle, GObjectAttributes, SVG, HTMLFunctions, CustomAttributeNames, 
     ShapeObjectType, openSVG, openHTML, openCustomElement, lazyOpenSVG,
-    LogicTable, LogicTree, Console, GObject, GPathTextBox
+    LogicTable, LogicTree, Console, GObject, GPathTextBox, createShape, clearSVG
 };
 
-
-console.log("Loaded Index.ts")

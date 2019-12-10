@@ -14,6 +14,7 @@
     
     //import {GObjectAttributes, GTextBoxAttributes, ConnectOption} from "../options/attributes_option"
     import {LogicTree, LogicGraph} from "../options/logic_tree"
+import { GraphArrangement } from "./graph_arrangement"
 
     export type ConnectOption = {
         outcomingInsertIndex?: number,
@@ -220,12 +221,17 @@
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.relocateName, value);
         }
 
+
         public relocate() {
             const value = this.relocateStyle;
             if (value != null) {
-                const p = Function("v", `return ${value}(v)`);
-                const f = <any>Function("graph", `${value}(graph)`);
-                f(this);
+                if(value == "standard"){
+                    GraphArrangement.standardTreeWidthArrangement(this);
+                }else{
+                    const p = Function("v", `return ${value}(v)`);
+                    const f = <any>Function("graph", `${value}(graph)`);
+                    f(this);    
+                }
             }
             //this.relocate();
             //this.moveInCanvas();
@@ -273,7 +279,7 @@
             }
         }
 
-        public build(graph: LogicGraph | LogicTree, option: { x?: number, y?: number, isLatexMode?: boolean } = {}) {
+        public build(graph: LogicGraph | LogicTree, option: { x?: number, y?: number, isLatexMode?: boolean, relocateStyle? : string } = {}) {
             if (option.isLatexMode == undefined) option.isLatexMode = false;
             this.clear();
             const svgsvg = SVG.getSVGSVG(this.svgGroup);
@@ -333,8 +339,11 @@
                     })
                 })
             }
-
-            this.relocateStyle = "GraphTableSVG.GraphArrangement.standardTreeWidthArrangement"
+            if(option.relocateStyle !== undefined){
+                this.relocateStyle = option.relocateStyle;
+            }else{
+                this.relocateStyle = "standard"
+            }
 
             //this.x = 200;
             //this.y = 200;

@@ -1,6 +1,7 @@
 //namespace GraphTableSVG {
 import { CommonFunctions } from "./common_functions";
 import { Size } from "./vline";
+import { SVG } from "../svghtml/svg";
 //import { SVG } from "../svghtml/svg";
 
 /**
@@ -9,6 +10,35 @@ import { Size } from "./vline";
  */
 export namespace PNG {
     export namespace SVGForPNG {
+        function preprocessSVGForPng(svgElement: SVGSVGElement) {
+
+        }
+        export function svg2jpeg(svgElement: SVGSVGElement, sucessCallback: any, errorCallback: any): HTMLImageElement {
+            var canvas = document.createElement('canvas');
+            canvas.width = svgElement.width.baseVal.value;
+            canvas.height = svgElement.height.baseVal.value;
+            var ctx = canvas.getContext('2d')!;
+            var image = new Image;
+
+            image.onload = () => {
+                // SVGデータをPNG形式に変換する
+                ctx.drawImage(image, 0, 0, image.width, image.height);
+                if (sucessCallback != null) {
+                    sucessCallback(canvas.toDataURL());
+                }
+            };
+            image.onerror = (e) => {
+                if (errorCallback != null) {
+                    errorCallback(e);
+                }
+            };
+            // SVGデータを取り出す
+            var svgData = new XMLSerializer().serializeToString(svgElement);
+            image.src = 'data:image/svg+xml;charset=utf-8;base64,' + btoa(svgData);
+
+            return image;
+        }
+
         const cssPropertyNames: string[] = ["font-size", "fill", "stroke",
             "font-family", "font-weight", "stroke-width", "background", "border", "background-color", "border-bottom-color", "border-bottom-style", "border-bottom-width",
             "border-left-color", "border-left-style", "border-left-width", "border-right-color", "border-right-style", "border-right-width", "border-top-color", "border-top-style", "border-top-width"];
@@ -115,6 +145,7 @@ export namespace PNG {
         export function setCSSToStyle(svg: HTMLElement, isComplete: boolean = true) {
             if (isComplete) {
                 const css: CSSStyleDeclaration | null = getComputedStyle(svg);
+                console.log(css);
                 if (css != null) {
                     for (let i = 0; i < css.length; i++) {
                         const name = css.item(i);
@@ -194,12 +225,16 @@ export namespace PNG {
      */
     export function createCanvasFromImage(img: HTMLImageElement): HTMLCanvasElement {
         const canvas = document.createElement("canvas");
+        canvas.setAttribute("width", img.getAttribute("width")! );
+        canvas.setAttribute("height", img.getAttribute("height")!);
+        /*
         if (img.style.width != null && img.style.height != null) {
 
-
-            canvas.setAttribute("width", img.style.width);
-            canvas.setAttribute("height", img.style.height);
+            console.log(img.style.width);
+            canvas.setAttribute("width", img.getAttribute("width")! );
+            canvas.setAttribute("height", img.getAttribute("height")!);
         }
+        */
         //canvas.style.height = img.style.height;    
         return canvas;
     }
@@ -208,8 +243,15 @@ export namespace PNG {
      * @param img 
      * @param canvas 
      */
-    export function setSaveEvent(img: HTMLImageElement, canvas: HTMLCanvasElement) {
+    export function setSaveEvent(img: HTMLImageElement) {
+        console.log("load?");
         img.onload = () => {
+            console.log("load!");
+
+            const canvas = document.createElement("canvas");
+            canvas.setAttribute("width", img.getAttribute("width")! );
+            canvas.setAttribute("height", img.getAttribute("height")!);
+
             const ctx = canvas.getContext("2d");
             if (ctx == null) throw Error("Error");
             ctx.drawImage(img, 0, 0);
@@ -220,24 +262,32 @@ export namespace PNG {
      * SVG要素からPNG画像を生成して保存します。
      * @param id 
      */
-    export function createPNGFromSVG(id: string): HTMLCanvasElement {
+    export function createPNGFromSVG(id: string): HTMLImageElement {
+
+
+        const svgBox = document.getElementById(id);
+        if (svgBox == null) throw Error("Error");
+        if (svgBox instanceof SVGSVGElement) {
+            return createPNGFromSVGSVGElement(svgBox);
+        } else {
+            throw Error("Error");
+        }
+
+    }
+    export function createPNGFromSVGSVGElement(svgsvg: SVGSVGElement): HTMLImageElement   {
         const userAgent = window.navigator.userAgent;
         if (userAgent.indexOf("Firefox") != -1) {
             alert(`Firefox is not supported!`);
             throw Error("not supported error");
         }
-        const svgBox = document.getElementById(id);
-        if (svgBox == null) throw Error("Error");
-        //console.log(svgBox.outerHTML);
+        const svgBox: any = svgsvg;
         const styleMap = SVGForPNG.getAllElementStyleMap(svgBox);
         SVGForPNG.copyCSStoStyle(svgBox);
-        //console.log(svgBox.outerHTML);
 
-        const img = getImage(svgBox);
-        const canvas = createCanvasFromImage(img);
-        setSaveEvent(img, canvas);
+        const img = getImage2(svgBox);
+        setSaveEvent(img);
         SVGForPNG.setAllElementStyleMap(svgBox, styleMap);
-        return canvas;
+        return img;
         //return canvas;
     }
 
@@ -277,8 +327,8 @@ export namespace PNG {
      * @param svgBox 
      */
     export function getImage(svgBox: HTMLElement): HTMLImageElement {
-        const img: HTMLImageElement = document.createElement("img");
         if (window.btoa) {
+            const img: HTMLImageElement = document.createElement("img");
             const realSize = getSizeWidthPadding(svgBox);
             let originalWidthAttr = svgBox.getAttribute("width");
             let originalHeightAttr = svgBox.getAttribute("height");
@@ -299,7 +349,9 @@ export namespace PNG {
             img.style.width = svgBox.style.width;
             img.style.height = svgBox.style.height;
 
-            img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgBox.outerHTML)));
+            //img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgBox.outerHTML)));            
+            var svgData = new XMLSerializer().serializeToString(svgBox);
+            img.src = 'data:image/svg+xml;charset=utf-8;base64,' + btoa(svgData);
 
 
             svgBox.style.width = originalWidthStyle;
@@ -319,13 +371,73 @@ export namespace PNG {
             } else {
                 svgBox.removeAttribute("viewBox")
             }
+            return img;
 
 
         } else {
             throw Error("Error");
         }
 
-        return img;
+        //return img;
+    }
+    export function getImage2(svgBox: SVGSVGElement): HTMLImageElement {
+        if (window.btoa !== undefined) {
+            const img: HTMLImageElement = document.createElement("img");
+            /*
+            const realSize = getSizeWidthPadding(svgBox);
+            let originalWidthAttr = svgBox.getAttribute("width");
+            let originalHeightAttr = svgBox.getAttribute("height");
+            let originalWidthStyle = svgBox.style.width;
+            let originalHeightStyle = svgBox.style.height;
+
+            let originalViewBox = svgBox.getAttribute("viewBox");
+            let viewBoxValue = getViewBox(svgBox);
+            let viewBox = `${viewBoxValue[0]} ${viewBoxValue[1]} ${realSize.width} ${realSize.height}`
+
+            svgBox.style.width = realSize.width.toString();
+            svgBox.style.height = realSize.height.toString();
+
+            svgBox.setAttribute("width", realSize.width.toString());
+            svgBox.setAttribute("height", realSize.height.toString());
+            svgBox.setAttribute("viewBox", viewBox);
+            */
+            //const rect = svgBox;
+            //img.setAttribute("width", svgBox.width.baseVal.value.toString()+"px" );
+            img.setAttribute("width", svgBox.width.baseVal.value.toString()+"px" );
+            img.setAttribute("height", svgBox.height.baseVal.value.toString()+"px" );
+            //img.style.width = svgBox.width.baseVal.value.toString();
+
+            //img.style.height = svgBox.height.baseVal.value.toString();
+
+            //img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgBox.outerHTML)));            
+            var svgData = new XMLSerializer().serializeToString(svgBox);
+            img.src = 'data:image/svg+xml;charset=utf-8;base64,' + btoa(svgData);
+
+            /*
+            svgBox.style.width = originalWidthStyle;
+            svgBox.style.height = originalHeightStyle;
+            if (originalWidthAttr != null) {
+                svgBox.setAttribute("width", originalWidthAttr);
+            } else {
+                svgBox.removeAttribute("width");
+            }
+            if (originalHeightAttr != null) {
+                svgBox.setAttribute("height", originalHeightAttr);
+            } else {
+                svgBox.removeAttribute("height")
+            }
+            if (originalViewBox != null) {
+                svgBox.setAttribute("viewBox", originalViewBox);
+            } else {
+                svgBox.removeAttribute("viewBox")
+            }
+            */
+            return img;
+
+
+        } else {
+            throw Error("Error");
+        }
     }
     /*
     function getCanvas(svgBox: HTMLElement): HTMLCanvasElement {

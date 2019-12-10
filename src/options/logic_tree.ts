@@ -6,6 +6,13 @@
     */
 import { Console} from "./console"
 import {VertexOrder} from "../basic/common/enums"
+
+    export type LogicTreeOption = {
+        x?: number,
+        y?: number,
+        isLatexMode?: boolean
+        relocateStyle? : string
+    }
    export class LogicGraphEdge{
         public text : string | null = null;
         public endNodeIndex : number = -1;
@@ -83,8 +90,8 @@ import {VertexOrder} from "../basic/common/enums"
             }
             return r;
         }
-        public view(){
-            Console.graph(this);
+        public view(option : LogicTreeOption = { relocateStyle : "standard-vertical-trie"}){
+            Console.graph(this, option);
         }
 
         

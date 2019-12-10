@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Logic Tree Sample</title>
+    <script src="../../scripts/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            let graph = null;
+            const node1 = new GraphTableSVG.LogicTree({
+                vertexText: "1"
+            });
+            const node2 = new GraphTableSVG.LogicTree({
+                vertexText: "2"
+            });
+            const node3 = new GraphTableSVG.LogicTree({
+                vertexText: "3",
+                parentEdgeText: "ho"
+            });
+            const node4 = new GraphTableSVG.LogicTree({
+                vertexText: "4"
+            });
+            const node5 = new GraphTableSVG.LogicTree({
+                vertexText: "5"
+            });
+            const node6 = new GraphTableSVG.LogicTree({
+                vertexText: "6"
+            });
+
+            node1.children.push(node2);
+            node1.children.push(node3);
+            node3.children.push(node4);
+            node4.children.push(node5);
+            node4.children.push(node6);
+
+            graph = GraphTableSVG.createShape('svgbox', 'g-graph');
+            graph.constructFromLogicTree(node1, {
+                x: 50,
+                y: 50
+            });
+            graph.relocateStyle = "standard"
+        };
+    </script>
+</head>
+
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" width="600pt" height="600pt" style="background:#e9e9e9;border:solid 1pt;" id="svgbox">
+    </svg>
+</body>
+
+</html>
