@@ -5,13 +5,16 @@
     }
     */
 import { Console} from "./console"
-import {VertexOrder} from "../basic/common/enums"
+import {VertexOrder, Direction} from "../basic/common/enums"
+import { GTextBoxAttributes } from "../object/g_textbox";
+import { GEdgeAttributes } from "../object/g_edge";
 
     export type LogicTreeOption = {
         x?: number,
         y?: number,
         isLatexMode?: boolean
         relocateStyle? : string
+        direction? : Direction | null;
     }
    export class LogicGraphEdge{
         public text : string | null = null;
@@ -52,17 +55,20 @@ import {VertexOrder} from "../basic/common/enums"
      * 木構造を表現するクラスです。
      */
     export class LogicTree {
-        public vertexText: string | null = null
-        public parentEdgeText: string | null = null
-        public vertexClass: string | null = null
-        public parentEdgeClass: string | null = null
+        //public vertexText: string | null = null
+        //public parentEdgeText: string | null = null
+        //public vertexClass: string | null = null
+        //public parentEdgeClass: string | null = null
         public children : (LogicTree | null)[] = [];
+        public vertexOption : GTextBoxAttributes = { isAutoSizeShapeToFitText : false};
+        public edgeOption : GEdgeAttributes = {};
+
         public item: any = null;
         constructor(option : {item?: any, children?: (LogicTree | null)[], 
             vertexText?: string, parentEdgeText?: string} = {} ) {
             if(option.item != undefined) this.item = option.item;
-            if(option.vertexText != undefined) this.vertexText = option.vertexText;
-            if(option.parentEdgeText != undefined) this.parentEdgeText = option.parentEdgeText;
+            //if(option.vertexText != undefined) this.vertexText = option.vertexText;
+            //if(option.parentEdgeText != undefined) this.parentEdgeText = option.parentEdgeText;
             if(option.children != undefined) this.children = option.children;
         }
         public getOrderedNodes(order: VertexOrder): LogicTree[] {
@@ -90,8 +96,8 @@ import {VertexOrder} from "../basic/common/enums"
             }
             return r;
         }
-        public view(option : LogicTreeOption = { relocateStyle : "standard-vertical-trie"}){
-            Console.graph(this, option);
+        public view(canvasID : string | null = null ,option : LogicTreeOption = { relocateStyle : "standard", direction : "down"}){
+            Console.graph(this, canvasID,option);
         }
 
         

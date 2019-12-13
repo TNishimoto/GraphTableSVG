@@ -34,7 +34,7 @@ export type GObjectMaps = {
         protected _tag: any;
         private _svgGroup: SVGGElement;
         protected _observer: MutationObserver;
-        protected _observerOption: MutationObserverInit;
+        private _observerOption: MutationObserverInit;
 
         public constructor(svgbox: SVGElement | string, option: GObjectAttributes = {}) {
             CommonFunctions.setGraphTableCSS();
@@ -76,7 +76,8 @@ export type GObjectMaps = {
 
             this._observer = new MutationObserver(this.observerFunc);
             this._observerOption = { attributes: true, childList: true, subtree: true };
-            this._observer.observe(this.svgGroup, this._observerOption);
+            this.hasConnectedObserverFunction = true;
+            //this.connectObserverFunction();
 
             this.dispatchObjectCreatedEvent();
             this.addResizeEvent();
@@ -107,6 +108,29 @@ export type GObjectMaps = {
         private __y: number | undefined;
         private __cx: number | undefined;
         private __cy: number | undefined;
+
+        protected disconnectObserverFunction(){
+            this._observer.disconnect();
+        }
+        protected connectObserverFunction(){
+            this._observer.observe(this.svgGroup, this._observerOption);
+        }
+        private _hasConnectedObserverFunction : boolean = false;
+        protected get hasConnectedObserverFunction() : boolean{
+            return this._hasConnectedObserverFunction;
+        }
+        protected set hasConnectedObserverFunction(b : boolean){
+            if(this._hasConnectedObserverFunction != b){
+                if(b){
+                    this.connectObserverFunction();
+                }else{
+                    this.disconnectObserverFunction();
+                }
+                this._hasConnectedObserverFunction = b;
+            }
+        }
+
+
 
         public get defaultClassName(): string | undefined {
             return undefined;
@@ -139,10 +163,31 @@ export type GObjectMaps = {
         private pUpdateFunc = () => {
             this.resizeUpdate();
         }
+        /*
+        private addOnLoadEvent() {
+            console.log("addon")
+            this.svgGroup.onload = this.onLoadFunction;
+            //this.svgGroup.addEventListener("load", this.onLoadFunction);
+        }
+
+        private removeOnLoadEvent() {
+            
+            this.svgGroup.removeEventListener("load", this.onLoadFunction);
+        }
+        protected onLoadFunction = () => {
+            console.log("helo");
+        }
+        */
 
         protected firstResizeUpdate() {
 
         }
+        /*
+        protected _isLoaded = false;
+        public get isLoaded(){
+            return this._isLoaded;
+        }
+        */
 
         protected resizeUpdate() {
             this.update();

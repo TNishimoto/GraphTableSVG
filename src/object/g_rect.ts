@@ -107,12 +107,14 @@
             this.svgRectangle.x.baseVal.value = -this.width / 2;
             this.svgRectangle.y.baseVal.value = -this.height / 2;
 
-            this._observer.disconnect();
+            //this._observer.disconnect();
+            this.hasConnectedObserverFunction = false;
             const dashStyle = this.msoDashStyle;
             if (dashStyle != null) {
                 msoDashStyle.setCpmoutedDashArray(this.svgRectangle);
             }
-            this._observer.observe(this.svgGroup, this._observerOption);
+            this.hasConnectedObserverFunction = true;
+            //this._observer.observe(this.svgGroup, this._observerOption);
 
         }
         /**

@@ -41,6 +41,9 @@ export namespace Common {
                 stroke-width: 1px;
                 fill : transparent;
             }
+            .${CustomAttributeNames.StyleValue.defaultCircleLogicTreeCircleSVGGroup}{
+                ${CustomAttributeNames.Style.autoSizeShapeToFitText}: false;
+            }
 
             .${CustomAttributeNames.StyleValue.defaultEdgePathClass}{
                 stroke: black;

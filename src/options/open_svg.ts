@@ -17,6 +17,7 @@ import { GEdge, GEdgeAttributes } from "../object/g_edge"
 import { GTable, GTableOption } from "../object/g_table"
 import { GGraph } from "../object/g_graph"
 import { GRectButton } from "../object/g_rect_button"
+import { GCircle } from "../object/g_circle";
 
 //export namespace openSVGFunctions {
     
@@ -79,7 +80,11 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
         } else if (type == ShapeObjectType.Ellipse) {
             const option = GTextBox.constructAttributes(e, true);
             r = new GEllipse(parent, option);
-        } else if (type == ShapeObjectType.Rect) {
+        } else if (type == ShapeObjectType.Circle) {
+            const option = GTextBox.constructAttributes(e, true);
+            r = new GCircle(parent, option);
+        } 
+        else if (type == ShapeObjectType.Rect) {
             const option = GTextBox.constructAttributes(e, true);
 
             r = new GRect(parent, option);
@@ -224,6 +229,7 @@ export function createShape(parent: SVGElement | string | GObject, type: "g-rect
 export function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GEdgeAttributes): GEdge
 export function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GTextBoxAttributes): GEllipse
 export function createShape(parent: SVGElement | string | GObject, type: "g-callout", option?: GTextBoxAttributes): GCallout
+export function createShape(parent: SVGElement | string | GObject, type: "g-circle", option?: GTextBoxAttributes): GCircle
 export function createShape(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GTextBoxAttributes): GArrowCallout
 export function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GTextBoxAttributes): GGraph
 export function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: GTableOption): GTable
@@ -246,6 +252,7 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
         case ShapeObjectType.Graph: return new GGraph(_parent, option);
         case ShapeObjectType.Table: return new GTable(_parent, option);
         case ShapeObjectType.RectButton: return new GRectButton(_parent, option);
+        case ShapeObjectType.Circle: return new GCircle(_parent, option);
 
     }
     throw Error("error");
@@ -259,6 +266,7 @@ export function createVertex(parent: GGraph, option: GTextBoxAttributes = {}): G
             case ShapeObjectType.Callout: return new GCallout(_parent, option);
             case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent, option);
             case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
+            case ShapeObjectType.Circle: return new GCircle(_parent, option);
             case ShapeObjectType.Rect: return new GRect(_parent, option);
         }
     }

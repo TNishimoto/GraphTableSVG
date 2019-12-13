@@ -8,12 +8,12 @@
     import {HTMLFunctions} from "../basic/svghtml/html_functions"
     import {SVG} from "../basic/svghtml/svg"
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
-    import { ShapeObjectType, VertexOrder, PathTextAlighnment, ConnectorPosition } from "../basic/common/enums";
+    import { ShapeObjectType, VertexOrder, PathTextAlighnment, ConnectorPosition, Direction } from "../basic/common/enums";
     import { createShape, createVertex } from "../options/open_svg";
     import { SVGTextBox } from "../basic/svghtml/svg_textbox";
     
     //import {GObjectAttributes, GTextBoxAttributes, ConnectOption} from "../options/attributes_option"
-    import {LogicTree, LogicGraph} from "../options/logic_tree"
+    import {LogicTree, LogicGraph, LogicTreeOption} from "../options/logic_tree"
 import { GraphArrangement } from "./graph_arrangement"
 
     export type ConnectOption = {
@@ -78,6 +78,28 @@ import { GraphArrangement } from "./graph_arrangement"
                 return parseInt(v);
             }
         }
+        public get direction(): Direction | null {
+            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.graphDirection);
+            if (v == null) {
+                return null;
+            } else {
+                if(v == "up"){
+                    return "up";
+                }else if(v == "left"){
+                    return "left";
+                }else if(v == "right"){
+                    return "right";
+                }else{
+                    return "down";
+                }
+            }
+        }
+        public set direction(value : Direction | null) {
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.graphDirection, value == null ? null : value.toString());
+        }
+
+
+
         public set vertexYInterval(value: number | null) {
             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.vertexYInterval, value == null ? null : value.toString());
         }
@@ -223,19 +245,25 @@ import { GraphArrangement } from "./graph_arrangement"
 
 
         public relocate() {
-            const value = this.relocateStyle;
-            if (value != null) {
-                if(value == "standard"){
-                    GraphArrangement.standardTreeWidthArrangement(this);
-                }else{
-                    const p = Function("v", `return ${value}(v)`);
-                    const f = <any>Function("graph", `${value}(graph)`);
-                    f(this);    
+            //console.log(this.isDrawnText());
+            //if(this.isDrawnText()){
+                this.hasConnectedObserverFunction = false;
+                const value = this.relocateStyle;
+                if (value != null) {
+                    if(value == "standard"){
+                        GraphArrangement.standardTreeWidthArrangement(this);
+                    }else{
+                        const p = Function("v", `return ${value}(v)`);
+                        const f = <any>Function("graph", `${value}(graph)`);
+                        f(this);    
+                    }
                 }
-            }
-            //this.relocate();
-            //this.moveInCanvas();
-
+                //this.relocate();
+                //this.moveInCanvas();
+    
+                this.hasConnectedObserverFunction = true;
+    
+           // }
 
         }
         get width(): number {
@@ -279,22 +307,26 @@ import { GraphArrangement } from "./graph_arrangement"
             }
         }
 
-        public build(graph: LogicGraph | LogicTree, option: { x?: number, y?: number, isLatexMode?: boolean, relocateStyle? : string } = {}) {
+        public build(logicGraph: LogicGraph | LogicTree, option: LogicTreeOption = {}) {
             if (option.isLatexMode == undefined) option.isLatexMode = false;
             this.clear();
             const svgsvg = SVG.getSVGSVG(this.svgGroup);
 
+            if(option.direction !== undefined){
+                this.direction = option.direction;
+            }
 
-            if (graph instanceof LogicGraph) {
+
+            if (logicGraph instanceof LogicGraph) {
                 const dic: Map<number, GVertex> = new Map();
 
-                graph.nodes.forEach((v, i) => {
-                    const node = createShape(svgsvg, "g-ellipse")
+                logicGraph.nodes.forEach((v, i) => {
+                    const node = createShape(svgsvg, "g-circle")
                     node.svgText.textContent = v.text;
                     this.add(node);
                     dic.set(i, node);
                 })
-                graph.nodes.forEach((v, i) => {
+                logicGraph.nodes.forEach((v, i) => {
                     v.outputEdges.forEach((e, j) => {
                         const edge = createShape(svgsvg, "g-edge")
                         if (e.text != undefined) {
@@ -312,19 +344,23 @@ import { GraphArrangement } from "./graph_arrangement"
             } else {
                 const dic: Map<LogicTree, GVertex> = new Map();
 
-                graph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
-                    const node = createShape(svgsvg, "g-ellipse")
-                    node.svgText.textContent = v.vertexText;
+                logicGraph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
+                    const node = createShape(svgsvg, "g-circle", v.vertexOption)
+                    //node.svgText.textContent = v.vertexText;
                     this.add(node);
                     dic.set(v, node);
                 })
-                graph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
+                logicGraph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
                         v.children.forEach((e, j) => {
                             if(e != null){
-                                const edge = createShape(svgsvg, "g-edge")
-                                if (e.parentEdgeText != null) {
-                                    const b = option.isLatexMode == undefined ? false : option.isLatexMode;
-                                    edge.svgTextPath.setTextContent(e.parentEdgeText, b);
+                                const edge = createShape(svgsvg, "g-edge", e.edgeOption )
+                                if (edge.svgTextPath.textContent != null) {
+                                    //const b = option.isLatexMode == undefined ? false : option.isLatexMode;
+                                    //edge.svgTextPath.setTextContent(e.parentEdgeText, b);
+
+                                    //console.log("@" + edge.svgText.getComputedTextLength() + "/" + edge.svgText.textContent);
+                                    //this.svgSurface!.onload = this.onLoadFunction;
+
                                     edge.isAppropriatelyReverseMode =  true;
                                     //edge.setAppropriateText();
         
@@ -350,6 +386,8 @@ import { GraphArrangement } from "./graph_arrangement"
 
             if (option.x != undefined) this.svgGroup.setX(option.x);
             if (option.y != undefined) this.svgGroup.setY(option.y);
+
+            this.relocate();
 
         }
 
@@ -382,6 +420,17 @@ import { GraphArrangement } from "./graph_arrangement"
                 svg.removeChild(this.svgGroup);
             }
         }
+        /*
+        public isDrawnText() :boolean{
+            if(this.edges.length == 0){
+                return true;
+            }else{
+                
+                const b = this.edges.every((v) => v.isDrawnText());
+                return b;
+            }
+        }
+        */
         /**
          * グラフの領域を表すRectangleを返します。位置の基準はグラフが追加されているNodeです。
          */
@@ -401,15 +450,18 @@ import { GraphArrangement } from "./graph_arrangement"
         private createChildFromLogicTree<T>(parent: GVertex | null = null, logicVertex: LogicTree, option: { isLatexMode?: boolean } = {}): GVertex {
             if (option.isLatexMode == undefined) option.isLatexMode = false;
 
-            const node: GVertex = <any>createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass });
-            if (logicVertex.vertexText != null) SVGTextBox.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
+            //const node: GVertex = <any>createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass } );
+            const node: GVertex = <any>createVertex(this, logicVertex.vertexOption );
+
+            //if (logicVertex.vertexText != null) SVGTextBox.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
             if (parent != null) {
-                const edge: GEdge = createShape(this, 'g-edge', { class: logicVertex.parentEdgeClass! });
+                const edge: GEdge = createShape(this, 'g-edge', logicVertex.edgeOption  );
+                /*
                 if (logicVertex.parentEdgeText != null) {
                     edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
                     edge.pathTextAlignment = PathTextAlighnment.regularInterval;
-                    //edge.svgText.setTextContent(tree.edgeLabel, isLatexMode);
                 }
+                */
                 this.connect(parent, edge, node, { beginConnectorType: "bottom", endConnectorType: "top" });
             } else {
                 this.roots.push(node);
@@ -490,8 +542,10 @@ import { GraphArrangement } from "./graph_arrangement"
             super.observerFunction(x);
             for (let i = 0; i < x.length; i++) {
                 const p = x[i];
-                if (p.attributeName == "style") {
+                if (p.attributeName == "style") {         
+                    console.log("observerFunction");           
                     this.relocate();
+
                 }
             }
         }
@@ -499,7 +553,7 @@ import { GraphArrangement } from "./graph_arrangement"
         public get type(): ShapeObjectType {
             return ShapeObjectType.Graph;
         }
-        protected resizeUpdate() {
+        protected resizeUpdate() {  
             this.relocate();
         }
         /*

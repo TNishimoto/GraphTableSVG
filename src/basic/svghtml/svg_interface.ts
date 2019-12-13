@@ -20,6 +20,10 @@ declare global {
         gtGetAttribute(name: string, defaultValue: string | null): string | null;
 
         gtGetAttributes(): { name: string, value: string }[];
+
+        getIsLoaded() : boolean | undefined;
+        setIsLoaded(b : boolean) : void; 
+
         hasStyleAttribute(name: string): boolean;
 
         /*
@@ -30,6 +34,20 @@ declare global {
         */
     }
 }
+(<any>Element).prototype.getIsLoaded = function (): boolean | undefined {
+    const item = <any>this;
+    if(item.__isLoaded === undefined){
+        return undefined;
+    }else{
+        return item.__isLoaded;
+    }
+};
+(<any>Element).prototype.setIsLoaded = function (b : boolean) : void {
+    const item = <any>this;
+    item.__isLoaded = b;
+};
+
+
 (<any>Element).prototype.hasStyleAttribute = function (name: string): boolean {
     const p = this.getPropertyStyleValue(name);
     return p !== null;

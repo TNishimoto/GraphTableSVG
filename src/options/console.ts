@@ -142,14 +142,19 @@
             code.innerHTML="";
         }
 
-        export function graph(item : any | LogicTree | LogicGraph, option :  LogicTreeOption = { }){
+        export function graph(item : any | LogicTree | LogicGraph, canvasID : string | null = null,  option :  LogicTreeOption = { }){
 
             if(item instanceof LogicTree || item instanceof LogicGraph){
-                const code = getOrCreateCodeElement();
-                const consoleLine = new ConsoleLineElement(code);
-                //const svg = addSVGSVGElement(code);
-                const ggraph = createShape(consoleLine.canvas, "g-graph");    
-                ggraph.build(item);
+                if(canvasID != null){
+                    const ggraph = createShape(canvasID, "g-graph");    
+                    ggraph.build(item, option);    
+                }else{
+                    const code = getOrCreateCodeElement();
+                    const consoleLine = new ConsoleLineElement(code);
+                    //const svg = addSVGSVGElement(code);
+                    const ggraph = createShape(consoleLine.canvas, "g-graph");    
+                    ggraph.build(item, option);    
+                }
                 /*
                 if(item instanceof LogicGraph){
                 }else{
@@ -160,7 +165,7 @@
                 const tableDic = new TableDictionary();
                 tableDic.construct(item);
                 const logicGraph = tableDic.toLogicGraph();
-                graph(logicGraph);
+                graph(logicGraph, canvasID, option);
                 //console.log(logicGraph);    
             }
         }

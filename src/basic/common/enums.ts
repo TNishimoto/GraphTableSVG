@@ -21,12 +21,13 @@ import {CustomAttributeNames} from "./custtome_attributes"
     */
     export type CustomTag = "row" | "cell" | "t";
 
-    export type ShapeObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" |
+    export type ShapeObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-circle" |
      "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox" | "g-rect-button";
     export namespace ShapeObjectType {
         export const Callout: ShapeObjectType = "g-callout"
         export const ArrowCallout: ShapeObjectType = "g-arrow-callout"
         export const Ellipse: ShapeObjectType = "g-ellipse"
+        export const Circle: ShapeObjectType = "g-circle"
         export const Rect: ShapeObjectType = "g-rect"
         export const Edge: ShapeObjectType = "g-edge"
         export const Graph: ShapeObjectType = "g-graph"
@@ -39,6 +40,7 @@ import {CustomAttributeNames} from "./custtome_attributes"
             "g-callout": true,
             "g-arrow-callout": true,
             "g-ellipse": true,
+            "g-circle": true,
             "g-rect": true,
             "g-edge": true,
             "g-graph": true,

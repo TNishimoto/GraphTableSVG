@@ -47,7 +47,6 @@ export class GEdge extends GTextBox {
             this.svgSurface!.setAttribute("class", CustomAttributeNames.StyleValue.defaultPathSurfaceClass);
         }
 
-
         //this._svgGroup = SVG.createGroup(svgbox);
         const _option = <GEdgeAttributes>this.initializeOption(option);
         this.svgText.textContent = "";
@@ -93,7 +92,7 @@ export class GEdge extends GTextBox {
         //this.update();
         if (_option.pathTextAlignment !== undefined) this.pathTextAlignment = _option.pathTextAlignment;
         if (this.svgText.getPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment) == null) {
-            this.pathTextAlignment = PathTextAlighnment.center;
+            this.pathTextAlignment = PathTextAlighnment.regularInterval;
         }
 
         //this.update();
@@ -101,6 +100,7 @@ export class GEdge extends GTextBox {
 
         //this.setAppropriateText();
     }
+
     /*
     protected createObjects(svgbox: SVGElement, option: GObjectAttributes = {}): void {
 
@@ -188,6 +188,15 @@ export class GEdge extends GTextBox {
 
         return _option;
 
+    }
+    public isDrawnText() : boolean{
+        const text = this.svgTextPath.textContent;
+        if(text == null || text.length == 0){
+            return true;
+        }else{
+            const len = this.svgTextPath.getComputedTextLength();
+            return len != 0;
+        }
     }
 
     private static connectedBeginVertexDic: { [key: string]: string; } = {};
@@ -758,12 +767,14 @@ export class GEdge extends GTextBox {
 
         this.updateConnectorInfo();
 
-        this._observer.disconnect();
+        this.hasConnectedObserverFunction = false;
+        //this._observer.disconnect();
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null) {
             msoDashStyle.setCpmoutedDashArray(this.svgPath);
         }
-        this._observer.observe(this.svgGroup, this._observerOption);
+        //this._observer.observe(this.svgGroup, this._observerOption);
+        this.hasConnectedObserverFunction = true;
 
 
         const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
@@ -825,11 +836,14 @@ export class GEdge extends GTextBox {
         if (this.pathTextAlignment == PathTextAlighnment.regularInterval) {
             const pathLen = this.svgPath.getTotalLength();
             const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
-            if (strLen > 0) {
-                const startPos = pathLen / (strLen + 1);
-                let textPathLen = pathLen - (startPos * 2);
+            const strWidth = SVGTextBox.getTextEmulatedWidth(this.svgTextPath);
+            if (strWidth > 0) {
+                const paddingWidth = pathLen - strWidth;
+                const paddingUnit = paddingWidth / (strLen + 1);
+                //const startPos = pathLen / (strLen + 1);
+                let textPathLen = pathLen - (paddingUnit * 2);
                 if (textPathLen <= 0) textPathLen = 5;
-                this.svgTextPath.setAttribute("startOffset", `${startPos}`);
+                this.svgTextPath.setAttribute("startOffset", `${paddingUnit }`);
                 this.setRegularInterval(textPathLen);
             }
 
@@ -867,6 +881,7 @@ export class GEdge extends GTextBox {
 
         return false;
     }
+
     private static getRevString(text: string): string {
         let s = "";
         for (let i = text.length - 1; i >= 0; i--) {

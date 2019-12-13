@@ -20,6 +20,7 @@ import { openSVG, openHTML, openCustomElement,  lazyOpenSVG, createShape, clearS
 import { LogicTable } from "./options/logic_table";
 import { LogicTree } from "./options/logic_tree";
 import { Console } from "./options/console";
+import { Debug } from "./options/debug";
 
 import {GObject, GObjectAttributes} from "./object/g_object"
 import {GPathTextBox} from "./object/g_path_textbox"
@@ -28,6 +29,6 @@ import {GPathTextBox} from "./object/g_path_textbox"
 export {
     CommonFunctions, GUIObserver, Rectangle, GObjectAttributes, SVG, HTMLFunctions, CustomAttributeNames, 
     ShapeObjectType, openSVG, openHTML, openCustomElement, lazyOpenSVG,
-    LogicTable, LogicTree, Console, GObject, GPathTextBox, createShape, clearSVG
+    LogicTable, LogicTree, Console, GObject, GPathTextBox, createShape, clearSVG, Debug
 };
 

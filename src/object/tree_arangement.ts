@@ -108,8 +108,8 @@
          * @param graph 
          */
         function computeAutoXYIntervals(graph: GGraph): [number, number] {
-            let yMaximalInterval = 100;
-            let xMaximalInterval = 100;
+            let yMaximalInterval = 10;
+            let xMaximalInterval = 10;
             graph.vertices.forEach((v) => {
                 if (v.width > xMaximalInterval) xMaximalInterval = v.width;
                 if (v.height > yMaximalInterval) yMaximalInterval = v.height;

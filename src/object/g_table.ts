@@ -1061,7 +1061,8 @@ import {HTMLFunctions} from "../basic/svghtml/html_functions"
         */
         public update() {
             super.update();
-            this._observer.disconnect();
+            //this._observer.disconnect();
+            this.hasConnectedObserverFunction = false;
             const display = this.svgGroup.getPropertyStyleValue("display");
 
             const b = HTMLFunctions.isShow(this.svgGroup);
@@ -1078,9 +1079,15 @@ import {HTMLFunctions} from "../basic/svghtml/html_functions"
             this.resize();
             this.relocation();
             this._isDrawing = false;
-            this._observer.observe(this.svgGroup, this.groupObserverOption);
+            this.hasConnectedObserverFunction = true;
+            //this._observer.observe(this.svgGroup, this.groupObserverOption);
 
         }
+        
+        protected connectObserverFunction(){
+            this._observer.observe(this.svgGroup, this.groupObserverOption);
+        }
+            
         /**
          * セル番号を振り直します。
          */

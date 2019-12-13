@@ -10,6 +10,8 @@
             //export const defaultEdgeClass: string = "--default-edge-class";
             export const vertexXInterval: string = "--vertex-x-interval";
             export const vertexYInterval: string = "--vertex-y-interval";
+            export const graphDirection: string = "--direction";
+
             export const defaultRadius = "--default-radius";
             export const defaultWidth = "--default-width";
             export const defaultHeight = "--default-height";
@@ -48,6 +50,7 @@
 
             export const defaultEdgePathClass: string = "___default-edge-path";
             export const defaultTextboxPathClass: string = "___default-textbox-path";
+            export const defaultCircleLogicTreeCircleSVGGroup: string = "___default-logic-tree-circle-svgGroup";
 
             export const defaultCellBackgroungClass: string = "___cell-background-default";  
             export const defaultCellBorderClass: string = "___cell-border-default";  

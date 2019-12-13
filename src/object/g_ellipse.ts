@@ -6,7 +6,95 @@
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import {Rectangle, VLine} from "../basic/common/vline"
-    export class GEllipse extends GVertex {
+
+    export class GAbstractEllipseCircle extends GVertex {
+        get rx(): number {
+            return 5;
+        }
+        get ry(): number {
+            return 5;
+        }
+        /**
+        頂点の幅を返します。
+        */
+        get width(): number {
+            return this.rx * 2;
+        }
+        /**
+        頂点の高さを返します。
+        */
+        get height(): number {
+            return this.ry * 2;
+        }
+        public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
+            super(svgbox, option);
+        }
+    
+        /**
+        テキストの領域を返します。
+        */
+        get innerRectangle(): Rectangle {
+            const rect = new Rectangle();
+            rect.width = this.width;
+            rect.height = this.height;
+            rect.x = -this.rx;
+            rect.y = -this.ry;
+            return rect;
+        }
+    
+        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+    
+            const centerX = (Math.sqrt(2) / 2) * this.rx;
+            const centerY = (Math.sqrt(2) / 2) * this.ry;
+    
+            switch (type) {
+                case ConnectorPosition.Top:
+                    return [this.cx, this.cy - this.ry];
+                case ConnectorPosition.TopRight:
+                    return [this.cx + centerX, this.cy - centerY];
+                case ConnectorPosition.Right:
+                    return [this.cx + this.rx, this.cy];
+                case ConnectorPosition.BottomRight:
+                    return [this.cx + centerX, this.cy + centerY];
+                case ConnectorPosition.Bottom:
+                    return [this.cx, this.cy + this.ry];
+                case ConnectorPosition.BottomLeft:
+                    return [this.cx - centerX, this.cy + centerY];
+                case ConnectorPosition.Left:
+                    return [this.cx - this.rx, this.cy];
+                case ConnectorPosition.TopLeft:
+                    return [this.cx - centerX, this.cy - centerY];
+                default:
+                    const autoType = this.getAutoPosition(x, y);
+                    return this.getLocation(autoType, x, y);
+            }
+        }
+        protected getAutoPosition(x: number, y: number): ConnectorPosition {
+            const radius = this.rx;
+            const r = (Math.sqrt(2) / 2) * radius;
+            const line1 = new VLine(this.x, this.y, this.x + r, this.y + r);
+            const line2 = new VLine(this.x, this.y, this.x + r, this.y - r);
+    
+            const b1 = line1.contains(x, y);
+            const b2 = line2.contains(x, y);
+    
+            if (b1) {
+                if (b2) {
+                    return ConnectorPosition.Top;
+                } else {
+                    return ConnectorPosition.Right;
+                }
+            } else {
+                if (b2) {
+                    return ConnectorPosition.Left;
+                } else {
+                    return ConnectorPosition.Bottom;
+                }
+            }
+        }
+    
+    }
+    export class GEllipse extends GAbstractEllipseCircle {
         public get svgEllipse(): SVGEllipseElement {
             return <SVGEllipseElement>this._svgSurface;
         }
@@ -57,39 +145,27 @@
 
             return output;
         }
-        /**
-        テキストの領域を返します。
-        */
-        get innerRectangle(): Rectangle {
-            const rect = new Rectangle();
-            rect.width = this.svgEllipse.rx.baseVal.value * 2;
-            rect.height = this.svgEllipse.ry.baseVal.value * 2;
-            rect.x = -this.svgEllipse.rx.baseVal.value;
-            rect.y = -this.svgEllipse.ry.baseVal.value;
-            return rect;
-        }
         
-        /**
-        頂点の幅を返します。
-        */
         get width(): number {
             return this.svgEllipse.rx.baseVal.value * 2;
         }
+        get height(): number {
+            return this.svgEllipse.ry.baseVal.value * 2;
+        }
+        
+
+
         set width(value: number) {
             const _rx = value/2;
             if (this.width != value) this.svgEllipse.setAttribute("rx", _rx.toString());
 
         }
-        /**
-        頂点の高さを返します。
-        */
-        get height(): number {
-            return this.svgEllipse.ry.baseVal.value * 2;
-        }
+
         set height(value: number) {
             const _ry = value/2;
             if (this.height != value) this.svgEllipse.setAttribute("ry", _ry.toString());
         }
+
         get rx() : number{
             return this.svgEllipse.rx.baseVal.value;
         }
@@ -99,7 +175,7 @@
         public get type(): ShapeObjectType {
             return ShapeObjectType.Ellipse;
         }
-
+        /*
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
 
             const centerX = (Math.sqrt(2) / 2) * this.svgEllipse.rx.baseVal.value;
@@ -150,7 +226,7 @@
                 }
             }
         }
-        
+        */
         public get shape(): string {
             return "msoShapeOval";
         }

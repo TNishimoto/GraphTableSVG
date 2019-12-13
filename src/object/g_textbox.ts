@@ -224,7 +224,8 @@ import {GObject, GObjectAttributes } from "./g_object"
             super.update();
             this._isUpdating = true;
             if (!this.isShow) return;
-            this._observer.disconnect();
+            //this._observer.disconnect();
+            this.hasConnectedObserverFunction = false;
 
             if (this.svgText == null) {
                 throw new TypeError("svgText is null");
@@ -254,18 +255,21 @@ import {GObject, GObjectAttributes } from "./g_object"
 
             //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
             this._isUpdating = false;
-            this._observer.observe(this.svgGroup, this.groupObserverOption);
+            //this._observer.observe(this.svgGroup, this.groupObserverOption);
+            this.hasConnectedObserverFunction = true;
 
         }
 
         protected updateSurface() {
 
-            this._observer.disconnect();
+            //this._observer.disconnect();
+            this.hasConnectedObserverFunction = false;
             const dashStyle = this.msoDashStyle;
             if (dashStyle != null && this.svgSurface != null) {
                 msoDashStyle.setCpmoutedDashArray(this.svgSurface);
             }
-            this._observer.observe(this.svgGroup, this._observerOption);
+            //this._observer.observe(this.svgGroup, this._observerOption);
+            this.hasConnectedObserverFunction = true;
         }
         protected updateToFitText() {
             this.isFixTextSize = true;

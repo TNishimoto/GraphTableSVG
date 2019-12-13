@@ -6,13 +6,25 @@ import {GVertex} from "./g_vertex"
 import {VirtualTree} from "./virtual_tree"
 
 import {TreeArrangement} from "./tree_arangement"
+import { Direction, ConnectorPosition } from "../basic/common/enums"
+import { SVGTextBox } from "../basic/svghtml/svg_textbox"
+import { HTMLFunctions } from "../basic/svghtml/html_functions";
 
     export namespace GraphArrangement {
         export function standardTreeWidthArrangement(graph: GGraph): void {
             const [xi, yi] = TreeArrangement.getXYIntervals(graph);
+            const direction = graph.direction;
+
+            
 
             
             const roots = graph.roots.length == 0? [graph.vertices[0]] : graph.roots; 
+
+            /*
+            const isTrie = graph.edges.every((v)=>{
+                return v.svgTextPath.textContent == null || v.svgTextPath.textContent.length <= 1;
+            })
+            */
             
             const externalEdges = createExternalEdgeDicInlevelorder(graph);
            
@@ -20,7 +32,7 @@ import {TreeArrangement} from "./tree_arangement"
             let [x, y] = [0, 0]
             roots.forEach((v=>{
                 const tree = v.createVirtualTree(externalEdges);
-                standardTreeWidthArrangementSub(tree, xi, yi);
+                standardTreeWidthArrangementSub(tree, xi, yi, direction);
                 tree.setRegionXYLocation(x, y);
 
                 x += tree.region().width;
@@ -28,7 +40,7 @@ import {TreeArrangement} from "./tree_arangement"
             
 
         }
-        function standardTreeWidthArrangementSub(tree: VirtualTree, xInterval: number, yInterval: number): void {
+        function standardTreeWidthArrangementSub(tree: VirtualTree, xInterval: number, yInterval: number, direction : Direction | null): void {
             tree.subTreeRoot.cx = 0;
             tree.subTreeRoot.cy = 0;
             let centerX = 0;
@@ -37,20 +49,44 @@ import {TreeArrangement} from "./tree_arangement"
             let x = 0;
 
             //tree.root.svgText.textContent = tree.getHeight().toString();
+            if(direction == "down"){
+                const edge = tree.subTreeRoot.parentEdge;
+                if(edge != null){
+                    edge.endConnectorType = ConnectorPosition.Top;
+                    edge.beginConnectorType = ConnectorPosition.Bottom;
+
+                }
+            }
+            let childYInterval = yInterval;
+            children.forEach((v)=>{
+                const path = v.parentEdge!.svgTextPath;
+                if(path.textContent == null || path.textContent.length == 0){
+                }
+                else if(path.textContent.length == 1){
+                    const padding = SVGTextBox.getRepresentativeFontSize(path);
+                    const edgeLen = (SVGTextBox.getTextEmulatedWidth(path)) + (padding);
+                    if(edgeLen > childYInterval) childYInterval = edgeLen;    
+                }
+                else{
+                    const padding = SVGTextBox.getRepresentativeFontSize(path);
+                    const edgeLen = (SVGTextBox.getTextEmulatedWidth(path)) + (padding * 4);
+                    if(edgeLen > childYInterval) childYInterval = edgeLen;    
+                }
+            })
 
             if (children.length == 1) {
                 tree.subTreeRoot.cx = children[0].root.cx;
-                standardTreeWidthArrangementSub(children[0], xInterval, yInterval);
+                standardTreeWidthArrangementSub(children[0], xInterval, yInterval, direction);
 
-                children[0].setRootLocation(tree.root.cx, yInterval);
+                children[0].setRootLocation(tree.root.cx, childYInterval);
             } else if (children.length == 0) {
             } else {
                 for (let i = 0; i < children.length; i++) {
-                    standardTreeWidthArrangementSub(children[i], xInterval, yInterval);
+                    standardTreeWidthArrangementSub(children[i], xInterval, yInterval, direction);
                     const rect = children[i].region();
                     const diffX = children[i].root.cx - rect.x;
 
-                    children[i].setRootLocation(x + diffX, yInterval);
+                    children[i].setRootLocation(x + diffX, childYInterval);
                     x += rect.width + xInterval;
                     if (i < children.length - 1) {
                         centerX += x - (xInterval / 2);
