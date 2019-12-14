@@ -1,20 +1,19 @@
 //namespace GraphTableSVG {
     import {GRect} from "./g_rect"
-    import {GObjectAttributes} from "./g_object"
-    import {GTextBoxAttributes} from "./g_textbox"
     //import {GTextBoxAttributes, GObjectAttributes} from "../options/attributes_option"
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import { ShapeObjectType } from "../basic/common/enums";
+    import {GOptions } from "./g_options"
 
     export class GRectButton extends GRect {
-        public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
             super(svgbox, option);
 
 
             //this.update();
             if(this.type == ShapeObjectType.RectButton) this.firstFunctionAfterInitialized();
         }
-        initializeOption(option: GObjectAttributes): GObjectAttributes {
+        initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
             let b = false;
             if (option.width !== undefined || option.height !== undefined) {
                 b = true;
@@ -27,7 +26,7 @@
             
             
 
-            const _option = <GTextBoxAttributes>super.initializeOption(option);
+            const _option = <GOptions.GTextBoxAttributes>super.initializeOption(option);
             
 
             return _option;

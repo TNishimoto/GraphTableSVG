@@ -1,20 +1,20 @@
 //namespace GraphTableSVG {
 //namespace GraphTableSVG {
-    import {GObjectAttributes} from "./g_object"
     import {GVertex} from "./g_vertex"
-    import {GTextBox, GTextBoxAttributes} from "./g_textbox"
+    import { GTextBox} from "./g_textbox"
     import {GCalloutAttributes} from "./g_callout"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import {Rectangle, VLine} from "../basic/common/vline"
     import {CSS} from "../basic/svghtml/css"
+    import {GOptions } from "./g_options"
 
     export class GRect extends GVertex {
         public get svgRectangle(): SVGRectElement {
             return <SVGRectElement>this._svgSurface;
         }
 
-        public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
             super(svgbox, option);
             this.updateAttributes.push("width");
             this.updateAttributes.push("height");
@@ -22,7 +22,7 @@
             //this.update();
             if(this.type == ShapeObjectType.Rect) this.firstFunctionAfterInitialized();
         }
-        protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
+        protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
             this._svgSurface = GRect.createRectangle(this.svgGroup, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
         }
@@ -32,7 +32,7 @@
          * @param className 生成するSVG要素のクラス属性名
          * @returns 生成されたSVGRectElement
          */
-        private static createRectangle(parent: SVGElement, className: string | CSS.surfaceClassCSS |undefined, style : string | undefined | CSS.surfaceClassCSS): SVGRectElement {
+        private static createRectangle(parent: SVGElement, className: string | GOptions.surfaceClassCSS |undefined, style : string | undefined | GOptions.surfaceClassCSS): SVGRectElement {
             const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             parent.appendChild(rect);
             rect.width.baseVal.value = 30;
@@ -73,7 +73,7 @@
             return rect;
         }
 
-        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GTextBoxAttributes = {}): GCalloutAttributes {
+        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GCalloutAttributes {
             GTextBox.constructAttributes(e, removeAttributes, output);
 
 

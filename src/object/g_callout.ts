@@ -1,12 +1,13 @@
 /// <reference path="g_path_textbox.ts"/>
 //namespace GraphTableSVG {
-    import {GTextBox, GTextBoxAttributes} from "./g_textbox"
+    import {GTextBox} from "./g_textbox"
     import {GPathTextBox} from "./g_path_textbox"
     import { ShapeObjectType, SpeakerPosition } from "../basic/common/enums";
     import {Rectangle, VLine} from "../basic/common/vline"
+    import {GOptions } from "./g_options"
 
     
-    export type GCalloutAttributes = GTextBoxAttributes & {
+    export type GCalloutAttributes = GOptions.GTextBoxAttributes & {
         speakerX?: number,
         speakerY?: number,
     }

@@ -2,26 +2,6 @@
 import { CustomAttributeNames } from "../common/custtome_attributes"
 import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment } from "../common/enums";
 export namespace CSS {
-    export type textClassCSS = {
-        fill? : string,
-        fontSize? : string,
-        fontFamily? : string,
-    }
-    export type surfaceClassCSS = {
-        stroke? : string,
-        strokeWidth? : string,
-        fill? : string,
-    }
-    export type GTextBoxCSS = {
-        isAutoSizeShapeToFitText?: boolean,
-        verticalAnchor?: VerticalAnchor,
-        horizontalAnchor?: HorizontalAnchor
-    }
-    export type GEdgeStyleCSS = {
-        beginConnectorType?: ConnectorPosition,
-        endConnectorType?: ConnectorPosition,
-        pathTextAlignment?: PathTextAlighnment
-    } & GTextBoxCSS
     /*
     interface IPoint2D {
         x: number;
@@ -29,7 +9,7 @@ export namespace CSS {
       }
       */
 
-    export function buildClassNameFromSurfaceClassCSS(rule : surfaceClassCSS) : string {
+    export function buildClassNameFromSurfaceClassCSS(rule : object) : string {
         const _rule : Map<string, string> = toRuleMap(rule);
         return getOrAddRule(_rule);
     }
@@ -92,7 +72,7 @@ export namespace CSS {
         }).join("\n");
         return content;
     }
-    export function toRuleMap(rule : textClassCSS) : Map<string,string>{
+    export function toRuleMap(rule : object) : Map<string,string>{
         const _rule : Map<string, string> = new Map();
         Object.keys(rule).forEach((v)=>{
             const value = (<any>rule)[v];
@@ -163,6 +143,9 @@ export namespace CSS {
             }
             .${CustomAttributeNames.StyleValue.defaultVertexClass}{
 
+            }
+            .${CustomAttributeNames.StyleValue.defaultEdgeClass}{
+                ${CustomAttributeNames.Style.PathTextAlignment}: center;
             }
 
             .${CustomAttributeNames.StyleValue.defaultSurfaceClass}{

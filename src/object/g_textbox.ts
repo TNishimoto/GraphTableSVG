@@ -10,29 +10,13 @@ import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from 
 import {Rectangle} from "../basic/common/vline"
 import {HTMLFunctions} from "../basic/svghtml/html_functions"
 import { SVGTextBox } from "../basic/svghtml/svg_textbox"
-import {GObject, GObjectAttributes, _GObjectAttributes } from "./g_object"
+import {GObject } from "./g_object"
+import {GOptions } from "./g_options"
 
 //namespace GraphTableSVG {
 
 
     
-    export type _GTextBoxAttribute = {
-        text?: string | HTMLElement[],
-        /*
-        isAutoSizeShapeToFitText?: boolean,
-        verticalAnchor?: VerticalAnchor,
-        horizontalAnchor?: HorizontalAnchor
-        */
-        textClass?: string | CSS.textClassCSS
-        textStyle?: string | CSS.textClassCSS
-    }
-    export type _GTextBoxSVGGroupInfo = {
-        class? : string | CSS.GTextBoxCSS
-        style? : string | CSS.GTextBoxCSS 
-    }
-    export type GTextBoxAttributesWithoutGroup = _GObjectAttributes & _GTextBoxAttribute
-
-    export type GTextBoxAttributes = GTextBoxAttributesWithoutGroup & _GTextBoxSVGGroupInfo
 
     export class GTextBox extends GObject {
         private _svgText: SVGTextElement;
@@ -46,7 +30,7 @@ import {GObject, GObjectAttributes, _GObjectAttributes } from "./g_object"
         protected _minimumWidth : number = 10;
         protected _minimumHeight : number = 10;
 
-        public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
             super(svgbox, option)
 
             /*
@@ -57,7 +41,7 @@ import {GObject, GObjectAttributes, _GObjectAttributes } from "./g_object"
             this._textObserver.observe(this.svgText, option2);
             */
 
-            const _option = <GTextBoxAttributes>this.initializeOption(option);
+            const _option = <GOptions.GTextBoxAttributes>this.initializeOption(option);
 
             this._svgText = GTextBox.createSVGText(_option.textClass, _option.textStyle);
             this.svgGroup.appendChild(this.svgText);
@@ -76,7 +60,7 @@ import {GObject, GObjectAttributes, _GObjectAttributes } from "./g_object"
             const b = this.svgGroup.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
             
             if (b === undefined && typeof(_option.style) == "object") {
-                const style : CSS.GTextBoxCSS = _option.style;
+                const style : GOptions.GTextBoxCSS = _option.style;
                 if(style.isAutoSizeShapeToFitText !== undefined ){
                     this.isAutoSizeShapeToFitText = style.isAutoSizeShapeToFitText;
                 }
@@ -87,13 +71,13 @@ import {GObject, GObjectAttributes, _GObjectAttributes } from "./g_object"
             if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
         }
 
-        initializeOption(option: GObjectAttributes): GObjectAttributes {
+        initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
             let b = false;
             if (option.width !== undefined || option.height !== undefined) {
                 b = true;
             }
 
-            const _option : GTextBoxAttributes = <GTextBoxAttributes>super.initializeOption(option);
+            const _option : GOptions.GTextBoxAttributes = <GOptions.GTextBoxAttributes>super.initializeOption(option);
             /*
             if(_option.class === undefined){
                 _option.class = { isAutoSizeShapeToFitText : true, verticalAnchor : VerticalAnchor.Middle, horizontalAnchor : HorizontalAnchor.Center }
@@ -118,7 +102,7 @@ import {GObject, GObjectAttributes, _GObjectAttributes } from "./g_object"
                  * @param className 生成するSVG要素のクラス属性名
                  * @returns 生成されたSVGTextElement
                  */
-        private static createSVGText(className: string | CSS.textClassCSS | undefined | null, style: string | undefined | CSS.textClassCSS): SVGTextElement {
+        private static createSVGText(className: string | GOptions.textClassCSS | undefined | null, style: string | undefined | GOptions.textClassCSS): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
             _svgText.setAttribute(CustomAttributeNames.objectIDName, (SVG.idCounter++).toString());
@@ -155,7 +139,7 @@ import {GObject, GObjectAttributes, _GObjectAttributes } from "./g_object"
         }
 
         static constructAttributes(e: Element,
-            removeAttributes: boolean = false, output: GTextBoxAttributes = {}): GTextBoxAttributes {
+            removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GOptions.GTextBoxAttributes {
 
             GObject.constructAttributes(e, removeAttributes, output);
             //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);

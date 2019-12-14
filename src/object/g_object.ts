@@ -9,28 +9,10 @@ import {CSS} from "../basic/svghtml/css"
 import {DraggableObjectFunctions} from "../basic/svghtml/draggable_object"
 import { CustomAttributeNames } from "../basic/common/custtome_attributes"
 import { ShapeObjectType } from "../basic/common/enums";
-
-export type _GObjectAttributes = {
-    //class?: string,
-    cx?: number,
-    cy?: number,
-    x?: number,
-    y?: number,
-    width?: number,
-    height?: number,
-    id?: string,
-
-    surfaceClass?: string | CSS.surfaceClassCSS,
-    surfaceStyle?: string | CSS.surfaceClassCSS
-
-}
-export type _SVGGroupStyleInfo = {
-    class?: string | object,
-    style?: string | object,
-}
+import { GOptions } from "./g_options";
 
 
-export type GObjectAttributes = _GObjectAttributes & _SVGGroupStyleInfo;
+
 export type GObjectMaps = {
     groupAttributes?: Map<string, string>;
     surfaceAttributes?: Map<string, string>;
@@ -44,7 +26,7 @@ export type GObjectMaps = {
         protected _observer: MutationObserver;
         private _observerOption: MutationObserverInit;
 
-        public constructor(svgbox: SVGElement | string, option: GObjectAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GOptions.GObjectAttributes = {}) {
             CSS.setGraphTableCSS();
             let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
             if (parentElement instanceof SVGSVGElement && !GUIObserver.isObserved(parentElement)) {
@@ -213,7 +195,7 @@ export type GObjectMaps = {
         protected resizeUpdate() {
             this.update();
         }
-        initializeOption(option: GObjectAttributes): GObjectAttributes {
+        initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
             const _option = { ...option };
             if (this.svgSurface != null && this.svgSurface.className != null) {
                 const width = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidth, null);
@@ -229,7 +211,7 @@ export type GObjectMaps = {
             return _option;
         }
         static constructAttributes(e: Element,
-            removeAttributes: boolean = false, output: GObjectAttributes = {}): GObjectAttributes {
+            removeAttributes: boolean = false, output: GOptions.GObjectAttributes = {}): GOptions.GObjectAttributes {
             output.class = e.gtGetAttributeStringWithUndefined("class");
             if (output.class === undefined) e.gtGetAttributeStringWithUndefined("group:class");
             output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface:class");
@@ -429,7 +411,7 @@ export type GObjectMaps = {
         public get type(): ShapeObjectType {
             return ShapeObjectType.Object;
         }
-        protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
+        protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
 
         }
 

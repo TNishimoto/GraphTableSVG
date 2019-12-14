@@ -1,30 +1,30 @@
-import {GObjectAttributes} from "./g_object"
 import {GVertex} from "./g_vertex"
-import {GTextBox, GTextBoxAttributes} from "./g_textbox"
+import {GTextBox} from "./g_textbox"
 import {GCalloutAttributes} from "./g_callout"
 import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
 import { CustomAttributeNames } from "../basic/common/custtome_attributes"
 import {Rectangle, VLine} from "../basic/common/vline"
 import {GEllipse, GAbstractEllipseCircle} from "./g_ellipse"
 import {CSS} from "../basic/svghtml/css"
+import {GOptions } from "./g_options"
 
 export class GCircle extends GAbstractEllipseCircle  {
     public get svgCircle(): SVGCircleElement {
         return <SVGCircleElement>this._svgSurface;
     }
 
-    public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
+    public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
         super(svgbox, option);
         if(this.type == ShapeObjectType.Circle) this.firstFunctionAfterInitialized();
 
         //this.update();
     }
-    protected createSurface(svgbox : SVGElement, option :GObjectAttributes = {}) : void {
+    protected createSurface(svgbox : SVGElement, option :GOptions.GObjectAttributes = {}) : void {
         if(option.surfaceClass === undefined) option.surfaceClass = CustomAttributeNames.StyleValue.defaultSurfaceClass;
         this._svgSurface = GCircle.createCircle(this.svgGroup, option.surfaceClass, option.surfaceStyle);
         this.svgGroup.insertBefore(this.svgCircle, this.svgText);
     }
-    private static createCircle(parent: SVGElement, className: string | CSS.surfaceClassCSS, style : string | undefined | CSS.surfaceClassCSS): SVGCircleElement {
+    private static createCircle(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style : string | undefined | GOptions.surfaceClassCSS): SVGCircleElement {
         const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         parent.appendChild(circle);
         if(style !== undefined){

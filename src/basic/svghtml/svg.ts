@@ -256,14 +256,18 @@ import { CustomAttributeNames } from "../common/custtome_attributes"
  * @param className 生成するSVGTextPathElementのクラス属性名
  * @returns 生成されたSVGTextElementとSVGTextPathElement
  */
-        export function createTextPath2(className: string | CSS.textClassCSS): SVGTextPathElement {
+        export function createTextPath2(className?: string): SVGTextPathElement {
             const path = <SVGTextPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
-            if(typeof(className) == "string"){
+            if(className !== undefined){
                 path.setAttribute("class", className);
+            }
+            /*
+            if(typeof(className) == "string"){
             }else{
                 const newClassName = CSS.getOrAddRule(className);
                 path.setAttribute("class", newClassName);
             }
+            */
             /*
             if (className == null) {
                 path.style.fill = "black";

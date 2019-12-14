@@ -6,8 +6,10 @@
     */
 import { Console} from "./console"
 import {VertexOrder, Direction} from "../basic/common/enums"
-import { GTextBoxAttributes } from "../object/g_textbox";
+//import { GTextBoxAttributes } from "../object/g_textbox";
 import { GEdgeAttributes } from "../object/g_edge";
+import {GOptions } from "../object/g_options"
+
 
     export type LogicTreeOption = {
         x?: number,
@@ -60,7 +62,7 @@ import { GEdgeAttributes } from "../object/g_edge";
         //public vertexClass: string | null = null
         //public parentEdgeClass: string | null = null
         public children : (LogicTree | null)[] = [];
-        public vertexOption : GTextBoxAttributes = { };
+        public vertexOption : GOptions.GTextBoxAttributes = { };
         public edgeOption : GEdgeAttributes = {};
 
         public item: any = null;

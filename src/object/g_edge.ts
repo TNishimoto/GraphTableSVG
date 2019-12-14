@@ -7,10 +7,11 @@ import { ShapeObjectType, PathTextAlighnment, ConnectorPosition, msoDashStyle } 
 import { CommonFunctions } from "../basic/common/common_functions"
 import { VBATranslateFunctions } from "../basic/common/vba_functions"
 import { SVGTextBox } from "../basic/svghtml/svg_textbox";
-import { GTextBox, GTextBoxAttributes, GTextBoxAttributesWithoutGroup } from "./g_textbox"
+import { GTextBox } from "./g_textbox"
 import { GVertex } from "./g_vertex"
-import { GObject, GObjectAttributes } from "./g_object"
+import { GObject } from "./g_object"
 import {CSS} from "../basic/svghtml/css"
+import {GOptions } from "./g_options"
 
 
 export type _GEdgeAttributes = {
@@ -31,10 +32,10 @@ export type _GEdgeAttributes = {
     //pathTextAlignment?: PathTextAlighnment
 }
 export type _GEdgeSVGGroupInfo = {
-    class? : string | CSS.GEdgeStyleCSS
-    style? : string | CSS.GEdgeStyleCSS 
+    class? : string | GOptions.GEdgeStyleCSS
+    style? : string | GOptions.GEdgeStyleCSS 
 }
-export type GEdgeAttributes = GTextBoxAttributesWithoutGroup & _GEdgeAttributes & _GEdgeSVGGroupInfo
+export type GEdgeAttributes = GOptions.GTextBoxAttributesWithoutGroup & _GEdgeAttributes & _GEdgeSVGGroupInfo
 
 /**
  * 辺をSVGで表現するためのクラスです。
@@ -57,7 +58,22 @@ export class GEdge extends GTextBox {
         this.svgText.textContent = "";
         //const textClass = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
         if (option.textClass === undefined) option.textClass = CustomAttributeNames.StyleValue.defaultTextClass;
-        this._svgTextPath = SVG.createTextPath2(option.textClass);
+
+        let textClass : string | undefined;
+        if(typeof option.textClass == "string"){
+            textClass = option.textClass;
+        }else if(typeof option.textClass == "object"){
+            textClass = CSS.getOrAddRule(option.textClass);
+        }
+        /*
+        if(typeof(className) == "string"){
+        }else{
+            const newClassName = CSS.getOrAddRule(className);
+            path.setAttribute("class", newClassName);
+        }
+        */
+
+        this._svgTextPath = SVG.createTextPath2(textClass);
         this.svgPath.id = `path-${this.objectID}`;
 
         this.svgText.appendChild(this._svgTextPath);
@@ -96,9 +112,9 @@ export class GEdge extends GTextBox {
         
         //this.pathTextAlignment = PathTextAlighnment.begin;
         //this.update();
-        if (this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment) == null) {
-            this.pathTextAlignment = PathTextAlighnment.center;
-        }
+        //if (this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment) == null) {
+        //    this.pathTextAlignment = PathTextAlighnment.center;
+       // }
 
         //this.update();
         if (this.type == ShapeObjectType.Edge) this.firstFunctionAfterInitialized();
@@ -163,7 +179,7 @@ export class GEdge extends GTextBox {
         return _output;
     }
 
-    initializeOption(option: GObjectAttributes): GObjectAttributes {
+    initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
         const _option = <GEdgeAttributes>super.initializeOption(option);
 
 
@@ -267,7 +283,7 @@ export class GEdge extends GTextBox {
     public get svgTextPath(): SVGTextPathElement {
         return this._svgTextPath;
     }
-    protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
+    protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
         if (option.surfaceClass === undefined) option.surfaceClass = CustomAttributeNames.StyleValue.defaultEdgePathClass;
         //if (_className != null) option.surfaceClass = _className;
 
@@ -285,7 +301,7 @@ export class GEdge extends GTextBox {
          * @returns 生成されたSVGPathElement
          */
     private static createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number,
-        className: string | CSS.surfaceClassCSS , style: string | undefined | CSS.surfaceClassCSS): SVGPathElement {
+        className: string | GOptions.surfaceClassCSS , style: string | undefined | GOptions.surfaceClassCSS): SVGPathElement {
         const path = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
         parent.appendChild(path);
         path.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
@@ -873,18 +889,27 @@ export class GEdge extends GTextBox {
         else if (this.pathTextAlignment == PathTextAlighnment.end) {
             this.svgTextPath.setAttribute("startOffset", `${0}`);
             this.removeTextLengthAttribute();
-            const textRect = SVGTextBox.getSize(this.svgText);
+            //const textRect = SVGTextBox.getSize(this.svgText);
+            const strWidth = SVGTextBox.getTextEmulatedWidth(this.svgTextPath);
+
             //const box = this.svgText.getBBox();
             const pathLen = this.svgPath.getTotalLength();
             //this.svgTextPath.setAttribute("startOffset", `${0}`);
-            this.svgTextPath.setAttribute("startOffset", `${pathLen - textRect.width}`);
+            //this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
+            if (this.side == "right") {
+                this.svgTextPath.setAttribute("startOffset", `${0}`);
+            } else {
+                this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
+            }
+
         }
         else if (this.pathTextAlignment == PathTextAlighnment.center) {
             this.removeTextLengthAttribute();
-            const textRect = SVGTextBox.getSize(this.svgText);
+            //const textRect = SVGTextBox.getSize(this.svgText);
+            const strWidth = SVGTextBox.getTextEmulatedWidth(this.svgTextPath);
             //const box = this.svgText.getBBox();
             const pathLen = this.svgPath.getTotalLength();
-            const offset = (pathLen - textRect.width) / 2;
+            const offset = (pathLen - strWidth) / 2;
             if (this.side == "right") {
                 this.svgTextPath.setAttribute("startOffset", `${offset}`);
             } else {
@@ -895,7 +920,15 @@ export class GEdge extends GTextBox {
 
         }
         else {
-            this.svgTextPath.setAttribute("startOffset", `${0}`);
+            const strWidth = SVGTextBox.getTextEmulatedWidth(this.svgTextPath);
+            const pathLen = this.svgPath.getTotalLength();
+            if (this.side == "right") {
+                this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
+            } else {
+                this.svgTextPath.setAttribute("startOffset", `${0}`);
+            }
+
+            //this.svgTextPath.setAttribute("startOffset", `${0}`);
             this.removeTextLengthAttribute();
             //this.svgText.textLength.baseVal.value = 0;
         }

@@ -1,5 +1,5 @@
 ﻿import { Color } from "../basic/common/color";
-import { GObject, GObjectAttributes } from "./g_object";
+import { GObject } from "./g_object";
 import {CommonFunctions} from "../basic/common/common_functions"
 //import {GTableOption} from "../options/attributes_option"
 import { ShapeObjectType } from "../basic/common/enums";
@@ -16,6 +16,7 @@ import {CSS} from "../basic/svghtml/css"
 
 import {HTMLFunctions} from "../basic/svghtml/html_functions"
 
+import {GOptions } from "./g_options"
 //namespace GraphTableSVG {
 
 
@@ -26,7 +27,7 @@ import {HTMLFunctions} from "../basic/svghtml/html_functions"
         columnWidth?: number,
         table?: LogicTable
     }
-    export type GTableOption = GObjectAttributes & _GTableOption;
+    export type GTableOption = GOptions.GObjectAttributes & _GTableOption;
     /**
     テーブルを表します。
     */

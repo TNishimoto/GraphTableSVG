@@ -1,6 +1,5 @@
 //namespace GraphTableSVG {
     import {GObject} from "./g_object"
-    import {GTextBoxAttributes} from "./g_textbox"
     import {GVertex} from "./g_vertex"
     import {GEdge} from "./g_edge"
     import {Rectangle} from "../basic/common/vline"
@@ -11,6 +10,7 @@
     import { ShapeObjectType, VertexOrder, PathTextAlighnment, ConnectorPosition, Direction } from "../basic/common/enums";
     import { createShape, createVertex } from "../options/open_svg";
     import { SVGTextBox } from "../basic/svghtml/svg_textbox";
+    import {GOptions } from "./g_options"
     
     //import {GObjectAttributes, GTextBoxAttributes, ConnectOption} from "../options/attributes_option"
     import {LogicTree, LogicGraph, LogicTreeOption} from "../options/logic_tree"
@@ -28,7 +28,7 @@ import { GraphArrangement } from "./graph_arrangement"
     */
     export class GGraph extends GObject {
 
-        constructor(box: SVGElement | string, option: GTextBoxAttributes = {}) {
+        constructor(box: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
             super(box, option)
             if (this.type == ShapeObjectType.Graph) this.firstFunctionAfterInitialized();
             //this.svgGroup.addEventListener(CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);

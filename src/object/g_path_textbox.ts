@@ -2,20 +2,19 @@
 
 //namespace GraphTableSVG {
     import {Rectangle, VLine} from "../basic/common/vline"
-    import {GObjectAttributes} from "./g_object"
     import {GVertex} from "./g_vertex"
-    import {GTextBoxAttributes} from "./g_textbox"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import { SVGTextBox } from "../basic/svghtml/svg_textbox"
     import {CSS} from "../basic/svghtml/css"
+    import {GOptions } from "./g_options"
 
     export class GPathTextBox extends GVertex {
         //private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {
             return <SVGPathElement>this.svgSurface;
         }
-        public constructor(svgbox: SVGElement | string, option: GTextBoxAttributes = {}) {
+        public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
             super(svgbox, option);
 
             /*
@@ -27,7 +26,7 @@
             //this.update();
             if(this.type == ShapeObjectType.PathTextBox) this.firstFunctionAfterInitialized();
         }
-        protected createSurface(svgbox: SVGElement, option: GObjectAttributes = {}): void {
+        protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
 
             if(option.surfaceClass === undefined) option.surfaceClass = CustomAttributeNames.StyleValue.defaultTextboxPathClass;
             //const _className = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
@@ -37,7 +36,7 @@
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         private static createSurfacePath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, 
-            className: string | CSS.surfaceClassCSS, style : string | undefined | CSS.surfaceClassCSS): SVGPathElement {
+            className: string | GOptions.surfaceClassCSS, style : string | undefined | GOptions.surfaceClassCSS): SVGPathElement {
             const path = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             parent.appendChild(path);
             path.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
@@ -68,7 +67,7 @@
             */
             return path;
         }
-        initializeOption(option: GObjectAttributes) : GObjectAttributes {
+        initializeOption(option: GOptions.GObjectAttributes) : GOptions.GObjectAttributes {
             const _option = super.initializeOption(option);
             return _option;
         }

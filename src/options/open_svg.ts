@@ -12,12 +12,13 @@ import { GEllipse } from "../object/g_ellipse"
 import { GRect } from "../object/g_rect"
 import { GVertex } from "../object/g_vertex"
 
-import { GTextBox, GTextBoxAttributes } from "../object/g_textbox"
+import { GTextBox } from "../object/g_textbox"
 import { GEdge, GEdgeAttributes } from "../object/g_edge"
 import { GTable, GTableOption } from "../object/g_table"
 import { GGraph } from "../object/g_graph"
 import { GRectButton } from "../object/g_rect_button"
 import { GCircle } from "../object/g_circle";
+import {GOptions } from "../object/g_options"
 
 //export namespace openSVGFunctions {
     
@@ -224,14 +225,14 @@ export function openSVG(inputItem: string | Element | null = null, output: GObje
     return output;
 
 }
-export function createShape(parent: SVGElement | string | GObject, type: "g-rect-button", option?: GTextBoxAttributes): GRectButton
-export function createShape(parent: SVGElement | string | GObject, type: "g-rect", option?: GTextBoxAttributes): GRect
+export function createShape(parent: SVGElement | string | GObject, type: "g-rect-button", option?: GOptions.GTextBoxAttributes): GRectButton
+export function createShape(parent: SVGElement | string | GObject, type: "g-rect", option?: GOptions.GTextBoxAttributes): GRect
 export function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GEdgeAttributes): GEdge
-export function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GTextBoxAttributes): GEllipse
-export function createShape(parent: SVGElement | string | GObject, type: "g-callout", option?: GTextBoxAttributes): GCallout
-export function createShape(parent: SVGElement | string | GObject, type: "g-circle", option?: GTextBoxAttributes): GCircle
-export function createShape(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GTextBoxAttributes): GArrowCallout
-export function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GTextBoxAttributes): GGraph
+export function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GOptions.GTextBoxAttributes): GEllipse
+export function createShape(parent: SVGElement | string | GObject, type: "g-callout", option?: GOptions.GTextBoxAttributes): GCallout
+export function createShape(parent: SVGElement | string | GObject, type: "g-circle", option?: GOptions.GTextBoxAttributes): GCircle
+export function createShape(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GOptions.GTextBoxAttributes): GArrowCallout
+export function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GOptions.GTextBoxAttributes): GGraph
 export function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: GTableOption): GTable
 export function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option: any = {}): GObject {
     let _parent: SVGElement;
@@ -257,7 +258,7 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
     }
     throw Error("error");
 }
-export function createVertex(parent: GGraph, option: GTextBoxAttributes = {}): GVertex {
+export function createVertex(parent: GGraph, option: GOptions.GTextBoxAttributes = {}): GVertex {
     let _parent = parent.svgGroup;
     if (option.class == undefined) option.class = CustomAttributeNames.StyleValue.defaultVertexClass;
     const type = typeof(option.class) == "string" ? parent.getStyleValue(option.class, CustomAttributeNames.Style.defaultSurfaceType) : null ;
