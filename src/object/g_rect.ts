@@ -7,6 +7,7 @@
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import {Rectangle, VLine} from "../basic/common/vline"
+    import {CSS} from "../basic/svghtml/css"
 
     export class GRect extends GVertex {
         public get svgRectangle(): SVGRectElement {
@@ -31,19 +32,31 @@
          * @param className 生成するSVG要素のクラス属性名
          * @returns 生成されたSVGRectElement
          */
-        private static createRectangle(parent: SVGElement, className: string | undefined, style : string | undefined): SVGRectElement {
+        private static createRectangle(parent: SVGElement, className: string | CSS.surfaceClassCSS |undefined, style : string | undefined | CSS.surfaceClassCSS): SVGRectElement {
             const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             parent.appendChild(rect);
             rect.width.baseVal.value = 30;
             rect.height.baseVal.value = 30;
-            if(style !== undefined) rect.setAttribute("style", style);
+            if(style !== undefined){
+                if(typeof(style) == "string"){
+                    rect.setAttribute("style", style);
+                }else{
+                    rect.setAttribute("style", CSS.buildClassNameFromSurfaceClassCSS(style));
+                }
+    
+            }
+            //if(style !== undefined) rect.setAttribute("style", style);
 
             if (className == null) {
                 if(rect.style.stroke == null || rect.style.stroke == "")rect.style.stroke = "black";
                 if(rect.style.fill == null || rect.style.fill == "")rect.style.fill = "white";
                 if(rect.style.strokeWidth == null || rect.style.strokeWidth == "")rect.style.strokeWidth = "1pt";
             } else {
-                rect.setAttribute("class", className);
+                if(typeof(className) == "string"){
+                    rect.setAttribute("class", className);
+                }else{
+                    rect.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
+                }
                 //const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
                 //if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 

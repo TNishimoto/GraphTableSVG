@@ -2,6 +2,8 @@
 
 import { Rectangle, Point } from "../common/vline";
 import { HTMLFunctions } from "./html_functions";
+import { CSS } from "./css";
+
 import {  } from "./svg_interface"
 import { CustomAttributeNames } from "../common/custtome_attributes"
 
@@ -254,9 +256,14 @@ import { CustomAttributeNames } from "../common/custtome_attributes"
  * @param className 生成するSVGTextPathElementのクラス属性名
  * @returns 生成されたSVGTextElementとSVGTextPathElement
  */
-        export function createTextPath2(className: string): SVGTextPathElement {
+        export function createTextPath2(className: string | CSS.textClassCSS): SVGTextPathElement {
             const path = <SVGTextPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
-            path.setAttribute("class", className);
+            if(typeof(className) == "string"){
+                path.setAttribute("class", className);
+            }else{
+                const newClassName = CSS.getOrAddRule(className);
+                path.setAttribute("class", newClassName);
+            }
             /*
             if (className == null) {
                 path.style.fill = "black";

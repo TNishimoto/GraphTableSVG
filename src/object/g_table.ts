@@ -12,6 +12,8 @@ import {Rectangle} from "../basic/common/vline"
 import {VBATranslateFunctions,parseInteger, visible} from "../basic/common/vba_functions"    
 
 import {SVG} from "../basic/svghtml/svg"
+import {CSS} from "../basic/svghtml/css"
+
 import {HTMLFunctions} from "../basic/svghtml/html_functions"
 
 //namespace GraphTableSVG {
@@ -37,7 +39,7 @@ import {HTMLFunctions} from "../basic/svghtml/html_functions"
         constructor(svgbox: SVGElement,
             option: GTableOption = {}) {
             super(svgbox, option)
-            CommonFunctions.setGraphTableCSS();
+            CSS.setGraphTableCSS();
 
             this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             this._svgRowBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -118,7 +120,15 @@ import {HTMLFunctions} from "../basic/svghtml/html_functions"
 
             if (output.x !== undefined) output.table!.x = output.x;
             if (output.y !== undefined) output.table!.y = output.y;
-            if (output.class !== undefined) output.table!.tableClassName = output.class;
+            if (output.class !== undefined){
+                if(typeof(output.class) == "string"){
+                    output.table!.tableClassName = output.class;
+                }else{
+                    const newClassName = CSS.getOrAddRule(output.class);
+                    output.table!.tableClassName = newClassName;
+
+                }
+            } 
             while (e.childNodes.length > 0) e.removeChild(e.childNodes.item(0));
 
             return output;

@@ -3,12 +3,14 @@ import "../basic/svghtml/svg_interface";
 import "../basic/svghtml/svg_text";
 import "../basic/svghtml/svg_g";
 import {SVG} from "../basic/svghtml/svg"
+import {CSS} from "../basic/svghtml/css"
+
 import { CustomAttributeNames } from "../basic/common/custtome_attributes"
 import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../basic/common/enums";
 import {Rectangle} from "../basic/common/vline"
 import {HTMLFunctions} from "../basic/svghtml/html_functions"
 import { SVGTextBox } from "../basic/svghtml/svg_textbox"
-import {GObject, GObjectAttributes } from "./g_object"
+import {GObject, GObjectAttributes, _GObjectAttributes } from "./g_object"
 
 //namespace GraphTableSVG {
 
@@ -16,13 +18,21 @@ import {GObject, GObjectAttributes } from "./g_object"
     
     export type _GTextBoxAttribute = {
         text?: string | HTMLElement[],
+        /*
         isAutoSizeShapeToFitText?: boolean,
         verticalAnchor?: VerticalAnchor,
         horizontalAnchor?: HorizontalAnchor
-        textClass?: string
-        textStyle?: string
+        */
+        textClass?: string | CSS.textClassCSS
+        textStyle?: string | CSS.textClassCSS
     }
-    export type GTextBoxAttributes = GObjectAttributes & _GTextBoxAttribute
+    export type _GTextBoxSVGGroupInfo = {
+        class? : string | CSS.GTextBoxCSS
+        style? : string | CSS.GTextBoxCSS 
+    }
+    export type GTextBoxAttributesWithoutGroup = _GObjectAttributes & _GTextBoxAttribute
+
+    export type GTextBoxAttributes = GTextBoxAttributesWithoutGroup & _GTextBoxSVGGroupInfo
 
     export class GTextBox extends GObject {
         private _svgText: SVGTextElement;
@@ -64,8 +74,12 @@ import {GObject, GObjectAttributes } from "./g_object"
             }
 
             const b = this.svgGroup.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
-            if (b === undefined && _option.isAutoSizeShapeToFitText !== undefined) {
-                this.isAutoSizeShapeToFitText = _option.isAutoSizeShapeToFitText;
+            
+            if (b === undefined && typeof(_option.style) == "object") {
+                const style : CSS.GTextBoxCSS = _option.style;
+                if(style.isAutoSizeShapeToFitText !== undefined ){
+                    this.isAutoSizeShapeToFitText = style.isAutoSizeShapeToFitText;
+                }
             }
 
             //if(_option.x !== undefined) this.x = _option.x;
@@ -79,11 +93,21 @@ import {GObject, GObjectAttributes } from "./g_object"
                 b = true;
             }
 
-            const _option = <GTextBoxAttributes>super.initializeOption(option);
-            if (b && _option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = false;
-            if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
-            if (_option.verticalAnchor === undefined) _option.verticalAnchor = VerticalAnchor.Middle;
-            if (_option.horizontalAnchor === undefined) _option.horizontalAnchor = HorizontalAnchor.Center;
+            const _option : GTextBoxAttributes = <GTextBoxAttributes>super.initializeOption(option);
+            /*
+            if(_option.class === undefined){
+                _option.class = { isAutoSizeShapeToFitText : true, verticalAnchor : VerticalAnchor.Middle, horizontalAnchor : HorizontalAnchor.Center }
+            }
+            if(typeof(_option.class) == "object" ){
+                if(_option.class.isAutoSizeShapeToFitText === undefined) _option.class.isAutoSizeShapeToFitText = true;
+                if(_option.class.verticalAnchor === undefined) _option.class.verticalAnchor = VerticalAnchor.Middle;
+                if(_option.class.horizontalAnchor === undefined) _option.class.horizontalAnchor = HorizontalAnchor.Center;
+            } 
+            */
+            //if (b && _option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = false;
+            //if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
+            //if (_option.verticalAnchor === undefined) _option.verticalAnchor = VerticalAnchor.Middle;
+            //if (_option.horizontalAnchor === undefined) _option.horizontalAnchor = HorizontalAnchor.Center;
             if (_option.textClass === undefined) _option.textClass = CustomAttributeNames.StyleValue.defaultTextClass;
 
 
@@ -94,11 +118,19 @@ import {GObject, GObjectAttributes } from "./g_object"
                  * @param className 生成するSVG要素のクラス属性名
                  * @returns 生成されたSVGTextElement
                  */
-        private static createSVGText(className: string | undefined, style: string | undefined): SVGTextElement {
+        private static createSVGText(className: string | CSS.textClassCSS | undefined | null, style: string | undefined | CSS.textClassCSS): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
             _svgText.setAttribute(CustomAttributeNames.objectIDName, (SVG.idCounter++).toString());
-            if (style !== undefined) _svgText.setAttribute("style", style);
+            if (style !== undefined){
+                if(typeof(style) == "string"){
+                    _svgText.setAttribute("style", style);
+                }else{
+                    const styleContent = CSS.getRuleContentString(CSS.toRuleMap(style));
+                    _svgText.setAttribute("style", styleContent);
+
+                }
+            } 
 
             //_svgText.style.textAnchor = "middle";
             if (className == null) {
@@ -111,7 +143,12 @@ import {GObject, GObjectAttributes } from "./g_object"
                 if (_svgText.style.getPropertyValue(CustomAttributeNames.Style.marginTop) == "") _svgText.setMarginTop(10);
                 if (_svgText.style.getPropertyValue(CustomAttributeNames.Style.marginBottom) == "") _svgText.setMarginBottom(10);
             } else {
-                _svgText.setAttribute("class", className);
+                if(typeof(className) == "string"){
+                    _svgText.setAttribute("class", className);
+                }else{
+                    const newClassName = CSS.getOrAddRule(className);
+                    _svgText.setAttribute("class", newClassName );
+                }
                 //_svgText.className = className;
             }
             return _svgText;
@@ -121,7 +158,7 @@ import {GObject, GObjectAttributes } from "./g_object"
             removeAttributes: boolean = false, output: GTextBoxAttributes = {}): GTextBoxAttributes {
 
             GObject.constructAttributes(e, removeAttributes, output);
-            output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
+            //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
             const textChild = HTMLFunctions.getChildByNodeName(e, "text");
             output.textClass = e.gtGetAttributeStringWithUndefined("text:class");
             output.textStyle = e.gtGetAttributeStringWithUndefined("text:style");
@@ -211,7 +248,7 @@ import {GObject, GObjectAttributes } from "./g_object"
         get isAutoSizeShapeToFitText(): boolean {
             const b = this.svgGroup.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
             if (b == undefined) {
-                return false;
+                return true;
             } else {
                 return b;
             }

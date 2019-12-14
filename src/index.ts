@@ -7,12 +7,13 @@
 
 //let exspo = Hello;
 import {CommonFunctions} from "./basic/common/common_functions"
-import {GUIObserver} from "./basic/svghtml/gui_observer"
+//import {GUIObserver} from "./basic/svghtml/gui_observer"
 import {Rectangle} from "./basic/common/vline"
+import {CSS, SVG, HTMLFunctions, GUIObserver} from "./basic/svghtml/index"
 
 //import {GObjectAttributes} from "./options/attributes_option"
-import {SVG} from "./basic/svghtml/svg"
-import {HTMLFunctions} from "./basic/svghtml/html_functions"
+//import {SVG} from "./basic/svghtml/svg"
+//import {HTMLFunctions} from "./basic/svghtml/html_functions"
 
 import { CustomAttributeNames } from "./basic/common/custtome_attributes"
 import { ShapeObjectType } from "./basic/common/enums";
@@ -29,6 +30,6 @@ import {GPathTextBox} from "./object/g_path_textbox"
 export {
     CommonFunctions, GUIObserver, Rectangle, GObjectAttributes, SVG, HTMLFunctions, CustomAttributeNames, 
     ShapeObjectType, openSVG, openHTML, openCustomElement, lazyOpenSVG,
-    LogicTable, LogicTree, Console, GObject, GPathTextBox, createShape, clearSVG, Debug
+    LogicTable, LogicTree, Console, GObject, GPathTextBox, createShape, clearSVG, Debug, CSS
 };
 

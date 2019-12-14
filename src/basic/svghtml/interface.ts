@@ -12,6 +12,7 @@ interface PPTextboxShape {
 */
 
 import { CommonFunctions } from "../common/common_functions";
+import { CSS } from "./css";
 import { SVGTextBox } from "./svg_textbox"
 import { CustomAttributeNames } from "../common/custtome_attributes"
 //import { Cell } from "../object/table/cell"
@@ -88,7 +89,7 @@ SVGLineElement.prototype.getEmphasis = function () {
     }
 };
 SVGLineElement.prototype.setEmphasis = function (value: boolean) {
-    CommonFunctions.setGraphTableCSS();
+    CSS.setGraphTableCSS();
 
     const p: SVGLineElement = this;
     if (p.getEmphasis() && !value) {

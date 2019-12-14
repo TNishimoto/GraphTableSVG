@@ -6,6 +6,7 @@
     import { SVGTextBox } from "../basic/svghtml/svg_textbox";
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import { SVG } from "../basic/svghtml/svg";
+    import { CSS } from "../basic/svghtml/css";
     import { PNG } from "../basic/common/png";
     import { VBAMacroModal } from "./vba_macro_modal";
     import { SVGToVBA } from "./svg_to_vba"
@@ -93,7 +94,7 @@
         }
 
         function getOrCreateCodeElement(): HTMLElement {
-            CommonFunctions.setGraphTableCSS();
+            CSS.setGraphTableCSS();
             const code = getCodeTag();
             if (code != null) {
                 return code;

@@ -6,6 +6,8 @@
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import {Rectangle, VLine} from "../basic/common/vline"
+    import {CSS} from "../basic/svghtml/css"
+
 
     export class GAbstractEllipseCircle extends GVertex {
         get rx(): number {
@@ -109,16 +111,26 @@
             this._svgSurface = GEllipse.createEllipse(this.svgGroup, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
         }
-        private static createEllipse(parent: SVGElement, className: string, style : string | undefined): SVGEllipseElement {
+        private static createEllipse(parent: SVGElement, className: string | CSS.surfaceClassCSS, style : string | CSS.surfaceClassCSS |undefined): SVGEllipseElement {
             const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
             parent.appendChild(circle);
-            if(style !== undefined) circle.setAttribute("style", style);
-
+            if(style !== undefined){
+                if(typeof(style) == "string"){
+                    circle.setAttribute("style", style);
+                }else{
+                    circle.setAttribute("style", CSS.buildClassNameFromSurfaceClassCSS(style));
+                }
+    
+            }
 
             circle.rx.baseVal.value = CustomAttributeNames.defaultCircleRadius;
             circle.ry.baseVal.value = CustomAttributeNames.defaultCircleRadius;
 
-            circle.setAttribute("class", className);
+            if(typeof(className) == "string"){
+                circle.setAttribute("class", className);
+            }else{
+                circle.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
+            }
             const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadius, null);
             if (radius != null) {
                 circle.rx.baseVal.value = radius;

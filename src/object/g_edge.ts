@@ -7,14 +7,13 @@ import { ShapeObjectType, PathTextAlighnment, ConnectorPosition, msoDashStyle } 
 import { CommonFunctions } from "../basic/common/common_functions"
 import { VBATranslateFunctions } from "../basic/common/vba_functions"
 import { SVGTextBox } from "../basic/svghtml/svg_textbox";
-import { GTextBox, GTextBoxAttributes } from "./g_textbox"
+import { GTextBox, GTextBoxAttributes, GTextBoxAttributesWithoutGroup } from "./g_textbox"
 import { GVertex } from "./g_vertex"
 import { GObject, GObjectAttributes } from "./g_object"
+import {CSS} from "../basic/svghtml/css"
 
 
 export type _GEdgeAttributes = {
-    startMarker?: boolean,
-    endMarker?: boolean,
     x1?: number,
     x2?: number,
     x3?: number,
@@ -23,13 +22,19 @@ export type _GEdgeAttributes = {
     y2?: number,
     y3?: number,
 
-    beginConnectorType?: ConnectorPosition,
-    endConnectorType?: ConnectorPosition,
+    //beginConnectorType?: ConnectorPosition,
+    //endConnectorType?: ConnectorPosition,
+    startMarker?: boolean,
+    endMarker?: boolean,
     beginVertex?: GVertex | string,
     endVertex?: GVertex | string,
-    pathTextAlignment?: PathTextAlighnment
+    //pathTextAlignment?: PathTextAlighnment
 }
-export type GEdgeAttributes = GTextBoxAttributes & _GEdgeAttributes
+export type _GEdgeSVGGroupInfo = {
+    class? : string | CSS.GEdgeStyleCSS
+    style? : string | CSS.GEdgeStyleCSS 
+}
+export type GEdgeAttributes = GTextBoxAttributesWithoutGroup & _GEdgeAttributes & _GEdgeSVGGroupInfo
 
 /**
  * 辺をSVGで表現するためのクラスです。
@@ -85,14 +90,14 @@ export class GEdge extends GTextBox {
         }
 
 
-        if (_option.beginConnectorType !== undefined) this.beginConnectorType = _option.beginConnectorType;
-        if (_option.endConnectorType !== undefined) this.endConnectorType = _option.endConnectorType;
-
+        //if (_option.beginConnectorType !== undefined) this.beginConnectorType = _option.beginConnectorType;
+        //if (_option.endConnectorType !== undefined) this.endConnectorType = _option.endConnectorType;
+        //if (_option.pathTextAlignment !== undefined) this.pathTextAlignment = _option.pathTextAlignment;
+        
         //this.pathTextAlignment = PathTextAlighnment.begin;
         //this.update();
-        if (_option.pathTextAlignment !== undefined) this.pathTextAlignment = _option.pathTextAlignment;
-        if (this.svgText.getPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment) == null) {
-            this.pathTextAlignment = PathTextAlighnment.regularInterval;
+        if (this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment) == null) {
+            this.pathTextAlignment = PathTextAlighnment.center;
         }
 
         //this.update();
@@ -122,9 +127,16 @@ export class GEdge extends GTextBox {
         _output.beginVertex = e.gtGetAttributeStringWithUndefined("begin-vertex");
         _output.endVertex = e.gtGetAttributeStringWithUndefined("end-vertex");
         const bct = e.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorType);
-        if (bct != null) _output.beginConnectorType = ConnectorPosition.ToConnectorPosition(bct);
+
+        if (bct != null && typeof(_output.style) == "object" ){
+            _output.style.beginConnectorType = ConnectorPosition.ToConnectorPosition(bct);
+        } 
         const ect = e.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorType);
-        if (ect != null) _output.endConnectorType = ConnectorPosition.ToConnectorPosition(ect);
+        if (ect != null && typeof(_output.style) == "object" ){
+            _output.style.endConnectorType = ConnectorPosition.ToConnectorPosition(ect);
+        }
+
+        //if (ect != null) _output.endConnectorType = ConnectorPosition.ToConnectorPosition(ect);
 
         _output.startMarker = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.markerStart);
         _output.endMarker = e.gtGetAttributeBooleanWithUndefined(CustomAttributeNames.Style.markerEnd);
@@ -273,14 +285,24 @@ export class GEdge extends GTextBox {
          * @returns 生成されたSVGPathElement
          */
     private static createPath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number,
-        className: string, style: string | undefined): SVGPathElement {
+        className: string | CSS.surfaceClassCSS , style: string | undefined | CSS.surfaceClassCSS): SVGPathElement {
         const path = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
         parent.appendChild(path);
         path.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
+        if(style !== undefined){
+            if(typeof(style) == "string"){
+                path.setAttribute("style", style);
+            }else{
+                path.setAttribute("style", CSS.buildClassNameFromSurfaceClassCSS(style));
+            }
 
-        if (style !== undefined) path.setAttribute("style", style);
+        }
 
-        path.setAttribute("class", className)
+        if(typeof(className) == "string"){
+            path.setAttribute("class", className);
+        }else{
+            path.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
+        }
         /*
     if (className !== undefined) {
     } else {
@@ -893,11 +915,11 @@ export class GEdge extends GTextBox {
      * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
      */
     public get pathTextAlignment(): PathTextAlighnment {
-        const value = this.svgText.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.PathTextAlignment, "none");
+        const value = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.PathTextAlignment, "center");
         return PathTextAlighnment.toPathTextAlighnment(value);
     }
     public set pathTextAlignment(value: PathTextAlighnment) {
-        this.svgText.setPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment, value);
+        this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment, value);
     }
 
     public save() {

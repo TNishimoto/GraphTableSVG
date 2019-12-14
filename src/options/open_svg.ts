@@ -260,7 +260,7 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
 export function createVertex(parent: GGraph, option: GTextBoxAttributes = {}): GVertex {
     let _parent = parent.svgGroup;
     if (option.class == undefined) option.class = CustomAttributeNames.StyleValue.defaultVertexClass;
-    const type = option.class == undefined ? null : parent.getStyleValue(option.class, CustomAttributeNames.Style.defaultSurfaceType);
+    const type = typeof(option.class) == "string" ? parent.getStyleValue(option.class, CustomAttributeNames.Style.defaultSurfaceType) : null ;
     if (type != null) {
         switch (type) {
             case ShapeObjectType.Callout: return new GCallout(_parent, option);

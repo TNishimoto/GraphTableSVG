@@ -5,7 +5,7 @@ import { HTMLFunctions } from "./html_functions";
 import { HorizontalAnchor, VerticalAnchor } from "../common/enums";
 import { } from "./svg_text"
 import "./svg_interface";
-import { Common } from "./css";
+//import { CSS } from "./css";
 
 export namespace SVGTextBox {
 

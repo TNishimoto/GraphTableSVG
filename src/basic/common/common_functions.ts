@@ -1,6 +1,6 @@
 ﻿//namespace GraphTableSVG {
     //import { Rectangle } from "./vline";
-    import * as CSS from "../svghtml/css"
+    //import * as CSS from "../svghtml/css"
     //import {GGraph} from "../object/g_graph"
     //import {GTable} from "../object/g_table"
     //import {GObject} from "../object/g_object"
@@ -36,37 +36,10 @@
             }
             return text;
         }
-        const CSSName: string = "___GraphTableCSS";
-        let createdGraphTableCSS : boolean = false;
-        export function setGraphTableCSS() {
-            if(createdGraphTableCSS) return;
-            const item = document.head!.getElementsByClassName(CSSName);
-            if (item.length > 0) {
-                document.head!.removeChild(item[0]);
-            }
-            var blankStyle: HTMLStyleElement = document.createElement('style');
-
-            blankStyle.innerHTML = CSS.Common.createCSS();
-            blankStyle.type = "text/css";
-            blankStyle.setAttribute("class", CSSName);
-
-            const head = document.getElementsByTagName('head');
-            const fstItem = head.item(0)!.firstChild;
-            if(fstItem == null){
-                head.item(0)!.appendChild(blankStyle);
-
-            }else{
-                head.item(0)!.insertBefore(blankStyle, fstItem);
-            }
-            createdGraphTableCSS = true;
-        }
+        
         //export function setCellCSS(){
 
         //}
-        export function getGraphTableCSS(): HTMLElement | null {
-            const item = document.getElementById(CSSName);
-            return item;
-        }
         /**
          * 単位付きの値を値部分と単位部分に分割します。
          * @param text 単位付きの値

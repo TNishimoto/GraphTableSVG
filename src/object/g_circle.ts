@@ -6,6 +6,7 @@ import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/commo
 import { CustomAttributeNames } from "../basic/common/custtome_attributes"
 import {Rectangle, VLine} from "../basic/common/vline"
 import {GEllipse, GAbstractEllipseCircle} from "./g_ellipse"
+import {CSS} from "../basic/svghtml/css"
 
 export class GCircle extends GAbstractEllipseCircle  {
     public get svgCircle(): SVGCircleElement {
@@ -23,15 +24,29 @@ export class GCircle extends GAbstractEllipseCircle  {
         this._svgSurface = GCircle.createCircle(this.svgGroup, option.surfaceClass, option.surfaceStyle);
         this.svgGroup.insertBefore(this.svgCircle, this.svgText);
     }
-    private static createCircle(parent: SVGElement, className: string, style : string | undefined): SVGCircleElement {
+    private static createCircle(parent: SVGElement, className: string | CSS.surfaceClassCSS, style : string | undefined | CSS.surfaceClassCSS): SVGCircleElement {
         const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         parent.appendChild(circle);
-        if(style !== undefined) circle.setAttribute("style", style);
+        if(style !== undefined){
+            if(typeof(style) == "string"){
+                circle.setAttribute("style", style);
+            }else{
+                circle.setAttribute("style", CSS.buildClassNameFromSurfaceClassCSS(style));
+            }
+
+        }
+        //if(style !== undefined) circle.setAttribute("style", style);
 
 
         circle.r.baseVal.value = CustomAttributeNames.defaultCircleRadius;
 
-        circle.setAttribute("class", className);
+        //circle.setAttribute("class", className);
+        
+        if(typeof(className) == "string"){
+            circle.setAttribute("class", className);
+        }else{
+            circle.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
+        }
         const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadius, null);
         if (radius != null) {
             circle.r.baseVal.value = radius;

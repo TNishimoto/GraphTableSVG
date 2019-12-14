@@ -60,7 +60,7 @@ import { GEdgeAttributes } from "../object/g_edge";
         //public vertexClass: string | null = null
         //public parentEdgeClass: string | null = null
         public children : (LogicTree | null)[] = [];
-        public vertexOption : GTextBoxAttributes = { isAutoSizeShapeToFitText : false};
+        public vertexOption : GTextBoxAttributes = { };
         public edgeOption : GEdgeAttributes = {};
 
         public item: any = null;

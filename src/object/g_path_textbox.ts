@@ -8,6 +8,7 @@
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import { SVGTextBox } from "../basic/svghtml/svg_textbox"
+    import {CSS} from "../basic/svghtml/css"
 
     export class GPathTextBox extends GVertex {
         //private _svgPath: SVGPathElement;
@@ -36,13 +37,26 @@
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         private static createSurfacePath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, 
-            className: string, style : string | undefined): SVGPathElement {
+            className: string | CSS.surfaceClassCSS, style : string | undefined | CSS.surfaceClassCSS): SVGPathElement {
             const path = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             parent.appendChild(path);
             path.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
-            if(style !== undefined) path.setAttribute("style", style);
+            if(style !== undefined){
+                if(typeof(style) == "string"){
+                    path.setAttribute("style", style);
+                }else{
+                    path.setAttribute("style", CSS.buildClassNameFromSurfaceClassCSS(style));
+                }
+    
+            }
+            //if(style !== undefined) path.setAttribute("style", style);
 
-            path.setAttribute("class", className)
+            if(typeof(className) == "string"){
+                path.setAttribute("class", className);
+            }else{
+                path.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
+            }
+            //path.setAttribute("class", className)
                 /*
             if (className != null) {
                 const dashStyle = path.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);

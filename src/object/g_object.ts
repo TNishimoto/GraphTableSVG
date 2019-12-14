@@ -5,10 +5,12 @@ import {GUIObserver} from "../basic/svghtml/gui_observer"
 import {Rectangle} from "../basic/common/vline"
 import {SVG} from "../basic/svghtml/svg"
 import {HTMLFunctions} from "../basic/svghtml/html_functions"
+import {CSS} from "../basic/svghtml/css"
 import {DraggableObjectFunctions} from "../basic/svghtml/draggable_object"
 import { CustomAttributeNames } from "../basic/common/custtome_attributes"
 import { ShapeObjectType } from "../basic/common/enums";
-export type GObjectAttributes = {
+
+export type _GObjectAttributes = {
     //class?: string,
     cx?: number,
     cy?: number,
@@ -17,12 +19,18 @@ export type GObjectAttributes = {
     width?: number,
     height?: number,
     id?: string,
-    class?: string,
-    surfaceClass?: string,
-    style?: string,
-    surfaceStyle?: string
+
+    surfaceClass?: string | CSS.surfaceClassCSS,
+    surfaceStyle?: string | CSS.surfaceClassCSS
 
 }
+export type _SVGGroupStyleInfo = {
+    class?: string | object,
+    style?: string | object,
+}
+
+
+export type GObjectAttributes = _GObjectAttributes & _SVGGroupStyleInfo;
 export type GObjectMaps = {
     groupAttributes?: Map<string, string>;
     surfaceAttributes?: Map<string, string>;
@@ -37,7 +45,7 @@ export type GObjectMaps = {
         private _observerOption: MutationObserverInit;
 
         public constructor(svgbox: SVGElement | string, option: GObjectAttributes = {}) {
-            CommonFunctions.setGraphTableCSS();
+            CSS.setGraphTableCSS();
             let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
             if (parentElement instanceof SVGSVGElement && !GUIObserver.isObserved(parentElement)) {
                 GUIObserver.observeSVGSVG(parentElement);
@@ -50,12 +58,25 @@ export type GObjectMaps = {
 
 
             this._svgGroup = SVG.createGroup(parentElement);
-            if (option.class !== undefined) {
+            if (typeof(option.class) == "string") {
                 this._svgGroup.setAttribute("class", option.class);
-            } else if (this.defaultClassName !== undefined) {
+            } else if(typeof(option.class) == "object"){
+                const newClassName = CSS.getOrAddRule(option.class);
+                this._svgGroup.setAttribute("class", newClassName);
+            } 
+            else if (this.defaultClassName !== undefined) {
                 this._svgGroup.setAttribute("class", this.defaultClassName);
             }
-            if (option.style !== undefined) this._svgGroup.setAttribute("style", option.style);
+            if (option.style !== undefined){
+                if (typeof(option.style) == "string") {
+                    this._svgGroup.setAttribute("style", option.style);
+                } else if(typeof(option.style) == "object"){
+                    const newStyleName = CSS.getRuleContentString(CSS.toRuleMap(option.style) );
+                    this._svgGroup.setAttribute("class", newStyleName);
+                } 
+    
+                //this._svgGroup.setAttribute("style", option.style);
+            } 
 
             //this.setClassNameOfSVGGroup();
 
