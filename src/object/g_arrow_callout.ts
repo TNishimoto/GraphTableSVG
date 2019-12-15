@@ -2,7 +2,7 @@
 //namespace GraphTableSVG {
     import {GPathTextBox} from "./g_path_textbox"
     import {GTextBox} from "./g_textbox"
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction } from "../basic/common/enums";
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction, AutoSizeShapeToFitText } from "../basic/common/enums";
     //import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import {Rectangle, VLine} from "../basic/common/vline"
@@ -110,7 +110,7 @@
         }
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
-            if (this.isAutoSizeShapeToFitText) {
+            if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
                 
                 const textRect = SVGTextBox.getSize(this.svgText);
                 //const b = this.svgText.getBBox();

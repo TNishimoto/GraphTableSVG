@@ -217,6 +217,14 @@ import {CustomAttributeNames} from "./custtome_attributes"
     }
 
     export type SpeakerPosition = "upleft" | "upright" | "leftup" | "leftdown" | "rightup" | "rightdown" | "downleft" | "downright" | "inner";
+    export type AutoSizeShapeToFitText = "auto" | "semi-auto" | "none" ;
+    export namespace AutoSizeShapeToFitText {
+        export const Auto: AutoSizeShapeToFitText = "auto"
+        export const SemiAuto: AutoSizeShapeToFitText = "semi-auto"
+        export const None: AutoSizeShapeToFitText = "none"
+
+    }
+
 
     export type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
     export namespace ConnectorPosition {

@@ -7,7 +7,7 @@
     import {GTable} from "../g_table"
     import {SVG} from "../../basic/svghtml/svg"
     //import {CellOption} from "../../options/attributes_option"
-    import { HorizontalAnchor, VerticalAnchor } from "../../basic/common/enums";
+    import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../../basic/common/enums";
     import { SVGTextBox } from "../../basic/svghtml/svg_textbox"
     import { BorderRow, BorderColumn } from "./border_row"
 
@@ -1047,7 +1047,7 @@
             innerRect.height = this.height - this.paddingTop - this.paddingBottom;
             innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
             if (this.isLocated) {
-                this.svgText.gtSetXY(innerRect, this.verticalAnchor, this.horizontalAnchor, false);
+                this.svgText.gtSetXY(innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None);
                 //ObsoleteGraph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
             }
         }

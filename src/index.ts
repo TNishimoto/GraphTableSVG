@@ -23,12 +23,12 @@ import { LogicTree } from "./options/logic_tree";
 import { Console } from "./options/console";
 import { Debug } from "./options/debug";
 
-import {GObject, GObjectAttributes} from "./object/g_object"
+import {GObject} from "./object/g_object"
 import {GPathTextBox} from "./object/g_path_textbox"
 
 
 export {
-    CommonFunctions, GUIObserver, Rectangle, GObjectAttributes, SVG, HTMLFunctions, CustomAttributeNames, 
+    CommonFunctions, GUIObserver, Rectangle, SVG, HTMLFunctions, CustomAttributeNames, 
     ShapeObjectType, openSVG, openHTML, openCustomElement, lazyOpenSVG,
     LogicTable, LogicTree, Console, GObject, GPathTextBox, createShape, clearSVG, Debug, CSS
 };

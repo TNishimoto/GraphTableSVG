@@ -1,7 +1,7 @@
 
 import {CSS} from "../basic/svghtml/css"
 import { CustomAttributeNames } from "../basic/common/custtome_attributes"
-import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment } from "../basic/common/enums";
+import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment, AutoSizeShapeToFitText } from "../basic/common/enums";
 
 export namespace GOptions{
     export type textClassCSS = {
@@ -15,7 +15,7 @@ export namespace GOptions{
         fill? : string,
     }
     export type GTextBoxCSS = {
-        isAutoSizeShapeToFitText?: boolean,
+        isAutoSizeShapeToFitText?: AutoSizeShapeToFitText,
         verticalAnchor?: VerticalAnchor,
         horizontalAnchor?: HorizontalAnchor
     }

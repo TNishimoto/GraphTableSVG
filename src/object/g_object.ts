@@ -74,17 +74,20 @@ export type GObjectMaps = {
             if (typeof _option.id !== "undefined") this.svgGroup.id = _option.id;
             //if(_option.surfaceClass !== undefined && this.svgSurface !== null) this.svgSurface.setAttribute("class", _option.surfaceClass);
 
-            this.width = _option.width!;
-            this.height = _option.height!;
+            if(_option.width !== undefined){
+                this.width = _option.width;
+            }
+            if(_option.height !== undefined){
+                this.height = _option.height;
+            }
+
 
             this._observer = new MutationObserver(this.observerFunc);
             this._observerOption = { attributes: true, childList: true, subtree: true };
             this.hasConnectedObserverFunction = true;
-            //this.connectObserverFunction();
 
             this.dispatchObjectCreatedEvent();
             this.addResizeEvent();
-
 
             this.__x = option.x;
             this.__y = option.y;
@@ -100,6 +103,7 @@ export type GObjectMaps = {
             if (_option.y !== undefined) this.fixedY = _option.y;
             */
             if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
+
         }
         /*
         public get shape() : ShapeObjectType {

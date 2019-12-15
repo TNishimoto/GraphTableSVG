@@ -3,7 +3,7 @@
 import { Size, Rectangle } from "../common/vline";
 import { CommonFunctions } from "../common/common_functions";
 import { HTMLFunctions } from "./html_functions";
-import { HorizontalAnchor, VerticalAnchor } from "../common/enums";
+import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../common/enums";
 import { SVGTextBox } from "./svg_textbox"
 import {  } from "./svg_interface"
 import { CustomAttributeNames } from "../common/custtome_attributes"
@@ -42,13 +42,13 @@ declare global {
         setMarginRight(value: number): void;
         getMarginBottom(): number;
         setMarginBottom(value: number): void;
-        gtSetXY(rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: boolean): void;
+        gtSetXY(rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText): void;
 
 
     }
 }
 
-SVGTextElement.prototype.gtSetXY = function (rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: boolean) {
+SVGTextElement.prototype.gtSetXY = function (rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText) {
     
     const text: SVGTextElement = this;
     //const g : SVGGElement = this;

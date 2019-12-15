@@ -12,6 +12,7 @@ import {HTMLFunctions} from "../basic/svghtml/html_functions"
 import { SVGTextBox } from "../basic/svghtml/svg_textbox"
 import {GObject } from "./g_object"
 import {GOptions } from "./g_options"
+import {AutoSizeShapeToFitText} from "../basic/common/enums"
 
 //namespace GraphTableSVG {
 
@@ -20,7 +21,7 @@ import {GOptions } from "./g_options"
 
     export class GTextBox extends GObject {
         private _svgText: SVGTextElement;
-        private isFixTextSize: boolean = false;
+        //private isFixTextSize: boolean = false;
         protected surfaceAttributes: string[] = [];
         private _textObserver: MutationObserver;
         private static updateTextAttributes = ["style"]
@@ -57,7 +58,7 @@ import {GOptions } from "./g_options"
 
             }
 
-            const b = this.svgGroup.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
+            const b = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitText);
             
             if (b === undefined && typeof(_option.style) == "object") {
                 const style : GOptions.GTextBoxCSS = _option.style;
@@ -229,17 +230,26 @@ import {GOptions } from "./g_options"
         /**
          * このVertexがテキストに合わせてサイズを変える場合Trueを返します。
          */
-        get isAutoSizeShapeToFitText(): boolean {
-            const b = this.svgGroup.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
+        get isAutoSizeShapeToFitText(): AutoSizeShapeToFitText {
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.autoSizeShapeToFitText, "semi-auto");
+            if(b == "auto"){
+                return "auto";
+            }else if(b == "none"){
+                return "none";
+            }else{
+                return "semi-auto";
+            }
+            /*
             if (b == undefined) {
-                return true;
+                return false;
             } else {
                 return b;
             }
+            */
         }
-        set isAutoSizeShapeToFitText(value: boolean) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
-
+        set isAutoSizeShapeToFitText(value: AutoSizeShapeToFitText) {
+            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitText, value);
+            //this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
         }
         public update() {
             super.update();
@@ -253,7 +263,23 @@ import {GOptions } from "./g_options"
             }
             SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
 
-            if (this.isAutoSizeShapeToFitText) this.updateToFitText();
+            if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto){
+                this.updateToFitText(true);
+                this.updateToFitText(false);
+
+            }else if(this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto){
+                const textRect = SVGTextBox.getSize(this.svgText);
+                const width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;
+                const height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;
+
+                if(this.width < width){
+                    this.updateToFitText(true);
+                }
+                if(this.height < height){
+                    this.updateToFitText(false);
+                }
+                //this.innerRectangle
+            }
             this.updateSurface();
 
 
@@ -292,17 +318,19 @@ import {GOptions } from "./g_options"
             //this._observer.observe(this.svgGroup, this._observerOption);
             this.hasConnectedObserverFunction = true;
         }
-        protected updateToFitText() {
-            this.isFixTextSize = true;
+        protected updateToFitText(isWidth : boolean) {
+            //this.isFixTextSize = true;
             //const box = this.svgText.getBBox();
             const textRect = SVGTextBox.getSize(this.svgText);
 
             const textWidth = textRect.width < this._minimumWidth ? this._minimumWidth : textRect.width;
             const textHeight = textRect.height < this._minimumHeight ? this._minimumHeight : textRect.height;
 
-
-            this.width = textWidth + this.marginPaddingLeft + this.marginPaddingRight;
-            this.height = textHeight + this.marginPaddingTop + this.marginPaddingBottom;
+            if(isWidth){
+                this.width = textWidth + this.marginPaddingLeft + this.marginPaddingRight;
+            }else{
+                this.height = textHeight + this.marginPaddingTop + this.marginPaddingBottom;
+            }
         }
         get marginPaddingTop() {
             return this.svgText.getMarginTop() + this.svgGroup.getPaddingTop();

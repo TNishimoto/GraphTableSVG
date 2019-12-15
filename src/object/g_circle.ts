@@ -19,6 +19,24 @@ export class GCircle extends GAbstractEllipseCircle  {
 
         //this.update();
     }
+    initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
+        const _option = { ...option };
+        if (this.svgSurface != null && this.svgSurface.className != null) {
+            const width = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidth, null);
+            const height = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeight, null);
+            if (width != null) _option.width = width;
+            if (height != null) _option.height = height;
+        }
+        if(_option.width === undefined && _option.height === undefined){
+            _option.width = 25;
+        }
+        //if (_option.width === undefined) _option.width = 25;
+        //if (_option.height === undefined) _option.height = 25;
+        if (_option.cx === undefined) _option.cx = 0;
+        if (_option.cy === undefined) _option.cy = 0;
+        if (_option.surfaceClass === undefined) _option.surfaceClass = CustomAttributeNames.StyleValue.defaultSurfaceClass;
+        return _option;
+    }
     protected createSurface(svgbox : SVGElement, option :GOptions.GObjectAttributes = {}) : void {
         if(option.surfaceClass === undefined) option.surfaceClass = CustomAttributeNames.StyleValue.defaultSurfaceClass;
         this._svgSurface = GCircle.createCircle(this.svgGroup, option.surfaceClass, option.surfaceStyle);
@@ -65,6 +83,7 @@ export class GCircle extends GAbstractEllipseCircle  {
     }
     set width(value: number) {
         const _rx = value / 2;
+        
         if (this.width != value) this.svgCircle.setAttribute("r", _rx.toString());
 
     }

@@ -5,7 +5,7 @@
     }
     */
 import { Console} from "./console"
-import {VertexOrder, Direction} from "../basic/common/enums"
+import {VertexOrder, Direction, PathTextAlighnment} from "../basic/common/enums"
 //import { GTextBoxAttributes } from "../object/g_textbox";
 import { GEdgeAttributes } from "../object/g_edge";
 import {GOptions } from "../object/g_options"
@@ -63,7 +63,7 @@ import {GOptions } from "../object/g_options"
         //public parentEdgeClass: string | null = null
         public children : (LogicTree | null)[] = [];
         public vertexOption : GOptions.GTextBoxAttributes = { };
-        public edgeOption : GEdgeAttributes = {};
+        public edgeOption : GEdgeAttributes = { class : { pathTextAlignment : PathTextAlighnment.regularInterval}};
 
         public item: any = null;
         constructor(option : {item?: any, children?: (LogicTree | null)[], 
@@ -73,7 +73,7 @@ import {GOptions } from "../object/g_options"
             //if(option.parentEdgeText != undefined) this.parentEdgeText = option.parentEdgeText;
             if(option.children != undefined) this.children = option.children;
         }
-        public getOrderedNodes(order: VertexOrder): LogicTree[] {
+        public getOrderedNodes(order: VertexOrder = VertexOrder.Preorder): LogicTree[] {
             const r: LogicTree[] = [];
             const edges = this.children;
             if (order == VertexOrder.Preorder) {
@@ -98,6 +98,19 @@ import {GOptions } from "../object/g_options"
             }
             return r;
         }
+        public get textContent() : string {
+            if(typeof (this.edgeOption.text) == "string" ){
+                return this.edgeOption.text!;
+            }else if(this.edgeOption.text === undefined){
+                return "";
+            }else{
+                return "";
+            }
+        }
+        public set textContent(value : string) {
+            this.edgeOption.text = value;
+        }
+
         public view(canvasID : string | null = null ,option : LogicTreeOption = { relocateStyle : "standard", direction : "down"}){
             Console.graph(this, canvasID,option);
         }

@@ -16,6 +16,21 @@ export namespace CSS {
 
     const CSSName: string = "___GraphTableCSS";
     let createdGraphTableCSS : boolean = false;
+    const replaceMapper : Map<string, string> = new Map();
+
+    function setupReplaceMapper(){
+        replaceMapper.set("fontSize", "font-size");
+        replaceMapper.set("fontFamily", "font-family");
+        replaceMapper.set("autoSizeShapeToFitText", CustomAttributeNames.Style.autoSizeShapeToFitText );
+        replaceMapper.set("verticalAnchor", CustomAttributeNames.Style.VerticalAnchor );
+        replaceMapper.set("horizontalAnchor", CustomAttributeNames.Style.HorizontalAnchor );
+
+        replaceMapper.set("beginConnectorType", CustomAttributeNames.Style.beginConnectorType );
+        replaceMapper.set("endConnectorType", CustomAttributeNames.Style.endConnectorType );
+        replaceMapper.set("pathTextAlignment", CustomAttributeNames.Style.PathTextAlignment );
+        replaceMapper.set("strokeWidth", "stroke-width" );
+
+    }
     
     export function setGraphTableCSS() {
         if(createdGraphTableCSS) return;
@@ -73,9 +88,15 @@ export namespace CSS {
         return content;
     }
     export function toRuleMap(rule : object) : Map<string,string>{
+        if(replaceMapper.size == 0) setupReplaceMapper();
         const _rule : Map<string, string> = new Map();
         Object.keys(rule).forEach((v)=>{
-            const value = (<any>rule)[v];
+            if(replaceMapper.has(v)){
+                _rule.set(replaceMapper.get(v)!, (<any>rule)[v]);
+            } else{
+                _rule.set(v, (<any>rule)[v]);
+            } 
+            /*        
             if(v == "fontSize"){
                 _rule.set("font-size", value);
             }else if(v == "fontFamily"){
@@ -83,6 +104,7 @@ export namespace CSS {
             }else{
                 _rule.set(v, (<any>rule)[v]);
             }
+            */
         })
         return _rule;
     }

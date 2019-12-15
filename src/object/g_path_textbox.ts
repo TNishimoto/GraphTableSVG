@@ -3,7 +3,7 @@
 //namespace GraphTableSVG {
     import {Rectangle, VLine} from "../basic/common/vline"
     import {GVertex} from "./g_vertex"
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle, AutoSizeShapeToFitText } from "../basic/common/enums";
     import { CustomAttributeNames } from "../basic/common/custtome_attributes"
     import { SVGTextBox } from "../basic/svghtml/svg_textbox"
     import {CSS} from "../basic/svghtml/css"
@@ -74,7 +74,7 @@
 
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
-            if (this.isAutoSizeShapeToFitText) {
+            if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
                 const textRect = SVGTextBox.getSize(this.svgText);
                 //const b = this.svgText.getBBox();
                 rect.width = textRect.width;
