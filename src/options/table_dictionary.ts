@@ -2,7 +2,7 @@
 import { LogicGraph, LogicGraphNode } from "./logic_tree"
 import { LogicTable } from "./logic_table"
 
-import {CustomAttributeNames} from "../basic/common/custtome_attributes"
+import * as CustomAttributeNames from "../basic/common/custtome_attributes"
 
 export class TableDictionary {
         public static IndexName = "___GraphTableSVG_Console_Index";

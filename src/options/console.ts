@@ -1,21 +1,21 @@
     import {TableDictionary} from "./table_dictionary"
     import { LogicGraph, LogicGraphNode, LogicTree, LogicTreeOption } from "./logic_tree"
     import { LogicTable } from "./logic_table"
-    import { CommonFunctions } from "../basic/common/common_functions";
+    //import { CommonFunctions } from "../basic/common/common_functions";
     import { createShape } from "./open_svg";
-    import { SVGTextBox } from "../basic/svghtml/svg_textbox";
-    import { CustomAttributeNames } from "../basic/common/custtome_attributes"
-    import { SVG } from "../basic/svghtml/svg";
-    import { CSS } from "../basic/svghtml/css";
+    import * as SVGTextBox from "../basic/svghtml/svg_textbox";
+    import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+    import * as SVG from "../basic/svghtml/svg";
+    import * as CSS from "../basic/svghtml/css";
     import { PNG } from "../basic/common/png";
     import { VBAMacroModal } from "./vba_macro_modal";
     import { SVGToVBA } from "./svg_to_vba"
     import { VBAObjectType } from "./vba_object"
 
-    import {GUIObserver} from "../basic/svghtml/gui_observer"
+    import * as GUIObserver from "../basic/svghtml/gui_observer"
     
 
-    export namespace Console {
+    //export namespace Console {
         export class ConsoleLineElement {
             public canvas : SVGSVGElement;
             public vbaObjects : VBAObjectType[] = new Array();
@@ -191,4 +191,4 @@
             //table(message);
             return consoleLine;
         }
-    }
+    //}

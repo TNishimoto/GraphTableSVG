@@ -1,16 +1,16 @@
 //namespace GraphTableSVG {
 
-import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import * as CustomAttributeNames from "../basic/common/custtome_attributes"
 //import {GEdgeAttributes, GObjectAttributes} from "../options/attributes_option"
-import { SVG } from "../basic/svghtml/svg"
+import * as SVG from "../basic/svghtml/svg"
 import { ShapeObjectType, PathTextAlighnment, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
-import { CommonFunctions } from "../basic/common/common_functions"
+import * as CommonFunctions from "../basic/common/common_functions"
 import { VBATranslateFunctions } from "../basic/common/vba_functions"
-import { SVGTextBox } from "../basic/svghtml/svg_textbox";
+import * as SVGTextBox from "../basic/svghtml/svg_textbox";
 import { GTextBox } from "./g_textbox"
 import { GVertex } from "./g_vertex"
 import { GObject } from "./g_object"
-import {CSS} from "../basic/svghtml/css"
+import * as CSS from "../basic/svghtml/css"
 import {GOptions } from "./g_options"
 
 
@@ -65,7 +65,7 @@ export class GEdge extends GTextBox {
         if(typeof option.textClass == "string"){
             textClass = option.textClass;
         }else if(typeof option.textClass == "object"){
-            textClass = CSS.getOrAddRule(option.textClass);
+            textClass = CSS.getOrCreateClassName(option.textClass);
         }
         /*
         if(typeof(className) == "string"){

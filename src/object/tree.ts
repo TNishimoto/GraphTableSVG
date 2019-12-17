@@ -3,7 +3,7 @@
     import {LogicTree} from "../options/logic_tree"
     import {GVertex} from "./g_vertex"
 
-    export namespace Parse{
+    //export namespace Parse{
         /**
          * 入力文字列をパースしてLogicTreeを構築します。
          * @param parseText 
@@ -53,5 +53,5 @@
             str += ")";
             return str;
         }
-    }
+    //}
 //}

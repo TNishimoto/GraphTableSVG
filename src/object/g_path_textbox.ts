@@ -4,9 +4,9 @@
     import {Rectangle, VLine} from "../basic/common/vline"
     import {GVertex} from "./g_vertex"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle, AutoSizeShapeToFitText } from "../basic/common/enums";
-    import { CustomAttributeNames } from "../basic/common/custtome_attributes"
-    import { SVGTextBox } from "../basic/svghtml/svg_textbox"
-    import {CSS} from "../basic/svghtml/css"
+    import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+    import * as SVGTextBox from "../basic/svghtml/svg_textbox"
+    import * as CSS from "../basic/svghtml/css"
     import {GOptions } from "./g_options"
 
     export class GPathTextBox extends GVertex {

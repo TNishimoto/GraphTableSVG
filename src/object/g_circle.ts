@@ -2,10 +2,10 @@ import {GVertex} from "./g_vertex"
 import {GTextBox} from "./g_textbox"
 import {GCalloutAttributes} from "./g_callout"
 import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
-import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import * as CustomAttributeNames from "../basic/common/custtome_attributes"
 import {Rectangle, VLine} from "../basic/common/vline"
 import {GEllipse, GAbstractEllipseCircle} from "./g_ellipse"
-import {CSS} from "../basic/svghtml/css"
+import * as CSS from "../basic/svghtml/css"
 import {GOptions } from "./g_options"
 
 export class GCircle extends GAbstractEllipseCircle  {

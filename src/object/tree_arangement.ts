@@ -5,7 +5,7 @@
 
     import {VirtualTree} from "./virtual_tree"
 
-    export namespace TreeArrangement {
+    //export namespace TreeArrangement {
         export function reverse(graph: GGraph, isX: boolean, isY: boolean) {
             if (graph.vertices.length > 0) {
                 if (isY) {
@@ -248,5 +248,5 @@
                 tree.subTreeRoot.cx = centerX;
             }
         }
-    }
+    //}
 //}

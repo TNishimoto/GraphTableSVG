@@ -2,14 +2,14 @@
 import "../basic/svghtml/svg_interface";
 import "../basic/svghtml/svg_text";
 import "../basic/svghtml/svg_g";
-import {SVG} from "../basic/svghtml/svg"
-import {CSS} from "../basic/svghtml/css"
+import * as SVG from "../basic/svghtml/svg"
+import * as CSS from "../basic/svghtml/css"
 
-import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import * as CustomAttributeNames from "../basic/common/custtome_attributes"
 import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../basic/common/enums";
 import {Rectangle} from "../basic/common/vline"
-import {HTMLFunctions} from "../basic/svghtml/html_functions"
-import { SVGTextBox } from "../basic/svghtml/svg_textbox"
+import * as HTMLFunctions from "../basic/svghtml/html_functions"
+import * as SVGTextBox from "../basic/svghtml/svg_textbox"
 import {GObject } from "./g_object"
 import {GOptions } from "./g_options"
 import {AutoSizeShapeToFitText} from "../basic/common/enums"
@@ -62,8 +62,8 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
             
             if (b === undefined && typeof(_option.style) == "object") {
                 const style : GOptions.GTextBoxCSS = _option.style;
-                if(style.isAutoSizeShapeToFitText !== undefined ){
-                    this.isAutoSizeShapeToFitText = style.isAutoSizeShapeToFitText;
+                if(style.autoSizeShapeToFitText !== undefined ){
+                    this.isAutoSizeShapeToFitText = style.autoSizeShapeToFitText;
                 }
             }
 
@@ -106,7 +106,7 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
         private static createSVGText(className: string | GOptions.textClassCSS | undefined | null, style: string | undefined | GOptions.textClassCSS): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-            _svgText.setAttribute(CustomAttributeNames.objectIDName, (SVG.idCounter++).toString());
+            _svgText.setAttribute(CustomAttributeNames.objectIDName, (SVG.getNewID() ).toString());
             if (style !== undefined){
                 if(typeof(style) == "string"){
                     _svgText.setAttribute("style", style);
@@ -131,7 +131,7 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
                 if(typeof(className) == "string"){
                     _svgText.setAttribute("class", className);
                 }else{
-                    const newClassName = CSS.getOrAddRule(className);
+                    const newClassName = CSS.getOrCreateClassName(className);
                     _svgText.setAttribute("class", newClassName );
                 }
                 //_svgText.className = className;

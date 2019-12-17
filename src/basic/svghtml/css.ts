@@ -1,7 +1,7 @@
 
-import { CustomAttributeNames } from "../common/custtome_attributes"
+import * as CustomAttributeNames from "../common/custtome_attributes"
 import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment } from "../common/enums";
-export namespace CSS {
+//export namespace CSS {
     /*
     interface IPoint2D {
         x: number;
@@ -9,31 +9,31 @@ export namespace CSS {
       }
       */
 
-    export function buildClassNameFromSurfaceClassCSS(rule : object) : string {
-        const _rule : Map<string, string> = toRuleMap(rule);
-        return getOrAddRule(_rule);
+    export function buildClassNameFromSurfaceClassCSS(rule: object): string {
+        const _rule: Map<string, string> = toRuleMap(rule);
+        return getOrCreateClassName(_rule);
     }
 
     const CSSName: string = "___GraphTableCSS";
-    let createdGraphTableCSS : boolean = false;
-    const replaceMapper : Map<string, string> = new Map();
+    let createdGraphTableCSS: boolean = false;
+    const replaceMapper: Map<string, string> = new Map();
 
-    function setupReplaceMapper(){
+    function setupReplaceMapper() {
         replaceMapper.set("fontSize", "font-size");
         replaceMapper.set("fontFamily", "font-family");
-        replaceMapper.set("autoSizeShapeToFitText", CustomAttributeNames.Style.autoSizeShapeToFitText );
-        replaceMapper.set("verticalAnchor", CustomAttributeNames.Style.VerticalAnchor );
-        replaceMapper.set("horizontalAnchor", CustomAttributeNames.Style.HorizontalAnchor );
+        replaceMapper.set("autoSizeShapeToFitText", CustomAttributeNames.Style.autoSizeShapeToFitText);
+        replaceMapper.set("verticalAnchor", CustomAttributeNames.Style.VerticalAnchor);
+        replaceMapper.set("horizontalAnchor", CustomAttributeNames.Style.HorizontalAnchor);
 
-        replaceMapper.set("beginConnectorType", CustomAttributeNames.Style.beginConnectorType );
-        replaceMapper.set("endConnectorType", CustomAttributeNames.Style.endConnectorType );
-        replaceMapper.set("pathTextAlignment", CustomAttributeNames.Style.PathTextAlignment );
-        replaceMapper.set("strokeWidth", "stroke-width" );
+        replaceMapper.set("beginConnectorType", CustomAttributeNames.Style.beginConnectorType);
+        replaceMapper.set("endConnectorType", CustomAttributeNames.Style.endConnectorType);
+        replaceMapper.set("pathTextAlignment", CustomAttributeNames.Style.PathTextAlignment);
+        replaceMapper.set("strokeWidth", "stroke-width");
 
     }
-    
+
     export function setGraphTableCSS() {
-        if(createdGraphTableCSS) return;
+        if (createdGraphTableCSS) return;
         const item = document.head!.getElementsByClassName(CSSName);
         if (item.length > 0) {
             document.head!.removeChild(item[0]);
@@ -44,58 +44,58 @@ export namespace CSS {
         blankStyle.type = "text/css";
         blankStyle.setAttribute("class", CSSName);
         blankStyle.title = CSSName;
-        
+
 
         const head = document.getElementsByTagName('head');
         const fstItem = head.item(0)!.firstChild;
-        if(fstItem == null){
+        if (fstItem == null) {
             head.item(0)!.appendChild(blankStyle);
 
-        }else{
+        } else {
             head.item(0)!.insertBefore(blankStyle, fstItem);
         }
-        
+
         createdGraphTableCSS = true;
     }
     export function getGraphTableCSS(): HTMLStyleElement | null {
         const item = document.getElementById(CSSName);
-        if(item instanceof HTMLStyleElement){
+        if (item instanceof HTMLStyleElement) {
             return item;
-        }else{
+        } else {
             return null;
         }
     }
     export function getGraphTableStyleSheet(): CSSStyleSheet | null {
-        if(!createdGraphTableCSS)setGraphTableCSS();
-        for(let i=0;i<document.styleSheets.length;i++){
+        if (!createdGraphTableCSS) setGraphTableCSS();
+        for (let i = 0; i < document.styleSheets.length; i++) {
             const css = document.styleSheets.item(i)!;
-            if(css.title == CSSName && css instanceof CSSStyleSheet){
+            if (css.title == CSSName && css instanceof CSSStyleSheet) {
                 return css
             }
         }
         return null;
     }
 
-    export function getRuleContentString(rule : Map<string,string>) : string{
-        const arr : string[] = new Array();
-        rule.forEach((value, key) =>{
+    export function getRuleContentString(rule: Map<string, string>): string {
+        const arr: string[] = new Array();
+        rule.forEach((value, key) => {
             arr.push(key);
         })
         arr.sort();
-        const content = arr.map((key) =>{
+        const content = arr.map((key) => {
             return `${key}: ${rule.get(key)};`;
         }).join("\n");
         return content;
     }
-    export function toRuleMap(rule : object) : Map<string,string>{
-        if(replaceMapper.size == 0) setupReplaceMapper();
-        const _rule : Map<string, string> = new Map();
-        Object.keys(rule).forEach((v)=>{
-            if(replaceMapper.has(v)){
+    export function toRuleMap(rule: object): Map<string, string> {
+        if (replaceMapper.size == 0) setupReplaceMapper();
+        const _rule: Map<string, string> = new Map();
+        Object.keys(rule).forEach((v) => {
+            if (replaceMapper.has(v)) {
                 _rule.set(replaceMapper.get(v)!, (<any>rule)[v]);
-            } else{
+            } else {
                 _rule.set(v, (<any>rule)[v]);
-            } 
+            }
             /*        
             if(v == "fontSize"){
                 _rule.set("font-size", value);
@@ -109,27 +109,27 @@ export namespace CSS {
         return _rule;
     }
 
-    const ruleInverseMap : Map<string,string> = new Map();
+    const ruleInverseMap: Map<string, string> = new Map();
     let createdCSSRuleCount = 0;
     const generatedCSSRuleName = "--g-class-";
 
-    export function getOrAddRule(rule : Map<string,string> | object) : string {
-        if(rule instanceof Map){
+    export function getOrCreateClassName(rule: Map<string, string> | object): string {
+        if (rule instanceof Map) {
             const ruleContentString = getRuleContentString(rule);
-            if(ruleInverseMap.has(ruleContentString)){
+            if (ruleInverseMap.has(ruleContentString)) {
                 return ruleInverseMap.get(ruleContentString)!;
-            }else{
+            } else {
                 const css = getGraphTableStyleSheet()!;
                 const className = `${generatedCSSRuleName}${createdCSSRuleCount++}`;
                 const cssRule = `.${className}{${ruleContentString}}`;
                 css.insertRule(cssRule, css.cssRules.length);
                 ruleInverseMap.set(ruleContentString, className);
                 return className;
-        
-            }    
-        }else{
-            const _rule : Map<string, string> = toRuleMap(rule);
-            return getOrAddRule(_rule);
+
+            }
+        } else {
+            const _rule: Map<string, string> = toRuleMap(rule);
+            return getOrCreateClassName(_rule);
         }
 
     }
@@ -258,4 +258,4 @@ export namespace CSS {
             `
         return r;
     }
-}
+//}

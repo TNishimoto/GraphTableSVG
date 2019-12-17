@@ -3,7 +3,7 @@
     /**
      * 色に関する名前空間です。
      */
-    export namespace Color {
+    //export namespace Color {
         const colorNameArray: string[] = new Array("aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige",
             "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue",
             "chartreuse", "chocolate", "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue",
@@ -147,5 +147,5 @@
             }
         }
 
-    }
+    //}
 //}

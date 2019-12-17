@@ -1,13 +1,13 @@
 
 import { Size, Rectangle } from "../common/vline";
-import { CommonFunctions } from "../common/common_functions";
-import { HTMLFunctions } from "./html_functions";
+import * as CommonFunctions from "../common/common_functions";
+import * as HTMLFunctions from "./html_functions";
 import { HorizontalAnchor, VerticalAnchor } from "../common/enums";
 import { } from "./svg_text"
 import "./svg_interface";
 //import { CSS } from "./css";
 
-export namespace SVGTextBox {
+//export namespace SVGTextBox {
 
 
 
@@ -499,4 +499,4 @@ export namespace SVGTextBox {
     }
     */
 
-}
+//}

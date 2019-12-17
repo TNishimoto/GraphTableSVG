@@ -5,10 +5,9 @@ import {GVertex} from "./g_vertex"
 
 import {VirtualTree} from "./virtual_tree"
 
-import {TreeArrangement} from "./tree_arangement"
+import * as TreeArrangement from "./tree_arangement"
 import { Direction, ConnectorPosition } from "../basic/common/enums"
-import { SVGTextBox } from "../basic/svghtml/svg_textbox"
-import { HTMLFunctions } from "../basic/svghtml/html_functions";
+import * as SVGTextBox from "../basic/svghtml/svg_textbox"
 
     export namespace GraphArrangement {
         export function standardTreeWidthArrangement(graph: GGraph): void {

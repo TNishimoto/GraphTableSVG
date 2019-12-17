@@ -4,12 +4,12 @@
     import {GEdge} from "./g_edge"
     import {Rectangle} from "../basic/common/vline"
     //import {  ConnectorPosition, msoDashStyle} from "../common/enums";    
-    import {HTMLFunctions} from "../basic/svghtml/html_functions"
-    import {SVG} from "../basic/svghtml/svg"
-    import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+    import * as HTMLFunctions from "../basic/svghtml/html_functions"
+    import * as SVG from "../basic/svghtml/svg"
+    import * as CustomAttributeNames from "../basic/common/custtome_attributes"
     import { ShapeObjectType, VertexOrder, PathTextAlighnment, ConnectorPosition, Direction } from "../basic/common/enums";
     import { createShape, createVertex } from "../options/open_svg";
-    import { SVGTextBox } from "../basic/svghtml/svg_textbox";
+    import * as SVGTextBox from "../basic/svghtml/svg_textbox";
     import {GOptions } from "./g_options"
     
     //import {GObjectAttributes, GTextBoxAttributes, ConnectOption} from "../options/attributes_option"

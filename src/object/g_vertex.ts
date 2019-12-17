@@ -2,7 +2,7 @@
 //namespace GraphTableSVG {
 import { VBATranslateFunctions } from "../basic/common/vba_functions"
 import { Rectangle } from "../basic/common/vline"
-import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import * as CustomAttributeNames from "../basic/common/custtome_attributes"
 import { ConnectorPosition, msoDashStyle } from "../basic/common/enums";
 import { GObject } from "./g_object"
 import { GTextBox } from "./g_textbox"

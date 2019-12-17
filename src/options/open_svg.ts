@@ -1,9 +1,9 @@
 
-import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import * as CustomAttributeNames from "../basic/common/custtome_attributes"
 import { ShapeObjectType } from "../basic/common/enums";
-import { HTMLFunctions } from "../basic/svghtml/html_functions"
+import * as HTMLFunctions from "../basic/svghtml/html_functions"
 import * as HTMLTable from "./html_table"
-import { GUIObserver } from "../basic/svghtml/gui_observer"
+import * as GUIObserver from "../basic/svghtml/gui_observer"
 
 import { GObject } from "../object/g_object"
 import { GCallout } from "../object/g_callout"
@@ -357,7 +357,7 @@ export function openHTML(id: string | HTMLElement | null = null) {
     else {
         const newE = toDivElement(id);
         if (newE != null) {
-            const table = HTMLTable.HTMLFunctions.createHTMLTable(newE);
+            const table = HTMLTable.createHTMLTable(newE);
             newE.insertAdjacentElement('beforebegin', table);
             newE.remove();
         }

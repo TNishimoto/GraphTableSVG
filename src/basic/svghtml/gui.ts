@@ -3,7 +3,7 @@ import { Padding, Rectangle } from "../common/vline";
 //import {SVGToVBA} from "../object/table/vba"
 //import {GObject} from "../object/g_object"
 
-export namespace GUI {
+//export namespace GUI {
 
 
 
@@ -99,5 +99,5 @@ export namespace GUI {
 
 
 
-}
+//}
 //}

@@ -1,6 +1,6 @@
 
 import { LogicTable } from "./logic_table"
-export namespace HTMLFunctions {
+//export namespace HTMLFunctions {
     export function createHTMLTable(e: HTMLElement): HTMLTableElement {
         const table = LogicTable.constructHTMLLogicTable(e);
         const tableTag: HTMLTableElement = document.createElement("table");
@@ -61,4 +61,4 @@ export namespace HTMLFunctions {
         }
         return tableTag;
     }
-}
+//}

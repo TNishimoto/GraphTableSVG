@@ -11,10 +11,10 @@ interface PPTextboxShape {
 }
 */
 
-import { CommonFunctions } from "../common/common_functions";
-import { CSS } from "./css";
-import { SVGTextBox } from "./svg_textbox"
-import { CustomAttributeNames } from "../common/custtome_attributes"
+//import * as CommonFunctions from "../common/common_functions";
+import * as CSS from "./css";
+import * as SVGTextBox from "./svg_textbox"
+import * as CustomAttributeNames from "../common/custtome_attributes"
 //import { Cell } from "../object/table/cell"
 
 //import { } from "./svg_interface"

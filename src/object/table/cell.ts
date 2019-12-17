@@ -1,14 +1,14 @@
 ﻿
 //namespace GraphTableSVG {
 
-    import {CommonFunctions} from "../../basic/common/common_functions"
+    import * as CommonFunctions from "../../basic/common/common_functions"
     import {Rectangle} from "../../basic/common/vline"
-    import { CustomAttributeNames } from "../../basic/common/custtome_attributes"
+    import * as CustomAttributeNames from "../../basic/common/custtome_attributes"
     import {GTable} from "../g_table"
-    import {SVG} from "../../basic/svghtml/svg"
+    import * as SVG from "../../basic/svghtml/svg"
     //import {CellOption} from "../../options/attributes_option"
     import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../../basic/common/enums";
-    import { SVGTextBox } from "../../basic/svghtml/svg_textbox"
+    import * as SVGTextBox from "../../basic/svghtml/svg_textbox"
     import { BorderRow, BorderColumn } from "./border_row"
 
     export type CellOption = {

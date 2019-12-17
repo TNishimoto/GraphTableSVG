@@ -1,6 +1,6 @@
 
 //import { Size, Rectangle } from "../common/vline";
-import { CommonFunctions } from "../common/common_functions";
+import * as CommonFunctions from "../common/common_functions";
 declare global {
     export interface Element {
         getActiveStyle(): CSSStyleDeclaration;

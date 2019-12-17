@@ -1,6 +1,6 @@
-﻿import { Color } from "../basic/common/color";
+﻿import * as Color from "../basic/common/color";
 import { GObject } from "./g_object";
-import {CommonFunctions} from "../basic/common/common_functions"
+import * as CommonFunctions from "../basic/common/common_functions"
 //import {GTableOption} from "../options/attributes_option"
 import { ShapeObjectType } from "../basic/common/enums";
 import {LogicTable} from "../options/logic_table"
@@ -11,10 +11,10 @@ import {Cell} from "./table/cell"
 import {Rectangle} from "../basic/common/vline"
 import {VBATranslateFunctions,parseInteger, visible} from "../basic/common/vba_functions"    
 
-import {SVG} from "../basic/svghtml/svg"
-import {CSS} from "../basic/svghtml/css"
+import * as SVG from "../basic/svghtml/svg"
+import * as CSS from "../basic/svghtml/css"
 
-import {HTMLFunctions} from "../basic/svghtml/html_functions"
+import * as HTMLFunctions from "../basic/svghtml/html_functions"
 
 import {GOptions } from "./g_options"
 //namespace GraphTableSVG {
@@ -125,7 +125,7 @@ import {GOptions } from "./g_options"
                 if(typeof(output.class) == "string"){
                     output.table!.tableClassName = output.class;
                 }else{
-                    const newClassName = CSS.getOrAddRule(output.class);
+                    const newClassName = CSS.getOrCreateClassName(output.class);
                     output.table!.tableClassName = newClassName;
 
                 }
@@ -465,10 +465,17 @@ import {GOptions } from "./g_options"
             if (table != null) {
                 const cellInfo = table.cells[y][x];
                 if (cellInfo != null) {
-                    if (cellInfo.cellClass != null) {
+                    if (typeof(cellInfo.cellClass) == "string") {
                         SVG.resetStyle(cell.svgGroup.style);
+                        //if(typeof(cellInfo.cellClass) == "string")
                         cell.svgGroup.setAttribute("class", cellInfo.cellClass);
+                    }else if(typeof(cellInfo.cellClass) == "object"){
+                        const className = CSS.getOrCreateClassName(cellInfo.cellClass)
+                        SVG.resetStyle(cell.svgGroup.style);
+                        cell.svgGroup.setAttribute("class", className);
+
                     }
+
                     if (cellInfo.backgroundClass != null) {
                         SVG.resetStyle(cell.svgBackground.style);
                         cell.svgBackground.setAttribute("class", cellInfo.backgroundClass);

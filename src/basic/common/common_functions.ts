@@ -7,7 +7,7 @@
 
     //import {VBAObjectType} from "../object/table/vba"
     
-    export namespace CommonFunctions {
+    //export namespace CommonFunctions {
         /**
          * 入力要素がdocument.bodyの孫であるときに限りTrueを返します。
          * @param node 判定する要素
@@ -20,7 +20,7 @@
             else if (parent == document.body) {
                 return true;
             } else {
-                return CommonFunctions.IsDescendantOfBody(parent);
+                return IsDescendantOfBody(parent);
             }
         }
         
@@ -86,5 +86,5 @@
             return [x, y];
         }
 
-    }
+    //}
 //}

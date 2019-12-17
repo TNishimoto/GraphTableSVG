@@ -1,12 +1,12 @@
 
 
 import { Size, Rectangle } from "../common/vline";
-import { CommonFunctions } from "../common/common_functions";
-import { HTMLFunctions } from "./html_functions";
+//import { CommonFunctions } from "../common/common_functions";
+//import { HTMLFunctions } from "./html_functions";
 import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../common/enums";
-import { SVGTextBox } from "./svg_textbox"
+import * as SVGTextBox from "./svg_textbox"
 import {  } from "./svg_interface"
-import { CustomAttributeNames } from "../common/custtome_attributes"
+import * as CustomAttributeNames from "../common/custtome_attributes"
 
 declare global {
     export interface SVGTextElement {

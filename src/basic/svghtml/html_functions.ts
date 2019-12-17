@@ -1,12 +1,12 @@
 
-import { GUI } from "./gui"
-import { CustomAttributeNames} from "../common/custtome_attributes"
-export namespace HTMLFunctions {
+import * as GUI from "./gui"
+import * as CustomAttributeNames from "../common/custtome_attributes"
+//export namespace HTMLFunctions {
     export enum NodeOrder {
         Preorder, Postorder
     }
     export function getTNodes(e: Element): HTMLElement[] | null {
-        const tNodes = <HTMLElement[]>HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "t");
+        const tNodes = <HTMLElement[]>getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "t");
         if (tNodes.length > 0) {
             tNodes.forEach((v, i) => {
                 v.removeAttribute(CustomAttributeNames.customElement);
@@ -128,4 +128,4 @@ export namespace HTMLFunctions {
         return b1 || b2 || b3 || b4;
     }
 
-}
+//}

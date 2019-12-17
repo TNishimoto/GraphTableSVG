@@ -4,7 +4,7 @@
         public nodeText: string | null = null;
     }
     */
-import { Console} from "./console"
+import * as Console from "./console"
 import {VertexOrder, Direction, PathTextAlighnment} from "../basic/common/enums"
 //import { GTextBoxAttributes } from "../object/g_textbox";
 import { GEdgeAttributes } from "../object/g_edge";
@@ -64,6 +64,7 @@ import {GOptions } from "../object/g_options"
         public children : (LogicTree | null)[] = [];
         public vertexOption : GOptions.GTextBoxAttributes = { };
         public edgeOption : GEdgeAttributes = { class : { pathTextAlignment : PathTextAlighnment.regularInterval}};
+        public graphOption : GOptions.GTextBoxAttributes ={};
 
         public item: any = null;
         constructor(option : {item?: any, children?: (LogicTree | null)[], 

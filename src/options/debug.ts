@@ -1,7 +1,7 @@
 
 
   import { LogicGraph, LogicGraphNode, LogicTree, LogicTreeOption, BinaryLogicTree } from "./logic_tree"
-    export namespace Debug {
+    //export namespace Debug {
         function randomTreeArray(node_num : number, max_degree : number) : LogicTree[] {
             const nodes : LogicTree[] = new Array(0);
             const root = new LogicTree();
@@ -98,4 +98,4 @@
         }
         */
 
-    }
+    //}

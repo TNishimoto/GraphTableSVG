@@ -1,7 +1,7 @@
 //namespace GraphTableSVG {
-import { CommonFunctions } from "./common_functions";
+import * as CommonFunctions from "./common_functions";
 import { Size } from "./vline";
-import { SVG } from "../svghtml/svg";
+//import * as SVG from "../svghtml/svg";
 //import { SVG } from "../svghtml/svg";
 
 /**

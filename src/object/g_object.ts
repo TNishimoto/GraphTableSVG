@@ -1,13 +1,13 @@
 //namespace GraphTableSVG {
 import "../basic/svghtml/interface"
-import {CommonFunctions} from "../basic/common/common_functions"
-import {GUIObserver} from "../basic/svghtml/gui_observer"
+import * as CommonFunctions from "../basic/common/common_functions"
+import * as GUIObserver from "../basic/svghtml/gui_observer"
 import {Rectangle} from "../basic/common/vline"
-import {SVG} from "../basic/svghtml/svg"
-import {HTMLFunctions} from "../basic/svghtml/html_functions"
-import {CSS} from "../basic/svghtml/css"
+import * as SVG from "../basic/svghtml/svg"
+import * as HTMLFunctions from "../basic/svghtml/html_functions"
+import * as CSS from "../basic/svghtml/css"
 import {DraggableObjectFunctions} from "../basic/svghtml/draggable_object"
-import { CustomAttributeNames } from "../basic/common/custtome_attributes"
+import * as CustomAttributeNames from "../basic/common/custtome_attributes"
 import { ShapeObjectType } from "../basic/common/enums";
 import { GOptions } from "./g_options";
 
@@ -43,7 +43,7 @@ export type GObjectMaps = {
             if (typeof(option.class) == "string") {
                 this._svgGroup.setAttribute("class", option.class);
             } else if(typeof(option.class) == "object"){
-                const newClassName = CSS.getOrAddRule(option.class);
+                const newClassName = CSS.getOrCreateClassName(option.class);
                 this._svgGroup.setAttribute("class", newClassName);
             } 
             else if (this.defaultClassName !== undefined) {

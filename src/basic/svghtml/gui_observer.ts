@@ -1,17 +1,17 @@
 //namespace GraphTableSVG {
     
     import { Padding, Rectangle } from "../common/vline";
-    import { CustomAttributeNames } from "../common/custtome_attributes"
-    import {GUI}  from "./gui"
-    import { HTMLFunctions } from "./html_functions"
-    import { SVG } from "./svg"
+    import * as CustomAttributeNames from "../common/custtome_attributes"
+    import * as GUI  from "./gui"
+    import * as HTMLFunctions from "./html_functions"
+    import * as SVG from "./svg"
 
     //import {VBAObjectType} from "../object/table/vba"
     //import {GObject} from "../object/g_object"
     //import {VBAObject} from "../object/vba_object"
     
 
-    export namespace GUIObserver {
+    //export namespace GUIObserver {
         /**
          * 
          * @param svgBox 
@@ -189,5 +189,5 @@
             if(changeElementDic.length > 0)setTimeout(observeChangeElementTimer, timerInterval);
         }
 
-    }
+    //}
 //}

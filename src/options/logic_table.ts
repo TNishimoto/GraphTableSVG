@@ -8,19 +8,20 @@
         public item: any;
     }
     */
-import { CustomAttributeNames } from "../basic/common/custtome_attributes"
-import { SVGTextBox } from "../basic/svghtml/svg_textbox"
+import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+import * as SVGTextBox from "../basic/svghtml/svg_textbox"
 //import { HTMLFunctions } from "../svghtml/html_table"
-import { HTMLFunctions } from "../basic/svghtml/html_functions"
+import * as HTMLFunctions  from "../basic/svghtml/html_functions"
 //import { openSVGFunctions } from "../options/open_svg";
-import { Console} from "./console"
+import * as Console from "./console"
 
 import { Cell } from "../object/table/cell"
+import { GOptions } from "../object/g_options"
 
     export class LogicCell {
 
         public text: string | null = null;
-        public cellClass: string | null = Cell.defaultCellClass;
+        public cellClass?: string | GOptions.GTextBoxCSS = Cell.defaultCellClass;
         public textClass: string | null = null;
         public backgroundClass: string | null = null;
         public topBorderClass: string | null = null;
@@ -99,7 +100,6 @@ import { Cell } from "../object/table/cell"
         }
 
         public constructor(option : {columnCount?: number, rowCount?: number, tableClassName? : string, x? : number, y? :number } = {} ) {
-
             if(option.columnCount == undefined) option.columnCount = 3;
             if(option.rowCount == undefined) option.rowCount = 3;
             

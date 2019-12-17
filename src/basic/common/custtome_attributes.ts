@@ -1,4 +1,4 @@
-    export namespace CustomAttributeNames {
+    //export namespace CustomAttributeNames {
         export namespace Style {
             export const autoSizeShapeToFitText: string = "--autosize-shape-to-fit-text"
             export const beginConnectorType: string = "--begin-connector-type";
@@ -90,5 +90,5 @@
 
 
         export let defaultCircleRadius = 15;
-    }
+    //}
 
