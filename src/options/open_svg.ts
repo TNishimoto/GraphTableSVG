@@ -1,7 +1,6 @@
 
 import * as AttributeNames from "../basic/common/attribute_names"
 import * as StyleNames from "../basic/common/style_names"
-import * as DefaultClassNames from "../basic/common/default_class_names"
 import { ShapeObjectType } from "../basic/common/enums";
 import * as HTMLFunctions from "../basic/html/html_functions"
 import * as HTMLTable from "./html_table"
@@ -15,7 +14,7 @@ import { GRect } from "../object/g_rect"
 import { GVertex } from "../object/g_vertex"
 
 import { GTextBox } from "../object/g_textbox"
-import { GEdge, GEdgeAttributes } from "../object/g_edge"
+import { GEdge } from "../object/g_edge"
 import { GTable, GTableOption } from "../object/g_table"
 import { GGraph } from "../object/g_graph"
 import { GRectButton } from "../object/g_rect_button"
@@ -229,7 +228,7 @@ export function openSVG(inputItem: string | Element | null = null, output: GObje
 }
 export function createShape(parent: SVGElement | string | GObject, type: "g-rect-button", option?: GOptions.GTextBoxAttributes): GRectButton
 export function createShape(parent: SVGElement | string | GObject, type: "g-rect", option?: GOptions.GTextBoxAttributes): GRect
-export function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GEdgeAttributes): GEdge
+export function createShape(parent: SVGElement | string | GObject, type: "g-edge", option?: GOptions.GEdgeAttributes): GEdge
 export function createShape(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GOptions.GTextBoxAttributes): GEllipse
 export function createShape(parent: SVGElement | string | GObject, type: "g-callout", option?: GOptions.GTextBoxAttributes): GCallout
 export function createShape(parent: SVGElement | string | GObject, type: "g-circle", option?: GOptions.GTextBoxAttributes): GCircle
@@ -260,23 +259,8 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
     }
     throw Error("error");
 }
-export function createVertex(parent: GGraph, option: GOptions.GTextBoxAttributes = {}): GVertex {
-    let _parent = parent.svgGroup;
-    if (option.class == undefined) option.class = DefaultClassNames.defaultVertexClass;
-    const type = typeof(option.class) == "string" ? parent.getStyleValue(option.class, StyleNames.defaultSurfaceType) : null ;
-    if (type != null) {
-        switch (type) {
-            case ShapeObjectType.Callout: return new GCallout(_parent, option);
-            case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent, option);
-            case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
-            case ShapeObjectType.Circle: return new GCircle(_parent, option);
-            case ShapeObjectType.Rect: return new GRect(_parent, option);
-        }
-    }
-    return new GEllipse(_parent, option);
 
-}
-export function toSVGUnknownElement(e: Element) {
+function toSVGUnknownElement(e: Element) {
     const type = ShapeObjectType.toShapeObjectTypeOrCustomTag(e.nodeName);
 
     if (type == null) {
@@ -299,7 +283,7 @@ export function toSVGUnknownElement(e: Element) {
         children.forEach((v) => toSVGUnknownElement(v));
     }
 }
-export function toDivElement(e: Element): HTMLElement | null {
+function toDivElement(e: Element): HTMLElement | null {
 
     //const type = e.nodeName == "G-TABLE" ? "g-table" : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell" : e.nodeName == "T" ? "t" : null;
     const type = e.nodeName == "G-TABLE" ? "g-table" : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell" : null;

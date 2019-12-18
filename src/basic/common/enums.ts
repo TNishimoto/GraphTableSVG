@@ -26,20 +26,25 @@ export enum OldConnectorPosition {
 */
 export type CustomTag = "row" | "cell" | "t";
 
-export type ShapeObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-circle" |
-    "g-rect" | "g-edge" | "g-graph" | "g-table" | "g-object" | "g-path-textbox" | "g-rect-button";
+export type VertexObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-circle" | "g-rect" | "g-path-textbox" | "g-rect-button";
+//export namespace VertexObjectType {
+//}
+
+
+export type ShapeObjectType = VertexObjectType | "g-edge" | "g-graph" | "g-table" | "g-object";
 export namespace ShapeObjectType {
-    export const Callout: ShapeObjectType = "g-callout"
-    export const ArrowCallout: ShapeObjectType = "g-arrow-callout"
-    export const Ellipse: ShapeObjectType = "g-ellipse"
-    export const Circle: ShapeObjectType = "g-circle"
-    export const Rect: ShapeObjectType = "g-rect"
-    export const Edge: ShapeObjectType = "g-edge"
+    export const Callout: VertexObjectType = "g-callout"
+    export const ArrowCallout: VertexObjectType = "g-arrow-callout"
+    export const Ellipse: VertexObjectType = "g-ellipse"
+    export const Circle: VertexObjectType = "g-circle"
+    export const Rect: VertexObjectType = "g-rect"
+    export const PathTextBox: VertexObjectType = "g-path-textbox"
+    export const RectButton: VertexObjectType = "g-rect-button"
+
     export const Graph: ShapeObjectType = "g-graph"
     export const Table: ShapeObjectType = "g-table"
     export const Object: ShapeObjectType = "g-object"
-    export const PathTextBox: ShapeObjectType = "g-path-textbox"
-    export const RectButton: ShapeObjectType = "g-rect-button"
+    export const Edge: ShapeObjectType = "g-edge"
 
     const typeDic: { [key: string]: boolean; } = {
         "g-callout": true,

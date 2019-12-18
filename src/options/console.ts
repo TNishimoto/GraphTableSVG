@@ -1,5 +1,5 @@
     import {TableDictionary} from "./table_dictionary"
-    import { LogicGraph, LogicGraphNode, LogicTree, LogicTreeOption } from "./logic_tree"
+    import { LogicGraph, LogicGraphNode, LogicTree } from "./logic_tree"
     import { LogicTable } from "./logic_table"
     //import { CommonFunctions } from "../basic/common/common_functions";
     import { createShape } from "./open_svg";
@@ -144,18 +144,18 @@
             code.innerHTML="";
         }
 
-        export function graph(item : any | LogicTree | LogicGraph, canvasID : string | null = null,  option :  LogicTreeOption = { }){
+        export function graph(item : any | LogicTree | LogicGraph, canvasID : string | null = null ){
 
             if(item instanceof LogicTree || item instanceof LogicGraph){
                 if(canvasID != null){
                     const ggraph = createShape(canvasID, "g-graph");    
-                    ggraph.build(item, option);    
+                    ggraph.build(item);    
                 }else{
                     const code = getOrCreateCodeElement();
                     const consoleLine = new ConsoleLineElement(code);
                     //const svg = addSVGSVGElement(code);
                     const ggraph = createShape(consoleLine.canvas, "g-graph");    
-                    ggraph.build(item, option);    
+                    ggraph.build(item);    
                 }
                 /*
                 if(item instanceof LogicGraph){
@@ -167,7 +167,7 @@
                 const tableDic = new TableDictionary();
                 tableDic.construct(item);
                 const logicGraph = tableDic.toLogicGraph();
-                graph(logicGraph, canvasID, option);
+                graph(logicGraph, canvasID);
                 //console.log(logicGraph);    
             }
         }

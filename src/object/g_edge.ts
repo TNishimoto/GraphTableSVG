@@ -17,35 +17,13 @@ import * as CSS from "../basic/html/css"
 import * as GOptions  from "./g_options"
 
 
-export type _GEdgeAttributes = {
-    x1?: number,
-    x2?: number,
-    x3?: number,
-
-    y1?: number,
-    y2?: number,
-    y3?: number,
-
-    //beginConnectorType?: ConnectorPosition,
-    //endConnectorType?: ConnectorPosition,
-    startMarker?: boolean,
-    endMarker?: boolean,
-    beginVertex?: GVertex | string,
-    endVertex?: GVertex | string,
-    //pathTextAlignment?: PathTextAlighnment
-}
-export type _GEdgeSVGGroupInfo = {
-    class? : string | GOptions.GEdgeStyleCSS
-    style? : string | GOptions.GEdgeStyleCSS 
-}
-export type GEdgeAttributes = GOptions.GTextBoxAttributesWithoutGroup & _GEdgeAttributes & _GEdgeSVGGroupInfo
 
 /**
  * 辺をSVGで表現するためのクラスです。
  */
 export class GEdge extends GTextBox {
 
-    constructor(svgbox: SVGElement | string, option: GEdgeAttributes = {}) {
+    constructor(svgbox: SVGElement | string, option: GOptions.GEdgeAttributes = {}) {
         super(svgbox, option);
         this._isSpecialTextBox = true;
         this.updateAttributes.push(AttributeNames.beginNodeName);
@@ -59,7 +37,7 @@ export class GEdge extends GTextBox {
         }
 
         //this._svgGroup = SVG.createGroup(svgbox);
-        const _option = <GEdgeAttributes>this.initializeOption(option);
+        const _option = <GOptions.GEdgeAttributes>this.initializeOption(option);
         this.svgText.textContent = "";
         //const textClass = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultTextClass);
         if (option.textClass === undefined) option.textClass = DefaultClassNames.defaultTextClass;
@@ -102,9 +80,13 @@ export class GEdge extends GTextBox {
 
         this.pathPoints = [[_option.x1!, _option.y1!], [_option.x2!, _option.y2!]];
 
-        if (_option.beginVertex instanceof GVertex) this.beginVertex = _option.beginVertex;
+        if(typeof _option.beginVertex == "object"){
+            if (_option.beginVertex instanceof GVertex) this.beginVertex = _option.beginVertex;
+        }
+        if(typeof _option.endVertex == "object"){
+            if (_option.endVertex instanceof GVertex) this.endVertex = _option.endVertex;
+        }
 
-        if (_option.endVertex instanceof GVertex) this.endVertex = _option.endVertex;
 
         if (_option.x3 !== undefined && _option.y3 !== undefined) {
             this.controlPoint = [[_option.x3, _option.y3]];
@@ -132,8 +114,8 @@ export class GEdge extends GTextBox {
 
     }
     */
-    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GEdgeAttributes = {}): GEdgeAttributes {
-        const _output = <GEdgeAttributes>GTextBox.constructAttributes(e, removeAttributes, output);
+    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GEdgeAttributes = {}): GOptions.GEdgeAttributes {
+        const _output = <GOptions.GEdgeAttributes>GTextBox.constructAttributes(e, removeAttributes, output);
         _output.x1 = e.gtGetAttributeNumberWithoutNull("x1", 0);
         _output.x2 = e.gtGetAttributeNumberWithoutNull("x2", 300);
         _output.y1 = e.gtGetAttributeNumberWithoutNull("y1", 0);
@@ -185,7 +167,7 @@ export class GEdge extends GTextBox {
     }
 
     initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
-        const _option = <GEdgeAttributes>super.initializeOption(option);
+        const _option = <GOptions.GEdgeAttributes>super.initializeOption(option);
 
 
         const markerStartName = this.svgGroup.getPropertyStyleValue(StyleNames.markerStart);
