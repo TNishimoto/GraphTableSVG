@@ -1,13 +1,13 @@
 //namespace GraphTableSVG {
-import {GEdge} from "./g_edge"
-import {GGraph} from "./g_graph"
-import {GVertex} from "./g_vertex"
+import {GEdge} from "./../g_edge"
+import {GGraph} from "./../g_graph"
+import {GVertex} from "./../g_vertex"
 
 import {VirtualTree} from "./virtual_tree"
 
 import * as TreeArrangement from "./tree_arangement"
-import { Direction, ConnectorPosition } from "../basic/common/enums"
-import * as SVGTextBox from "../basic/interface/svg_textbox"
+import { Direction, ConnectorPosition } from "../../basic/common/enums"
+import * as SVGTextBox from "../../basic/interface/svg_textbox"
 
     export namespace GraphArrangement {
         export function standardTreeWidthArrangement(graph: GGraph): void {

@@ -16,7 +16,7 @@
     
     //import {GObjectAttributes, GTextBoxAttributes, ConnectOption} from "../options/attributes_option"
     import {LogicTree, LogicGraph, LogicTreeOption} from "../options/logic_tree"
-import { GraphArrangement } from "./graph_arrangement"
+import { GraphArrangement } from "./graph_helpers/graph_arrangement"
 
     export type ConnectOption = {
         outcomingInsertIndex?: number,

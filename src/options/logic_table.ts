@@ -15,7 +15,7 @@ import * as HTMLFunctions  from "../basic/html/html_functions"
 //import { openSVGFunctions } from "../options/open_svg";
 import * as Console from "./console"
 
-import { Cell } from "../object/table/cell"
+import { Cell } from "../object/table_helpers/cell"
 import * as GOptions from "../object/g_options"
 
     export class LogicCell {

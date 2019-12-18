@@ -9,7 +9,7 @@ import { GObject } from "./g_object"
 import { GTextBox } from "./g_textbox"
 import { GEdge } from "./g_edge"
 import { GGraph } from "./g_graph"
-import { VirtualTree } from "./virtual_tree"
+import { VirtualTree } from "./graph_helpers/virtual_tree"
 
 
 
