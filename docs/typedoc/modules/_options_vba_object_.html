@@ -71,15 +71,16 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Modules</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-module tsd-parent-kind-external-module"><a href="_options_vba_object_.vbaobject.html" class="tsd-kind-icon">VBAObject</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_options_vba_object_.html#vbaobjecttype" class="tsd-kind-icon">VBAObject<wbr>Type</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_options_vba_object_.html#cleargraphtables" class="tsd-kind-icon">clear<wbr>Graph<wbr>Tables</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_options_vba_object_.html#getregion" class="tsd-kind-icon">get<wbr>Region</a></li>
 							</ul>
 						</section>
 					</div>
@@ -93,9 +94,75 @@
 					<div class="tsd-signature tsd-kind-icon">VBAObject<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SVGPathElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SVGTextElement</span><span class="tsd-signature-symbol"> | </span><a href="../classes/_object_g_object_.gobject.html" class="tsd-signature-type">GObject</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in options/vba_object.ts:9</li>
+							<li>Defined in options/vba_object.ts:8</li>
 						</ul>
 					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="cleargraphtables" class="tsd-anchor"></a>
+					<h3>clear<wbr>Graph<wbr>Tables</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">clear<wbr>Graph<wbr>Tables<span class="tsd-signature-symbol">(</span>svg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SVGElement</span>, items<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="../classes/_object_g_table_.gtable.html" class="tsd-signature-type">GTable</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_object_g_graph_.ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in options/vba_object.ts:37</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>グラフや表を消去します。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>svg: <span class="tsd-signature-type">SVGElement</span></h5>
+								</li>
+								<li>
+									<h5>items: <span class="tsd-signature-symbol">(</span><a href="../classes/_object_g_table_.gtable.html" class="tsd-signature-type">GTable</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_object_g_graph_.ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="getregion" class="tsd-anchor"></a>
+					<h3>get<wbr>Region</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Region<span class="tsd-signature-symbol">(</span>items<span class="tsd-signature-symbol">: </span><a href="_options_vba_object_.html#vbaobjecttype" class="tsd-signature-type">VBAObjectType</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/_basic_common_vline_.rectangle.html" class="tsd-signature-type">Rectangle</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in options/vba_object.ts:15</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>領域を取得します。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>items: <a href="_options_vba_object_.html#vbaobjecttype" class="tsd-signature-type">VBAObjectType</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../classes/_basic_common_vline_.rectangle.html" class="tsd-signature-type">Rectangle</a></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -107,11 +174,6 @@
 					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="_options_vba_object_.html">&quot;options/vba_<wbr>object&quot;</a>
-						<ul>
-							<li class=" tsd-kind-module tsd-parent-kind-external-module">
-								<a href="_options_vba_object_.vbaobject.html">VBAObject</a>
-							</li>
-						</ul>
 					</li>
 				</ul>
 			</nav>
@@ -119,6 +181,12 @@
 				<ul class="before-current">
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="_options_vba_object_.html#vbaobjecttype" class="tsd-kind-icon">VBAObject<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_options_vba_object_.html#cleargraphtables" class="tsd-kind-icon">clear<wbr>Graph<wbr>Tables</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_options_vba_object_.html#getregion" class="tsd-kind-icon">get<wbr>Region</a>
 					</li>
 				</ul>
 			</nav>

@@ -8,7 +8,7 @@ import { ConnectorPosition, msoDashStyle } from "../basic/common/enums";
 import { GObject } from "./g_object"
 import { GTextBox } from "./g_textbox"
 import { GEdge } from "./g_edge"
-import { GGraph } from "./g_graph"
+//import { GGraph } from "./g_graph"
 import { VirtualTree } from "./graph_helpers/virtual_tree"
 
 
@@ -297,12 +297,12 @@ export class GVertex extends GTextBox {
         return ` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`;
     }
 
-    public get graph(): GGraph | null {
+    public get graph(): GObject | null {
         const v = this.svgGroup.parentElement;
         if (v != null && v instanceof SVGGElement && v.hasAttribute(AttributeNames.objectIDName)) {
             const id = v.getAttribute(AttributeNames.objectIDName)!;
             const obj = GObject.getObjectFromObjectID(id);
-            if (obj instanceof GGraph) {
+            if (obj instanceof GObject) {
                 return obj;
             }
         }
