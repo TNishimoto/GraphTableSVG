@@ -1,6 +1,6 @@
 
 import * as AttributeNames from "../basic/common/attribute_names"
-import * as StyleNames from "../basic/common/style_names"
+//import * as StyleNames from "../basic/common/style_names"
 import { ShapeObjectType } from "../basic/common/enums";
 import * as HTMLFunctions from "../basic/html/html_functions"
 import * as HTMLTable from "./html_table"
@@ -11,7 +11,7 @@ import { GCallout } from "../object/g_callout"
 import { GArrowCallout } from "../object/g_arrow_callout"
 import { GEllipse } from "../object/g_ellipse"
 import { GRect } from "../object/g_rect"
-import { GVertex } from "../object/g_vertex"
+//import { GVertex } from "../object/g_vertex"
 
 import { GTextBox } from "../object/g_textbox"
 import { GEdge } from "../object/g_edge"
