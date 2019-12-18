@@ -4,10 +4,10 @@
     import {GTextBox} from "./g_textbox"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction, AutoSizeShapeToFitText } from "../basic/common/enums";
     //import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
-    import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+    import * as AttributeNames from "../basic/common/attribute_names"
     import {Rectangle, VLine} from "../basic/common/vline"
-    import * as SVGTextBox from "../basic/svghtml/svg_textbox";
-    import {GOptions } from "./g_options"
+    import * as SVGTextBox from "../basic/interface/svg_textbox";
+    import * as GOptions  from "./g_options"
 
 
     export type _GShapeArrowCalloutAttributes = {

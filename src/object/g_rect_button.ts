@@ -1,9 +1,10 @@
 //namespace GraphTableSVG {
     import {GRect} from "./g_rect"
     //import {GTextBoxAttributes, GObjectAttributes} from "../options/attributes_option"
-    import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+    import * as AttributeNames from "../basic/common/attribute_names"
+    import * as DefaultClassNames from "../basic/common/default_class_names"
     import { ShapeObjectType } from "../basic/common/enums";
-    import {GOptions } from "./g_options"
+    import * as GOptions  from "./g_options"
 
     export class GRectButton extends GRect {
         public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
@@ -21,7 +22,7 @@
             
             
             if(option.surfaceClass === undefined){
-                option.surfaceClass = CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass;
+                option.surfaceClass = DefaultClassNames.defaultRectButtonSurfaceClass;
             }
             
             
@@ -34,7 +35,7 @@
         
         public get defaultClassName() : string | undefined {
             return undefined;
-            //return GraphTableSVG.CustomAttributeNames.StyleValue.defaultRectButtonClass;
+            //return GraphTableSVG.AttributeNames.StyleValue.defaultRectButtonClass;
         }
         public get type(): ShapeObjectType {
             return ShapeObjectType.RectButton;

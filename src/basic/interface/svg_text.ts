@@ -6,7 +6,8 @@ import { Size, Rectangle } from "../common/vline";
 import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../common/enums";
 import * as SVGTextBox from "./svg_textbox"
 import {  } from "./svg_interface"
-import * as CustomAttributeNames from "../common/custtome_attributes"
+import * as AttributeNames from "../common/attribute_names"
+import * as StyleNames from "../common/style_names"
 
 declare global {
     export interface SVGTextElement {
@@ -86,36 +87,36 @@ SVGTextElement.prototype.gtSetXY = function (rect: Rectangle, vAnchor: VerticalA
 
 SVGTextElement.prototype.getMarginLeft = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.marginLeft, 5)!;
+    return p.getPropertyStyleNumberValue(StyleNames.marginLeft, 5)!;
 };
 SVGTextElement.prototype.setMarginLeft = function (value: number) {
     const p: SVGTextElement = this;
-    p.setPropertyStyleValue(CustomAttributeNames.Style.marginLeft, value.toString());
+    p.setPropertyStyleValue(StyleNames.marginLeft, value.toString());
 };
 
 SVGTextElement.prototype.getMarginTop = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.marginTop, 5)!;
+    return p.getPropertyStyleNumberValue(StyleNames.marginTop, 5)!;
 };
 SVGTextElement.prototype.setMarginTop = function (value: number) {
     const p: SVGTextElement = this;
-    p.setPropertyStyleValue(CustomAttributeNames.Style.marginTop, value.toString());
+    p.setPropertyStyleValue(StyleNames.marginTop, value.toString());
 };
 SVGTextElement.prototype.getMarginRight = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.marginRight, 5)!;
+    return p.getPropertyStyleNumberValue(StyleNames.marginRight, 5)!;
 };
 SVGTextElement.prototype.setMarginRight = function (value: number) {
     const p: SVGTextElement = this;
-    p.setPropertyStyleValue(CustomAttributeNames.Style.marginRight, value.toString());
+    p.setPropertyStyleValue(StyleNames.marginRight, value.toString());
 };
 SVGTextElement.prototype.getMarginBottom = function () {
     const p: SVGTextElement = this;
-    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.marginBottom, 5)!;
+    return p.getPropertyStyleNumberValue(StyleNames.marginBottom, 5)!;
 };
 SVGTextElement.prototype.setMarginBottom = function (value: number) {
     const p: SVGTextElement = this;
-    p.setPropertyStyleValue(CustomAttributeNames.Style.marginBottom, value.toString());
+    p.setPropertyStyleValue(StyleNames.marginBottom, value.toString());
 };
 
 

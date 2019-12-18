@@ -1,11 +1,12 @@
 ﻿
 
 import { Rectangle, Point } from "../common/vline";
-import * as  HTMLFunctions from "./html_functions";
+import * as  HTMLFunctions from "../html/html_functions";
 //import * as CSS from "./css";
 
 import { } from "./svg_interface"
-import * as CustomAttributeNames from "../common/custtome_attributes"
+import * as AttributeNames from "../common/attribute_names"
+import * as StyleNames from "../common/style_names"
 
 //export namespace SVG {
     let idCounter: number = 0;
@@ -55,7 +56,7 @@ import * as CustomAttributeNames from "../common/custtome_attributes"
     export function createText(className: string): SVGTextElement {
         const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-        _svgText.setAttribute(CustomAttributeNames.objectIDName, (idCounter++).toString());
+        _svgText.setAttribute(AttributeNames.objectIDName, (idCounter++).toString());
         //_svgText.style.textAnchor = "middle";
         _svgText.setAttribute("class", className);
         /*
@@ -84,14 +85,14 @@ import * as CustomAttributeNames from "../common/custtome_attributes"
             rect.style.strokeWidth = "1pt";
         } else {
             rect.setAttribute("class", className);
-            //const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+            //const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.AttributeNames.Style.msoDashStyleName);
             //if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 
-            const width = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidth, null);
+            const width = rect.getPropertyStyleNumberValue(StyleNames.defaultWidth, null);
             if (width != null) {
                 rect.width.baseVal.value = width;
             }
-            const height = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeight, null);
+            const height = rect.getPropertyStyleNumberValue(StyleNames.defaultHeight, null);
             if (height != null) {
                 rect.height.baseVal.value = height;
             }
@@ -122,7 +123,7 @@ import * as CustomAttributeNames from "../common/custtome_attributes"
      */
     export function createGroup(parent: HTMLElement | SVGElement | null): SVGGElement {
         const g = <SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.setAttribute(CustomAttributeNames.objectIDName, (idCounter++).toString());
+        g.setAttribute(AttributeNames.objectIDName, (idCounter++).toString());
         /*
         if (className != null) {
             g.setAttribute("class", className);
@@ -143,10 +144,10 @@ import * as CustomAttributeNames from "../common/custtome_attributes"
         (<any>style).fontWeight = null;
         (<any>style).fontFamily = null;
         /*
-        style.removeProperty(CustomAttributeNames.Style.paddingTop);
-        style.removeProperty(CustomAttributeNames.Style.paddingLeft);
-        style.removeProperty(CustomAttributeNames.Style.paddingRight);
-        style.removeProperty(CustomAttributeNames.Style.paddingBottom);
+        style.removeProperty(AttributeNames.Style.paddingTop);
+        style.removeProperty(AttributeNames.Style.paddingLeft);
+        style.removeProperty(AttributeNames.Style.paddingRight);
+        style.removeProperty(AttributeNames.Style.paddingBottom);
         */
     }
 
@@ -159,19 +160,19 @@ import * as CustomAttributeNames from "../common/custtome_attributes"
     export function createCircle(parent: SVGElement, className: string | null = null): SVGCircleElement {
         const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         parent.appendChild(circle);
-        circle.r.baseVal.value = CustomAttributeNames.defaultCircleRadius;
+        circle.r.baseVal.value = AttributeNames.defaultCircleRadius;
         if (className == null) {
             circle.style.stroke = "black";
             circle.style.strokeWidth = "1pt";
             circle.style.fill = "white";
         } else {
             circle.setAttribute("class", className);
-            const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadius, null);
+            const radius = circle.getPropertyStyleNumberValue(StyleNames.defaultRadius, null);
             if (radius != null) {
                 circle.r.baseVal.value = radius;
             }
 
-            //const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+            //const dashStyle = circle.getPropertyStyleValue(GraphTableSVG.AttributeNames.Style.msoDashStyleName);
             //if (dashStyle != null) msoDashStyle.setStyle(circle, dashStyle);
         }
         //circle.style.fill = "#ffffff";

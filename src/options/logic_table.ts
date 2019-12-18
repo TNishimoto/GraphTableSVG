@@ -8,15 +8,15 @@
         public item: any;
     }
     */
-import * as CustomAttributeNames from "../basic/common/custtome_attributes"
-import * as SVGTextBox from "../basic/svghtml/svg_textbox"
+import * as AttributeNames from "../basic/common/attribute_names"
+import * as SVGTextBox from "../basic/interface/svg_textbox"
 //import { HTMLFunctions } from "../svghtml/html_table"
-import * as HTMLFunctions  from "../basic/svghtml/html_functions"
+import * as HTMLFunctions  from "../basic/html/html_functions"
 //import { openSVGFunctions } from "../options/open_svg";
 import * as Console from "./console"
 
 import { Cell } from "../object/table/cell"
-import { GOptions } from "../object/g_options"
+import * as GOptions from "../object/g_options"
 
     export class LogicCell {
 
@@ -190,15 +190,15 @@ import { GOptions } from "../object/g_options"
             return table;
         }
         public static constructLogicTable(e: Element) : LogicTable | null {
-            const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
+            const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
             const widthsStr = e.getPropertyStyleValue("--widths");
             if(rows.length == 0) return null;
 
             const cells: Element[][] = new Array(rows.length);
             let columnSize = 0;
             rows.forEach((v, i) => {
-                const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "cell");
-                cellArray.forEach((v) => v.removeAttribute(CustomAttributeNames.customElement));
+                const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(AttributeNames.customElement) == "cell");
+                cellArray.forEach((v) => v.removeAttribute(AttributeNames.customElement));
                 cells[i] = cellArray;
                 if (columnSize < cellArray.length) columnSize = cellArray.length;
             });
@@ -233,7 +233,7 @@ import { GOptions } from "../object/g_options"
             return logicTable;
         }
         public static constructHTMLLogicTable(e: Element) : LogicTable | null {
-            const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
+            const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
             const widthsStr = e.getPropertyStyleValue("--widths");
 
             if(rows.length == 0) return null;
@@ -241,8 +241,8 @@ import { GOptions } from "../object/g_options"
             const cells: Element[][] = new Array(rows.length);
             let columnSize = 0;
             rows.forEach((v, i) => {
-                const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "cell");
-                cellArray.forEach((v) => v.removeAttribute(CustomAttributeNames.customElement));
+                const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(AttributeNames.customElement) == "cell");
+                cellArray.forEach((v) => v.removeAttribute(AttributeNames.customElement));
                 cells[i] = cellArray;
                 if (columnSize < cellArray.length) columnSize = cellArray.length;
             });

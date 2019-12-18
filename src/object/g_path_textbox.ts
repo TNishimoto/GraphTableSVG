@@ -4,10 +4,11 @@
     import {Rectangle, VLine} from "../basic/common/vline"
     import {GVertex} from "./g_vertex"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle, AutoSizeShapeToFitText } from "../basic/common/enums";
-    import * as CustomAttributeNames from "../basic/common/custtome_attributes"
-    import * as SVGTextBox from "../basic/svghtml/svg_textbox"
-    import * as CSS from "../basic/svghtml/css"
-    import {GOptions } from "./g_options"
+    import * as AttributeNames from "../basic/common/attribute_names"
+    import * as DefaultClassNames from "../basic/common/default_class_names"
+    import * as SVGTextBox from "../basic/interface/svg_textbox"
+    import * as CSS from "../basic/html/css"
+    import * as GOptions  from "./g_options"
 
     export class GPathTextBox extends GVertex {
         //private _svgPath: SVGPathElement;
@@ -28,8 +29,8 @@
         }
         protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
 
-            if(option.surfaceClass === undefined) option.surfaceClass = CustomAttributeNames.StyleValue.defaultTextboxPathClass;
-            //const _className = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultPathClass);
+            if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultTextboxPathClass;
+            //const _className = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultPathClass);
             //if(_className != null) option.surfaceClass = _className;
 
             this._svgSurface = GPathTextBox.createSurfacePath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
@@ -58,7 +59,7 @@
             //path.setAttribute("class", className)
                 /*
             if (className != null) {
-                const dashStyle = path.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+                const dashStyle = path.getPropertyStyleValue(GraphTableSVG.AttributeNames.Style.msoDashStyleName);
             } else {
                 if(path.style.stroke == null || path.style.stroke == "")path.style.stroke = "black";
                 if(path.style.fill == null || path.style.fill == "")path.style.fill = "white";

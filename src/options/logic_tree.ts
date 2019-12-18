@@ -8,7 +8,7 @@ import * as Console from "./console"
 import {VertexOrder, Direction, PathTextAlighnment} from "../basic/common/enums"
 //import { GTextBoxAttributes } from "../object/g_textbox";
 import { GEdgeAttributes } from "../object/g_edge";
-import {GOptions } from "../object/g_options"
+import * as GOptions from "../object/g_options"
 
 
     export type LogicTreeOption = {

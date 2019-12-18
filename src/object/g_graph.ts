@@ -4,13 +4,15 @@
     import {GEdge} from "./g_edge"
     import {Rectangle} from "../basic/common/vline"
     //import {  ConnectorPosition, msoDashStyle} from "../common/enums";    
-    import * as HTMLFunctions from "../basic/svghtml/html_functions"
-    import * as SVG from "../basic/svghtml/svg"
-    import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+    import * as HTMLFunctions from "../basic/html/html_functions"
+    import * as SVG from "../basic/interface/svg"
+    import * as AttributeNames from "../basic/common/attribute_names"
+    import * as StyleNames from "../basic/common/style_names"
+
     import { ShapeObjectType, VertexOrder, PathTextAlighnment, ConnectorPosition, Direction } from "../basic/common/enums";
     import { createShape, createVertex } from "../options/open_svg";
-    import * as SVGTextBox from "../basic/svghtml/svg_textbox";
-    import {GOptions } from "./g_options"
+    import * as SVGTextBox from "../basic/interface/svg_textbox";
+    import * as GOptions  from "./g_options"
     
     //import {GObjectAttributes, GTextBoxAttributes, ConnectOption} from "../options/attributes_option"
     import {LogicTree, LogicGraph, LogicTreeOption} from "../options/logic_tree"
@@ -31,13 +33,13 @@ import { GraphArrangement } from "./graph_arrangement"
         constructor(box: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
             super(box, option)
             if (this.type == ShapeObjectType.Graph) this.firstFunctionAfterInitialized();
-            //this.svgGroup.addEventListener(CustomAttributeNames.objectCreatedEventName, this.objectCreatedFunction);
+            //this.svgGroup.addEventListener(AttributeNames.objectCreatedEventName, this.objectCreatedFunction);
         }
 
         public get vertices(): GVertex[] {
             const r: GVertex[] = [];
-            HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(CustomAttributeNames.objectIDName)).forEach((v) => {
-                const item = GObject.getObjectFromObjectID(v.getAttribute(CustomAttributeNames.objectIDName)!)
+            HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(AttributeNames.objectIDName)).forEach((v) => {
+                const item = GObject.getObjectFromObjectID(v.getAttribute(AttributeNames.objectIDName)!)
                 if (item instanceof GVertex) {
                     r.push(item);
                 }
@@ -46,8 +48,8 @@ import { GraphArrangement } from "./graph_arrangement"
         }
         public get edges(): GEdge[] {
             const r: GEdge[] = [];
-            HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(CustomAttributeNames.objectIDName)).forEach((v) => {
-                const item = GObject.getObjectFromObjectID(v.getAttribute(CustomAttributeNames.objectIDName)!)
+            HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(AttributeNames.objectIDName)).forEach((v) => {
+                const item = GObject.getObjectFromObjectID(v.getAttribute(AttributeNames.objectIDName)!)
                 if (item instanceof GEdge) {
                     r.push(item);
                 }
@@ -60,7 +62,7 @@ import { GraphArrangement } from "./graph_arrangement"
 
         protected _roots: GVertex[] = [];
         public get vertexXInterval(): number | null {
-            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.vertexXInterval);
+            const v = this.svgGroup.getPropertyStyleValue(StyleNames.vertexXInterval);
             if (v == null) {
                 return null;
             } else {
@@ -68,10 +70,10 @@ import { GraphArrangement } from "./graph_arrangement"
             }
         }
         public set vertexXInterval(value: number | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.vertexXInterval, value == null ? null : value.toString());
+            this.svgGroup.setPropertyStyleValue(StyleNames.vertexXInterval, value == null ? null : value.toString());
         }
         public get vertexYInterval(): number | null {
-            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.vertexYInterval);
+            const v = this.svgGroup.getPropertyStyleValue(StyleNames.vertexYInterval);
             if (v == null) {
                 return null;
             } else {
@@ -79,7 +81,7 @@ import { GraphArrangement } from "./graph_arrangement"
             }
         }
         public get direction(): Direction | null {
-            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.graphDirection);
+            const v = this.svgGroup.getPropertyStyleValue(StyleNames.graphDirection);
             if (v == null) {
                 return null;
             } else {
@@ -95,31 +97,31 @@ import { GraphArrangement } from "./graph_arrangement"
             }
         }
         public set direction(value : Direction | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.graphDirection, value == null ? null : value.toString());
+            this.svgGroup.setPropertyStyleValue(StyleNames.graphDirection, value == null ? null : value.toString());
         }
 
 
 
         public set vertexYInterval(value: number | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.vertexYInterval, value == null ? null : value.toString());
+            this.svgGroup.setPropertyStyleValue(StyleNames.vertexYInterval, value == null ? null : value.toString());
         }
         /*
         get defaultVertexClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultVertexClass);
+            return this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultVertexClass);
         }
         set defaultVertexClass(value: string | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.defaultVertexClass, value);
+            this.svgGroup.setPropertyStyleValue(AttributeNames.Style.defaultVertexClass, value);
         }
         */
 
         /*
          get defaultEdgeClass(): string | null {
-             return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultEdgeClass);
+             return this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultEdgeClass);
          }
          */
         /*
          set defaultEdgeClass(value: string | null) {
-             this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.defaultEdgeClass, value);
+             this.svgGroup.setPropertyStyleValue(AttributeNames.Style.defaultEdgeClass, value);
          }
          */
         /**
@@ -237,10 +239,10 @@ import { GraphArrangement } from "./graph_arrangement"
 
         }
         public get relocateStyle(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.relocateName)
+            return this.svgGroup.getPropertyStyleValue(StyleNames.relocateName)
         }
         public set relocateStyle(value: string | null) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.relocateName, value);
+            this.svgGroup.setPropertyStyleValue(StyleNames.relocateName, value);
         }
 
 
@@ -501,7 +503,7 @@ import { GraphArrangement } from "./graph_arrangement"
         }
         protected dispatchVertexCreatedEvent(vertex: GVertex): void {
             var event = document.createEvent("HTMLEvents");
-            event.initEvent(CustomAttributeNames.vertexCreatedEventName, true, true);
+            event.initEvent(AttributeNames.vertexCreatedEventName, true, true);
             vertex.svgGroup.dispatchEvent(event);
 
         }

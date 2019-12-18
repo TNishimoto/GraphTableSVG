@@ -3,10 +3,12 @@
     import {GTextBox} from "./g_textbox"
     import {GCalloutAttributes} from "./g_callout"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
-    import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+    import * as AttributeNames from "../basic/common/attribute_names"
+    import * as StyleNames from "../basic/common/style_names"
+    import * as DefaultClassNames from "../basic/common/default_class_names"
     import {Rectangle, VLine} from "../basic/common/vline"
-    import * as CSS from "../basic/svghtml/css"
-    import {GOptions } from "./g_options"
+    import * as CSS from "../basic/html/css"
+    import * as GOptions  from "./g_options"
 
 
     export class GAbstractEllipseCircle extends GVertex {
@@ -107,7 +109,7 @@
             //this.update();
         }
         protected createSurface(svgbox : SVGElement, option :GOptions.GObjectAttributes = {}) : void {
-            if(option.surfaceClass === undefined) option.surfaceClass = CustomAttributeNames.StyleValue.defaultSurfaceClass;
+            if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
             this._svgSurface = GEllipse.createEllipse(this.svgGroup, option.surfaceClass, option.surfaceStyle);
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
         }
@@ -123,15 +125,15 @@
     
             }
 
-            circle.rx.baseVal.value = CustomAttributeNames.defaultCircleRadius;
-            circle.ry.baseVal.value = CustomAttributeNames.defaultCircleRadius;
+            circle.rx.baseVal.value = AttributeNames.defaultCircleRadius;
+            circle.ry.baseVal.value = AttributeNames.defaultCircleRadius;
 
             if(typeof(className) == "string"){
                 circle.setAttribute("class", className);
             }else{
                 circle.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
             }
-            const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadius, null);
+            const radius = circle.getPropertyStyleNumberValue(StyleNames.defaultRadius, null);
             if (radius != null) {
                 circle.rx.baseVal.value = radius;
                 circle.ry.baseVal.value = radius;

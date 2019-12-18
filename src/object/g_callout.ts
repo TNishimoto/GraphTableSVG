@@ -4,7 +4,7 @@
     import {GPathTextBox} from "./g_path_textbox"
     import { ShapeObjectType, SpeakerPosition } from "../basic/common/enums";
     import {Rectangle, VLine} from "../basic/common/vline"
-    import {GOptions } from "./g_options"
+    import * as GOptions  from "./g_options"
 
     
     export type GCalloutAttributes = GOptions.GTextBoxAttributes & {

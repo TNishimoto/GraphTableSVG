@@ -2,11 +2,14 @@ import {GVertex} from "./g_vertex"
 import {GTextBox} from "./g_textbox"
 import {GCalloutAttributes} from "./g_callout"
 import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
-import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+import * as AttributeNames from "../basic/common/attribute_names"
+import * as StyleNames from "../basic/common/style_names"
+import * as DefaultClassNames from "../basic/common/default_class_names"
+
 import {Rectangle, VLine} from "../basic/common/vline"
 import {GEllipse, GAbstractEllipseCircle} from "./g_ellipse"
-import * as CSS from "../basic/svghtml/css"
-import {GOptions } from "./g_options"
+import * as CSS from "../basic/html/css"
+import * as GOptions  from "./g_options"
 
 export class GCircle extends GAbstractEllipseCircle  {
     public get svgCircle(): SVGCircleElement {
@@ -22,8 +25,8 @@ export class GCircle extends GAbstractEllipseCircle  {
     initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
         const _option = { ...option };
         if (this.svgSurface != null && this.svgSurface.className != null) {
-            const width = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidth, null);
-            const height = this.svgSurface.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeight, null);
+            const width = this.svgSurface.getPropertyStyleNumberValue(StyleNames.defaultWidth, null);
+            const height = this.svgSurface.getPropertyStyleNumberValue(StyleNames.defaultHeight, null);
             if (width != null) _option.width = width;
             if (height != null) _option.height = height;
         }
@@ -34,11 +37,11 @@ export class GCircle extends GAbstractEllipseCircle  {
         //if (_option.height === undefined) _option.height = 25;
         if (_option.cx === undefined) _option.cx = 0;
         if (_option.cy === undefined) _option.cy = 0;
-        if (_option.surfaceClass === undefined) _option.surfaceClass = CustomAttributeNames.StyleValue.defaultSurfaceClass;
+        if (_option.surfaceClass === undefined) _option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
         return _option;
     }
     protected createSurface(svgbox : SVGElement, option :GOptions.GObjectAttributes = {}) : void {
-        if(option.surfaceClass === undefined) option.surfaceClass = CustomAttributeNames.StyleValue.defaultSurfaceClass;
+        if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
         this._svgSurface = GCircle.createCircle(this.svgGroup, option.surfaceClass, option.surfaceStyle);
         this.svgGroup.insertBefore(this.svgCircle, this.svgText);
     }
@@ -56,7 +59,7 @@ export class GCircle extends GAbstractEllipseCircle  {
         //if(style !== undefined) circle.setAttribute("style", style);
 
 
-        circle.r.baseVal.value = CustomAttributeNames.defaultCircleRadius;
+        circle.r.baseVal.value = AttributeNames.defaultCircleRadius;
 
         //circle.setAttribute("class", className);
         
@@ -65,7 +68,7 @@ export class GCircle extends GAbstractEllipseCircle  {
         }else{
             circle.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
         }
-        const radius = circle.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultRadius, null);
+        const radius = circle.getPropertyStyleNumberValue(StyleNames.defaultRadius, null);
         if (radius != null) {
             circle.r.baseVal.value = radius;
         }

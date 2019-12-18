@@ -2,7 +2,7 @@
     import {Cell, CellOption} from "./cell"
     //import {BorderRow} from "./border_row"
     
-    import * as SVG from "../../basic/svghtml/svg"   
+    import * as SVG from "../../basic/interface/svg"   
     import {GTable} from "../g_table"
 
     /**

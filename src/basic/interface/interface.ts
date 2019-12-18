@@ -12,9 +12,9 @@ interface PPTextboxShape {
 */
 
 //import * as CommonFunctions from "../common/common_functions";
-import * as CSS from "./css";
+import * as CSS from "../html/css";
 import * as SVGTextBox from "./svg_textbox"
-import * as CustomAttributeNames from "../common/custtome_attributes"
+import * as AttributeNames from "../common/attribute_names"
 //import { Cell } from "../object/table/cell"
 
 //import { } from "./svg_interface"
@@ -83,7 +83,7 @@ SVGLineElement.prototype.getEmphasis = function () {
 
     const emp = p.getAttribute("class");
     if (emp != null) {
-        return emp == CustomAttributeNames.cellEmphasisBorderClass;
+        return emp == AttributeNames.cellEmphasisBorderClass;
     } else {
         return false;
     }
@@ -93,24 +93,24 @@ SVGLineElement.prototype.setEmphasis = function (value: boolean) {
 
     const p: SVGLineElement = this;
     if (p.getEmphasis() && !value) {
-        const tmp = p.getAttribute(CustomAttributeNames.cellTemporaryBorderClass);
+        const tmp = p.getAttribute(AttributeNames.cellTemporaryBorderClass);
         if (tmp != null) {
             p.setAttribute("class", tmp);
-            p.removeAttribute(CustomAttributeNames.cellTemporaryBorderClass);
+            p.removeAttribute(AttributeNames.cellTemporaryBorderClass);
 
         } else {
             p.removeAttribute("class");
 
-            p.removeAttribute(CustomAttributeNames.cellTemporaryBorderClass);
+            p.removeAttribute(AttributeNames.cellTemporaryBorderClass);
 
         }
 
     }
     else if (!p.getEmphasis() && value) {
         const lineClass = p.getAttribute("class");
-        p.setAttribute("class", CustomAttributeNames.cellTemporaryBorderClass);
+        p.setAttribute("class", AttributeNames.cellTemporaryBorderClass);
         if (lineClass != null) {
-            p.setAttribute(CustomAttributeNames.cellTemporaryBorderClass, lineClass);
+            p.setAttribute(AttributeNames.cellTemporaryBorderClass, lineClass);
         }
     }
 };

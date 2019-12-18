@@ -1,6 +1,5 @@
 //namespace GraphTableSVG {
     import { Rectangle } from "../basic/common/vline";
-    import * as CSS from "../basic/svghtml/css"
     import {GGraph} from "../object/g_graph"
     import {GTable} from "../object/g_table"
     import {GObject} from "../object/g_object"
@@ -8,7 +7,7 @@
 
     export type VBAObjectType = SVGPathElement | SVGTextElement | GObject;
 
-    export namespace VBAObject{
+    //export namespace VBAObject{
         /**
          * 領域を取得します。
          * @param items 
@@ -47,4 +46,4 @@
             
         }
 
-    }
+    //}

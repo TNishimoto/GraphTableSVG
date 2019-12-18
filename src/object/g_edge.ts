@@ -1,17 +1,20 @@
 //namespace GraphTableSVG {
 
-import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+import * as AttributeNames from "../basic/common/attribute_names"
+import * as StyleNames from "../basic/common/style_names"
+import * as DefaultClassNames from "../basic/common/default_class_names"
+
 //import {GEdgeAttributes, GObjectAttributes} from "../options/attributes_option"
-import * as SVG from "../basic/svghtml/svg"
+import * as SVG from "../basic/interface/svg"
 import { ShapeObjectType, PathTextAlighnment, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
 import * as CommonFunctions from "../basic/common/common_functions"
 import { VBATranslateFunctions } from "../basic/common/vba_functions"
-import * as SVGTextBox from "../basic/svghtml/svg_textbox";
+import * as SVGTextBox from "../basic/interface/svg_textbox";
 import { GTextBox } from "./g_textbox"
 import { GVertex } from "./g_vertex"
 import { GObject } from "./g_object"
-import * as CSS from "../basic/svghtml/css"
-import {GOptions } from "./g_options"
+import * as CSS from "../basic/html/css"
+import * as GOptions  from "./g_options"
 
 
 export type _GEdgeAttributes = {
@@ -45,21 +48,21 @@ export class GEdge extends GTextBox {
     constructor(svgbox: SVGElement | string, option: GEdgeAttributes = {}) {
         super(svgbox, option);
         this._isSpecialTextBox = true;
-        this.updateAttributes.push(CustomAttributeNames.beginNodeName);
-        this.updateAttributes.push(CustomAttributeNames.endNodeName);
+        this.updateAttributes.push(AttributeNames.beginNodeName);
+        this.updateAttributes.push(AttributeNames.endNodeName);
 
         console.log(option);
 
         const pathClass = this.svgSurface!.getAttribute("class");
-        if (pathClass == CustomAttributeNames.StyleValue.defaultSurfaceClass) {
-            this.svgSurface!.setAttribute("class", CustomAttributeNames.StyleValue.defaultPathSurfaceClass);
+        if (pathClass == DefaultClassNames.defaultSurfaceClass) {
+            this.svgSurface!.setAttribute("class", DefaultClassNames.defaultPathSurfaceClass);
         }
 
         //this._svgGroup = SVG.createGroup(svgbox);
         const _option = <GEdgeAttributes>this.initializeOption(option);
         this.svgText.textContent = "";
-        //const textClass = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
-        if (option.textClass === undefined) option.textClass = CustomAttributeNames.StyleValue.defaultTextClass;
+        //const textClass = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultTextClass);
+        if (option.textClass === undefined) option.textClass = DefaultClassNames.defaultTextClass;
 
         let textClass : string | undefined;
         if(typeof option.textClass == "string"){
@@ -114,7 +117,7 @@ export class GEdge extends GTextBox {
         
         //this.pathTextAlignment = PathTextAlighnment.begin;
         //this.update();
-        //if (this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment) == null) {
+        //if (this.svgGroup.getPropertyStyleValue(AttributeNames.Style.PathTextAlignment) == null) {
         //    this.pathTextAlignment = PathTextAlighnment.center;
        // }
 
@@ -144,20 +147,20 @@ export class GEdge extends GTextBox {
 
         _output.beginVertex = e.gtGetAttributeStringWithUndefined("begin-vertex");
         _output.endVertex = e.gtGetAttributeStringWithUndefined("end-vertex");
-        const bct = e.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorType);
+        const bct = e.getPropertyStyleValue(StyleNames.beginConnectorType);
 
         if (bct != null && typeof(_output.style) == "object" ){
             _output.style.beginConnectorType = ConnectorPosition.ToConnectorPosition(bct);
         } 
-        const ect = e.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorType);
+        const ect = e.getPropertyStyleValue(StyleNames.endConnectorType);
         if (ect != null && typeof(_output.style) == "object" ){
             _output.style.endConnectorType = ConnectorPosition.ToConnectorPosition(ect);
         }
 
         //if (ect != null) _output.endConnectorType = ConnectorPosition.ToConnectorPosition(ect);
 
-        _output.startMarker = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.markerStart);
-        _output.endMarker = e.gtGetAttributeBooleanWithUndefined(CustomAttributeNames.Style.markerEnd);
+        _output.startMarker = e.gtGetStyleBooleanWithUndefined(StyleNames.markerStart);
+        _output.endMarker = e.gtGetAttributeBooleanWithUndefined(StyleNames.markerEnd);
 
         if (removeAttributes) {
             e.removeAttribute("x1");
@@ -185,8 +188,8 @@ export class GEdge extends GTextBox {
         const _option = <GEdgeAttributes>super.initializeOption(option);
 
 
-        const markerStartName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.markerStart);
-        const markerEndName = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.markerEnd);
+        const markerStartName = this.svgGroup.getPropertyStyleValue(StyleNames.markerStart);
+        const markerEndName = this.svgGroup.getPropertyStyleValue(StyleNames.markerEnd);
         if (typeof _option.startMarker === "undefined" && markerStartName != null) _option.startMarker = markerStartName == "true";
         if (typeof _option.endMarker === "undefined" && markerEndName != null) _option.endMarker = markerEndName == "true";
 
@@ -210,8 +213,8 @@ export class GEdge extends GTextBox {
         }
 
 
-        //const styleBeginConnectorType = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorType);
-        //const styleEndConnectorType = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorType);
+        //const styleBeginConnectorType = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.beginConnectorType);
+        //const styleEndConnectorType = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.endConnectorType);
         //if (_option.beginConnectorType === undefined && styleBeginConnectorType === null) _option.beginConnectorType = ConnectorPosition.Auto;
         //if (_option.endConnectorType === undefined && styleEndConnectorType === null) _option.endConnectorType = ConnectorPosition.Auto;
         //if (_option.pathTextAlignment === undefined) _option.pathTextAlignment = PathTextAlighnment.center;
@@ -261,7 +264,7 @@ export class GEdge extends GTextBox {
     protected setClassNameOfSVGGroup() {
         const parent = this.svgGroup.parentElement;
         if (parent instanceof SVGElement) {
-            const className = CustomAttributeNames.StyleValue.defaultEdgeClass;
+            const className = AttributeNames.StyleValue.defaultEdgeClass;
             if (className != null) {
                 this.svgGroup.setAttribute("class", className);
             }
@@ -274,7 +277,7 @@ export class GEdge extends GTextBox {
         return degree;
     }
     public get defaultClassName(): string | undefined {
-        return CustomAttributeNames.StyleValue.defaultEdgeClass;
+        return DefaultClassNames.defaultEdgeClass;
     }
 
     //private _svgPath: SVGPathElement | null;
@@ -286,7 +289,7 @@ export class GEdge extends GTextBox {
         return this._svgTextPath;
     }
     protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
-        if (option.surfaceClass === undefined) option.surfaceClass = CustomAttributeNames.StyleValue.defaultEdgePathClass;
+        if (option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultEdgePathClass;
         //if (_className != null) option.surfaceClass = _className;
 
         this._svgSurface = GEdge.createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
@@ -361,55 +364,55 @@ export class GEdge extends GTextBox {
     開始接点の接続位置を返します。
     */
     get beginConnectorType(): ConnectorPosition {
-        const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.beginConnectorType);
+        const p = this.svgGroup.getPropertyStyleValue(StyleNames.beginConnectorType);
         return ConnectorPosition.ToConnectorPosition(p);
     }
     /**
     開始接点の接続位置を設定します。
     */
     set beginConnectorType(value: ConnectorPosition) {
-        this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.beginConnectorType, value)
+        this.svgGroup.setPropertyStyleValue(StyleNames.beginConnectorType, value)
         //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, ToStrFromConnectorPosition(value));
     }
     /**
     終了接点の接続位置を返します。
     */
     get endConnectorType(): ConnectorPosition {
-        const p = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.endConnectorType);
+        const p = this.svgGroup.getPropertyStyleValue(StyleNames.endConnectorType);
         return ConnectorPosition.ToConnectorPosition(p);
     }
     /**
     終了接点の接続位置を設定します。
     */
     set endConnectorType(value: ConnectorPosition) {
-        this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.endConnectorType, value)
+        this.svgGroup.setPropertyStyleValue(StyleNames.endConnectorType, value)
     }
 
     private get beginVertexID(): string | null {
-        return this.svgGroup.getAttribute(CustomAttributeNames.beginNodeName);
+        return this.svgGroup.getAttribute(AttributeNames.beginNodeName);
     }
     private set beginVertexID(v: string | null) {
         if (v == null) {
-            this.svgGroup.removeAttribute(CustomAttributeNames.beginNodeName);
+            this.svgGroup.removeAttribute(AttributeNames.beginNodeName);
         } else {
-            this.svgGroup.setAttribute(CustomAttributeNames.beginNodeName, v);
+            this.svgGroup.setAttribute(AttributeNames.beginNodeName, v);
         }
     }
 
     private get endVertexID(): string | null {
-        return this.svgGroup.getAttribute(CustomAttributeNames.endNodeName);
+        return this.svgGroup.getAttribute(AttributeNames.endNodeName);
     }
     private set endVertexID(v: string | null) {
         if (v == null) {
-            this.svgGroup.removeAttribute(CustomAttributeNames.endNodeName);
+            this.svgGroup.removeAttribute(AttributeNames.endNodeName);
         } else {
-            this.svgGroup.setAttribute(CustomAttributeNames.endNodeName, v);
+            this.svgGroup.setAttribute(AttributeNames.endNodeName, v);
         }
     }
 
     public get isAppropriatelyReverseMode(): boolean {
 
-        const p = this.svgGroup.getAttribute(CustomAttributeNames.isAppropriatelyReverseTextMode);
+        const p = this.svgGroup.getAttribute(AttributeNames.isAppropriatelyReverseTextMode);
         if (p == null) {
             return false;
         } else {
@@ -417,10 +420,10 @@ export class GEdge extends GTextBox {
         }
 
 
-        //return this.svgGroup.getAttribute(CustomAttributeNames.appropriateEdgeText);
+        //return this.svgGroup.getAttribute(AttributeNames.appropriateEdgeText);
     }
     public set isAppropriatelyReverseMode(v: boolean) {
-        this.svgGroup.setAttribute(CustomAttributeNames.isAppropriatelyReverseTextMode, v.toString());
+        this.svgGroup.setAttribute(AttributeNames.isAppropriatelyReverseTextMode, v.toString());
 
     }
 
@@ -504,10 +507,10 @@ export class GEdge extends GTextBox {
         }
     }
     private removeVertexEvent(vertex: GTextBox) {
-        vertex.svgGroup.removeEventListener(CustomAttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
+        vertex.svgGroup.removeEventListener(AttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
     }
     private addVertexEvent(vertex: GTextBox) {
-        vertex.svgGroup.addEventListener(CustomAttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
+        vertex.svgGroup.addEventListener(AttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
     }
     private connectPositionChangedFunc = () => {
         this.update();
@@ -950,11 +953,11 @@ export class GEdge extends GTextBox {
      * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
      */
     public get pathTextAlignment(): PathTextAlighnment {
-        const value = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.PathTextAlignment, "center");
+        const value = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.PathTextAlignment, "center");
         return PathTextAlighnment.toPathTextAlighnment(value);
     }
     public set pathTextAlignment(value: PathTextAlighnment) {
-        this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.PathTextAlignment, value);
+        this.svgGroup.setPropertyStyleValue(StyleNames.PathTextAlignment, value);
     }
 
     public save() {

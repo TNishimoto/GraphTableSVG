@@ -3,12 +3,15 @@
 
     import * as CommonFunctions from "../../basic/common/common_functions"
     import {Rectangle} from "../../basic/common/vline"
-    import * as CustomAttributeNames from "../../basic/common/custtome_attributes"
+    import * as AttributeNames from "../../basic/common/attribute_names"
+    import * as DefaultClassNames from "../../basic/common/default_class_names"
+    import * as StyleNames from "../../basic/common/style_names"
+
     import {GTable} from "../g_table"
-    import * as SVG from "../../basic/svghtml/svg"
+    import * as SVG from "../../basic/interface/svg"
     //import {CellOption} from "../../options/attributes_option"
     import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../../basic/common/enums";
-    import * as SVGTextBox from "../../basic/svghtml/svg_textbox"
+    import * as SVGTextBox from "../../basic/interface/svg_textbox"
     import { BorderRow, BorderColumn } from "./border_row"
 
     export type CellOption = {
@@ -34,17 +37,17 @@
 
             this.table.rows[_py].svgGroup.appendChild(this.svgGroup);
             //this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgGroup.firstChild);
-            this.svgGroup.setAttribute("class", option.cellClass !== undefined ? option.cellClass : CustomAttributeNames.StyleValue.defaultCellClass);
-            this.svgGroup.setAttribute(CustomAttributeNames.GroupAttribute, "cell");
+            this.svgGroup.setAttribute("class", option.cellClass !== undefined ? option.cellClass : DefaultClassNames.defaultCellClass);
+            this.svgGroup.setAttribute(AttributeNames.GroupAttribute, "cell");
             this.svgGroup.setAttribute(Cell.cellXName, `${_px}`);
             this.svgGroup.setAttribute(Cell.cellYName, `${_py}`);
             this.setMasterDiffX(0);
             this.setMasterDiffY(0);
 
-            const backGroundClass = CustomAttributeNames.StyleValue.defaultCellBackgroungClass;
+            const backGroundClass = DefaultClassNames.defaultCellBackgroungClass;
             this._svgBackground = SVG.createCellRectangle(this.svgGroup, backGroundClass);
             
-            const textClass = CustomAttributeNames.StyleValue.defaultTextClass;            
+            const textClass = DefaultClassNames.defaultTextClass;            
             this._svgText = SVG.createText(textClass);
             this.svgGroup.appendChild(this.svgText);
 
@@ -92,13 +95,13 @@
          */
         public get isEmphasized(): boolean {
             const cellClass = this.svgBackground.getAttribute("class");
-            return cellClass == CustomAttributeNames.cellEmphasisCellClass;
+            return cellClass == AttributeNames.cellEmphasisCellClass;
         }
         public set isEmphasized(v: boolean) {
             if (v) {
                 if (!this.isEmphasized) {
                     this.tmpStyle = this.svgBackground.getAttribute("class");
-                    this.svgBackground.setAttribute("class", CustomAttributeNames.cellEmphasisCellClass);
+                    this.svgBackground.setAttribute("class", AttributeNames.cellEmphasisCellClass);
                 }
             } else {
                 if (this.isEmphasized) {
@@ -150,27 +153,27 @@
 
 
         get horizontalAnchor(): HorizontalAnchor {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.HorizontalAnchor, "center");
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.HorizontalAnchor, "center");
             return HorizontalAnchor.toHorizontalAnchor(b);
         }
         /**
         テキストの水平方向の配置設定を設定します。
         */
         set horizontalAnchor(value: HorizontalAnchor) {
-            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor, value);
+            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(StyleNames.HorizontalAnchor, value);
         }
         /**
         テキストの垂直方向の配置設定を返します。
         */
         get verticalAnchor(): VerticalAnchor {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.VerticalAnchor, "middle");
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.VerticalAnchor, "middle");
             return VerticalAnchor.toVerticalAnchor(b);
         }
         /**
         テキストの垂直方向の配置設定を設定します。
         */
         set verticalAnchor(value: VerticalAnchor) {
-            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor, value);
+            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(StyleNames.VerticalAnchor, value);
         }
         // #endregion
 
@@ -347,11 +350,11 @@
         }
         /*
         get defaultTextClass(): string | null {
-            const r = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass);
+            const r = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultTextClass);
             return r;
         }
         get defaultBackgroundClass(): string | null {
-            const v = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultCellBackgroundClass);
+            const v = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultCellBackgroundClass);
             return v;
         }
         */

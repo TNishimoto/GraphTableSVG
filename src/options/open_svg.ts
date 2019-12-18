@@ -1,9 +1,11 @@
 
-import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+import * as AttributeNames from "../basic/common/attribute_names"
+import * as StyleNames from "../basic/common/style_names"
+import * as DefaultClassNames from "../basic/common/default_class_names"
 import { ShapeObjectType } from "../basic/common/enums";
-import * as HTMLFunctions from "../basic/svghtml/html_functions"
+import * as HTMLFunctions from "../basic/html/html_functions"
 import * as HTMLTable from "./html_table"
-import * as GUIObserver from "../basic/svghtml/gui_observer"
+import * as GUIObserver from "../basic/html/gui_observer"
 
 import { GObject } from "../object/g_object"
 import { GCallout } from "../object/g_callout"
@@ -18,13 +20,13 @@ import { GTable, GTableOption } from "../object/g_table"
 import { GGraph } from "../object/g_graph"
 import { GRectButton } from "../object/g_rect_button"
 import { GCircle } from "../object/g_circle";
-import {GOptions } from "../object/g_options"
+import * as GOptions from "../object/g_options"
 
 //export namespace openSVGFunctions {
     
 //}
 function isGCustomElement(element: SVGElement): boolean {
-    const gObjectTypeAttr = element.getAttribute(CustomAttributeNames.customElement);
+    const gObjectTypeAttr = element.getAttribute(AttributeNames.customElement);
 
     if (gObjectTypeAttr != null) {
         const gObjectType = ShapeObjectType.toShapeObjectType(gObjectTypeAttr);
@@ -46,7 +48,7 @@ export function openCustomElement(id: string | SVGElement): GObject | null {
     } else {
         const element = id;
         //const shapeType = GraphTableSVG.ShapeObjectType.toShapeObjectType(element.nodeName);
-        const gObjectTypeAttr = element.getAttribute(CustomAttributeNames.customElement);
+        const gObjectTypeAttr = element.getAttribute(AttributeNames.customElement);
         if (gObjectTypeAttr != null) {
             const gObjectType = ShapeObjectType.toShapeObjectType(gObjectTypeAttr);
             if (gObjectType != null) {
@@ -71,7 +73,7 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
     if (parent instanceof SVGElement) {
         let r: GObject;
 
-        e.removeAttribute(CustomAttributeNames.customElement);
+        e.removeAttribute(AttributeNames.customElement);
         if (type == ShapeObjectType.Callout) {
             const option = GCallout.constructAttributes(e, true);
             r = new GCallout(parent, option);
@@ -260,8 +262,8 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
 }
 export function createVertex(parent: GGraph, option: GOptions.GTextBoxAttributes = {}): GVertex {
     let _parent = parent.svgGroup;
-    if (option.class == undefined) option.class = CustomAttributeNames.StyleValue.defaultVertexClass;
-    const type = typeof(option.class) == "string" ? parent.getStyleValue(option.class, CustomAttributeNames.Style.defaultSurfaceType) : null ;
+    if (option.class == undefined) option.class = DefaultClassNames.defaultVertexClass;
+    const type = typeof(option.class) == "string" ? parent.getStyleValue(option.class, StyleNames.defaultSurfaceType) : null ;
     if (type != null) {
         switch (type) {
             case ShapeObjectType.Callout: return new GCallout(_parent, option);
@@ -281,7 +283,7 @@ export function toSVGUnknownElement(e: Element) {
 
     } else {
         const ns = document.createElementNS('http://www.w3.org/2000/svg', "g");
-        ns.setAttribute(CustomAttributeNames.customElement, e.nodeName);
+        ns.setAttribute(AttributeNames.customElement, e.nodeName);
         for (let i = 0; i < e.attributes.length; i++) {
             const attr = e.attributes.item(i);
             ns.setAttribute(attr!.name, attr!.value);
@@ -306,7 +308,7 @@ export function toDivElement(e: Element): HTMLElement | null {
         return null;
     } else {
         const ns = document.createElement("div");
-        ns.setAttribute(CustomAttributeNames.customElement, type);
+        ns.setAttribute(AttributeNames.customElement, type);
         for (let i = 0; i < e.attributes.length; i++) {
             const attr = e.attributes.item(i);
             ns.setAttribute(attr!.name, attr!.value);

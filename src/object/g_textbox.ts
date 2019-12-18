@@ -1,17 +1,19 @@
 /// <reference path="g_object.ts"/>
-import "../basic/svghtml/svg_interface";
-import "../basic/svghtml/svg_text";
-import "../basic/svghtml/svg_g";
-import * as SVG from "../basic/svghtml/svg"
-import * as CSS from "../basic/svghtml/css"
+import "../basic/interface/svg_interface";
+import "../basic/interface/svg_text";
+import "../basic/interface/svg_g";
+import * as SVG from "../basic/interface/svg"
+import * as CSS from "../basic/html/css"
 
-import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+import * as AttributeNames from "../basic/common/attribute_names"
+import * as StyleNames from "../basic/common/style_names"
+import * as DefaultClassNames from "../basic/common/default_class_names"
 import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../basic/common/enums";
 import {Rectangle} from "../basic/common/vline"
-import * as HTMLFunctions from "../basic/svghtml/html_functions"
-import * as SVGTextBox from "../basic/svghtml/svg_textbox"
+import * as HTMLFunctions from "../basic/html/html_functions"
+import * as SVGTextBox from "../basic/interface/svg_textbox"
 import {GObject } from "./g_object"
-import {GOptions } from "./g_options"
+import * as GOptions  from "./g_options"
 import {AutoSizeShapeToFitText} from "../basic/common/enums"
 
 //namespace GraphTableSVG {
@@ -35,7 +37,7 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
             super(svgbox, option)
 
             /*
-            this._svgText = GTextBox.createSVGText(this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultTextClass));
+            this._svgText = GTextBox.createSVGText(this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultTextClass));
             this.svgGroup.appendChild(this.svgText);
             this._textObserver = new MutationObserver(this.textObserverFunc);
             const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
@@ -58,7 +60,7 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
 
             }
 
-            const b = this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitText);
+            const b = this.svgGroup.getPropertyStyleValue(StyleNames.autoSizeShapeToFitText);
             
             if (b === undefined && typeof(_option.style) == "object") {
                 const style : GOptions.GTextBoxCSS = _option.style;
@@ -93,7 +95,7 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
             //if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
             //if (_option.verticalAnchor === undefined) _option.verticalAnchor = VerticalAnchor.Middle;
             //if (_option.horizontalAnchor === undefined) _option.horizontalAnchor = HorizontalAnchor.Center;
-            if (_option.textClass === undefined) _option.textClass = CustomAttributeNames.StyleValue.defaultTextClass;
+            if (_option.textClass === undefined) _option.textClass = DefaultClassNames.defaultTextClass;
 
 
             return _option;
@@ -106,7 +108,7 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
         private static createSVGText(className: string | GOptions.textClassCSS | undefined | null, style: string | undefined | GOptions.textClassCSS): SVGTextElement {
             const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-            _svgText.setAttribute(CustomAttributeNames.objectIDName, (SVG.getNewID() ).toString());
+            _svgText.setAttribute(AttributeNames.objectIDName, (SVG.getNewID() ).toString());
             if (style !== undefined){
                 if(typeof(style) == "string"){
                     _svgText.setAttribute("style", style);
@@ -123,10 +125,10 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
                 if (_svgText.style.fontSize == null || _svgText.style.fontSize == "") _svgText.style.fontSize = "14px";
                 if (_svgText.style.fontWeight == null || _svgText.style.fontWeight == "") _svgText.style.fontWeight = "bold";
                 if (_svgText.style.fontFamily == null || _svgText.style.fontFamily == "") _svgText.style.fontFamily = 'Times New Roman';
-                if (_svgText.style.getPropertyValue(CustomAttributeNames.Style.marginLeft) == "") _svgText.setMarginLeft(10);
-                if (_svgText.style.getPropertyValue(CustomAttributeNames.Style.marginRight) == "") _svgText.setMarginRight(10);
-                if (_svgText.style.getPropertyValue(CustomAttributeNames.Style.marginTop) == "") _svgText.setMarginTop(10);
-                if (_svgText.style.getPropertyValue(CustomAttributeNames.Style.marginBottom) == "") _svgText.setMarginBottom(10);
+                if (_svgText.style.getPropertyValue(StyleNames.marginLeft) == "") _svgText.setMarginLeft(10);
+                if (_svgText.style.getPropertyValue(StyleNames.marginRight) == "") _svgText.setMarginRight(10);
+                if (_svgText.style.getPropertyValue(StyleNames.marginTop) == "") _svgText.setMarginTop(10);
+                if (_svgText.style.getPropertyValue(StyleNames.marginBottom) == "") _svgText.setMarginBottom(10);
             } else {
                 if(typeof(className) == "string"){
                     _svgText.setAttribute("class", className);
@@ -143,7 +145,7 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
             removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GOptions.GTextBoxAttributes {
 
             GObject.constructAttributes(e, removeAttributes, output);
-            //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(CustomAttributeNames.Style.autoSizeShapeToFitText);
+            //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(AttributeNames.Style.autoSizeShapeToFitText);
             const textChild = HTMLFunctions.getChildByNodeName(e, "text");
             output.textClass = e.gtGetAttributeStringWithUndefined("text:class");
             output.textStyle = e.gtGetAttributeStringWithUndefined("text:style");
@@ -169,7 +171,7 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
                 e.removeAttribute("text:class");
                 e.removeAttribute("text:style");
 
-                (<any>e).style.removeProperty(CustomAttributeNames.Style.autoSizeShapeToFitText);
+                (<any>e).style.removeProperty(StyleNames.autoSizeShapeToFitText);
             }
             return output;
         }
@@ -204,34 +206,34 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
 
 
         get horizontalAnchor(): HorizontalAnchor {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.HorizontalAnchor, "center");
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.HorizontalAnchor, "center");
             return HorizontalAnchor.toHorizontalAnchor(b);
         }
         /**
         テキストの水平方向の配置設定を設定します。
         */
         set horizontalAnchor(value: HorizontalAnchor) {
-            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.HorizontalAnchor, value);
+            if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(StyleNames.HorizontalAnchor, value);
         }
         /**
         テキストの垂直方向の配置設定を返します。
         */
         get verticalAnchor(): VerticalAnchor {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.VerticalAnchor, "middle");
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.VerticalAnchor, "middle");
             return VerticalAnchor.toVerticalAnchor(b);
         }
         /**
         テキストの垂直方向の配置設定を設定します。
         */
         set verticalAnchor(value: VerticalAnchor) {
-            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.VerticalAnchor, value);
+            if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(StyleNames.VerticalAnchor, value);
         }
 
         /**
          * このVertexがテキストに合わせてサイズを変える場合Trueを返します。
          */
         get isAutoSizeShapeToFitText(): AutoSizeShapeToFitText {
-            const b = this.svgGroup.getPropertyStyleValueWithDefault(CustomAttributeNames.Style.autoSizeShapeToFitText, "semi-auto");
+            const b = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.autoSizeShapeToFitText, "semi-auto");
             if(b == "auto"){
                 return "auto";
             }else if(b == "none"){
@@ -248,8 +250,8 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
             */
         }
         set isAutoSizeShapeToFitText(value: AutoSizeShapeToFitText) {
-            this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitText, value);
-            //this.svgGroup.setPropertyStyleValue(CustomAttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
+            this.svgGroup.setPropertyStyleValue(StyleNames.autoSizeShapeToFitText, value);
+            //this.svgGroup.setPropertyStyleValue(AttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
         }
         public update() {
             super.update();
@@ -436,8 +438,8 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
             return r;
         }
         public hasDescendant(obj: SVGElement): boolean {
-            const ids = this.svgElements.map((v) => v.getAttribute(CustomAttributeNames.objectIDName)).filter((v) => v != null);
-            const id = obj.getAttribute(CustomAttributeNames.objectIDName);
+            const ids = this.svgElements.map((v) => v.getAttribute(AttributeNames.objectIDName)).filter((v) => v != null);
+            const id = obj.getAttribute(AttributeNames.objectIDName);
             return ids.some((v) => v == id);
         }
 
@@ -447,7 +449,7 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
 
         public get msoDashStyle(): msoDashStyle | null {
             if (this.svgSurface != null) {
-                const dashStyle = this.svgSurface.getPropertyStyleValue(CustomAttributeNames.Style.msoDashStyleName);
+                const dashStyle = this.svgSurface.getPropertyStyleValue(StyleNames.msoDashStyleName);
                 if (dashStyle != null) {
                     return msoDashStyle.toMSODashStyle(dashStyle);
                 } else {
@@ -460,9 +462,9 @@ import {AutoSizeShapeToFitText} from "../basic/common/enums"
         public set msoDashStyle(value: msoDashStyle | null) {
             if (this.svgSurface != null) {
                 if (msoDashStyle == null) {
-                    this.svgSurface.style.removeProperty(CustomAttributeNames.Style.msoDashStyleName);
+                    this.svgSurface.style.removeProperty(StyleNames.msoDashStyleName);
                 } else {
-                    this.svgSurface.setPropertyStyleValue(CustomAttributeNames.Style.msoDashStyleName, value);
+                    this.svgSurface.setPropertyStyleValue(StyleNames.msoDashStyleName, value);
                 }
             }
         }

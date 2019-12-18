@@ -1,4 +1,4 @@
-import * as SVG from "./svg"
+import * as SVG from "../interface/svg"
 export namespace DraggableObjectFunctions {
     type DragInfo = { target: SVGElement, offsetX: number, offsetY: number, g : SVGGElement, gParentG : SVGGElement | SVGSVGElement }
     let drag: DragInfo | null = null;

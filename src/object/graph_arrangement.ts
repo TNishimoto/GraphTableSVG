@@ -7,7 +7,7 @@ import {VirtualTree} from "./virtual_tree"
 
 import * as TreeArrangement from "./tree_arangement"
 import { Direction, ConnectorPosition } from "../basic/common/enums"
-import * as SVGTextBox from "../basic/svghtml/svg_textbox"
+import * as SVGTextBox from "../basic/interface/svg_textbox"
 
     export namespace GraphArrangement {
         export function standardTreeWidthArrangement(graph: GGraph): void {

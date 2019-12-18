@@ -2,7 +2,8 @@
 //namespace GraphTableSVG {
 import { VBATranslateFunctions } from "../basic/common/vba_functions"
 import { Rectangle } from "../basic/common/vline"
-import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+import * as AttributeNames from "../basic/common/attribute_names"
+import * as DefaultClassNames from "../basic/common/default_class_names"
 import { ConnectorPosition, msoDashStyle } from "../basic/common/enums";
 import { GObject } from "./g_object"
 import { GTextBox } from "./g_textbox"
@@ -17,7 +18,7 @@ export class GVertex extends GTextBox {
     protected setClassNameOfSVGGroup() {
         const parent = this.svgGroup.parentElement;
         if (parent instanceof SVGElement) {
-            const className = GraphTableSVG.CustomAttributeNames.StyleValue.defaultVertexClass;
+            const className = GraphTableSVG.AttributeNames.StyleValue.defaultVertexClass;
             if (className != null && !this.svgGroup.hasAttribute("class") ) {
                 this.svgGroup.setAttribute("class", className);
             }
@@ -26,7 +27,7 @@ export class GVertex extends GTextBox {
     */
 
     public get defaultClassName(): string | undefined {
-        return CustomAttributeNames.StyleValue.defaultVertexClass;
+        return DefaultClassNames.defaultVertexClass;
     }
     /**
     * 接続部分のXY座標を返します。
@@ -298,8 +299,8 @@ export class GVertex extends GTextBox {
 
     public get graph(): GGraph | null {
         const v = this.svgGroup.parentElement;
-        if (v != null && v instanceof SVGGElement && v.hasAttribute(CustomAttributeNames.objectIDName)) {
-            const id = v.getAttribute(CustomAttributeNames.objectIDName)!;
+        if (v != null && v instanceof SVGGElement && v.hasAttribute(AttributeNames.objectIDName)) {
+            const id = v.getAttribute(AttributeNames.objectIDName)!;
             const obj = GObject.getObjectFromObjectID(id);
             if (obj instanceof GGraph) {
                 return obj;

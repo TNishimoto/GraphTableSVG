@@ -1,9 +1,9 @@
 
 //import * as CSS from "../basic/svghtml/css"
-//import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+//import * as AttributeNames from "../basic/common/custtome_attributes"
 import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment, AutoSizeShapeToFitText } from "../basic/common/enums";
 
-export namespace GOptions{
+//export namespace GOptions{
     export type textClassCSS = {
         fill? : string,
         fontSize? : string,
@@ -65,4 +65,4 @@ export namespace GOptions{
 
     export type GTextBoxAttributes = GTextBoxAttributesWithoutGroup & _GTextBoxSVGGroupInfo
 
-}
+//}

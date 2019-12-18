@@ -1,10 +1,10 @@
 //namespace GraphTableSVG {
     
     import { Padding, Rectangle } from "../common/vline";
-    import * as CustomAttributeNames from "../common/custtome_attributes"
+    import * as AttributeNames from "../common/attribute_names"
     import * as GUI  from "./gui"
     import * as HTMLFunctions from "./html_functions"
-    import * as SVG from "./svg"
+    import * as SVG from "../interface/svg"
 
     //import {VBAObjectType} from "../object/table/vba"
     //import {GObject} from "../object/g_object"
@@ -154,7 +154,7 @@
                 
                 var event = document.createEvent("HTMLEvents");
                 
-                event.initEvent(CustomAttributeNames.resizeName, false, true)
+                event.initEvent(AttributeNames.resizeName, false, true)
                 e.dispatchEvent(event);
             }
 

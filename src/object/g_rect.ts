@@ -4,10 +4,11 @@
     import { GTextBox} from "./g_textbox"
     import {GCalloutAttributes} from "./g_callout"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../basic/common/enums";
-    import * as CustomAttributeNames from "../basic/common/custtome_attributes"
+    import * as AttributeNames from "../basic/common/attribute_names"
+    import * as StyleNames from "../basic/common/style_names"
     import {Rectangle, VLine} from "../basic/common/vline"
-    import * as CSS from "../basic/svghtml/css"
-    import {GOptions } from "./g_options"
+    import * as CSS from "../basic/html/css"
+    import * as GOptions  from "./g_options"
 
     export class GRect extends GVertex {
         public get svgRectangle(): SVGRectElement {
@@ -57,14 +58,14 @@
                 }else{
                     rect.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
                 }
-                //const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName);
+                //const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.AttributeNames.Style.msoDashStyleName);
                 //if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 
-                const width = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultWidth, null);
+                const width = rect.getPropertyStyleNumberValue(StyleNames.defaultWidth, null);
                 if (width != null) {
                     rect.width.baseVal.value = width;
                 }
-                const height = rect.getPropertyStyleNumberValue(CustomAttributeNames.Style.defaultHeight, null);
+                const height = rect.getPropertyStyleNumberValue(StyleNames.defaultHeight, null);
                 if (height != null) {
                     rect.height.baseVal.value = height;
                 }

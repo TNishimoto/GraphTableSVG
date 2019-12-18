@@ -11,12 +11,12 @@ import {Cell} from "./table/cell"
 import {Rectangle} from "../basic/common/vline"
 import {VBATranslateFunctions,parseInteger, visible} from "../basic/common/vba_functions"    
 
-import * as SVG from "../basic/svghtml/svg"
-import * as CSS from "../basic/svghtml/css"
+import * as SVG from "../basic/interface/svg"
+import * as CSS from "../basic/html/css"
 
-import * as HTMLFunctions from "../basic/svghtml/html_functions"
+import * as HTMLFunctions from "../basic/html/html_functions"
 
-import {GOptions } from "./g_options"
+import * as GOptions  from "./g_options"
 //namespace GraphTableSVG {
 
 
@@ -284,12 +284,12 @@ import {GOptions } from "./g_options"
         
        /*
         get defaultCellClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultCellClass);
+            return this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultCellClass);
         }
         */
        /*
         get defaultBorderClass(): string | null {
-            return this.svgGroup.getPropertyStyleValue(CustomAttributeNames.Style.defaultBorderClass);
+            return this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultBorderClass);
         }
         */
         /**
@@ -511,13 +511,13 @@ import {GOptions } from "./g_options"
                 }
             }
             /*
-            if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingLeft)) cell.svgGroup.setPaddingLeft(10);
-            if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingRight)) cell.svgGroup.setPaddingRight(10);
-            if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingTop)) cell.svgGroup.setPaddingTop(10);
-            if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.paddingBottom)) cell.svgGroup.setPaddingBottom(10);
+            if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.paddingLeft)) cell.svgGroup.setPaddingLeft(10);
+            if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.paddingRight)) cell.svgGroup.setPaddingRight(10);
+            if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.paddingTop)) cell.svgGroup.setPaddingTop(10);
+            if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.paddingBottom)) cell.svgGroup.setPaddingBottom(10);
             */
-            //if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.VerticalAnchor)) cell.verticalAnchor = VerticalAnchor.Middle;
-            //if (!cell.svgGroup.hasStyleAttribute(CustomAttributeNames.Style.HorizontalAnchor)) cell.horizontalAnchor = HorizontalAnchor.Center;
+            //if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.VerticalAnchor)) cell.verticalAnchor = VerticalAnchor.Middle;
+            //if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.HorizontalAnchor)) cell.horizontalAnchor = HorizontalAnchor.Center;
             //if(this.cells[y][x].)
         }
         /**

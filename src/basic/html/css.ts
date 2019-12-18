@@ -1,5 +1,8 @@
 
-import * as CustomAttributeNames from "../common/custtome_attributes"
+import * as AttributeNames from "../common/attribute_names"
+import * as StyleNames from "../common/style_names"
+import * as DefaultClassNames from "../common/default_class_names"
+
 import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment } from "../common/enums";
 //export namespace CSS {
     /*
@@ -21,13 +24,13 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
     function setupReplaceMapper() {
         replaceMapper.set("fontSize", "font-size");
         replaceMapper.set("fontFamily", "font-family");
-        replaceMapper.set("autoSizeShapeToFitText", CustomAttributeNames.Style.autoSizeShapeToFitText);
-        replaceMapper.set("verticalAnchor", CustomAttributeNames.Style.VerticalAnchor);
-        replaceMapper.set("horizontalAnchor", CustomAttributeNames.Style.HorizontalAnchor);
+        replaceMapper.set("autoSizeShapeToFitText", StyleNames.autoSizeShapeToFitText);
+        replaceMapper.set("verticalAnchor", StyleNames.VerticalAnchor);
+        replaceMapper.set("horizontalAnchor", StyleNames.HorizontalAnchor);
 
-        replaceMapper.set("beginConnectorType", CustomAttributeNames.Style.beginConnectorType);
-        replaceMapper.set("endConnectorType", CustomAttributeNames.Style.endConnectorType);
-        replaceMapper.set("pathTextAlignment", CustomAttributeNames.Style.PathTextAlignment);
+        replaceMapper.set("beginConnectorType", StyleNames.beginConnectorType);
+        replaceMapper.set("endConnectorType", StyleNames.endConnectorType);
+        replaceMapper.set("pathTextAlignment", StyleNames.PathTextAlignment);
         replaceMapper.set("strokeWidth", "stroke-width");
 
     }
@@ -138,74 +141,74 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
     export function createCSS(): string {
 
         const r = `
-            .${CustomAttributeNames.cellEmphasisCellClass}{
+            .${AttributeNames.cellEmphasisCellClass}{
             fill : yellow !important;
             }
-            .${CustomAttributeNames.cellEmphasisBorderClass}{
+            .${AttributeNames.cellEmphasisBorderClass}{
             stroke : red !important;
             }
-            .${CustomAttributeNames.StyleValue.defaultCellClass}{
-                ${CustomAttributeNames.Style.paddingTop} : 5px;
-                ${CustomAttributeNames.Style.paddingLeft} : 5px;
-                ${CustomAttributeNames.Style.paddingRight} : 5px;
-                ${CustomAttributeNames.Style.paddingBottom} : 5px;
-                ${CustomAttributeNames.Style.VerticalAnchor} : ${VerticalAnchor.Middle};
-                ${CustomAttributeNames.Style.HorizontalAnchor} : ${HorizontalAnchor.Center};
+            .${DefaultClassNames.defaultCellClass}{
+                ${StyleNames.paddingTop} : 5px;
+                ${StyleNames.paddingLeft} : 5px;
+                ${StyleNames.paddingRight} : 5px;
+                ${StyleNames.paddingBottom} : 5px;
+                ${StyleNames.VerticalAnchor} : ${VerticalAnchor.Middle};
+                ${StyleNames.HorizontalAnchor} : ${HorizontalAnchor.Center};
             }
-            .${CustomAttributeNames.StyleValue.defaultTextClass}{
+            .${DefaultClassNames.defaultTextClass}{
                 fill : black;
                 font-size: 18px;
                 font-family: "monospace";
             }
-            .${CustomAttributeNames.StyleValue.defaultCellBackgroungClass}{
+            .${DefaultClassNames.defaultCellBackgroungClass}{
                 fill : white;
             }
-            .${CustomAttributeNames.StyleValue.defaultCellBorderClass}{
+            .${DefaultClassNames.defaultCellBorderClass}{
                 stroke : black;
             }
-            .${CustomAttributeNames.StyleValue.defaultVertexClass}{
+            .${DefaultClassNames.defaultVertexClass}{
 
             }
-            .${CustomAttributeNames.StyleValue.defaultEdgeClass}{
-                ${CustomAttributeNames.Style.PathTextAlignment}: center;
+            .${DefaultClassNames.defaultEdgeClass}{
+                ${StyleNames.PathTextAlignment}: center;
             }
 
-            .${CustomAttributeNames.StyleValue.defaultSurfaceClass}{
+            .${DefaultClassNames.defaultSurfaceClass}{
                 stroke: black;
                 stroke-width: 1px;
                 fill : white;
             }
-            .${CustomAttributeNames.StyleValue.defaultPathSurfaceClass}{
+            .${DefaultClassNames.defaultPathSurfaceClass}{
                 stroke: black;
                 stroke-width: 1px;
                 fill : transparent;
             }
-            .${CustomAttributeNames.StyleValue.defaultCircleLogicTreeCircleSVGGroup}{
-                ${CustomAttributeNames.Style.autoSizeShapeToFitText}: false;
+            .${DefaultClassNames.defaultCircleLogicTreeCircleSVGGroup}{
+                ${StyleNames.autoSizeShapeToFitText}: false;
             }
 
-            .${CustomAttributeNames.StyleValue.defaultEdgePathClass}{
+            .${DefaultClassNames.defaultEdgePathClass}{
                 stroke: black;
                 fill: none;
                 stroke-width: 1px;
             }
-            .${CustomAttributeNames.StyleValue.defaultTextboxPathClass}{
+            .${DefaultClassNames.defaultTextboxPathClass}{
                 stroke: black;
                 fill: white;
                 stroke-width: 1px;
             }
 
-            .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}{
+            .${DefaultClassNames.defaultRectButtonSurfaceClass}{
                 fill: #8EB8FF; 
                 stroke: black;
             }
-            .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}[disabled]{
+            .${DefaultClassNames.defaultRectButtonSurfaceClass}[disabled]{
                 fill: #aaaaaa; 
             }
-            .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}:not([disabled]):hover{
+            .${DefaultClassNames.defaultRectButtonSurfaceClass}:not([disabled]):hover{
                 fill:#A4C6FF; 
             }
-            .${CustomAttributeNames.StyleValue.defaultRectButtonSurfaceClass}:not([disabled]):active{
+            .${DefaultClassNames.defaultRectButtonSurfaceClass}:not([disabled]):active{
                 fill:#8EB8FF; 
             }
 
@@ -220,18 +223,18 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
                 --padding-bottom: 0px;
             }
 
-            .${CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellTextClass} {
+            .${DefaultClassNames.defaultConsoleColumnTitleCellTextClass} {
                 fill : black;
                 font-size: 18px;
                 font-weight: bold;
             }
-            .${CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellUndefinedTextClass} {
+            .${DefaultClassNames.defaultConsoleColumnTitleCellUndefinedTextClass} {
                 fill : pink;
                 font-size: 18px;
                 font-style: italic;
             }
 
-            .${CustomAttributeNames.StyleValue.defaultConsoleColumnTitleCellBackgroundClass}{
+            .${DefaultClassNames.defaultConsoleColumnTitleCellBackgroundClass}{
                 fill: #8EB8FF; 
                 stroke: black;
             }

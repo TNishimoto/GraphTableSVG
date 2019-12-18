@@ -3,7 +3,7 @@
 import { SVGToVBA } from "./svg_to_vba"
 import { GObject } from "../object/g_object"
 
-export namespace VBAMacroModal {
+//export namespace VBAMacroModal {
     export function showMacroModal(id :string | GObject){
         if (id instanceof GObject) {
             const p = SVGToVBA.create(id);
@@ -93,4 +93,4 @@ export namespace VBAMacroModal {
         alert('クリップボードにコピーしました。');
         removeMacroModal();
     }
-}
+//}

@@ -1,15 +1,15 @@
 
 import * as GUI from "./gui"
-import * as CustomAttributeNames from "../common/custtome_attributes"
+import * as AttributeNames from "../common/attribute_names"
 //export namespace HTMLFunctions {
     export enum NodeOrder {
         Preorder, Postorder
     }
     export function getTNodes(e: Element): HTMLElement[] | null {
-        const tNodes = <HTMLElement[]>getChildren(e).filter((v) => v.getAttribute(CustomAttributeNames.customElement) == "t");
+        const tNodes = <HTMLElement[]>getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == "t");
         if (tNodes.length > 0) {
             tNodes.forEach((v, i) => {
-                v.removeAttribute(CustomAttributeNames.customElement);
+                v.removeAttribute(AttributeNames.customElement);
                 if (i > 0 && !v.hasAttribute("newline"))
                     v.setAttribute("newline", "true")
             }

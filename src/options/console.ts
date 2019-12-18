@@ -3,16 +3,17 @@
     import { LogicTable } from "./logic_table"
     //import { CommonFunctions } from "../basic/common/common_functions";
     import { createShape } from "./open_svg";
-    import * as SVGTextBox from "../basic/svghtml/svg_textbox";
-    import * as CustomAttributeNames from "../basic/common/custtome_attributes"
-    import * as SVG from "../basic/svghtml/svg";
-    import * as CSS from "../basic/svghtml/css";
+    import * as SVGTextBox from "../basic/interface/svg_textbox";
+    import * as AttributeNames from "../basic/common/attribute_names"
+    import * as DefaultClassNames from "../basic/common/default_class_names"
+    import * as SVG from "../basic/interface/svg";
+    import * as CSS from "../basic/html/css";
     import { PNG } from "../basic/common/png";
-    import { VBAMacroModal } from "./vba_macro_modal";
+    import * as VBAMacroModal from "./vba_macro_modal";
     import { SVGToVBA } from "./svg_to_vba"
     import { VBAObjectType } from "./vba_object"
 
-    import * as GUIObserver from "../basic/svghtml/gui_observer"
+    import * as GUIObserver from "../basic/html/gui_observer"
     
 
     //export namespace Console {
@@ -174,7 +175,7 @@
             const code = getOrCreateCodeElement();
             const consoleLine = new ConsoleLineElement(code);
 
-            const textClass = CustomAttributeNames.StyleValue.defaultTextClass;  
+            const textClass = DefaultClassNames.defaultTextClass;  
             const textElement = SVG.createText(textClass)
             //const text = document.createElementNS('http://www.w3.org/2000/svg', "text");
 

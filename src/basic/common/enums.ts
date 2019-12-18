@@ -1,5 +1,7 @@
 ﻿//namespace GraphTableSVG {
-import * as CustomAttributeNames from "./custtome_attributes"
+import * as AttributeNames from "./attribute_names"
+import * as StyleNames from "../common/style_names"
+
 /**
 ノードの並び順です。
 */
@@ -169,14 +171,14 @@ export namespace msoDashStyle {
             const width = <number>svgLine.getPropertyStyleNumberValue("stroke-width", 2);
             svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
             svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
-            svgLine.setPropertyStyleValue(GraphTableSVG.CustomAttributeNames.Style.msoDashStyleName, type);
+            svgLine.setPropertyStyleValue(GraphTableSVG.AttributeNames.Style.msoDashStyleName, type);
         } else {
 
         }
     }
     */
     export function setCpmoutedDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement): void {
-        const type = svgLine.getPropertyStyleValue(CustomAttributeNames.Style.msoDashStyleName);
+        const type = svgLine.getPropertyStyleValue(StyleNames.msoDashStyleName);
         if (type == null) {
 
         }
@@ -188,7 +190,7 @@ export namespace msoDashStyle {
     }
 
     export function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElement): msoDashStyle {
-        const typeName = svgLine.getPropertyStyleValue(CustomAttributeNames.Style.msoDashStyleName);
+        const typeName = svgLine.getPropertyStyleValue(StyleNames.msoDashStyleName);
         if (typeName != null) {
             const type = toMSODashStyle(typeName);
             if (type != null) {

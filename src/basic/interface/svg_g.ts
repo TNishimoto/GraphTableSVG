@@ -1,5 +1,6 @@
 
-import * as CustomAttributeNames from "../common/custtome_attributes"
+import * as AttributeNames from "../common/attribute_names"
+import * as StyleNames from "../common/style_names"
 
 declare global {
     export interface SVGGElement {
@@ -86,34 +87,34 @@ SVGGElement.prototype.setY = function (value: number) {
 
 SVGElement.prototype.getPaddingTop = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.paddingTop, 5)!;
+    return p.getPropertyStyleNumberValue(StyleNames.paddingTop, 5)!;
 };
 SVGElement.prototype.getPaddingLeft = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.paddingLeft, 5)!;
+    return p.getPropertyStyleNumberValue(StyleNames.paddingLeft, 5)!;
 };
 SVGElement.prototype.getPaddingRight = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.paddingRight, 5)!;
+    return p.getPropertyStyleNumberValue(StyleNames.paddingRight, 5)!;
 };
 SVGElement.prototype.getPaddingBottom = function () {
     const p: SVGElement = this;
-    return p.getPropertyStyleNumberValue(CustomAttributeNames.Style.paddingBottom, 5)!;
+    return p.getPropertyStyleNumberValue(StyleNames.paddingBottom, 5)!;
 };
 
 SVGElement.prototype.setPaddingLeft = function (value: number) {
     const p: SVGElement = this;
-    p.setPropertyStyleValue(CustomAttributeNames.Style.paddingLeft, value.toString());
+    p.setPropertyStyleValue(StyleNames.paddingLeft, value.toString());
 };
 SVGElement.prototype.setPaddingTop = function (value: number) {
     const p: SVGElement = this;
-    p.setPropertyStyleValue(CustomAttributeNames.Style.paddingTop, value.toString());
+    p.setPropertyStyleValue(StyleNames.paddingTop, value.toString());
 };
 SVGElement.prototype.setPaddingRight = function (value: number) {
     const p: SVGElement = this;
-    p.setPropertyStyleValue(CustomAttributeNames.Style.paddingRight, value.toString());
+    p.setPropertyStyleValue(StyleNames.paddingRight, value.toString());
 };
 SVGElement.prototype.setPaddingBottom = function (value: number) {
     const p: SVGElement = this;
-    p.setPropertyStyleValue(CustomAttributeNames.Style.paddingBottom, value.toString());
+    p.setPropertyStyleValue(StyleNames.paddingBottom, value.toString());
 };

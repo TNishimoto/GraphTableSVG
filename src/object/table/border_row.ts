@@ -1,8 +1,9 @@
 //namespace GraphTableSVG {
     import {Cell} from "./cell"
-    import * as CustomAttributeNames from "../../basic/common/custtome_attributes"
+    import * as AttributeNames from "../../basic/common/attribute_names"
+    import * as DefaultClassNames from "../../basic/common/default_class_names"
     import {GTable} from "../g_table"
-    import * as SVG from "../../basic/svghtml/svg"
+    import * as SVG from "../../basic/interface/svg"
 
     /**
      * 表の行を表現するクラスです。
@@ -28,7 +29,7 @@
             this._svgGroup.setAttribute("name", "border_row");
             this.borderY = _y;
             for (let x = 0; x < columnSize; x++) {
-                this.insertBorder(x, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
+                this.insertBorder(x, borderClass !== undefined ? borderClass : DefaultClassNames.defaultCellBorderClass);
             }
         }
         private _borders: SVGLineElement[] = new Array(0);
@@ -37,7 +38,7 @@
         }
 
         public insertBorder(coromni: number, borderClass?: string) {
-            const line = SVG.createLine(0, 0, 0, 0, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
+            const line = SVG.createLine(0, 0, 0, 0, borderClass !== undefined ? borderClass : DefaultClassNames.defaultCellBorderClass);
             this._svgGroup.appendChild(line);
             this._borders.splice(coromni, 0, line);
         }
@@ -75,7 +76,7 @@
             this.borderX = _x;
 
             for (let y = 0; y < rowSize; y++) {
-                this.insertBorder(y, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
+                this.insertBorder(y, borderClass !== undefined ? borderClass : DefaultClassNames.defaultCellBorderClass);
 
             }
 
@@ -85,7 +86,7 @@
             return this._borders;
         }
         public insertBorder(rowi: number, borderClass?: string) {
-            const line = SVG.createLine(0, 0, 0, 0, borderClass !== undefined ? borderClass : CustomAttributeNames.StyleValue.defaultCellBorderClass);
+            const line = SVG.createLine(0, 0, 0, 0, borderClass !== undefined ? borderClass : DefaultClassNames.defaultCellBorderClass);
             this._svgGroup.appendChild(line);
             this._borders.splice(rowi, 0, line);
         }
