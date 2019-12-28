@@ -4,10 +4,10 @@ export class BaseLogicTree {
     public nodeText: string | null = null;
 }
 */
-import * as Console from "./console"
-import { VertexOrder, Direction, PathTextAlighnment } from "../basic/common/enums"
+//import * as Console from "../../options/console"
+import { VertexOrder, Direction, PathTextAlighnment } from "../../basic/common/enums"
 //import { GTextBoxAttributes } from "../object/g_textbox";
-import * as GOptions from "../object/g_options"
+import * as GOptions from "../g_options"
 
 /*
 export type LogicTreeOption = {
@@ -114,11 +114,11 @@ export class LogicTree {
     public set textContent(value: string) {
         this.edgeOption.text = value;
     }
-
+    /*
     public view(canvasID: string | null = null ) {
-        //option: LogicTreeOption = { relocateStyle: "standard", direction: "down" }
         Console.graph(this, canvasID);
     }
+    */
 
 
 }

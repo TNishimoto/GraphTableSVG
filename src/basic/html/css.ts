@@ -261,4 +261,42 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
             `
         return r;
     }
+    export function createCSSString(obj : object | string | undefined) : string | undefined {
+        if(typeof obj == "string"){
+            return obj;
+        }else if(typeof obj == "object"){
+            const styleContent = getRuleContentString(toRuleMap(obj));
+            return styleContent;    
+        }else{
+            return undefined;
+        }
+    }
+    export function createCSSClass(obj : object | string | undefined) : string | undefined {
+        if(typeof obj == "string"){
+            return obj;
+        }else if(typeof obj == "object"){
+            const styleClass = getOrCreateClassName(obj);
+            return styleClass;    
+        }else{
+            return undefined;
+        }
+    }
+    export function setCSSClass(e : SVGElement, style : object | string | undefined){
+        if(style !== undefined){
+            //SVG.resetStyle(e.style);
+            const styleClass = createCSSClass(style);
+            if(styleClass !== undefined){
+                e.setAttribute("class", styleClass);    
+            }
+        }
+    }
+    export function setCSSStyle(e : SVGElement, style : object | string | undefined){
+        if(style !== undefined){
+            //SVG.resetStyle(e.style);
+            const styleClass = createCSSString(style);
+            if(styleClass !== undefined){
+                e.setAttribute("style", styleClass);    
+            }
+        }
+    }
 //}

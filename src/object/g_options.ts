@@ -2,7 +2,8 @@
 //import * as CSS from "../basic/svghtml/css"
 //import * as AttributeNames from "../basic/common/custtome_attributes"
 import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment, AutoSizeShapeToFitText, Direction } from "../basic/common/enums";
-
+import * as CSS from "../basic/html/css"
+import * as SVG from "../basic/interface/svg"
 export type GraphAllocateFunction = (graph: object) => void
 
 
@@ -12,6 +13,10 @@ export type textClassCSS = {
     fontSize?: string,
     fontFamily?: string,
 }
+export type backgroundCSS = {
+    fill?: string
+}
+
 export type surfaceClassCSS = {
     stroke?: string,
     strokeWidth?: string,
@@ -27,6 +32,9 @@ export type GEdgeStyleCSS = {
     endConnectorType?: ConnectorPosition,
     pathTextAlignment?: PathTextAlighnment
 } & GTextBoxCSS
+
+
+
 
 type _GObjectAttributes = {
     //class?: string,

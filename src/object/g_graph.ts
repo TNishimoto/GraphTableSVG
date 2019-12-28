@@ -20,7 +20,7 @@ import * as GOptions from "./g_options"
 
 import { ShapeObjectType, VertexObjectType, VertexOrder, PathTextAlighnment, ConnectorPosition, Direction } from "../basic/common/enums";
 
-import { LogicTree, LogicGraph } from "../options/logic_tree"
+import { LogicTree, LogicGraph } from "./logic/logic_tree"
 import { GraphArrangement } from "./graph_helpers/graph_arrangement"
 
 

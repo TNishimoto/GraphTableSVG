@@ -1,6 +1,6 @@
 
 //namespace GraphTableSVG {
-    import {LogicTree} from "./logic_tree"
+    import {LogicTree} from "../object/logic/logic_tree"
     import {GVertex} from "../object/g_vertex"
 
     //export namespace Parse{

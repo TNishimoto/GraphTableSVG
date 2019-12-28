@@ -1,6 +1,6 @@
     import {TableDictionary} from "./table_dictionary"
-    import { LogicGraph, LogicGraphNode, LogicTree } from "./logic_tree"
-    import { LogicTable } from "./logic_table"
+    import { LogicGraph, LogicGraphNode, LogicTree } from "../object/logic/logic_tree"
+    import { LogicTable } from "../object/logic/logic_table"
     //import { CommonFunctions } from "../basic/common/common_functions";
     import { createShape } from "./open_svg";
     import * as SVGTextBox from "../basic/interface/svg_textbox";
@@ -191,5 +191,14 @@
 
             //table(message);
             return consoleLine;
+        }
+        export function view(item : LogicTable | LogicTree | LogicGraph){
+            if(item instanceof LogicTable){
+                table(item);
+            }else if(item instanceof LogicTree){
+                graph(item);
+            }else{
+                graph(item);
+            }
         }
     //}

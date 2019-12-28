@@ -8,77 +8,15 @@ export class HTMLLogicCell{
     public item: any;
 }
 */
-import * as AttributeNames from "../basic/common/attribute_names"
-import * as SVGTextBox from "../basic/interface/svg_textbox"
-import * as HTMLFunctions from "../basic/html/html_functions"
-import * as Console from "./console"
+import * as AttributeNames from "../../basic/common/attribute_names"
+import * as HTMLFunctions from "../../basic/html/html_functions"
+//import * as Console from "../../options/console"
+import {LogicCell} from "./logic_cell"
 
-import { Cell } from "../object/table_helpers/cell"
-import * as GOptions from "../object/g_options"
+//import { Cell } from "../object/table_helpers/cell"
+//import * as GOptions from "../object/g_options"
 
-export class LogicCell {
 
-    public text: string | null = null;
-    public cellClass?: string | GOptions.GTextBoxCSS = Cell.defaultCellClass;
-    public textClass: string | null = null;
-    public backgroundClass: string | null = null;
-    public topBorderClass: string | null = null;
-    public leftBorderClass: string | null = null;
-    public rightBorderClass: string | null = null;
-    public bottomBorderClass: string | null = null;
-    public svgText: SVGTextElement | null = null;
-    public connectedColumnCount: number = 1;
-    public connectedRowCount: number = 1;
-    public tTexts: HTMLElement[] | null = null;
-
-    public item: any;
-
-    public isLatexMode: boolean = false;
-    constructor() {
-    }
-    public set(text: string | undefined = undefined, isLatexMode: boolean = false, cellClass: string | undefined = undefined, backgroundClass: string | undefined = undefined, textClass: string | undefined = undefined,
-        topBorderClass: string | undefined = undefined, leftBorderClass: string | undefined = undefined, rightBorderClass: string | undefined = undefined, bottomBorderClass: string | undefined = undefined) {
-        if (text !== undefined) this.text = text;
-        if (cellClass !== undefined) this.cellClass = cellClass;
-        if (textClass !== undefined) this.textClass = textClass;
-        if (backgroundClass !== undefined) this.backgroundClass = backgroundClass;
-        if (topBorderClass !== undefined) this.topBorderClass = topBorderClass;
-        if (leftBorderClass !== undefined) this.leftBorderClass = leftBorderClass;
-        if (rightBorderClass !== undefined) this.rightBorderClass = rightBorderClass;
-        if (bottomBorderClass !== undefined) this.bottomBorderClass = bottomBorderClass;
-        this.isLatexMode = isLatexMode;
-    }
-    public createTextElement(svgText: SVGTextElement) {
-        if (this.tTexts != null) {
-            SVGTextBox.constructSVGTextByHTMLElements(svgText, this.tTexts, this.isLatexMode);
-        } else if (this.text != null) {
-            svgText.setTextContent(this.text, this.isLatexMode);
-        }
-    }
-    /*
-    public set(text: string | null = null, isLatexMode: boolean = false, cellClass: string | null = null, backgroundClass: string | null = null, textClass: string | null = null
-        , topBorderClass: string | null = null, leftBorderClass: string | null = null, rightBorderClass: string | null = null, bottomBorderClass: string | null = null) {
-        if (text != null) this.text = text;
-        if (cellClass != null) this.cellClass = cellClass;
-        if (textClass != null) this.textClass = textClass;
-        if (backgroundClass != null) this.backgroundClass = backgroundClass;
-        if (topBorderClass != null) this.topBorderClass = topBorderClass;
-        if (leftBorderClass != null) this.leftBorderClass = leftBorderClass;
-        if (rightBorderClass != null) this.rightBorderClass = rightBorderClass;
-        if (bottomBorderClass != null) this.bottomBorderClass = bottomBorderClass;
-        this.isLatexMode = isLatexMode;
-    }
-    */
-    /*
-    public checkCell(): boolean {
-        if (this.masterCell != null) {
-
-        } else {
-
-        }
-    }
-    */
-}
 /**
  * 表を表現するクラスです。
  */
@@ -178,7 +116,7 @@ export class LogicTable {
         for (let y = 0; y < str.length; y++) {
             for (let x = 0; x < str[y].length; x++) {
                 const p = str[y][x].split("%%%");
-                table.cells[y][x].text = p[0];
+                table.cells[y][x].text.textContent = p[0];
                 if (p.length == 3) {
                     table.cells[y][x].connectedColumnCount = Number(p[1]);
                     table.cells[y][x].connectedRowCount = Number(p[2]);
@@ -214,7 +152,7 @@ export class LogicTable {
             logicTable.rowHeights[y] = h;
 
             for (let x = 0; x < cells[y].length; x++) {
-                logicTable.cells[y][x].text = cells[y][x].innerHTML;
+                logicTable.cells[y][x].text.textContent = cells[y][x].innerHTML;
                 if (cells[y][x].hasAttribute("w")) {
                     const w = Number(cells[y][x].getAttribute("w"));
                     logicTable.cells[y][x].connectedColumnCount = w;
@@ -256,7 +194,7 @@ export class LogicTable {
             logicTable.rowHeights[y] = h;
 
             for (let x = 0; x < cells[y].length; x++) {
-                logicTable.cells[y][x].text = cells[y][x].innerHTML;
+                logicTable.cells[y][x].text.textContent = cells[y][x].innerHTML;
                 if (cells[y][x].hasAttribute("w")) {
                     const w = Number(cells[y][x].getAttribute("w"));
                     logicTable.cells[y][x].connectedColumnCount = w;
@@ -267,14 +205,16 @@ export class LogicTable {
                 }
                 //const tNodes = openSVGFunctions.getTNodes(cells[y][x]);
 
-                logicTable.cells[y][x].text = cells[y][x].innerHTML;
+                logicTable.cells[y][x].text.textContent = cells[y][x].innerHTML;
 
             }
         }
         return logicTable;
     }
-
+    /*
     public view() {
         Console.table(this);
     }
+    */
 }
+

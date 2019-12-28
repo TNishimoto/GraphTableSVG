@@ -3,8 +3,10 @@ import { Color, CommonFunctions, AttributeNames, Enums, VBAFunctions, VLine,Defa
 import { GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox} from "./object/index"
 
 import { openSVG, openHTML, openCustomElement,  lazyOpenSVG, createShape, clearSVG } from "./options/open_svg";
-import { LogicTable } from "./options/logic_table";
-import { LogicTree } from "./options/logic_tree";
+import { LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, LogicTableLine, createLogicTable } from "./object/logic/index";
+
+//import { LogicTable } from "./object/logic/logic_table";
+//import { LogicTree } from "./object/logic/logic_tree";
 import * as Console from "./options/console";
 import * as Debug from "./options/debug";
 
@@ -13,8 +15,9 @@ import * as Debug from "./options/debug";
 export {
     Color, CommonFunctions, AttributeNames, Enums, VBAFunctions, VLine,DefaultClassNames, StyleNames, 
     GUIObserver, HTMLFunctions, GUI, DraggableObject, 
+    LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, LogicTableLine, createLogicTable, 
     GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox,
     openSVG, openHTML, openCustomElement, lazyOpenSVG,
-    LogicTable, LogicTree, Console, createShape, clearSVG, Debug, CSS
+    Console, createShape, clearSVG, Debug, CSS
 };
 

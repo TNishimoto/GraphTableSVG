@@ -13,6 +13,7 @@
     import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../../basic/common/enums";
     import * as SVGTextBox from "../../basic/interface/svg_textbox"
     import { BorderRow, BorderColumn } from "./border_row"
+import { LogicCell } from "../logic/logic_cell"
 
     export type CellOption = {
         cellClass?: string,
@@ -179,7 +180,7 @@
 
         // #region field
         //private static readonly defaultBackgroundClassName: string = "--default-background-class";
-        public static readonly defaultCellClass: string = "___cell-default";
+        //
 
         public static readonly cellXName = "data-cellX";
         public static readonly cellYName = "data-cellY";

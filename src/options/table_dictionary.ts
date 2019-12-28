@@ -1,9 +1,10 @@
 // tslint:disable-next-line: no-namespace
-import { LogicGraph, LogicGraphNode } from "./logic_tree"
-import { LogicTable } from "./logic_table"
+import { LogicGraph, LogicGraphNode } from "../object/logic/logic_tree"
+import { LogicTable } from "../object/logic/logic_table"
 
 import * as AttributeNames from "../basic/common/attribute_names"
 import * as DefaultClassNames from "../basic/common/default_class_names"
+import { LogicText } from "../object/logic/logic_text";
 
 export class TableDictionary {
     public static IndexName = "___GraphTableSVG_Console_Index";
@@ -66,34 +67,37 @@ export class TableDictionary {
         const table = new LogicTable({ columnCount: this.columnMapper.size, rowCount: this.rows.length + 1 });
 
         this.columnMapper.forEach((value, key) => {
-            table.cells[0][value].textClass = DefaultClassNames.defaultConsoleColumnTitleCellTextClass;
+            const logicText : LogicText = new LogicText();
+            logicText.class = DefaultClassNames.defaultConsoleColumnTitleCellTextClass;
+            //table.cells[0][value].textClass = DefaultClassNames.defaultConsoleColumnTitleCellTextClass;
             table.cells[0][value].backgroundClass = DefaultClassNames.defaultConsoleColumnTitleCellBackgroundClass;
             if (key == TableDictionary.IndexName) {
-                table.cells[0][value].text = "(index)";
+                logicText.textContent = "(index)";
             } else if (key == TableDictionary.ValueName) {
-                table.cells[0][value].text = "(value)";
+                logicText.textContent = "(value)";
 
             } else {
-                table.cells[0][value].text = key;
+                logicText.textContent = key;
             }
+            table.cells[0][value].text = logicText;
 
         })
         this.rows.forEach((map, index) => {
 
             const tableIndex = index + 1;
             for (let i = 0; i < this.columnMapper.size; i++) {
-                table.cells[tableIndex][i].text = "undefined";
-                table.cells[tableIndex][i].textClass = DefaultClassNames.defaultConsoleColumnTitleCellUndefinedTextClass;
+                table.cells[tableIndex][i].text.textContent = "undefined";
+                table.cells[tableIndex][i].text.textContent = DefaultClassNames.defaultConsoleColumnTitleCellUndefinedTextClass;
             }
             map.forEach((value, key) => {
                 const columnIndex = this.columnMapper.get(key);
                 if (columnIndex != undefined) {
                     const cell = this.rows[index].get(key);
                     if (cell == null) {
-                        table.cells[tableIndex][columnIndex].text = "null";
+                        table.cells[tableIndex][columnIndex].text.textContent = "null";
                     } else if (cell != undefined) {
-                        table.cells[tableIndex][columnIndex].text = cell.toString();
-                        table.cells[tableIndex][columnIndex].textClass = DefaultClassNames.defaultTextClass;
+                        table.cells[tableIndex][columnIndex].text.textContent = cell.toString();
+                        table.cells[tableIndex][columnIndex].text.class = DefaultClassNames.defaultTextClass;
 
                     }
                 }

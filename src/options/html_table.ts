@@ -1,5 +1,5 @@
 
-import { LogicTable } from "./logic_table"
+import { LogicTable } from "../object/logic/logic_table"
 //export namespace HTMLFunctions {
     export function createHTMLTable(e: HTMLElement): HTMLTableElement {
         const table = LogicTable.constructHTMLLogicTable(e);
@@ -52,7 +52,7 @@ import { LogicTable } from "./logic_table"
                             })
                         } else {
                             const text = cell.text;
-                            if (text != null) td.innerHTML = text;
+                            if (typeof text == "string") td.innerHTML = text;
                         }
                         tr.appendChild(td);
                     }

@@ -14,6 +14,7 @@ export const customElement: string = "data-custom";
 export const cellEmphasisCellClass: string = "___cell-emphasis";
 export const cellEmphasisBorderClass: string = "___border-emphasis";
 export const cellTemporaryBorderClass: string = "___temporary-class";
+export const defaultCellClass: string = "___cell-default";
 export let defaultCircleRadius = 15;
 
 

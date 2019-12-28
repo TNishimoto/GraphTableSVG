@@ -3,7 +3,7 @@ import { GObject } from "./g_object";
 import * as CommonFunctions from "../basic/common/common_functions"
 //import {GTableOption} from "../options/attributes_option"
 import { ShapeObjectType } from "../basic/common/enums";
-import { LogicTable } from "../options/logic_table"
+import { LogicTable } from "./logic/logic_table"
 import { CellRow } from "./table_helpers/row"
 import { CellColumn } from "./table_helpers/column"
 import { BorderColumn, BorderRow } from "./table_helpers/border_row"
@@ -465,60 +465,33 @@ export class GTable extends GObject {
         if (table != null) {
             const cellInfo = table.cells[y][x];
             if (cellInfo != null) {
-                if (typeof (cellInfo.cellClass) == "string") {
-                    SVG.resetStyle(cell.svgGroup.style);
-                    //if(typeof(cellInfo.cellClass) == "string")
-                    cell.svgGroup.setAttribute("class", cellInfo.cellClass);
-                } else if (typeof (cellInfo.cellClass) == "object") {
-                    const className = CSS.getOrCreateClassName(cellInfo.cellClass)
-                    SVG.resetStyle(cell.svgGroup.style);
-                    cell.svgGroup.setAttribute("class", className);
-
-                }
+                CSS.setCSSClass(cell.svgGroup, cellInfo.cellClass);
 
                 if (cellInfo.backgroundClass != null) {
-                    SVG.resetStyle(cell.svgBackground.style);
-                    cell.svgBackground.setAttribute("class", cellInfo.backgroundClass);
+                    CSS.setCSSClass(cell.svgBackground, cellInfo.backgroundClass);
                 }
+                /*
                 if (cellInfo.textClass != null) {
-                    SVG.resetStyle(cell.svgText.style);
-                    cell.svgText.setAttribute("class", cellInfo.textClass);
+                    CSS.setCSSClass(cell.svgText, cellInfo.textClass);
                 }
+                */
                 cellInfo.createTextElement(cell.svgText);
                 if (cellInfo.topBorderClass != null) {
-
-                    let borderClass = cellInfo.topBorderClass;
-
-                    SVG.resetStyle(cell.svgTopBorder.style);
-                    cell.svgTopBorder.setAttribute("class", borderClass);
+                    CSS.setCSSClass(cell.svgTopBorder, cellInfo.topBorderClass);
                 }
                 if (cellInfo.leftBorderClass != null) {
-                    let borderClass = cellInfo.leftBorderClass;
-                    SVG.resetStyle(cell.svgLeftBorder.style);
-                    cell.svgLeftBorder.setAttribute("class", borderClass);
+                    CSS.setCSSClass(cell.svgLeftBorder, cellInfo.leftBorderClass);
+
                 }
                 if (cellInfo.rightBorderClass != null) {
-                    let borderClass = cellInfo.rightBorderClass;
-                    SVG.resetStyle(cell.svgRightBorder.style);
-                    cell.svgRightBorder.setAttribute("class", borderClass);
+                    CSS.setCSSClass(cell.svgRightBorder, cellInfo.rightBorderClass);
                 }
                 if (cellInfo.bottomBorderClass != null) {
-                    let borderClass = cellInfo.bottomBorderClass;
-                    SVG.resetStyle(cell.svgBottomBorder.style);
-                    cell.svgBottomBorder.setAttribute("class", borderClass);
+                    CSS.setCSSClass(cell.svgBottomBorder, cellInfo.bottomBorderClass);
                 }
 
             }
         }
-        /*
-        if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.paddingLeft)) cell.svgGroup.setPaddingLeft(10);
-        if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.paddingRight)) cell.svgGroup.setPaddingRight(10);
-        if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.paddingTop)) cell.svgGroup.setPaddingTop(10);
-        if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.paddingBottom)) cell.svgGroup.setPaddingBottom(10);
-        */
-        //if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.VerticalAnchor)) cell.verticalAnchor = VerticalAnchor.Middle;
-        //if (!cell.svgGroup.hasStyleAttribute(AttributeNames.Style.HorizontalAnchor)) cell.horizontalAnchor = HorizontalAnchor.Center;
-        //if(this.cells[y][x].)
     }
     /**
      * LogicTableからTableを構築します。
