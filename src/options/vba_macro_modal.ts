@@ -33,10 +33,14 @@ import { GObject } from "../object/g_object"
     ※サイズの大きすぎる木はマクロ実行時にエラーが出ます。
     <br>
     <textarea id="codeBox" rows="8" cols="100" style="overflow:auto;"></textarea>
-    <button class="btn" onClick="GraphTableSVG.GUI.copyAndCloseMacroModal();">
-        クリップボードにコピー
-    </button>
 `;
+            const button = document.createElement("button");
+            button.setAttribute("class", "btn");
+            button.textContent = "クリップボードにコピー";
+            button.onclick = () =>{
+                copyAndCloseMacroModal();
+            }
+            mainDiv.appendChild(button);
 
             mainDiv.style.position = "fixed";
             mainDiv.style.zIndex = "16";

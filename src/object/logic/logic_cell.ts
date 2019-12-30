@@ -17,10 +17,10 @@ export class LogicCell {
 
 
     public backgroundClass?: string | GOptions.backgroundCSS;
-    public topBorderClass: string | null = null;
-    public leftBorderClass: string | null = null;
-    public rightBorderClass: string | null = null;
-    public bottomBorderClass: string | null = null;
+    public topBorderClass?: string | null;
+    public leftBorderClass?: string | null;
+    public rightBorderClass?: string | null;
+    public bottomBorderClass?: string | null;
     //public svgText: SVGTextElement | null = null;
     public connectedColumnCount: number = 1;
     public connectedRowCount: number = 1;
@@ -38,11 +38,14 @@ export class LogicCell {
         this.cellClass = cell.cellClass;
         this.cellStyle = cell.cellStyle;
         this.backgroundClass = cell.backgroundClass;
-        this.topBorderClass = cell.topBorderClass;
-        this.leftBorderClass = cell.topBorderClass;
-        this.rightBorderClass = cell.rightBorderClass;
-        this.connectedColumnCount = cell.connectedColumnCount;
+        if(cell.topBorderClass !== undefined)this.topBorderClass = cell.topBorderClass;
+        if(cell.leftBorderClass !== undefined)this.leftBorderClass = cell.topBorderClass;
+        if(cell.rightBorderClass !== undefined)this.rightBorderClass = cell.rightBorderClass;
+        if(cell.bottomBorderClass !== undefined){
+            this.bottomBorderClass = cell.bottomBorderClass;
+        }
         this.connectedRowCount = cell.connectedRowCount;
+        this.connectedColumnCount = cell.connectedColumnCount;
         this.item = cell.item;
     }
     

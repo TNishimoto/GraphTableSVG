@@ -58,6 +58,9 @@
 
 
             }
+            public addVBAObject(obj : VBAObjectType){
+                this.vbaObjects.push(obj);
+            }
 
             public static addSVGSVGElement(code: HTMLElement): SVGSVGElement {
                 const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -127,7 +130,8 @@
 
                 gtable.constructFromLogicTable(item);
                 gtable.x = 0;
-                gtable.y = 0;    
+                gtable.y = 0;
+                consoleLine.addVBAObject(gtable);
 
             }else{
 
@@ -155,7 +159,8 @@
                     const consoleLine = new ConsoleLineElement(code);
                     //const svg = addSVGSVGElement(code);
                     const ggraph = createShape(consoleLine.canvas, "g-graph");    
-                    ggraph.build(item);    
+                    ggraph.build(item);
+                    consoleLine.addVBAObject(ggraph);
                 }
                 /*
                 if(item instanceof LogicGraph){
@@ -187,7 +192,7 @@
             const b2 = SVGTextBox.getSize(textElement, true);
             textElement.setAttribute("y", b2.height.toString() );
 
-            consoleLine.vbaObjects.push(textElement);
+            consoleLine.addVBAObject(textElement);
 
             //table(message);
             return consoleLine;

@@ -281,12 +281,16 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
             return undefined;
         }
     }
-    export function setCSSClass(e : SVGElement, style : object | string | undefined){
+    export function setCSSClass(e : SVGElement, style : object | string | undefined | null){
         if(style !== undefined){
             //SVG.resetStyle(e.style);
-            const styleClass = createCSSClass(style);
-            if(styleClass !== undefined){
-                e.setAttribute("class", styleClass);    
+            if(style == null){
+                e.removeAttribute("class")
+            }else{
+                const styleClass = createCSSClass(style);
+                if(styleClass !== undefined){
+                    e.setAttribute("class", styleClass);    
+                }    
             }
         }
     }

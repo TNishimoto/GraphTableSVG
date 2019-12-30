@@ -476,17 +476,17 @@ export class GTable extends GObject {
                 }
                 */
                 cellInfo.createTextElement(cell.svgText);
-                if (cellInfo.topBorderClass != null) {
+                if (cellInfo.topBorderClass !== undefined) {
                     CSS.setCSSClass(cell.svgTopBorder, cellInfo.topBorderClass);
                 }
-                if (cellInfo.leftBorderClass != null) {
+                if (cellInfo.leftBorderClass !== undefined) {
                     CSS.setCSSClass(cell.svgLeftBorder, cellInfo.leftBorderClass);
 
                 }
-                if (cellInfo.rightBorderClass != null) {
+                if (cellInfo.rightBorderClass !== undefined) {
                     CSS.setCSSClass(cell.svgRightBorder, cellInfo.rightBorderClass);
                 }
-                if (cellInfo.bottomBorderClass != null) {
+                if (cellInfo.bottomBorderClass !== undefined) {
                     CSS.setCSSClass(cell.svgBottomBorder, cellInfo.bottomBorderClass);
                 }
 
