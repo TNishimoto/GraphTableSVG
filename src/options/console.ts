@@ -197,6 +197,17 @@
             //table(message);
             return consoleLine;
         }
+        export function textarea(message : string) : HTMLTextAreaElement{
+            const code = getOrCreateCodeElement();
+
+            const textArea = document.createElement("textarea");
+            textArea.textContent = message;
+            textArea.rows = 5;
+            textArea.cols = 80;
+            code.appendChild(textArea);
+            return textArea;
+
+        }
         export function view(item : LogicTable | LogicTree | LogicGraph){
             if(item instanceof LogicTable){
                 table(item);
