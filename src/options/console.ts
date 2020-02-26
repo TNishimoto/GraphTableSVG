@@ -18,17 +18,24 @@
 
     //export namespace Console {
         export class ConsoleLineElement {
-            public canvas : SVGSVGElement;
+            public canvas : SVGSVGElement | null = null;
             public vbaObjects : VBAObjectType[] = new Array();
             canvasContainer : HTMLDivElement;
-            pngButton : HTMLButtonElement;
+            //pngButton : HTMLButtonElement;
+            removeButton : HTMLButtonElement;
             macroButton : HTMLButtonElement;
-            constructor(parent : HTMLElement, createVBAButton : boolean = true){
+            constructor(parent : HTMLElement, createVBAButton : boolean = true, createCanvas : boolean = true, mainElement : HTMLElement | null = null){
                 this.canvasContainer = document.createElement("div");
-                parent.appendChild(this.canvasContainer);                
-                this.canvas = ConsoleLineElement.addSVGSVGElement(this.canvasContainer);
-                GUIObserver.observeSVGSVG(this.canvas);
-
+                parent.appendChild(this.canvasContainer);           
+                
+                if(createCanvas){
+                    this.canvas = ConsoleLineElement.addSVGSVGElement(this.canvasContainer);
+                    GUIObserver.observeSVGSVG(this.canvas);                        
+                }
+                if(mainElement != null){
+                    this.canvasContainer.appendChild(mainElement);
+                }
+                /*
                 this.pngButton = document.createElement("button");
                 this.pngButton.textContent = "PNG";
                 const pngFunc = () =>{
@@ -37,9 +44,16 @@
 
                 }
                 this.pngButton.onclick = pngFunc;
+                */
                 //this.canvasContainer.appendChild(this.pngButton);
                 //this.pngButton.setAttribute("hidden", "1");
-                
+                this.removeButton = document.createElement("button");
+                this.removeButton.textContent = "remove";                
+                this.canvasContainer.appendChild(this.removeButton);
+                const removeFunc = () => {
+                    this.canvasContainer.remove();
+                }
+                this.removeButton.onclick = removeFunc;
 
                 this.macroButton = document.createElement("button");
                 this.macroButton.textContent = "VBA";
@@ -53,6 +67,7 @@
                     VBAMacroModal.createMacroModal(SVGToVBA.create(this.vbaObjects));
 
                 }
+
                 this.macroButton.onclick = vbaFunc;
 
 
@@ -61,6 +76,7 @@
             public addVBAObject(obj : VBAObjectType){
                 this.vbaObjects.push(obj);
             }
+
 
             public static addSVGSVGElement(code: HTMLElement): SVGSVGElement {
                 const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -126,7 +142,7 @@
                 const consoleLine = new ConsoleLineElement(code);
 
                 //const svg = addSVGSVGElement(code);
-                const gtable = createShape(consoleLine.canvas, "g-table");
+                const gtable = createShape(consoleLine.canvas!, "g-table");
 
                 gtable.constructFromLogicTable(item);
                 gtable.x = 0;
@@ -158,7 +174,7 @@
                     const code = getOrCreateCodeElement();
                     const consoleLine = new ConsoleLineElement(code);
                     //const svg = addSVGSVGElement(code);
-                    const ggraph = createShape(consoleLine.canvas, "g-graph");    
+                    const ggraph = createShape(consoleLine.canvas!, "g-graph");    
                     ggraph.build(item);
                     consoleLine.addVBAObject(ggraph);
                 }
@@ -185,7 +201,7 @@
             //const text = document.createElementNS('http://www.w3.org/2000/svg', "text");
 
             //text.textContent = message;
-            consoleLine.canvas.appendChild(textElement);
+            consoleLine.canvas!.appendChild(textElement);
 
             SVGTextBox.setTextToSVGText(textElement, message, false);
             textElement.setAttribute("x", "0" );
@@ -197,15 +213,20 @@
             //table(message);
             return consoleLine;
         }
-        export function textarea(message : string) : HTMLTextAreaElement{
+        export function textarea(message : string) : ConsoleLineElement{
             const code = getOrCreateCodeElement();
-
             const textArea = document.createElement("textarea");
             textArea.textContent = message;
             textArea.rows = 5;
             textArea.cols = 80;
-            code.appendChild(textArea);
-            return textArea;
+            const consoleLine = new ConsoleLineElement(code, false, false, textArea);
+
+
+            //const canvasContainer = document.createElement("div");
+            //code.appendChild(canvasContainer);                
+
+            //consoleLine.canvasContainer.appendChild(textArea);
+            return consoleLine;
 
         }
         export function view(item : LogicTable | LogicTree | LogicGraph){
