@@ -1,0 +1,26 @@
+{
+    "name": "typedoc-sample",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "webpack",
+        "typedoc": "typedoc --out ./docs/typedoc/ ./src/ -m 'commonjs'"
+    },
+    "keywords": [
+        "typedoc"
+    ],
+    "author": "Mic-U",
+    "license": "MIT",
+    "dependencies": {
+        "gulp": "^4.0.2",
+        "gulp-typedoc": "^2.0.0",
+        "typedoc": "^0.15.3"
+    },
+    "devDependencies": {
+        "ts-loader": "^6.2.1",
+        "typescript": "^3.7.3",
+        "webpack": "^4.41.2",
+        "webpack-cli": "^3.3.10"
+    }
+}
