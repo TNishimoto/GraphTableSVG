@@ -20,20 +20,29 @@
         export class ConsoleLineElement {
             public canvas : SVGSVGElement | null = null;
             public vbaObjects : VBAObjectType[] = new Array();
-            canvasContainer : HTMLDivElement;
+            public fieldSetElement : HTMLFieldSetElement;
+            private legendElement : HTMLLegendElement;
+            private canvasContainer : HTMLDivElement;
             //pngButton : HTMLButtonElement;
-            removeButton : HTMLButtonElement;
-            macroButton : HTMLButtonElement;
+            private removeButton : HTMLButtonElement;
+            private macroButton : HTMLButtonElement;
+
+
             constructor(parent : HTMLElement, createVBAButton : boolean = true, createCanvas : boolean = true, mainElement : HTMLElement | null = null){
                 this.canvasContainer = document.createElement("div");
-                parent.appendChild(this.canvasContainer);           
+                parent.appendChild(this.canvasContainer);
+
+                this.fieldSetElement = document.createElement("fieldset");
+                this.canvasContainer.appendChild(this.fieldSetElement);
+                this.legendElement = document.createElement("legend");
+                this.fieldSetElement.appendChild(this.legendElement);
                 
                 if(createCanvas){
-                    this.canvas = ConsoleLineElement.addSVGSVGElement(this.canvasContainer);
+                    this.canvas = ConsoleLineElement.addSVGSVGElement(this.fieldSetElement);
                     GUIObserver.observeSVGSVG(this.canvas);                        
                 }
                 if(mainElement != null){
-                    this.canvasContainer.appendChild(mainElement);
+                    this.fieldSetElement.appendChild(mainElement);
                 }
                 /*
                 this.pngButton = document.createElement("button");
@@ -49,16 +58,16 @@
                 //this.pngButton.setAttribute("hidden", "1");
                 this.removeButton = document.createElement("button");
                 this.removeButton.textContent = "remove";                
-                this.canvasContainer.appendChild(this.removeButton);
+                this.fieldSetElement.appendChild(this.removeButton);
                 const removeFunc = () => {
-                    this.canvasContainer.remove();
+                    this.fieldSetElement.remove();
                 }
                 this.removeButton.onclick = removeFunc;
 
                 this.macroButton = document.createElement("button");
                 this.macroButton.textContent = "VBA";
                 if(createVBAButton){
-                    this.canvasContainer.appendChild(this.macroButton);
+                    this.fieldSetElement.appendChild(this.macroButton);
                 }
 
 
@@ -73,6 +82,14 @@
 
 
             }
+            public get title() : string{
+                return this.legendElement.textContent!;
+            }
+            public set title(value : string){
+                this.legendElement.textContent = value;
+                this.legendElement.style.fontWeight = "bold"
+            }
+            
             public addVBAObject(obj : VBAObjectType){
                 this.vbaObjects.push(obj);
             }
@@ -136,7 +153,7 @@
             }
         }
         */
-        export function table(item: any) {
+        export function table(item: any, title : string = "") {
             if(item instanceof LogicTable){ 
                 const code = getOrCreateCodeElement();
                 const consoleLine = new ConsoleLineElement(code);
@@ -148,13 +165,14 @@
                 gtable.x = 0;
                 gtable.y = 0;
                 consoleLine.addVBAObject(gtable);
+                consoleLine.title = title;
 
             }else{
 
                 const tableDic = new TableDictionary();
                 tableDic.construct(item);
                 const logicTable = tableDic.toLogicTable();
-                table(logicTable);
+                table(logicTable, title);
             }
             
 
@@ -164,7 +182,7 @@
             code.innerHTML="";
         }
 
-        export function graph(item : any | LogicTree | LogicGraph, canvasID : string | null = null ){
+        export function graph(item : any | LogicTree | LogicGraph, title : string = "",canvasID : string | null = null ){
 
             if(item instanceof LogicTree || item instanceof LogicGraph){
                 if(canvasID != null){
@@ -177,6 +195,7 @@
                     const ggraph = createShape(consoleLine.canvas!, "g-graph");    
                     ggraph.build(item);
                     consoleLine.addVBAObject(ggraph);
+                    consoleLine.title = title;
                 }
                 /*
                 if(item instanceof LogicGraph){
@@ -188,7 +207,7 @@
                 const tableDic = new TableDictionary();
                 tableDic.construct(item);
                 const logicGraph = tableDic.toLogicGraph();
-                graph(logicGraph, canvasID);
+                graph(logicGraph, title, canvasID);
                 //console.log(logicGraph);    
             }
         }
@@ -213,13 +232,14 @@
             //table(message);
             return consoleLine;
         }
-        export function textarea(message : string) : ConsoleLineElement{
+        export function textarea(message : string, title : string = "") : ConsoleLineElement{
             const code = getOrCreateCodeElement();
             const textArea = document.createElement("textarea");
             textArea.textContent = message;
             textArea.rows = 5;
             textArea.cols = 80;
             const consoleLine = new ConsoleLineElement(code, false, false, textArea);
+            consoleLine.title = title;
 
 
             //const canvasContainer = document.createElement("div");
