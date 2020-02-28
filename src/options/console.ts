@@ -14,21 +14,24 @@
     import { VBAObjectType } from "./vba_object"
 
     import * as GUIObserver from "../basic/html/gui_observer"
+import { GTable, GGraph } from "../object";
     
 
     //export namespace Console {
         export class ConsoleLineElement {
             public canvas : SVGSVGElement | null = null;
             public vbaObjects : VBAObjectType[] = new Array();
+            public mainObject : GTable | GGraph | null = null;
             public fieldSetElement : HTMLFieldSetElement;
             private legendElement : HTMLLegendElement;
             private canvasContainer : HTMLDivElement;
             //pngButton : HTMLButtonElement;
             private removeButton : HTMLButtonElement;
             private macroButton : HTMLButtonElement;
+            private csvButton : HTMLButtonElement;
 
 
-            constructor(parent : HTMLElement, createVBAButton : boolean = true, createCanvas : boolean = true, mainElement : HTMLElement | null = null){
+            constructor(parent : HTMLElement, type : "table" | "graph" | "log" | "textarea", title :string = "", option: {mainElement? : HTMLElement | GTable | GGraph} = {}){
                 this.canvasContainer = document.createElement("div");
                 parent.appendChild(this.canvasContainer);
 
@@ -36,13 +39,19 @@
                 this.canvasContainer.appendChild(this.fieldSetElement);
                 this.legendElement = document.createElement("legend");
                 this.fieldSetElement.appendChild(this.legendElement);
+                this.title = title;
+
+                const createCanvas = type == "table" || type == "graph" || type == "log";
+                const createVBAButton = type == "table" || type == "graph"  || type == "log"
                 
                 if(createCanvas){
                     this.canvas = ConsoleLineElement.addSVGSVGElement(this.fieldSetElement);
                     GUIObserver.observeSVGSVG(this.canvas);                        
                 }
-                if(mainElement != null){
-                    this.fieldSetElement.appendChild(mainElement);
+                if(option.mainElement !== undefined){
+                    if(option.mainElement instanceof HTMLElement){
+                        this.fieldSetElement.appendChild(option.mainElement);
+                    }
                 }
                 /*
                 this.pngButton = document.createElement("button");
@@ -69,15 +78,29 @@
                 if(createVBAButton){
                     this.fieldSetElement.appendChild(this.macroButton);
                 }
-
-
-
                 const vbaFunc = () =>{
                     VBAMacroModal.createMacroModal(SVGToVBA.create(this.vbaObjects));
-
                 }
-
                 this.macroButton.onclick = vbaFunc;
+
+
+
+
+                const createCSVButton = type == "table";
+                this.csvButton = document.createElement("button");
+                this.csvButton.textContent = "csv";
+                if(createCSVButton){
+                    this.fieldSetElement.appendChild(this.csvButton);
+                }
+                const csvFunc = () =>{
+                    if(this.mainObject instanceof GTable){
+                        const str = this.mainObject.rows.map((v)=>{
+                            return v.cells.map((w) => w.svgText.textContent).join(",")
+                        }).join("\n");
+                        textarea(str, this.title);
+                    }
+                }
+                this.csvButton.onclick = csvFunc;
 
 
 
@@ -92,6 +115,9 @@
             
             public addVBAObject(obj : VBAObjectType){
                 this.vbaObjects.push(obj);
+                if(obj instanceof GTable || obj instanceof GGraph){
+                    this.mainObject = obj;
+                }
             }
 
 
@@ -156,7 +182,7 @@
         export function table(item: any, title : string = "") {
             if(item instanceof LogicTable){ 
                 const code = getOrCreateCodeElement();
-                const consoleLine = new ConsoleLineElement(code);
+                const consoleLine = new ConsoleLineElement(code, "table", title);
 
                 //const svg = addSVGSVGElement(code);
                 const gtable = createShape(consoleLine.canvas!, "g-table");
@@ -165,7 +191,8 @@
                 gtable.x = 0;
                 gtable.y = 0;
                 consoleLine.addVBAObject(gtable);
-                consoleLine.title = title;
+                //consoleLine.addVBAObject(gtable);
+                //consoleLine.title = title;
 
             }else{
 
@@ -190,12 +217,11 @@
                     ggraph.build(item);    
                 }else{
                     const code = getOrCreateCodeElement();
-                    const consoleLine = new ConsoleLineElement(code);
+                    const consoleLine = new ConsoleLineElement(code, "graph", title);
                     //const svg = addSVGSVGElement(code);
                     const ggraph = createShape(consoleLine.canvas!, "g-graph");    
                     ggraph.build(item);
                     consoleLine.addVBAObject(ggraph);
-                    consoleLine.title = title;
                 }
                 /*
                 if(item instanceof LogicGraph){
@@ -211,9 +237,9 @@
                 //console.log(logicGraph);    
             }
         }
-        export function log(message : string) : ConsoleLineElement{
+        export function log(message : string, title : string = "") : ConsoleLineElement{
             const code = getOrCreateCodeElement();
-            const consoleLine = new ConsoleLineElement(code);
+            const consoleLine = new ConsoleLineElement(code, "log", title);
 
             const textClass = DefaultClassNames.defaultTextClass;  
             const textElement = SVG.createText(textClass)
@@ -232,13 +258,32 @@
             //table(message);
             return consoleLine;
         }
-        export function textarea(message : string, title : string = "") : ConsoleLineElement{
+        function getRowCount(line : string, cols : number){
+            return Math.ceil(line.length / cols);
+        }
+        export function textarea(message : string, title : string = "", option? : {cols? : number, rows? : number}) : ConsoleLineElement{
             const code = getOrCreateCodeElement();
             const textArea = document.createElement("textarea");
             textArea.textContent = message;
-            textArea.rows = 5;
-            textArea.cols = 80;
-            const consoleLine = new ConsoleLineElement(code, false, false, textArea);
+
+            const lines = message.split("\n");
+            let maxCols = 0;
+            lines.forEach((v)=>{
+                if(v.length > maxCols){
+                    maxCols = v.length;
+                }
+            })
+            const defaultCols = maxCols < 240 ? maxCols + 5 : 245;
+
+            const newOption = option === undefined ? { } : option;
+            textArea.cols = newOption.cols === undefined ? defaultCols : newOption.cols;
+
+            let rowCount = 0;
+            lines.forEach((v) => rowCount += getRowCount(v, textArea.cols));
+
+
+            textArea.rows = newOption.rows === undefined ? rowCount : newOption.rows;
+            const consoleLine = new ConsoleLineElement(code, "textarea", title, { mainElement: textArea});
             consoleLine.title = title;
 
 
