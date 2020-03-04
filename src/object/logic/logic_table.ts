@@ -35,6 +35,25 @@ export class LogicTable {
         return this.columnWidths.length;
     }
 
+    public parse(obj : any) : void{
+        this.x = obj["x"];
+        this.y = obj["y"];
+        this.tableClassName = obj["tableClassName"];
+        this.rowHeights = obj["rowHeights"];
+        this.columnWidths = obj["columnWidths"];
+        const cells : any[][] = obj["cells"];
+        const rowCount = cells.length;
+        const columnCount = rowCount == 0 ? 0 : cells[0].length;
+        for (let y = 0; y < rowCount; y++) {
+            this.cells[y] = new Array(columnCount);
+            for (let x = 0; x < columnCount; x++) {
+                this.cells[y][x] = new LogicCell();
+                this.cells[y][x].parse(cells[y][x]);
+            }
+        }
+        
+    }
+
     public constructor(option: { columnCount?: number, rowCount?: number, tableClassName?: string, x?: number, y?: number } = {}) {
         if (option.columnCount == undefined) option.columnCount = 3;
         if (option.rowCount == undefined) option.rowCount = 3;

@@ -16,6 +16,12 @@ export class LogicTSpan{
         CSS.setCSSStyle(tspan, this.style);
         return tspan;
     }
+    public parse(obj : any) : void{
+        this.textContent =  obj["textContent"];
+        this.class = obj["class"];
+        this.style = obj["style"];
+        this.isLatexMode = obj["isLatexMode"];
+    }
 }
 export class LogicText{
     public textContent : string | LogicTSpan[] = "";
@@ -46,5 +52,21 @@ export class LogicText{
             })
         }
         
+    }
+    public parse(obj:any) : void{
+        if(Array.isArray(obj["textContent"])){
+            const arr : any[] = obj["textContent"];
+            this.textContent = new Array(arr.length);
+            for(let i=0;i<arr.length;i++){
+                this.textContent[i] = new LogicTSpan();
+                this.textContent[i].parse(arr[i]);
+            }
+        }else{
+            this.textContent = obj["textContent"];
+        }
+        this.class = obj["class"];
+        this.style = obj["style"];
+        this.isLatexMode = obj["isLatexMode"];
+
     }
 }

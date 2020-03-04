@@ -4,6 +4,8 @@ import * as CommonFunctions from "../basic/common/common_functions"
 //import {GTableOption} from "../options/attributes_option"
 import { ShapeObjectType } from "../basic/common/enums";
 import { LogicTable } from "./logic/logic_table"
+import { createTextElementFromLogicCell } from "./logic/gobject_functions"
+
 import { CellRow } from "./table_helpers/row"
 import { CellColumn } from "./table_helpers/column"
 import { BorderColumn, BorderRow } from "./table_helpers/border_row"
@@ -475,7 +477,8 @@ export class GTable extends GObject {
                     CSS.setCSSClass(cell.svgText, cellInfo.textClass);
                 }
                 */
-                cellInfo.createTextElement(cell.svgText);
+               createTextElementFromLogicCell(cellInfo, cell.svgText);
+                //cellInfo.createTextElement(cell.svgText);
                 if (cellInfo.topBorderClass !== undefined) {
                     CSS.setCSSClass(cell.svgTopBorder, cellInfo.topBorderClass);
                 }

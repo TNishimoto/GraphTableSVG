@@ -2,8 +2,8 @@
 //import * as CSS from "../basic/svghtml/css"
 //import * as AttributeNames from "../basic/common/custtome_attributes"
 import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment, AutoSizeShapeToFitText, Direction } from "../basic/common/enums";
-import * as CSS from "../basic/html/css"
-import * as SVG from "../basic/interface/svg"
+//import * as CSS from "../basic/html/css"
+//import * as SVG from "../basic/interface/svg"
 export type GraphAllocateFunction = (graph: object) => void
 
 

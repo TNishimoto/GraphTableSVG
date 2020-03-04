@@ -1,9 +1,9 @@
-import * as SVGTextBox from "../../basic/interface/svg_textbox"
 import {defaultCellClass} from "../../basic/common/attribute_names"
 
 //import { Cell } from "../object/table_helpers/cell"
 import * as GOptions from "../g_options"
-import { LogicTSpan, LogicText } from "./logic_text";
+
+import { LogicText } from "./logic_text";
 
 export class LogicCell {
 
@@ -31,6 +31,20 @@ export class LogicCell {
 
     //public isLatexMode: boolean = false;
     constructor() {
+    }
+    public parse(obj : any){
+        this.text.parse(obj["text"]);
+        
+        this.cellClass = obj["cellClass"];
+        this.cellStyle = obj["cellStyle"];
+        this.backgroundClass = obj["backgroundClass"];
+        this.topBorderClass = obj["topBorderClass"];
+        this.leftBorderClass = obj["leftBorderClass"];
+        this.rightBorderClass = obj["rightBorderClass"];
+        this.bottomBorderClass = obj["bottomBorderClass"];
+        this.connectedColumnCount = obj["connectedColumnCount"];
+        this.connectedRowCount = obj["connectedRowCount"];
+
     }
     
     public copy(cell : LogicCell){
@@ -61,6 +75,7 @@ export class LogicCell {
         if (bottomBorderClass !== undefined) this.bottomBorderClass = bottomBorderClass;
         //this.isLatexMode = isLatexMode;
     }
+    /*
     public createTextElement(svgText: SVGTextElement) {
         if (this.tTexts != null) {
             SVGTextBox.constructSVGTextByHTMLElements(svgText, this.tTexts, true);
@@ -68,6 +83,7 @@ export class LogicCell {
             this.text.setTextElement(svgText);
         }
     }
+    */
     /*
     public set(text: string | null = null, isLatexMode: boolean = false, cellClass: string | null = null, backgroundClass: string | null = null, textClass: string | null = null
         , topBorderClass: string | null = null, leftBorderClass: string | null = null, rightBorderClass: string | null = null, bottomBorderClass: string | null = null) {
