@@ -1,6 +1,6 @@
 import { LogicCell } from "./logic_cell";
 import * as SVGTextBox from "../../basic/interface/svg_textbox"
-import { LogicText } from ".";
+import { LogicText } from "./logic_text";
 
 export function createTextElementFromLogicCell(item : LogicCell,svgText: SVGTextElement) {
     if (item.tTexts != null) {

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LogicGraph | typedoc-sample</title>
+	<title>LogicText | graph-table-svg</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">typedoc-sample</a>
+					<a href="../index.html" class="title">graph-table-svg</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_options_logic_tree_.html">&quot;options/logic_tree&quot;</a>
+					<a href="../modules/_object_logic_logic_text_.html">&quot;object/logic/logic_text&quot;</a>
 				</li>
 				<li>
-					<a href="_options_logic_tree_.logicgraph.html">LogicGraph</a>
+					<a href="_object_logic_logic_text_.logictext.html">LogicText</a>
 				</li>
 			</ul>
-			<h1>Class LogicGraph</h1>
+			<h1>Class LogicText</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">LogicGraph</span>
+						<span class="target">LogicText</span>
 					</li>
 				</ul>
 			</section>
@@ -82,49 +82,101 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_object_logic_logic_text_.logictext.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_options_logic_tree_.logicgraph.html#edges" class="tsd-kind-icon">edges</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_options_logic_tree_.logicgraph.html#nodes" class="tsd-kind-icon">nodes</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_object_logic_logic_text_.logictext.html#class" class="tsd-kind-icon">class</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_object_logic_logic_text_.logictext.html#islatexmode" class="tsd-kind-icon">is<wbr>Latex<wbr>Mode</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_object_logic_logic_text_.logictext.html#style" class="tsd-kind-icon">style</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_object_logic_logic_text_.logictext.html#textcontent" class="tsd-kind-icon">text<wbr>Content</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_options_logic_tree_.logicgraph.html#addnode" class="tsd-kind-icon">add<wbr>Node</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_options_logic_tree_.logicgraph.html#construct" class="tsd-kind-icon">construct</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_options_logic_tree_.logicgraph.html#createedge" class="tsd-kind-icon">create<wbr>Edge</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_options_logic_tree_.logicgraph.html#getindex" class="tsd-kind-icon">get<wbr>Index</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Object literals</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-object-literal tsd-parent-kind-class"><a href="_options_logic_tree_.logicgraph.html#graphoption" class="tsd-kind-icon">graph<wbr>Option</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_object_logic_logic_text_.logictext.html#parse" class="tsd-kind-icon">parse</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_object_logic_logic_text_.logictext.html#settextelement" class="tsd-kind-icon">set<wbr>Text<wbr>Element</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Logic<wbr>Text<span class="tsd-signature-symbol">(</span>_text<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="_object_logic_logic_text_.logictspan.html" class="tsd-signature-type">LogicTSpan</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, _class<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_object_g_options_.html#textclasscss" class="tsd-signature-type">textClassCSS</a>, _style<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_object_g_options_.html#textclasscss" class="tsd-signature-type">textClassCSS</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_object_logic_logic_text_.logictext.html" class="tsd-signature-type">LogicText</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in object/logic/logic_text.ts:30</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> _text: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="_object_logic_logic_text_.logictspan.html" class="tsd-signature-type">LogicTSpan</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> _class: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_object_g_options_.html#textclasscss" class="tsd-signature-type">textClassCSS</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> _style: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_object_g_options_.html#textclasscss" class="tsd-signature-type">textClassCSS</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_object_logic_logic_text_.logictext.html" class="tsd-signature-type">LogicText</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="edges" class="tsd-anchor"></a>
-					<h3>edges</h3>
-					<div class="tsd-signature tsd-kind-icon">edges<span class="tsd-signature-symbol">:</span> <a href="_options_logic_tree_.logicgraphedge.html" class="tsd-signature-type">LogicGraphEdge</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<a name="class" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> class</h3>
+					<div class="tsd-signature tsd-kind-icon">class<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_object_g_options_.html#textclasscss" class="tsd-signature-type">textClassCSS</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in options/logic_tree.ts:37</li>
+							<li>Defined in object/logic/logic_text.ts:28</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="nodes" class="tsd-anchor"></a>
-					<h3>nodes</h3>
-					<div class="tsd-signature tsd-kind-icon">nodes<span class="tsd-signature-symbol">:</span> <a href="_options_logic_tree_.logicgraphnode.html" class="tsd-signature-type">LogicGraphNode</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<a name="islatexmode" class="tsd-anchor"></a>
+					<h3>is<wbr>Latex<wbr>Mode</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Latex<wbr>Mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in options/logic_tree.ts:36</li>
+							<li>Defined in object/logic/logic_text.ts:30</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="style" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> style</h3>
+					<div class="tsd-signature tsd-kind-icon">style<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_object_g_options_.html#textclasscss" class="tsd-signature-type">textClassCSS</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in object/logic/logic_text.ts:29</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="textcontent" class="tsd-anchor"></a>
+					<h3>text<wbr>Content</h3>
+					<div class="tsd-signature tsd-kind-icon">text<wbr>Content<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="_object_logic_logic_text_.logictspan.html" class="tsd-signature-type">LogicTSpan</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in object/logic/logic_text.ts:27</li>
 						</ul>
 					</aside>
 				</section>
@@ -132,39 +184,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="addnode" class="tsd-anchor"></a>
-					<h3>add<wbr>Node</h3>
+					<a name="parse" class="tsd-anchor"></a>
+					<h3>parse</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Node<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_options_logic_tree_.logicgraphnode.html" class="tsd-signature-type">LogicGraphNode</a></li>
+						<li class="tsd-signature tsd-kind-icon">parse<span class="tsd-signature-symbol">(</span>obj<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in options/logic_tree.ts:43</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_options_logic_tree_.logicgraphnode.html" class="tsd-signature-type">LogicGraphNode</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="construct" class="tsd-anchor"></a>
-					<h3>construct</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">construct<span class="tsd-signature-symbol">(</span>iten<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in options/logic_tree.ts:40</li>
+									<li>Defined in object/logic/logic_text.ts:56</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>iten: <span class="tsd-signature-type">any</span></h5>
+									<h5>obj: <span class="tsd-signature-type">any</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -172,77 +207,27 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="createedge" class="tsd-anchor"></a>
-					<h3>create<wbr>Edge</h3>
+					<a name="settextelement" class="tsd-anchor"></a>
+					<h3>set<wbr>Text<wbr>Element</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Edge<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_options_logic_tree_.logicgraphedge.html" class="tsd-signature-type">LogicGraphEdge</a></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Text<wbr>Element<span class="tsd-signature-symbol">(</span>svgText<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SVGTextElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in options/logic_tree.ts:48</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_options_logic_tree_.logicgraphedge.html" class="tsd-signature-type">LogicGraphEdge</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getindex" class="tsd-anchor"></a>
-					<h3>get<wbr>Index</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Index<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><a href="_options_logic_tree_.logicgraphnode.html" class="tsd-signature-type">LogicGraphNode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in options/logic_tree.ts:53</li>
+									<li>Defined in object/logic/logic_text.ts:42</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>node: <a href="_options_logic_tree_.logicgraphnode.html" class="tsd-signature-type">LogicGraphNode</a></h5>
+									<h5>svgText: <span class="tsd-signature-type">SVGTextElement</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Object literals</h2>
-				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-class">
-					<a name="graphoption" class="tsd-anchor"></a>
-					<h3>graph<wbr>Option</h3>
-					<div class="tsd-signature tsd-kind-icon">graph<wbr>Option<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in options/logic_tree.ts:38</li>
-						</ul>
-					</aside>
-					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
-						<a name="graphoption.direction" class="tsd-anchor"></a>
-						<h3>direction</h3>
-						<div class="tsd-signature tsd-kind-icon">direction<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"down"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;down&quot;</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in options/logic_tree.ts:38</li>
-							</ul>
-						</aside>
-					</section>
-					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
-						<a name="graphoption.relocatestyle" class="tsd-anchor"></a>
-						<h3>relocate<wbr>Style</h3>
-						<div class="tsd-signature tsd-kind-icon">relocate<wbr>Style<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;standard&quot;</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in options/logic_tree.ts:38</li>
-							</ul>
-						</aside>
-					</section>
 				</section>
 			</section>
 		</div>
@@ -253,54 +238,45 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_options_logic_tree_.html">&quot;options/logic_<wbr>tree&quot;</a>
+						<a href="../modules/_object_logic_logic_text_.html">&quot;object/logic/logic_<wbr>text&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_options_logic_tree_.binarylogictree.html" class="tsd-kind-icon">Binary<wbr>Logic<wbr>Tree</a>
+						<a href="_object_logic_logic_text_.logictspan.html" class="tsd-kind-icon">LogicTSpan</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_options_logic_tree_.logicgraph.html" class="tsd-kind-icon">Logic<wbr>Graph</a>
+						<a href="_object_logic_logic_text_.logictext.html" class="tsd-kind-icon">Logic<wbr>Text</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_options_logic_tree_.logicgraph.html#edges" class="tsd-kind-icon">edges</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_object_logic_logic_text_.logictext.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_options_logic_tree_.logicgraph.html#nodes" class="tsd-kind-icon">nodes</a>
+								<a href="_object_logic_logic_text_.logictext.html#class" class="tsd-kind-icon">class</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_object_logic_logic_text_.logictext.html#islatexmode" class="tsd-kind-icon">is<wbr>Latex<wbr>Mode</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_object_logic_logic_text_.logictext.html#style" class="tsd-kind-icon">style</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_object_logic_logic_text_.logictext.html#textcontent" class="tsd-kind-icon">text<wbr>Content</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_options_logic_tree_.logicgraph.html#addnode" class="tsd-kind-icon">add<wbr>Node</a>
+								<a href="_object_logic_logic_text_.logictext.html#parse" class="tsd-kind-icon">parse</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_options_logic_tree_.logicgraph.html#construct" class="tsd-kind-icon">construct</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_options_logic_tree_.logicgraph.html#createedge" class="tsd-kind-icon">create<wbr>Edge</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_options_logic_tree_.logicgraph.html#getindex" class="tsd-kind-icon">get<wbr>Index</a>
-							</li>
-							<li class=" tsd-kind-object-literal tsd-parent-kind-class">
-								<a href="_options_logic_tree_.logicgraph.html#graphoption" class="tsd-kind-icon">graph<wbr>Option</a>
+								<a href="_object_logic_logic_text_.logictext.html#settextelement" class="tsd-kind-icon">set<wbr>Text<wbr>Element</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_options_logic_tree_.logicgraphedge.html" class="tsd-kind-icon">Logic<wbr>Graph<wbr>Edge</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_options_logic_tree_.logicgraphnode.html" class="tsd-kind-icon">Logic<wbr>Graph<wbr>Node</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_options_logic_tree_.logictree.html" class="tsd-kind-icon">Logic<wbr>Tree</a>
-					</li>
 				</ul>
 			</nav>
 		</div>

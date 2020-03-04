@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ConsoleLineElement | typedoc-sample</title>
+	<title>ConsoleLineElement | graph-table-svg</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">typedoc-sample</a>
+					<a href="../index.html" class="title">graph-table-svg</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -91,15 +91,26 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_options_console_.consolelineelement.html#canvas" class="tsd-kind-icon">canvas</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_options_console_.consolelineelement.html#canvascontainer" class="tsd-kind-icon">canvas<wbr>Container</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_options_console_.consolelineelement.html#macrobutton" class="tsd-kind-icon">macro<wbr>Button</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_options_console_.consolelineelement.html#pngbutton" class="tsd-kind-icon">png<wbr>Button</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_options_console_.consolelineelement.html#canvascontainer" class="tsd-kind-icon">canvas<wbr>Container</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_options_console_.consolelineelement.html#csvbutton" class="tsd-kind-icon">csv<wbr>Button</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_options_console_.consolelineelement.html#fieldsetelement" class="tsd-kind-icon">field<wbr>Set<wbr>Element</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_options_console_.consolelineelement.html#legendelement" class="tsd-kind-icon">legend<wbr>Element</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_options_console_.consolelineelement.html#macrobutton" class="tsd-kind-icon">macro<wbr>Button</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_options_console_.consolelineelement.html#mainobject" class="tsd-kind-icon">main<wbr>Object</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_options_console_.consolelineelement.html#removebutton" class="tsd-kind-icon">remove<wbr>Button</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_options_console_.consolelineelement.html#vbaobjects" class="tsd-kind-icon">vba<wbr>Objects</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="_options_console_.consolelineelement.html#title" class="tsd-kind-icon">title</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_options_console_.consolelineelement.html#addvbaobject" class="tsd-kind-icon">addVBAObject</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_options_console_.consolelineelement.html#addsvgsvgelement" class="tsd-kind-icon">addSVGSVGElement</a></li>
 							</ul>
 						</section>
@@ -112,13 +123,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Console<wbr>Line<wbr>Element<span class="tsd-signature-symbol">(</span>parent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, createVBAButton<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_options_console_.consolelineelement.html" class="tsd-signature-type">ConsoleLineElement</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Console<wbr>Line<wbr>Element<span class="tsd-signature-symbol">(</span>parent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"table"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"graph"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"log"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"textarea"</span>, title<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_options_console_.consolelineelement.html" class="tsd-signature-type">ConsoleLineElement</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in options/console.ts:25</li>
+									<li>Defined in options/console.ts:30</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -127,7 +138,18 @@
 									<h5>parent: <span class="tsd-signature-type">HTMLElement</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> createVBAButton: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
+									<h5>type: <span class="tsd-signature-type">"table"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"graph"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"log"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"textarea"</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> title: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> option: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> main<wbr>Element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> | </span><a href="_object_g_table_.gtable.html" class="tsd-signature-type">GTable</a><span class="tsd-signature-symbol"> | </span><a href="_object_g_graph_.ggraph.html" class="tsd-signature-type">GGraph</a></h5>
+										</li>
+									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_options_console_.consolelineelement.html" class="tsd-signature-type">ConsoleLineElement</a></h4>
@@ -140,40 +162,80 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="canvas" class="tsd-anchor"></a>
 					<h3>canvas</h3>
-					<div class="tsd-signature tsd-kind-icon">canvas<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SVGSVGElement</span></div>
+					<div class="tsd-signature tsd-kind-icon">canvas<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SVGSVGElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in options/console.ts:21</li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="canvascontainer" class="tsd-anchor"></a>
-					<h3>canvas<wbr>Container</h3>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> canvas<wbr>Container</h3>
 					<div class="tsd-signature tsd-kind-icon">canvas<wbr>Container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLDivElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in options/console.ts:23</li>
+							<li>Defined in options/console.ts:26</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="csvbutton" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> csv<wbr>Button</h3>
+					<div class="tsd-signature tsd-kind-icon">csv<wbr>Button<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLButtonElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in options/console.ts:30</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="macrobutton" class="tsd-anchor"></a>
-					<h3>macro<wbr>Button</h3>
-					<div class="tsd-signature tsd-kind-icon">macro<wbr>Button<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLButtonElement</span></div>
+					<a name="fieldsetelement" class="tsd-anchor"></a>
+					<h3>field<wbr>Set<wbr>Element</h3>
+					<div class="tsd-signature tsd-kind-icon">field<wbr>Set<wbr>Element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLFieldSetElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in options/console.ts:24</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="legendelement" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> legend<wbr>Element</h3>
+					<div class="tsd-signature tsd-kind-icon">legend<wbr>Element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLLegendElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in options/console.ts:25</li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="pngbutton" class="tsd-anchor"></a>
-					<h3>png<wbr>Button</h3>
-					<div class="tsd-signature tsd-kind-icon">png<wbr>Button<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLButtonElement</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="macrobutton" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> macro<wbr>Button</h3>
+					<div class="tsd-signature tsd-kind-icon">macro<wbr>Button<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLButtonElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in options/console.ts:24</li>
+							<li>Defined in options/console.ts:29</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="mainobject" class="tsd-anchor"></a>
+					<h3>main<wbr>Object</h3>
+					<div class="tsd-signature tsd-kind-icon">main<wbr>Object<span class="tsd-signature-symbol">:</span> <a href="_object_g_table_.gtable.html" class="tsd-signature-type">GTable</a><span class="tsd-signature-symbol"> | </span><a href="_object_g_graph_.ggraph.html" class="tsd-signature-type">GGraph</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in options/console.ts:23</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="removebutton" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> remove<wbr>Button</h3>
+					<div class="tsd-signature tsd-kind-icon">remove<wbr>Button<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLButtonElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in options/console.ts:28</li>
 						</ul>
 					</aside>
 				</section>
@@ -189,7 +251,65 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="title" class="tsd-anchor"></a>
+					<h3>title</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> title<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> title<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in options/console.ts:107</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in options/console.ts:110</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addvbaobject" class="tsd-anchor"></a>
+					<h3>addVBAObject</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">addVBAObject<span class="tsd-signature-symbol">(</span>obj<span class="tsd-signature-symbol">: </span><a href="../modules/_options_vba_object_.html#vbaobjecttype" class="tsd-signature-type">VBAObjectType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in options/console.ts:115</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>obj: <a href="../modules/_options_vba_object_.html#vbaobjecttype" class="tsd-signature-type">VBAObjectType</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a name="addsvgsvgelement" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> addSVGSVGElement</h3>
@@ -200,7 +320,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in options/console.ts:62</li>
+									<li>Defined in options/console.ts:123</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -239,17 +359,35 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_options_console_.consolelineelement.html#canvas" class="tsd-kind-icon">canvas</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_options_console_.consolelineelement.html#canvascontainer" class="tsd-kind-icon">canvas<wbr>Container</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_options_console_.consolelineelement.html#csvbutton" class="tsd-kind-icon">csv<wbr>Button</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_options_console_.consolelineelement.html#fieldsetelement" class="tsd-kind-icon">field<wbr>Set<wbr>Element</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_options_console_.consolelineelement.html#legendelement" class="tsd-kind-icon">legend<wbr>Element</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_options_console_.consolelineelement.html#macrobutton" class="tsd-kind-icon">macro<wbr>Button</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_options_console_.consolelineelement.html#pngbutton" class="tsd-kind-icon">png<wbr>Button</a>
+								<a href="_options_console_.consolelineelement.html#mainobject" class="tsd-kind-icon">main<wbr>Object</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_options_console_.consolelineelement.html#removebutton" class="tsd-kind-icon">remove<wbr>Button</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_options_console_.consolelineelement.html#vbaobjects" class="tsd-kind-icon">vba<wbr>Objects</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="_options_console_.consolelineelement.html#title" class="tsd-kind-icon">title</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_options_console_.consolelineelement.html#addvbaobject" class="tsd-kind-icon">addVBAObject</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_options_console_.consolelineelement.html#addsvgsvgelement" class="tsd-kind-icon">addSVGSVGElement</a>
@@ -267,6 +405,9 @@
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/_options_console_.html#getorcreatecodeelement" class="tsd-kind-icon">get<wbr>OrCreate<wbr>Code<wbr>Element</a>
 					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_options_console_.html#getrowcount" class="tsd-kind-icon">get<wbr>Row<wbr>Count</a>
+					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="../modules/_options_console_.html#graph" class="tsd-kind-icon">graph</a>
 					</li>
@@ -275,6 +416,12 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="../modules/_options_console_.html#table" class="tsd-kind-icon">table</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_options_console_.html#textarea" class="tsd-kind-icon">textarea</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_options_console_.html#view" class="tsd-kind-icon">view</a>
 					</li>
 				</ul>
 			</nav>
