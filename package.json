@@ -1,24 +1,24 @@
 {
-    "name": "typedoc-sample",
-    "version": "1.0.0",
+    "name": "graph-table-svg",
+    "version": "0.0.18",
     "description": "",
-    "main": "index.js",
+    "main": "./dist/nodejs_index.js",
     "scripts": {
-        "start": "webpack",
+        "webpack": "webpack",
         "typedoc": "typedoc --out ./docs/typedoc/ ./src/ -m 'commonjs'"
     },
     "keywords": [
         "typedoc"
     ],
-    "author": "Mic-U",
+    "author": "mklemma",
     "license": "MIT",
     "dependencies": {
-        "gulp": "^4.0.2",
-        "gulp-typedoc": "^2.0.0",
-        "opener": "^1.5.1",
-        "typedoc": "^0.15.3"
+        "opener": "^1.5.1"
     },
     "devDependencies": {
+        "gulp": "^4.0.2",
+        "gulp-typedoc": "^2.0.0",
+        "typedoc": "^0.15.3",
         "@types/opener": "^1.4.0",
         "ts-loader": "^6.2.1",
         "typescript": "^3.7.3",

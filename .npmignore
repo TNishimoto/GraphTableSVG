@@ -1,0 +1,6 @@
+# .npmignore
+/.vscode
+/docs/images
+/docs/typedoc
+/my
+/develop
