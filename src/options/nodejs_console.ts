@@ -15,7 +15,8 @@ import * as GUIObserver from "../basic/html/gui_observer"
 import { GTable } from "../object/g_table";
 import { GGraph } from "../object/g_graph";
 const opener = require("opener")
-var fs = require("fs");
+const fs = require("fs");
+const os = require('os');
 
 
 
@@ -31,14 +32,15 @@ export function log(message: string, title: string = "") {
 
     opener("テストoutput2.html");
 }
-function save(data : string, path : string){
+function save(data : string, path : string, debug : boolean){
+    const scriptPath = debug ? "./docs/scripts/graph_table_svg.js" : "https://cdn.jsdelivr.net/npm/graph-table-svg@0.0.20/docs/scripts/graph_table_svg.js"
     const ptext =`
     <!DOCTYPE html>
     <html>    
     <head>
         <meta charset="utf-8" />
         <title>View</title>
-        <script src="./docs/scripts/graph_table_svg.js"></script>
+        <script src="${scriptPath}"></script>
         <script>
             window.onload = () => {
                 const logicData = \`${data}\`
@@ -64,10 +66,15 @@ function save(data : string, path : string){
     }
 
 }
-export function table(item: any,  title: string = "", filepath : string = "text.html") {
+export function table(item: any,  title: string = "", option : { filepath? : string, debug? : boolean } = { }) {
     if (item instanceof LogicTable) {
         const data = JSON.stringify(item);
-        save(data, filepath);
+        const tmpdir = os.tmpdir();
+        const rand : string = (Math.floor( Math.random() * 100000000 )).toString();
+
+        const filepath = option.filepath ? option.filepath : `${tmpdir}/graph_table_svg_table_output_${rand}.html`;
+        const debug = option.debug ? option.debug : false;
+        save(data, filepath, debug);
         opener(filepath);
 
     } else {
@@ -75,6 +82,6 @@ export function table(item: any,  title: string = "", filepath : string = "text.
         const tableDic = new TableDictionary();
         tableDic.construct(item);
         const logicTable = tableDic.toLogicTable();
-        table(logicTable, title);
+        table(logicTable, title, option);
     }
 }
