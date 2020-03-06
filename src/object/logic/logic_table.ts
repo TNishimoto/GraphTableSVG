@@ -27,6 +27,7 @@ export class LogicTable {
     public tableClassName: string | null = null;
     public x: number | null = null;
     public y: number | null = null;
+    private objectType : string = "LogicTable";
 
     public get rowCount(): number {
         return this.rowHeights.length;
@@ -35,7 +36,9 @@ export class LogicTable {
         return this.columnWidths.length;
     }
 
-    public parse(obj : any) : void{
+
+    public buildFromObject(obj : any) : void{
+        
         this.x = obj["x"];
         this.y = obj["y"];
         this.tableClassName = obj["tableClassName"];
@@ -48,7 +51,7 @@ export class LogicTable {
             this.cells[y] = new Array(columnCount);
             for (let x = 0; x < columnCount; x++) {
                 this.cells[y][x] = new LogicCell();
-                this.cells[y][x].parse(cells[y][x]);
+                this.cells[y][x].buildFromObject(cells[y][x]);
             }
         }
         

@@ -68,11 +68,37 @@ export class LogicTree {
     public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
 
     public item: any = null;
+
+    private objectType : string = "LogicTree";
+
+    public buildFromObject(item : any){        
+        this.vertexOption = item["vertexOption"];
+        this.edgeOption = item["edgeOption"];
+        this.graphOption = item["graphOption"];
+
+        const children : any[] = item["children"];
+        //this.children = new Array(0);
+        this.children = children.map((v) =>{
+            if(v == null){
+                return null;
+            }else{
+                const w = new LogicTree();
+                w.buildFromObject(v);
+                return w;
+            }
+        })
+        
+
+    }
+
     constructor(option: {
         item?: any, children?: (LogicTree | null)[],
-        vertexText?: string, parentEdgeText?: string
+        vertexOption?: GOptions.GTextBoxAttributes, edgeOption?: GOptions.GGraphAttributes
     } = {}) {
         if (option.item != undefined) this.item = option.item;
+        if(option.vertexOption !== undefined) this.vertexOption = option.vertexOption;
+        if(option.edgeOption !== undefined) this.edgeOption = option.edgeOption;
+
         //if(option.vertexText != undefined) this.vertexText = option.vertexText;
         //if(option.parentEdgeText != undefined) this.parentEdgeText = option.parentEdgeText;
         if (option.children != undefined) this.children = option.children;
@@ -149,8 +175,8 @@ export class BinaryLogicTree extends LogicTree {
     public set right(value: BinaryLogicTree | null) {
         this.children[1] = value;
     }
-    constructor(public item: any = null, left: BinaryLogicTree | null = null, right: BinaryLogicTree | null = null, nodeText: string | null = null, edgeLabel: string | null = null) {
-        super({ item: item == null ? undefined : item, children: [left, right], vertexText: nodeText == null ? undefined : nodeText, parentEdgeText: edgeLabel == null ? undefined : edgeLabel });
+    constructor(public item: any = null, left: BinaryLogicTree | null = null, right: BinaryLogicTree | null = null, vertexOption?: GOptions.GTextBoxAttributes, edgeOption?: GOptions.GGraphAttributes) {
+        super({ item: item == null ? undefined : item, children: [left, right], vertexOption: vertexOption, edgeOption : edgeOption });
     }
     /*
     public toLogicTree(): LogicTree<T> {

@@ -32,8 +32,8 @@ export class LogicCell {
     //public isLatexMode: boolean = false;
     constructor() {
     }
-    public parse(obj : any){
-        this.text.parse(obj["text"]);
+    public buildFromObject(obj : any){
+        this.text.buildFromObject(obj["text"]);
         
         this.cellClass = obj["cellClass"];
         this.cellStyle = obj["cellStyle"];

@@ -53,7 +53,7 @@ export class LogicText{
         }
         
     }
-    public parse(obj:any) : void{
+    public buildFromObject(obj:any) : void{
         if(Array.isArray(obj["textContent"])){
             const arr : any[] = obj["textContent"];
             this.textContent = new Array(arr.length);
