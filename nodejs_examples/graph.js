@@ -8,4 +8,4 @@ const node3 = new GraphTableSVG.LogicTree({ vertexOption: { text: "hello3" } });
 node1.children.push(node2);
 node1.children.push(node3);
 
-GraphTableSVG.Console.graph(node1, "aaa", { debug: true });
+GraphTableSVG.Console.graph(node1, "aaa");

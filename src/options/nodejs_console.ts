@@ -21,27 +21,21 @@ const fs = require("fs");
 const os = require('os');
 
 
-
+/*
 export function log(message: string, title: string = "") {
-    //console.log(p);
-
-    try {
-        fs.writeFileSync("テストoutput2.html", message);
-        console.log('write end');
-    } catch (e) {
-        console.log(e);
-    }
-
-    opener("テストoutput2.html");
 }
-function getSavePath(debug : boolean) : string {
-    const tmpdir = debug ? `D:/github/GraphTableSVG/temp`: os.tmpdir();
+*/
+function getSavePath() : string {
+    const env = process.env
+    const tmpdir = env.DEBUG == "TRUE" ? `D:/github/GraphTableSVG/temp`: os.tmpdir();
     const rand : string = (Math.floor( Math.random() * 100000000 )).toString();
     const filepath = `${tmpdir}/graph_table_svg_table_${rand}.html`;
     return filepath;
 }
-function save(data : string, path : string, type : "table" | "graph" | "tree", debug : boolean){
-    const scriptPath = debug ? `../docs/scripts/graph_table_svg.js` : "https://cdn.jsdelivr.net/npm/graph-table-svg@0.0.20/docs/scripts/graph_table_svg.js"
+function save(data : string, path : string, type : "table" | "graph" | "tree"){
+    const env = process.env
+
+    const scriptPath = env.DEBUG == "TRUE" ? `../docs/scripts/graph_table_svg.js` : "https://cdn.jsdelivr.net/npm/graph-table-svg@0.0.20/docs/scripts/graph_table_svg.js"
     const ptext =`
     <!DOCTYPE html>
     <html>    
@@ -78,16 +72,16 @@ function save(data : string, path : string, type : "table" | "graph" | "tree", d
     }
 
 }
-export function table(item: any,  title: string = "", option : { filepath? : string, debug? : boolean } = { }) {
+export function table(item: any,  title: string = "", option : { filepath? : string } = { }) {
     if (item instanceof LogicTable) {
         const data = JSON.stringify(item);
-        const debug = option.debug ? option.debug : false;
-        const filepath = option.filepath ? option.filepath : getSavePath(debug);
+        //const debug = option.debug ? option.debug : false;
+        const filepath = option.filepath ? option.filepath : getSavePath();
         //const tmpdir = os.tmpdir();
         //const rand : string = (Math.floor( Math.random() * 100000000 )).toString();
 
         //const filepath = option.filepath ? option.filepath : `${tmpdir}/graph_table_svg_table_output_${rand}.html`;
-        save(data, filepath, "table", debug);
+        save(data, filepath, "table");
         opener(filepath);
 
     } else {
@@ -98,14 +92,14 @@ export function table(item: any,  title: string = "", option : { filepath? : str
         table(logicTable, title, option);
     }
 }
-export function graph(item: any | LogicTree | LogicGraph, title: string = "", option : { filepath? : string, debug? : boolean } = { }) {
+export function graph(item: any | LogicTree | LogicGraph, title: string = "", option : { filepath? : string } = { }) {
 
     if (item instanceof LogicTree || item instanceof LogicGraph) {
 
         const data = JSON.stringify(item);
-        const debug = option.debug ? option.debug : false;
-        const filepath = option.filepath ? option.filepath : getSavePath(debug);
-        save(data, filepath, "tree", debug);
+        //const debug = option.debug ? option.debug : false;
+        const filepath = option.filepath ? option.filepath : getSavePath();
+        save(data, filepath, "tree");
         opener(filepath);
         
 
