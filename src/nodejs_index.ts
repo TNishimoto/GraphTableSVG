@@ -3,7 +3,11 @@
 //import { GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox} from "./object/index"
 
 //import { openSVG, openHTML, openCustomElement,  lazyOpenSVG, createShape, clearSVG } from "./options/open_svg";
-import { LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree } from "./object/logic/index";
+import { LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, buildLogicObjectFromJSON, LogicCellLine, buildLogicTable, toLogicCellLine, getIndexArrayTableLine } from "./object/logic/index";
+
+import {GTextBoxCSS} from "./object/g_options"
+
+
 import * as Console from "./options/nodejs_console"
 //import * as Console from "./options/console";
 //import * as Debug from "./options/debug";
@@ -13,9 +17,15 @@ import * as Console from "./options/nodejs_console"
 export {
     //Color, CommonFunctions, AttributeNames, Enums, VBAFunctions, VLine,DefaultClassNames, StyleNames, 
     //GUIObserver, HTMLFunctions, GUI, DraggableObject, 
-    LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, 
+    //LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, 
     //GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox,
     //openSVG, openHTML, openCustomElement, lazyOpenSVG,
     //Console, createShape, clearSVG, Debug, CSS
-    Console
+    Console,
+    //logic/index
+    LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, getIndexArrayTableLine, 
+    LogicCellLine, buildLogicTable, toLogicCellLine, buildLogicObjectFromJSON,
+
+    GTextBoxCSS
+    
 };

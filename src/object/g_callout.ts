@@ -6,6 +6,7 @@
     import {Rectangle, VLine} from "../basic/common/vline"
     import * as GOptions  from "./g_options"
 
+    import * as ElementExtension from "../basic/interface/element_extension"
     
     export type GCalloutAttributes = GOptions.GTextBoxAttributes & {
         speakerX?: number,
@@ -26,8 +27,8 @@
             GTextBox.constructAttributes(e, removeAttributes, output);
 
 
-            if(e.hasAttribute("speaker-x"))output.speakerX = e.gtGetAttributeNumber("speaker-x", 200)!;
-            if(e.hasAttribute("speaker-y"))output.speakerY = e.gtGetAttributeNumber("speaker-y", 200)!;
+            if(e.hasAttribute("speaker-x"))output.speakerX = ElementExtension.gtGetAttributeNumber(e, "speaker-x", 200)!;
+            if(e.hasAttribute("speaker-y"))output.speakerY = ElementExtension.gtGetAttributeNumber(e, "speaker-y", 200)!;
 
             if(removeAttributes){
                 e.removeAttribute("speaker-x");
@@ -126,13 +127,13 @@
         }
 
         get speakerX(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-speaker-x", 0)!;
+            return ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-speaker-x", 0)!;
         }
         set speakerX(value: number) {
             if (this.speakerX != value) this.svgGroup.setAttribute("data-speaker-x", value.toString());
         }
         get speakerY(): number {
-            return this.svgGroup.gtGetAttributeNumber("data-speaker-y", 0)!;
+            return ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-speaker-y", 0)!;
         }
         set speakerY(value: number) {
             if (this.speakerY != value) this.svgGroup.setAttribute("data-speaker-y", value.toString());

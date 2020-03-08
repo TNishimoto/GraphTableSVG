@@ -15,10 +15,12 @@ import { VBATranslateFunctions, parseInteger, visible } from "../basic/common/vb
 
 import * as SVG from "../basic/interface/svg"
 import * as CSS from "../basic/html/css"
-
 import * as HTMLFunctions from "../basic/html/html_functions"
-
 import * as GOptions from "./g_options"
+import * as ElementExtension from "../basic/interface/element_extension"
+import * as SVGGExtension from "../basic/interface/svg_g_extension"
+import * as SVGTextExtension from "../basic/interface/svg_text_extension"
+
 //namespace GraphTableSVG {
 
 
@@ -396,8 +398,8 @@ export class GTable extends GObject {
     */
     public getRegion(): Rectangle {
         let rect = new Rectangle();
-        rect.x = this.svgGroup.getX();
-        rect.y = this.svgGroup.getY();
+        rect.x = SVGGExtension.getX(this.svgGroup);
+        rect.y = SVGGExtension.getY(this.svgGroup);
         rect.width = this.width;
         rect.height = this.height;
         return rect;
@@ -573,7 +575,8 @@ export class GTable extends GObject {
 
         table.forEach((v, y) => {
             v.forEach((str, x) => {
-                this.cells[y][x].svgText.setTextContent(str, <boolean>option.isLatexMode);
+                
+                SVGTextExtension.setTextContent(this.cells[y][x].svgText, str, <boolean>option.isLatexMode);
             })
         })
         if (option.rowHeight != undefined) {
@@ -614,8 +617,8 @@ export class GTable extends GObject {
         fstLines.push(` Dim table_ As table`);
         //lines.push(` Set tableS = CreateTable(createdSlide, ${table.height}, ${table.width})`);
         fstLines.push(` Set tableS = ${slideName}.Shapes.AddTable(${this.rowCount}, ${this.columnCount})`)
-        fstLines.push(` tableS.Left = ${this.svgGroup.getX()}`);
-        fstLines.push(` tableS.Top = ${this.svgGroup.getY()}`);
+        fstLines.push(` tableS.Left = ${SVGGExtension.getX(this.svgGroup)}`);
+        fstLines.push(` tableS.Top = ${SVGGExtension.getY(this.svgGroup)}`);
 
         //page.Shapes.AddTable(row_, column_)
         fstLines.push(` Set table_ = tableS.table`);
@@ -632,7 +635,7 @@ export class GTable extends GObject {
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {
                 const cell = this.cells[y][x];
-                let color = Color.createRGBFromColorName(cell.svgBackground.getPropertyStyleValueWithDefault("fill", "gray"));
+                let color = Color.createRGBFromColorName(ElementExtension.getPropertyStyleValueWithDefault(cell.svgBackground, "fill", "gray"));
                 //const style = cell.svgBackground.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
                 VBATranslateFunctions.TranslateSVGTextElement(lines, this.cells[y][x].svgText, `${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame.TextRange`);
                 lines.push([`${tableName}.cell(${y + 1},${x + 1}).Shape.Fill.ForeColor.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`]);
@@ -651,20 +654,20 @@ export class GTable extends GObject {
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {
                 const cell = this.cells[y][x];
-                const upLineStyle = VBATranslateFunctions.colorToVBA(cell.svgTopBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                const upLineStyle = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(cell.svgTopBorder, "stroke", "gray"));
                 const upLineStrokeWidth = cell.svgTopBorder.style.strokeWidth != null ? parseInteger(cell.svgTopBorder.style.strokeWidth) : "";
                 const upLineVisibility = cell.svgTopBorder.style.visibility != null ? visible(cell.svgTopBorder.style.visibility) : "";
 
                 lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${upLineStyle}, ${upLineStrokeWidth}, ${upLineVisibility})`]);
 
-                const leftLineStyle = VBATranslateFunctions.colorToVBA(cell.svgLeftBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                const leftLineStyle = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(cell.svgLeftBorder, "stroke", "gray"));
                 const leftLineStrokeWidth = cell.svgLeftBorder.style.strokeWidth != null ? parseInteger(cell.svgLeftBorder.style.strokeWidth) : "";
                 const leftLineVisibility = cell.svgLeftBorder.style.visibility != null ? visible(cell.svgLeftBorder.style.visibility) : "";
 
                 lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${leftLineStyle}, ${leftLineStrokeWidth}, ${leftLineVisibility})`]);
                 if (x + 1 == this.columnCount) {
 
-                    const rightLineStyle = VBATranslateFunctions.colorToVBA(cell.svgRightBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    const rightLineStyle = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(cell.svgRightBorder, "stroke", "gray"));
                     const rightLineStrokeWidth = cell.svgRightBorder.style.strokeWidth != null ? parseInteger(cell.svgRightBorder.style.strokeWidth) : "";
                     const rightLineVisibility = cell.svgRightBorder.style.visibility != null ? visible(cell.svgRightBorder.style.visibility) : "";
 
@@ -672,7 +675,7 @@ export class GTable extends GObject {
                 }
 
                 if (y + 1 == this.rowCount) {
-                    const bottomLineStyle = VBATranslateFunctions.colorToVBA(cell.svgBottomBorder.getPropertyStyleValueWithDefault("stroke", "gray"));
+                    const bottomLineStyle = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(cell.svgBottomBorder, "stroke", "gray"));
                     const bottomLineStrokeWidth = cell.svgBottomBorder.style.strokeWidth != null ? parseInteger(cell.svgBottomBorder.style.strokeWidth) : "";
                     const bottomLineVisibility = cell.svgBottomBorder.style.visibility != null ? visible(cell.svgBottomBorder.style.visibility) : "";
 
@@ -1057,7 +1060,7 @@ export class GTable extends GObject {
         super.update();
         //this._observer.disconnect();
         this.hasConnectedObserverFunction = false;
-        const display = this.svgGroup.getPropertyStyleValue("display");
+        const display = ElementExtension.getPropertyStyleValue(this.svgGroup, "display");
 
         const b = HTMLFunctions.isShow(this.svgGroup);
         if (!b) {

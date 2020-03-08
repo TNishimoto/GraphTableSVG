@@ -9,6 +9,9 @@
     import {Rectangle, VLine} from "../basic/common/vline"
     import * as CSS from "../basic/html/css"
     import * as GOptions  from "./g_options"
+    import {setCpmoutedDashArray} from "../basic/html/enum_extension";
+    import * as ElementExtension from "../basic/interface/element_extension"
+
 
     export class GRect extends GVertex {
         public get svgRectangle(): SVGRectElement {
@@ -61,11 +64,11 @@
                 //const dashStyle = rect.getPropertyStyleValue(GraphTableSVG.AttributeNames.Style.msoDashStyleName);
                 //if (dashStyle != null) msoDashStyle.setStyle(rect, dashStyle);
 
-                const width = rect.getPropertyStyleNumberValue(StyleNames.defaultWidth, null);
+                const width = ElementExtension.getPropertyStyleNumberValue(rect, StyleNames.defaultWidth, null);
                 if (width != null) {
                     rect.width.baseVal.value = width;
                 }
-                const height = rect.getPropertyStyleNumberValue(StyleNames.defaultHeight, null);
+                const height = ElementExtension.getPropertyStyleNumberValue(rect, StyleNames.defaultHeight, null);
                 if (height != null) {
                     rect.height.baseVal.value = height;
                 }
@@ -125,7 +128,7 @@
             this.hasConnectedObserverFunction = false;
             const dashStyle = this.msoDashStyle;
             if (dashStyle != null) {
-                msoDashStyle.setCpmoutedDashArray(this.svgRectangle);
+                setCpmoutedDashArray(this.svgRectangle);
             }
             this.hasConnectedObserverFunction = true;
             //this._observer.observe(this.svgGroup, this._observerOption);

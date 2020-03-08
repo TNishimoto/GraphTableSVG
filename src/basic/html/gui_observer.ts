@@ -3,6 +3,7 @@ import * as AttributeNames from "../common/attribute_names";
 import * as GUI from "./gui";
 import * as HTMLFunctions from "./html_functions";
 import * as SVG from "../interface/svg";
+import * as ElementExtension from "../interface/element_extension"
 
 /**
  * 
@@ -73,7 +74,7 @@ export function observeSVGSVG(svgBox: SVGSVGElement, padding: Padding = new Padd
 
     let _observer: MutationObserver;
     let observeFunction: MutationCallback = (x: MutationRecord[]) => {
-        const gShrink = svgBox.gtGetAttributeBooleanWithUndefined("g-shrink");
+        const gShrink = ElementExtension.gtGetAttributeBooleanWithUndefined(svgBox, "g-shrink");
         let b = false;
 
         for (let i = 0; i < x.length; i++) {
@@ -128,7 +129,7 @@ function observeSVGSVGTimer() {
                 //const time = endTime - startTime;
                 //console.log("dispatch " + v.svgsvg.id + " : " + time + "ms");
 
-                const b = v.svgsvg.gtGetAttributeBooleanWithUndefined("g-shrink");
+                const b = ElementExtension.gtGetAttributeBooleanWithUndefined(v.svgsvg, "g-shrink");
                 if (b !== undefined && b === true) resizeSVGSVG(v.svgsvg, v.padding);
                 v.visible = true;
             }

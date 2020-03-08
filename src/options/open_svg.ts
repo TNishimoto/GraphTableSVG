@@ -20,6 +20,7 @@ import { GGraph } from "../object/g_graph"
 import { GRectButton } from "../object/g_rect_button"
 import { GCircle } from "../object/g_circle";
 import * as GOptions from "../object/g_options"
+import * as ElementExtension from "../basic/interface/element_extension"
 
 //export namespace openSVGFunctions {
     
@@ -115,7 +116,7 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
         }
 
         //属性の移動と元オブジェクトの削除
-        const attrs = e.gtGetAttributes();
+        const attrs = ElementExtension.gtGetAttributes(e);
         HTMLFunctions.getChildren(e).forEach((v) => r.svgGroup.appendChild(v));
         e.remove();
         attrs.forEach((v) => {

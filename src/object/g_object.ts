@@ -1,5 +1,4 @@
 //namespace GraphTableSVG {
-import "../basic/interface/interface"
 import * as CommonFunctions from "../basic/common/common_functions"
 import * as GUIObserver from "../basic/html/gui_observer"
 import { Rectangle } from "../basic/common/vline"
@@ -12,6 +11,8 @@ import * as StyleNames from "../basic/common/style_names"
 import * as DefaultClassNames from "../basic/common/default_class_names"
 import { ShapeObjectType } from "../basic/common/enums";
 import * as  GOptions from "./g_options";
+import * as ElementExtension from "../basic/interface/element_extension"
+import * as SVGGExtension from "../basic/interface/svg_g_extension"
 
 
 
@@ -204,8 +205,8 @@ export class GObject {
     initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
         const _option = { ...option };
         if (this.svgSurface != null && this.svgSurface.className != null) {
-            const width = this.svgSurface.getPropertyStyleNumberValue(StyleNames.defaultWidth, null);
-            const height = this.svgSurface.getPropertyStyleNumberValue(StyleNames.defaultHeight, null);
+            const width = ElementExtension.getPropertyStyleNumberValue(this.svgSurface, StyleNames.defaultWidth, null);
+            const height = ElementExtension.getPropertyStyleNumberValue(this.svgSurface, StyleNames.defaultHeight, null);
             if (width != null) _option.width = width;
             if (height != null) _option.height = height;
         }
@@ -218,19 +219,19 @@ export class GObject {
     }
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GOptions.GObjectAttributes = {}): GOptions.GObjectAttributes {
-        output.class = e.gtGetAttributeStringWithUndefined("class");
-        if (output.class === undefined) e.gtGetAttributeStringWithUndefined("group:class");
-        output.surfaceClass = e.gtGetAttributeStringWithUndefined("surface:class");
-        output.style = e.gtGetAttributeStringWithUndefined("group:style");
-        if (e.hasAttribute("style")) output.style = e.gtGetAttributeStringWithUndefined("style");
-        output.surfaceStyle = e.gtGetAttributeStringWithUndefined("surface:style");
+        output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, "class");
+        if (output.class === undefined) ElementExtension.gtGetAttributeStringWithUndefined(e, "group:class");
+        output.surfaceClass = ElementExtension.gtGetAttributeStringWithUndefined(e, "surface:class");
+        output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, "group:style");
+        if (e.hasAttribute("style")) output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, "style");
+        output.surfaceStyle = ElementExtension.gtGetAttributeStringWithUndefined(e, "surface:style");
 
-        output.cx = e.gtGetAttributeNumberWithUndefined("cx");
-        output.cy = e.gtGetAttributeNumberWithUndefined("cy");
-        output.width = e.gtGetAttributeNumberWithUndefined("width");
-        output.height = e.gtGetAttributeNumberWithUndefined("height");
-        output.x = e.gtGetAttributeNumberWithUndefined("x");
-        output.y = e.gtGetAttributeNumberWithUndefined("y");
+        output.cx = ElementExtension.gtGetAttributeNumberWithUndefined(e, "cx");
+        output.cy = ElementExtension.gtGetAttributeNumberWithUndefined(e, "cy");
+        output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, "width");
+        output.height = ElementExtension.gtGetAttributeNumberWithUndefined(e, "height");
+        output.x = ElementExtension.gtGetAttributeNumberWithUndefined(e, "x");
+        output.y = ElementExtension.gtGetAttributeNumberWithUndefined(e, "y");
 
 
         if (removeAttributes) {
@@ -281,18 +282,18 @@ export class GObject {
 */
     public get cx(): number {
         if (this.isCenterBased) {
-            return this.svgGroup.getX();
+            return SVGGExtension.getX(this.svgGroup);
         } else {
-            return this.svgGroup.getX() + (this.width / 2);
+            return SVGGExtension.getX(this.svgGroup) + (this.width / 2);
         }
     }
     public set cx(value: number) {
         if (this.isCenterBased) {
-            if (this.svgGroup.getX() != value) {
-                this.svgGroup.setX(value);
+            if (SVGGExtension.getX(this.svgGroup) != value) {
+                SVGGExtension.setX(this.svgGroup,value);
             }
         } else {
-            this.svgGroup.setX(value - (this.width / 2));
+            SVGGExtension.setX(this.svgGroup,value - (this.width / 2));
         }
 
     }
@@ -301,18 +302,18 @@ export class GObject {
     */
     public get cy(): number {
         if (this.isCenterBased) {
-            return this.svgGroup.getY();
+            return SVGGExtension.getY(this.svgGroup);
         } else {
-            return this.svgGroup.getY() + (this.height / 2);
+            return SVGGExtension.getY(this.svgGroup) + (this.height / 2);
         }
     }
     public set cy(value: number) {
         if (this.isCenterBased) {
-            if (this.svgGroup.getY() != value) {
-                this.svgGroup.setY(value);
+            if (SVGGExtension.getY(this.svgGroup) != value) {
+                SVGGExtension.setY(this.svgGroup,value);
             }
         } else {
-            this.svgGroup.setY(value - (this.height / 2));
+            SVGGExtension.setY(this.svgGroup,value - (this.height / 2));
         }
 
     }
@@ -321,7 +322,7 @@ export class GObject {
     */
     get width(): number {
         if (this.hasSize) {
-            return <number>this.svgGroup.gtGetAttributeNumber("data-width", 0);
+            return <number>ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-width", 0);
         } else {
             return 0;
         }
@@ -336,7 +337,7 @@ export class GObject {
     */
     get height(): number {
         if (this.hasSize) {
-            return <number>this.svgGroup.gtGetAttributeNumber("data-height", 0);
+            return <number>ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-height", 0);
         } else {
             return 0;
         }
@@ -347,7 +348,7 @@ export class GObject {
         }
     }
     public get fixedX(): number | null {
-        return this.svgGroup.gtGetAttributeNumber("data-fixedX", null);
+        return ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-fixedX", null);
     }
     public set fixedX(v: number | null) {
         if (v == null) {
@@ -357,7 +358,7 @@ export class GObject {
         }
     }
     public get fixedY(): number | null {
-        return this.svgGroup.gtGetAttributeNumber("data-fixedY", null);
+        return ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-fixedY", null);
     }
     public set fixedY(v: number | null) {
         if (v == null) {
@@ -371,40 +372,40 @@ export class GObject {
     }
     public get x(): number {
         if (this.isCenterBased) {
-            return this.svgGroup.getX() - (this.width / 2);
+            return SVGGExtension.getX(this.svgGroup) - (this.width / 2);
         } else {
-            return this.svgGroup.getX();
+            return SVGGExtension.getX(this.svgGroup);
         }
     }
     public get y(): number {
         if (this.isCenterBased) {
             return this.cy - (this.height / 2);
         } else {
-            return this.svgGroup.getY();
+            return SVGGExtension.getY(this.svgGroup);
         }
     }
     public set x(v: number) {
         if (this.isCenterBased) {
-            this.svgGroup.setX(v + (this.width / 2));
+            SVGGExtension.setX(this.svgGroup,v + (this.width / 2));
         } else {
-            this.svgGroup.setX(v);
+            SVGGExtension.setX(this.svgGroup, v);
         }
 
     }
     public set y(v: number) {
         if (this.isCenterBased) {
-            this.svgGroup.setY(v + (this.height / 2));
+            SVGGExtension.setY(this.svgGroup, v + (this.height / 2));
         } else {
-            this.svgGroup.setY(v);
+            SVGGExtension.setY(this.svgGroup, v);
         }
     }
 
     public get isProhibitionOutOfRange(): boolean {
-        const p = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.prohibitionOutOfRange, "true");
+        const p = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.prohibitionOutOfRange, "true");
         return p == "true";
     }
     public set isProhibitionOutOfRange(v: boolean) {
-        this.svgGroup.setPropertyStyleValue(StyleNames.prohibitionOutOfRange, v.toString());
+        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.prohibitionOutOfRange, v.toString());
 
     }
     public moveInCanvas() {

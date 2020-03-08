@@ -1,5 +1,6 @@
 import { textClassCSS } from "../g_options";
 import * as CSS from "../../basic/html/css";
+import * as SVGTextExtension from "../../basic/interface/svg_text_extension"
 
 
 export class LogicTSpan{
@@ -44,7 +45,7 @@ export class LogicText{
         CSS.setCSSStyle(svgText, this.style);
 
         if(typeof this.textContent == "string"){
-            svgText.setTextContent(this.textContent, this.isLatexMode);
+            SVGTextExtension.setTextContent(svgText,this.textContent, this.isLatexMode);
         }else{
             svgText.textContent = "";
             this.textContent.map((v) => v.createTSpan()).forEach((v)=>{

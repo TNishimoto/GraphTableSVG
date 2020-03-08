@@ -1,4 +1,5 @@
 import * as SVG from "../interface/svg"
+import * as SVGGExtension from "../interface/svg_g_extension"
 export namespace DraggableObjectFunctions {
     type DragInfo = { target: SVGElement, offsetX: number, offsetY: number, g : SVGGElement, gParentG : SVGGElement | SVGSVGElement }
     let drag: DragInfo | null = null;
@@ -42,8 +43,8 @@ export namespace DraggableObjectFunctions {
                     const containerRect = SVG.getAbsolutePosition(drag.gParentG);
                     const refx = (e.clientX - containerRect.x) - drag.offsetX;
                     const refy =  (e.clientY - containerRect.y) - drag.offsetY; 
-                    g.setX( refx  );
-                    g.setY( refy  );
+                    SVGGExtension.setX(g, refx  );
+                    SVGGExtension.setY(g, refy  );
 
                     //drag.target.x.baseVal.value = e.clientX - drag.offsetx;
                     //drag.target.y.baseVal.value = e.clientY - drag.offsety;

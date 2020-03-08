@@ -7,6 +7,9 @@ import { Rectangle } from "../basic/common/vline";
 import * as CSS from "../basic/html/css"
 import { VBATranslateFunctions } from "../basic/common/vba_functions"
 import { VBAObjectType } from "./vba_object"
+import * as ElementExtension from "../basic/interface/element_extension"
+import * as Extensions from "../basic/interface/extensions"
+import * as SVGTextExtension from "../basic/interface/svg_text_extension"
 
 
 export class SVGToVBA {
@@ -95,7 +98,7 @@ export class SVGToVBA {
     }
     private static createVBACodeOfSVGPath(path: SVGPathElement, id: number): string[] {
         const lines = new Array(0);
-        const pos = path.getPathLocations();
+        const pos = Extensions.getPathLocations(path);
         lines.push(`Sub create${id}(createdSlide As slide)`);
         lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
         lines.push(` Dim edges${id}(${pos.length - 1}) As Shape`);
@@ -103,9 +106,9 @@ export class SVGToVBA {
 
         for (let i = 0; i < pos.length - 1; i++) {
             lines.push(` Set edges${id}(${i}) = shapes_.AddConnector(msoConnectorStraight, ${pos[i][0]}, ${pos[i][1]}, ${pos[i + 1][0]}, ${pos[i + 1][1]})`);
-            const lineColor = VBATranslateFunctions.colorToVBA(path.getPropertyStyleValueWithDefault("stroke", "gray"));
-            const strokeWidth = parseInt(path.getPropertyStyleValueWithDefault("stroke-width", "4"));
-            const visible = path.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(path, "stroke", "gray"));
+            const strokeWidth = parseInt(ElementExtension.getPropertyStyleValueWithDefault(path,"stroke-width", "4"));
+            const visible = ElementExtension.getPropertyStyleValueWithDefault(path, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
             lines.push(` Call EditLine(edges${id}(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
         }
 
@@ -118,10 +121,10 @@ export class SVGToVBA {
         lines.push(`Sub create${id}(createdSlide As slide)`);
         lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
         lines.push(` Dim txt As Shape`);
-        lines.push(` Set txt = shapes_.AddTextbox(msoTextOrientationHorizontal, ${element.getX()}, ${element.getY()}, 0, 0)`);
-        const fontSize = parseInt(element.getPropertyStyleValueWithDefault("font-size", "24"));
-        const fontFamily = VBATranslateFunctions.ToVBAFont(element.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
-        const fontBold = VBATranslateFunctions.ToFontBold(element.getPropertyStyleValueWithDefault("font-weight", "none"));
+        lines.push(` Set txt = shapes_.AddTextbox(msoTextOrientationHorizontal, ${SVGTextExtension.getX(element)}, ${SVGTextExtension.getY(element)}, 0, 0)`);
+        const fontSize = parseInt(ElementExtension.getPropertyStyleValueWithDefault(element, "font-size", "24"));
+        const fontFamily = VBATranslateFunctions.ToVBAFont(ElementExtension.getPropertyStyleValueWithDefault(element,"font-family", "MS PGothic"));
+        const fontBold = VBATranslateFunctions.ToFontBold(ElementExtension.getPropertyStyleValueWithDefault(element, "font-weight", "none"));
         lines.push([` Call EditTextFrame(txt.TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeShapeToFitText)`]);
         VBATranslateFunctions.TranslateSVGTextElement(sub, element, `txt.TextFrame.TextRange`);
         sub.forEach((v) => lines.push(v[0]));

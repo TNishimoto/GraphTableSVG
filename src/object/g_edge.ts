@@ -10,11 +10,15 @@ import { ShapeObjectType, PathTextAlighnment, ConnectorPosition, msoDashStyle } 
 import * as CommonFunctions from "../basic/common/common_functions"
 import { VBATranslateFunctions } from "../basic/common/vba_functions"
 import * as SVGTextBox from "../basic/interface/svg_textbox";
+import {getLineType, setCpmoutedDashArray} from "../basic/html/enum_extension";
+
 import { GTextBox } from "./g_textbox"
 import { GVertex } from "./g_vertex"
 import { GObject } from "./g_object"
 import * as CSS from "../basic/html/css"
 import * as GOptions  from "./g_options"
+import * as ElementExtension from "../basic/interface/element_extension"
+import * as Extensions from "../basic/interface/extensions"
 
 
 
@@ -63,16 +67,16 @@ export class GEdge extends GTextBox {
         this._svgTextPath.href.baseVal = `#${this.svgPath.id}`
 
         if (typeof _option.text == "string") {
-            this.svgTextPath.setTextContent(_option.text);
+            Extensions.setTextContent(this.svgTextPath, _option.text);
         } else if (Array.isArray(_option.text)) {
 
         } else {
 
         }
 
-        const edgeColor = this.svgPath.getPropertyStyleValue("stroke");
+        const edgeColor = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke");
         const edgeColor2 = edgeColor == null ? undefined : edgeColor;
-        const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
+        const strokeWidth = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke-width");
         const strokeWidth2 = strokeWidth == null ? undefined : strokeWidth;
 
         if (_option.startMarker !== undefined) this.markerStart = GEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
@@ -116,33 +120,33 @@ export class GEdge extends GTextBox {
     */
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GEdgeAttributes = {}): GOptions.GEdgeAttributes {
         const _output = <GOptions.GEdgeAttributes>GTextBox.constructAttributes(e, removeAttributes, output);
-        _output.x1 = e.gtGetAttributeNumberWithoutNull("x1", 0);
-        _output.x2 = e.gtGetAttributeNumberWithoutNull("x2", 300);
-        _output.y1 = e.gtGetAttributeNumberWithoutNull("y1", 0);
-        _output.y2 = e.gtGetAttributeNumberWithoutNull("y2", 300);
+        _output.x1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "x1", 0);
+        _output.x2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "x2", 300);
+        _output.y1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "y1", 0);
+        _output.y2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "y2", 300);
         if (e.hasAttribute("x3")) {
-            _output.x3 = e.gtGetAttributeNumberWithoutNull("x3", 0);
+            _output.x3 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "x3", 0);
         }
         if (e.hasAttribute("y3")) {
-            _output.y3 = e.gtGetAttributeNumberWithoutNull("y3", 0);
+            _output.y3 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "y3", 0);
         }
 
-        _output.beginVertex = e.gtGetAttributeStringWithUndefined("begin-vertex");
-        _output.endVertex = e.gtGetAttributeStringWithUndefined("end-vertex");
-        const bct = e.getPropertyStyleValue(StyleNames.beginConnectorType);
+        _output.beginVertex = ElementExtension.gtGetAttributeStringWithUndefined(e, "begin-vertex");
+        _output.endVertex = ElementExtension.gtGetAttributeStringWithUndefined(e, "end-vertex");
+        const bct = ElementExtension.getPropertyStyleValue(e, StyleNames.beginConnectorType);
 
         if (bct != null && typeof(_output.style) == "object" ){
             _output.style.beginConnectorType = ConnectorPosition.ToConnectorPosition(bct);
         } 
-        const ect = e.getPropertyStyleValue(StyleNames.endConnectorType);
+        const ect = ElementExtension.getPropertyStyleValue(e, StyleNames.endConnectorType);
         if (ect != null && typeof(_output.style) == "object" ){
             _output.style.endConnectorType = ConnectorPosition.ToConnectorPosition(ect);
         }
 
         //if (ect != null) _output.endConnectorType = ConnectorPosition.ToConnectorPosition(ect);
 
-        _output.startMarker = e.gtGetStyleBooleanWithUndefined(StyleNames.markerStart);
-        _output.endMarker = e.gtGetAttributeBooleanWithUndefined(StyleNames.markerEnd);
+        _output.startMarker = ElementExtension.gtGetStyleBooleanWithUndefined(e, StyleNames.markerStart);
+        _output.endMarker = ElementExtension.gtGetAttributeBooleanWithUndefined(e, StyleNames.markerEnd);
 
         if (removeAttributes) {
             e.removeAttribute("x1");
@@ -170,8 +174,8 @@ export class GEdge extends GTextBox {
         const _option = <GOptions.GEdgeAttributes>super.initializeOption(option);
 
 
-        const markerStartName = this.svgGroup.getPropertyStyleValue(StyleNames.markerStart);
-        const markerEndName = this.svgGroup.getPropertyStyleValue(StyleNames.markerEnd);
+        const markerStartName = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.markerStart);
+        const markerEndName = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.markerEnd);
         if (typeof _option.startMarker === "undefined" && markerStartName != null) _option.startMarker = markerStartName == "true";
         if (typeof _option.endMarker === "undefined" && markerEndName != null) _option.endMarker = markerEndName == "true";
 
@@ -346,28 +350,28 @@ export class GEdge extends GTextBox {
     開始接点の接続位置を返します。
     */
     get beginConnectorType(): ConnectorPosition {
-        const p = this.svgGroup.getPropertyStyleValue(StyleNames.beginConnectorType);
+        const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.beginConnectorType);
         return ConnectorPosition.ToConnectorPosition(p);
     }
     /**
     開始接点の接続位置を設定します。
     */
     set beginConnectorType(value: ConnectorPosition) {
-        this.svgGroup.setPropertyStyleValue(StyleNames.beginConnectorType, value)
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.beginConnectorType, value)
         //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, ToStrFromConnectorPosition(value));
     }
     /**
     終了接点の接続位置を返します。
     */
     get endConnectorType(): ConnectorPosition {
-        const p = this.svgGroup.getPropertyStyleValue(StyleNames.endConnectorType);
+        const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.endConnectorType);
         return ConnectorPosition.ToConnectorPosition(p);
     }
     /**
     終了接点の接続位置を設定します。
     */
     set endConnectorType(value: ConnectorPosition) {
-        this.svgGroup.setPropertyStyleValue(StyleNames.endConnectorType, value)
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.endConnectorType, value)
     }
 
     private get beginVertexID(): string | null {
@@ -638,7 +642,7 @@ export class GEdge extends GTextBox {
      */
     public get lineColor(): string | null {
         if (this.svgPath != null) {
-            return this.svgPath.getPropertyStyleValueWithDefault("stroke", "black");
+            return ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke", "black");
         } else {
             return null;
         }
@@ -796,7 +800,7 @@ export class GEdge extends GTextBox {
         //this._observer.disconnect();
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null) {
-            msoDashStyle.setCpmoutedDashArray(this.svgPath);
+            setCpmoutedDashArray(this.svgPath);
         }
         //this._observer.observe(this.svgGroup, this._observerOption);
         this.hasConnectedObserverFunction = true;
@@ -849,7 +853,7 @@ export class GEdge extends GTextBox {
                 node.setAttribute("fill", this.lineColor);
             }
         }
-        const strokeWidth = this.svgPath.getPropertyStyleValue("stroke-width");
+        const strokeWidth = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke-width");
         if (strokeWidth != null) {
             const diffy = CommonFunctions.toPX(strokeWidth) + 3;
             this.svgText.setAttribute("dy", `-${diffy}`);
@@ -935,11 +939,11 @@ export class GEdge extends GTextBox {
      * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
      */
     public get pathTextAlignment(): PathTextAlighnment {
-        const value = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.PathTextAlignment, "center");
+        const value = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.PathTextAlignment, "center");
         return PathTextAlighnment.toPathTextAlighnment(value);
     }
     public set pathTextAlignment(value: PathTextAlighnment) {
-        this.svgGroup.setPropertyStyleValue(StyleNames.PathTextAlignment, value);
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.PathTextAlignment, value);
     }
 
     public save() {
@@ -1020,10 +1024,10 @@ export class GEdge extends GTextBox {
                 const begType: number = ConnectorPosition.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
                 const endType: number = ConnectorPosition.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
                 r.push(` Call EditConnector(obj.ConnectorFormat, shapes_("${this.beginVertex.objectID}"), shapes_("${this.endVertex.objectID}"), ${begType}, ${endType})`)
-                const lineType = msoDashStyle.getLineType(this.svgPath);
-                const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
-                const strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
-                const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                const lineType = getLineType(this.svgPath);
+                const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke", "gray"));
+                const strokeWidth = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke-width", "4"));
+                const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
                 r.push(` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
 
             }
@@ -1046,10 +1050,10 @@ export class GEdge extends GTextBox {
                 const end = j == this.VBAConnectorNumber ? this.endVertex.objectID : `${this.objectID}_node_${j}`;
 
                 r.push(` shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0).name = "${this.objectID}_edge_${j}"`);
-                const lineType = msoDashStyle.getLineType(this.svgPath);
-                const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
-                const strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
-                const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+                const lineType = getLineType(this.svgPath);
+                const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke", "gray"));
+                const strokeWidth = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke-width", "4"));
+                const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
                 r.push(` Call EditLine(shapes_("${edgeID}").Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
 
                 const begType: number = j == 0 ? ConnectorPosition.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
@@ -1079,10 +1083,10 @@ export class GEdge extends GTextBox {
 
 
         lineArr.forEach((v) => {
-            const lineType = msoDashStyle.getLineType(this.svgPath);
-            const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));
-            const strokeWidth = parseInt(this.svgPath.getPropertyStyleValueWithDefault("stroke-width", "4"));
-            const visible = this.svgPath.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            const lineType = getLineType(this.svgPath);
+            const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke", "gray"));
+            const strokeWidth = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke-width", "4"));
+            const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
             r.push(` Call EditLine(edges(${v}).Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
         });
 
@@ -1109,9 +1113,9 @@ export class GEdge extends GTextBox {
      */
     public createVBACodeOfText(id: number): string[][] {
         const r: string[][] = [];
-        const fontSize = parseInt(this.svgTextPath.getPropertyStyleValueWithDefault("font-size", "12"));
-        const fontFamily = VBATranslateFunctions.ToVBAFont(this.svgTextPath.getPropertyStyleValueWithDefault("font-family", "MS PGothic"));
-        const fontBold = VBATranslateFunctions.ToFontBold(this.svgTextPath.getPropertyStyleValueWithDefault("font-weight", "none"));
+        const fontSize = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgTextPath, "font-size", "12"));
+        const fontFamily = VBATranslateFunctions.ToVBAFont(ElementExtension.getPropertyStyleValueWithDefault(this.svgTextPath, "font-family", "MS PGothic"));
+        const fontBold = VBATranslateFunctions.ToFontBold(ElementExtension.getPropertyStyleValueWithDefault(this.svgTextPath, "font-weight", "none"));
 
         if (this.svgTextPath.textContent != null) {
             for (let i = 0; i < this.svgTextPath.textContent.length; i++) {

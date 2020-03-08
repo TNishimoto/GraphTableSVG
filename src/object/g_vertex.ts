@@ -10,6 +10,8 @@ import { GTextBox } from "./g_textbox"
 import { GEdge } from "./g_edge"
 //import { GGraph } from "./g_graph"
 import { VirtualTree } from "./graph_helpers/virtual_tree"
+import {getLineType} from "../basic/html/enum_extension";
+import * as ElementExtension from "../basic/interface/element_extension"
 
 
 
@@ -66,7 +68,7 @@ export class GVertex extends GTextBox {
     入辺配列を返します。
     */
     get outcomingEdges(): GEdge[] {
-        const p = <number[]>JSON.parse(<string>this.svgGroup.gtGetAttribute("outcoming-edges", "[]"));
+        const p = <number[]>JSON.parse(<string>ElementExtension.gtGetAttribute(this.svgGroup, "outcoming-edges", "[]"));
         const p2 = p.map((v) => GObject.getObjectFromObjectID(v.toString()));
         return <GEdge[]>p2;
     }
@@ -82,7 +84,7 @@ export class GVertex extends GTextBox {
     出辺配列を返します。
     */
     get incomingEdges(): GEdge[] {
-        const p = <number[]>JSON.parse(<string>this.svgGroup.gtGetAttribute("incoming-edges", "[]"));
+        const p = <number[]>JSON.parse(<string>ElementExtension.gtGetAttribute(this.svgGroup, "incoming-edges", "[]"));
         const p2 = p.map((v) => GObject.getObjectFromObjectID(v.toString()));
         return <GEdge[]>p2;
 
@@ -257,8 +259,8 @@ export class GVertex extends GTextBox {
              */
     public createVBACode(id: number): string[] {
         const lines: string[] = [];
-        const backColor = VBATranslateFunctions.colorToVBA(this.svgSurface!.getPropertyStyleValueWithDefault("fill", "gray"));
-        const visible = this.svgSurface!.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+        const backColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "fill", "gray"));
+        const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
 
         const vAnchor = VBATranslateFunctions.ToVerticalAnchor(this.verticalAnchor);
         const hAnchor = VBATranslateFunctions.ToHorizontalAnchor(this.horizontalAnchor);
@@ -290,10 +292,10 @@ export class GVertex extends GTextBox {
         return [];
     }
     private getVBAEditLine(): string {
-        const lineColor = VBATranslateFunctions.colorToVBA(this.svgSurface!.getPropertyStyleValueWithDefault("stroke", "gray"));
-        const lineType = msoDashStyle.getLineType(this.svgSurface!);
-        const strokeWidth = parseInt(this.svgSurface!.getPropertyStyleValueWithDefault("stroke-width", "4"));
-        const visible = this.svgSurface!.getPropertyStyleValueWithDefault("visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+        const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "stroke", "gray"));
+        const lineType = getLineType(this.svgSurface!);
+        const strokeWidth = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "stroke-width", "4"));
+        const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
         return ` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`;
     }
 

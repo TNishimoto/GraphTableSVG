@@ -1,7 +1,4 @@
 /// <reference path="g_object.ts"/>
-import "../basic/interface/svg_interface";
-import "../basic/interface/svg_text";
-import "../basic/interface/svg_g";
 import * as SVG from "../basic/interface/svg"
 import * as CSS from "../basic/html/css"
 
@@ -15,6 +12,11 @@ import * as SVGTextBox from "../basic/interface/svg_textbox"
 import { GObject } from "./g_object"
 import * as GOptions from "./g_options"
 import { AutoSizeShapeToFitText } from "../basic/common/enums"
+import {setCpmoutedDashArray} from "../basic/html/enum_extension";
+
+import * as ElementExtension from "../basic/interface/element_extension"
+import * as SVGElementExtension from "../basic/interface/svg_element_extension"
+import * as SVGTextExtension from "../basic/interface/svg_text_extension"
 
 //namespace GraphTableSVG {
 
@@ -55,14 +57,14 @@ export class GTextBox extends GObject {
         this._textObserver.observe(this.svgText, option2);
 
         if (typeof _option.text == "string") {
-            this.svgText.setTextContent(_option.text);
+            SVGTextExtension.setTextContent(this.svgText, _option.text);
         } else if (Array.isArray(_option.text)) {
             SVGTextBox.constructSVGTextByHTMLElements(this.svgText, _option.text, false);
         } else {
 
         }
 
-        const b = this.svgGroup.getPropertyStyleValue(StyleNames.autoSizeShapeToFitText);
+        const b = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.autoSizeShapeToFitText);
 
         if (b === undefined && typeof (_option.style) == "object") {
             const style: GOptions.GTextBoxCSS = _option.style;
@@ -121,10 +123,10 @@ export class GTextBox extends GObject {
             if (_svgText.style.fontSize == null || _svgText.style.fontSize == "") _svgText.style.fontSize = "14px";
             if (_svgText.style.fontWeight == null || _svgText.style.fontWeight == "") _svgText.style.fontWeight = "bold";
             if (_svgText.style.fontFamily == null || _svgText.style.fontFamily == "") _svgText.style.fontFamily = 'Times New Roman';
-            if (_svgText.style.getPropertyValue(StyleNames.marginLeft) == "") _svgText.setMarginLeft(10);
-            if (_svgText.style.getPropertyValue(StyleNames.marginRight) == "") _svgText.setMarginRight(10);
-            if (_svgText.style.getPropertyValue(StyleNames.marginTop) == "") _svgText.setMarginTop(10);
-            if (_svgText.style.getPropertyValue(StyleNames.marginBottom) == "") _svgText.setMarginBottom(10);
+            if (_svgText.style.getPropertyValue(StyleNames.marginLeft) == "") SVGTextExtension.setMarginLeft(_svgText,10);
+            if (_svgText.style.getPropertyValue(StyleNames.marginRight) == "") SVGTextExtension.setMarginRight(_svgText,10);
+            if (_svgText.style.getPropertyValue(StyleNames.marginTop) == "") SVGTextExtension.setMarginTop(_svgText,10);
+            if (_svgText.style.getPropertyValue(StyleNames.marginBottom) == "") SVGTextExtension.setMarginBottom(_svgText,10);
         } else {
             if (className != undefined) {
                 _svgText.setAttribute("class", className);
@@ -141,8 +143,8 @@ export class GTextBox extends GObject {
         GObject.constructAttributes(e, removeAttributes, output);
         //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(AttributeNames.Style.autoSizeShapeToFitText);
         const textChild = HTMLFunctions.getChildByNodeName(e, "text");
-        output.textClass = e.gtGetAttributeStringWithUndefined("text:class");
-        output.textStyle = e.gtGetAttributeStringWithUndefined("text:style");
+        output.textClass = ElementExtension.gtGetAttributeStringWithUndefined(e, "text:class");
+        output.textStyle = ElementExtension.gtGetAttributeStringWithUndefined(e, "text:style");
 
         if (e.hasAttribute("text")) {
             output.text = <string>e.getAttribute("text");
@@ -200,34 +202,34 @@ export class GTextBox extends GObject {
 
 
     get horizontalAnchor(): HorizontalAnchor {
-        const b = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.HorizontalAnchor, "center");
+        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.HorizontalAnchor, "center");
         return HorizontalAnchor.toHorizontalAnchor(b);
     }
     /**
     テキストの水平方向の配置設定を設定します。
     */
     set horizontalAnchor(value: HorizontalAnchor) {
-        if (this.horizontalAnchor != value) this.svgGroup.setPropertyStyleValue(StyleNames.HorizontalAnchor, value);
+        if (this.horizontalAnchor != value) ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.HorizontalAnchor, value);
     }
     /**
     テキストの垂直方向の配置設定を返します。
     */
     get verticalAnchor(): VerticalAnchor {
-        const b = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.VerticalAnchor, "middle");
+        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.VerticalAnchor, "middle");
         return VerticalAnchor.toVerticalAnchor(b);
     }
     /**
     テキストの垂直方向の配置設定を設定します。
     */
     set verticalAnchor(value: VerticalAnchor) {
-        if (this.verticalAnchor != value) this.svgGroup.setPropertyStyleValue(StyleNames.VerticalAnchor, value);
+        if (this.verticalAnchor != value) ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.VerticalAnchor, value);
     }
 
     /**
      * このVertexがテキストに合わせてサイズを変える場合Trueを返します。
      */
     get isAutoSizeShapeToFitText(): AutoSizeShapeToFitText {
-        const b = this.svgGroup.getPropertyStyleValueWithDefault(StyleNames.autoSizeShapeToFitText, "semi-auto");
+        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.autoSizeShapeToFitText, "semi-auto");
         if (b == "auto") {
             return "auto";
         } else if (b == "none") {
@@ -244,7 +246,7 @@ export class GTextBox extends GObject {
         */
     }
     set isAutoSizeShapeToFitText(value: AutoSizeShapeToFitText) {
-        this.svgGroup.setPropertyStyleValue(StyleNames.autoSizeShapeToFitText, value);
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.autoSizeShapeToFitText, value);
         //this.svgGroup.setPropertyStyleValue(AttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
     }
     public update() {
@@ -293,7 +295,7 @@ export class GTextBox extends GObject {
         */
 
         if (!this._isSpecialTextBox) {
-            this.svgText.gtSetXY(this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+            SVGTextExtension.gtSetXY(this.svgText, this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
         }
 
         //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
@@ -309,7 +311,7 @@ export class GTextBox extends GObject {
         this.hasConnectedObserverFunction = false;
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null && this.svgSurface != null) {
-            msoDashStyle.setCpmoutedDashArray(this.svgSurface);
+            setCpmoutedDashArray(this.svgSurface);
         }
         //this._observer.observe(this.svgGroup, this._observerOption);
         this.hasConnectedObserverFunction = true;
@@ -329,67 +331,67 @@ export class GTextBox extends GObject {
         }
     }
     get marginPaddingTop() {
-        return this.svgText.getMarginTop() + this.svgGroup.getPaddingTop();
+        return SVGTextExtension.getMarginTop(this.svgText) + SVGElementExtension.getPaddingTop(this.svgGroup);
     }
     get marginPaddingLeft() {
-        return this.svgText.getMarginLeft() + this.svgGroup.getPaddingLeft();
+        return SVGTextExtension.getMarginLeft(this.svgText) + SVGElementExtension.getPaddingLeft(this.svgGroup);
     }
     get marginPaddingRight() {
-        return this.svgText.getMarginRight() + this.svgGroup.getPaddingRight();
+        return SVGTextExtension.getMarginRight(this.svgText) + SVGElementExtension.getPaddingRight(this.svgGroup);
     }
     get marginPaddingBottom() {
-        return this.svgText.getMarginBottom() + this.svgGroup.getPaddingBottom();
+        return SVGTextExtension.getMarginBottom(this.svgText) + SVGElementExtension.getPaddingBottom(this.svgGroup);
     }
 
     get paddingTop(): number {
-        return this.svgGroup.getPaddingTop();
+        return SVGElementExtension.getPaddingTop(this.svgGroup);
     }
     set paddingTop(value: number) {
-        this.svgGroup.setPaddingTop(value);
+        SVGElementExtension.setPaddingTop(this.svgGroup,value);
     }
     get paddingLeft(): number {
-        return this.svgGroup.getPaddingLeft();
+        return SVGElementExtension.getPaddingLeft(this.svgGroup);
     }
     set paddingLeft(value: number) {
-        this.svgGroup.setPaddingLeft(value);
+        SVGElementExtension.setPaddingLeft(this.svgGroup,value);
     }
     get paddingRight(): number {
-        return this.svgGroup.getPaddingRight();
+        return SVGElementExtension.getPaddingRight(this.svgGroup);
     }
     set paddingRight(value: number) {
-        this.svgGroup.setPaddingRight(value);
+        SVGElementExtension.setPaddingRight(this.svgGroup, value);
     }
     get paddingBottom(): number {
-        return this.svgGroup.getPaddingBottom();
+        return SVGElementExtension.getPaddingBottom(this.svgGroup);
     }
     set paddingBottom(value: number) {
-        this.svgGroup.setPaddingBottom(value);
+        SVGElementExtension.setPaddingBottom(this.svgGroup, value);
     }
 
     get marginTop(): number {
-        return this.svgText.getMarginTop();
+        return SVGTextExtension.getMarginTop(this.svgText);
     }
     set marginTop(value: number) {
-        this.svgText.setMarginTop(value);
+        SVGTextExtension.setMarginTop(this.svgText,value);
     }
 
     get marginLeft(): number {
-        return this.svgText.getMarginLeft();
+        return SVGTextExtension.getMarginLeft(this.svgText);
     }
     set marginLeft(value: number) {
-        this.svgText.setMarginLeft(value);
+        SVGTextExtension.setMarginLeft(this.svgText,value);
     }
     get marginRight(): number {
-        return this.svgText.getMarginRight();
+        return SVGTextExtension.getMarginRight(this.svgText);
     }
     set marginRight(value: number) {
-        this.svgText.setMarginRight(value);
+        SVGTextExtension.setMarginRight(this.svgText,value);
     }
     get marginBottom(): number {
-        return this.svgText.getMarginBottom();
+        return SVGTextExtension.getMarginBottom(this.svgText);
     }
     set marginBottom(value: number) {
-        this.svgText.setMarginBottom(value);
+        SVGTextExtension.setMarginBottom(this.svgText,value);
     }
 
 
@@ -443,7 +445,7 @@ export class GTextBox extends GObject {
 
     public get msoDashStyle(): msoDashStyle | null {
         if (this.svgSurface != null) {
-            const dashStyle = this.svgSurface.getPropertyStyleValue(StyleNames.msoDashStyleName);
+            const dashStyle = ElementExtension.getPropertyStyleValue(this.svgSurface, StyleNames.msoDashStyleName);
             if (dashStyle != null) {
                 return msoDashStyle.toMSODashStyle(dashStyle);
             } else {
@@ -458,7 +460,7 @@ export class GTextBox extends GObject {
             if (msoDashStyle == null) {
                 this.svgSurface.style.removeProperty(StyleNames.msoDashStyleName);
             } else {
-                this.svgSurface.setPropertyStyleValue(StyleNames.msoDashStyleName, value);
+                ElementExtension.setPropertyStyleValue(this.svgSurface, StyleNames.msoDashStyleName, value);
             }
         }
     }

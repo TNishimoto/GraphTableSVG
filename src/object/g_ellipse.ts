@@ -9,6 +9,7 @@
     import {Rectangle, VLine} from "../basic/common/vline"
     import * as CSS from "../basic/html/css"
     import * as GOptions  from "./g_options"
+    import * as ElementExtension from "../basic/interface/element_extension"
 
 
     export class GAbstractEllipseCircle extends GVertex {
@@ -133,7 +134,7 @@
             }else{
                 circle.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
             }
-            const radius = circle.getPropertyStyleNumberValue(StyleNames.defaultRadius, null);
+            const radius = ElementExtension.getPropertyStyleNumberValue(circle,StyleNames.defaultRadius, null);
             if (radius != null) {
                 circle.rx.baseVal.value = radius;
                 circle.ry.baseVal.value = radius;

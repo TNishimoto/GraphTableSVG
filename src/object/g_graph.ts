@@ -22,6 +22,9 @@ import { ShapeObjectType, VertexObjectType, VertexOrder, PathTextAlighnment, Con
 
 import { LogicTree, LogicGraph } from "./logic/logic_tree"
 import { GraphArrangement } from "./graph_helpers/graph_arrangement"
+import * as ElementExtension from "../basic/interface/element_extension"
+import * as Extensions from "../basic/interface/extensions"
+import * as SVGGExtension from "../basic/interface/svg_g_extension"
 
 
 
@@ -71,7 +74,7 @@ export class GGraph extends GObject {
 
     protected _roots: GVertex[] = [];
     public get vertexXInterval(): number | null {
-        const v = this.svgGroup.getPropertyStyleValue(StyleNames.vertexXInterval);
+        const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.vertexXInterval);
         if (v == null) {
             return null;
         } else {
@@ -79,10 +82,10 @@ export class GGraph extends GObject {
         }
     }
     public set vertexXInterval(value: number | null) {
-        this.svgGroup.setPropertyStyleValue(StyleNames.vertexXInterval, value == null ? null : value.toString());
+        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.vertexXInterval, value == null ? null : value.toString());
     }
     public get vertexYInterval(): number | null {
-        const v = this.svgGroup.getPropertyStyleValue(StyleNames.vertexYInterval);
+        const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.vertexYInterval);
         if (v == null) {
             return null;
         } else {
@@ -90,7 +93,7 @@ export class GGraph extends GObject {
         }
     }
     public get direction(): Direction | null {
-        const v = this.svgGroup.getPropertyStyleValue(StyleNames.graphDirection);
+        const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.graphDirection);
         if (v == null) {
             return null;
         } else {
@@ -106,13 +109,13 @@ export class GGraph extends GObject {
         }
     }
     public set direction(value: Direction | null) {
-        this.svgGroup.setPropertyStyleValue(StyleNames.graphDirection, value == null ? null : value.toString());
+        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.graphDirection, value == null ? null : value.toString());
     }
 
 
 
     public set vertexYInterval(value: number | null) {
-        this.svgGroup.setPropertyStyleValue(StyleNames.vertexYInterval, value == null ? null : value.toString());
+        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.vertexYInterval, value == null ? null : value.toString());
     }
     /*
     get defaultVertexClass(): string | null {
@@ -248,10 +251,10 @@ export class GGraph extends GObject {
 
     }
     public get relocateStyle(): string | null {
-        return this.svgGroup.getPropertyStyleValue(StyleNames.relocateName)
+        return ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.relocateName)
     }
     public set relocateStyle(value: string | null) {
-        this.svgGroup.setPropertyStyleValue(StyleNames.relocateName, value);
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.relocateName, value);
     }
 
 
@@ -291,8 +294,8 @@ export class GGraph extends GObject {
     set height(value: number) {
     }
     public Noderegion(): Rectangle {
-        const _x = this.svgGroup.getX();
-        const _y = this.svgGroup.getY();
+        const _x = SVGGExtension.getX(this.svgGroup);
+        const _y = SVGGExtension.getY(this.svgGroup);
         let left = _x;
         let right = _y;
         let top = _x;
@@ -345,7 +348,7 @@ export class GGraph extends GObject {
                     const edge = GGraph.createEdge(svgsvg)
                     if (e.text != undefined) {
                         const b = option.isLatexMode == undefined ? false : option.isLatexMode;
-                        edge.svgTextPath.setTextContent(e.text, b);
+                        Extensions.setTextContent(edge.svgTextPath, e.text, b);
 
                     }
                     this.add(edge);
@@ -399,8 +402,8 @@ export class GGraph extends GObject {
         //this.x = 200;
         //this.y = 200;
 
-        if (option.x != undefined) this.svgGroup.setX(option.x);
-        if (option.y != undefined) this.svgGroup.setY(option.y);
+        if (option.x != undefined) SVGGExtension.setX(this.svgGroup,option.x);
+        if (option.y != undefined) SVGGExtension.setY(this.svgGroup,option.y);
 
         this.relocate();
 
@@ -449,7 +452,7 @@ export class GGraph extends GObject {
     public getRegion(): Rectangle {
         const rects = this.vertices.map((v) => v.region);
         const rect = Rectangle.merge(rects);
-        rect.addOffset(this.svgGroup.getX(), this.svgGroup.getY());
+        rect.addOffset(SVGGExtension.getX(this.svgGroup), SVGGExtension.getY(this.svgGroup));
         return rect;
     }
     /**
@@ -501,12 +504,12 @@ export class GGraph extends GObject {
         if (this.svgGroup.hasAttribute("class")) {
             const oldClass = this.svgGroup.getAttribute("class")!;
             this.svgGroup.setAttribute("class", className);
-            const r = this.svgGroup.getPropertyStyleValue(valueName);
+            const r = ElementExtension.getPropertyStyleValue(this.svgGroup, valueName);
             this.svgGroup.setAttribute("class", oldClass);
             return r;
         } else {
             this.svgGroup.setAttribute("class", className);
-            const r = this.svgGroup.getPropertyStyleValue(valueName);
+            const r = ElementExtension.getPropertyStyleValue(this.svgGroup, valueName);
             this.svgGroup.removeAttribute("class");
             return r;
         }

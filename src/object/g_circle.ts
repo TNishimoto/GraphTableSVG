@@ -10,6 +10,7 @@ import {Rectangle, VLine} from "../basic/common/vline"
 import {GEllipse, GAbstractEllipseCircle} from "./g_ellipse"
 import * as CSS from "../basic/html/css"
 import * as GOptions  from "./g_options"
+import * as ElementExtension from "../basic/interface/element_extension"
 
 export class GCircle extends GAbstractEllipseCircle  {
     public get svgCircle(): SVGCircleElement {
@@ -25,8 +26,8 @@ export class GCircle extends GAbstractEllipseCircle  {
     initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
         const _option = { ...option };
         if (this.svgSurface != null && this.svgSurface.className != null) {
-            const width = this.svgSurface.getPropertyStyleNumberValue(StyleNames.defaultWidth, null);
-            const height = this.svgSurface.getPropertyStyleNumberValue(StyleNames.defaultHeight, null);
+            const width = ElementExtension.getPropertyStyleNumberValue(this.svgSurface, StyleNames.defaultWidth, null);
+            const height = ElementExtension.getPropertyStyleNumberValue(this.svgSurface, StyleNames.defaultHeight, null);
             if (width != null) _option.width = width;
             if (height != null) _option.height = height;
         }
@@ -68,7 +69,7 @@ export class GCircle extends GAbstractEllipseCircle  {
         }else{
             circle.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
         }
-        const radius = circle.getPropertyStyleNumberValue(StyleNames.defaultRadius, null);
+        const radius = ElementExtension.getPropertyStyleNumberValue(circle,StyleNames.defaultRadius, null);
         if (radius != null) {
             circle.r.baseVal.value = radius;
         }

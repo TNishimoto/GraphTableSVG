@@ -12,6 +12,8 @@ import * as AttributeNames from "../../basic/common/attribute_names"
 import * as HTMLFunctions from "../../basic/html/html_functions"
 //import * as Console from "../../options/console"
 import {LogicCell} from "./logic_cell"
+import * as ElementExtension from "../../basic/interface/element_extension"
+
 
 //import { Cell } from "../object/table_helpers/cell"
 //import * as GOptions from "../object/g_options"
@@ -149,7 +151,7 @@ export class LogicTable {
     }
     public static constructLogicTable(e: Element): LogicTable | null {
         const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
-        const widthsStr = e.getPropertyStyleValue("--widths");
+        const widthsStr = ElementExtension.getPropertyStyleValue(e, "--widths");
         if (rows.length == 0) return null;
 
         const cells: Element[][] = new Array(rows.length);
@@ -170,7 +172,7 @@ export class LogicTable {
         }
 
         for (let y = 0; y < cells.length; y++) {
-            const h = rows[y].getPropertyStyleNumberValue("--height", null);
+            const h = ElementExtension.getPropertyStyleNumberValue(rows[y], "--height", null);
             logicTable.rowHeights[y] = h;
 
             for (let x = 0; x < cells[y].length; x++) {
@@ -192,7 +194,7 @@ export class LogicTable {
     }
     public static constructHTMLLogicTable(e: Element): LogicTable | null {
         const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
-        const widthsStr = e.getPropertyStyleValue("--widths");
+        const widthsStr = ElementExtension.getPropertyStyleValue(e, "--widths");
 
         if (rows.length == 0) return null;
 
@@ -212,7 +214,7 @@ export class LogicTable {
         }
 
         for (let y = 0; y < cells.length; y++) {
-            const h = rows[y].getPropertyStyleNumberValue("--height", null);
+            const h = ElementExtension.getPropertyStyleNumberValue(rows[y], "--height", null);
             logicTable.rowHeights[y] = h;
 
             for (let x = 0; x < cells[y].length; x++) {

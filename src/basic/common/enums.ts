@@ -134,7 +134,7 @@ export namespace msoDashStyle {
         "msoLineSolid": [],
         "msoLineSquareDot": [1, 1]
     };
-    const lineCapDic: { [key: string]: string; } = {
+    export const lineCapDic: { [key: string]: string; } = {
         "msoLineDash": "butt",
         "msoLineDashDot": "butt",
         "msoLineDashDotDot": "butt",
@@ -163,13 +163,6 @@ export namespace msoDashStyle {
             return msoLineSolid;
         }
     }
-    function computeDashArray(type: msoDashStyle, width: number): string {
-        const r = [];
-        for (let i = 0; i < dashArrayDic[type].length; i++) {
-            r.push(dashArrayDic[type][i] * width);
-        }
-        return r.join(",");
-    }
     /*
     function setStyle(svgLine: SVGLineElement | SVGPathElement | SVGElement, type: string): void {
         if (toMSODashStyle(type) != null) {
@@ -182,18 +175,7 @@ export namespace msoDashStyle {
         }
     }
     */
-    export function setCpmoutedDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement): void {
-        const type = svgLine.getPropertyStyleValue(StyleNames.msoDashStyleName);
-        if (type == null) {
-
-        }
-        else if (toMSODashStyle(type) != null) {
-            const width = <number>svgLine.getPropertyStyleNumberValue("stroke-width", 2);
-            svgLine.setPropertyStyleValue("stroke-dasharray", computeDashArray(toMSODashStyle(type), width));
-            svgLine.setPropertyStyleValue("stroke-linecap", lineCapDic[type]);
-        }
-    }
-
+    /*
     export function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElement): msoDashStyle {
         const typeName = svgLine.getPropertyStyleValue(StyleNames.msoDashStyleName);
         if (typeName != null) {
@@ -209,6 +191,7 @@ export namespace msoDashStyle {
             return msoDashStyle.msoLineSolid;
         }
     }
+    */
 }
 
 export type Direction = "up" | "left" | "right" | "down";
