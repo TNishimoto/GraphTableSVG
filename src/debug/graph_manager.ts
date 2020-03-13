@@ -1,3 +1,4 @@
+/*
 namespace GraphTableSVG {
     export namespace GraphManager {
         export function createRandomObject(size: number) : { [key: number]: any; }[] {
@@ -28,3 +29,4 @@ namespace GraphTableSVG {
         }
     }
 }
+*/

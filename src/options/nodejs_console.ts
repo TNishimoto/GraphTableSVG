@@ -35,7 +35,7 @@ function getSavePath() : string {
 function save(data : string, path : string, type : "table" | "graph" | "tree"){
     const env = process.env
 
-    const scriptPath = env.DEBUG == "TRUE" ? `../docs/scripts/graph_table_svg.js` : "https://cdn.jsdelivr.net/npm/graph-table-svg@0.0.20/docs/scripts/graph_table_svg.js"
+    const scriptPath = env.DEBUG == "TRUE" ? `../docs/scripts/graph_table_svg.js` : "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js"
     const ptext =`
     <!DOCTYPE html>
     <html>    

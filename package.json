@@ -1,6 +1,6 @@
 {
     "name": "graph-table-svg",
-    "version": "0.0.26",
+    "version": "0.0.28",
     "description": "",
     "main": "./dist/nodejs_index.js",
     "scripts": {
@@ -8,7 +8,7 @@
         "typedoc": "typedoc --out ./docs/typedoc/ ./src/ -m 'commonjs'"
     },
     "keywords": [
-        "typedoc"
+
     ],
     "jsdelivr": "./docs/scripts/graph_table_svg.js",
     "author": "mklemma",

@@ -118,6 +118,7 @@
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_object_logic_logic_tree_.binarylogictree.html#buildfromobject" class="tsd-kind-icon">build<wbr>From<wbr>Object</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_object_logic_logic_tree_.binarylogictree.html#getorderednodes" class="tsd-kind-icon">get<wbr>Ordered<wbr>Nodes</a></li>
 							</ul>
 						</section>
@@ -137,14 +138,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Binary<wbr>Logic<wbr>Tree<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span>, left<span class="tsd-signature-symbol">?: </span><a href="_object_logic_logic_tree_.binarylogictree.html" class="tsd-signature-type">BinaryLogicTree</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, right<span class="tsd-signature-symbol">?: </span><a href="_object_logic_logic_tree_.binarylogictree.html" class="tsd-signature-type">BinaryLogicTree</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, nodeText<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, edgeLabel<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_object_logic_logic_tree_.binarylogictree.html" class="tsd-signature-type">BinaryLogicTree</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Binary<wbr>Logic<wbr>Tree<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span>, left<span class="tsd-signature-symbol">?: </span><a href="_object_logic_logic_tree_.binarylogictree.html" class="tsd-signature-type">BinaryLogicTree</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, right<span class="tsd-signature-symbol">?: </span><a href="_object_logic_logic_tree_.binarylogictree.html" class="tsd-signature-type">BinaryLogicTree</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, vertexOption<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">GOptions.GTextBoxAttributes</span>, edgeOption<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">GOptions.GGraphAttributes</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_object_logic_logic_tree_.binarylogictree.html" class="tsd-signature-type">BinaryLogicTree</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_object_logic_logic_tree_.logictree.html">LogicTree</a>.<a href="_object_logic_logic_tree_.logictree.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in object/logic/logic_tree.ts:151</li>
+									<li>Defined in object/logic/logic_tree.ts:177</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -159,10 +160,10 @@
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> right: <a href="_object_logic_logic_tree_.binarylogictree.html" class="tsd-signature-type">BinaryLogicTree</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> nodeText: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> vertexOption: <span class="tsd-signature-type">GOptions.GTextBoxAttributes</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> edgeLabel: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> edgeOption: <span class="tsd-signature-type">GOptions.GGraphAttributes</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_object_logic_logic_tree_.binarylogictree.html" class="tsd-signature-type">BinaryLogicTree</a></h4>
@@ -190,7 +191,7 @@
 					<aside class="tsd-sources">
 						<p>Overrides <a href="_object_logic_logic_tree_.logictree.html">LogicTree</a>.<a href="_object_logic_logic_tree_.logictree.html#item">item</a></p>
 						<ul>
-							<li>Defined in object/logic/logic_tree.ts:152</li>
+							<li>Defined in object/logic/logic_tree.ts:178</li>
 						</ul>
 					</aside>
 				</section>
@@ -219,7 +220,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in object/logic/logic_tree.ts:129</li>
+									<li>Defined in object/logic/logic_tree.ts:155</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_object_logic_logic_tree_.binarylogictree.html" class="tsd-signature-type">BinaryLogicTree</a>
@@ -230,7 +231,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in object/logic/logic_tree.ts:137</li>
+									<li>Defined in object/logic/logic_tree.ts:163</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -254,7 +255,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in object/logic/logic_tree.ts:140</li>
+									<li>Defined in object/logic/logic_tree.ts:166</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_object_logic_logic_tree_.binarylogictree.html" class="tsd-signature-type">BinaryLogicTree</a>
@@ -265,7 +266,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in object/logic/logic_tree.ts:149</li>
+									<li>Defined in object/logic/logic_tree.ts:175</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -290,7 +291,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_object_logic_logic_tree_.logictree.html">LogicTree</a>.<a href="_object_logic_logic_tree_.logictree.html#textcontent">textContent</a></p>
 								<ul>
-									<li>Defined in object/logic/logic_tree.ts:105</li>
+									<li>Defined in object/logic/logic_tree.ts:131</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -299,7 +300,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_object_logic_logic_tree_.logictree.html">LogicTree</a>.<a href="_object_logic_logic_tree_.logictree.html#textcontent">textContent</a></p>
 								<ul>
-									<li>Defined in object/logic/logic_tree.ts:114</li>
+									<li>Defined in object/logic/logic_tree.ts:140</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -316,6 +317,30 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="buildfromobject" class="tsd-anchor"></a>
+					<h3>build<wbr>From<wbr>Object</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">build<wbr>From<wbr>Object<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_object_logic_logic_tree_.logictree.html">LogicTree</a>.<a href="_object_logic_logic_tree_.logictree.html#buildfromobject">buildFromObject</a></p>
+								<ul>
+									<li>Defined in object/logic/logic_tree.ts:74</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>item: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="getorderednodes" class="tsd-anchor"></a>
 					<h3>get<wbr>Ordered<wbr>Nodes</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -326,7 +351,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_object_logic_logic_tree_.logictree.html">LogicTree</a>.<a href="_object_logic_logic_tree_.logictree.html#getorderednodes">getOrderedNodes</a></p>
 								<ul>
-									<li>Defined in object/logic/logic_tree.ts:80</li>
+									<li>Defined in object/logic/logic_tree.ts:106</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -444,6 +469,9 @@
 							</li>
 							<li class=" tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
 								<a href="_object_logic_logic_tree_.binarylogictree.html#textcontent" class="tsd-kind-icon">text<wbr>Content</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_object_logic_logic_tree_.binarylogictree.html#buildfromobject" class="tsd-kind-icon">build<wbr>From<wbr>Object</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_object_logic_logic_tree_.binarylogictree.html#getorderednodes" class="tsd-kind-icon">get<wbr>Ordered<wbr>Nodes</a>
