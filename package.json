@@ -7,9 +7,7 @@
         "webpack": "webpack",
         "typedoc": "typedoc --out ./docs/typedoc/ ./src/ -m 'commonjs'"
     },
-    "keywords": [
-
-    ],
+    "keywords": [],
     "jsdelivr": "./docs/scripts/graph_table_svg.js",
     "author": "mklemma",
     "license": "MIT",
@@ -18,12 +16,12 @@
     },
     "devDependencies": {
         "gulp": "^4.0.2",
-        "gulp-typedoc": "^2.0.0",
-        "typedoc": "^0.15.3",
+        "gulp-typedoc": "^2.2.4",
+        "typedoc": "^0.17.0",
         "@types/opener": "^1.4.0",
         "ts-loader": "^6.2.1",
-        "typescript": "^3.7.3",
-        "webpack": "^4.41.2",
-        "webpack-cli": "^3.3.10"
+        "typescript": "^3.8.3",
+        "webpack": "^4.42.0",
+        "webpack-cli": "^3.3.11"
     }
 }
