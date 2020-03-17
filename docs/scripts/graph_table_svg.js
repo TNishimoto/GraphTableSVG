@@ -555,6 +555,18 @@ eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\n//
 
 /***/ }),
 
+/***/ "./src/objects/g_options.ts":
+/*!**********************************!*\
+  !*** ./src/objects/g_options.ts ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\n//}\r\n\n\n//# sourceURL=webpack://GraphTableSVG/./src/objects/g_options.ts?");
+
+/***/ }),
+
 /***/ "./src/objects/g_path_textbox.ts":
 /*!***************************************!*\
   !*** ./src/objects/g_path_textbox.ts ***!
@@ -671,7 +683,7 @@ eval("\r\n//namespace GraphTableSVG {\r\nObject.defineProperty(exports, \"__esMo
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst g_object_1 = __webpack_require__(/*! ./g_object */ \"./src/objects/g_object.ts\");\r\nexports.GObject = g_object_1.GObject;\r\nconst g_arrow_callout_1 = __webpack_require__(/*! ./g_arrow_callout */ \"./src/objects/g_arrow_callout.ts\");\r\nexports.GArrowCallout = g_arrow_callout_1.GArrowCallout;\r\nconst g_callout_1 = __webpack_require__(/*! ./g_callout */ \"./src/objects/g_callout.ts\");\r\nexports.GCallout = g_callout_1.GCallout;\r\nconst g_circle_1 = __webpack_require__(/*! ./g_circle */ \"./src/objects/g_circle.ts\");\r\nexports.GCircle = g_circle_1.GCircle;\r\nconst g_edge_1 = __webpack_require__(/*! ./g_edge */ \"./src/objects/g_edge.ts\");\r\nexports.GEdge = g_edge_1.GEdge;\r\nconst g_ellipse_1 = __webpack_require__(/*! ./g_ellipse */ \"./src/objects/g_ellipse.ts\");\r\nexports.GEllipse = g_ellipse_1.GEllipse;\r\nconst g_graph_1 = __webpack_require__(/*! ./g_graph */ \"./src/objects/g_graph.ts\");\r\nexports.GGraph = g_graph_1.GGraph;\r\nconst g_rect_button_1 = __webpack_require__(/*! ./g_rect_button */ \"./src/objects/g_rect_button.ts\");\r\nexports.GRectButton = g_rect_button_1.GRectButton;\r\nconst g_rect_1 = __webpack_require__(/*! ./g_rect */ \"./src/objects/g_rect.ts\");\r\nexports.GRect = g_rect_1.GRect;\r\nconst g_table_1 = __webpack_require__(/*! ./g_table */ \"./src/objects/g_table.ts\");\r\nexports.GTable = g_table_1.GTable;\r\nconst g_textbox_1 = __webpack_require__(/*! ./g_textbox */ \"./src/objects/g_textbox.ts\");\r\nexports.GTextBox = g_textbox_1.GTextBox;\r\nconst g_vertex_1 = __webpack_require__(/*! ./g_vertex */ \"./src/objects/g_vertex.ts\");\r\nexports.GVertex = g_vertex_1.GVertex;\r\nconst g_path_textbox_1 = __webpack_require__(/*! ./g_path_textbox */ \"./src/objects/g_path_textbox.ts\");\r\nexports.GPathTextBox = g_path_textbox_1.GPathTextBox;\r\n\n\n//# sourceURL=webpack://GraphTableSVG/./src/objects/index.ts?");
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst g_object_1 = __webpack_require__(/*! ./g_object */ \"./src/objects/g_object.ts\");\r\nexports.GObject = g_object_1.GObject;\r\nconst g_arrow_callout_1 = __webpack_require__(/*! ./g_arrow_callout */ \"./src/objects/g_arrow_callout.ts\");\r\nexports.GArrowCallout = g_arrow_callout_1.GArrowCallout;\r\nconst g_callout_1 = __webpack_require__(/*! ./g_callout */ \"./src/objects/g_callout.ts\");\r\nexports.GCallout = g_callout_1.GCallout;\r\nconst g_circle_1 = __webpack_require__(/*! ./g_circle */ \"./src/objects/g_circle.ts\");\r\nexports.GCircle = g_circle_1.GCircle;\r\nconst g_edge_1 = __webpack_require__(/*! ./g_edge */ \"./src/objects/g_edge.ts\");\r\nexports.GEdge = g_edge_1.GEdge;\r\nconst g_ellipse_1 = __webpack_require__(/*! ./g_ellipse */ \"./src/objects/g_ellipse.ts\");\r\nexports.GEllipse = g_ellipse_1.GEllipse;\r\nconst g_graph_1 = __webpack_require__(/*! ./g_graph */ \"./src/objects/g_graph.ts\");\r\nexports.GGraph = g_graph_1.GGraph;\r\nconst g_rect_button_1 = __webpack_require__(/*! ./g_rect_button */ \"./src/objects/g_rect_button.ts\");\r\nexports.GRectButton = g_rect_button_1.GRectButton;\r\nconst g_rect_1 = __webpack_require__(/*! ./g_rect */ \"./src/objects/g_rect.ts\");\r\nexports.GRect = g_rect_1.GRect;\r\nconst g_table_1 = __webpack_require__(/*! ./g_table */ \"./src/objects/g_table.ts\");\r\nexports.GTable = g_table_1.GTable;\r\nconst g_textbox_1 = __webpack_require__(/*! ./g_textbox */ \"./src/objects/g_textbox.ts\");\r\nexports.GTextBox = g_textbox_1.GTextBox;\r\nconst g_vertex_1 = __webpack_require__(/*! ./g_vertex */ \"./src/objects/g_vertex.ts\");\r\nexports.GVertex = g_vertex_1.GVertex;\r\nconst g_path_textbox_1 = __webpack_require__(/*! ./g_path_textbox */ \"./src/objects/g_path_textbox.ts\");\r\nexports.GPathTextBox = g_path_textbox_1.GPathTextBox;\r\nconst GOptions = __webpack_require__(/*! ./g_options */ \"./src/objects/g_options.ts\");\r\nexports.GOptions = GOptions;\r\n\n\n//# sourceURL=webpack://GraphTableSVG/./src/objects/index.ts?");
 
 /***/ }),
 

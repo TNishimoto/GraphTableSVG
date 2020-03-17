@@ -13,8 +13,9 @@ import {GVertex} from "./g_vertex"
 
 
 import {GPathTextBox} from "./g_path_textbox"
+import * as GOptions from "./g_options"
 
 
 export {
-    GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox
+    GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox, GOptions
 }

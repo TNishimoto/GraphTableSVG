@@ -46,12 +46,12 @@ function save(data : string, path : string, type : "table" | "graph" | "tree"){
         <script>
             window.onload = () => {
                 const logicData = \`${data}\`
-                const obj = GraphTableSVG.buildLogicObjectFromJSON(logicData);
-                if(obj instanceof GraphTableSVG.LogicTable){
+                const obj = GraphTableSVG.Logics.buildLogicObjectFromJSON(logicData);
+                if(obj instanceof GraphTableSVG.Logics.LogicTable){
                     GraphTableSVG.Console.table(obj, "aaa");    
-                }else if(obj instanceof GraphTableSVG.LogicTree){
+                }else if(obj instanceof GraphTableSVG.Logics.LogicTree){
                     GraphTableSVG.Console.graph(obj, "aaa");    
-                }else if(obj instanceof GraphTableSVG.LogicGraph){
+                }else if(obj instanceof GraphTableSVG.Logics.LogicGraph){
 
                 }
                 console.log(obj); 
