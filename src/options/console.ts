@@ -1,19 +1,19 @@
 import { TableDictionary } from "./table_dictionary"
-import { LogicGraph, LogicGraphNode, LogicTree } from "../object/logic/logic_tree"
-import { LogicTable } from "../object/logic/logic_table"
-//import { CommonFunctions } from "../basic/common/common_functions";
+import { LogicGraph, LogicGraphNode, LogicTree } from "../logics/logic_tree"
+import { LogicTable } from "../logics/logic_table"
+//import { CommonFunctions } from "../common/common_functions";
 import { createShape } from "./open_svg";
-import * as SVGTextBox from "../basic/interface/svg_textbox";
-import * as DefaultClassNames from "../basic/common/default_class_names"
-import * as SVG from "../basic/interface/svg";
-import * as CSS from "../basic/html/css";
+import * as SVGTextBox from "../interfaces/svg_textbox";
+import * as DefaultClassNames from "../common/default_class_names"
+import * as SVG from "../interfaces/svg";
+import * as CSS from "../html/css";
 import * as VBAMacroModal from "./vba_macro_modal";
 import { SVGToVBA } from "./svg_to_vba"
 import { VBAObjectType } from "./vba_object"
 
-import * as GUIObserver from "../basic/html/gui_observer"
-import { GTable } from "../object/g_table";
-import { GGraph } from "../object/g_graph";
+import * as GUIObserver from "../html/gui_observer"
+import { GTable } from "../objects/g_table";
+import { GGraph } from "../objects/g_graph";
 
 
 //export namespace Console {

@@ -1,26 +1,26 @@
 
-import * as AttributeNames from "../basic/common/attribute_names"
-//import * as StyleNames from "../basic/common/style_names"
-import { ShapeObjectType } from "../basic/common/enums";
-import * as HTMLFunctions from "../basic/html/html_functions"
+import * as AttributeNames from "../common/attribute_names"
+//import * as StyleNames from "../common/style_names"
+import { ShapeObjectType } from "../common/enums";
+import * as HTMLFunctions from "../html/html_functions"
 import * as HTMLTable from "./html_table"
-import * as GUIObserver from "../basic/html/gui_observer"
+import * as GUIObserver from "../html/gui_observer"
 
-import { GObject } from "../object/g_object"
-import { GCallout } from "../object/g_callout"
-import { GArrowCallout } from "../object/g_arrow_callout"
-import { GEllipse } from "../object/g_ellipse"
-import { GRect } from "../object/g_rect"
+import { GObject } from "../objects/g_object"
+import { GCallout } from "../objects/g_callout"
+import { GArrowCallout } from "../objects/g_arrow_callout"
+import { GEllipse } from "../objects/g_ellipse"
+import { GRect } from "../objects/g_rect"
 //import { GVertex } from "../object/g_vertex"
 
-import { GTextBox } from "../object/g_textbox"
-import { GEdge } from "../object/g_edge"
-import { GTable, GTableOption } from "../object/g_table"
-import { GGraph } from "../object/g_graph"
-import { GRectButton } from "../object/g_rect_button"
-import { GCircle } from "../object/g_circle";
-import * as GOptions from "../object/g_options"
-import * as ElementExtension from "../basic/interface/element_extension"
+import { GTextBox } from "../objects/g_textbox"
+import { GEdge } from "../objects/g_edge"
+import { GTable, GTableOption } from "../objects/g_table"
+import { GGraph } from "../objects/g_graph"
+import { GRectButton } from "../objects/g_rect_button"
+import { GCircle } from "../objects/g_circle";
+import * as GOptions from "../objects/g_options"
+import * as ElementExtension from "../interfaces/element_extension"
 
 //export namespace openSVGFunctions {
     

@@ -1,5 +1,5 @@
 
-import { LogicTable } from "../object/logic/logic_table"
+import { LogicTable } from "../logics/logic_table"
 //export namespace HTMLFunctions {
     export function createHTMLTable(e: HTMLElement): HTMLTableElement {
         const table = LogicTable.constructHTMLLogicTable(e);

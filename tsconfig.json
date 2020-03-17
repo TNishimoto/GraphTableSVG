@@ -17,9 +17,9 @@
     },
     "include": [
         "src/basic", 
-        "src/object", 
+        "src/objects", 
         "src/options",
-        "src"
+        "src", "src/logics"
         //"src/debug", "src/basic/svghtml/draggable_object.ts"
     ],
     "exclude": [

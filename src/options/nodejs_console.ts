@@ -1,11 +1,11 @@
 import { TableDictionary } from "./table_dictionary"
-import { LogicGraph, LogicGraphNode, LogicTree } from "../object/logic/logic_tree"
-import { LogicTable } from "../object/logic/logic_table"
-//import { CommonFunctions } from "../basic/common/common_functions";
+import { LogicGraph, LogicGraphNode, LogicTree } from "../logics/logic_tree"
+import { LogicTable } from "../logics/logic_table"
+//import { CommonFunctions } from "../common/common_functions";
 /*
 import { createShape } from "./open_svg";
 import * as SVGTextBox from "../basic/interface/svg_textbox";
-import * as DefaultClassNames from "../basic/common/default_class_names"
+import * as DefaultClassNames from "../common/default_class_names"
 import * as SVG from "../basic/interface/svg";
 import * as CSS from "../basic/html/css";
 import * as VBAMacroModal from "./vba_macro_modal";

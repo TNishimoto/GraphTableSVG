@@ -1,15 +1,15 @@
 ﻿
 //namespace GraphTableSVG {
-import { GObject } from "../object/g_object"
-import { GTable } from "../object/g_table"
-import { GGraph } from "../object/g_graph"
-import { Rectangle } from "../basic/common/vline";
-import * as CSS from "../basic/html/css"
-import { VBATranslateFunctions } from "../basic/common/vba_functions"
+import { GObject } from "../objects/g_object"
+import { GTable } from "../objects/g_table"
+import { GGraph } from "../objects/g_graph"
+import { Rectangle } from "../common/vline";
+import * as CSS from "../html/css"
+import { VBATranslateFunctions } from "../common/vba_functions"
 import { VBAObjectType } from "./vba_object"
-import * as ElementExtension from "../basic/interface/element_extension"
-import * as Extensions from "../basic/interface/extensions"
-import * as SVGTextExtension from "../basic/interface/svg_text_extension"
+import * as ElementExtension from "../interfaces/element_extension"
+import * as Extensions from "../interfaces/extensions"
+import * as SVGTextExtension from "../interfaces/svg_text_extension"
 
 
 export class SVGToVBA {

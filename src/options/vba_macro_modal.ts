@@ -1,7 +1,7 @@
 //namespace GraphTableSVG {
 //import { Padding, Rectangle } from "../common/vline";
 import { SVGToVBA } from "./svg_to_vba"
-import { GObject } from "../object/g_object"
+import { GObject } from "../objects/g_object"
 
 //export namespace VBAMacroModal {
     export function showMacroModal(id :string | GObject){
