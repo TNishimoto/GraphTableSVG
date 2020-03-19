@@ -32,7 +32,7 @@ function getSavePath() : string {
     const filepath = `${tmpdir}/graph_table_svg_table_${rand}.html`;
     return filepath;
 }
-function save(data : string, path : string, type : "table" | "graph" | "tree"){
+function save(data : string, path : string, title : string,type : "table" | "graph" | "tree", libraryPath : string | null = null, additonalFunction : string | null){
     const env = process.env
 
     const scriptPath = env.DEBUG == "TRUE" ? `../docs/scripts/graph_table_svg.js` : "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js"
@@ -43,14 +43,16 @@ function save(data : string, path : string, type : "table" | "graph" | "tree"){
         <meta charset="utf-8" />
         <title>View</title>
         <script src="${scriptPath}"></script>
+        ${libraryPath != null ? "<script src=" + libraryPath + "></script>" : ""}
         <script>
             window.onload = () => {
                 const logicData = \`${data}\`
                 const obj = GraphTableSVG.Logics.buildLogicObjectFromJSON(logicData);
                 if(obj instanceof GraphTableSVG.Logics.LogicTable){
-                    GraphTableSVG.Console.table(obj, "aaa");    
+                    GraphTableSVG.Console.table(obj, "${title}");    
                 }else if(obj instanceof GraphTableSVG.Logics.LogicTree){
-                    GraphTableSVG.Console.graph(obj, "aaa");    
+                    const graphResult = GraphTableSVG.Console.graph(obj, "${title}");    
+                    ${additonalFunction != null ? additonalFunction + "(graphResult[0])" : ""}
                 }else if(obj instanceof GraphTableSVG.Logics.LogicGraph){
 
                 }
@@ -81,7 +83,7 @@ export function table(item: any,  title: string = "", option : { filepath? : str
         //const rand : string = (Math.floor( Math.random() * 100000000 )).toString();
 
         //const filepath = option.filepath ? option.filepath : `${tmpdir}/graph_table_svg_table_output_${rand}.html`;
-        save(data, filepath, "table");
+        save(data, filepath, title, "table", null, null);
         opener(filepath);
 
     } else {
@@ -99,7 +101,13 @@ export function graph(item: any | LogicTree | LogicGraph, title: string = "", op
         const data = JSON.stringify(item);
         //const debug = option.debug ? option.debug : false;
         const filepath = option.filepath ? option.filepath : getSavePath();
-        save(data, filepath, "tree");
+        if(item instanceof LogicTree){
+            const libraryPath = item.drawingFunction == null ? null : item.drawingFunction.url;
+            const additonalFunction = item.drawingFunction == null ? null : item.drawingFunction.functionName;
+            save(data, filepath, title, "tree", libraryPath, additonalFunction);
+        }else{
+            save(data, filepath, title, "tree", null, null);
+        }
         opener(filepath);
         
 

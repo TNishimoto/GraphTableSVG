@@ -208,12 +208,13 @@ export function clear() {
     code.innerHTML = "";
 }
 
-export function graph(item: any | LogicTree | LogicGraph, title: string = "", canvasID: string | null = null) {
+export function graph(item: any | LogicTree | LogicGraph, title: string = "", canvasID: string | null = null) : [GGraph, ConsoleLineElement | null] {
 
     if (item instanceof LogicTree || item instanceof LogicGraph) {
         if (canvasID != null) {
             const ggraph = createShape(canvasID, "g-graph");
             ggraph.build(item);
+            return [ggraph, null];
         } else {
             const code = getOrCreateCodeElement();
             const consoleLine = new ConsoleLineElement(code, "graph", title);
@@ -221,6 +222,7 @@ export function graph(item: any | LogicTree | LogicGraph, title: string = "", ca
             const ggraph = createShape(consoleLine.canvas!, "g-graph");
             ggraph.build(item);
             consoleLine.addVBAObject(ggraph);
+            return [ggraph, consoleLine];
         }
         /*
         if(item instanceof LogicGraph){
@@ -232,7 +234,7 @@ export function graph(item: any | LogicTree | LogicGraph, title: string = "", ca
         const tableDic = new TableDictionary();
         tableDic.construct(item);
         const logicGraph = tableDic.toLogicGraph();
-        graph(logicGraph, title, canvasID);
+        return graph(logicGraph, title, canvasID);
         //console.log(logicGraph);    
     }
 }

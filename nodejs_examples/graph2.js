@@ -7,5 +7,6 @@ const node3 = new GraphTableSVG.Logics.LogicTree({ vertexOption: { text: "hello3
 
 node1.children.push(node2);
 node1.children.push(node3);
+node1.drawingFunction = { url: null, functionName: "GraphTableSVG.Logics.Test" }
 
-GraphTableSVG.Console.graph(node1, "aaa");
+const result = GraphTableSVG.Console.graph(node1, "aaa");

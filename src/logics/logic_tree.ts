@@ -8,6 +8,7 @@ export class BaseLogicTree {
 import { VertexOrder, Direction, PathTextAlighnment } from "../common/enums"
 //import { GTextBoxAttributes } from "../object/g_textbox";
 import * as GOptions from "../objects/g_options"
+export type DrawingFunctionOnURL = { url : string | null, functionName : string | null, drawingFunction : object | null }
 
 /*
 export type LogicTreeOption = {
@@ -32,6 +33,10 @@ export class LogicGraphNode {
         this.outputEdges.push(e);
     }
 }
+export function Test(obj : LogicTree) : void {
+    console.log(obj);
+    console.log("test");
+}
 export class LogicGraph {
     public nodes: LogicGraphNode[] = [];
     public edges: LogicGraphEdge[] = [];
@@ -55,7 +60,6 @@ export class LogicGraph {
     }
 }
 
-export type DrawingFunctionOnURL = { url : string, functionName : string }
 /**
  * 木構造を表現するクラスです。
  */
@@ -68,7 +72,7 @@ export class LogicTree {
     public vertexOption: GOptions.GTextBoxAttributes = {};
     public edgeOption: GOptions.GEdgeAttributes = { class: { pathTextAlignment: PathTextAlighnment.regularInterval } };
     public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
-    public drawingFunction : DrawingFunctionOnURL | string | null = null;
+    public drawingFunction : DrawingFunctionOnURL | null = null;
 
     public item: any = null;
 
