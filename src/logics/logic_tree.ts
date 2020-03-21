@@ -135,7 +135,7 @@ export class LogicTree {
         }
         return r;
     }
-    public get textContent(): string {
+    public get edgeTextContent(): string {
         if (typeof (this.edgeOption.text) == "string") {
             return this.edgeOption.text!;
         } else if (this.edgeOption.text === undefined) {
@@ -144,9 +144,23 @@ export class LogicTree {
             return "";
         }
     }
-    public set textContent(value: string) {
+    public set edgeTextContent(value: string) {
         this.edgeOption.text = value;
     }
+    public get vertexTextContent(): string {
+        if (typeof (this.vertexOption.text) == "string") {
+            return this.vertexOption.text!;
+        } else if (this.vertexOption.text === undefined) {
+            return "";
+        } else {
+            return "";
+        }
+    }
+    public set vertexTextContent(value: string) {
+        this.vertexOption.text = value;
+    }
+
+
     /*
     public view(canvasID: string | null = null ) {
         Console.graph(this, canvasID);
