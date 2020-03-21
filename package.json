@@ -4,8 +4,8 @@
     "description": "",
     "main": "./dist/nodejs_index.js",
     "scripts": {
-        "webpack": "webpack",
-        "typedoc": "typedoc --out ./docs/typedoc/ ./src/ -m 'commonjs'"
+        "compile": "webpack && tsc -p .",
+        "typedoc": "typedoc --out ./docs/typedoc/ ./src/ -m commonjs"
     },
     "bin": {
         "graph-table-svg": "./bin/repl.js"
