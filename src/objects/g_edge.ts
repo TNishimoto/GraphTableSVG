@@ -491,10 +491,10 @@ export class GEdge extends GTextBox {
             }
         }
     }
-    private removeVertexEvent(vertex: GTextBox) {
+    private removeVertexEvent(vertex: GVertex) {
         vertex.svgGroup.removeEventListener(AttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
     }
-    private addVertexEvent(vertex: GTextBox) {
+    private addVertexEvent(vertex: GVertex) {
         vertex.svgGroup.addEventListener(AttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
     }
     private connectPositionChangedFunc = () => {

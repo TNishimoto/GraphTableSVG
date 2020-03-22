@@ -20,6 +20,7 @@ import * as GOptions from "./g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
+import { GVertex } from "./g_vertex";
 
 //namespace GraphTableSVG {
 
@@ -35,7 +36,7 @@ export type GTableOption = GOptions.GObjectAttributes & _GTableOption;
 /**
 テーブルを表します。
 */
-export class GTable extends GObject {
+export class GTable extends GVertex {
 
 
     /**

@@ -6,7 +6,7 @@ import * as AttributeNames from "../common/attribute_names"
 import * as DefaultClassNames from "../common/default_class_names"
 import { ConnectorPosition, msoDashStyle } from "../common/enums";
 import { GObject } from "./g_object"
-import { GTextBox } from "./g_textbox"
+//import { GTextBox } from "./g_textbox"
 import { GEdge } from "./g_edge"
 //import { GGraph } from "./g_graph"
 import { VirtualTree } from "./graph_helpers/virtual_tree"
@@ -15,7 +15,7 @@ import * as ElementExtension from "../interfaces/element_extension"
 
 
 
-export class GVertex extends GTextBox {
+export class GVertex extends GObject {
     /*
     protected setClassNameOfSVGGroup() {
         const parent = this.svgGroup.parentElement;
@@ -63,6 +63,11 @@ export class GVertex extends GTextBox {
         return ConnectorPosition.Top;
 
     }
+
+    public tryGetSVGText(): SVGTextElement | null {
+        return null;
+    }
+
 
     /**
     入辺配列を返します。
@@ -259,22 +264,17 @@ export class GVertex extends GTextBox {
              */
     public createVBACode(id: number): string[] {
         const lines: string[] = [];
+        
         const backColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "fill", "gray"));
         const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-
-        const vAnchor = VBATranslateFunctions.ToVerticalAnchor(this.verticalAnchor);
-        const hAnchor = VBATranslateFunctions.ToHorizontalAnchor(this.horizontalAnchor);
-
 
         lines.push(`Sub create${id}(createdSlide As slide)`);
         lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
         lines.push(` Dim obj As Shape`);
         lines.push(` Set obj = shapes_.AddShape(${this.shape}, ${this.x}, ${this.y}, ${this.width}, ${this.height})`);
-        lines.push(` Call EditTextFrame(obj.TextFrame, ${this.marginPaddingTop}, ${this.marginPaddingBottom}, ${this.marginPaddingLeft}, ${this.marginPaddingRight}, false, ppAutoSizeNone)`);
-        lines.push(` Call EditAnchor(obj.TextFrame, ${vAnchor}, ${hAnchor})`);
 
-        VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, `obj.TextFrame.TextRange`).forEach((v) => lines.push(v));
-        //const adjustments = this.VBAAdjustments;
+        const svgText = this.tryGetSVGText();
+        if(svgText != null)VBATranslateFunctions.TranslateSVGTextElement2(svgText, `obj.TextFrame.TextRange`).forEach((v) => lines.push(v));
         lines.push(this.getVBAEditLine());
 
         lines.push(` Call EditCallOut(obj, "${this.objectID}", ${visible}, ${backColor})`)
@@ -282,7 +282,7 @@ export class GVertex extends GTextBox {
             lines.push(` obj.Adjustments.Item(${i + 1}) = ${v}`);
         })
         lines.push(`End Sub`);
-        //sub.push([` Call EditTextEffect(nodes(${i}).TextEffect, ${fontSize}, "${fontFamily}")`]);
+        
         return lines;
     }
     /**
@@ -291,7 +291,7 @@ export class GVertex extends GTextBox {
     protected get VBAAdjustments(): number[] {
         return [];
     }
-    private getVBAEditLine(): string {
+    protected getVBAEditLine(): string {
         const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "stroke", "gray"));
         const lineType = getLineType(this.svgSurface!);
         const strokeWidth = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "stroke-width", "4"));

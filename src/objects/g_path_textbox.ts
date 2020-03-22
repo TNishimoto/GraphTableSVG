@@ -2,7 +2,7 @@
 
 //namespace GraphTableSVG {
     import {Rectangle, VLine} from "../common/vline"
-    import {GVertex} from "./g_vertex"
+    import {GTextBox} from "./g_textbox"
     import { ShapeObjectType, ConnectorPosition, msoDashStyle, AutoSizeShapeToFitText } from "../common/enums";
     import * as AttributeNames from "../common/attribute_names"
     import * as DefaultClassNames from "../common/default_class_names"
@@ -10,7 +10,7 @@
     import * as CSS from "../html/css"
     import * as GOptions  from "./g_options"
 
-    export class GPathTextBox extends GVertex {
+    export class GPathTextBox extends GTextBox {
         //private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {
             return <SVGPathElement>this.svgSurface;

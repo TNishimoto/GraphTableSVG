@@ -26,7 +26,7 @@ export enum OldConnectorPosition {
 */
 export type CustomTag = "row" | "cell" | "t";
 
-export type VertexObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-circle" | "g-rect" | "g-path-textbox" | "g-rect-button";
+export type VertexObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-circle" | "g-rect" | "g-path-textbox" | "g-rect-button" | "g-table";
 //export namespace VertexObjectType {
 //}
 

@@ -12,7 +12,7 @@
     import * as ElementExtension from "../interfaces/element_extension"
 
 
-    export class GAbstractEllipseCircle extends GVertex {
+    export class GAbstractEllipseCircle extends GTextBox {
         get rx(): number {
             return 5;
         }

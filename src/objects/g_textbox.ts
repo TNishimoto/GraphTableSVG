@@ -1,6 +1,7 @@
 /// <reference path="g_object.ts"/>
 import * as SVG from "../interfaces/svg"
 import * as CSS from "../html/css"
+import { VBATranslateFunctions } from "../common/vba_functions"
 
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
@@ -10,6 +11,8 @@ import { Rectangle } from "../common/vline"
 import * as HTMLFunctions from "../html/html_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { GObject } from "./g_object"
+import { GVertex } from "./g_vertex"
+
 import * as GOptions from "./g_options"
 import { AutoSizeShapeToFitText } from "../common/enums"
 import {setCpmoutedDashArray} from "../html/enum_extension";
@@ -23,7 +26,7 @@ import * as SVGTextExtension from "../interfaces/svg_text_extension"
 
 
 
-export class GTextBox extends GObject {
+export class GTextBox extends GVertex {
     private _svgText: SVGTextElement;
     //private isFixTextSize: boolean = false;
     protected surfaceAttributes: string[] = [];
@@ -464,7 +467,34 @@ export class GTextBox extends GObject {
             }
         }
     }
+    public createVBACode(id: number): string[] {
+        const lines: string[] = [];
+        
+        const backColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "fill", "gray"));
+        const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
 
+        const vAnchor = VBATranslateFunctions.ToVerticalAnchor(this.verticalAnchor);
+        const hAnchor = VBATranslateFunctions.ToHorizontalAnchor(this.horizontalAnchor);
+
+
+        lines.push(`Sub create${id}(createdSlide As slide)`);
+        lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
+        lines.push(` Dim obj As Shape`);
+        lines.push(` Set obj = shapes_.AddShape(${this.shape}, ${this.x}, ${this.y}, ${this.width}, ${this.height})`);
+        lines.push(` Call EditTextFrame(obj.TextFrame, ${this.marginPaddingTop}, ${this.marginPaddingBottom}, ${this.marginPaddingLeft}, ${this.marginPaddingRight}, false, ppAutoSizeNone)`);
+        lines.push(` Call EditAnchor(obj.TextFrame, ${vAnchor}, ${hAnchor})`);
+
+        VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, `obj.TextFrame.TextRange`).forEach((v) => lines.push(v));
+        lines.push(this.getVBAEditLine());
+
+        lines.push(` Call EditCallOut(obj, "${this.objectID}", ${visible}, ${backColor})`)
+        this.VBAAdjustments.forEach((v, i) => {
+            lines.push(` obj.Adjustments.Item(${i + 1}) = ${v}`);
+        })
+        lines.push(`End Sub`);
+        
+        return lines;
+    }
 }
 
 

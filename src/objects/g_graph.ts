@@ -153,10 +153,10 @@ export class GGraph extends GObject {
      * @param item
      */
     public add(item: GVertex | GEdge): void {
-        if (item instanceof GVertex) {
-            this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
-        } else {
+        if (item instanceof GEdge) {
             this.svgGroup.appendChild(item.svgGroup);
+        } else {
+            this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
         }
     }
     /**
@@ -340,7 +340,10 @@ export class GGraph extends GObject {
 
             logicGraph.nodes.forEach((v, i) => {
                 const node = GGraph.createVertex(svgsvg, "g-circle")
-                node.svgText.textContent = v.text;
+                const svgText = node.tryGetSVGText();
+                if(svgText != null){
+                    svgText.textContent = v.text;
+                }
                 this.add(node);
                 dic.set(i, node);
             })

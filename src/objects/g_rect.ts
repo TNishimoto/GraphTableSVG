@@ -13,7 +13,7 @@
     import * as ElementExtension from "../interfaces/element_extension"
 
 
-    export class GRect extends GVertex {
+    export class GRect extends GTextBox {
         public get svgRectangle(): SVGRectElement {
             return <SVGRectElement>this._svgSurface;
         }
