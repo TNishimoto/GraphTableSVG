@@ -4,7 +4,7 @@ import * as Objects from "./objects/index"
 import * as Options from "./options/index";
 import * as Logics from "./logics/index";
 import * as Console from "./options/console";
-import * as Debug from "./options/debug";
+import * as Debug from "./debug/debug";
 
 
 

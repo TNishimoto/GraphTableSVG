@@ -224,6 +224,7 @@ export function graph(item: any | LogicTree | LogicGraph, title: string = "", ca
             consoleLine.addVBAObject(ggraph);
             return [ggraph, consoleLine];
         }
+        
         /*
         if(item instanceof LogicGraph){
         }else{

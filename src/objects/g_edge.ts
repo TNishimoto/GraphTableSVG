@@ -6,13 +6,13 @@ import * as DefaultClassNames from "../common/default_class_names"
 
 //import {GEdgeAttributes, GObjectAttributes} from "../options/attributes_option"
 import * as SVG from "../interfaces/svg"
-import { ShapeObjectType, PathTextAlighnment, ConnectorPosition, msoDashStyle } from "../common/enums";
+import { ShapeObjectType, PathTextAlighnment, ConnectorPosition, msoDashStyle, CoodinateType } from "../common/enums";
 import * as CommonFunctions from "../common/common_functions"
 import { VBATranslateFunctions } from "../common/vba_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox";
 import {getLineType, setCpmoutedDashArray} from "../html/enum_extension";
 
-import { GTextBox } from "./g_textbox"
+import { GEdgeTextBox } from "./g_edge_textbox"
 import { GVertex } from "./g_vertex"
 import { GObject } from "./g_object"
 import * as CSS from "../html/css"
@@ -25,7 +25,7 @@ import * as Extensions from "../interfaces/extensions"
 /**
  * 辺をSVGで表現するためのクラスです。
  */
-export class GEdge extends GTextBox {
+export class GEdge extends GEdgeTextBox {
 
     constructor(svgbox: SVGElement | string, option: GOptions.GEdgeAttributes = {}) {
         super(svgbox, option);
@@ -111,6 +111,23 @@ export class GEdge extends GTextBox {
 
         //this.setAppropriateText();
     }
+    public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+        throw Error("Error!")
+    }
+    public get coordinateType() : CoodinateType {
+        return "group00"
+    }
+    /*
+    public set x(v: number) {
+        console.log("call_x!" + v);
+        super.x = 0;
+    }
+    public set y(v: number) {
+        console.log("call_y!" + v);
+
+        super.y = 0;
+    }
+    */
 
     /*
     protected createObjects(svgbox: SVGElement, option: GObjectAttributes = {}): void {
@@ -118,7 +135,7 @@ export class GEdge extends GTextBox {
     }
     */
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GEdgeAttributes = {}): GOptions.GEdgeAttributes {
-        const _output = <GOptions.GEdgeAttributes>GTextBox.constructAttributes(e, removeAttributes, output);
+        const _output = <GOptions.GEdgeAttributes>GEdgeTextBox.constructAttributes(e, removeAttributes, output);
         _output.x1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "x1", 0);
         _output.x2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "x2", 300);
         _output.y1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "y1", 0);
@@ -185,13 +202,13 @@ export class GEdge extends GTextBox {
         if (typeof _option.y2 === "undefined") _option.y2 = 300;
 
         if (typeof _option.beginVertex === "string") {
-            const obj = GTextBox.getObjectFromID(_option.beginVertex);
+            const obj = GEdgeTextBox.getObjectFromID(_option.beginVertex);
             if (obj instanceof GVertex) {
                 _option.beginVertex = obj;
             }
         }
         if (typeof _option.endVertex === "string") {
-            const obj = GTextBox.getObjectFromID(_option.endVertex);
+            const obj = GEdgeTextBox.getObjectFromID(_option.endVertex);
             if (obj instanceof GVertex) {
                 _option.endVertex = obj;
             }
@@ -508,7 +525,7 @@ export class GEdge extends GTextBox {
         if (this.beginVertexID == null) {
             return null;
         } else {
-            return <GVertex>GTextBox.getObjectFromObjectID(this.beginVertexID);
+            return <GVertex>GEdgeTextBox.getObjectFromObjectID(this.beginVertexID);
         }
     }
     /**
@@ -531,7 +548,7 @@ export class GEdge extends GTextBox {
         if (this.endVertexID == null) {
             return null;
         } else {
-            return <GVertex>GTextBox.getObjectFromObjectID(this.endVertexID);
+            return <GVertex>GEdgeTextBox.getObjectFromObjectID(this.endVertexID);
         }
     }
     /**
@@ -810,6 +827,9 @@ export class GEdge extends GTextBox {
 
         const [x1, y1] = this.beginVertex != null ? this.beginVertex.getLocation(this.beginConnectorType, cx2, cy2) : [cx1, cy1];
         const [x2, y2] = this.endVertex != null ? this.endVertex.getLocation(this.endConnectorType, cx1, cy1) : [cx2, cy2];
+
+        console.log(`edge ${this.objectID} / ${x1}/${y1} / ${this.x}`)
+        //if(this.x != 0) throw Error("error!");
         /*
         this.x1 = x1;
         this.y1 = y1;

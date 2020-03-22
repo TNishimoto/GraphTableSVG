@@ -4,17 +4,17 @@ import * as StyleNames from "../common/style_names"
 import * as ElementExtension from "./element_extension"
 
 export function getPaddingLeft(item: SVGElement): number{
-    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.paddingLeft, 5)!;
+    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.paddingLeft, 0)!;
 }
 export function getPaddingTop(item: SVGElement): number{
-    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.paddingTop, 5)!;
+    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.paddingTop, 0)!;
 }
 export function getPaddingRight(item: SVGElement): number{
-    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.paddingRight, 5)!;
+    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.paddingRight, 0)!;
 
 }
 export function getPaddingBottom(item: SVGElement): number{
-    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.paddingBottom, 5)!;
+    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.paddingBottom, 0)!;
 
 }
 

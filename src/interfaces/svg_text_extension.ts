@@ -66,14 +66,14 @@ export function setTextContent(item: SVGTextElement, text: string, isLatexMode: 
 //setTextContent(text: string): void;
 
 export function getMarginLeft(item: SVGTextElement): number{
-    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginLeft, 5)!;
+    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginLeft, 0)!;
 }
 export function setMarginLeft(item: SVGTextElement,value: number): void{
     ElementExtension.setPropertyStyleValue(item, StyleNames.marginLeft, value.toString());
 
 }
 export function getMarginTop(item: SVGTextElement): number{
-    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginTop, 5)!;
+    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginTop, 0)!;
 
 }
 export function setMarginTop(item: SVGTextElement,value: number): void{
@@ -81,7 +81,7 @@ export function setMarginTop(item: SVGTextElement,value: number): void{
 
 }
 export function getMarginRight(item: SVGTextElement): number{
-    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginRight, 5)!;
+    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginRight, 0)!;
 
 }
 export function setMarginRight(item: SVGTextElement,value: number): void{
@@ -89,7 +89,7 @@ export function setMarginRight(item: SVGTextElement,value: number): void{
 
 }
 export function getMarginBottom(item: SVGTextElement): number{
-    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginBottom, 5)!;
+    return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginBottom, 0)!;
 
 }
 export function setMarginBottom(item: SVGTextElement,value: number): void{

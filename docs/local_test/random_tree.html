@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Text Examples</title>
+    <script src="../scripts/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            //GraphTableSVG.openSVG()
+        };
+
+        function editTree(tree) {
+            tree.getOrderedNodes().forEach((v) => {
+                v.vertexOption.surfaceClass = {
+                    fill: "black"
+                };
+                v.vertexOption.width = 20;
+
+            })
+            return tree;
+
+        }
+
+        function randomBinaryTreeButton() {
+            GraphTableSVG.Options.clearSVG("svgbox")
+            const tree = GraphTableSVG.Debug.randomBinaryTree(2);
+            editTree(tree);
+            GraphTableSVG.Console.graph(tree, "random", "svgbox");
+            //GraphTableSVG.Console.graph(tree, "random");
+
+            //tree.view("svgbox");
+
+        }
+
+        function randomTreeButton() {
+            GraphTableSVG.Options.clearSVG("svgbox")
+            const tree = GraphTableSVG.Debug.randomTree(15, 4);
+            editTree(tree);
+            GraphTableSVG.Console.graph(tree, "random", "svgbox");
+        }
+
+        function randomBinaryTrieButton() {
+            GraphTableSVG.Options.clearSVG("svgbox")
+            const tree = GraphTableSVG.Debug.randomBinaryTrie(15);
+            editTree(tree);
+            GraphTableSVG.Console.graph(tree, "random", "svgbox");
+        }
+
+        function randomTrieButton() {
+            GraphTableSVG.Options.clearSVG("svgbox")
+            const tree = GraphTableSVG.Debug.randomTrie(5, 4);
+            editTree(tree);
+            GraphTableSVG.Console.graph(tree, "random", "svgbox");
+        }
+
+        function randomLabeledTreeButton() {
+            GraphTableSVG.Options.clearSVG("svgbox")
+            const tree = GraphTableSVG.Debug.randomLabeledTree(5, 4, 48);
+            editTree(tree);
+            GraphTableSVG.Console.graph(tree, "random", "svgbox");
+        }
+    </script>
+</head>
+
+<body>
+    <button onclick="randomBinaryTreeButton()">random Binary Tree</button>
+    <button onclick="randomBinaryTrieButton()">random Binary Trie</button>
+    <button onclick="randomTreeButton()">random Tree</button>
+    <button onclick="randomTrieButton()">random Trie</button>
+    <button onclick="randomLabeledTreeButton()">random Labeld Tree</button>
+
+    </br>
+    <svg xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;" g-shrink="false" id="svgbox" width="1000px" height="1000px">
+
+    </svg>
+
+</body>
+
+</html>

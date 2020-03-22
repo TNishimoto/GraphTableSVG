@@ -2,6 +2,8 @@
 import * as CommonFunctions from "../common/common_functions"
 import * as GUIObserver from "../html/gui_observer"
 import { Rectangle } from "../common/vline"
+import { CoodinateType } from "../common/enums"
+
 import * as SVG from "../interfaces/svg"
 import * as HTMLFunctions from "../html/html_functions"
 import * as CSS from "../html/css"
@@ -28,6 +30,7 @@ export class GObject {
     private _svgGroup: SVGGElement;
     protected _observer: MutationObserver;
     private _observerOption: MutationObserverInit;
+
 
     public constructor(svgbox: SVGElement | string, option: GOptions.GObjectAttributes = {}) {
         CSS.setGraphTableCSS();
@@ -140,7 +143,9 @@ export class GObject {
         }
     }
 
-
+    public get coordinateType() : CoodinateType {
+        return "object-center"
+    }
 
     public get defaultClassName(): string | undefined {
         return undefined;
@@ -288,6 +293,11 @@ export class GObject {
         }
     }
     public set cx(value: number) {
+        if(this.coordinateType == CoodinateType.Group00){
+            console.log(this.type + "/" + this.coordinateType)
+            throw Error("This object does not support set cx!" + this.type);
+        }
+
         if (this.isCenterBased) {
             if (SVGGExtension.getX(this.svgGroup) != value) {
                 SVGGExtension.setX(this.svgGroup,value);
@@ -301,6 +311,7 @@ export class GObject {
     このVertexのY座標を返します。
     */
     public get cy(): number {
+
         if (this.isCenterBased) {
             return SVGGExtension.getY(this.svgGroup);
         } else {
@@ -308,6 +319,9 @@ export class GObject {
         }
     }
     public set cy(value: number) {
+        if(this.coordinateType == CoodinateType.Group00){
+            throw Error("This object does not support set cy!");
+        }
         if (this.isCenterBased) {
             if (SVGGExtension.getY(this.svgGroup) != value) {
                 SVGGExtension.setY(this.svgGroup,value);
@@ -385,18 +399,26 @@ export class GObject {
         }
     }
     public set x(v: number) {
-        if (this.isCenterBased) {
-            SVGGExtension.setX(this.svgGroup,v + (this.width / 2));
-        } else {
-            SVGGExtension.setX(this.svgGroup, v);
+        if(this.coordinateType == CoodinateType.Group00){
+            throw Error("This object does not support set x!");
+        }else{
+            if (this.isCenterBased) {
+                SVGGExtension.setX(this.svgGroup,v + (this.width / 2));
+            } else {
+                SVGGExtension.setX(this.svgGroup, v);
+            }    
         }
 
     }
     public set y(v: number) {
-        if (this.isCenterBased) {
-            SVGGExtension.setY(this.svgGroup, v + (this.height / 2));
-        } else {
-            SVGGExtension.setY(this.svgGroup, v);
+        if(this.coordinateType == CoodinateType.Group00){
+            throw Error("This object does not support set y!");
+        }else{
+            if (this.isCenterBased) {
+                SVGGExtension.setY(this.svgGroup, v + (this.height / 2));
+            } else {
+                SVGGExtension.setY(this.svgGroup, v);
+            }    
         }
     }
 

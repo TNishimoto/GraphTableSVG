@@ -86,13 +86,18 @@ export class GCircle extends GAbstractEllipseCircle  {
         return this.svgCircle.r.baseVal.value;
     }
     set width(value: number) {
+        console.log("set/" +value)
+        if(value == 40) throw Error("error")
         const _rx = value / 2;
         
         if (this.width != value) this.svgCircle.setAttribute("r", _rx.toString());
+        console.log("set_end/" +this.width)
 
     }
 
     set height(value: number) {
+        console.log("set_height/" +value)
+
         const _ry = value / 2;
         if (this.height != value) this.svgCircle.setAttribute("r", _ry.toString());
     }
