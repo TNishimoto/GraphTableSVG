@@ -5,7 +5,7 @@ export class BaseLogicTree {
 }
 */
 //import * as Console from "../../options/console"
-import { VertexOrder, Direction, PathTextAlighnment } from "../common/enums"
+import { VertexOrder, Direction, PathTextAlighnment, VertexObjectType } from "../common/enums"
 //import { GTextBoxAttributes } from "../object/g_textbox";
 import * as GOptions from "../objects/g_options"
 export type DrawingFunctionOnURL = { url : string | null, functionName : string | null, drawingFunction : object | null }
@@ -73,7 +73,7 @@ export class LogicTree {
     public edgeOption: GOptions.GEdgeAttributes = { class: { pathTextAlignment: PathTextAlighnment.regularInterval } };
     public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
     public drawingFunction : DrawingFunctionOnURL | null = null;
-
+    public vertexShape : VertexObjectType = "g-circle"
     public item: any = null;
 
     private objectType : string = "LogicTree";
@@ -82,6 +82,7 @@ export class LogicTree {
         this.vertexOption = item["vertexOption"];
         this.edgeOption = item["edgeOption"];
         this.graphOption = item["graphOption"];
+        this.vertexShape = item["vertexShape"]
 
         const children : any[] = item["children"];
         //this.children = new Array(0);

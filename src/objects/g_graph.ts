@@ -25,6 +25,7 @@ import { GraphArrangement } from "./graph_helpers/graph_arrangement"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
+import { GPathTextBox } from "."
 
 
 
@@ -361,9 +362,11 @@ export class GGraph extends GObject {
         } else {
     
             const dic: Map<LogicTree, GVertex> = new Map();
-
+            console.log("build")
             logicGraph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
-                const node = GGraph.createVertex(svgsvg, "g-circle", v.vertexOption)
+                const node = GGraph.createVertex(svgsvg, v.vertexShape, v.vertexOption)
+                console.log(`${node}/${v.vertexShape}`)
+
                 //node.svgText.textContent = v.vertexText;
                 this.add(node);
                 dic.set(v, node);
@@ -594,12 +597,15 @@ export class GGraph extends GObject {
         return new GEllipse(_parent, option);
 
     }
+    /*
     public static createVertex(parent: SVGElement | string | GObject, type: "g-rect-button", option?: GOptions.GTextBoxAttributes): GRectButton
     public static createVertex(parent: SVGElement | string | GObject, type: "g-rect", option?: GOptions.GTextBoxAttributes): GRect
+    public static createVertex(parent: SVGElement | string | GObject, type: "g-path-textbox", option?: GOptions.GTextBoxAttributes): GPathTextBox
     public static createVertex(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GOptions.GTextBoxAttributes): GEllipse
     public static createVertex(parent: SVGElement | string | GObject, type: "g-callout", option?: GOptions.GTextBoxAttributes): GCallout
     public static createVertex(parent: SVGElement | string | GObject, type: "g-circle", option?: GOptions.GTextBoxAttributes): GCircle
     public static createVertex(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GOptions.GTextBoxAttributes): GArrowCallout
+    */
     public static createVertex(parent: SVGElement | string | GObject, type: VertexObjectType, option: any = {}): GVertex {
         let _parent: SVGElement;
         if (parent instanceof GObject) {
@@ -613,6 +619,7 @@ export class GGraph extends GObject {
         switch (type) {
             case ShapeObjectType.Callout: return new GCallout(_parent, option);
             case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent, option);
+            case ShapeObjectType.PathTextBox: return new GPathTextBox(_parent, option);
             case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
             case ShapeObjectType.Rect: return new GRect(_parent, option);
             case ShapeObjectType.RectButton: return new GRectButton(_parent, option);

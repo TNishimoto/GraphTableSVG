@@ -33,7 +33,6 @@ export class GEdge extends GTextBox {
         this.updateAttributes.push(AttributeNames.beginNodeName);
         this.updateAttributes.push(AttributeNames.endNodeName);
 
-        console.log(option);
 
         const pathClass = this.svgSurface!.getAttribute("class");
         if (pathClass == DefaultClassNames.defaultSurfaceClass) {

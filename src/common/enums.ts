@@ -40,7 +40,6 @@ export namespace ShapeObjectType {
     export const Rect: VertexObjectType = "g-rect"
     export const PathTextBox: VertexObjectType = "g-path-textbox"
     export const RectButton: VertexObjectType = "g-rect-button"
-
     export const Graph: ShapeObjectType = "g-graph"
     export const Table: ShapeObjectType = "g-table"
     export const Object: ShapeObjectType = "g-object"
