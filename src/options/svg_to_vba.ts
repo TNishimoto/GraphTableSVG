@@ -39,7 +39,7 @@ export class SVGToVBA {
                 const item = items[i];
                 if (item instanceof GTable) {
                     //const lines = item.createVBACode2(id++, "createdSlide");
-                    const lines = item.createVBACode2(id, "createdSlide");
+                    const lines = item.createVBACode(id);
 
                     lines.forEach((v) => s.push(v));
                     id++;

@@ -2,7 +2,7 @@
 //namespace GraphTableSVG {
     import {GTextBox} from "./g_textbox"
     import {GPathTextBox} from "./g_path_textbox"
-    import { ShapeObjectType, SpeakerPosition } from "../common/enums";
+    import { ShapeObjectType, SpeakerPosition, VBAShapeType } from "../common/enums";
     import {Rectangle, VLine} from "../common/vline"
     import * as GOptions  from "./g_options"
 
@@ -192,8 +192,8 @@
             }
 
         }
-        public get shape(): string {
-            return "msoShapeRectangularCallout";
+        public get shape(): VBAShapeType {
+            return VBAShapeType.Callout;
         }
 
         protected get VBAAdjustments(): number[] {

@@ -2,7 +2,7 @@
     import {GVertex} from "./g_vertex"
     import {GTextBox} from "./g_textbox"
     import {GCalloutAttributes} from "./g_callout"
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle, VBAShapeType } from "../common/enums";
     import * as AttributeNames from "../common/attribute_names"
     import * as StyleNames from "../common/style_names"
     import * as DefaultClassNames from "../common/default_class_names"
@@ -244,8 +244,8 @@
             }
         }
         */
-        public get shape(): string {
-            return "msoShapeOval";
+        public get shape(): VBAShapeType {
+            return VBAShapeType.Oval;
         }
         /*
         public createVBACode(id: number): string[] {

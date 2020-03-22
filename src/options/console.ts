@@ -186,7 +186,7 @@ export function table(item: any, title: string = "") {
         //const svg = addSVGSVGElement(code);
         const gtable = createShape(consoleLine.canvas!, "g-table");
 
-        gtable.constructFromLogicTable(item);
+        gtable.buildFromLogicTable(item);
         gtable.x = 0;
         gtable.y = 0;
         consoleLine.addVBAObject(gtable);

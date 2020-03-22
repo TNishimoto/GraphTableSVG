@@ -5,9 +5,10 @@ export class BaseLogicTree {
 }
 */
 //import * as Console from "../../options/console"
-import { VertexOrder, Direction, PathTextAlighnment, VertexObjectType } from "../common/enums"
+import { VertexOrder, Direction, PathTextAlighnment, VertexObjectType, ShapeObjectType } from "../common/enums"
 //import { GTextBoxAttributes } from "../object/g_textbox";
 import * as GOptions from "../objects/g_options"
+import { LogicTable } from "./logic_table";
 export type DrawingFunctionOnURL = { url : string | null, functionName : string | null, drawingFunction : object | null }
 
 /*
@@ -74,6 +75,7 @@ export class LogicTree {
     public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
     public drawingFunction : DrawingFunctionOnURL | null = null;
     public vertexShape : VertexObjectType = "g-circle"
+    public table : LogicTable | null = null;
     public item: any = null;
 
     private objectType : string = "LogicTree";
@@ -83,6 +85,11 @@ export class LogicTree {
         this.edgeOption = item["edgeOption"];
         this.graphOption = item["graphOption"];
         this.vertexShape = item["vertexShape"]
+
+        if(this.vertexShape == ShapeObjectType.Table){
+            this.table = new LogicTable();
+            this.table.buildFromObject(item["table"])
+        }
 
         const children : any[] = item["children"];
         //this.children = new Array(0);

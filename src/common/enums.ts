@@ -31,13 +31,28 @@ export namespace CoodinateType {
     export const Group00: CoodinateType = "group00"
 }
 
+export type VBAShapeType = "--table" | "NONE" | "msoShapeOval" | "msoShapeRectangle" | "msoShapeRectangularCallout" | "msoShapeUpArrowCallout" | "msoShapeLeftArrowCallout" | "msoShapeRightArrowCallout" | "msoShapeDownArrowCallout";
+
+export namespace VBAShapeType {
+    export const None: VBAShapeType = "NONE"
+    export const Table: VBAShapeType = "--table"
+    export const Oval: VBAShapeType = "msoShapeOval"
+    export const Rectangle: VBAShapeType = "msoShapeRectangle"
+    export const Callout: VBAShapeType = "msoShapeRectangularCallout";
+    export const UpArrowCallout: VBAShapeType = "msoShapeUpArrowCallout";
+    export const LeftArrowCallout: VBAShapeType = "msoShapeLeftArrowCallout";
+    export const RightArrowCallout: VBAShapeType = "msoShapeRightArrowCallout";
+    export const DownArrowCallout: VBAShapeType = "msoShapeDownArrowCallout";
+
+}
+
 
 export type VertexObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-circle" | "g-rect" | "g-path-textbox" | "g-rect-button" | "g-table";
 //export namespace VertexObjectType {
 //}
 
 
-export type ShapeObjectType = VertexObjectType | "g-edge" | "g-graph" | "g-table" | "g-object";
+export type ShapeObjectType = VertexObjectType | "g-edge" | "g-graph" | "g-object";
 export namespace ShapeObjectType {
     export const Callout: VertexObjectType = "g-callout"
     export const ArrowCallout: VertexObjectType = "g-arrow-callout"
@@ -284,8 +299,42 @@ export namespace ConnectorPosition {
             return 1;
         }
     }
-    export function ToVBAConnectorPosition2(shapeType: string, str: ConnectorPosition): number {
-        if (shapeType == "msoShapeOval") {
+    export function ToVBAConnectorPosition2(shapeType: VBAShapeType, str: ConnectorPosition): number {
+        switch (shapeType) {
+            case VBAShapeType.Oval:
+            case VBAShapeType.UpArrowCallout:
+            case VBAShapeType.LeftArrowCallout:
+            case VBAShapeType.RightArrowCallout:
+            case VBAShapeType.DownArrowCallout:
+
+                switch (str) {
+                    case "top": return 1;
+                    case "topleft": return 2;
+                    case "left": return 3;
+                    case "bottomleft": return 4;
+                    case "bottom": return 5;
+                    case "bottomright": return 6;
+                    case "right": return 7;
+                    case "topright": return 8;
+                    case "auto": return 9;
+                    default: return 1;
+                }
+
+            case VBAShapeType.Rectangle:
+            case VBAShapeType.Table:
+                switch (str) {
+                    case "top": return 1;
+                    case "left": return 2;
+                    case "bottom": return 3;
+                    case "right": return 4;
+                    case "auto": return 9;
+                    default: return 1;
+                }
+            default: return 1;
+
+        }
+        /*
+        if (shapeType == VBAShapeType.Oval) {
             switch (str) {
                 case "top": return 1;
                 case "topleft": return 2;
@@ -298,7 +347,7 @@ export namespace ConnectorPosition {
                 case "auto": return 9;
                 default: return 1;
             }
-        } else if (shapeType == "msoShapeRectangle") {
+        } else if (shapeType == VBAShapeType.Rectangle) {
             switch (str) {
                 case "top": return 1;
                 case "left": return 2;
@@ -308,9 +357,13 @@ export namespace ConnectorPosition {
                 default: return 1;
             }
 
-        } else {
+        } else if (){
+
+        } 
+        else {
             return 1;
         }
+        */
     }
 
 }

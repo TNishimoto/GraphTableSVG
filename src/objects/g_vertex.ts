@@ -4,7 +4,7 @@ import { VBATranslateFunctions } from "../common/vba_functions"
 import { Rectangle } from "../common/vline"
 import * as AttributeNames from "../common/attribute_names"
 import * as DefaultClassNames from "../common/default_class_names"
-import { ConnectorPosition, msoDashStyle } from "../common/enums";
+import { ConnectorPosition, msoDashStyle, VBAShapeType } from "../common/enums";
 import { GObject } from "./g_object"
 //import { GTextBox } from "./g_textbox"
 import { GEdge } from "./g_edge"
@@ -255,8 +255,8 @@ export class GVertex extends GObject {
         p.height = this.height;
         return p;
     }
-    public get shape(): string {
-        return "NONE";
+    public get shape(): VBAShapeType {
+        return VBAShapeType.None;
     }
     /**
              * 

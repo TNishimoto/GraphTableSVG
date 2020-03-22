@@ -26,6 +26,8 @@ import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 import { GPathTextBox } from "."
+import { LogicTable } from "../logics/logic_table"
+import { GTable } from "./g_table"
 
 
 
@@ -365,10 +367,8 @@ export class GGraph extends GObject {
         } else {
     
             const dic: Map<LogicTree, GVertex> = new Map();
-            console.log("build")
             logicGraph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
-                const node = GGraph.createVertex(svgsvg, v.vertexShape, v.vertexOption)
-                console.log(`${node}/${v.vertexShape}`)
+                const node = v.vertexShape == ShapeObjectType.Table ? GGraph.createVertexTable(svgsvg, v.table!) : GGraph.createVertex(svgsvg, v.vertexShape, v.vertexOption)
 
                 //node.svgText.textContent = v.vertexText;
                 this.add(node);
@@ -630,6 +630,21 @@ export class GGraph extends GObject {
         }
         throw Error("error");
     }
+    public static createVertexTable(parent: SVGElement | string | GObject, obj : LogicTable): GVertex {
+        let _parent: SVGElement;
+        if (parent instanceof GObject) {
+            _parent = parent.svgGroup;
+        } else if (parent instanceof SVGElement) {
+            _parent = parent;
+        } else {
+            _parent = <any>document.getElementById(parent);
+        }
+
+        const table = new GTable(_parent);
+        table.buildFromLogicTable(obj);
+        return table;
+    }
+
     public static createEdge(parent: SVGElement | string | GObject, option: any = {}): GEdge {
         let _parent: SVGElement;
         if (parent instanceof GObject) {
