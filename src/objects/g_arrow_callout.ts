@@ -2,7 +2,7 @@
 //namespace GraphTableSVG {
     import {GPathTextBox} from "./g_path_textbox"
     import {GTextBox} from "./g_textbox"
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction, AutoSizeShapeToFitText } from "../common/enums";
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction, AutoSizeShapeToFitText, VBAShapeType } from "../common/enums";
     //import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
     import * as AttributeNames from "../common/attribute_names"
     import {Rectangle, VLine} from "../common/vline"
@@ -278,14 +278,14 @@
                 this.svgPath.setAttribute("d", `${top} ${right} ${bottom} ${left} z`);
             }
         }
-        public get shape(): string {
+        public get shape(): VBAShapeType {
             switch (this.direction) {
-                case "up": return "msoShapeUpArrowCallout";
-                case "left": return "msoShapeLeftArrowCallout";
-                case "right": return "msoShapeRightArrowCallout";
-                case "down": return "msoShapeDownArrowCallout";
+                case "up": return VBAShapeType.UpArrowCallout;
+                case "left": return VBAShapeType.LeftArrowCallout;
+                case "right": return VBAShapeType.RightArrowCallout;
+                case "down": return VBAShapeType.DownArrowCallout;
             }
-            return "msoShapeDownArrowCallout";
+            return VBAShapeType.DownArrowCallout;
         }
         /**
          * VBAコードでのこの図形を表すShape図形のVBAAdjustmentsプロパティを表します。

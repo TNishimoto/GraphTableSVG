@@ -2,7 +2,8 @@
 import { GObject } from "./g_object";
 import * as CommonFunctions from "../common/common_functions"
 //import {GTableOption} from "../options/attributes_option"
-import { ShapeObjectType } from "../common/enums";
+import { ShapeObjectType, ConnectorPosition, msoDashStyle, VBAShapeType } from "../common/enums";
+
 import { LogicTable } from "../logics/logic_table"
 import { createTextElementFromLogicCell } from "../logics/gobject_functions"
 
@@ -10,7 +11,7 @@ import { CellRow } from "./table_helpers/row"
 import { CellColumn } from "./table_helpers/column"
 import { BorderColumn, BorderRow } from "./table_helpers/border_row"
 import { Cell } from "./table_helpers/cell"
-import { Rectangle } from "../common/vline"
+import { Rectangle, VLine } from "../common/vline"
 import { VBATranslateFunctions, parseInteger, visible } from "../common/vba_functions"
 
 import * as SVG from "../interfaces/svg"
@@ -20,6 +21,7 @@ import * as GOptions from "./g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
+import { GVertex } from "./g_vertex";
 
 //namespace GraphTableSVG {
 
@@ -35,7 +37,7 @@ export type GTableOption = GOptions.GObjectAttributes & _GTableOption;
 /**
 テーブルを表します。
 */
-export class GTable extends GObject {
+export class GTable extends GVertex {
 
 
     /**
@@ -86,7 +88,7 @@ export class GTable extends GObject {
             this.svgGroup.style.display = "none"
             this._isNoneMode = true;
 
-            this.constructFromLogicTable(option.table);
+            this.buildFromLogicTable(option.table);
 
             this._isNoneMode = false;
 
@@ -166,6 +168,9 @@ export class GTable extends GObject {
     }
     public get borderColumns(): BorderColumn[] {
         return this._borderColumns;
+    }
+    public get shape(): VBAShapeType {
+        return VBAShapeType.Table;
     }
 
     //private _cells: Cell[][] = [];
@@ -479,7 +484,7 @@ export class GTable extends GObject {
                     CSS.setCSSClass(cell.svgText, cellInfo.textClass);
                 }
                 */
-               createTextElementFromLogicCell(cellInfo, cell.svgText);
+                createTextElementFromLogicCell(cellInfo, cell.svgText);
                 //cellInfo.createTextElement(cell.svgText);
                 if (cellInfo.topBorderClass !== undefined) {
                     CSS.setCSSClass(cell.svgTopBorder, cellInfo.topBorderClass);
@@ -502,7 +507,7 @@ export class GTable extends GObject {
      * LogicTableからTableを構築します。
      * @param table 入力LogicTable
      */
-    public constructFromLogicTable(table: LogicTable) {
+    public buildFromLogicTable(table: LogicTable) {
 
         if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
         this.setSize(table.columnWidths.length, table.rowHeights.length);
@@ -575,7 +580,7 @@ export class GTable extends GObject {
 
         table.forEach((v, y) => {
             v.forEach((str, x) => {
-                
+
                 SVGTextExtension.setTextContent(this.cells[y][x].svgText, str, <boolean>option.isLatexMode);
             })
         })
@@ -594,7 +599,7 @@ export class GTable extends GObject {
      * @param id 
      * @param slide 
      */
-    public createVBACode2(id: number, slide: string): string[] {
+    public createVBACode(id: number): string[] {
         const lines = new Array(0);
         lines.push(`Sub create${id}(createdSlide As slide)`);
 
@@ -619,6 +624,11 @@ export class GTable extends GObject {
         fstLines.push(` Set tableS = ${slideName}.Shapes.AddTable(${this.rowCount}, ${this.columnCount})`)
         fstLines.push(` tableS.Left = ${SVGGExtension.getX(this.svgGroup)}`);
         fstLines.push(` tableS.Top = ${SVGGExtension.getY(this.svgGroup)}`);
+
+        //const backColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "fill", "gray"));
+        //const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+
+        fstLines.push(` tableS.name = "${this.objectID}"`)
 
         //page.Shapes.AddTable(row_, column_)
         fstLines.push(` Set table_ = tableS.table`);
@@ -1212,5 +1222,59 @@ export class GTable extends GObject {
     }
     */
 
+    /**
+            * 接続部分の座標を返します。
+            * @param type
+            * @param x
+            * @param y
+            */
+    public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+        const wr = this.width / 2;
+        const hr = this.height / 2;
+
+
+        switch (type) {
+            case ConnectorPosition.Top:
+                return [this.cx, this.cy - hr];
+            case ConnectorPosition.TopRight:
+            case ConnectorPosition.Right:
+            case ConnectorPosition.BottomRight:
+                return [this.cx + wr, this.cy];
+            case ConnectorPosition.Bottom:
+                return [this.cx, this.cy + hr];
+            case ConnectorPosition.BottomLeft:
+            case ConnectorPosition.Left:
+            case ConnectorPosition.TopLeft:
+                return [this.cx - wr, this.cy];
+            default:
+                const autoType = this.getAutoPosition(x, y);
+                return this.getLocation(autoType, x, y);
+        }
+    }
+    protected getAutoPosition(x: number, y: number): ConnectorPosition {
+        const wr = this.width / 2;
+        const hr = this.height / 2;
+
+        const line1 = new VLine(this.cx, this.cy, this.cx + wr, this.cy + hr);
+        const line2 = new VLine(this.cx, this.cy, this.cx + wr, this.cy - hr);
+
+        const b1 = line1.contains(x, y);
+        const b2 = line2.contains(x, y);
+
+        if (b1) {
+            if (b2) {
+                return ConnectorPosition.Top;
+            } else {
+                return ConnectorPosition.Right;
+            }
+        } else {
+            if (b2) {
+                return ConnectorPosition.Left;
+            } else {
+                return ConnectorPosition.Bottom;
+            }
+        }
+
+    }
 }
 //}

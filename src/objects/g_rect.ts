@@ -3,7 +3,7 @@
     import {GVertex} from "./g_vertex"
     import { GTextBox} from "./g_textbox"
     import {GCalloutAttributes} from "./g_callout"
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle, VBAShapeType } from "../common/enums";
     import * as AttributeNames from "../common/attribute_names"
     import * as StyleNames from "../common/style_names"
     import {Rectangle, VLine} from "../common/vline"
@@ -13,7 +13,7 @@
     import * as ElementExtension from "../interfaces/element_extension"
 
 
-    export class GRect extends GVertex {
+    export class GRect extends GTextBox {
         public get svgRectangle(): SVGRectElement {
             return <SVGRectElement>this._svgSurface;
         }
@@ -189,8 +189,8 @@
 
         }
 
-        public get shape(): string {
-            return "msoShapeRectangle";
+        public get shape(): VBAShapeType {
+            return VBAShapeType.Rectangle;
         }
     }
 //}

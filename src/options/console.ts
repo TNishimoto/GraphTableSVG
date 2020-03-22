@@ -186,7 +186,7 @@ export function table(item: any, title: string = "") {
         //const svg = addSVGSVGElement(code);
         const gtable = createShape(consoleLine.canvas!, "g-table");
 
-        gtable.constructFromLogicTable(item);
+        gtable.buildFromLogicTable(item);
         gtable.x = 0;
         gtable.y = 0;
         consoleLine.addVBAObject(gtable);
@@ -224,6 +224,7 @@ export function graph(item: any | LogicTree | LogicGraph, title: string = "", ca
             consoleLine.addVBAObject(ggraph);
             return [ggraph, consoleLine];
         }
+        
         /*
         if(item instanceof LogicGraph){
         }else{

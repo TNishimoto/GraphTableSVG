@@ -2,7 +2,7 @@
     import {GVertex} from "./g_vertex"
     import {GTextBox} from "./g_textbox"
     import {GCalloutAttributes} from "./g_callout"
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
+    import { ShapeObjectType, ConnectorPosition, msoDashStyle, VBAShapeType } from "../common/enums";
     import * as AttributeNames from "../common/attribute_names"
     import * as StyleNames from "../common/style_names"
     import * as DefaultClassNames from "../common/default_class_names"
@@ -12,7 +12,7 @@
     import * as ElementExtension from "../interfaces/element_extension"
 
 
-    export class GAbstractEllipseCircle extends GVertex {
+    export class GAbstractEllipseCircle extends GTextBox {
         get rx(): number {
             return 5;
         }
@@ -51,7 +51,9 @@
     
             const centerX = (Math.sqrt(2) / 2) * this.rx;
             const centerY = (Math.sqrt(2) / 2) * this.ry;
-    
+            
+            console.log(`circle ${this.objectID} ${this.cx} ${this.cy} ${this.rx} ${this.ry}`)
+
             switch (type) {
                 case ConnectorPosition.Top:
                     return [this.cx, this.cy - this.ry];
@@ -242,8 +244,8 @@
             }
         }
         */
-        public get shape(): string {
-            return "msoShapeOval";
+        public get shape(): VBAShapeType {
+            return VBAShapeType.Oval;
         }
         /*
         public createVBACode(id: number): string[] {

@@ -1,10 +1,10 @@
 {
     "name": "graph-table-svg",
-    "version": "0.0.39",
+    "version": "0.0.41",
     "description": "",
     "main": "./dist/nodejs_index.js",
     "scripts": {
-        "compile": "webpack && tsc -p .",
+        "compile": "tsc -p . && webpack",
         "typedoc": "typedoc --out ./docs/typedoc/ ./src/ -m commonjs"
     },
     "bin": {
@@ -20,7 +20,7 @@
     },
     "devDependencies": {
         "ts-loader": "^6.2.1",
-        "typedoc": "^0.17.1",
+        "typedoc": "^0.17.3",
         "typescript": "^3.8.3",
         "webpack": "^4.42.0",
         "webpack-cli": "^3.3.11"

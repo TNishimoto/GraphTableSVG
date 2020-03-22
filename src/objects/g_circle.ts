@@ -1,7 +1,7 @@
 import {GVertex} from "./g_vertex"
 import {GTextBox} from "./g_textbox"
 import {GCalloutAttributes} from "./g_callout"
-import { ShapeObjectType, ConnectorPosition, msoDashStyle } from "../common/enums";
+import { ShapeObjectType, ConnectorPosition, msoDashStyle, VBAShapeType } from "../common/enums";
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
@@ -86,13 +86,18 @@ export class GCircle extends GAbstractEllipseCircle  {
         return this.svgCircle.r.baseVal.value;
     }
     set width(value: number) {
+        console.log("set/" +value)
+        if(value == 40) throw Error("error")
         const _rx = value / 2;
         
         if (this.width != value) this.svgCircle.setAttribute("r", _rx.toString());
+        console.log("set_end/" +this.width)
 
     }
 
     set height(value: number) {
+        console.log("set_height/" +value)
+
         const _ry = value / 2;
         if (this.height != value) this.svgCircle.setAttribute("r", _ry.toString());
     }
@@ -112,8 +117,8 @@ export class GCircle extends GAbstractEllipseCircle  {
         return ShapeObjectType.Circle;
     }
 
-    public get shape(): string {
-        return "msoShapeOval";
+    public get shape(): VBAShapeType {
+        return VBAShapeType.Oval;
     }
 
 }

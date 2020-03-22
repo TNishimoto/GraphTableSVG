@@ -25,6 +25,9 @@ import { GraphArrangement } from "./graph_helpers/graph_arrangement"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
+import { GPathTextBox } from "."
+import { LogicTable } from "../logics/logic_table"
+import { GTable } from "./g_table"
 
 
 
@@ -152,10 +155,10 @@ export class GGraph extends GObject {
      * @param item
      */
     public add(item: GVertex | GEdge): void {
-        if (item instanceof GVertex) {
-            this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
-        } else {
+        if (item instanceof GEdge) {
             this.svgGroup.appendChild(item.svgGroup);
+        } else {
+            this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
         }
     }
     /**
@@ -339,7 +342,10 @@ export class GGraph extends GObject {
 
             logicGraph.nodes.forEach((v, i) => {
                 const node = GGraph.createVertex(svgsvg, "g-circle")
-                node.svgText.textContent = v.text;
+                const svgText = node.tryGetSVGText();
+                if(svgText != null){
+                    svgText.textContent = v.text;
+                }
                 this.add(node);
                 dic.set(i, node);
             })
@@ -361,9 +367,9 @@ export class GGraph extends GObject {
         } else {
     
             const dic: Map<LogicTree, GVertex> = new Map();
-
             logicGraph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
-                const node = GGraph.createVertex(svgsvg, "g-circle", v.vertexOption)
+                const node = v.vertexShape == ShapeObjectType.Table ? GGraph.createVertexTable(svgsvg, v.table!) : GGraph.createVertex(svgsvg, v.vertexShape, v.vertexOption)
+
                 //node.svgText.textContent = v.vertexText;
                 this.add(node);
                 dic.set(v, node);
@@ -594,12 +600,15 @@ export class GGraph extends GObject {
         return new GEllipse(_parent, option);
 
     }
+    /*
     public static createVertex(parent: SVGElement | string | GObject, type: "g-rect-button", option?: GOptions.GTextBoxAttributes): GRectButton
     public static createVertex(parent: SVGElement | string | GObject, type: "g-rect", option?: GOptions.GTextBoxAttributes): GRect
+    public static createVertex(parent: SVGElement | string | GObject, type: "g-path-textbox", option?: GOptions.GTextBoxAttributes): GPathTextBox
     public static createVertex(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GOptions.GTextBoxAttributes): GEllipse
     public static createVertex(parent: SVGElement | string | GObject, type: "g-callout", option?: GOptions.GTextBoxAttributes): GCallout
     public static createVertex(parent: SVGElement | string | GObject, type: "g-circle", option?: GOptions.GTextBoxAttributes): GCircle
     public static createVertex(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GOptions.GTextBoxAttributes): GArrowCallout
+    */
     public static createVertex(parent: SVGElement | string | GObject, type: VertexObjectType, option: any = {}): GVertex {
         let _parent: SVGElement;
         if (parent instanceof GObject) {
@@ -613,6 +622,7 @@ export class GGraph extends GObject {
         switch (type) {
             case ShapeObjectType.Callout: return new GCallout(_parent, option);
             case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent, option);
+            case ShapeObjectType.PathTextBox: return new GPathTextBox(_parent, option);
             case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
             case ShapeObjectType.Rect: return new GRect(_parent, option);
             case ShapeObjectType.RectButton: return new GRectButton(_parent, option);
@@ -620,6 +630,21 @@ export class GGraph extends GObject {
         }
         throw Error("error");
     }
+    public static createVertexTable(parent: SVGElement | string | GObject, obj : LogicTable): GVertex {
+        let _parent: SVGElement;
+        if (parent instanceof GObject) {
+            _parent = parent.svgGroup;
+        } else if (parent instanceof SVGElement) {
+            _parent = parent;
+        } else {
+            _parent = <any>document.getElementById(parent);
+        }
+
+        const table = new GTable(_parent);
+        table.buildFromLogicTable(obj);
+        return table;
+    }
+
     public static createEdge(parent: SVGElement | string | GObject, option: any = {}): GEdge {
         let _parent: SVGElement;
         if (parent instanceof GObject) {

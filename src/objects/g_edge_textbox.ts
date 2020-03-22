@@ -11,7 +11,6 @@ import { Rectangle } from "../common/vline"
 import * as HTMLFunctions from "../html/html_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { GObject } from "./g_object"
-import { GVertex } from "./g_vertex"
 
 import * as GOptions from "./g_options"
 import { AutoSizeShapeToFitText } from "../common/enums"
@@ -26,7 +25,7 @@ import * as SVGTextExtension from "../interfaces/svg_text_extension"
 
 
 
-export class GTextBox extends GVertex {
+export class GEdgeTextBox extends GObject {
     private _svgText: SVGTextElement;
     //private isFixTextSize: boolean = false;
     protected surfaceAttributes: string[] = [];
@@ -53,7 +52,7 @@ export class GTextBox extends GVertex {
         const textClass = CSS.createCSSClass(_option.textClass);
         const styleClass = CSS.createCSSClass(_option.textStyle);
 
-        this._svgText = GTextBox.createSVGText(textClass, styleClass);
+        this._svgText = GEdgeTextBox.createSVGText(textClass, styleClass);
         this.svgGroup.appendChild(this.svgText);
         this._textObserver = new MutationObserver(this.textObserverFunc);
         const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
@@ -187,7 +186,7 @@ export class GTextBox extends GVertex {
 
         for (let i = 0; i < x.length; i++) {
             const p = x[i];
-            if (GTextBox.updateTextAttributes.some((v) => v == p.attributeName)) {
+            if (GEdgeTextBox.updateTextAttributes.some((v) => v == p.attributeName)) {
                 b = true;
             }
             if (p.attributeName == null) {
@@ -467,34 +466,6 @@ export class GTextBox extends GVertex {
                 ElementExtension.setPropertyStyleValue(this.svgSurface, StyleNames.msoDashStyleName, value);
             }
         }
-    }
-    public createVBACode(id: number): string[] {
-        const lines: string[] = [];
-        
-        const backColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "fill", "gray"));
-        const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-
-        const vAnchor = VBATranslateFunctions.ToVerticalAnchor(this.verticalAnchor);
-        const hAnchor = VBATranslateFunctions.ToHorizontalAnchor(this.horizontalAnchor);
-
-
-        lines.push(`Sub create${id}(createdSlide As slide)`);
-        lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
-        lines.push(` Dim obj As Shape`);
-        lines.push(` Set obj = shapes_.AddShape(${this.shape}, ${this.x}, ${this.y}, ${this.width}, ${this.height})`);
-        lines.push(` Call EditTextFrame(obj.TextFrame, ${this.marginPaddingTop}, ${this.marginPaddingBottom}, ${this.marginPaddingLeft}, ${this.marginPaddingRight}, false, ppAutoSizeNone)`);
-        lines.push(` Call EditAnchor(obj.TextFrame, ${vAnchor}, ${hAnchor})`);
-
-        VBATranslateFunctions.TranslateSVGTextElement2(this.svgText, `obj.TextFrame.TextRange`).forEach((v) => lines.push(v));
-        lines.push(this.getVBAEditLine());
-
-        lines.push(` Call EditCallOut(obj, "${this.objectID}", ${visible}, ${backColor})`)
-        this.VBAAdjustments.forEach((v, i) => {
-            lines.push(` obj.Adjustments.Item(${i + 1}) = ${v}`);
-        })
-        lines.push(`End Sub`);
-        
-        return lines;
     }
 }
 
