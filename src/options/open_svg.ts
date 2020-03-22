@@ -218,7 +218,6 @@ export function openSVG(inputItem: string | Element | null = null, output: GObje
         })
         const endTime = performance.now();
         const time = endTime - startTime;
-        //console.log("create " + svgsvg.id + " : " + time + "ms");
 
         GUIObserver.observeSVGSVG(svgsvg);
     } else {

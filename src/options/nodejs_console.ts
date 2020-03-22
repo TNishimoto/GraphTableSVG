@@ -56,7 +56,6 @@ function save(data : string, path : string, title : string,type : "table" | "gra
                 }else if(obj instanceof GraphTableSVG.Logics.LogicGraph){
 
                 }
-                console.log(obj); 
             };
         </script>
     </head>
@@ -68,9 +67,7 @@ function save(data : string, path : string, title : string,type : "table" | "gra
     `
     try {
         fs.writeFileSync(path, ptext);
-        //console.log('write end');
     } catch (e) {
-        //console.log(e);
     }
 
 }
@@ -117,7 +114,6 @@ export function graph(item: any | LogicTree | LogicGraph, title: string = "", op
         tableDic.construct(item);
         const logicGraph = tableDic.toLogicGraph();
         graph(logicGraph, title, option);
-        //console.log(logicGraph);    
     }
 }
 

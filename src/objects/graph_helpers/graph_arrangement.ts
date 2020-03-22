@@ -40,7 +40,6 @@ import * as SVGTextBox from "../../interfaces/svg_textbox"
 
         }
         function standardTreeWidthArrangementSub(tree: VirtualTree, xInterval: number, yInterval: number, direction : Direction | null): void {
-            console.log("Sub" + tree.subTreeRoot.type);
             tree.subTreeRoot.cx = 0;
             tree.subTreeRoot.cy = 0;
             let centerX = 0;

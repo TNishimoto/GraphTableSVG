@@ -180,7 +180,6 @@ export class GObject {
     }
     /*
     private addOnLoadEvent() {
-        console.log("addon")
         this.svgGroup.onload = this.onLoadFunction;
         //this.svgGroup.addEventListener("load", this.onLoadFunction);
     }
@@ -190,7 +189,6 @@ export class GObject {
         this.svgGroup.removeEventListener("load", this.onLoadFunction);
     }
     protected onLoadFunction = () => {
-        console.log("helo");
     }
     */
 
@@ -294,7 +292,6 @@ export class GObject {
     }
     public set cx(value: number) {
         if(this.coordinateType == CoodinateType.Group00){
-            console.log(this.type + "/" + this.coordinateType)
             throw Error("This object does not support set cx!" + this.type);
         }
 

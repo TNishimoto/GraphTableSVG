@@ -52,7 +52,6 @@
             const centerX = (Math.sqrt(2) / 2) * this.rx;
             const centerY = (Math.sqrt(2) / 2) * this.ry;
             
-            console.log(`circle ${this.objectID} ${this.cx} ${this.cy} ${this.rx} ${this.ry}`)
 
             switch (type) {
                 case ConnectorPosition.Top:

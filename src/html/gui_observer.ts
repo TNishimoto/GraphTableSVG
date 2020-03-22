@@ -18,7 +18,6 @@ export function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => Rectangle, 
 
         for (let i = 0; i < x.length; i++) {
             const item = x[i];
-            //console.log(item.target);
             if (svgBox != item.target) {
                 b = true;
             }

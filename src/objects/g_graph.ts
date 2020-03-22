@@ -262,7 +262,6 @@ export class GGraph extends GObject {
 
 
     public relocate() {
-        //console.log(this.isDrawnText());
         //if(this.isDrawnText()){
         this.hasConnectedObserverFunction = false;
         const value = this.relocateStyle;
@@ -382,7 +381,6 @@ export class GGraph extends GObject {
                             //const b = option.isLatexMode == undefined ? false : option.isLatexMode;
                             //edge.svgTextPath.setTextContent(e.parentEdgeText, b);
 
-                            //console.log("@" + edge.svgText.getComputedTextLength() + "/" + edge.svgText.textContent);
                             //this.svgSurface!.onload = this.onLoadFunction;
 
                             edge.isAppropriatelyReverseMode = true;

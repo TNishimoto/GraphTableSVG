@@ -117,17 +117,6 @@ export class GEdge extends GEdgeTextBox {
     public get coordinateType() : CoodinateType {
         return "group00"
     }
-    /*
-    public set x(v: number) {
-        console.log("call_x!" + v);
-        super.x = 0;
-    }
-    public set y(v: number) {
-        console.log("call_y!" + v);
-
-        super.y = 0;
-    }
-    */
 
     /*
     protected createObjects(svgbox: SVGElement, option: GObjectAttributes = {}): void {
@@ -828,7 +817,6 @@ export class GEdge extends GEdgeTextBox {
         const [x1, y1] = this.beginVertex != null ? this.beginVertex.getLocation(this.beginConnectorType, cx2, cy2) : [cx1, cy1];
         const [x2, y2] = this.endVertex != null ? this.endVertex.getLocation(this.endConnectorType, cx1, cy1) : [cx2, cy2];
 
-        console.log(`edge ${this.objectID} / ${x1}/${y1} / ${this.x}`)
         //if(this.x != 0) throw Error("error!");
         /*
         this.x1 = x1;

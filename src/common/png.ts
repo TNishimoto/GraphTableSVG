@@ -145,7 +145,6 @@ export namespace PNG {
         export function setCSSToStyle(svg: HTMLElement, isComplete: boolean = true) {
             if (isComplete) {
                 const css: CSSStyleDeclaration | null = getComputedStyle(svg);
-                console.log(css);
                 if (css != null) {
                     for (let i = 0; i < css.length; i++) {
                         const name = css.item(i);
@@ -230,7 +229,6 @@ export namespace PNG {
         /*
         if (img.style.width != null && img.style.height != null) {
 
-            console.log(img.style.width);
             canvas.setAttribute("width", img.getAttribute("width")! );
             canvas.setAttribute("height", img.getAttribute("height")!);
         }
@@ -244,9 +242,7 @@ export namespace PNG {
      * @param canvas 
      */
     export function setSaveEvent(img: HTMLImageElement) {
-        console.log("load?");
         img.onload = () => {
-            console.log("load!");
 
             const canvas = document.createElement("canvas");
             canvas.setAttribute("width", img.getAttribute("width")! );

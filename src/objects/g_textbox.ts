@@ -326,7 +326,6 @@ export class GTextBox extends GVertex {
 
         const textWidth = textRect.width < this._minimumWidth ? this._minimumWidth : textRect.width;
         const textHeight = textRect.height < this._minimumHeight ? this._minimumHeight : textRect.height;
-        //console.log(`${textWidth} / ${textRect.width} / ${this.marginPaddingLeft} / ${this.marginPaddingRight}`)
 
         if (isWidth) {
             this.width = textWidth + this.marginPaddingLeft + this.marginPaddingRight;

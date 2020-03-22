@@ -236,7 +236,6 @@ export function graph(item: any | LogicTree | LogicGraph, title: string = "", ca
         tableDic.construct(item);
         const logicGraph = tableDic.toLogicGraph();
         return graph(logicGraph, title, canvasID);
-        //console.log(logicGraph);    
     }
 }
 export function log(message: string, title: string = ""): ConsoleLineElement {
