@@ -10,17 +10,23 @@ export class LogicCell {
     public text: LogicText = new LogicText();
     //public textClass?: string | GOptions.textClassCSS;
     //public textStyle?: string | GOptions.textClassCSS;
-
-    public cellClass?: string | GOptions.GTextBoxCSS = defaultCellClass;
-    public cellStyle?: string | GOptions.GTextBoxCSS;
+    public svgGroupOption : GOptions.CellAttributes = { class : defaultCellClass}
+    //public cellClass?: string | GOptions.GTextBoxCSS = defaultCellClass;
+    //public cellStyle?: string | GOptions.GTextBoxCSS;
     
 
 
-    public backgroundClass?: string | GOptions.backgroundCSS;
-    public topBorderClass?: string | null;
-    public leftBorderClass?: string | null;
-    public rightBorderClass?: string | null;
-    public bottomBorderClass?: string | null;
+    public backgroundOption: GOptions.backgroundOption = {};
+    public topBorderOption: GOptions.BorderAttributes = {};
+    public leftBorderOption: GOptions.BorderAttributes = {};
+    public rightBorderOption: GOptions.BorderAttributes = {};
+    public bottomBorderOption: GOptions.BorderAttributes = {};
+
+
+    //public topBorderClass?: string | null;
+    //public leftBorderClass?: string | null;
+    //public rightBorderClass?: string | null;
+    //public bottomBorderClass?: string | null;
     //public svgText: SVGTextElement | null = null;
     public connectedColumnCount: number = 1;
     public connectedRowCount: number = 1;
@@ -35,13 +41,13 @@ export class LogicCell {
     public buildFromObject(obj : any){
         this.text.buildFromObject(obj["text"]);
         
-        this.cellClass = obj["cellClass"];
-        this.cellStyle = obj["cellStyle"];
-        this.backgroundClass = obj["backgroundClass"];
-        this.topBorderClass = obj["topBorderClass"];
-        this.leftBorderClass = obj["leftBorderClass"];
-        this.rightBorderClass = obj["rightBorderClass"];
-        this.bottomBorderClass = obj["bottomBorderClass"];
+        this.svgGroupOption = obj["svgGroupOption"];
+        //this.cellStyle = obj["cellStyle"];
+        this.backgroundOption = obj["backgroundOption"];
+        this.topBorderOption = obj["topBorderOption"];
+        this.leftBorderOption = obj["leftBorderOption"];
+        this.rightBorderOption = obj["rightBorderOption"];
+        this.bottomBorderOption = obj["bottomBorderOption"];
         this.connectedColumnCount = obj["connectedColumnCount"];
         this.connectedRowCount = obj["connectedRowCount"];
 
@@ -49,30 +55,38 @@ export class LogicCell {
     
     public copy(cell : LogicCell){
         this.text = cell.text;
-        this.cellClass = cell.cellClass;
-        this.cellStyle = cell.cellStyle;
-        this.backgroundClass = cell.backgroundClass;
+        this.svgGroupOption = Object.create(cell.svgGroupOption);
+        //this.cellStyle = cell.cellStyle;
+        this.backgroundOption = Object.create(cell.backgroundOption);
+        this.topBorderOption = Object.create(cell.topBorderOption);
+        this.leftBorderOption = Object.create(cell.leftBorderOption);
+        this.rightBorderOption = Object.create(cell.rightBorderOption);
+        this.bottomBorderOption = Object.create(cell.bottomBorderOption);
+        /*
         if(cell.topBorderClass !== undefined)this.topBorderClass = cell.topBorderClass;
         if(cell.leftBorderClass !== undefined)this.leftBorderClass = cell.topBorderClass;
         if(cell.rightBorderClass !== undefined)this.rightBorderClass = cell.rightBorderClass;
         if(cell.bottomBorderClass !== undefined){
             this.bottomBorderClass = cell.bottomBorderClass;
         }
+        */
         this.connectedRowCount = cell.connectedRowCount;
         this.connectedColumnCount = cell.connectedColumnCount;
         this.item = cell.item;
     }
     
-    public set(text: LogicText | undefined = undefined, isLatexMode: boolean = false, cellClass: string | undefined = undefined, backgroundClass: string | undefined = undefined,
-        topBorderClass: string | undefined = undefined, leftBorderClass: string | undefined = undefined, rightBorderClass: string | undefined = undefined, bottomBorderClass: string | undefined = undefined) {
+    public set(text: LogicText | undefined = undefined, isLatexMode: boolean = false, cellOption: GOptions.CellAttributes = { class : defaultCellClass}, backgroundOption: GOptions.backgroundOption = {},
+        topBorderOption: GOptions.BorderAttributes = {}, leftBorderOption: GOptions.BorderAttributes = {}, rightBorderOption: GOptions.BorderAttributes = {}, bottomBorderOption: GOptions.BorderAttributes = {}) {
         if (text !== undefined) this.text = text;
-        if (cellClass !== undefined) this.cellClass = cellClass;
+        //if (cellClass !== undefined) this.cellClass = ;
+        this.svgGroupOption = Object.create(cellOption)
         //if (textClass !== undefined) this.textClass = textClass;
-        if (backgroundClass !== undefined) this.backgroundClass = backgroundClass;
-        if (topBorderClass !== undefined) this.topBorderClass = topBorderClass;
-        if (leftBorderClass !== undefined) this.leftBorderClass = leftBorderClass;
-        if (rightBorderClass !== undefined) this.rightBorderClass = rightBorderClass;
-        if (bottomBorderClass !== undefined) this.bottomBorderClass = bottomBorderClass;
+        this.backgroundOption = Object.create(backgroundOption);
+        this.topBorderOption = Object.create(topBorderOption);
+        this.leftBorderOption = Object.create(leftBorderOption);
+        this.rightBorderOption = Object.create(rightBorderOption);
+        this.bottomBorderOption = Object.create(bottomBorderOption);
+
         //this.isLatexMode = isLatexMode;
     }
     /*

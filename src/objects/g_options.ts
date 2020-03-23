@@ -1,5 +1,5 @@
 
-//import * as CSS from "../basic/svghtml/css"
+import * as CSS from "../html/css"
 //import * as AttributeNames from "../common/custtome_attributes"
 import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment, AutoSizeShapeToFitText, Direction } from "../common/enums";
 //import * as CSS from "../basic/html/css"
@@ -22,6 +22,11 @@ export type surfaceClassCSS = {
     strokeWidth?: string,
     fill?: string,
 }
+export type StrokeClassCSS = {
+    stroke?: string,
+    strokeWidth?: string,
+}
+
 export type GTextBoxCSS = {
     autoSizeShapeToFitText?: AutoSizeShapeToFitText,
     verticalAnchor?: VerticalAnchor,
@@ -32,7 +37,10 @@ export type GEdgeStyleCSS = {
     endConnectorType?: ConnectorPosition,
     pathTextAlignment?: PathTextAlighnment
 } & GTextBoxCSS
-
+export type CellAttributes = {
+    class?: string | GTextBoxCSS | null;
+    style?: string | GTextBoxCSS | null;
+}
 
 
 
@@ -54,6 +62,15 @@ type _SVGGroupStyleInfo = {
     class?: string | object,
     style?: string | object,
 }
+export type BorderAttributes = {
+    class?: string | StrokeClassCSS | null,
+    style?: string | StrokeClassCSS | null
+}
+export type backgroundOption = {
+    class?: string | backgroundCSS | null,
+    style?: string | backgroundCSS | null    
+}
+
 
 
 export type GObjectAttributes = _GObjectAttributes & _SVGGroupStyleInfo;
@@ -75,12 +92,14 @@ export type _GTextBoxSVGGroupInfo = {
 export type GTextBoxAttributesWithoutGroup = _GObjectAttributes & _GTextBoxAttribute
 
 export type GTextBoxAttributes = GTextBoxAttributesWithoutGroup & _GTextBoxSVGGroupInfo
+export type DrawingFunctionOnURL = { url : string | null, functionName : string | null, drawingFunction : object | null }
 
 type _GGraphAttributes = {
     allocate? : GraphAllocateFunction;
     isLatexMode?: boolean
     relocateStyle?: string
     direction?: Direction | null;
+    drawingFunction? : DrawingFunctionOnURL
 }
 export type GGraphAttributes = _GGraphAttributes & GTextBoxAttributes; 
 
@@ -113,4 +132,29 @@ export type ConnectOption = {
     beginConnectorType?: ConnectorPosition,
     endConnectorType?: ConnectorPosition
 }
+
+
+export function setClassAndStyle(svg: SVGElement, className: string | object | undefined | null, style : string | object |undefined | null) {
+    if(typeof(className) == "string"){
+        svg.setAttribute("class", className);
+    }else if(className === undefined){
+    }else if(className === null){
+        svg.removeAttribute("class")
+    }else{
+        svg.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
+    }
+
+    if(typeof(style) == "string"){
+        svg.setAttribute("style", style);
+    }else if(style === undefined){
+    }else if(style === null){
+        svg.removeAttribute("style")
+    }else{
+        const cssString = CSS.createCSSString(style);
+        console.log(cssString);
+        svg.setAttribute("style", cssString === undefined ? "" : cssString );
+    }
+
+}
+
 //}

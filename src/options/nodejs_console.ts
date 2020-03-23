@@ -27,23 +27,40 @@ export function log(message: string, title: string = "") {
 */
 function getSavePath() : string {
     const env = process.env
-    const tmpdir = env.DEBUG == "TRUE" ? `D:/github/GraphTableSVG/temp`: os.tmpdir();
+    if(env.GTS_DEBUG == "TRUE" && env.GTS_DIR === undefined){
+        throw Error("DEBUG ERROR");
+    }
+
+    //const tmpdir = env.DEBUG == "TRUE" ? `D:/github/GraphTableSVG/temp`: os.tmpdir();
+    const tmpdir = env.GTS_DEBUG == "TRUE" && env.GTS_DIR !== undefined ? env.GTS_DIR: os.tmpdir();
+    
     const rand : string = (Math.floor( Math.random() * 100000000 )).toString();
     const filepath = `${tmpdir}/graph_table_svg_table_${rand}.html`;
     return filepath;
 }
-function save(data : string, path : string, title : string,type : "table" | "graph" | "tree", libraryPath : string | null = null, additonalFunction : string | null){
+function getMainLibPath() : string {
+    const env = process.env
+    if(env.GTS_DEBUG == "TRUE" && env.GTS_PATH === undefined){
+        throw Error("DEBUG ERROR");
+    }
+
+    const path = env.GTS_DEBUG == "TRUE" && env.GTS_PATH !== undefined ? env.GTS_PATH : "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js";
+    
+    return path;
+}
+
+function save(data : string, path : string, title : string,type : "table" | "graph" | "tree", graphTableSVGPath : string ,libraryPath : string | null = null, additonalFunction : string | null){
     const env = process.env
 
-    const scriptPath = env.DEBUG == "TRUE" ? `../docs/scripts/graph_table_svg.js` : "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js"
+    //const scriptPath = env.DEBUG == "TRUE" ? `../docs/scripts/graph_table_svg.js` : "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js"
     const ptext =`
     <!DOCTYPE html>
     <html>    
     <head>
         <meta charset="utf-8" />
         <title>View</title>
-        <script src="${scriptPath}"></script>
-        ${libraryPath != null ? "<script src=" + libraryPath + "></script>" : ""}
+        <script src="${graphTableSVGPath}"></script>
+        ${libraryPath != null ? "<script src=\"" + libraryPath + "\"></script>" : ""}
         <script>
             window.onload = () => {
                 const logicData = \`${data}\`
@@ -80,7 +97,7 @@ export function table(item: any,  title: string = "", option : { filepath? : str
         //const rand : string = (Math.floor( Math.random() * 100000000 )).toString();
 
         //const filepath = option.filepath ? option.filepath : `${tmpdir}/graph_table_svg_table_output_${rand}.html`;
-        save(data, filepath, title, "table", null, null);
+        save(data, filepath, title, "table", getMainLibPath(), null, null);
         opener(filepath);
 
     } else {
@@ -99,11 +116,11 @@ export function graph(item: any | LogicTree | LogicGraph, title: string = "", op
         //const debug = option.debug ? option.debug : false;
         const filepath = option.filepath ? option.filepath : getSavePath();
         if(item instanceof LogicTree){
-            const libraryPath = item.drawingFunction == null ? null : item.drawingFunction.url;
-            const additonalFunction = item.drawingFunction == null ? null : item.drawingFunction.functionName;
-            save(data, filepath, title, "tree", libraryPath, additonalFunction);
+            const libraryPath = item.graphOption.drawingFunction === undefined ? null : item.graphOption.drawingFunction.url;
+            const additonalFunction = item.graphOption.drawingFunction === undefined ? null : item.graphOption.drawingFunction.functionName;
+            save(data, filepath, title, "tree", getMainLibPath(),libraryPath, additonalFunction);
         }else{
-            save(data, filepath, title, "tree", null, null);
+            save(data, filepath, title, "tree", getMainLibPath(), null, null);
         }
         opener(filepath);
         

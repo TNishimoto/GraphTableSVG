@@ -10,6 +10,7 @@ import {GRect} from "./g_rect"
 import {GTable} from "./g_table"
 import {GTextBox} from "./g_textbox"
 import {GVertex} from "./g_vertex"
+import {VirtualTree} from "./graph_helpers/virtual_tree"
 
 
 import {GPathTextBox} from "./g_path_textbox"
@@ -17,5 +18,5 @@ import * as GOptions from "./g_options"
 
 
 export {
-    GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox, GOptions
+    GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox, GOptions, VirtualTree
 }

@@ -9,7 +9,6 @@ import { VertexOrder, Direction, PathTextAlighnment, VertexObjectType, ShapeObje
 //import { GTextBoxAttributes } from "../object/g_textbox";
 import * as GOptions from "../objects/g_options"
 import { LogicTable } from "./logic_table";
-export type DrawingFunctionOnURL = { url : string | null, functionName : string | null, drawingFunction : object | null }
 
 /*
 export type LogicTreeOption = {
@@ -73,7 +72,7 @@ export class LogicTree {
     public vertexOption: GOptions.GTextBoxAttributes = {};
     public edgeOption: GOptions.GEdgeAttributes = { class: { pathTextAlignment: PathTextAlighnment.regularInterval } };
     public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
-    public drawingFunction : DrawingFunctionOnURL | null = null;
+    //public drawingFunction : DrawingFunctionOnURL | null = null;
     public vertexShape : VertexObjectType = "g-circle"
     public table : LogicTable | null = null;
     public item: any = null;

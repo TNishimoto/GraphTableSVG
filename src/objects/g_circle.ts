@@ -49,6 +49,9 @@ export class GCircle extends GAbstractEllipseCircle  {
     private static createCircle(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style : string | undefined | GOptions.surfaceClassCSS): SVGCircleElement {
         const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         parent.appendChild(circle);
+        
+        GOptions.setClassAndStyle(circle, className, style);
+        /*
         if(style !== undefined){
             if(typeof(style) == "string"){
                 circle.setAttribute("style", style);
@@ -57,18 +60,20 @@ export class GCircle extends GAbstractEllipseCircle  {
             }
 
         }
+        */
         //if(style !== undefined) circle.setAttribute("style", style);
 
 
         circle.r.baseVal.value = AttributeNames.defaultCircleRadius;
 
         //circle.setAttribute("class", className);
-        
+        /*
         if(typeof(className) == "string"){
             circle.setAttribute("class", className);
         }else{
             circle.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
         }
+        */
         const radius = ElementExtension.getPropertyStyleNumberValue(circle,StyleNames.defaultRadius, null);
         if (radius != null) {
             circle.r.baseVal.value = radius;

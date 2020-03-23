@@ -70,7 +70,7 @@ export class TableDictionary {
             const logicText : LogicText = new LogicText();
             logicText.class = DefaultClassNames.defaultConsoleColumnTitleCellTextClass;
             //table.cells[0][value].textClass = DefaultClassNames.defaultConsoleColumnTitleCellTextClass;
-            table.cells[0][value].backgroundClass = DefaultClassNames.defaultConsoleColumnTitleCellBackgroundClass;
+            table.cells[0][value].backgroundOption.class = DefaultClassNames.defaultConsoleColumnTitleCellBackgroundClass;
             if (key == TableDictionary.IndexName) {
                 logicText.textContent = "(index)";
             } else if (key == TableDictionary.ValueName) {

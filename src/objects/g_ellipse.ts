@@ -118,6 +118,8 @@
         private static createEllipse(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style : string | GOptions.surfaceClassCSS |undefined): SVGEllipseElement {
             const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
             parent.appendChild(circle);
+            GOptions.setClassAndStyle(circle, className, style);
+            /*
             if(style !== undefined){
                 if(typeof(style) == "string"){
                     circle.setAttribute("style", style);
@@ -126,15 +128,17 @@
                 }
     
             }
+            */
 
             circle.rx.baseVal.value = AttributeNames.defaultCircleRadius;
             circle.ry.baseVal.value = AttributeNames.defaultCircleRadius;
-
+            /*
             if(typeof(className) == "string"){
                 circle.setAttribute("class", className);
             }else{
                 circle.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
             }
+            */
             const radius = ElementExtension.getPropertyStyleNumberValue(circle,StyleNames.defaultRadius, null);
             if (radius != null) {
                 circle.rx.baseVal.value = radius;

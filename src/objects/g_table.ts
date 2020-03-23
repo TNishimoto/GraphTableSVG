@@ -14,7 +14,6 @@ import { Cell } from "./table_helpers/cell"
 import { Rectangle, VLine } from "../common/vline"
 import { VBATranslateFunctions, parseInteger, visible } from "../common/vba_functions"
 
-import * as SVG from "../interfaces/svg"
 import * as CSS from "../html/css"
 import * as HTMLFunctions from "../html/html_functions"
 import * as GOptions from "./g_options"
@@ -474,21 +473,29 @@ export class GTable extends GVertex {
         if (table != null) {
             const cellInfo = table.cells[y][x];
             if (cellInfo != null) {
-                CSS.setCSSClass(cell.svgGroup, cellInfo.cellClass);
-
+                //CSS.setCSSClass(cell.svgGroup, cellInfo.cellClass);
+                GOptions.setClassAndStyle(cell.svgGroup, cellInfo.svgGroupOption.class, cellInfo.svgGroupOption.style);
+                GOptions.setClassAndStyle(cell.svgBackground, cellInfo.backgroundOption.class, cellInfo.backgroundOption.style);
+                /*
                 if (cellInfo.backgroundClass != null) {
                     CSS.setCSSClass(cell.svgBackground, cellInfo.backgroundClass);
                 }
+                */
                 /*
                 if (cellInfo.textClass != null) {
                     CSS.setCSSClass(cell.svgText, cellInfo.textClass);
                 }
                 */
                 createTextElementFromLogicCell(cellInfo, cell.svgText);
+                GOptions.setClassAndStyle(cell.svgTopBorder, cellInfo.topBorderOption.class, cellInfo.topBorderOption.style);
+                GOptions.setClassAndStyle(cell.svgLeftBorder, cellInfo.leftBorderOption.class, cellInfo.leftBorderOption.style);
+                GOptions.setClassAndStyle(cell.svgRightBorder, cellInfo.rightBorderOption.class, cellInfo.rightBorderOption.style);
+                GOptions.setClassAndStyle(cell.svgBottomBorder, cellInfo.bottomBorderOption.class, cellInfo.bottomBorderOption.style);
+                /*
                 //cellInfo.createTextElement(cell.svgText);
-                if (cellInfo.topBorderClass !== undefined) {
-                    CSS.setCSSClass(cell.svgTopBorder, cellInfo.topBorderClass);
-                }
+                //if (cellInfo.topBorderClass !== undefined) {
+                    CSS.setCSSClass(cell.svgTopBorder, cellInfo.topBorderOption);
+                //}
                 if (cellInfo.leftBorderClass !== undefined) {
                     CSS.setCSSClass(cell.svgLeftBorder, cellInfo.leftBorderClass);
 
@@ -499,6 +506,7 @@ export class GTable extends GVertex {
                 if (cellInfo.bottomBorderClass !== undefined) {
                     CSS.setCSSClass(cell.svgBottomBorder, cellInfo.bottomBorderClass);
                 }
+                */
 
             }
         }

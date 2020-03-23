@@ -2,20 +2,19 @@
 import { LogicTable } from "./logic_table"
 import * as GOptions from "../objects/g_options"
 import { LogicCell } from "./logic_cell";
+import { defaultCellClass } from "../common/attribute_names";
 
 export type LogicCellLine = LogicCell[];
 
 //export type LogicTableDetailLine = LogicCell[]; 
 
-function setCell(cell: LogicCell, value: number | string | LogicCell, cellClass?: string | GOptions.GTextBoxCSS) {
+function setCell(cell: LogicCell, value: number | string | LogicCell, svgGroupOption: GOptions.CellAttributes = { class : defaultCellClass}) {
     if (value instanceof LogicCell) {
         cell.copy(value);
     } else {
         cell.text.textContent = value.toString()
     }
-    if (cellClass !== undefined) {
-        cell.cellClass = cellClass;
-    }
+    cell.svgGroupOption = svgGroupOption;
 
 }
 /*
@@ -92,18 +91,19 @@ function setColumn2(table: LogicTable, ithColumn: number, line: LogicCellLine) {
         setCell(table.cells[i][ithColumn], v);
     })
 }
-export function toLogicCellLine( name: string, values: (number | string)[], cellClass?: string | GOptions.GTextBoxCSS) : LogicCellLine{
+export function toLogicCellLine( name: string, values: (number | string)[], svgGroupOption: GOptions.CellAttributes = { class : defaultCellClass}) : LogicCellLine{
     const titleCell = new LogicCell();
     titleCell.text.textContent = name;
+    titleCell.svgGroupOption = svgGroupOption;
+    /*
     if(cellClass !== undefined){
         titleCell.cellClass = cellClass;
     }
+    */
     const cells = values.map((v) =>{
         const cell = new LogicCell();
         cell.text.textContent = v.toString();
-        if(cellClass !== undefined){
-            cell.cellClass = cellClass;
-        }
+        cell.svgGroupOption = svgGroupOption;
         return cell;
     })
 

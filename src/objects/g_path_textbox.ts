@@ -41,6 +41,9 @@
             const path = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
             parent.appendChild(path);
             path.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
+            
+            GOptions.setClassAndStyle(path, className, style);
+            /*
             if(style !== undefined){
                 if(typeof(style) == "string"){
                     path.setAttribute("style", style);
@@ -56,6 +59,7 @@
             }else{
                 path.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
             }
+            */
             //path.setAttribute("class", className)
                 /*
             if (className != null) {
