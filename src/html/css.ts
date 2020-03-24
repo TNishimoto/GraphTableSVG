@@ -31,6 +31,11 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
         replaceMapper.set("beginConnectorType", StyleNames.beginConnectorType);
         replaceMapper.set("endConnectorType", StyleNames.endConnectorType);
         replaceMapper.set("pathTextAlignment", StyleNames.PathTextAlignment);
+        replaceMapper.set("paddingTop", StyleNames.paddingTop);
+        replaceMapper.set("paddingLeft", StyleNames.paddingLeft);
+        replaceMapper.set("paddingRight", StyleNames.paddingRight);
+        replaceMapper.set("paddingBottom", StyleNames.paddingBottom);
+
         replaceMapper.set("strokeWidth", "stroke-width");
 
     }
@@ -150,7 +155,7 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
             .${DefaultClassNames.defaultCellClass}{
                 ${StyleNames.paddingTop} : 5px;
                 ${StyleNames.paddingLeft} : 5px;
-                ${StyleNames.paddingRight} : 5px;
+                ${StyleNames.paddingRight} : 50px;
                 ${StyleNames.paddingBottom} : 5px;
                 ${StyleNames.VerticalAnchor} : ${VerticalAnchor.Middle};
                 ${StyleNames.HorizontalAnchor} : ${HorizontalAnchor.Center};

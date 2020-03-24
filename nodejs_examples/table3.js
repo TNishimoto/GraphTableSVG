@@ -6,10 +6,9 @@ const table = new GraphTableSVG.Logics.LogicTable({ columnCount: column, rowCoun
 
 for (let y = 0; y < row; y++) {
     for (let x = 0; x < column; x++) {
-        table.cells[y][x].text.textContent = "aaaa";
-        table.cells[y][x].groupOption = { style: { paddingLeft: 0 } };
+        table.cells[y][x].text.textContent = "a";
+        table.cells[y][x].groupOption = { style: { paddingLeft: 5, paddingRight: 5 } };
 
-        table.cells[y][x].rightBorderOption = { style: { stroke: "transparent" } }
     }
 }
 

@@ -14,7 +14,7 @@ function setCell(cell: LogicCell, value: number | string | LogicCell, svgGroupOp
     } else {
         cell.text.textContent = value.toString()
     }
-    cell.svgGroupOption = svgGroupOption;
+    cell.groupOption = svgGroupOption;
 
 }
 /*
@@ -94,7 +94,7 @@ function setColumn2(table: LogicTable, ithColumn: number, line: LogicCellLine) {
 export function toLogicCellLine( name: string, values: (number | string)[], svgGroupOption: GOptions.CellAttributes = { class : defaultCellClass}) : LogicCellLine{
     const titleCell = new LogicCell();
     titleCell.text.textContent = name;
-    titleCell.svgGroupOption = svgGroupOption;
+    titleCell.groupOption = svgGroupOption;
     /*
     if(cellClass !== undefined){
         titleCell.cellClass = cellClass;
@@ -103,7 +103,7 @@ export function toLogicCellLine( name: string, values: (number | string)[], svgG
     const cells = values.map((v) =>{
         const cell = new LogicCell();
         cell.text.textContent = v.toString();
-        cell.svgGroupOption = svgGroupOption;
+        cell.groupOption = svgGroupOption;
         return cell;
     })
 

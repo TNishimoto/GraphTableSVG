@@ -110,6 +110,7 @@ export function createRectangle(parent: SVGElement, className: string | null = n
  */
 export function createCellRectangle(parent: SVGElement, className: string | null = null): SVGRectElement {
     const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.width.baseVal.value = 0;
     parent.appendChild(rect);
     if (className != null) {
         rect.setAttribute("class", className);

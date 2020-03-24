@@ -9,6 +9,7 @@ for (let y = 0; y < 3; y++) {
         table1.cells[y][x].text.textContent = "aaaa";
         table2.cells[y][x].text.textContent = "bbbb";
         table3.cells[y][x].text.textContent = "cccc";
+        table1.cells[y][x].groupOption = { style: { paddingLeft: 0 } };
 
     }
 }

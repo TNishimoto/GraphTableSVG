@@ -37,9 +37,42 @@ export type GEdgeStyleCSS = {
     endConnectorType?: ConnectorPosition,
     pathTextAlignment?: PathTextAlighnment
 } & GTextBoxCSS
+
+type _GTextBoxAttribute = {
+    text?: string | HTMLElement[],
+    /*
+    isAutoSizeShapeToFitText?: boolean,
+    verticalAnchor?: VerticalAnchor,
+    horizontalAnchor?: HorizontalAnchor
+    */
+    textClass?: string | textClassCSS
+    textStyle?: string | textClassCSS
+}
+export type _GTextBoxSVGGroupInfo = {
+    class?: string | GTextBoxCSS
+    style?: string | GTextBoxCSS
+}
+export type GTextBoxAttributesWithoutGroup = _GObjectAttributes & _GTextBoxAttribute
+
+export type GTextBoxAttributes = GTextBoxAttributesWithoutGroup & _GTextBoxSVGGroupInfo
+
+export type CellCSS = {
+    autoSizeShapeToFitText?: AutoSizeShapeToFitText,
+    verticalAnchor?: VerticalAnchor,
+    horizontalAnchor?: HorizontalAnchor,
+    paddingTop? : number,
+    paddingLeft? : number,
+    paddingRight? : number,
+    paddingBottom? : number
+    
+    //minimumWidth? : number,
+    //minimumHeight? : number,
+
+}
+
 export type CellAttributes = {
-    class?: string | GTextBoxCSS | null;
-    style?: string | GTextBoxCSS | null;
+    class?: string | CellCSS | null;
+    style?: string | CellCSS | null;
 }
 
 
@@ -75,23 +108,7 @@ export type backgroundOption = {
 
 export type GObjectAttributes = _GObjectAttributes & _SVGGroupStyleInfo;
 
-type _GTextBoxAttribute = {
-    text?: string | HTMLElement[],
-    /*
-    isAutoSizeShapeToFitText?: boolean,
-    verticalAnchor?: VerticalAnchor,
-    horizontalAnchor?: HorizontalAnchor
-    */
-    textClass?: string | textClassCSS
-    textStyle?: string | textClassCSS
-}
-export type _GTextBoxSVGGroupInfo = {
-    class?: string | GTextBoxCSS
-    style?: string | GTextBoxCSS
-}
-export type GTextBoxAttributesWithoutGroup = _GObjectAttributes & _GTextBoxAttribute
 
-export type GTextBoxAttributes = GTextBoxAttributesWithoutGroup & _GTextBoxSVGGroupInfo
 export type DrawingFunctionOnURL = { url : string | null, functionName : string | null, drawingFunction : object | null }
 
 type _GGraphAttributes = {
@@ -144,6 +161,7 @@ export function setClassAndStyle(svg: SVGElement, className: string | object | u
         svg.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
     }
 
+
     if(typeof(style) == "string"){
         svg.setAttribute("style", style);
     }else if(style === undefined){
@@ -151,7 +169,6 @@ export function setClassAndStyle(svg: SVGElement, className: string | object | u
         svg.removeAttribute("style")
     }else{
         const cssString = CSS.createCSSString(style);
-        console.log(cssString);
         svg.setAttribute("style", cssString === undefined ? "" : cssString );
     }
 

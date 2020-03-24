@@ -705,8 +705,9 @@ export class Cell {
     get calculatedWidthUsingText(): number {
         if (this.isLocated) {
             const textRect = SVGTextBox.getSize(this.svgText, this._assurancevisibility);
-            return textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
-                + this.paddingLeft + this.paddingRight;
+            const w = textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
+            + this.paddingLeft + this.paddingRight;
+            return w;
         } else {
             return 0;
         }

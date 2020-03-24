@@ -10,7 +10,7 @@ export class LogicCell {
     public text: LogicText = new LogicText();
     //public textClass?: string | GOptions.textClassCSS;
     //public textStyle?: string | GOptions.textClassCSS;
-    public svgGroupOption : GOptions.CellAttributes = { class : defaultCellClass}
+    public groupOption : GOptions.CellAttributes = { class : defaultCellClass}
     //public cellClass?: string | GOptions.GTextBoxCSS = defaultCellClass;
     //public cellStyle?: string | GOptions.GTextBoxCSS;
     
@@ -41,7 +41,7 @@ export class LogicCell {
     public buildFromObject(obj : any){
         this.text.buildFromObject(obj["text"]);
         
-        this.svgGroupOption = obj["svgGroupOption"];
+        this.groupOption = obj["groupOption"];
         //this.cellStyle = obj["cellStyle"];
         this.backgroundOption = obj["backgroundOption"];
         this.topBorderOption = obj["topBorderOption"];
@@ -55,7 +55,7 @@ export class LogicCell {
     
     public copy(cell : LogicCell){
         this.text = cell.text;
-        this.svgGroupOption = Object.create(cell.svgGroupOption);
+        this.groupOption = Object.create(cell.groupOption);
         //this.cellStyle = cell.cellStyle;
         this.backgroundOption = Object.create(cell.backgroundOption);
         this.topBorderOption = Object.create(cell.topBorderOption);
@@ -79,7 +79,7 @@ export class LogicCell {
         topBorderOption: GOptions.BorderAttributes = {}, leftBorderOption: GOptions.BorderAttributes = {}, rightBorderOption: GOptions.BorderAttributes = {}, bottomBorderOption: GOptions.BorderAttributes = {}) {
         if (text !== undefined) this.text = text;
         //if (cellClass !== undefined) this.cellClass = ;
-        this.svgGroupOption = Object.create(cellOption)
+        this.groupOption = Object.create(cellOption)
         //if (textClass !== undefined) this.textClass = textClass;
         this.backgroundOption = Object.create(backgroundOption);
         this.topBorderOption = Object.create(topBorderOption);

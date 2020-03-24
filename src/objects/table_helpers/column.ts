@@ -123,7 +123,7 @@
                 const cell = this.table.cells[y][this.cellX];
                 if (cell.isMasterCellOfColumnCountOne) {
                     if (width < cell.calculatedWidthUsingText) width = cell.calculatedWidthUsingText;
-                    if (width < cell.width) width = cell.width;
+                    //if (width < cell.width) width = cell.width;
                 }
             }
 

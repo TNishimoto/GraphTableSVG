@@ -261,7 +261,9 @@ export class GTable extends GVertex {
         }
         if (b2 && !this.isConstructing) {
             //if(this.cellArray.some((v)=>v.isErrorCell)) throw new Error("err!");
-            this.fitSizeToOriginalCells(false);
+            //this.fitSizeToOriginalCells(false);
+            this.fitSizeToOriginalCells(true);
+
         }
         if (b) this.update();
     };
@@ -474,7 +476,7 @@ export class GTable extends GVertex {
             const cellInfo = table.cells[y][x];
             if (cellInfo != null) {
                 //CSS.setCSSClass(cell.svgGroup, cellInfo.cellClass);
-                GOptions.setClassAndStyle(cell.svgGroup, cellInfo.svgGroupOption.class, cellInfo.svgGroupOption.style);
+                GOptions.setClassAndStyle(cell.svgGroup, cellInfo.groupOption.class, cellInfo.groupOption.style);
                 GOptions.setClassAndStyle(cell.svgBackground, cellInfo.backgroundOption.class, cellInfo.backgroundOption.style);
                 /*
                 if (cellInfo.backgroundClass != null) {
@@ -1088,7 +1090,9 @@ export class GTable extends GVertex {
         this._isDrawing = true;
         if (true) {
             this.cellArray.forEach((v) => v.update());
-            this.fitSizeToOriginalCells(false);
+            //this.fitSizeToOriginalCells(false);
+            this.fitSizeToOriginalCells(true);
+            
             this.prevShow = false;
         }
         this.resize();

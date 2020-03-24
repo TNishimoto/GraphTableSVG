@@ -562,7 +562,6 @@ export class GGraph extends GObject {
         for (let i = 0; i < x.length; i++) {
             const p = x[i];
             if (p.attributeName == "style") {
-                console.log("observerFunction");
                 this.relocate();
 
             }
