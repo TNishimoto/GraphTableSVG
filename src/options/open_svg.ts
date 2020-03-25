@@ -235,6 +235,7 @@ export function createShape(parent: SVGElement | string | GObject, type: "g-circ
 export function createShape(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GOptions.GTextBoxAttributes): GArrowCallout
 export function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GOptions.GTextBoxAttributes): GGraph
 export function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: GTableOption): GTable
+export function createShape(parent: SVGElement | string | GObject, type: "g-object", option?: GTableOption): GObject
 export function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option: any = {}): GObject {
     let _parent: SVGElement;
     if (parent instanceof GObject) {
@@ -255,7 +256,7 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
         case ShapeObjectType.Table: return new GTable(_parent, option);
         case ShapeObjectType.RectButton: return new GRectButton(_parent, option);
         case ShapeObjectType.Circle: return new GCircle(_parent, option);
-
+        case ShapeObjectType.Object: return new GObject(_parent, option);
     }
     throw Error("error");
 }

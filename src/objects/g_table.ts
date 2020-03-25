@@ -124,8 +124,8 @@ export class GTable extends GVertex {
             output.table = table;
         }
 
-        if (output.x !== undefined) output.table!.x = output.x;
-        if (output.y !== undefined) output.table!.y = output.y;
+        //if (output.x !== undefined) output.table!.x = output.x;
+        //if (output.y !== undefined) output.table!.y = output.y;
         if (output.class !== undefined) {
             if (typeof (output.class) == "string") {
                 output.table!.tableClassName = output.class;
@@ -522,8 +522,18 @@ export class GTable extends GVertex {
         if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
         this.setSize(table.columnWidths.length, table.rowHeights.length);
 
-        if (table.x != null) this.cx = table.x;
-        if (table.y != null) this.cy = table.y;
+        if(table.position !== undefined){
+            if(table.position.type == "center"){
+                this.cx = table.position.x;
+                this.cy = table.position.y;
+            }else{
+                this.x = table.position.x;
+                this.y = table.position.y;
+            }
+        }
+
+        //if (table.x != null) this.cx = table.x;
+        //if (table.y != null) this.cy = table.y;
 
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {

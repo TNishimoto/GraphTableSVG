@@ -14,6 +14,8 @@ import { VBAObjectType } from "./vba_object"
 import * as GUIObserver from "../html/gui_observer"
 import { GTable } from "../objects/g_table";
 import { GGraph } from "../objects/g_graph";
+import { LogicGroup } from "../logics/logic_group";
+import { GObject } from "../objects";
 
 
 //export namespace Console {
@@ -30,7 +32,7 @@ export class ConsoleLineElement {
     private csvButton: HTMLButtonElement;
 
 
-    constructor(parent: HTMLElement, type: "table" | "graph" | "log" | "textarea", title: string = "", option: { mainElement?: HTMLElement | GTable | GGraph } = {}) {
+    constructor(parent: HTMLElement, type: "table" | "graph" | "log" | "textarea" | "group", title: string = "", option: { mainElement?: HTMLElement | GTable | GGraph } = {}) {
         this.canvasContainer = document.createElement("div");
         parent.appendChild(this.canvasContainer);
 
@@ -40,8 +42,8 @@ export class ConsoleLineElement {
         this.fieldSetElement.appendChild(this.legendElement);
         this.title = title;
 
-        const createCanvas = type == "table" || type == "graph" || type == "log";
-        const createVBAButton = type == "table" || type == "graph" || type == "log"
+        const createCanvas = type == "table" || type == "graph" || type == "log" || "group";
+        const createVBAButton = type == "table" || type == "graph" || type == "log"  || "group";
 
         if (createCanvas) {
             this.canvas = ConsoleLineElement.addSVGSVGElement(this.fieldSetElement);
@@ -178,27 +180,15 @@ function initialize(): void {
     }
 }
 */
-export function table(item: any, title: string = "") {
+export function table(item: any, title: string = "", canvasID: string | null = null): [GTable, ConsoleLineElement | SVGElement] {
     if (item instanceof LogicTable) {
-        const code = getOrCreateCodeElement();
-        const consoleLine = new ConsoleLineElement(code, "table", title);
-
-        //const svg = addSVGSVGElement(code);
-        const gtable = createShape(consoleLine.canvas!, "g-table");
-
-        gtable.buildFromLogicTable(item);
-        gtable.x = 0;
-        gtable.y = 0;
-        consoleLine.addVBAObject(gtable);
-        //consoleLine.addVBAObject(gtable);
-        //consoleLine.title = title;
-
+        return view(item, title, canvasID);
     } else {
 
         const tableDic = new TableDictionary();
         tableDic.construct(item);
         const logicTable = tableDic.toLogicTable();
-        table(logicTable, title);
+        return table(logicTable, title, canvasID);
     }
 
 
@@ -208,29 +198,14 @@ export function clear() {
     code.innerHTML = "";
 }
 
-export function graph(item: any | LogicTree | LogicGraph, title: string = "", canvasID: string | null = null) : [GGraph, ConsoleLineElement | null] {
+export function graph(item: any | LogicTree | LogicGraph, title: string = "", canvasID: string | SVGElement | null = null): [GGraph, ConsoleLineElement | SVGElement] {
 
     if (item instanceof LogicTree || item instanceof LogicGraph) {
-        if (canvasID != null) {
-            const ggraph = createShape(canvasID, "g-graph");
-            ggraph.build(item);
-            return [ggraph, null];
+        if (item instanceof LogicTree) {
+            return view(item, title, canvasID);
         } else {
-            const code = getOrCreateCodeElement();
-            const consoleLine = new ConsoleLineElement(code, "graph", title);
-            //const svg = addSVGSVGElement(code);
-            const ggraph = createShape(consoleLine.canvas!, "g-graph");
-            ggraph.build(item);
-            consoleLine.addVBAObject(ggraph);
-            return [ggraph, consoleLine];
+            return view(item, title, canvasID);
         }
-        
-        /*
-        if(item instanceof LogicGraph){
-        }else{
-            ggraph.constructFromLogicTree(item);
-        }
-        */
     } else {
         const tableDic = new TableDictionary();
         tableDic.construct(item);
@@ -295,13 +270,65 @@ export function textarea(message: string, title: string = "", option?: { cols?: 
     return consoleLine;
 
 }
-export function view(item: LogicTable | LogicTree | LogicGraph) {
+export function view(item: LogicTable, title: string, canvasID: string | SVGElement | null): [GTable, ConsoleLineElement | SVGElement];
+export function view(item: LogicTree, title: string, canvasID: string | SVGElement | null): [GGraph, ConsoleLineElement | SVGElement];
+export function view(item: LogicGraph, title: string, canvasID: string | SVGElement | null): [GGraph, ConsoleLineElement | SVGElement];
+export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, title: string, canvasID: string | SVGElement | null = null): [GObject, ConsoleLineElement | SVGElement] {
     if (item instanceof LogicTable) {
-        table(item);
-    } else if (item instanceof LogicTree) {
-        graph(item);
+        if (canvasID != null) {
+            const gtable = createShape(canvasID, "g-table");
+            gtable.buildFromLogicTable(item);
+            return [gtable, <SVGElement>gtable.svgGroup.parentNode];
+
+        } else {
+            const code = getOrCreateCodeElement();
+            const consoleLine = new ConsoleLineElement(code, "table", title);
+            const gtable = createShape(consoleLine.canvas!, "g-table");
+
+            gtable.buildFromLogicTable(item);
+            gtable.x = 0;
+            gtable.y = 0;
+            consoleLine.addVBAObject(gtable);
+            return [gtable, consoleLine];
+        }
+
+    } else if (item instanceof LogicTree || item instanceof LogicGraph) {
+        if (canvasID != null) {
+            const ggraph = createShape(canvasID, "g-graph");
+            ggraph.build(item);
+            return [ggraph, <SVGElement>ggraph.svgGroup.parentNode];
+        } else {
+            const code = getOrCreateCodeElement();
+            const consoleLine = new ConsoleLineElement(code, "graph", title);
+            //const svg = addSVGSVGElement(code);
+            const ggraph = createShape(consoleLine.canvas!, "g-graph");
+            ggraph.build(item);
+            consoleLine.addVBAObject(ggraph);
+            return [ggraph, consoleLine];
+        }
+
+        //graph(item);
     } else {
-        graph(item);
+
+        if (canvasID != null) {
+            const gobject = createShape(canvasID, "g-object");
+            item.items.forEach((v) => {                
+                view(<any>v, title, gobject.svgGroup);
+            })
+            return [gobject, <SVGElement>gobject.svgGroup.parentNode]
+        } else {
+            const code = getOrCreateCodeElement();
+            const consoleLine = new ConsoleLineElement(code, "group", title);
+            const gobject = createShape(consoleLine.canvas!, "g-object");
+            item.items.forEach((v) => {                
+                view(<any>v, title, gobject.svgGroup);
+            })
+            return [gobject, consoleLine];
+        }
     }
+}
+export function viewUsingObject(obj: any, title: string, canvasID: string | SVGElement | null = null) : [GObject, ConsoleLineElement | SVGElement] {
+    const item = LogicGroup.buildLogicObjectFromObject(obj);
+    return view(<any>item, title, canvasID);
 }
     //}

@@ -2,8 +2,8 @@ import {LogicTSpan, LogicText} from "./logic_text"
 import {LogicCell} from "./logic_cell"
 import {LogicTable} from "./logic_table"
 import {LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, Test} from "./logic_tree"
+import {LogicGroup, buildLogicObjectFromJSON} from "./logic_group"
 import {getIndexArrayTableLine, LogicCellLine, buildLogicTable, toLogicCellLine} from "./logic_table_line"
-import { buildLogicObjectFromJSON} from "./logic_builder"
 
 //import {GObjectOptions} from "./gobject_attributes"
 
@@ -11,6 +11,6 @@ import { buildLogicObjectFromJSON} from "./logic_builder"
 
 export {
     LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, getIndexArrayTableLine, 
-    LogicCellLine, buildLogicTable, toLogicCellLine, buildLogicObjectFromJSON, Test
+    LogicCellLine, buildLogicTable, toLogicCellLine, buildLogicObjectFromJSON, Test, LogicGroup
 };
 

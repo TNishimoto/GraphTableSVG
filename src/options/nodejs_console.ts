@@ -1,6 +1,7 @@
 import { TableDictionary } from "./table_dictionary"
 import { LogicGraph, LogicGraphNode, LogicTree } from "../logics/logic_tree"
 import { LogicTable } from "../logics/logic_table"
+import { LogicGroup } from "../logics/logic_group";
 //import { CommonFunctions } from "../common/common_functions";
 /*
 import { createShape } from "./open_svg";
@@ -49,7 +50,7 @@ function getMainLibPath() : string {
     return path;
 }
 
-function save(data : string, path : string, title : string,type : "table" | "graph" | "tree", graphTableSVGPath : string ,libraryPath : string | null = null, additonalFunction : string | null){
+function save(data : string, path : string, title : string,type : "table" | "graph" | "tree" | "group", graphTableSVGPath : string ,libraryPath : string | null = null, additonalFunction : string | null){
     const env = process.env
 
     //const scriptPath = env.DEBUG == "TRUE" ? `../docs/scripts/graph_table_svg.js` : "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js"
@@ -65,14 +66,14 @@ function save(data : string, path : string, title : string,type : "table" | "gra
             window.onload = () => {
                 const logicData = \`${data}\`
                 const obj = GraphTableSVG.Logics.buildLogicObjectFromJSON(logicData);
-                if(obj instanceof GraphTableSVG.Logics.LogicTable){
-                    GraphTableSVG.Console.table(obj, "${title}");    
-                }else if(obj instanceof GraphTableSVG.Logics.LogicTree){
-                    const graphResult = GraphTableSVG.Console.graph(obj, "${title}");    
-                    ${additonalFunction != null ? additonalFunction + "(graphResult[0])" : ""}
-                }else if(obj instanceof GraphTableSVG.Logics.LogicGraph){
-
-                }
+                GraphTableSVG.Console.viewUsingObject(obj, "${title}");
+                //if(obj instanceof GraphTableSVG.Logics.LogicTable){
+                //    GraphTableSVG.Console.table(obj, "${title}");    
+                //}else if(obj instanceof GraphTableSVG.Logics.LogicTree){
+                //    const graphResult = GraphTableSVG.Console.graph(obj, "${title}");    
+                //    ${additonalFunction != null ? additonalFunction + "(graphResult[0])" : ""}
+                //}else if(obj instanceof GraphTableSVG.Logics.LogicGraph){
+                //}
             };
         </script>
     </head>
@@ -88,30 +89,8 @@ function save(data : string, path : string, title : string,type : "table" | "gra
     }
 
 }
-export function table(item: any,  title: string = "", option : { filepath? : string } = { }) {
-    if (item instanceof LogicTable) {
-        const data = JSON.stringify(item);
-        //const debug = option.debug ? option.debug : false;
-        const filepath = option.filepath ? option.filepath : getSavePath();
-        //const tmpdir = os.tmpdir();
-        //const rand : string = (Math.floor( Math.random() * 100000000 )).toString();
-
-        //const filepath = option.filepath ? option.filepath : `${tmpdir}/graph_table_svg_table_output_${rand}.html`;
-        save(data, filepath, title, "table", getMainLibPath(), null, null);
-        opener(filepath);
-
-    } else {
-
-        const tableDic = new TableDictionary();
-        tableDic.construct(item);
-        const logicTable = tableDic.toLogicTable();
-        table(logicTable, title, option);
-    }
-}
-export function graph(item: any | LogicTree | LogicGraph, title: string = "", option : { filepath? : string } = { }) {
-
-    if (item instanceof LogicTree || item instanceof LogicGraph) {
-
+export function view(item: LogicTree | LogicGraph | LogicGroup | LogicTable, title: string = "", option : { filepath? : string } = { }){
+    if(item instanceof LogicTree || item instanceof LogicGraph){
         const data = JSON.stringify(item);
         //const debug = option.debug ? option.debug : false;
         const filepath = option.filepath ? option.filepath : getSavePath();
@@ -123,9 +102,35 @@ export function graph(item: any | LogicTree | LogicGraph, title: string = "", op
             save(data, filepath, title, "tree", getMainLibPath(), null, null);
         }
         opener(filepath);
-        
 
+    }else if(item instanceof LogicTable){
+        const data = JSON.stringify(item);
+        const filepath = option.filepath ? option.filepath : getSavePath();
+        save(data, filepath, title, "table", getMainLibPath(), null, null);
+        opener(filepath);
+    }else{
+        const data = JSON.stringify(item);
+        const filepath = option.filepath ? option.filepath : getSavePath();
+        save(data, filepath, title, "group", getMainLibPath(), null, null);
+        opener(filepath);
 
+    }
+}
+export function table(item: any,  title: string = "", option : { filepath? : string } = { }) {
+    if (item instanceof LogicTable) {
+        view(item, title, option);
+    } else {
+
+        const tableDic = new TableDictionary();
+        tableDic.construct(item);
+        const logicTable = tableDic.toLogicTable();
+        table(logicTable, title, option);
+    }
+}
+export function graph(item: any | LogicTree | LogicGraph, title: string = "", option : { filepath? : string } = { }) {
+
+    if (item instanceof LogicTree || item instanceof LogicGraph) {
+        view(item, title, option);
     } else {
         const tableDic = new TableDictionary();
         tableDic.construct(item);
@@ -133,4 +138,5 @@ export function graph(item: any | LogicTree | LogicGraph, title: string = "", op
         graph(logicGraph, title, option);
     }
 }
+
 

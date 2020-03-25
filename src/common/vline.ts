@@ -1,4 +1,7 @@
 ﻿//namespace GraphTableSVG {
+    export type CenterPosition = { x : number, y : number, type : "center"};
+export type UpperLeftPosition = { x : number, y : number, type : "upper-left"};
+
     /**
      * 傾きや切片を計算できる線です。
      */

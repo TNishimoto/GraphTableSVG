@@ -9,10 +9,15 @@ export class HTMLLogicCell{
 }
 */
 import * as AttributeNames from "../common/attribute_names"
+import {CenterPosition, UpperLeftPosition} from "../common/vline"
+
 import * as HTMLFunctions from "../html/html_functions"
 //import * as Console from "../../options/console"
 import {LogicCell} from "./logic_cell"
 import * as ElementExtension from "../interfaces/element_extension"
+
+
+
 
 
 //import { Cell } from "../object/table_helpers/cell"
@@ -27,8 +32,7 @@ export class LogicTable {
     public columnWidths: (number | null)[];
     public rowHeights: (number | null)[];
     public tableClassName: string | null = null;
-    public x: number | null = null;
-    public y: number | null = null;
+    public position? : CenterPosition | UpperLeftPosition;
     private objectType : string = "LogicTable";
 
     public get rowCount(): number {
@@ -40,9 +44,9 @@ export class LogicTable {
 
 
     public buildFromObject(obj : any) : void{
-        
-        this.x = obj["x"];
-        this.y = obj["y"];
+        if(obj["position"] !== undefined){
+            this.position = obj["position"];
+        }
         this.tableClassName = obj["tableClassName"];
         this.rowHeights = obj["rowHeights"];
         this.columnWidths = obj["columnWidths"];
@@ -59,13 +63,11 @@ export class LogicTable {
         
     }
 
-    public constructor(option: { columnCount?: number, rowCount?: number, tableClassName?: string, x?: number, y?: number } = {}) {
+    public constructor(option: { columnCount?: number, rowCount?: number, tableClassName?: string, position? : CenterPosition | UpperLeftPosition } = {}) {
         if (option.columnCount == undefined) option.columnCount = 3;
         if (option.rowCount == undefined) option.rowCount = 3;
 
-        if (option.x == undefined) option.x = 0;
-        if (option.y == undefined) option.y = 0;
-        [this.x, this.y] = [option.x, option.y];
+        this.position = option.position;
 
         //if(option.tableClassName == undefined) option.tableClassName = null;
 
