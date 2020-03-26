@@ -10,6 +10,7 @@
     import * as GOptions  from "./g_options"
 
     import * as ElementExtension from "../interfaces/element_extension"
+    import * as SVGTextExtensions from "../interfaces/svg_text_extension"
 
     export type _GShapeArrowCalloutAttributes = {
         arrowHeadWidth?: number,
@@ -113,7 +114,7 @@
             const rect = new Rectangle();
             if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
                 
-                const textRect = SVGTextBox.getSize(this.svgText);
+                const textRect = SVGTextExtensions.getSize(this.svgText);
                 //const b = this.svgText.getBBox();
                 rect.width = textRect.width;
                 rect.height = textRect.height;
@@ -149,7 +150,7 @@
 
         protected updateToFitText() {
 
-            const textRect = SVGTextBox.getSize(this.svgText);
+            const textRect = SVGTextExtensions.getSize(this.svgText);
             //const box = this.svgText.getBBox();
             if (this.direction == "up" || this.direction == "down") {
                 this.width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;

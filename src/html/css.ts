@@ -155,7 +155,7 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
             .${DefaultClassNames.defaultCellClass}{
                 ${StyleNames.paddingTop} : 5px;
                 ${StyleNames.paddingLeft} : 5px;
-                ${StyleNames.paddingRight} : 50px;
+                ${StyleNames.paddingRight} : 5px;
                 ${StyleNames.paddingBottom} : 5px;
                 ${StyleNames.VerticalAnchor} : ${VerticalAnchor.Middle};
                 ${StyleNames.HorizontalAnchor} : ${HorizontalAnchor.Center};

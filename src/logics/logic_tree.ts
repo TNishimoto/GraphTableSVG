@@ -33,7 +33,7 @@ export class LogicGraphNode {
         this.outputEdges.push(e);
     }
 }
-export function Test(obj : LogicTree) : void {
+export function Test(obj : any) : void {
     console.log(obj);
     console.log("test");
 }

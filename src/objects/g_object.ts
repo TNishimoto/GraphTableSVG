@@ -578,6 +578,21 @@ export class GObject {
         rect.height = this.height;
         return rect;
     }
+    public getVirtualWidth() : number{
+        return 0;
+    }
+    public getVirtualHeight() : number{
+        return 0;
+    }
+
+    public getVirtualRegion(): Rectangle {
+        let rect = new Rectangle();
+        rect.x = this.x;
+        rect.y = this.y;
+        rect.width = this.width;
+        rect.height = this.height;
+        return rect;
+    }
 
     public movable(): void {
 

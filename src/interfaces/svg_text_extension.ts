@@ -6,6 +6,8 @@ import * as SVGTextBox from "./svg_textbox"
 //import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as ElementExtension from "./element_extension"
+import * as CommonFunctions from "../common/common_functions";
+import * as HTMLFunctions from "../html/html_functions";
 
 
 /**
@@ -103,7 +105,7 @@ export function gtSetXY(text: SVGTextElement, rect: Rectangle, vAnchor: Vertical
     (<any>text).setAttribute('x', x.toString());
     (<any>text).setAttribute('y', y.toString());
 
-    const b2 = SVGTextBox.getSize(<any>text, true);
+    const b2 = getSize(<any>text, true);
 
     const dy = b2.y - y;
     const dx = b2.x - x;
@@ -124,4 +126,96 @@ export function gtSetXY(text: SVGTextElement, rect: Rectangle, vAnchor: Vertical
 
     (<any>text).setAttribute('y', y.toString());
     (<any>text).setAttribute('x', x.toString());
+}
+
+
+type CharInfo = { char: number, fontSize: number, fontFamily: string }
+const CharInfoMap: Map<CharInfo, number> = new Map();
+export function computeTextWidth(text: string | number, fontSize: number, fontFamily: string): number {
+
+    if (typeof text == "string") {
+        let width = 0;
+        for (let i = 0; i < text.length; i++) {
+            const w = computeTextWidth(text.charCodeAt(i), fontSize, fontFamily);
+            width += w;
+        }
+
+        return width;
+    } else {
+        const info: CharInfo = { char: text, fontSize: fontSize, fontFamily: fontFamily };
+        if (CharInfoMap.has(info)) {
+            return CharInfoMap.get(info)!;
+        } else {
+
+            var div = document.createElement('div');
+            div.style.position = 'absolute';
+            div.style.height = 'auto';
+            div.style.width = 'auto';
+            div.style.whiteSpace = 'nowrap';
+            div.style.fontFamily = fontFamily;
+            div.style.fontSize = fontSize.toString() + "px"; // large enough for good resolution
+
+            div.innerHTML = String.fromCharCode(text);
+            document.body.appendChild(div);
+            var clientWidth = div.clientWidth;
+            CharInfoMap.set(info, clientWidth);
+
+            document.body.removeChild(div);
+            return clientWidth;
+        }
+    }
+}
+export function getVirtualWidth(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {
+    if (text instanceof SVGTSpanElement) {
+        const style = getComputedStyle(text);
+        const fontSize = CommonFunctions.toPX(style.fontSize!);
+        const fontFamily = style.fontFamily!;
+        return computeTextWidth(text.textContent!, fontSize, fontFamily);
+    } else {
+
+        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(text).filter((v) => v.nodeName == "tspan");
+        let len = 0;
+        tspans.forEach((v) => { len += getVirtualWidth(v) });
+        return len;
+    }
+}
+
+export function getSize(svgText: SVGTextElement, showChecked: boolean = false): Rectangle {
+    let r = new Rectangle();
+    const b = showChecked ? true : HTMLFunctions.isShow(svgText);
+
+    if (b) {
+        const rect = svgText.getBBox();
+        r.x = rect.x;
+        r.y = rect.y;
+        r.width = rect.width;
+        r.height = rect.height;
+        return r;
+    } else {
+        return new Rectangle();
+    }
+
+}
+
+export function getVirtualRegion(svgText: SVGTextElement): Rectangle {
+    const style = getComputedStyle(svgText);
+    const fontSize = CommonFunctions.toPX(style.fontSize!);
+
+
+    let r = new Rectangle();
+    r.x = getX(svgText);
+    r.y = getY(svgText);
+    r.width = getVirtualWidth(svgText);
+    r.height = fontSize;
+
+
+    //const rect = svgText.getBBox();
+    /*
+    r.x = rect.x;
+    r.y = rect.y;
+    r.width = rect.width;
+    r.height = rect.height;
+    */
+    return r;
+
 }

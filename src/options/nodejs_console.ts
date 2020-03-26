@@ -1,7 +1,7 @@
 import { TableDictionary } from "./table_dictionary"
 import { LogicGraph, LogicGraphNode, LogicTree } from "../logics/logic_tree"
 import { LogicTable } from "../logics/logic_table"
-import { LogicGroup } from "../logics/logic_group";
+import { LogicGroup, getAdditionalLibraryPathList } from "../logics/logic_group";
 //import { CommonFunctions } from "../common/common_functions";
 /*
 import { createShape } from "./open_svg";
@@ -50,10 +50,13 @@ function getMainLibPath() : string {
     return path;
 }
 
-function save(data : string, path : string, title : string,type : "table" | "graph" | "tree" | "group", graphTableSVGPath : string ,libraryPath : string | null = null, additonalFunction : string | null){
+function save(data : string, path : string, title : string,type : "table" | "graph" | "tree" | "group", graphTableSVGPath : string ,additionalLibraryPathList : string[] = new Array(0)){
     const env = process.env
 
     //const scriptPath = env.DEBUG == "TRUE" ? `../docs/scripts/graph_table_svg.js` : "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js"
+
+    const pathListLines = additionalLibraryPathList.length == 0 ? "" : additionalLibraryPathList.map((v) => `<script src="${v}"></script>`).join("\n");
+
     const ptext =`
     <!DOCTYPE html>
     <html>    
@@ -61,17 +64,16 @@ function save(data : string, path : string, title : string,type : "table" | "gra
         <meta charset="utf-8" />
         <title>View</title>
         <script src="${graphTableSVGPath}"></script>
-        ${libraryPath != null ? "<script src=\"" + libraryPath + "\"></script>" : ""}
+        ${pathListLines}
         <script>
             window.onload = () => {
-                const logicData = \`${data}\`
+                const logicData = \`${data}\`                
                 const obj = GraphTableSVG.Logics.buildLogicObjectFromJSON(logicData);
-                GraphTableSVG.Console.viewUsingObject(obj, "${title}");
+                GraphTableSVG.Console.view(obj, "${title}");
                 //if(obj instanceof GraphTableSVG.Logics.LogicTable){
                 //    GraphTableSVG.Console.table(obj, "${title}");    
                 //}else if(obj instanceof GraphTableSVG.Logics.LogicTree){
                 //    const graphResult = GraphTableSVG.Console.graph(obj, "${title}");    
-                //    ${additonalFunction != null ? additonalFunction + "(graphResult[0])" : ""}
                 //}else if(obj instanceof GraphTableSVG.Logics.LogicGraph){
                 //}
             };
@@ -89,7 +91,12 @@ function save(data : string, path : string, title : string,type : "table" | "gra
     }
 
 }
-export function view(item: LogicTree | LogicGraph | LogicGroup | LogicTable, title: string = "", option : { filepath? : string } = { }){
+export function view(item: LogicTree | LogicGraph | LogicGroup | LogicTable, title: string = "", option : { filepath? : string, libraryPath? : string[] } = { }){
+    const tempLibraryPathList : string[] = option.libraryPath === undefined ? new Array(0) : option.libraryPath;
+    const collectedLibraryPathList = getAdditionalLibraryPathList(item);
+    tempLibraryPathList.forEach((v) => collectedLibraryPathList.add(v));
+    const libraryPathList = Array.from(collectedLibraryPathList.values());
+
     if(item instanceof LogicTree || item instanceof LogicGraph){
         const data = JSON.stringify(item);
         //const debug = option.debug ? option.debug : false;
@@ -97,21 +104,21 @@ export function view(item: LogicTree | LogicGraph | LogicGroup | LogicTable, tit
         if(item instanceof LogicTree){
             const libraryPath = item.graphOption.drawingFunction === undefined ? null : item.graphOption.drawingFunction.url;
             const additonalFunction = item.graphOption.drawingFunction === undefined ? null : item.graphOption.drawingFunction.functionName;
-            save(data, filepath, title, "tree", getMainLibPath(),libraryPath, additonalFunction);
+            save(data, filepath, title, "tree", getMainLibPath(), libraryPathList);
         }else{
-            save(data, filepath, title, "tree", getMainLibPath(), null, null);
+            save(data, filepath, title, "tree", getMainLibPath(), libraryPathList);
         }
         opener(filepath);
 
     }else if(item instanceof LogicTable){
         const data = JSON.stringify(item);
         const filepath = option.filepath ? option.filepath : getSavePath();
-        save(data, filepath, title, "table", getMainLibPath(), null, null);
+        save(data, filepath, title, "table", getMainLibPath(), libraryPathList);
         opener(filepath);
     }else{
         const data = JSON.stringify(item);
         const filepath = option.filepath ? option.filepath : getSavePath();
-        save(data, filepath, title, "group", getMainLibPath(), null, null);
+        save(data, filepath, title, "group", getMainLibPath(), libraryPathList);
         opener(filepath);
 
     }

@@ -268,7 +268,7 @@ export class GEdgeTextBox extends GObject {
             this.updateToFitText(false);
 
         } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
-            const textRect = SVGTextBox.getSize(this.svgText);
+            const textRect = SVGTextExtension.getSize(this.svgText);
             const width = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;
             const height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;
 
@@ -321,7 +321,7 @@ export class GEdgeTextBox extends GObject {
     protected updateToFitText(isWidth: boolean) {
         //this.isFixTextSize = true;
         //const box = this.svgText.getBBox();
-        const textRect = SVGTextBox.getSize(this.svgText);
+        const textRect = SVGTextExtension.getSize(this.svgText);
 
         const textWidth = textRect.width < this._minimumWidth ? this._minimumWidth : textRect.width;
         const textHeight = textRect.height < this._minimumHeight ? this._minimumHeight : textRect.height;

@@ -8,6 +8,7 @@ import {VirtualTree} from "./virtual_tree"
 import * as TreeArrangement from "./tree_arangement"
 import { Direction, ConnectorPosition } from "../../common/enums"
 import * as SVGTextBox from "../../interfaces/svg_textbox"
+import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
 
     export namespace GraphArrangement {
         export function standardTreeWidthArrangement(graph: GGraph): void {
@@ -63,12 +64,12 @@ import * as SVGTextBox from "../../interfaces/svg_textbox"
                 }
                 else if(path.textContent.length == 1){
                     const padding = SVGTextBox.getRepresentativeFontSize(path);
-                    const edgeLen = (SVGTextBox.getTextEmulatedWidth(path)) + (padding);
+                    const edgeLen = (SVGTextExtensions.getVirtualWidth(path)) + (padding);
                     if(edgeLen > childYInterval) childYInterval = edgeLen;    
                 }
                 else{
                     const padding = SVGTextBox.getRepresentativeFontSize(path);
-                    const edgeLen = (SVGTextBox.getTextEmulatedWidth(path)) + (padding * 4);
+                    const edgeLen = (SVGTextExtensions.getVirtualWidth(path)) + (padding * 4);
                     if(edgeLen > childYInterval) childYInterval = edgeLen;    
                 }
             })

@@ -4,6 +4,8 @@ import { LogicTable } from "../logics/logic_table"
 //import { CommonFunctions } from "../common/common_functions";
 import { createShape } from "./open_svg";
 import * as SVGTextBox from "../interfaces/svg_textbox";
+import * as SVGTextExtension from "../interfaces/svg_text_extension";
+
 import * as DefaultClassNames from "../common/default_class_names"
 import * as SVG from "../interfaces/svg";
 import * as CSS from "../html/css";
@@ -43,7 +45,7 @@ export class ConsoleLineElement {
         this.title = title;
 
         const createCanvas = type == "table" || type == "graph" || type == "log" || "group";
-        const createVBAButton = type == "table" || type == "graph" || type == "log"  || "group";
+        const createVBAButton = type == "table" || type == "graph" || type == "log" || "group";
 
         if (createCanvas) {
             this.canvas = ConsoleLineElement.addSVGSVGElement(this.fieldSetElement);
@@ -226,7 +228,7 @@ export function log(message: string, title: string = ""): ConsoleLineElement {
 
     SVGTextBox.setTextToSVGText(textElement, message, false);
     textElement.setAttribute("x", "0");
-    const b2 = SVGTextBox.getSize(textElement, true);
+    const b2 = SVGTextExtension.getSize(textElement, true);
     textElement.setAttribute("y", b2.height.toString());
 
     consoleLine.addVBAObject(textElement);
@@ -296,6 +298,10 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
         if (canvasID != null) {
             const ggraph = createShape(canvasID, "g-graph");
             ggraph.build(item);
+            if (item.graphOption.drawingFunction !== undefined) {
+                const drawingFunction = new Function("obj", `${item.graphOption.drawingFunction.functionName}(obj)`);
+                drawingFunction(ggraph);
+            }
             return [ggraph, <SVGElement>ggraph.svgGroup.parentNode];
         } else {
             const code = getOrCreateCodeElement();
@@ -304,6 +310,11 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
             const ggraph = createShape(consoleLine.canvas!, "g-graph");
             ggraph.build(item);
             consoleLine.addVBAObject(ggraph);
+            if (item.graphOption.drawingFunction !== undefined) {
+                const drawingFunction = new Function("obj", `${item.graphOption.drawingFunction.functionName}(obj)`);
+                drawingFunction(ggraph);
+            }
+
             return [ggraph, consoleLine];
         }
 
@@ -312,7 +323,7 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
 
         if (canvasID != null) {
             const gobject = createShape(canvasID, "g-object");
-            item.items.forEach((v) => {                
+            item.items.forEach((v) => {
                 view(<any>v, title, gobject.svgGroup);
             })
             return [gobject, <SVGElement>gobject.svgGroup.parentNode]
@@ -320,15 +331,17 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
             const code = getOrCreateCodeElement();
             const consoleLine = new ConsoleLineElement(code, "group", title);
             const gobject = createShape(consoleLine.canvas!, "g-object");
-            item.items.forEach((v) => {                
+            item.items.forEach((v) => {
                 view(<any>v, title, gobject.svgGroup);
             })
             return [gobject, consoleLine];
         }
     }
 }
+/*
 export function viewUsingObject(obj: any, title: string, canvasID: string | SVGElement | null = null) : [GObject, ConsoleLineElement | SVGElement] {
     const item = LogicGroup.buildLogicObjectFromObject(obj);
     return view(<any>item, title, canvasID);
 }
+*/
     //}

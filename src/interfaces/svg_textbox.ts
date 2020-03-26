@@ -11,57 +11,9 @@ import * as ElementExtension from "./element_extension"
 
 
 
-type CharInfo = { char: number, fontSize: number, fontFamily: string }
-const CharInfoMap: Map<CharInfo, number> = new Map();
 
-function getEmulatedWidthOfText(text: string | number, fontSize: number, fontFamily: string): number {
 
-    if (typeof text == "string") {
-        let width = 0;
-        for (let i = 0; i < text.length; i++) {
-            const w = getEmulatedWidthOfText(text.charCodeAt(i), fontSize, fontFamily);
-            width += w;
-        }
 
-        return width;
-    } else {
-        const info: CharInfo = { char: text, fontSize: fontSize, fontFamily: fontFamily };
-        if (CharInfoMap.has(info)) {
-            return CharInfoMap.get(info)!;
-        } else {
-
-            var div = document.createElement('div');
-            div.style.position = 'absolute';
-            div.style.height = 'auto';
-            div.style.width = 'auto';
-            div.style.whiteSpace = 'nowrap';
-            div.style.fontFamily = fontFamily;
-            div.style.fontSize = fontSize.toString() + "px"; // large enough for good resolution
-
-            div.innerHTML = String.fromCharCode(text);
-            document.body.appendChild(div);
-            var clientWidth = div.clientWidth;
-            CharInfoMap.set(info, clientWidth);
-
-            document.body.removeChild(div);
-            return clientWidth;
-        }
-    }
-}
-export function getTextEmulatedWidth(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {
-    if (text instanceof SVGTSpanElement) {
-        const style = getComputedStyle(text);
-        const fontSize = CommonFunctions.toPX(style.fontSize!);
-        const fontFamily = style.fontFamily!;
-        return getEmulatedWidthOfText(text.textContent!, fontSize, fontFamily);
-    } else {
-
-        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(text).filter((v) => v.nodeName == "tspan");
-        let len = 0;
-        tspans.forEach((v) => { len += getTextEmulatedWidth(v) });
-        return len;
-    }
-}
 export function getRepresentativeFontSize(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {
     if (text instanceof SVGTSpanElement) {
         const style = getComputedStyle(text);
@@ -360,62 +312,6 @@ export function constructSVGTextByHTMLElements(svgText: SVGTextElement, text: HT
 let ura: SVGSVGElement | null = null;
 
 
-export function getSize(svgText: SVGTextElement, showChecked: boolean = false): Rectangle {
-    let r = new Rectangle();
-
-    /*
-    try{
-        const rect = svgText.getBBox();
-        r.x = rect.x;
-        r.y = rect.y;
-        r.width = rect.width;
-        r.height = rect.height;
-        return r;
-    }catch(e){
-        return new Rectangle();
-    }
-    */
-    const b = showChecked ? true : HTMLFunctions.isShow(svgText);
-
-    if (b) {
-        const rect = svgText.getBBox();
-        r.x = rect.x;
-        r.y = rect.y;
-        r.width = rect.width;
-        r.height = rect.height;
-        return r;
-    } else {
-        return new Rectangle();
-        /*
-        if(ura == null){
-            ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        } 
-        document.body.appendChild(ura);
-        ura.innerHTML = svgText.outerHTML;
-        const fst = ura.firstChild;
-        if(fst instanceof SVGTextElement){
-
-            const rect = fst.getBBox();
-            r.x = rect.x;
-            r.y = rect.y;
-            r.width = rect.width;
-            r.height = rect.height;
- 
-            ura.removeChild(fst);
-            ura.remove();
-            return r;
-        }else if(fst != null){
-            ura.removeChild(fst);
-            ura.remove();
-            return r;
-        }else{
-            ura.remove();
-            return r;
-        }
-        */
-    }
-
-}
 
 export function getComputedTextLengthsOfTSpans(svgText: SVGTextElement, showChecked: boolean): Size[] {
     const b = showChecked ? true : HTMLFunctions.isShow(svgText);

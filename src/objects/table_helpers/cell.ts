@@ -699,12 +699,10 @@ export class Cell {
     }
 
 
-    /**
-    セルが取るべき幅を返します。
-    */
+    /*
     get calculatedWidthUsingText(): number {
         if (this.isLocated) {
-            const textRect = SVGTextBox.getSize(this.svgText, this._assurancevisibility);
+            const textRect = SVGTextExtension.getSize(this.svgText, this._assurancevisibility);
             const w = textRect.width + this.innerExtraPaddingLeft + this.innerExtraPaddingRight
             + this.paddingLeft + this.paddingRight;
             return w;
@@ -712,35 +710,19 @@ export class Cell {
             return 0;
         }
     }
-    private _assurancevisibility: boolean = false;
 
-    /**
-    セルが取るべき高さを返します。
-    */
     get calculatedHeightUsingText(): number {
         if (this.isLocated) {
-            const textRect = SVGTextBox.getSize(this.svgText, this._assurancevisibility);
+            const textRect = SVGTextExtension.getSize(this.svgText, this._assurancevisibility);
 
             return textRect.height + this.paddingTop + this.paddingBottom;
         } else {
             return 0;
         }
     }
+    */
 
-    calculatedSizeUsingGroup(): [number, number] {
-        if (this.isLocated) {
-            let w = 0;
-            let h = 0;
-            this.leftSideGroupCells.forEach((v) => h += this.table.rows[v.cellY].height);
 
-            this.upperSideGroupCells.forEach((v) => w += this.table.columns[v.cellX].width);
-
-            return [w, h];
-
-        } else {
-            return [0, 0];
-        }
-    }
 
 
     private computeSidePosition(dir: DirectionType2): [number, number] {
@@ -1038,29 +1020,16 @@ export class Cell {
         if (this.height != h) {
             this.height = h;
         }
-
-        if (this.width < this.calculatedWidthUsingText) {
-            this.width = this.calculatedWidthUsingText;
+        const rect = this.getVirtualRegion();
+        if (this.width < rect.width) {
+            this.width = rect.width;
         }
-        if (this.height < this.calculatedHeightUsingText) {
-            this.height = this.calculatedHeightUsingText;
+        if (this.height < rect.height) {
+            this.height = rect.height;
         }
 
     }
-    /**
-     * テキストを再描画します。
-     */
-    private locateSVGText() {
-        const innerRect = new Rectangle();
-        innerRect.x = this.innerExtraPaddingLeft + this.paddingLeft;
-        innerRect.y = this.paddingTop;
-        innerRect.height = this.height - this.paddingTop - this.paddingBottom;
-        innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
-        if (this.isLocated) {
-            SVGTextExtension.gtSetXY(this.svgText,innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None);
-            //ObsoleteGraph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
-        }
-    }
+    
 
     /**
      * 指定した方向の枠を取り除きます。
@@ -1422,7 +1391,63 @@ export class Cell {
 
     }
     // #endregion
+    private _assurancevisibility: boolean = false;
 
+    /**
+    セルの仮想上の領域を返します。
+    */
+    public getVirtualRegion() : Rectangle {
+        const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
+        const rect = new Rectangle();
+        rect.x = 0;
+        rect.width = textRect.width + this.paddingRight + this.paddingLeft;
+        rect.y = 0;
+        rect.height = textRect.height + this.paddingBottom + this.paddingTop;
+        return rect;
+    }
+    private getVirtualInnerRegion() : Rectangle {
+        const rect = this.getVirtualRegion();
+        const innerRec = new Rectangle();
+        innerRec.x = 0 + this.paddingLeft;
+        innerRec.y = 0 + this.paddingTop;
+        innerRec.width = rect.width - this.paddingLeft - this.paddingRight;
+        innerRec.height = rect.height - this.paddingBottom - this.paddingTop;
+        return innerRec;
+    }
+    calculatedSizeUsingGroup(): [number, number] {
+        if (this.isLocated) {
+            let w = 0;
+            let h = 0;
+            this.leftSideGroupCells.forEach((v) => h += this.table.rows[v.cellY].height
+        );
+
+            this.upperSideGroupCells.forEach((v) => w += this.table.columns[v.cellX].width);
+
+            return [w, h];
+
+        } else {
+            return [0, 0];
+        }
+    }
+    /**
+     * テキストを再描画します。
+     */
+    private locateSVGText() {
+        /*
+        const innerRect = new Rectangle();
+        innerRect.x = this.innerExtraPaddingLeft + this.paddingLeft;
+        innerRect.y = this.paddingTop;
+        innerRect.height = this.height - this.paddingTop - this.paddingBottom;
+        innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
+        */
+       const innerRect= this.getVirtualInnerRegion();
+       //const innerRect= this.getVirtualRegion();
+
+       if (this.isLocated) {
+            SVGTextExtension.gtSetXY(this.svgText,innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None);
+            //ObsoleteGraph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+        }
+    }
 
 }
 //}

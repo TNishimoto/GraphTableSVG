@@ -469,11 +469,11 @@ export class GTable extends GVertex {
 
 
     // #region construct2
-    private updateCellByLogicCell(table: LogicTable | null, x: number, y: number) {
+    private updateCellByLogicCell(logicTable: LogicTable | null, x: number, y: number) {
         const cell = this.cells[y][x];
         //const isShow = HTMLFunctions.(this.svgGroup);
-        if (table != null) {
-            const cellInfo = table.cells[y][x];
+        if (logicTable != null) {
+            const cellInfo = logicTable.cells[y][x];
             if (cellInfo != null) {
                 //CSS.setCSSClass(cell.svgGroup, cellInfo.cellClass);
                 GOptions.setClassAndStyle(cell.svgGroup, cellInfo.groupOption.class, cellInfo.groupOption.style);
@@ -1298,5 +1298,12 @@ export class GTable extends GVertex {
         }
 
     }
+    public getVirtualWidth() : number{
+        return this.columns.reduce((w, v) => w + v.getVirtualSize().width, 0);
+    }
+    public getVirtualHeight() : number{
+        return this.rows.reduce((w, v) => w + v.getVirtualSize().height, 0);
+    }
+
 }
 //}

@@ -2,6 +2,7 @@
     import {Cell, CellOption} from "./cell"
     import * as SVG from "../../interfaces/svg"
     import {GTable} from "../g_table"
+import { Rectangle, Size } from "../../common/vline";
 
     /**
      * 表の行を表現するクラスです。
@@ -108,6 +109,22 @@
             if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
             */
         }
+        getVirtualSize() : Size {
+            let height = 0;
+            let width = 0;
+            for (let x = 0; x < this.table.columnCount; x++) {
+                const cell = this.table.cells[this.cellY][x];
+                const rect = cell.getVirtualRegion();
+                if (cell.isMasterCellOfRowCountOne) {
+                    if (height < rect.height) height = rect.height;
+
+                }
+                width += cell.master.getVirtualRegion().width;
+            }
+            return new Size(width, height);
+
+        }
+
 
         /**
          * この行のセル配列を返します。
@@ -205,9 +222,9 @@
          */
         public fitHeightToOriginalCell(allowShrink: boolean) {
             if (allowShrink) {
-                this.height = this.getMaxHeight();
+                this.height = this.getVirtualSize().height;
             } else {
-                this.height = Math.max(this.height, this.getMaxHeight());
+                this.height = Math.max(this.height, this.getVirtualSize().height);
             }
         }
         /**
@@ -223,17 +240,20 @@
         /**
          * この行の最大の縦幅を持つセルの縦幅を返します。
          */
+        /*
         private getMaxHeight(): number {
             let height = 0;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
+                const rect = cell.getVirtualRegion();
                 if (cell.isMasterCellOfRowCountOne) {
-                    if (height < cell.calculatedHeightUsingText) height = cell.calculatedHeightUsingText;
+                    if (height < rect.height) height = rect.height;
                     if (height < cell.height) height = cell.height;
                 }
             }
             return height;
         }
+        */
         private get selfy(): number {
             for (let i = 0; i < this.table.rowCount; i++) {
                 if (this.table.rows[i] == this) {

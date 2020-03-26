@@ -4,6 +4,7 @@
     
     import * as SVG from "../../interfaces/svg"   
     import {GTable} from "../g_table"
+    import { Rectangle, Size } from "../../common/vline";
 
     /**
      * 表の列を表現するクラスです。
@@ -114,21 +115,38 @@
 
         }
         /**
-         * この列に属しているセルの中で最大の横幅を返します。
+         * この列の仮想上のサイズを返します。
          */
+        getVirtualSize() : Size {
+            let height = 0;
+            let width = 0;
+            for (let y = 0; y < this.table.rowCount; y++) {
+                const cell = this.table.cells[y][this.cellX];
+                const rect = cell.getVirtualRegion();
+                if (cell.isMasterCellOfColumnCountOne) {
+                    if (width < rect.width) width = rect.width;
+                }
+                height += cell.master.getVirtualRegion().height;
+            }
+            return new Size(width, height);
+
+        }
+        /*
         private getMaxWidth(): number {
             let width = 0;
 
             for (let y = 0; y < this.table.rowCount; y++) {
                 const cell = this.table.cells[y][this.cellX];
                 if (cell.isMasterCellOfColumnCountOne) {
-                    if (width < cell.calculatedWidthUsingText) width = cell.calculatedWidthUsingText;
+                    const rect = cell.getVirtualRegion();
+                    if (width < rect.width) width = rect.width;
                     //if (width < cell.width) width = cell.width;
                 }
             }
 
             return width;
         }
+        */
         /**
          * この列を更新します。
          */
@@ -154,9 +172,9 @@
          */
         public fitWidthToOriginalCell(allowShrink : boolean){
             if(allowShrink){
-                this.width = this.getMaxWidth();
+                this.width = this.getVirtualSize().width;
             }else{
-                this.width = Math.max(this.width, this.getMaxWidth());
+                this.width = Math.max(this.width, this.getVirtualSize().width);
             }
         }
 

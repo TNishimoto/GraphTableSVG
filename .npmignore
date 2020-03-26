@@ -2,7 +2,9 @@
 /.vscode
 /docs/images
 /docs/typedoc
+/docs/local_test
+/docs/sample
 /my
 /develop
-/tmp
+/temp
 /dist_temp

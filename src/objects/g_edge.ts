@@ -19,6 +19,7 @@ import * as CSS from "../html/css"
 import * as GOptions  from "./g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
+import * as SVGTextExtensions from "../interfaces/svg_text_extension"
 
 
 
@@ -666,7 +667,7 @@ export class GEdge extends GEdgeTextBox {
     private setRegularInterval(value: number): void {
         this.removeTextLengthAttribute();
 
-        const textRect = SVGTextBox.getSize(this.svgText);
+        const textRect = SVGTextExtensions.getSize(this.svgText);
         //const box = this.svgText.getBBox();
         const diff = value - textRect.width;
         const number = this.svgText.textContent != null ? this.svgText.textContent.length : 0;
@@ -877,7 +878,7 @@ export class GEdge extends GEdgeTextBox {
         if (this.pathTextAlignment == PathTextAlighnment.regularInterval) {
             const pathLen = this.svgPath.getTotalLength();
             const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
-            const strWidth = SVGTextBox.getTextEmulatedWidth(this.svgTextPath);
+            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgTextPath);
             if (strWidth > 0) {
                 const paddingWidth = pathLen - strWidth;
                 const paddingUnit = paddingWidth / (strLen + 1);
@@ -893,7 +894,7 @@ export class GEdge extends GEdgeTextBox {
             this.svgTextPath.setAttribute("startOffset", `${0}`);
             this.removeTextLengthAttribute();
             //const textRect = SVGTextBox.getSize(this.svgText);
-            const strWidth = SVGTextBox.getTextEmulatedWidth(this.svgTextPath);
+            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgTextPath);
 
             //const box = this.svgText.getBBox();
             const pathLen = this.svgPath.getTotalLength();
@@ -909,7 +910,7 @@ export class GEdge extends GEdgeTextBox {
         else if (this.pathTextAlignment == PathTextAlighnment.center) {
             this.removeTextLengthAttribute();
             //const textRect = SVGTextBox.getSize(this.svgText);
-            const strWidth = SVGTextBox.getTextEmulatedWidth(this.svgTextPath);
+            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgTextPath);
             //const box = this.svgText.getBBox();
             const pathLen = this.svgPath.getTotalLength();
             const offset = (pathLen - strWidth) / 2;
@@ -923,7 +924,7 @@ export class GEdge extends GEdgeTextBox {
 
         }
         else {
-            const strWidth = SVGTextBox.getTextEmulatedWidth(this.svgTextPath);
+            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgTextPath);
             const pathLen = this.svgPath.getTotalLength();
             if (this.side == "right") {
                 this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);

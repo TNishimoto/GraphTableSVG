@@ -7,6 +7,8 @@
     import * as AttributeNames from "../common/attribute_names"
     import * as DefaultClassNames from "../common/default_class_names"
     import * as SVGTextBox from "../interfaces/svg_textbox"
+    import * as SVGTextExtension from "../interfaces/svg_text_extension"
+
     import * as CSS from "../html/css"
     import * as GOptions  from "./g_options"
 
@@ -80,7 +82,7 @@
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
             if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
-                const textRect = SVGTextBox.getSize(this.svgText);
+                const textRect = SVGTextExtension.getSize(this.svgText);
                 //const b = this.svgText.getBBox();
                 rect.width = textRect.width;
                 rect.height = textRect.height;

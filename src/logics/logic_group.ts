@@ -14,22 +14,8 @@ export class LogicGroup {
     public buildFromObject(item : any){
         const temp = item["items"];
         if(temp !== undefined && temp instanceof Array){
-            temp.forEach((v) =>{
-                if(v["objectType"] == "LogicTree"){
-                    const child = new LogicTree();
-                    child.buildFromObject(v);
-                    this.items.push(child);
-                }else if(v["objectType"] == "LogicGraph"){
-
-                }else if(v["objectType"] == "LogicTable"){
-                    const child = new LogicTable();
-                    child.buildFromObject(v);
-                    this.items.push(child);
-                }else if(v["objectType"] == "LogicGroup"){
-                    const child = new LogicGroup();
-                    child.buildFromObject(v);
-                    this.items.push(child);                    
-                }
+            temp.forEach((v, i) =>{
+                this.items.push(LogicGroup.buildLogicObjectFromObject(v));
             })
         }
         this.position = item["position"];
@@ -63,4 +49,25 @@ export class LogicGroup {
 export function buildLogicObjectFromJSON(data : string) : LogicTree | LogicTable | LogicGraph | LogicGroup{
     const obj = JSON.parse(data);
     return LogicGroup.buildLogicObjectFromObject(obj);
+}
+
+export function getAdditionalLibraryPathList(data : LogicGraph | LogicTree | LogicTable | LogicGroup) : Set<string> {
+    const r = new Set<string>();
+    if(data instanceof LogicGroup){
+        data.items.forEach((v) =>{
+            const sub = getAdditionalLibraryPathList(v);
+            Array.from(sub.values()).forEach((w) =>{
+                r.add(w);
+            })
+        })
+
+    }else if(data instanceof LogicGraph){
+
+    }else if(data instanceof LogicTree){
+        if(data.graphOption.drawingFunction !== undefined && data.graphOption.drawingFunction.url != null){
+            r.add(data.graphOption.drawingFunction.url);
+        }
+    }else{
+    }
+    return r;
 }
