@@ -60,6 +60,21 @@ export class LogicGraph {
     }
 }
 
+export class  LogicNode {
+    public vertexOption: GOptions.GTextBoxAttributes = {};
+    public vertexShape : VertexObjectType = "g-circle"
+}
+
+export class  LogicTreeNode {
+    public edgeOption: GOptions.GEdgeAttributes = { class: { pathTextAlignment: PathTextAlighnment.regularInterval } };
+    public children: (LogicTree | null)[] = [];
+
+}
+export class LogicTreeInfo {
+    public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
+}
+
+
 /**
  * 木構造を表現するクラスです。
  */
@@ -75,22 +90,26 @@ export class LogicTree {
     //public drawingFunction : DrawingFunctionOnURL | null = null;
     public vertexShape : VertexObjectType = "g-circle"
     public table : LogicTable | null = null;
+    //public attributes : object | null = null;
     public item: any = null;
 
     private objectType : string = "LogicTree";
 
-    public buildFromObject(item : any){        
-        this.vertexOption = item["vertexOption"];
-        this.edgeOption = item["edgeOption"];
-        this.graphOption = item["graphOption"];
-        this.vertexShape = item["vertexShape"]
+    public buildFromObject(obj : any){        
+        this.vertexOption = obj["vertexOption"];
+        this.edgeOption = obj["edgeOption"];
+        this.graphOption = obj["graphOption"];
+        this.vertexShape = obj["vertexShape"]
+        this.item = obj["item"];
+        //this.attributes = obj["attributes"];
+        
 
         if(this.vertexShape == ShapeObjectType.Table){
             this.table = new LogicTable();
-            this.table.buildFromObject(item["table"])
+            this.table.buildFromObject(obj["table"])
         }
 
-        const children : any[] = item["children"];
+        const children : any[] = obj["children"];
         //this.children = new Array(0);
         this.children = children.map((v) =>{
             if(v == null){
@@ -168,11 +187,6 @@ export class LogicTree {
     }
 
 
-    /*
-    public view(canvasID: string | null = null ) {
-        Console.graph(this, canvasID);
-    }
-    */
 
 
 }

@@ -46,6 +46,14 @@ export class GObject {
 
 
         this._svgGroup = SVG.createGroup(parentElement);
+        GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
+        if(option.attributes !== undefined){
+            Object.keys(option.attributes).forEach((v) =>{
+                const value : string = option.attributes![v];
+                this._svgGroup.setAttribute(v, value);
+            })
+        }
+        /*
         if (typeof (option.class) == "string") {
             this._svgGroup.setAttribute("class", option.class);
         } else if (typeof (option.class) == "object") {
@@ -62,9 +70,8 @@ export class GObject {
                 const newStyleName = CSS.getRuleContentString(CSS.toRuleMap(option.style));
                 this._svgGroup.setAttribute("class", newStyleName);
             }
-
-            //this._svgGroup.setAttribute("style", option.style);
         }
+        */
 
         //this.setClassNameOfSVGGroup();
 

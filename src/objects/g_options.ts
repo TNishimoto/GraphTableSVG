@@ -88,7 +88,8 @@ type _GObjectAttributes = {
     id?: string,
 
     surfaceClass?: string | surfaceClassCSS,
-    surfaceStyle?: string | surfaceClassCSS
+    surfaceStyle?: string | surfaceClassCSS,
+    attributes?: { [key: string]: string; }
 
 }
 type _SVGGroupStyleInfo = {
