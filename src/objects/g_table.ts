@@ -21,6 +21,7 @@ import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { GVertex } from "./g_vertex";
+import {CenterPosition, UpperLeftPosition} from "../common/vline"
 
 //namespace GraphTableSVG {
 
@@ -31,6 +32,11 @@ export type _GTableOption = {
     rowHeight?: number,
     columnWidth?: number,
     table?: LogicTable
+    
+    columnWidths?: (number | null)[];
+    rowHeights?: (number | null)[];
+    position? : CenterPosition | UpperLeftPosition;
+
 }
 export type GTableOption = GOptions.GObjectAttributes & _GTableOption;
 /**
@@ -126,6 +132,7 @@ export class GTable extends GVertex {
 
         //if (output.x !== undefined) output.table!.x = output.x;
         //if (output.y !== undefined) output.table!.y = output.y;
+        /*
         if (output.class !== undefined) {
             if (typeof (output.class) == "string") {
                 output.table!.tableClassName = output.class;
@@ -135,6 +142,7 @@ export class GTable extends GVertex {
 
             }
         }
+        */
         while (e.childNodes.length > 0) e.removeChild(e.childNodes.item(0));
 
         return output;
@@ -515,20 +523,21 @@ export class GTable extends GVertex {
     }
     /**
      * LogicTableからTableを構築します。
-     * @param table 入力LogicTable
+     * @param logicTable 入力LogicTable
      */
-    public buildFromLogicTable(table: LogicTable) {
+    public buildFromLogicTable(logicTable: LogicTable) {
 
-        if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
-        this.setSize(table.columnWidths.length, table.rowHeights.length);
+        //if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
+        GOptions.setClassAndStyle(this.svgGroup, logicTable.option.class, logicTable.option.style);
+        this.setSize(logicTable.columnCount, logicTable.rowCount);
 
-        if(table.position !== undefined){
-            if(table.position.type == "center"){
-                this.cx = table.position.x;
-                this.cy = table.position.y;
+        if(logicTable.option.position !== undefined){
+            if(logicTable.option.position.type == "center"){
+                this.cx = logicTable.option.position.x;
+                this.cy = logicTable.option.position.y;
             }else{
-                this.x = table.position.x;
-                this.y = table.position.y;
+                this.x = logicTable.option.position.x;
+                this.y = logicTable.option.position.y;
             }
         }
 
@@ -537,26 +546,32 @@ export class GTable extends GVertex {
 
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {
-                this.updateCellByLogicCell(table, x, y);
+                this.updateCellByLogicCell(logicTable, x, y);
             }
 
         }
 
         //this.fitSizeToOriginalCells();
-        for (let y = 0; y < this.rowCount; y++) {
-            const h = table.rowHeights[y];
-            if (h != null) this.rows[y].height = h;
+        if(logicTable.option.rowHeights !== undefined){
+            for (let y = 0; y < this.rowCount; y++) {
+                const h = logicTable.option.rowHeights[y];
+                if (h != null) this.rows[y].height = h;
+            }
+    
         }
-        for (let x = 0; x < this.columnCount; x++) {
-            const w = table.columnWidths[x];
-            //this.columns[x].defaultWidth = w;
-            if (w != null) this.columns[x].width = w;
+        if(logicTable.option.columnWidths !== undefined){
+            for (let x = 0; x < this.columnCount; x++) {
+                const w = logicTable.option.columnWidths[x];
+                //this.columns[x].defaultWidth = w;
+                if (w != null) this.columns[x].width = w;
+            }
+    
         }
 
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {
                 const cell = this.cells[y][x];
-                const logicCell = table.cells[y][x];
+                const logicCell = logicTable.cells[y][x];
                 if (logicCell.connectedColumnCount > 1 || logicCell.connectedRowCount > 1) {
                     if (cell.canMerge(logicCell.connectedColumnCount, logicCell.connectedRowCount)) {
                         cell.merge(logicCell.connectedColumnCount, logicCell.connectedRowCount);

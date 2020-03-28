@@ -1,21 +1,11 @@
-
-/*
-export class HTMLLogicCell{
-    public text: string | null = null;
-    public cellClass: string | null = null;
-    public connectedColumnCount: number = 1;
-    public connectedRowCount: number = 1;
-    public item: any;
-}
-*/
 import * as AttributeNames from "../common/attribute_names"
-import {CenterPosition, UpperLeftPosition} from "../common/vline"
 
 import * as HTMLFunctions from "../html/html_functions"
 //import * as Console from "../../options/console"
 import {LogicCell} from "./logic_cell"
 import * as ElementExtension from "../interfaces/element_extension"
 import { ShapeObjectType } from "../common/enums"
+import { GTableOption } from "../objects/g_table"
 
 
 
@@ -30,31 +20,41 @@ import { ShapeObjectType } from "../common/enums"
  */
 export class LogicTable {
     public cells: LogicCell[][];
-    public columnWidths: (number | null)[];
-    public rowHeights: (number | null)[];
-    public tableClassName: string | null = null;
-    public position? : CenterPosition | UpperLeftPosition;
+    //public columnWidths: (number | null)[];
+    //public rowHeights: (number | null)[];
+    
+    //public tableClassName: string | null = null;
+    public option : GTableOption = {};
     private className : "LogicTable" = "LogicTable";
 
     public get rowCount(): number {
-        return this.rowHeights.length;
+        return this.cells.length;
     }
     public get columnCount(): number {
-        return this.columnWidths.length;
+        if(this.cells.length == 0){
+            return 0;
+        }else{
+            return this.cells[0].length;
+        }
     }
 
 
     public buildFromObject(obj : any) : void{
+        /*
         if(obj["position"] !== undefined){
             this.position = obj["position"];
         }
         this.tableClassName = obj["tableClassName"];
-        this.rowHeights = obj["rowHeights"];
-        this.columnWidths = obj["columnWidths"];
+        */
+        this.option = obj["option"];
+
+        //this.rowHeights = obj["rowHeights"];
+        //this.columnWidths = obj["columnWidths"];
         const cells : any[][] = obj["cells"];
         const rowCount = cells.length;
         const columnCount = rowCount == 0 ? 0 : cells[0].length;
 
+        this.cells = new Array(rowCount);
         for (let y = 0; y < rowCount; y++) {
             this.cells[y] = new Array(columnCount);
             for (let x = 0; x < columnCount; x++) {
@@ -65,15 +65,18 @@ export class LogicTable {
         
     }
 
-    public constructor(option: { columnCount?: number, rowCount?: number, tableClassName?: string, position? : CenterPosition | UpperLeftPosition } = {}) {
-        if (option.columnCount == undefined) option.columnCount = 3;
-        if (option.rowCount == undefined) option.rowCount = 3;
+    public constructor(option: {columnCount: number, rowCount: number, option? : GTableOption} = { columnCount : 3, rowCount : 3, option : {}} ) {
+        //if (option.columnCount == undefined) option.columnCount = 3;
+        //if (option.rowCount == undefined) option.rowCount = 3;
+        if(option !== undefined){
+            this.option = option;
+        }
 
-        this.position = option.position;
+        //this.position = option.position;
 
         //if(option.tableClassName == undefined) option.tableClassName = null;
 
-        this.tableClassName = option.tableClassName == undefined ? null : option.tableClassName;
+        //this.tableClassName = option.tableClassName == undefined ? null : option.tableClassName;
         this.cells = new Array(option.rowCount);
         for (let y = 0; y < option.rowCount; y++) {
             this.cells[y] = new Array(option.columnCount);
@@ -81,6 +84,7 @@ export class LogicTable {
                 this.cells[y][x] = new LogicCell();
             }
         }
+        /*
         this.rowHeights = new Array(option.rowCount);
         for (let y = 0; y < option.rowCount; y++) {
             this.rowHeights[y] = null;
@@ -89,12 +93,13 @@ export class LogicTable {
         for (let x = 0; x < option.columnCount; x++) {
             this.columnWidths[x] = null;
         }
+        */
 
     }
     public get cellArray(): LogicCell[] {
         const r: LogicCell[] = new Array();
-        for (let y = 0; y < this.rowHeights.length; y++) {
-            for (let x = 0; x < this.columnWidths.length; x++) {
+        for (let y = 0; y < this.rowCount; y++) {
+            for (let x = 0; x < this.columnCount; x++) {
                 r.push(this.cells[y][x]);
             }
         }
@@ -102,14 +107,14 @@ export class LogicTable {
     }
     public getColumn(i: number): LogicCell[] {
         const r: LogicCell[] = new Array();
-        for (let y = 0; y < this.rowHeights.length; y++) {
+        for (let y = 0; y < this.rowCount; y++) {
             r.push(this.cells[y][i]);
         }
         return r;
     }
     public getRow(i: number): LogicCell[] {
         const r: LogicCell[] = new Array();
-        for (let x = 0; x < this.columnWidths.length; x++) {
+        for (let x = 0; x < this.columnCount; x++) {
             r.push(this.cells[i][x]);
         }
         return r;
@@ -138,8 +143,8 @@ export class LogicTable {
         }
         return r;
     }
-    public static create(str: string[][], tableClassName: string | null = null): LogicTable {
-        const table = new LogicTable({ columnCount: str[0].length, rowCount: str.length, tableClassName: tableClassName == null ? undefined : tableClassName });
+    public static create(str: string[][], option? : GTableOption): LogicTable {
+        const table = new LogicTable({columnCount : str[0].length, rowCount : str.length, option : option} );
 
         for (let y = 0; y < str.length; y++) {
             for (let x = 0; x < str[y].length; x++) {
@@ -166,18 +171,19 @@ export class LogicTable {
             cells[i] = cellArray;
             if (columnSize < cellArray.length) columnSize = cellArray.length;
         });
-        const logicTable = new LogicTable({ rowCount: rows.length, columnCount: columnSize });;
+        const logicTable = new LogicTable({columnCount : columnSize, rowCount : rows.length});;
 
         //output.table = new LogicTable({ rowCount: rows.length, columnCount: columnSize });
-
+        /*
         if (widthsStr != null) {
             const widths: (number | null)[] = JSON.parse(widthsStr);
             widths.forEach((v, i) => logicTable.columnWidths[i] = v);
         }
+        */
 
         for (let y = 0; y < cells.length; y++) {
             const h = ElementExtension.getPropertyStyleNumberValue(rows[y], "--height", null);
-            logicTable.rowHeights[y] = h;
+            //logicTable.rowHeights[y] = h;
 
             for (let x = 0; x < cells[y].length; x++) {
                 logicTable.cells[y][x].text.textContent = cells[y][x].innerHTML;
@@ -210,16 +216,18 @@ export class LogicTable {
             cells[i] = cellArray;
             if (columnSize < cellArray.length) columnSize = cellArray.length;
         });
-        const logicTable = new LogicTable({ rowCount: rows.length, columnCount: columnSize });;
+        const logicTable = new LogicTable({columnCount : columnSize,rowCount : rows.length});;
 
+        /*
         if (widthsStr != null) {
             const widths: (number | null)[] = JSON.parse(widthsStr);
             widths.forEach((v, i) => logicTable.columnWidths[i] = v);
         }
+        */
 
         for (let y = 0; y < cells.length; y++) {
             const h = ElementExtension.getPropertyStyleNumberValue(rows[y], "--height", null);
-            logicTable.rowHeights[y] = h;
+            //logicTable.rowHeights[y] = h;
 
             for (let x = 0; x < cells[y].length; x++) {
                 logicTable.cells[y][x].text.textContent = cells[y][x].innerHTML;
