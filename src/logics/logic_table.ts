@@ -15,6 +15,7 @@ import * as HTMLFunctions from "../html/html_functions"
 //import * as Console from "../../options/console"
 import {LogicCell} from "./logic_cell"
 import * as ElementExtension from "../interfaces/element_extension"
+import { ShapeObjectType } from "../common/enums"
 
 
 
@@ -33,7 +34,7 @@ export class LogicTable {
     public rowHeights: (number | null)[];
     public tableClassName: string | null = null;
     public position? : CenterPosition | UpperLeftPosition;
-    private objectType : string = "LogicTable";
+    private className : "LogicTable" = "LogicTable";
 
     public get rowCount(): number {
         return this.rowHeights.length;

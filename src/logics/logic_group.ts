@@ -1,12 +1,16 @@
 import { LogicTable } from "./logic_table";
-import { LogicGraph, LogicTree } from "./logic_tree";
+import { LogicTree } from "./logic_tree";
+import { LogicGraph } from "./logic_graph";
+
 import {CenterPosition, UpperLeftPosition} from "../common/vline"
+import {UndefinedError} from "../common/exceptions"
+
 type LogicType = "LogicTree" | "LogicTable" | "LogicGraph" | "LogicGroup";
 
 
 export class LogicGroup {
     public items : (LogicGraph | LogicTree | LogicTable | LogicGroup)[] = new Array(0);
-    private objectType : string = "LogicGroup";
+    public className : "LogicGroup" = "LogicGroup";
     public position? : UpperLeftPosition;
     constructor() {
         
@@ -22,7 +26,10 @@ export class LogicGroup {
     }
 
     public static buildLogicObjectFromObject(obj : any) : LogicTree | LogicTable | LogicGraph | LogicGroup{
-        const type : LogicType = obj["objectType"];
+        const type : LogicType = obj["className"];
+        //const type : LogicType = obj[LogicGroup.buildLogicObjectFromObject.toString()];
+
+        if(type === undefined) throw new UndefinedError();
     
         if(type == "LogicTree"){
             const w = new LogicTree();

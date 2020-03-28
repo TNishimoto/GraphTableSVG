@@ -130,13 +130,15 @@ import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
             const touchedVertexes : Set<GVertex> = new Set();
             const inputEdges : GEdge[] = new Array(0);
 
-            const roots = graph.roots.length == 0? [graph.vertices[0]] : graph.roots; 
+            if(graph.vertices.length > 0){
+                const roots = graph.roots.length == 0? [graph.vertices[0]] : graph.roots; 
             
-            roots.forEach((v=>{
-                touchedVertexes.add(v);
-                v.outcomingEdges.forEach((w) => inputEdges.push(w));
-            }))
-            createExternalEdgeDicInlevelorderSub(inputEdges, externalEdges, touchedVertexes, 0);
+                roots.forEach((v=>{
+                    touchedVertexes.add(v);
+                    v.outcomingEdges.forEach((w) => inputEdges.push(w));
+                }))
+                createExternalEdgeDicInlevelorderSub(inputEdges, externalEdges, touchedVertexes, 0);    
+            }
             return externalEdges;
         }
         function createExternalEdgeDicInlevelorderSub(inputEdges : GEdge[], externalEdges : Set<GEdge>, touchedVertexes : Set<GVertex>, level : number){

@@ -19,103 +19,106 @@ export type LogicTreeOption = {
     direction?: Direction | null;
 }
 */
-export class LogicGraphEdge {
-    public text: string | null = null;
-    public endNodeIndex: number = -1;
-}
 
-
-export class LogicGraphNode {
-    public text: string | null = null;
-    public outputEdges: LogicGraphEdge[] = [];
-
-    public addEdge(e: LogicGraphEdge) {
-        this.outputEdges.push(e);
-    }
-}
 export function Test(obj : any) : void {
     console.log(obj);
     console.log("test");
 }
-export class LogicGraph {
-    public nodes: LogicGraphNode[] = [];
-    public edges: LogicGraphEdge[] = [];
-    public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
 
-    construct(iten: any) {
+export class  LogicBasicShape {
+    public option: GOptions.GTextBoxAttributes = {};
+    public shape : VertexObjectType = "g-circle"
+    private className : "LogicBasicShape" = "LogicBasicShape";
 
+    public item: any = null;
+
+    public get textContent(): string {
+        if (typeof (this.option.text) == "string") {
+            return this.option.text!;
+        } else if (this.option.text === undefined) {
+            return "";
+        } else {
+            return "";
+        }
     }
-    addNode(): LogicGraphNode {
-        const node = new LogicGraphNode();
-        this.nodes.push(node);
-        return node;
+    public set textContent(value: string) {
+        this.option.text = value;
     }
-    createEdge(): LogicGraphEdge {
-        const edge = new LogicGraphEdge();
-        this.edges.push(edge);
-        return edge;
+    public buildFromObject(obj : any){        
+        this.option = obj["option"];
+        this.shape = obj["shape"]
+        this.item = obj["item"];
     }
-    getIndex(node: LogicGraphNode) {
-        return this.nodes.indexOf(node);
+    constructor(constructorOption : {text? : string, shape? : VertexObjectType, option? : GOptions.GTextBoxAttributes } = {}){
+        if(constructorOption.shape !== undefined){
+            this.shape = constructorOption.shape;
+        }
+        if(constructorOption.option !== undefined){
+            this.option = constructorOption.option;
+        }
+        if(constructorOption.text !== undefined){
+            this.textContent = constructorOption.text;
+        }
     }
-}
 
-export class  LogicNode {
-    public vertexOption: GOptions.GTextBoxAttributes = {};
-    public vertexShape : VertexObjectType = "g-circle"
-}
 
-export class  LogicTreeNode {
-    public edgeOption: GOptions.GEdgeAttributes = { class: { pathTextAlignment: PathTextAlighnment.regularInterval } };
-    public children: (LogicTree | null)[] = [];
 
-}
-export class LogicTreeInfo {
-    public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
 }
 
 
 /**
  * 木構造を表現するクラスです。
  */
-export class LogicTree {
-    //public vertexText: string | null = null
-    //public parentEdgeText: string | null = null
-    //public vertexClass: string | null = null
-    //public parentEdgeClass: string | null = null
-    public children: (LogicTree | null)[] = [];
-    public vertexOption: GOptions.GTextBoxAttributes = {};
-    public edgeOption: GOptions.GEdgeAttributes = { class: { pathTextAlignment: PathTextAlighnment.regularInterval } };
-    public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
-    //public drawingFunction : DrawingFunctionOnURL | null = null;
-    public vertexShape : VertexObjectType = "g-circle"
-    public table : LogicTable | null = null;
-    //public attributes : object | null = null;
-    public item: any = null;
 
-    private objectType : string = "LogicTree";
-
-    public buildFromObject(obj : any){        
-        this.vertexOption = obj["vertexOption"];
-        this.edgeOption = obj["edgeOption"];
-        this.graphOption = obj["graphOption"];
-        this.vertexShape = obj["vertexShape"]
-        this.item = obj["item"];
-        //this.attributes = obj["attributes"];
-        
-
-        if(this.vertexShape == ShapeObjectType.Table){
-            this.table = new LogicTable();
-            this.table.buildFromObject(obj["table"])
+export class  LogicTreeNode {
+    constructor(constructorOption : {vertexText? : string, edgeText? : string, vertexShape? : VertexObjectType } = {}){
+        if(constructorOption.vertexShape === "g-table"){
+            this.shapeObject = new LogicTable();            
+        }
+        if(constructorOption.edgeText !== undefined){
+            this.edgeTextContent = constructorOption.edgeText;            
+        }
+        if(constructorOption.vertexText !== undefined){
+            if(this.shapeObject instanceof LogicTable){
+                throw Error("You cannot use vertexText if you use LogicTable as the shapeObject property in LogicTreeNode")
+            }else{
+                this.shapeObject.textContent = constructorOption.vertexText;            
+            }
         }
 
+    }
+    public edgeOption: GOptions.GEdgeAttributes = { class: { pathTextAlignment: PathTextAlighnment.regularInterval } };
+    public children: (LogicTreeNode | null)[] = [];
+    public get edgeTextContent(): string {
+        if (typeof (this.edgeOption.text) == "string") {
+            return this.edgeOption.text!;
+        } else if (this.edgeOption.text === undefined) {
+            return "";
+        } else {
+            return "";
+        }
+    }
+    public set edgeTextContent(value: string) {
+        this.edgeOption.text = value;
+    }
+    public shapeObject : LogicBasicShape | LogicTable = new LogicBasicShape();
+    public buildFromObject(obj : any){        
+        this.edgeOption = obj["edgeOption"];
+        const className = obj["shapeObject"]["className"];
+        if(className == "LogicTable"){
+            this.shapeObject = new LogicTable();
+        }else{
+            this.shapeObject = new LogicBasicShape();
+        }
+        this.shapeObject.buildFromObject(obj["shapeObject"])
+
+
         const children : any[] = obj["children"];
-        //this.children = new Array(0);
         this.children = children.map((v) =>{
             if(v == null){
                 return null;
             }else{
-                const w = new LogicTree();
+                const w = new LogicTreeNode();
                 w.buildFromObject(v);
                 return w;
             }
@@ -123,21 +126,9 @@ export class LogicTree {
         
 
     }
-
-    constructor(option: {
-        item?: any, children?: (LogicTree | null)[],
-        vertexOption?: GOptions.GTextBoxAttributes, edgeOption?: GOptions.GGraphAttributes
-    } = {}) {
-        if (option.item != undefined) this.item = option.item;
-        if(option.vertexOption !== undefined) this.vertexOption = option.vertexOption;
-        if(option.edgeOption !== undefined) this.edgeOption = option.edgeOption;
-
-        //if(option.vertexText != undefined) this.vertexText = option.vertexText;
-        //if(option.parentEdgeText != undefined) this.parentEdgeText = option.parentEdgeText;
-        if (option.children != undefined) this.children = option.children;
-    }
-    public getOrderedNodes(order: VertexOrder = VertexOrder.Preorder): LogicTree[] {
-        const r: LogicTree[] = [];
+    
+    public getOrderedNodes(order: VertexOrder = VertexOrder.Preorder): LogicTreeNode[] {
+        const r: LogicTreeNode[] = [];
         const edges = this.children;
         if (order == VertexOrder.Preorder) {
             r.push(this);
@@ -161,38 +152,28 @@ export class LogicTree {
         }
         return r;
     }
-    public get edgeTextContent(): string {
-        if (typeof (this.edgeOption.text) == "string") {
-            return this.edgeOption.text!;
-        } else if (this.edgeOption.text === undefined) {
-            return "";
-        } else {
-            return "";
-        }
-    }
-    public set edgeTextContent(value: string) {
-        this.edgeOption.text = value;
-    }
-    public get vertexTextContent(): string {
-        if (typeof (this.vertexOption.text) == "string") {
-            return this.vertexOption.text!;
-        } else if (this.vertexOption.text === undefined) {
-            return "";
-        } else {
-            return "";
-        }
-    }
-    public set vertexTextContent(value: string) {
-        this.vertexOption.text = value;
-    }
-
-
-
-
+    
 }
+export class LogicTree {
+    public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
+    public root : LogicTreeNode | null = null;
+    private className : "LogicTree" = "LogicTree";
+
+    public buildFromObject(obj : any){        
+        this.graphOption = obj["graphOption"];
+        if(obj["root"] != null){
+            this.root = new LogicTreeNode();
+            this.root.buildFromObject(obj["root"]);
+        }        
+    
+    }
+}
+
+
 /**
  * 二分木を表現するクラスです。
  */
+/*
 export class BinaryLogicTree extends LogicTree {
     public get left(): BinaryLogicTree | null {
         const left = this.children[0];
@@ -220,17 +201,6 @@ export class BinaryLogicTree extends LogicTree {
     constructor(public item: any = null, left: BinaryLogicTree | null = null, right: BinaryLogicTree | null = null, vertexOption?: GOptions.GTextBoxAttributes, edgeOption?: GOptions.GGraphAttributes) {
         super({ item: item == null ? undefined : item, children: [left, right], vertexOption: vertexOption, edgeOption : edgeOption });
     }
-    /*
-    public toLogicTree(): LogicTree<T> {
-        var r = new LogicTree<T>(this.item);
-        if (this.left != null) {
-            r.children.push(this.left.toLogicTree());
-        }
-        if (this.right != null) {
-            r.children.push(this.right.toLogicTree());
-        }
-        return r;
-    }
-    */
 }
+*/
 

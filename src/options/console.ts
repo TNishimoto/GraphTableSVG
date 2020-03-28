@@ -1,5 +1,7 @@
 import { TableDictionary } from "./table_dictionary"
-import { LogicGraph, LogicGraphNode, LogicTree } from "../logics/logic_tree"
+import { LogicTree } from "../logics/logic_tree"
+import { LogicGraph } from "../logics/logic_graph"
+
 import { LogicTable } from "../logics/logic_table"
 //import { CommonFunctions } from "../common/common_functions";
 import { createShape } from "./open_svg";

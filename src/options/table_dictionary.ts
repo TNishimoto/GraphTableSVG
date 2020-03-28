@@ -1,5 +1,5 @@
 // tslint:disable-next-line: no-namespace
-import { LogicGraph, LogicGraphNode } from "../logics/logic_tree"
+import { LogicGraph, LogicGraphNode } from "../logics/logic_graph"
 import { LogicTable } from "../logics/logic_table"
 
 import * as AttributeNames from "../common/attribute_names"

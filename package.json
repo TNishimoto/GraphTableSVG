@@ -1,10 +1,10 @@
 {
     "name": "graph-table-svg",
-    "version": "0.0.59",
+    "version": "0.0.60",
     "description": "",
     "main": "./dist/nodejs_index.js",
     "scripts": {
-        "compile": "tsc -p . && webpack",
+        "compile": "tsc -p . && tsc -p ./examples/ts && webpack",
         "typedoc": "typedoc --out ./docs/typedoc/ ./src/ -m commonjs"
     },
     "bin": {

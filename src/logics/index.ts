@@ -1,7 +1,9 @@
 import {LogicTSpan, LogicText} from "./logic_text"
 import {LogicCell} from "./logic_cell"
 import {LogicTable} from "./logic_table"
-import {LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, Test} from "./logic_tree"
+import {LogicTree, LogicTreeNode, LogicBasicShape, Test} from "./logic_tree"
+import {LogicGraph, LogicGraphEdge, LogicGraphNode} from "./logic_graph"
+
 import {LogicGroup, buildLogicObjectFromJSON} from "./logic_group"
 import {getIndexArrayTableLine, LogicCellLine, buildLogicTable, toLogicCellLine} from "./logic_table_line"
 
@@ -10,7 +12,7 @@ import {getIndexArrayTableLine, LogicCellLine, buildLogicTable, toLogicCellLine}
 
 
 export {
-    LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, getIndexArrayTableLine, 
+    LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, LogicTreeNode, LogicBasicShape, getIndexArrayTableLine, 
     LogicCellLine, buildLogicTable, toLogicCellLine, buildLogicObjectFromJSON, Test, LogicGroup
 };
 

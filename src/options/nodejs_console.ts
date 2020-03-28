@@ -1,5 +1,7 @@
 import { TableDictionary } from "./table_dictionary"
-import { LogicGraph, LogicGraphNode, LogicTree } from "../logics/logic_tree"
+import { LogicTree } from "../logics/logic_tree"
+import { LogicGraph, LogicGraphNode } from "../logics/logic_graph"
+
 import { LogicTable } from "../logics/logic_table"
 import { LogicGroup, getAdditionalLibraryPathList } from "../logics/logic_group";
 //import { CommonFunctions } from "../common/common_functions";

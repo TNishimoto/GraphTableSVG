@@ -20,7 +20,9 @@ import * as GOptions from "./g_options"
 
 import { ShapeObjectType, VertexObjectType, VertexOrder, PathTextAlighnment, ConnectorPosition, Direction } from "../common/enums";
 
-import { LogicTree, LogicGraph } from "../logics/logic_tree"
+import { LogicTree, LogicTreeNode, LogicBasicShape } from "../logics/logic_tree"
+import { LogicGraph } from "../logics/logic_graph";
+
 import { GraphArrangement } from "./graph_helpers/graph_arrangement"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
@@ -75,7 +77,7 @@ export class GGraph extends GObject {
         return this.vertices.filter((v) => v.incomingEdges.length == 0);
     }
 
-    protected _roots: GVertex[] = [];
+    //protected _roots: GVertex[] = [];
     public get vertexXInterval(): number | null {
         const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.vertexXInterval);
         if (v == null) {
@@ -333,6 +335,7 @@ export class GGraph extends GObject {
         if (option.direction !== undefined) {
             this.direction = option.direction;
         }
+        console.log(logicGraph);
 
 
 
@@ -365,38 +368,39 @@ export class GGraph extends GObject {
             })
         } else {
     
-            const dic: Map<LogicTree, GVertex> = new Map();
-            logicGraph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
-                const node = v.vertexShape == ShapeObjectType.Table ? GGraph.createVertexTable(svgsvg, v.table!) : GGraph.createVertex(svgsvg, v.vertexShape, v.vertexOption)
-
-                //node.svgText.textContent = v.vertexText;
-                this.add(node);
-                dic.set(v, node);
-            })
-            logicGraph.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
-                v.children.forEach((e, j) => {
-                    if (e != null) {
-                        const edge = GGraph.createEdge(svgsvg, e.edgeOption)
-                        if (edge.svgTextPath.textContent != null) {
-                            //const b = option.isLatexMode == undefined ? false : option.isLatexMode;
-                            //edge.svgTextPath.setTextContent(e.parentEdgeText, b);
-
-                            //this.svgSurface!.onload = this.onLoadFunction;
-
-                            edge.isAppropriatelyReverseMode = true;
-                            //edge.setAppropriateText();
-
-                        }
-                        this.add(edge);
-                        const beginNode = dic.get(v);
-                        const endNode = dic.get(e);
-                        if (beginNode == undefined || endNode == undefined) throw Error("error");
-                        this.connect(beginNode, edge, endNode);
-                    }
-
+            const dic: Map<LogicTreeNode, GVertex> = new Map();
+            if(logicGraph.root != null){
+                logicGraph.root.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
+                    const node = v.shapeObject instanceof LogicTable ? GGraph.createVertexTable(svgsvg, v.shapeObject) : GGraph.createVertex(svgsvg, v.shapeObject.shape, v.shapeObject.option)
+                    if(this.roots.length == 0) this.roots.push(node);
+                    this.add(node);
+                    dic.set(v, node);
                 })
-            })
+                logicGraph.root.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
+                    v.children.forEach((e, j) => {
+                        if (e != null) {
+                            const edge = GGraph.createEdge(svgsvg, e.edgeOption)
+                            if (edge.svgTextPath.textContent != null) {    
+                                edge.isAppropriatelyReverseMode = true;    
+                            }
+                            this.add(edge);
+                            const beginNode = dic.get(v);
+                            const endNode = dic.get(e);
+
+                            if (beginNode == undefined || endNode == undefined) throw Error("error");
+                            this.connect(beginNode, edge, endNode);
+                        }
+    
+                    })
+                })
+    
+            }else{
+                throw Error("error")
+            }
         }
+        console.log("test");
+        console.log(this.roots);
+
         if (option.relocateStyle !== undefined) {
             this.relocateStyle = option.relocateStyle;
         } else {
@@ -466,21 +470,13 @@ export class GGraph extends GObject {
      * @param option 作成オプション
      * @returns logicVertexを表すVertex
      */
-    private createChildFromLogicTree<T>(parent: GVertex | null = null, logicVertex: LogicTree, option: { isLatexMode?: boolean } = {}): GVertex {
+    /*
+    private createChildFromLogicTree<T>(parent: GVertex | null = null, logicVertex: LogicTreeGraph, option: { isLatexMode?: boolean } = {}): GVertex {
         if (option.isLatexMode == undefined) option.isLatexMode = false;
-
-        //const node: GVertex = <any>createVertex(this, { class: logicVertex.vertexClass == null ? undefined : logicVertex.vertexClass } );
         const node: GVertex = <any>GGraph.createVertex2(this, logicVertex.vertexOption);
 
-        //if (logicVertex.vertexText != null) SVGTextBox.setTextToSVGText(node.svgText, logicVertex.vertexText, option.isLatexMode);
         if (parent != null) {
             const edge: GEdge = GGraph.createEdge(this, logicVertex.edgeOption);
-            /*
-            if (logicVertex.parentEdgeText != null) {
-                edge.svgTextPath.setTextContent(logicVertex.parentEdgeText, option.isLatexMode);
-                edge.pathTextAlignment = PathTextAlighnment.regularInterval;
-            }
-            */
             this.connect(parent, edge, node, { beginConnectorType: "bottom", endConnectorType: "top" });
         } else {
             this.roots.push(node);
@@ -488,9 +484,9 @@ export class GGraph extends GObject {
         logicVertex.children.forEach((v) => {
             if (v != null) this.createChildFromLogicTree(node, v, option);
         });
-        //this.createdNodeCallback(node);
         return node;
     }
+    */
 
     public createVBACode(id: number): string[] {
         const r: string[] = [];

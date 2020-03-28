@@ -1,10 +1,12 @@
 
 
-  import { LogicGraph, LogicGraphNode, LogicTree, BinaryLogicTree } from "../logics/logic_tree"
+  import { LogicTree, LogicTreeNode} from "../logics/logic_tree"
     //export namespace Debug {
-        function randomTreeArray(node_num : number, max_degree : number) : LogicTree[] {
-            const nodes : LogicTree[] = new Array(0);
-            const root = new LogicTree();
+        function randomTreeArray(node_num : number, max_degree : number) : [LogicTree, LogicTreeNode[]] {
+            const nodes : LogicTreeNode[] = new Array(0);
+            const graph = new LogicTree();
+            const root = new LogicTreeNode();
+
             nodes.push(root);
 
             while(nodes.length < node_num){
@@ -12,13 +14,14 @@
 
                 const parent = nodes[random];
                 if(parent.children.length < max_degree){
-                    const child = new LogicTree();
+                    const child = new LogicTreeNode();
                     parent.children.push(child);
                     nodes.push(child);    
                 }
 
             }
-            return nodes;
+            graph.root = root;
+            return [graph, nodes];
         }
         /*
         function randomBinaryTreeArray(node_num : number) : BinaryLogicTree[] {
@@ -55,16 +58,16 @@
         }
         const labels = ["a", "b", "c", "あ", "e", "f", "g"];
         export function randomTrie(node_num : number, max_degree : number) : LogicTree {
-            const nodes = randomTreeArray(node_num, max_degree);
+            const [graph, nodes] = randomTreeArray(node_num, max_degree);
             for(let i=1;i<nodes.length;i++){
                 var randomLabelNumber = Math.floor( Math.random()* labels.length );
                 nodes[i].edgeOption.text = labels[randomLabelNumber]; 
                 
             }
-            return nodes[0];
+            return graph;
         }
         export function randomLabeledTree(node_num : number, max_degree : number, max_string_length : number) : LogicTree {
-            const nodes = randomTreeArray(node_num, max_degree);
+            const [graph, nodes] = randomTreeArray(node_num, max_degree);
             for(let i=1;i<nodes.length;i++){
                 var strLen = Math.floor( Math.random()*max_string_length );
                 let s = "";
@@ -79,7 +82,7 @@
                 
             }
             
-            return nodes[0];
+            return graph;
         }
 
         export function randomBinaryTrie(node_num : number) : LogicTree {

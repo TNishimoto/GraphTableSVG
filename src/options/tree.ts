@@ -1,6 +1,6 @@
 
 //namespace GraphTableSVG {
-    import {LogicTree} from "../logics/logic_tree"
+    import {LogicTree, LogicTreeNode} from "../logics/logic_tree"
     import {GVertex} from "../objects/g_vertex"
 
     //export namespace Parse{
@@ -9,12 +9,16 @@
          * @param parseText 
          */
         export function parseTree(parseText : string) : LogicTree {
+            const graph = new LogicTree();
             const [tree, pos] = parseTreeSub(parseText, 0);
-            return tree;
+            graph.root = tree;
+            return graph;
         }
-        function parseTreeSub(str : string, pos : number) : [LogicTree, number] {
+        function parseTreeSub(str : string, pos : number) : [LogicTreeNode, number] {
             
-            const node : LogicTree | null = new LogicTree({ item : "" });
+            //const node : LogicTreeNode | null = new LogicTreeNode({ item : "" });
+            const node : LogicTreeNode | null = new LogicTreeNode();
+            
             const c = str[pos];
             if(c != '('){
                 throw Error("Parse Error");
