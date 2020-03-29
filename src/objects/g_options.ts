@@ -5,6 +5,7 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
 //import * as CSS from "../basic/html/css"
 //import * as SVG from "../basic/interface/svg"
 export type GraphAllocateFunction = (graph: object) => void
+import {CenterPosition, UpperLeftPosition} from "../common/vline"
 
 
 //export namespace GOptions{
@@ -79,10 +80,14 @@ export type CellAttributes = {
 
 type _GObjectAttributes = {
     //class?: string,
+    /*
     cx?: number,
     cy?: number,
     x?: number,
     y?: number,
+    */
+    
+    position? : CenterPosition | UpperLeftPosition;
     width?: number,
     height?: number,
     id?: string,

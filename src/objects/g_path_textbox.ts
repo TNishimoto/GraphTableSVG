@@ -78,7 +78,7 @@
             const _option = super.initializeOption(option);
             return _option;
         }
-
+        /*
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
             if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
@@ -96,6 +96,7 @@
             }
             return rect;
         }
+        */
         /*
         private getVBAEditLine(id: number): string {
             const lineColor = VBATranslateFunctions.colorToVBA(this.svgPath.getPropertyStyleValueWithDefault("stroke", "gray"));

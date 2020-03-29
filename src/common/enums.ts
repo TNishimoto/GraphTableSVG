@@ -31,6 +31,7 @@ export namespace CoodinateType {
     export const Group00: CoodinateType = "group00"
 }
 
+
 export type VBAShapeType = "--table" | "NONE" | "msoShapeOval" | "msoShapeRectangle" | "msoShapeRectangularCallout" | "msoShapeUpArrowCallout" | "msoShapeLeftArrowCallout" | "msoShapeRightArrowCallout" | "msoShapeDownArrowCallout";
 
 export namespace VBAShapeType {

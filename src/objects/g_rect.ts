@@ -86,10 +86,7 @@
         public get type(): ShapeObjectType {
             return ShapeObjectType.Rect;
         }
-
-        /**
-        テキストの領域を返します。
-        */
+       /*
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
             rect.width = this.width;
@@ -97,9 +94,9 @@
             rect.x = (-this.width / 2);
             rect.y = (-this.height / 2);
 
-            
             return rect;
         }
+        */
         /**
         頂点の幅を返します。
         */
@@ -121,8 +118,14 @@
         }
 
         protected updateSurface() {
-            this.svgRectangle.x.baseVal.value = -this.width / 2;
-            this.svgRectangle.y.baseVal.value = -this.height / 2;
+            const virtualRegion = this.getVirtualRegion();
+            this.svgRectangle.x.baseVal.value = -virtualRegion.width / 2;
+            this.svgRectangle.y.baseVal.value = -virtualRegion.height / 2;
+            //this.width = virtualRegion.width;
+            //this.height = virtualRegion.height;
+
+            //this.svgRectangle.x.baseVal.value = -this.width / 2;
+            //this.svgRectangle.y.baseVal.value = -this.height / 2;
 
             //this._observer.disconnect();
             this.hasConnectedObserverFunction = false;
@@ -192,5 +195,6 @@
         public get shape(): VBAShapeType {
             return VBAShapeType.Rectangle;
         }
+        
     }
 //}

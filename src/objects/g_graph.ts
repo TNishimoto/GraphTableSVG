@@ -39,10 +39,35 @@ import { GTable } from "./g_table"
 */
 export class GGraph extends GObject {
 
-    constructor(box: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
+    constructor(box: SVGElement | string, option: GOptions.GGraphAttributes = {}) {
         super(box, option)
         if (this.type == ShapeObjectType.Graph) this.firstFunctionAfterInitialized();
+        this.setOptionInGObject(option)
         //this.svgGroup.addEventListener(AttributeNames.objectCreatedEventName, this.objectCreatedFunction);
+    }
+    protected setOptionInGGraph(option: GOptions.GGraphAttributes){
+        if (option.isLatexMode == undefined) option.isLatexMode = false;
+        if (option.direction !== undefined) {
+            this.direction = option.direction;
+        }
+
+        if (option.relocateStyle !== undefined) {
+            this.relocateStyle = option.relocateStyle;
+        } else {
+            this.relocateStyle = "standard"
+        }
+
+        //this.x = 200;
+        //this.y = 200;
+        /*
+        if (option.x != undefined) SVGGExtension.setX(this.svgGroup,option.x);
+        if (option.y != undefined) SVGGExtension.setY(this.svgGroup,option.y);
+        */
+    }
+    
+    public setOption(option: GOptions.GGraphAttributes, superFlag : boolean = true){
+        if(superFlag) this.setOptionInGObject(option);
+        this.setOptionInGGraph(option);
     }
     public get graphAllocateFunction() : GOptions.GraphAllocateFunction | undefined{
         const svg = this.svgGroup;
@@ -328,16 +353,16 @@ export class GGraph extends GObject {
     }
 
     public build(logicGraph: LogicGraph | LogicTree ) {
-        const option = logicGraph instanceof LogicTree ? logicGraph.graphOption : logicGraph.graphOption;
-        if (option.isLatexMode == undefined) option.isLatexMode = false;
+        const option = logicGraph.graphOption;
+        this.setOption(option, true);
+        //if (option.isLatexMode == undefined) option.isLatexMode = false;
         this.clear();
         const svgsvg = SVG.getSVGSVG(this.svgGroup);
-        if (option.direction !== undefined) {
-            this.direction = option.direction;
-        }
-        console.log(logicGraph);
+        //if (option.direction !== undefined) {
+        //    this.direction = option.direction;
+       // }
 
-
+        
 
         if (logicGraph instanceof LogicGraph) {
             const dic: Map<number, GVertex> = new Map();
@@ -398,9 +423,7 @@ export class GGraph extends GObject {
                 throw Error("error")
             }
         }
-        console.log("test");
-        console.log(this.roots);
-
+        /*
         if (option.relocateStyle !== undefined) {
             this.relocateStyle = option.relocateStyle;
         } else {
@@ -412,6 +435,7 @@ export class GGraph extends GObject {
 
         if (option.x != undefined) SVGGExtension.setX(this.svgGroup,option.x);
         if (option.y != undefined) SVGGExtension.setY(this.svgGroup,option.y);
+        */
 
         this.relocate();
 
@@ -602,7 +626,7 @@ export class GGraph extends GObject {
     public static createVertex(parent: SVGElement | string | GObject, type: "g-circle", option?: GOptions.GTextBoxAttributes): GCircle
     public static createVertex(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GOptions.GTextBoxAttributes): GArrowCallout
     */
-    public static createVertex(parent: SVGElement | string | GObject, type: VertexObjectType, option: any = {}): GVertex {
+    private static getParent(parent: SVGElement | string | GObject) : SVGElement{
         let _parent: SVGElement;
         if (parent instanceof GObject) {
             _parent = parent.svgGroup;
@@ -611,6 +635,11 @@ export class GGraph extends GObject {
         } else {
             _parent = <any>document.getElementById(parent);
         }
+        return _parent;
+
+    }
+    public static createVertex(parent: SVGElement | string | GObject, type: VertexObjectType, option: any = {}): GVertex {
+        const _parent: SVGElement = GGraph.getParent(parent);
 
         switch (type) {
             case ShapeObjectType.Callout: return new GCallout(_parent, option);
@@ -624,14 +653,7 @@ export class GGraph extends GObject {
         throw Error("error");
     }
     public static createVertexTable(parent: SVGElement | string | GObject, obj : LogicTable): GVertex {
-        let _parent: SVGElement;
-        if (parent instanceof GObject) {
-            _parent = parent.svgGroup;
-        } else if (parent instanceof SVGElement) {
-            _parent = parent;
-        } else {
-            _parent = <any>document.getElementById(parent);
-        }
+        const _parent: SVGElement = GGraph.getParent(parent);
 
         const table = new GTable(_parent);
         table.buildFromLogicTable(obj);
@@ -639,14 +661,7 @@ export class GGraph extends GObject {
     }
 
     public static createEdge(parent: SVGElement | string | GObject, option: any = {}): GEdge {
-        let _parent: SVGElement;
-        if (parent instanceof GObject) {
-            _parent = parent.svgGroup;
-        } else if (parent instanceof SVGElement) {
-            _parent = parent;
-        } else {
-            _parent = <any>document.getElementById(parent);
-        }
+        const _parent: SVGElement = GGraph.getParent(parent);
         return new GEdge(_parent, option);
 
 

@@ -22,6 +22,7 @@ import * as SVGGExtension from "../interfaces/svg_g_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { GVertex } from "./g_vertex";
 import {CenterPosition, UpperLeftPosition} from "../common/vline"
+import { UndefinedError } from "../common/exceptions";
 
 //namespace GraphTableSVG {
 
@@ -31,7 +32,7 @@ export type _GTableOption = {
     columnCount?: number,
     rowHeight?: number,
     columnWidth?: number,
-    table?: LogicTable
+    //table?: LogicTable
     
     columnWidths?: (number | null)[];
     rowHeights?: (number | null)[];
@@ -50,9 +51,9 @@ export class GTable extends GVertex {
      */
     constructor(svgbox: SVGElement,
         option: GTableOption = {}) {
+
         super(svgbox, option)
         CSS.setGraphTableCSS();
-
         this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this._svgRowBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this._svgRowBorderGroup.setAttribute("name", "rowBorderGroup");
@@ -68,24 +69,11 @@ export class GTable extends GVertex {
         this.updateAttributes = [];
         this.isConstructing = true;
         this.firstSetSize();
+        this.setSize(1,1)
 
+        /*
         if (option.table === undefined) {
 
-            if (option.rowCount == undefined) option.rowCount = 5;
-            if (option.columnCount == undefined) option.columnCount = 5;
-            this.setSize(option.columnCount, option.rowCount);
-
-            if (option.rowHeight != undefined) {
-                this.rows.forEach((v) => v.height = <number>option.rowHeight);
-            }
-            if (option.columnWidth != undefined) {
-                this.columns.forEach((v) => v.width = <number>option.columnWidth);
-            }
-            for (let y = 0; y < this.rowCount; y++) {
-                for (let x = 0; x < this.columnCount; x++) {
-                    this.updateCellByLogicCell(null, x, y);
-                }
-            }
             //this.update();
 
         } else {
@@ -101,15 +89,45 @@ export class GTable extends GVertex {
             this.isTextObserved = true;
 
         }
-
+        */
         //if (option.cx !== undefined) this.cx = option.cx;
         //if (option.cy !== undefined) this.cy = option.cy;
+        this.setOptionInGTable(option)
         this.isConstructing = false;
 
         //this.update();
         if (this.type == ShapeObjectType.Table) this.firstFunctionAfterInitialized();
 
     }
+    private setOptionInGTable(option: GTableOption) : void{
+        //if (option.rowCount == undefined) option.rowCount = 5;
+        //if (option.columnCount == undefined) option.columnCount = 5;
+        const columnCount = option.columnCount !== undefined ? option.columnCount : 5;
+        const rowCount = option.rowCount !== undefined ? option.rowCount : 5;
+        this.setSize(columnCount , rowCount);
+
+        if (option.rowHeight !== undefined) {
+            this.rows.forEach((v) => v.height = <number>option.rowHeight);
+        }
+        if (option.columnWidth !== undefined) {
+            this.columns.forEach((v) => v.width = <number>option.columnWidth);
+        }
+        if(this.columns === undefined) throw new UndefinedError();
+
+        /*
+        for (let y = 0; y < this.rowCount; y++) {
+            for (let x = 0; x < this.columnCount; x++) {
+                this.updateCellByLogicCell(null, x, y);
+            }
+        }
+        */
+
+    }
+    public setOption(option: GTableOption, superFlag : boolean = true){
+        if(superFlag) this.setOptionInGObject(option);
+        this.setOptionInGTable(option);
+    }
+
     private _isNoneMode: boolean = false;
     get isNoneMode(): boolean {
         return this._isNoneMode;
@@ -123,12 +141,13 @@ export class GTable extends GVertex {
         removeAttributes: boolean = false, output: GTableOption = {}): GTableOption {
         //const widthsStr = e.getPropertyStyleValue("--widths");
 
-        const table = LogicTable.constructLogicTable(e);
+        //const table = LogicTable.constructLogicTable(e);
         GObject.constructAttributes(e, removeAttributes, output);
-
+        /*
         if (table != null) {
             output.table = table;
         }
+        */
 
         //if (output.x !== undefined) output.table!.x = output.x;
         //if (output.y !== undefined) output.table!.y = output.y;
@@ -184,16 +203,24 @@ export class GTable extends GVertex {
 
     private isConstructing = false;
     get width(): number {
-        let width = 0;
-        this.columns.forEach((v) => width += v.width);
-        return width;
+        if(this.columns ===undefined){
+            return 0;
+        }else{
+            let width = 0;
+            this.columns.forEach((v) => width += v.width);
+            return width;    
+        }
     }
     set width(value: number) {
     }
     get height(): number {
-        let height = 0;
-        this.rows.forEach((v) => height += v.height);
-        return height;
+        if(this.rows === undefined){
+            return 0;
+        }else{
+            let height = 0;
+            this.rows.forEach((v) => height += v.height);
+            return height;    
+        }
 
     }
     set height(value: number) {
@@ -486,37 +513,12 @@ export class GTable extends GVertex {
                 //CSS.setCSSClass(cell.svgGroup, cellInfo.cellClass);
                 GOptions.setClassAndStyle(cell.svgGroup, cellInfo.groupOption.class, cellInfo.groupOption.style);
                 GOptions.setClassAndStyle(cell.svgBackground, cellInfo.backgroundOption.class, cellInfo.backgroundOption.style);
-                /*
-                if (cellInfo.backgroundClass != null) {
-                    CSS.setCSSClass(cell.svgBackground, cellInfo.backgroundClass);
-                }
-                */
-                /*
-                if (cellInfo.textClass != null) {
-                    CSS.setCSSClass(cell.svgText, cellInfo.textClass);
-                }
-                */
+
                 createTextElementFromLogicCell(cellInfo, cell.svgText);
                 GOptions.setClassAndStyle(cell.svgTopBorder, cellInfo.topBorderOption.class, cellInfo.topBorderOption.style);
                 GOptions.setClassAndStyle(cell.svgLeftBorder, cellInfo.leftBorderOption.class, cellInfo.leftBorderOption.style);
                 GOptions.setClassAndStyle(cell.svgRightBorder, cellInfo.rightBorderOption.class, cellInfo.rightBorderOption.style);
                 GOptions.setClassAndStyle(cell.svgBottomBorder, cellInfo.bottomBorderOption.class, cellInfo.bottomBorderOption.style);
-                /*
-                //cellInfo.createTextElement(cell.svgText);
-                //if (cellInfo.topBorderClass !== undefined) {
-                    CSS.setCSSClass(cell.svgTopBorder, cellInfo.topBorderOption);
-                //}
-                if (cellInfo.leftBorderClass !== undefined) {
-                    CSS.setCSSClass(cell.svgLeftBorder, cellInfo.leftBorderClass);
-
-                }
-                if (cellInfo.rightBorderClass !== undefined) {
-                    CSS.setCSSClass(cell.svgRightBorder, cellInfo.rightBorderClass);
-                }
-                if (cellInfo.bottomBorderClass !== undefined) {
-                    CSS.setCSSClass(cell.svgBottomBorder, cellInfo.bottomBorderClass);
-                }
-                */
 
             }
         }
@@ -528,9 +530,13 @@ export class GTable extends GVertex {
     public buildFromLogicTable(logicTable: LogicTable) {
 
         //if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
-        GOptions.setClassAndStyle(this.svgGroup, logicTable.option.class, logicTable.option.style);
-        this.setSize(logicTable.columnCount, logicTable.rowCount);
+        logicTable.option.columnCount = logicTable.columnCount;
+        logicTable.option.rowCount = logicTable.rowCount;
+        this.setOption(logicTable.option, true);
+        //this.setSize(logicTable.columnCount, logicTable.rowCount);
 
+        //GOptions.setClassAndStyle(this.svgGroup, logicTable.option.class, logicTable.option.style);
+        /*
         if(logicTable.option.position !== undefined){
             if(logicTable.option.position.type == "center"){
                 this.cx = logicTable.option.position.x;
@@ -540,6 +546,7 @@ export class GTable extends GVertex {
                 this.y = logicTable.option.position.y;
             }
         }
+        */
 
         //if (table.x != null) this.cx = table.x;
         //if (table.y != null) this.cy = table.y;
@@ -552,6 +559,7 @@ export class GTable extends GVertex {
         }
 
         //this.fitSizeToOriginalCells();
+        /*
         if(logicTable.option.rowHeights !== undefined){
             for (let y = 0; y < this.rowCount; y++) {
                 const h = logicTable.option.rowHeights[y];
@@ -567,6 +575,7 @@ export class GTable extends GVertex {
             }
     
         }
+        */
 
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {

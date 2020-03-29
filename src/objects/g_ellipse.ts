@@ -10,6 +10,7 @@
     import * as CSS from "../html/css"
     import * as GOptions  from "./g_options"
     import * as ElementExtension from "../interfaces/element_extension"
+    import * as SVGTextExtension from "../interfaces/svg_text_extension"
 
 
     export class GAbstractEllipseCircle extends GTextBox {
@@ -38,14 +39,19 @@
         /**
         テキストの領域を返します。
         */
+       /*
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
+            const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
+    
+            //const rect = new Rectangle();
             rect.width = this.width;
             rect.height = this.height;
             rect.x = -this.rx;
             rect.y = -this.ry;
             return rect;
         }
+        */
     
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
     

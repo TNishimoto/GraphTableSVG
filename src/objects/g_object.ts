@@ -1,7 +1,7 @@
 //namespace GraphTableSVG {
 import * as CommonFunctions from "../common/common_functions"
 import * as GUIObserver from "../html/gui_observer"
-import { Rectangle } from "../common/vline"
+import { Rectangle, PositionType } from "../common/vline"
 import { CoodinateType } from "../common/enums"
 
 import * as SVG from "../interfaces/svg"
@@ -38,14 +38,9 @@ export class GObject {
         if (parentElement instanceof SVGSVGElement && !GUIObserver.isObserved(parentElement)) {
             GUIObserver.observeSVGSVG(parentElement);
         }
-        /*
-        if(!HTMLFunctions.isShow(parentElement)){
-            throw Error("The parent element of the instance must be displayed when the instance is created");
-        }
-        */
-
-
         this._svgGroup = SVG.createGroup(parentElement);
+
+        /*
         GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
         if(option.attributes !== undefined){
             Object.keys(option.attributes).forEach((v) =>{
@@ -53,27 +48,7 @@ export class GObject {
                 this._svgGroup.setAttribute(v, value);
             })
         }
-        /*
-        if (typeof (option.class) == "string") {
-            this._svgGroup.setAttribute("class", option.class);
-        } else if (typeof (option.class) == "object") {
-            const newClassName = CSS.getOrCreateClassName(option.class);
-            this._svgGroup.setAttribute("class", newClassName);
-        }
-        else if (this.defaultClassName !== undefined) {
-            this._svgGroup.setAttribute("class", this.defaultClassName);
-        }
-        if (option.style !== undefined) {
-            if (typeof (option.style) == "string") {
-                this._svgGroup.setAttribute("style", option.style);
-            } else if (typeof (option.style) == "object") {
-                const newStyleName = CSS.getRuleContentString(CSS.toRuleMap(option.style));
-                this._svgGroup.setAttribute("class", newStyleName);
-            }
-        }
         */
-
-        //this.setClassNameOfSVGGroup();
 
         GObject.setObjectFromObjectID(this);
 
@@ -83,17 +58,7 @@ export class GObject {
 
         this.svgGroup.setAttribute(AttributeNames.GroupAttribute, this.type);
         const _option = this.initializeOption(option);
-        this.createSurface(parentElement, _option);
-        if (typeof _option.id !== "undefined") this.svgGroup.id = _option.id;
-        //if(_option.surfaceClass !== undefined && this.svgSurface !== null) this.svgSurface.setAttribute("class", _option.surfaceClass);
-
-        if (_option.width !== undefined) {
-            this.width = _option.width;
-        }
-        if (_option.height !== undefined) {
-            this.height = _option.height;
-        }
-
+        this.createSurface(parentElement, option);
 
         this._observer = new MutationObserver(this.observerFunc);
         this._observerOption = { attributes: true, childList: true, subtree: true };
@@ -102,14 +67,10 @@ export class GObject {
         this.dispatchObjectCreatedEvent();
         this.addResizeEvent();
 
-        this.__x = option.x;
-        this.__y = option.y;
-        this.__cx = option.cx;
-        this.__cy = option.cy;
 
         const __svg = <any>this.svgGroup
         __svg.operator = this;
-
+        this.setOptionInGObject(option);
 
         /*
         if (_option.x !== undefined) this.fixedX = _option.x;
@@ -117,6 +78,67 @@ export class GObject {
         */
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
 
+    }
+    protected setOptionInGObject(option: GOptions.GObjectAttributes) : void{
+        GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
+        if(option.attributes !== undefined){
+            Object.keys(option.attributes).forEach((v) =>{
+                const value : string = option.attributes![v];
+                this._svgGroup.setAttribute(v, value);
+            })
+        }
+        if (typeof option.id !== "undefined") this.svgGroup.id = option.id;
+        //if(_option.surfaceClass !== undefined && this.svgSurface !== null) this.svgSurface.setAttribute("class", _option.surfaceClass);
+
+        this.width = option.width !== undefined ? option.width : 25;
+        this.height = option.height !== undefined ? option.height : 25;
+
+        if(option.position !== undefined){
+            if(option.position.type == "center"){
+                this.positionType = PositionType.Center;
+                this.cx = option.position.x;
+                this.cy = option.position.y;
+            }else{
+                /*
+                this.positionType = PositionType.UpperLeft;
+                this.x = option.position.x;
+                this.y = option.position.y;
+                */
+            }
+        }else{
+            this.positionType = PositionType.Center;
+            this.__cx = 0;
+            this.__cy = 0;
+    
+        }
+
+        /*
+        this.__x = option.x;
+        this.__y = option.y;
+        this.__cx = option.cx !== undefined ? option.cx : 0;
+        this.__cy = option.cy !== undefined ? option.cy : 0;
+        */
+    }
+    public setOption(option: GOptions.GObjectAttributes, superFlag : boolean = true){
+        this.setOptionInGObject(option);
+    }
+    initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
+        const _option = { ...option };
+        if (this.svgSurface != null && this.svgSurface.className != null) {
+            const width = ElementExtension.getPropertyStyleNumberValue(this.svgSurface, StyleNames.defaultWidth, null);
+            const height = ElementExtension.getPropertyStyleNumberValue(this.svgSurface, StyleNames.defaultHeight, null);
+            if (width != null) _option.width = width;
+            if (height != null) _option.height = height;
+        }
+        if (_option.width === undefined) _option.width = 25;
+        if (_option.height === undefined) _option.height = 25;
+        /*
+        if (_option.cx === undefined) _option.cx = 0;
+        if (_option.cy === undefined) _option.cy = 0;
+        */
+        if (_option.surfaceClass === undefined) _option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
+        
+        return _option;
     }
     /*
     public get shape() : ShapeObjectType {
@@ -212,21 +234,7 @@ export class GObject {
     protected resizeUpdate() {
         this.update();
     }
-    initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
-        const _option = { ...option };
-        if (this.svgSurface != null && this.svgSurface.className != null) {
-            const width = ElementExtension.getPropertyStyleNumberValue(this.svgSurface, StyleNames.defaultWidth, null);
-            const height = ElementExtension.getPropertyStyleNumberValue(this.svgSurface, StyleNames.defaultHeight, null);
-            if (width != null) _option.width = width;
-            if (height != null) _option.height = height;
-        }
-        if (_option.width === undefined) _option.width = 25;
-        if (_option.height === undefined) _option.height = 25;
-        if (_option.cx === undefined) _option.cx = 0;
-        if (_option.cy === undefined) _option.cy = 0;
-        if (_option.surfaceClass === undefined) _option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
-        return _option;
-    }
+    
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GOptions.GObjectAttributes = {}): GOptions.GObjectAttributes {
         output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, "class");
@@ -236,12 +244,20 @@ export class GObject {
         if (e.hasAttribute("style")) output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, "style");
         output.surfaceStyle = ElementExtension.gtGetAttributeStringWithUndefined(e, "surface:style");
 
-        output.cx = ElementExtension.gtGetAttributeNumberWithUndefined(e, "cx");
-        output.cy = ElementExtension.gtGetAttributeNumberWithUndefined(e, "cy");
+        const cx = ElementExtension.gtGetAttributeNumberWithUndefined(e, "cx");
+        const cy = ElementExtension.gtGetAttributeNumberWithUndefined(e, "cy");
+        const x = ElementExtension.gtGetAttributeNumberWithUndefined(e, "x");
+        const y = ElementExtension.gtGetAttributeNumberWithUndefined(e, "y");
+        if(cx !== undefined || cy !== undefined){
+            output.position = { type : "center", x : cx !== undefined ? cx : 0, y : cy !== undefined ? cy : 0}
+        }else if(x !== undefined || y !== undefined){
+            output.position = { type : "upper-left", x : x !== undefined ? x : 0, y : y !== undefined ? y : 0}
+        }else{
+            output.position = { type : "center", x : 0, y : 0}
+        }
+        //const cx = 
         output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, "width");
         output.height = ElementExtension.gtGetAttributeNumberWithUndefined(e, "height");
-        output.x = ElementExtension.gtGetAttributeNumberWithUndefined(e, "x");
-        output.y = ElementExtension.gtGetAttributeNumberWithUndefined(e, "y");
 
 
         if (removeAttributes) {
@@ -299,16 +315,19 @@ export class GObject {
     }
     public set cx(value: number) {
         if(this.coordinateType == CoodinateType.Group00){
-            throw Error("This object does not support set cx!" + this.type);
+            //throw Error("This object does not support set cx!" + this.type);
+        }
+        else{
+            if (this.isCenterBased) {
+                if (SVGGExtension.getX(this.svgGroup) != value) {
+                    SVGGExtension.setX(this.svgGroup,value);
+                }
+            } else {
+                SVGGExtension.setX(this.svgGroup,value - (this.width / 2));
+            }
+    
         }
 
-        if (this.isCenterBased) {
-            if (SVGGExtension.getX(this.svgGroup) != value) {
-                SVGGExtension.setX(this.svgGroup,value);
-            }
-        } else {
-            SVGGExtension.setX(this.svgGroup,value - (this.width / 2));
-        }
 
     }
     /**
@@ -324,17 +343,88 @@ export class GObject {
     }
     public set cy(value: number) {
         if(this.coordinateType == CoodinateType.Group00){
-            throw Error("This object does not support set cy!");
-        }
-        if (this.isCenterBased) {
-            if (SVGGExtension.getY(this.svgGroup) != value) {
-                SVGGExtension.setY(this.svgGroup,value);
-            }
-        } else {
-            SVGGExtension.setY(this.svgGroup,value - (this.height / 2));
+            //throw Error("This object does not support set cy!");
+        }else{
+            if (this.isCenterBased) {
+                if (SVGGExtension.getY(this.svgGroup) != value) {
+                    SVGGExtension.setY(this.svgGroup,value);
+                }
+            } else {
+                SVGGExtension.setY(this.svgGroup,value - (this.height / 2));
+            }    
         }
 
     }
+    public get upperHeight() : number{
+        return (this.height /2);
+    }
+    public get leftWidth() : number{
+        return (this.width /2);
+    }
+
+    public get x(): number {
+        if (this.isCenterBased) {
+            return SVGGExtension.getX(this.svgGroup) + this.getVirtualRegion().x;
+        } else {
+            return SVGGExtension.getX(this.svgGroup);
+        }
+    }
+    public get y(): number {
+        if (this.isCenterBased) {
+            return SVGGExtension.getY(this.svgGroup) + this.getVirtualRegion().y;
+        } else {
+            return SVGGExtension.getY(this.svgGroup);
+        }
+    }
+    public set x(v: number) {
+        if(this.coordinateType == CoodinateType.Group00){
+            throw Error("This object does not support set x!");
+        }else{
+            if (this.isCenterBased) {
+                SVGGExtension.setX(this.svgGroup, v  - this.getVirtualRegion().x);
+            } else {
+                SVGGExtension.setX(this.svgGroup, v);
+            }    
+        }
+
+    }
+    public set virtualX(v: number) {
+        if(this.coordinateType == CoodinateType.Group00){
+            throw Error("This object does not support set x!");
+        }else{
+            if (this.isCenterBased) {
+                SVGGExtension.setX(this.svgGroup,v - this.getVirtualRegion().y );
+            } else {
+                SVGGExtension.setX(this.svgGroup, v);
+            }    
+        }
+
+    }
+
+    public set y(v: number) {
+        if(this.coordinateType == CoodinateType.Group00){
+            throw Error("This object does not support set y!");
+        }else{
+            if (this.isCenterBased) {
+                SVGGExtension.setY(this.svgGroup, v + (this.height / 2));
+            } else {
+                SVGGExtension.setY(this.svgGroup, v);
+            }    
+        }
+    }
+    public set virtualY(v: number) {
+        if(this.coordinateType == CoodinateType.Group00){
+            throw Error("This object does not support set y!");
+        }else{
+            if (this.isCenterBased) {
+                SVGGExtension.setY(this.svgGroup, v + (this.getVirtualHeight() / 2));
+            } else {
+                SVGGExtension.setY(this.svgGroup, v);
+            }    
+        }
+
+    }
+
     /**
     頂点の幅を返します。
     */
@@ -388,43 +478,22 @@ export class GObject {
     public get isCenterBased() {
         return true;
     }
-    public get x(): number {
-        if (this.isCenterBased) {
-            return SVGGExtension.getX(this.svgGroup) - (this.width / 2);
-        } else {
-            return SVGGExtension.getX(this.svgGroup);
-        }
-    }
-    public get y(): number {
-        if (this.isCenterBased) {
-            return this.cy - (this.height / 2);
-        } else {
-            return SVGGExtension.getY(this.svgGroup);
-        }
-    }
-    public set x(v: number) {
-        if(this.coordinateType == CoodinateType.Group00){
-            throw Error("This object does not support set x!");
+    public get positionType() : PositionType {
+        const str = this.svgGroup.getAttribute("data-position-type");
+        if(str !== undefined){
+            if(str == PositionType.Center){
+                return PositionType.Center;
+            }else{
+                return PositionType.UpperLeft;
+            }
         }else{
-            if (this.isCenterBased) {
-                SVGGExtension.setX(this.svgGroup,v + (this.width / 2));
-            } else {
-                SVGGExtension.setX(this.svgGroup, v);
-            }    
+            return PositionType.Center;
         }
+    }
+    public set positionType(value : PositionType) {
+        this.svgGroup.setAttribute("data-position-type", value);
+    }
 
-    }
-    public set y(v: number) {
-        if(this.coordinateType == CoodinateType.Group00){
-            throw Error("This object does not support set y!");
-        }else{
-            if (this.isCenterBased) {
-                SVGGExtension.setY(this.svgGroup, v + (this.height / 2));
-            } else {
-                SVGGExtension.setY(this.svgGroup, v);
-            }    
-        }
-    }
 
     public get isProhibitionOutOfRange(): boolean {
         const p = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.prohibitionOutOfRange, "true");

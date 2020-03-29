@@ -7,7 +7,7 @@ import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
 import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../common/enums";
-import { Rectangle } from "../common/vline"
+import { Rectangle, PositionType } from "../common/vline"
 import * as HTMLFunctions from "../html/html_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { GObject } from "./g_object"
@@ -15,11 +15,12 @@ import { GVertex } from "./g_vertex"
 
 import * as GOptions from "./g_options"
 import { AutoSizeShapeToFitText } from "../common/enums"
-import {setCpmoutedDashArray} from "../html/enum_extension";
+import { setCpmoutedDashArray } from "../html/enum_extension";
 
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGElementExtension from "../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
+import { UndefinedError } from "../common/exceptions"
 
 //namespace GraphTableSVG {
 
@@ -33,7 +34,7 @@ export class GTextBox extends GVertex {
     private _textObserver: MutationObserver;
     private static updateTextAttributes = ["style"]
 
-    protected _isSpecialTextBox: boolean = false;
+    //protected _isSpecialTextBox: boolean = false;
 
     protected _minimumWidth: number = 10;
     protected _minimumHeight: number = 10;
@@ -50,37 +51,78 @@ export class GTextBox extends GVertex {
         */
 
         const _option = <GOptions.GTextBoxAttributes>this.initializeOption(option);
-        const textClass = CSS.createCSSClass(_option.textClass);
-        const styleClass = CSS.createCSSClass(_option.textStyle);
+        //const textClass = CSS.createCSSClass(_option.textClass);
+        //const styleClass = CSS.createCSSClass(_option.textStyle);
 
-        this._svgText = GTextBox.createSVGText(textClass, styleClass);
+        //this._svgText = GTextBox.createSVGText(textClass, styleClass);
+        this._svgText = GTextBox.createSVGText(undefined, undefined);
+
         this.svgGroup.appendChild(this.svgText);
         this._textObserver = new MutationObserver(this.textObserverFunc);
         const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
         this._textObserver.observe(this.svgText, option2);
 
-        if (typeof _option.text == "string") {
-            SVGTextExtension.setTextContent(this.svgText, _option.text);
-        } else if (Array.isArray(_option.text)) {
-            SVGTextBox.constructSVGTextByHTMLElements(this.svgText, _option.text, false);
+
+
+        //if(_option.x !== undefined) this.x = _option.x;
+        //if(_option.y !== undefined) this.y = _option.y;
+        this.setOptionInGTextBox(option)
+
+        if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
+        this.svgSurface!.onclick = (e) => {
+
+            const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
+
+            /*
+            const textRect2 = SVGTextExtension.getSize(this.svgText);
+
+            console.log(textRect2);
+            */
+
+        }
+    }
+    protected setOptionInGTextBox(option: GOptions.GTextBoxAttributes) {
+        const textClass = CSS.createCSSClass(option.textClass);
+        const styleClass = CSS.createCSSClass(option.textStyle);
+        GOptions.setClassAndStyle(this.svgText, textClass, styleClass);
+        const _x = this.x;
+        const _y = this.y;
+
+        if (typeof option.text == "string") {
+
+            SVGTextExtension.setTextContent(this.svgText, option.text);
+
+
+        } else if (Array.isArray(option.text)) {
+            SVGTextBox.constructSVGTextByHTMLElements(this.svgText, option.text, false);
+            SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
+
+
         } else {
 
         }
+        const region = this.getVirtualRegion();
+
+
+        if (this.positionType == PositionType.UpperLeft) {
+            this.virtualX = _x;
+            this.virtualY = _y;
+        }
 
         const b = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.autoSizeShapeToFitText);
-
-        if (b === undefined && typeof (_option.style) == "object") {
-            const style: GOptions.GTextBoxCSS = _option.style;
+        if (b === undefined && typeof (option.style) == "object") {
+            const style: GOptions.GTextBoxCSS = option.style;
             if (style.autoSizeShapeToFitText !== undefined) {
                 this.isAutoSizeShapeToFitText = style.autoSizeShapeToFitText;
             }
         }
 
-        //if(_option.x !== undefined) this.x = _option.x;
-        //if(_option.y !== undefined) this.y = _option.y;
-        if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
     }
 
+    public setOption(option: GOptions.GTextBoxAttributes, superFlag: boolean = true) {
+        if (superFlag) this.setOptionInGObject(option);
+        this.setOptionInGTextBox(option);
+    }
     initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
         let b = false;
         if (option.width !== undefined || option.height !== undefined) {
@@ -121,19 +163,23 @@ export class GTextBox extends GVertex {
         }
 
         //_svgText.style.textAnchor = "middle";
-        if (className == null) {
+        if(className === undefined){
+            _svgText.setAttribute("class", DefaultClassNames.defaultTextClass);
+        }
+        else if (className == null) {
+
+            /*
             if (_svgText.style.fill == null || _svgText.style.fill == "") _svgText.style.fill = "black";
             if (_svgText.style.fontSize == null || _svgText.style.fontSize == "") _svgText.style.fontSize = "14px";
             if (_svgText.style.fontWeight == null || _svgText.style.fontWeight == "") _svgText.style.fontWeight = "bold";
             if (_svgText.style.fontFamily == null || _svgText.style.fontFamily == "") _svgText.style.fontFamily = 'Times New Roman';
-            if (_svgText.style.getPropertyValue(StyleNames.marginLeft) == "") SVGTextExtension.setMarginLeft(_svgText,10);
-            if (_svgText.style.getPropertyValue(StyleNames.marginRight) == "") SVGTextExtension.setMarginRight(_svgText,10);
-            if (_svgText.style.getPropertyValue(StyleNames.marginTop) == "") SVGTextExtension.setMarginTop(_svgText,10);
-            if (_svgText.style.getPropertyValue(StyleNames.marginBottom) == "") SVGTextExtension.setMarginBottom(_svgText,10);
+            if (_svgText.style.getPropertyValue(StyleNames.marginLeft) == "") SVGTextExtension.setMarginLeft(_svgText, 10);
+            if (_svgText.style.getPropertyValue(StyleNames.marginRight) == "") SVGTextExtension.setMarginRight(_svgText, 10);
+            if (_svgText.style.getPropertyValue(StyleNames.marginTop) == "") SVGTextExtension.setMarginTop(_svgText, 10);
+            if (_svgText.style.getPropertyValue(StyleNames.marginBottom) == "") SVGTextExtension.setMarginBottom(_svgText, 10);
+            */
         } else {
-            if (className != undefined) {
-                _svgText.setAttribute("class", className);
-            }
+            _svgText.setAttribute("class", className);
 
             //_svgText.className = className;
         }
@@ -263,7 +309,13 @@ export class GTextBox extends GVertex {
             throw new TypeError("svgText is null");
         }
         SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
+        const region = this.getVirtualRegion();
+        //this.cx = region.x + (region.width/2);
+        //this.cy = region.y + (region.height/2);
 
+        this.width = region.width;
+        this.height = region.height;
+        /*
         if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
             this.updateToFitText(true);
             this.updateToFitText(false);
@@ -281,6 +333,7 @@ export class GTextBox extends GVertex {
             }
             //this.innerRectangle
         }
+        */
         this.updateSurface();
 
 
@@ -297,9 +350,13 @@ export class GTextBox extends GVertex {
         }
         */
 
-        if (!this._isSpecialTextBox) {
-            SVGTextExtension.gtSetXY(this.svgText, this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
-        }
+        //if (!this._isSpecialTextBox) {
+
+        const textRect = this.innerRectangle;
+        //SVGTextExtension.getVirtualRegion(this.svgText);
+        //const newTextRect = new Rectangle(-textRect.width / 2, -textRect.height / 2, textRect.width, textRect.height)
+        SVGTextExtension.gtSetXY(this.svgText, textRect, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+        // }
 
         //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
         this._isUpdating = false;
@@ -319,6 +376,7 @@ export class GTextBox extends GVertex {
         //this._observer.observe(this.svgGroup, this._observerOption);
         this.hasConnectedObserverFunction = true;
     }
+    /*
     protected updateToFitText(isWidth: boolean) {
         //this.isFixTextSize = true;
         //const box = this.svgText.getBBox();
@@ -333,6 +391,7 @@ export class GTextBox extends GVertex {
             this.height = textHeight + this.marginPaddingTop + this.marginPaddingBottom;
         }
     }
+    */
     get marginPaddingTop() {
         return SVGTextExtension.getMarginTop(this.svgText) + SVGElementExtension.getPaddingTop(this.svgGroup);
     }
@@ -350,13 +409,13 @@ export class GTextBox extends GVertex {
         return SVGElementExtension.getPaddingTop(this.svgGroup);
     }
     set paddingTop(value: number) {
-        SVGElementExtension.setPaddingTop(this.svgGroup,value);
+        SVGElementExtension.setPaddingTop(this.svgGroup, value);
     }
     get paddingLeft(): number {
         return SVGElementExtension.getPaddingLeft(this.svgGroup);
     }
     set paddingLeft(value: number) {
-        SVGElementExtension.setPaddingLeft(this.svgGroup,value);
+        SVGElementExtension.setPaddingLeft(this.svgGroup, value);
     }
     get paddingRight(): number {
         return SVGElementExtension.getPaddingRight(this.svgGroup);
@@ -375,38 +434,32 @@ export class GTextBox extends GVertex {
         return SVGTextExtension.getMarginTop(this.svgText);
     }
     set marginTop(value: number) {
-        SVGTextExtension.setMarginTop(this.svgText,value);
+        SVGTextExtension.setMarginTop(this.svgText, value);
     }
 
     get marginLeft(): number {
         return SVGTextExtension.getMarginLeft(this.svgText);
     }
     set marginLeft(value: number) {
-        SVGTextExtension.setMarginLeft(this.svgText,value);
+        SVGTextExtension.setMarginLeft(this.svgText, value);
     }
     get marginRight(): number {
         return SVGTextExtension.getMarginRight(this.svgText);
     }
     set marginRight(value: number) {
-        SVGTextExtension.setMarginRight(this.svgText,value);
+        SVGTextExtension.setMarginRight(this.svgText, value);
     }
     get marginBottom(): number {
         return SVGTextExtension.getMarginBottom(this.svgText);
     }
     set marginBottom(value: number) {
-        SVGTextExtension.setMarginBottom(this.svgText,value);
+        SVGTextExtension.setMarginBottom(this.svgText, value);
     }
 
 
 
-    get innerRectangle(): Rectangle {
-        const rect = new Rectangle();
-        rect.width = 0;
-        rect.height = 0;
-        rect.x = 0;
-        rect.y = 0;
-        return rect;
-    }
+
+    /*
     private get innerRectangleWithoutMargin(): Rectangle {
         const rect = this.innerRectangle;
         rect.width = rect.width - this.marginPaddingLeft - this.marginPaddingRight;
@@ -415,6 +468,7 @@ export class GTextBox extends GVertex {
         rect.y = rect.y + this.marginPaddingTop;
         return rect;
     }
+    */
 
     /*
     get marginLeft(): number {
@@ -469,7 +523,7 @@ export class GTextBox extends GVertex {
     }
     public createVBACode(id: number): string[] {
         const lines: string[] = [];
-        
+
         const backColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "fill", "gray"));
         const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgSurface!, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
 
@@ -492,9 +546,89 @@ export class GTextBox extends GVertex {
             lines.push(` obj.Adjustments.Item(${i + 1}) = ${v}`);
         })
         lines.push(`End Sub`);
-        
+
         return lines;
     }
+
+    public getVirtualWidth(): number {
+        return this.getVirtualRegion().width;
+    }
+    public getVirtualHeight(): number {
+        return this.getVirtualRegion().height;
+    }
+    
+    get innerRectangle(): Rectangle {
+        const rect = new Rectangle();
+        const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
+        //const newTextRect = new Rectangle(-textRect.width/2, -textRect.height/2, textRect.width, textRect.height)
+        rect.width = textRect.width;
+        rect.height = textRect.height;
+        rect.x = (-textRect.width / 2);
+        rect.y = (-textRect.height / 2);
+        return rect;
+    }
+    get topExtraLength(): number {
+        return this.marginPaddingTop;
+    }
+    get leftExtraLength(): number {
+        return this.marginPaddingLeft;
+    }
+    get rightExtraLength(): number {
+        return this.marginPaddingRight;
+    }
+    get bottomExtraLength(): number {
+        return this.marginPaddingBottom;
+    }
+    public get upperHeight() : number{
+        return 0 - (this.topExtraLength) + this.innerRectangle.y;
+    }
+    public get leftWidth() : number{
+        return 0 - (this.leftExtraLength) + this.innerRectangle.x;
+    }
+
+    public getVirtualRegion(): Rectangle {
+        if(this.svgText === undefined){
+            throw new UndefinedError();
+            //return new Rectangle(this.cx, this.cy, 0, 0);
+        }
+        const textRect = this.innerRectangle;
+        const textWidth = textRect.width < this._minimumWidth ? this._minimumWidth : textRect.width;
+        const textHeight = textRect.height < this._minimumHeight ? this._minimumHeight : textRect.height;
+        const width = textWidth + this.leftExtraLength + this.rightExtraLength;
+        const height = textHeight + this.topExtraLength + this.bottomExtraLength;
+
+
+        if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
+            const x = - (textWidth/2) - this.leftExtraLength;
+            const y = - (textHeight/2) - this.topExtraLength;
+            return new Rectangle(x, y, width, height);
+        } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
+            let [x, y] = [0,0]
+            let [newWidth, newHeight] = [0,0]
+
+            if(this.width < width){
+                newWidth = width;
+                x = - (textWidth/2) - this.leftExtraLength;
+            }else{
+                newWidth = this.width;
+                x = this.cx - this.leftWidth;
+            }
+            if(this.height < height){
+                newHeight = height;
+                y = - (textHeight/2) - this.topExtraLength;
+            }else{
+                newWidth = this.height;
+                x = this.cy - this.upperHeight;
+            }
+            //const newWidth = this.width < width ? width : this.width;
+            //const newHeigth = this.height < height ? height : this.height;
+            return new Rectangle(x, y, newWidth, newHeight);
+        } else {
+            return new Rectangle(- (this.width / 2), - (this.height / 2), this.width, this.height);
+            //return new Rectangle(this.x, this.y, this.width, this.height);
+        }
+    }
+
 }
 
 

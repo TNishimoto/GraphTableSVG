@@ -36,8 +36,8 @@ export class GCircle extends GAbstractEllipseCircle  {
         }
         //if (_option.width === undefined) _option.width = 25;
         //if (_option.height === undefined) _option.height = 25;
-        if (_option.cx === undefined) _option.cx = 0;
-        if (_option.cy === undefined) _option.cy = 0;
+        //if (_option.cx === undefined) _option.cx = 0;
+        //if (_option.cy === undefined) _option.cy = 0;
         if (_option.surfaceClass === undefined) _option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
         return _option;
     }

@@ -11,6 +11,7 @@
 
     import * as ElementExtension from "../interfaces/element_extension"
     import * as SVGTextExtensions from "../interfaces/svg_text_extension"
+    import * as SVGTextExtension from "../interfaces/svg_text_extension"
 
     export type _GShapeArrowCalloutAttributes = {
         arrowHeadWidth?: number,
@@ -110,6 +111,39 @@
                 this.svgGroup.setAttribute("data-direction", value.toString());
             }
         }
+        get topExtraLength(): number {
+            if(this.direction  == "up"){
+                return this.arrowHeadHeight + this.arrowNeckHeight + this.marginPaddingTop;
+            }else{
+                return this.marginPaddingTop;
+            }
+        }
+        get leftExtraLength(): number {
+            if(this.direction  == "left"){
+                return this.arrowHeadWidth + this.arrowNeckWidth + this.marginPaddingLeft;
+            }else{
+                return this.marginPaddingLeft;
+            }
+
+        }
+        get rightExtraLength(): number {
+            if(this.direction  == "right"){
+                return this.arrowHeadWidth + this.arrowNeckWidth + this.marginPaddingRight;
+            }else{
+                return this.marginPaddingRight;
+            }
+
+        }
+        get bottomExtraLength(): number {
+            if(this.direction  == "down"){
+                return this.arrowHeadHeight + this.arrowNeckHeight + this.marginPaddingBottom;
+            }else{
+                return this.marginPaddingBottom;
+            }
+
+        }
+    
+        /*
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
             if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
@@ -130,6 +164,7 @@
             if (this.direction == "left") rect.x += this.arrowNeckHeight + this.arrowHeadHeight;
             return rect;
         }
+        */
         /**
          * 矢印部分を除いた図形の高さを表します。
          */
@@ -147,7 +182,7 @@
                 return this.width - this.arrowNeckHeight - this.arrowHeadWidth;
             }
         }
-
+        /*
         protected updateToFitText() {
 
             const textRect = SVGTextExtensions.getSize(this.svgText);
@@ -160,6 +195,42 @@
                 this.height = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;
             }
         }
+        */
+       /*
+        public getVirtualRegion(): Rectangle {
+            const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
+            let _w = 0;
+            let _h = 0;
+            if (this.direction == "up" || this.direction == "down") {
+                _w = textRect.width + this.marginPaddingLeft + this.marginPaddingRight;
+                _h = textRect.height + this.marginPaddingTop + this.marginPaddingBottom + this.arrowNeckHeight + this.arrowHeadHeight;
+            } else {
+                _w = textRect.width + this.marginPaddingLeft + this.marginPaddingRight + this.arrowNeckHeight + this.arrowHeadHeight;
+                _h = textRect.height + this.marginPaddingTop + this.marginPaddingBottom;
+            }
+
+            if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
+    
+
+                const textWidth = _w < this._minimumWidth ? this._minimumWidth : _w;
+                const textHeight = _h < this._minimumHeight ? this._minimumHeight : _h;
+                const width = _w;
+                const height = _h;
+    
+                return new Rectangle(this.cx - (width / 2), this.cy - (height / 2), width, height);
+    
+            } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
+                const newWidth = this.width < _w ? _w : this.width;
+                const newHeigth = this.height < _h ? _h : this.height;
+                return new Rectangle(this.cx - (newWidth / 2), this.cy - (newHeigth / 2), newWidth, newHeigth);
+            } else {
+    
+                return new Rectangle(this.cx - (this.width / 2), this.cy - (this.height / 2), this.width, this.height);
+    
+                //return new Rectangle(this.x, this.y, this.width, this.height);
+            }
+        }
+        */
         public update() {
             super.update();
 

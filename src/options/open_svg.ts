@@ -21,6 +21,7 @@ import { GRectButton } from "../objects/g_rect_button"
 import { GCircle } from "../objects/g_circle";
 import * as GOptions from "../objects/g_options"
 import * as ElementExtension from "../interfaces/element_extension"
+import { LogicTable } from "../logics";
 
 //export namespace openSVGFunctions {
     
@@ -102,8 +103,16 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
             r = new GGraph(parent, option);
             //(<GGraph>r).relocate();
         } else if (type == ShapeObjectType.Table) {
+            const logicTable = LogicTable.constructLogicTable(e);
+
             const option = GTable.constructAttributes(e, true);
-            r = new GTable(parent, option);
+            const table =  new GTable(parent, option);
+            console.log(logicTable)
+            
+            if(logicTable !== null){
+                table.buildFromLogicTable(logicTable);
+            }
+            r = table;
 
         }
         else if (type == ShapeObjectType.RectButton) {
