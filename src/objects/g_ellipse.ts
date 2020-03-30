@@ -32,8 +32,8 @@
         get height(): number {
             return this.ry * 2;
         }
-        public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
-            super(svgbox, option);
+        public constructor(svgbox: SVGElement | string) {
+            super(svgbox);
         }
     
         /**
@@ -111,14 +111,14 @@
             return <SVGEllipseElement>this._svgSurface;
         }
 
-        public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
-            super(svgbox, option);
+        public constructor(svgbox: SVGElement | string) {
+            super(svgbox);
             if(this.type == ShapeObjectType.Ellipse) this.firstFunctionAfterInitialized();
             //this.update();
         }
-        protected createSurface(svgbox : SVGElement, option :GOptions.GObjectAttributes = {}) : void {
-            if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
-            this._svgSurface = GEllipse.createEllipse(this.svgGroup, option.surfaceClass, option.surfaceStyle);
+        protected createSurface(svgbox : SVGElement) : void {
+            //if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
+            this._svgSurface = GEllipse.createEllipse(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
             this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
         }
         private static createEllipse(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style : string | GOptions.surfaceClassCSS |undefined): SVGEllipseElement {

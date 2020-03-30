@@ -39,60 +39,28 @@ export class GTextBox extends GVertex {
     protected _minimumWidth: number = 10;
     protected _minimumHeight: number = 10;
 
-    public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
-        super(svgbox, option)
+    public constructor(svgbox: SVGElement | string) {
+        super(svgbox)
 
-        /*
-        this._svgText = GTextBox.createSVGText(this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultTextClass));
-        this.svgGroup.appendChild(this.svgText);
-        this._textObserver = new MutationObserver(this.textObserverFunc);
-        const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
-        this._textObserver.observe(this.svgText, option2);
-        */
-
-        const _option = <GOptions.GTextBoxAttributes>this.initializeOption(option);
-        //const textClass = CSS.createCSSClass(_option.textClass);
-        //const styleClass = CSS.createCSSClass(_option.textStyle);
-
-        //this._svgText = GTextBox.createSVGText(textClass, styleClass);
         this._svgText = GTextBox.createSVGText(undefined, undefined);
-
         this.svgGroup.appendChild(this.svgText);
         this._textObserver = new MutationObserver(this.textObserverFunc);
         const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
         this._textObserver.observe(this.svgText, option2);
 
-
-
-        //if(_option.x !== undefined) this.x = _option.x;
-        //if(_option.y !== undefined) this.y = _option.y;
-        this.setOptionInGTextBox(option)
 
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
         this.svgSurface!.onclick = (e) => {
-
             const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
-
-            /*
-            const textRect2 = SVGTextExtension.getSize(this.svgText);
-
-            console.log(textRect2);
-            */
-
         }
     }
-    protected setOptionInGTextBox(option: GOptions.GTextBoxAttributes) {
+    protected setBasicOption(option: GOptions.GTextBoxAttributes) {
         const textClass = CSS.createCSSClass(option.textClass);
         const styleClass = CSS.createCSSClass(option.textStyle);
         GOptions.setClassAndStyle(this.svgText, textClass, styleClass);
-        const _x = this.x;
-        const _y = this.y;
 
         if (typeof option.text == "string") {
-
             SVGTextExtension.setTextContent(this.svgText, option.text);
-
-
         } else if (Array.isArray(option.text)) {
             SVGTextBox.constructSVGTextByHTMLElements(this.svgText, option.text, false);
             SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
@@ -100,13 +68,6 @@ export class GTextBox extends GVertex {
 
         } else {
 
-        }
-        const region = this.getVirtualRegion();
-
-
-        if (this.positionType == PositionType.UpperLeft) {
-            this.virtualX = _x;
-            this.virtualY = _y;
         }
 
         const b = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.autoSizeShapeToFitText);
@@ -119,9 +80,9 @@ export class GTextBox extends GVertex {
 
     }
 
-    public setOption(option: GOptions.GTextBoxAttributes, superFlag: boolean = true) {
-        if (superFlag) this.setOptionInGObject(option);
-        this.setOptionInGTextBox(option);
+    public setOption(option: GOptions.GTextBoxAttributes) {
+        super.setOption(option);
+        //this.setBasicOption(option);
     }
     initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
         let b = false;
@@ -281,10 +242,10 @@ export class GTextBox extends GVertex {
         const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.autoSizeShapeToFitText, "semi-auto");
         if (b == "auto") {
             return "auto";
-        } else if (b == "none") {
-            return "none";
-        } else {
+        } else if (b == "semi-auto") {
             return "semi-auto";
+        } else {
+            return "none";
         }
         /*
         if (b == undefined) {
@@ -308,7 +269,7 @@ export class GTextBox extends GVertex {
         if (this.svgText == null) {
             throw new TypeError("svgText is null");
         }
-        SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
+        //SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
         const region = this.getVirtualRegion();
         //this.cx = region.x + (region.width/2);
         //this.cy = region.y + (region.height/2);
@@ -580,10 +541,10 @@ export class GTextBox extends GVertex {
         return this.marginPaddingBottom;
     }
     public get upperHeight() : number{
-        return 0 - (this.topExtraLength) + this.innerRectangle.y;
+        return this.topExtraLength - this.innerRectangle.y;
     }
     public get leftWidth() : number{
-        return 0 - (this.leftExtraLength) + this.innerRectangle.x;
+        return this.leftExtraLength - this.innerRectangle.x;
     }
 
     public getVirtualRegion(): Rectangle {
@@ -611,14 +572,14 @@ export class GTextBox extends GVertex {
                 x = - (textWidth/2) - this.leftExtraLength;
             }else{
                 newWidth = this.width;
-                x = this.cx - this.leftWidth;
+                x = -this.leftWidth;
             }
             if(this.height < height){
                 newHeight = height;
                 y = - (textHeight/2) - this.topExtraLength;
             }else{
-                newWidth = this.height;
-                x = this.cy - this.upperHeight;
+                newHeight = this.height;
+                y = - this.upperHeight;
             }
             //const newWidth = this.width < width ? width : this.width;
             //const newHeigth = this.height < height ? height : this.height;

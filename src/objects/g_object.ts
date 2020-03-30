@@ -32,7 +32,7 @@ export class GObject {
     private _observerOption: MutationObserverInit;
 
 
-    public constructor(svgbox: SVGElement | string, option: GOptions.GObjectAttributes = {}) {
+    public constructor(svgbox: SVGElement | string) {
         CSS.setGraphTableCSS();
         let parentElement: SVGElement = svgbox instanceof SVGElement ? svgbox : <any>document.getElementById(svgbox);
         if (parentElement instanceof SVGSVGElement && !GUIObserver.isObserved(parentElement)) {
@@ -57,8 +57,8 @@ export class GObject {
 
 
         this.svgGroup.setAttribute(AttributeNames.GroupAttribute, this.type);
-        const _option = this.initializeOption(option);
-        this.createSurface(parentElement, option);
+        //const _option = this.initializeOption(option);
+        this.createSurface(parentElement);
 
         this._observer = new MutationObserver(this.observerFunc);
         this._observerOption = { attributes: true, childList: true, subtree: true };
@@ -70,7 +70,7 @@ export class GObject {
 
         const __svg = <any>this.svgGroup
         __svg.operator = this;
-        this.setOptionInGObject(option);
+        //this.setOptionInGObject(option);
 
         /*
         if (_option.x !== undefined) this.fixedX = _option.x;
@@ -79,7 +79,7 @@ export class GObject {
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
 
     }
-    protected setOptionInGObject(option: GOptions.GObjectAttributes) : void{
+    protected setBasicOption(option: GOptions.GObjectAttributes) : void{
         GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
         if(option.attributes !== undefined){
             Object.keys(option.attributes).forEach((v) =>{
@@ -88,10 +88,13 @@ export class GObject {
             })
         }
         if (typeof option.id !== "undefined") this.svgGroup.id = option.id;
-        //if(_option.surfaceClass !== undefined && this.svgSurface !== null) this.svgSurface.setAttribute("class", _option.surfaceClass);
-
+    }
+    protected setOptionalSize(option: GOptions.GObjectAttributes){
         this.width = option.width !== undefined ? option.width : 25;
         this.height = option.height !== undefined ? option.height : 25;
+    }
+
+    protected setOptionalPosition(option: GOptions.GObjectAttributes){
 
         if(option.position !== undefined){
             if(option.position.type == "center"){
@@ -99,11 +102,11 @@ export class GObject {
                 this.cx = option.position.x;
                 this.cy = option.position.y;
             }else{
-                /*
+                
                 this.positionType = PositionType.UpperLeft;
                 this.x = option.position.x;
                 this.y = option.position.y;
-                */
+                
             }
         }else{
             this.positionType = PositionType.Center;
@@ -111,16 +114,11 @@ export class GObject {
             this.__cy = 0;
     
         }
-
-        /*
-        this.__x = option.x;
-        this.__y = option.y;
-        this.__cx = option.cx !== undefined ? option.cx : 0;
-        this.__cy = option.cy !== undefined ? option.cy : 0;
-        */
     }
-    public setOption(option: GOptions.GObjectAttributes, superFlag : boolean = true){
-        this.setOptionInGObject(option);
+    public setOption(option: GOptions.GObjectAttributes){        
+        this.setBasicOption(option);
+        this.setOptionalSize(option);
+        this.setOptionalPosition(option)
     }
     initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
         const _option = { ...option };
@@ -388,30 +386,33 @@ export class GObject {
         }
 
     }
+    /*
     public set virtualX(v: number) {
         if(this.coordinateType == CoodinateType.Group00){
             throw Error("This object does not support set x!");
         }else{
             if (this.isCenterBased) {
-                SVGGExtension.setX(this.svgGroup,v - this.getVirtualRegion().y );
+                SVGGExtension.setX(this.svgGroup,v - this.getVirtualRegion().x );
             } else {
                 SVGGExtension.setX(this.svgGroup, v);
             }    
         }
 
     }
+    */
 
     public set y(v: number) {
         if(this.coordinateType == CoodinateType.Group00){
             throw Error("This object does not support set y!");
         }else{
             if (this.isCenterBased) {
-                SVGGExtension.setY(this.svgGroup, v + (this.height / 2));
+                SVGGExtension.setY(this.svgGroup, v - this.getVirtualRegion().y );
             } else {
                 SVGGExtension.setY(this.svgGroup, v);
             }    
         }
     }
+    /*
     public set virtualY(v: number) {
         if(this.coordinateType == CoodinateType.Group00){
             throw Error("This object does not support set y!");
@@ -424,6 +425,7 @@ export class GObject {
         }
 
     }
+    */
 
     /**
     頂点の幅を返します。
@@ -513,7 +515,7 @@ export class GObject {
     public get type(): ShapeObjectType {
         return ShapeObjectType.Object;
     }
-    protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
+    protected createSurface(svgbox: SVGElement): void {
 
     }
 

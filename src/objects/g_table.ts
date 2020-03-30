@@ -49,10 +49,9 @@ export class GTable extends GVertex {
     /**
      * コンストラクタです。
      */
-    constructor(svgbox: SVGElement,
-        option: GTableOption = {}) {
+    constructor(svgbox: SVGElement) {
 
-        super(svgbox, option)
+        super(svgbox)
         CSS.setGraphTableCSS();
         this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this._svgRowBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -92,7 +91,7 @@ export class GTable extends GVertex {
         */
         //if (option.cx !== undefined) this.cx = option.cx;
         //if (option.cy !== undefined) this.cy = option.cy;
-        this.setOptionInGTable(option)
+        //this.setOptionInGTable(option)
         this.isConstructing = false;
 
         //this.update();
@@ -124,7 +123,7 @@ export class GTable extends GVertex {
 
     }
     public setOption(option: GTableOption, superFlag : boolean = true){
-        if(superFlag) this.setOptionInGObject(option);
+        if(superFlag) this.setBasicOption(option);
         this.setOptionInGTable(option);
     }
 

@@ -17,8 +17,8 @@ export class GCircle extends GAbstractEllipseCircle  {
         return <SVGCircleElement>this._svgSurface;
     }
 
-    public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
-        super(svgbox, option);
+    public constructor(svgbox: SVGElement | string) {
+        super(svgbox);
         if(this.type == ShapeObjectType.Circle) this.firstFunctionAfterInitialized();
 
         //this.update();
@@ -41,9 +41,9 @@ export class GCircle extends GAbstractEllipseCircle  {
         if (_option.surfaceClass === undefined) _option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
         return _option;
     }
-    protected createSurface(svgbox : SVGElement, option :GOptions.GObjectAttributes = {}) : void {
-        if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
-        this._svgSurface = GCircle.createCircle(this.svgGroup, option.surfaceClass, option.surfaceStyle);
+    protected createSurface(svgbox : SVGElement) : void {
+        //if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
+        this._svgSurface = GCircle.createCircle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
         this.svgGroup.insertBefore(this.svgCircle, this.svgText);
     }
     private static createCircle(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style : string | undefined | GOptions.surfaceClassCSS): SVGCircleElement {

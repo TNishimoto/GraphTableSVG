@@ -11,6 +11,7 @@
     import * as GOptions  from "./g_options"
     import {setCpmoutedDashArray} from "../html/enum_extension";
     import * as ElementExtension from "../interfaces/element_extension"
+    import * as DefaultClassNames from "../common/default_class_names"
 
 
     export class GRect extends GTextBox {
@@ -19,15 +20,15 @@
         }
 
         public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
-            super(svgbox, option);
+            super(svgbox);
             this.updateAttributes.push("width");
             this.updateAttributes.push("height");
             //throw Error("error2");
             //this.update();
             if(this.type == ShapeObjectType.Rect) this.firstFunctionAfterInitialized();
         }
-        protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
-            this._svgSurface = GRect.createRectangle(this.svgGroup, option.surfaceClass, option.surfaceStyle);
+        protected createSurface(svgbox: SVGElement): void {
+            this._svgSurface = GRect.createRectangle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
             this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
         }
         /**

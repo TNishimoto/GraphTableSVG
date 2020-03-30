@@ -17,8 +17,8 @@
         public get svgPath(): SVGPathElement {
             return <SVGPathElement>this.svgSurface;
         }
-        public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
-            super(svgbox, option);
+        public constructor(svgbox: SVGElement | string) {
+            super(svgbox);
 
             /*
             if(this.surface!.className == null && this.surface!.getPropertyStyleValue("fill") == null){
@@ -29,13 +29,13 @@
             //this.update();
             if(this.type == ShapeObjectType.PathTextBox) this.firstFunctionAfterInitialized();
         }
-        protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
+        protected createSurface(svgbox: SVGElement): void {
 
-            if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultTextboxPathClass;
+            //if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultTextboxPathClass;
             //const _className = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultPathClass);
             //if(_className != null) option.surfaceClass = _className;
 
-            this._svgSurface = GPathTextBox.createSurfacePath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
+            this._svgSurface = GPathTextBox.createSurfacePath(this.svgGroup, 0, 0, 0, 0, DefaultClassNames.defaultTextboxPathClass, undefined);
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         private static createSurfacePath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, 

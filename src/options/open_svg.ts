@@ -77,37 +77,43 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
         e.removeAttribute(AttributeNames.customElement);
         if (type == ShapeObjectType.Callout) {
             const option = GCallout.constructAttributes(e, true);
-            r = new GCallout(parent, option);
+            r = new GCallout(parent);
+            r.setOption(option);
         } else if (type == ShapeObjectType.ArrowCallout) {
             const option = GArrowCallout.constructAttributes(e, true);
-            r = new GArrowCallout(parent, option);
+            r = new GArrowCallout(parent);
+            r.setOption(option);
         } else if (type == ShapeObjectType.Ellipse) {
             const option = GTextBox.constructAttributes(e, true);
-            r = new GEllipse(parent, option);
+            r = new GEllipse(parent);
+            r.setOption(option);
         } else if (type == ShapeObjectType.Circle) {
             const option = GTextBox.constructAttributes(e, true);
-            r = new GCircle(parent, option);
+            r = new GCircle(parent);
+            r.setOption(option);
         } 
         else if (type == ShapeObjectType.Rect) {
             const option = GTextBox.constructAttributes(e, true);
-
             r = new GRect(parent, option);
+            r.setOption(option);
             //throw Error("error");
 
 
         } else if (type == ShapeObjectType.Edge) {
             const option = GEdge.constructAttributes(e, true);
             r = new GEdge(parent, option);
+            r.setOption(option);
         } else if (type == ShapeObjectType.Graph) {
             const option = GTextBox.constructAttributes(e, true);
-            r = new GGraph(parent, option);
+            r = new GGraph(parent);
+            r.setOption(option);
             //(<GGraph>r).relocate();
         } else if (type == ShapeObjectType.Table) {
             const logicTable = LogicTable.constructLogicTable(e);
-
             const option = GTable.constructAttributes(e, true);
-            const table =  new GTable(parent, option);
-            console.log(logicTable)
+
+            const table =  new GTable(parent);
+            table.setOption(option);
             
             if(logicTable !== null){
                 table.buildFromLogicTable(logicTable);
@@ -118,7 +124,7 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
         else if (type == ShapeObjectType.RectButton) {
             const option = GTextBox.constructAttributes(e, true);
             r = new GRectButton(parent, option);
-
+            r.setOption(option);
         }
         else {
             return null;
@@ -256,16 +262,16 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
     }
 
     switch (type) {
-        case ShapeObjectType.Callout: return new GCallout(_parent, option);
-        case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent, option);
-        case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
+        case ShapeObjectType.Callout: return new GCallout(_parent);
+        case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent);
+        case ShapeObjectType.Ellipse: return new GEllipse(_parent);
         case ShapeObjectType.Rect: return new GRect(_parent, option);
         case ShapeObjectType.Edge: return new GEdge(_parent, option);
-        case ShapeObjectType.Graph: return new GGraph(_parent, option);
-        case ShapeObjectType.Table: return new GTable(_parent, option);
+        case ShapeObjectType.Graph: return new GGraph(_parent);
+        case ShapeObjectType.Table: return new GTable(_parent);
         case ShapeObjectType.RectButton: return new GRectButton(_parent, option);
-        case ShapeObjectType.Circle: return new GCircle(_parent, option);
-        case ShapeObjectType.Object: return new GObject(_parent, option);
+        case ShapeObjectType.Circle: return new GCircle(_parent);
+        case ShapeObjectType.Object: return new GObject(_parent);
     }
     throw Error("error");
 }

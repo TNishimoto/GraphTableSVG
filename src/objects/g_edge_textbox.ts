@@ -38,7 +38,7 @@ export class GEdgeTextBox extends GObject {
     protected _minimumHeight: number = 10;
 
     public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
-        super(svgbox, option)
+        super(svgbox)
 
         /*
         this._svgText = GTextBox.createSVGText(this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultTextClass));

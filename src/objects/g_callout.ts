@@ -13,13 +13,14 @@
         speakerY?: number,
     }
     export class GCallout extends GPathTextBox {
-        public constructor(svgbox: SVGElement | string, option: GCalloutAttributes = {}) {
-            super(svgbox, option);
+        public constructor(svgbox: SVGElement | string) {
+            super(svgbox);
             const defaultSX = this.fixedX == null ? this.cx - 100 : this.fixedX - 50;
             const defaultSY = this.fixedY == null ? this.cy - 100 : this.fixedY - 50;
-
+            /*
             this.speakerX = option.speakerX == undefined ? defaultSX : option.speakerX;
             this.speakerY = option.speakerY == undefined ? defaultSY : option.speakerY;
+            */
             if(this.type == ShapeObjectType.Callout) this.firstFunctionAfterInitialized();
         }
 

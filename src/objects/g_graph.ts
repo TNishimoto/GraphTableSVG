@@ -39,10 +39,10 @@ import { GTable } from "./g_table"
 */
 export class GGraph extends GObject {
 
-    constructor(box: SVGElement | string, option: GOptions.GGraphAttributes = {}) {
-        super(box, option)
+    constructor(box: SVGElement | string) {
+        super(box)
         if (this.type == ShapeObjectType.Graph) this.firstFunctionAfterInitialized();
-        this.setOptionInGObject(option)
+        //this.setOptionInGObject(option)
         //this.svgGroup.addEventListener(AttributeNames.objectCreatedEventName, this.objectCreatedFunction);
     }
     protected setOptionInGGraph(option: GOptions.GGraphAttributes){
@@ -66,7 +66,7 @@ export class GGraph extends GObject {
     }
     
     public setOption(option: GOptions.GGraphAttributes, superFlag : boolean = true){
-        if(superFlag) this.setOptionInGObject(option);
+        if(superFlag) this.setBasicOption(option);
         this.setOptionInGGraph(option);
     }
     public get graphAllocateFunction() : GOptions.GraphAllocateFunction | undefined{
@@ -607,14 +607,14 @@ export class GGraph extends GObject {
         const type = typeof (option.class) == "string" ? parent.getStyleValue(option.class, StyleNames.defaultSurfaceType) : null;
         if (type != null) {
             switch (type) {
-                case ShapeObjectType.Callout: return new GCallout(_parent, option);
-                case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent, option);
-                case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
-                case ShapeObjectType.Circle: return new GCircle(_parent, option);
+                case ShapeObjectType.Callout: return new GCallout(_parent);
+                case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent);
+                case ShapeObjectType.Ellipse: return new GEllipse(_parent);
+                case ShapeObjectType.Circle: return new GCircle(_parent);
                 case ShapeObjectType.Rect: return new GRect(_parent, option);
             }
         }
-        return new GEllipse(_parent, option);
+        return new GEllipse(_parent);
 
     }
     /*
@@ -642,13 +642,13 @@ export class GGraph extends GObject {
         const _parent: SVGElement = GGraph.getParent(parent);
 
         switch (type) {
-            case ShapeObjectType.Callout: return new GCallout(_parent, option);
-            case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent, option);
-            case ShapeObjectType.PathTextBox: return new GPathTextBox(_parent, option);
-            case ShapeObjectType.Ellipse: return new GEllipse(_parent, option);
+            case ShapeObjectType.Callout: return new GCallout(_parent);
+            case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent);
+            case ShapeObjectType.PathTextBox: return new GPathTextBox(_parent);
+            case ShapeObjectType.Ellipse: return new GEllipse(_parent);
             case ShapeObjectType.Rect: return new GRect(_parent, option);
             case ShapeObjectType.RectButton: return new GRectButton(_parent, option);
-            case ShapeObjectType.Circle: return new GCircle(_parent, option);
+            case ShapeObjectType.Circle: return new GCircle(_parent);
         }
         throw Error("error");
     }
