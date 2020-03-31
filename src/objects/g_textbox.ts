@@ -50,11 +50,18 @@ export class GTextBox extends GVertex {
 
 
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
-        this.svgSurface!.onclick = (e) => {
-            const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
+        this.svgText!.onclick = (e) => {
+            const textRect = this.getVirtualRegion();
+            console.log(this.marginRegion)
+            console.log(this.textRegion)
+            console.log(`${this.leftExtraLength}/${this.rightExtraLength}/${this.topExtraLength}/${this.bottomExtraLength}`)
+
+            this.svgText!.style.border = "black"
+
         }
     }
     protected setBasicOption(option: GOptions.GTextBoxAttributes) {
+        super.setBasicOption(option)
         const textClass = CSS.createCSSClass(option.textClass);
         const styleClass = CSS.createCSSClass(option.textStyle);
         GOptions.setClassAndStyle(this.svgText, textClass, styleClass);
@@ -313,7 +320,7 @@ export class GTextBox extends GVertex {
 
         //if (!this._isSpecialTextBox) {
 
-        const textRect = this.innerRectangle;
+        const textRect = this.textRegion;
         //SVGTextExtension.getVirtualRegion(this.svgText);
         //const newTextRect = new Rectangle(-textRect.width / 2, -textRect.height / 2, textRect.width, textRect.height)
         SVGTextExtension.gtSetXY(this.svgText, textRect, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
@@ -518,16 +525,23 @@ export class GTextBox extends GVertex {
         return this.getVirtualRegion().height;
     }
     
-    get innerRectangle(): Rectangle {
-        const rect = new Rectangle();
-        const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
-        //const newTextRect = new Rectangle(-textRect.width/2, -textRect.height/2, textRect.width, textRect.height)
-        rect.width = textRect.width;
-        rect.height = textRect.height;
-        rect.x = (-textRect.width / 2);
-        rect.y = (-textRect.height / 2);
-        return rect;
+    get textRegion(): Rectangle {
+        const rect = this.marginRegion;
+        const w = rect.width - this.leftExtraLength - this.rightExtraLength;
+        const h = rect.height - this.topExtraLength - this.bottomExtraLength;
+        const x =rect.x + this.leftExtraLength;
+        const y = rect.y + this.topExtraLength;
+        return new Rectangle(x, y, w, h);
     }
+    get marginRegion(): Rectangle {
+        const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
+        const w = textRect.width + this.leftExtraLength + this.rightExtraLength;
+        const h = textRect.height + this.topExtraLength + this.bottomExtraLength;
+        const x = -w/2;
+        const y = -h/2;
+        return new Rectangle(x, y, w, h);
+    }
+
     get topExtraLength(): number {
         return this.marginPaddingTop;
     }
@@ -540,46 +554,51 @@ export class GTextBox extends GVertex {
     get bottomExtraLength(): number {
         return this.marginPaddingBottom;
     }
+    /*
     public get upperHeight() : number{
-        return this.topExtraLength - this.innerRectangle.y;
+        return this.topExtraLength - this.textRegion.y;
     }
     public get leftWidth() : number{
-        return this.leftExtraLength - this.innerRectangle.x;
+        return this.leftExtraLength - this.textRegion.x;
     }
+    */
 
     public getVirtualRegion(): Rectangle {
         if(this.svgText === undefined){
             throw new UndefinedError();
             //return new Rectangle(this.cx, this.cy, 0, 0);
         }
-        const textRect = this.innerRectangle;
+        const marginRect = this.marginRegion;
+        /*
         const textWidth = textRect.width < this._minimumWidth ? this._minimumWidth : textRect.width;
         const textHeight = textRect.height < this._minimumHeight ? this._minimumHeight : textRect.height;
         const width = textWidth + this.leftExtraLength + this.rightExtraLength;
         const height = textHeight + this.topExtraLength + this.bottomExtraLength;
+        */
 
 
         if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
-            const x = - (textWidth/2) - this.leftExtraLength;
-            const y = - (textHeight/2) - this.topExtraLength;
-            return new Rectangle(x, y, width, height);
+            return marginRect;
         } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
             let [x, y] = [0,0]
             let [newWidth, newHeight] = [0,0]
 
-            if(this.width < width){
-                newWidth = width;
-                x = - (textWidth/2) - this.leftExtraLength;
+            if(this.width < marginRect.width){
+                newWidth = marginRect.width;
+                x = marginRect.x;
             }else{
+                const surface_x = this.svgSurface != null ? SVGElementExtension.getX(this.svgSurface) : 0;
                 newWidth = this.width;
-                x = -this.leftWidth;
+                x = this.width/2;
             }
-            if(this.height < height){
-                newHeight = height;
-                y = - (textHeight/2) - this.topExtraLength;
+            if(this.height < marginRect.height){
+                
+                newHeight =marginRect.height;
+                y = marginRect.y;
             }else{
+                const surface_y = this.svgSurface != null ? SVGElementExtension.getY(this.svgSurface) : 0;
                 newHeight = this.height;
-                y = - this.upperHeight;
+                y = this.height/2;
             }
             //const newWidth = this.width < width ? width : this.width;
             //const newHeigth = this.height < height ? height : this.height;

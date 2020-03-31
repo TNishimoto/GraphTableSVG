@@ -125,47 +125,21 @@
             const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
             parent.appendChild(circle);
             GOptions.setClassAndStyle(circle, className, style);
-            /*
-            if(style !== undefined){
-                if(typeof(style) == "string"){
-                    circle.setAttribute("style", style);
-                }else{
-                    circle.setAttribute("style", CSS.buildClassNameFromSurfaceClassCSS(style));
-                }
-    
-            }
-            */
 
             circle.rx.baseVal.value = AttributeNames.defaultCircleRadius;
             circle.ry.baseVal.value = AttributeNames.defaultCircleRadius;
-            /*
-            if(typeof(className) == "string"){
-                circle.setAttribute("class", className);
-            }else{
-                circle.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
-            }
-            */
             const radius = ElementExtension.getPropertyStyleNumberValue(circle,StyleNames.defaultRadius, null);
             if (radius != null) {
                 circle.rx.baseVal.value = radius;
                 circle.ry.baseVal.value = radius;
             }
-            /*
-            if (className == null) {
-                if(circle.style.stroke == null || circle.style.stroke == "")circle.style.stroke = "black";
-                if(circle.style.strokeWidth == null || circle.style.strokeWidth == "")circle.style.strokeWidth = "1pt";
-                if(circle.style.fill == null || circle.style.fill == "")circle.style.fill = "white";
-            } else {
-
-            }
-            */
             circle.cx.baseVal.value = 0;
             circle.cy.baseVal.value = 0;
 
             return circle;
         }
 
-        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GCalloutAttributes {
+        public static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GOptions.GTextBoxAttributes {
             GTextBox.constructAttributes(e, removeAttributes, output);
 
 

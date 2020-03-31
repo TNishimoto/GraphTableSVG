@@ -2,6 +2,7 @@
 
 import * as StyleNames from "../common/style_names"
 import * as ElementExtension from "./element_extension"
+import { NotSupportedError } from "../common/exceptions";
 
 export function getPaddingLeft(item: SVGElement): number{
     return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.paddingLeft, 0)!;
@@ -34,4 +35,18 @@ export function setPaddingRight(item: SVGElement, value: number): void{
 export function setPaddingBottom(item: SVGElement, value: number): void{
     ElementExtension.setPropertyStyleValue(item, StyleNames.paddingBottom, value.toString());
 
+}
+export function getX(item : SVGElement) : number {
+    if(item instanceof SVGElement){
+        return Number.parseInt(item.getAttribute("x")!);
+    }else{
+        throw new NotSupportedError();
+    }
+}
+export function getY(item : SVGElement) : number {
+    if(item instanceof SVGElement){
+        return Number.parseInt(item.getAttribute("y")!);
+    }else{
+        throw new NotSupportedError();
+    }
 }

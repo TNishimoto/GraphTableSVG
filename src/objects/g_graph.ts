@@ -45,7 +45,8 @@ export class GGraph extends GObject {
         //this.setOptionInGObject(option)
         //this.svgGroup.addEventListener(AttributeNames.objectCreatedEventName, this.objectCreatedFunction);
     }
-    protected setOptionInGGraph(option: GOptions.GGraphAttributes){
+    protected setBasicOption(option: GOptions.GGraphAttributes){
+        super.setBasicOption(option);
         if (option.isLatexMode == undefined) option.isLatexMode = false;
         if (option.direction !== undefined) {
             this.direction = option.direction;
@@ -56,18 +57,11 @@ export class GGraph extends GObject {
         } else {
             this.relocateStyle = "standard"
         }
-
-        //this.x = 200;
-        //this.y = 200;
-        /*
-        if (option.x != undefined) SVGGExtension.setX(this.svgGroup,option.x);
-        if (option.y != undefined) SVGGExtension.setY(this.svgGroup,option.y);
-        */
     }
     
-    public setOption(option: GOptions.GGraphAttributes, superFlag : boolean = true){
-        if(superFlag) this.setBasicOption(option);
-        this.setOptionInGGraph(option);
+    
+    public setOption(option: GOptions.GGraphAttributes){
+        super.setOption(option);
     }
     public get graphAllocateFunction() : GOptions.GraphAllocateFunction | undefined{
         const svg = this.svgGroup;
@@ -354,7 +348,7 @@ export class GGraph extends GObject {
 
     public build(logicGraph: LogicGraph | LogicTree ) {
         const option = logicGraph.graphOption;
-        this.setOption(option, true);
+        this.setOption(option);
         //if (option.isLatexMode == undefined) option.isLatexMode = false;
         this.clear();
         const svgsvg = SVG.getSVGSVG(this.svgGroup);

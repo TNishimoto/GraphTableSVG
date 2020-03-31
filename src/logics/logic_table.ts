@@ -247,10 +247,5 @@ export class LogicTable {
         }
         return logicTable;
     }
-    /*
-    public view() {
-        Console.table(this);
-    }
-    */
 }
 

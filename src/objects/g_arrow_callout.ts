@@ -251,8 +251,6 @@ export class GArrowCallout extends GPathTextBox {
         super.update();
 
         const region = this.getVirtualRegion();
-        console.log(region);
-        console.log(this.innerRectangle);
         const x1 = region.x;
         const y1 = region.y;
         const x2 = region.right;

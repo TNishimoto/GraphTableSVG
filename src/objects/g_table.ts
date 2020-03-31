@@ -98,33 +98,25 @@ export class GTable extends GVertex {
         if (this.type == ShapeObjectType.Table) this.firstFunctionAfterInitialized();
 
     }
-    private setOptionInGTable(option: GTableOption) : void{
-        //if (option.rowCount == undefined) option.rowCount = 5;
-        //if (option.columnCount == undefined) option.columnCount = 5;
+    protected setBasicOption(option: GTableOption) : void{
+        super.setBasicOption(option);
         const columnCount = option.columnCount !== undefined ? option.columnCount : 5;
         const rowCount = option.rowCount !== undefined ? option.rowCount : 5;
         this.setSize(columnCount , rowCount);
 
+    }
+    protected setOptionalSize(option: GTableOption){
+        super.setOptionalSize(option);
         if (option.rowHeight !== undefined) {
             this.rows.forEach((v) => v.height = <number>option.rowHeight);
         }
         if (option.columnWidth !== undefined) {
             this.columns.forEach((v) => v.width = <number>option.columnWidth);
         }
-        if(this.columns === undefined) throw new UndefinedError();
-
-        /*
-        for (let y = 0; y < this.rowCount; y++) {
-            for (let x = 0; x < this.columnCount; x++) {
-                this.updateCellByLogicCell(null, x, y);
-            }
-        }
-        */
 
     }
-    public setOption(option: GTableOption, superFlag : boolean = true){
-        if(superFlag) this.setBasicOption(option);
-        this.setOptionInGTable(option);
+    public setOption(option: GTableOption){
+        super.setOption(option);
     }
 
     private _isNoneMode: boolean = false;
@@ -531,7 +523,7 @@ export class GTable extends GVertex {
         //if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
         logicTable.option.columnCount = logicTable.columnCount;
         logicTable.option.rowCount = logicTable.rowCount;
-        this.setOption(logicTable.option, true);
+        this.setOption(logicTable.option);
         //this.setSize(logicTable.columnCount, logicTable.rowCount);
 
         //GOptions.setClassAndStyle(this.svgGroup, logicTable.option.class, logicTable.option.style);

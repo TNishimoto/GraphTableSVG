@@ -78,9 +78,8 @@
             return rect;
         }
 
-        static constructAttributes(e: SVGElement, removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GCalloutAttributes {
+        static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GOptions.GTextBoxAttributes {
             GTextBox.constructAttributes(e, removeAttributes, output);
-
 
             return output;
         }

@@ -7,3 +7,10 @@ export class UndefinedError extends Error{
     }
     
 }
+export class NotSupportedError extends Error{
+    constructor(){
+        super();
+        //this.message = "Undefined Error:";
+    }
+    
+}

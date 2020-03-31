@@ -269,22 +269,6 @@ export function createTextPath2(className?: string): SVGTextPathElement {
     if (className !== undefined) {
         path.setAttribute("class", className);
     }
-    /*
-    if(typeof(className) == "string"){
-    }else{
-        const newClassName = CSS.getOrAddRule(className);
-        path.setAttribute("class", newClassName);
-    }
-    */
-    /*
-    if (className == null) {
-        path.style.fill = "black";
-        path.style.fontSize = "14px";
-        path.style.fontWeight = "bold";
-        path.style.fontFamily = 'Times New Roman';
-    } else {
-    }
-    */
     return path;
 }
 
@@ -292,44 +276,7 @@ export function createTextPath2(className?: string): SVGTextPathElement {
 
 
 
-/*
-export function setDefaultValue(item: SVGCircleElement | SVGRectElement, style: CSSStyleDeclaration | null = null) {
-    const className = item.getAttribute("class");
-    if (style != null) {
-        if (item instanceof SVGCircleElement) {
-            const s = style.getPropertyValue(defaultRadiusName).trim();
-            if (s.length > 0) {
-                item.r.baseVal.value = Number(s);
-            }
-        } else {
-            const s1 = style.getPropertyValue(defaultWidthName).trim();
-            if (s1.length > 0) {
-                item.width.baseVal.value = Number(s1);
-            }
 
-            const s2 = style.getPropertyValue(defaultHeightName).trim();
-            if (s2.length > 0) {
-                item.height.baseVal.value = Number(s2);
-            }
-        }
-    } else {
-        
-        if (className != null) {
-            const cssStyle = getStyleSheet(className);
-
-            if (cssStyle != null) {
-                setDefaultValue(item, cssStyle)
-            } else {
-                const computedStyle = getComputedStyle(item);
-                setDefaultValue(item, computedStyle);
-            }
-        }
-        
-    }
-
-    
-}
-*/
 /**
  * SVG要素にクラス属性をセットします。
  * @param svg 適用されるSVG要素
@@ -372,47 +319,7 @@ export function getStyleSheet(name: string): CSSStyleDeclaration | null {
     return null;
 }
 
-/*
-export function setStyleForPNG(svg: SVGElement) {
-    const style = getComputedStyle(svg);
-    svg.style.fill = style.fill;
-    svg.style.stroke = style.stroke;
-    svg.style.strokeWidth = style.stroke;
-}
-*/
-/*
-export function getRegion(e: SVGElement): Rectangle {
-    if (e instanceof SVGSVGElement) {
-        const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
-        const rectangles = elements.map((v) => getRegion(v));
 
-        const eRegion = getRelativeBoundingClientRect(e);
-        const region = Rectangle.merge(rectangles);
-
-        return region;
-
-    }
-    else if (e instanceof SVGGElement) {
-        const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
-        const rectangles = elements.map((v) => getRegion(v));
-
-        //const eRegion = getRelativeBoundingClientRect(e);
-        const px = e.getX();
-        const py = e.getY();
-
-        const region = Rectangle.merge(rectangles);
-
-        //const region2 = new Rectangle(region.x + eRegion.x, region.y + eRegion.y, region.width, region.height);
-        const region2 = new Rectangle(region.x + px, region.y + py, region.width, region.height);
-                        
-        return region2;
-    } else {
-        const rect = getRelativeBoundingClientRect2(e);
-        const region = rect
-        return region;
-    }
-}
-*/
 export function getRegion2(e: SVGElement): Rectangle {
     if (e instanceof SVGSVGElement) {
         const elements = <SVGElement[]>HTMLFunctions.getChildren(e).filter((v) => v instanceof SVGElement);
@@ -448,113 +355,6 @@ export function getRegion2(e: SVGElement): Rectangle {
         return r;
     }
 }
-let ura: SVGSVGElement | null = null;
-/*
-function getRelativeBoundingClientRect(e: SVGElement): Rectangle {
-    let r = new Rectangle();
-    const svgsvgHidden = isSVGSVGHidden(e);
-    const svgHidden = isSVGHidden(e);
-    if(svgHidden){
-        return r;
-    }else if(svgsvgHidden){
-        if (ura == null) {
-            ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        }
-        document.body.appendChild(ura);
-        ura.innerHTML = e.outerHTML;
-        const fst = ura.firstChild;
-        if (fst instanceof SVGElement) {
-            
-            const rect = fst.getBoundingClientRect();
-            const parentRect = ura.getBoundingClientRect();
-            r.x = rect.left - parentRect.left;
-            r.y = rect.top - parentRect.top;
-            r.width = rect.width;
-            r.height = rect.height;
-
- 
-            ura.removeChild(fst);
-            ura.remove();
-
-            return r;
-        } else if (fst != null) {
-            ura.removeChild(fst);
-            ura.remove();
-            return r;
-        } else {
-            ura.remove();
-            return r;
-        }
-    }else{
-        const rect = e.getBoundingClientRect();
-        const parentRect = e.parentElement!.getBoundingClientRect();
-        r.x = rect.left - parentRect.left;
-        r.y = rect.top - parentRect.top;
-        r.width = rect.width;
-        r.height = rect.height;
-
-        return r;
-    }
-
-}
- 
-function getHiddenRelativeBoundingClientRect(e: SVGElement): Rectangle {
-    let r = new Rectangle();
-    if (ura == null) {
-        ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    }
-    document.body.appendChild(ura);
-    ura.innerHTML = e.outerHTML;
-    const fst = ura.firstChild;
-    if (fst instanceof SVGElement) {
-        
-        const rect = fst.getBoundingClientRect();
-        const parentRect = ura.getBoundingClientRect();
-        r.x = rect.left - parentRect.left;
-        r.y = rect.top - parentRect.top;
-        r.width = rect.width;
-        r.height = rect.height;
-
-
-        ura.removeChild(fst);
-        ura.remove();
-
-        return r;
-    } else if (fst != null) {
-        ura.removeChild(fst);
-        ura.remove();
-        return r;
-    } else {
-        ura.remove();
-        return r;
-    }
-}
- 
-function getRelativeBoundingClientRect2(e: SVGElement): Rectangle {
-    let r = new Rectangle();
-    const svgsvgHidden = isSVGSVGHidden(e);
-    const svgHidden = isSVGHidden(e);
-    if(svgHidden){
-        return r;
-    }else if(svgsvgHidden){
-        return getHiddenRelativeBoundingClientRect(e);
-    }else{
-        return getHiddenRelativeBoundingClientRect(e);
-    }
-}
-function getSVGSVGBoundingClientRect(e: SVGElement): Rectangle {
-    const parent = getSVGSVG(e);
-    let r = new Rectangle();
-    const rect = e.getBoundingClientRect();
-    const parentRect = parent.getBoundingClientRect();
-    r.x = rect.left - parentRect.left;
-    r.y = rect.top - parentRect.top;
-    r.width = rect.width;
-    r.height = rect.height;
-    return r;
-}
-*/
-
 
 export function getSVGSVG(e: SVGElement): SVGSVGElement {
     if (e instanceof SVGSVGElement) {

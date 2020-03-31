@@ -84,16 +84,16 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
             r = new GArrowCallout(parent);
             r.setOption(option);
         } else if (type == ShapeObjectType.Ellipse) {
-            const option = GTextBox.constructAttributes(e, true);
+            const option = GEllipse.constructAttributes(e, true);
             r = new GEllipse(parent);
             r.setOption(option);
         } else if (type == ShapeObjectType.Circle) {
-            const option = GTextBox.constructAttributes(e, true);
+            const option = GCircle.constructAttributes(e, true);
             r = new GCircle(parent);
             r.setOption(option);
         } 
         else if (type == ShapeObjectType.Rect) {
-            const option = GTextBox.constructAttributes(e, true);
+            const option = GRect.constructAttributes(e, true);
             r = new GRect(parent, option);
             r.setOption(option);
             //throw Error("error");
@@ -104,7 +104,7 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
             r = new GEdge(parent, option);
             r.setOption(option);
         } else if (type == ShapeObjectType.Graph) {
-            const option = GTextBox.constructAttributes(e, true);
+            const option = GGraph.constructAttributes(e, true);
             r = new GGraph(parent);
             r.setOption(option);
             //(<GGraph>r).relocate();
@@ -122,7 +122,7 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
 
         }
         else if (type == ShapeObjectType.RectButton) {
-            const option = GTextBox.constructAttributes(e, true);
+            const option = GRectButton.constructAttributes(e, true);
             r = new GRectButton(parent, option);
             r.setOption(option);
         }

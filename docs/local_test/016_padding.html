@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Padding Samples</title>
+    <script src="../scripts/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.Options.openSVG();
+        };
+    </script>
+</head>
+
+<body>
+    <svg width="900px" height="900px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
+
+        <g-rect x="100" y="100">
+            <t>None</t>
+        </g-rect>
+
+
+        <g-rect x="100" y="200" style="--padding-top:50">
+            <t>padding-top:50</t>
+        </g-rect>
+        <g-rect x="100" y="300" style="--padding-left:50">
+            <t>padding-left:50</t>
+        </g-rect>
+        <g-rect x="100" y="400" style="--padding-right:50">
+            <t>padding-right:50</t>
+        </g-rect>
+        <g-rect x="100" y="500" style="--padding-bottom:50">
+            <t>padding-bottom:50</t>
+        </g-rect>
+    
+    </svg>
+</body>
+
+</html>

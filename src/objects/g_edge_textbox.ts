@@ -398,7 +398,7 @@ export class GEdgeTextBox extends GObject {
 
 
 
-    get innerRectangle(): Rectangle {
+    get textRegion(): Rectangle {
         const rect = new Rectangle();
         rect.width = 0;
         rect.height = 0;
@@ -407,7 +407,7 @@ export class GEdgeTextBox extends GObject {
         return rect;
     }
     private get innerRectangleWithoutMargin(): Rectangle {
-        const rect = this.innerRectangle;
+        const rect = this.textRegion;
         rect.width = rect.width - this.marginPaddingLeft - this.marginPaddingRight;
         rect.height = rect.height - this.marginPaddingTop - this.marginPaddingBottom;
         rect.x = rect.x + this.marginPaddingLeft;

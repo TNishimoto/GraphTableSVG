@@ -80,7 +80,9 @@ export class GObject {
 
     }
     protected setBasicOption(option: GOptions.GObjectAttributes) : void{
+
         GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
+        
         if(option.attributes !== undefined){
             Object.keys(option.attributes).forEach((v) =>{
                 const value : string = option.attributes![v];
@@ -90,6 +92,10 @@ export class GObject {
         if (typeof option.id !== "undefined") this.svgGroup.id = option.id;
     }
     protected setOptionalSize(option: GOptions.GObjectAttributes){
+        if(this.svgSurface !== null){
+            GOptions.setClassAndStyle(this.svgSurface, option.surfaceClass, option.surfaceStyle)
+        }
+
         this.width = option.width !== undefined ? option.width : 25;
         this.height = option.height !== undefined ? option.height : 25;
     }
