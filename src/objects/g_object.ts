@@ -110,8 +110,9 @@ export class GObject {
             }else{
                 
                 this.positionType = PositionType.UpperLeft;
-                this.x = option.position.x;
-                this.y = option.position.y;
+                this.setVirtualXY(option.position.x, option.position.y);
+                //this.x = option.position.x;
+                //this.y = option.position.y;
                 
             }
         }else{
@@ -365,17 +366,20 @@ export class GObject {
     public get leftWidth() : number{
         return (this.width /2);
     }
+    public get surfaceRegion() : Rectangle{
+        return new Rectangle();
+    }
 
     public get x(): number {
         if (this.isCenterBased) {
-            return SVGGExtension.getX(this.svgGroup) + this.getVirtualRegion().x;
+            return SVGGExtension.getX(this.svgGroup) + this.surfaceRegion.x;
         } else {
             return SVGGExtension.getX(this.svgGroup);
         }
     }
     public get y(): number {
         if (this.isCenterBased) {
-            return SVGGExtension.getY(this.svgGroup) + this.getVirtualRegion().y;
+            return SVGGExtension.getY(this.svgGroup) + this.surfaceRegion.y;
         } else {
             return SVGGExtension.getY(this.svgGroup);
         }
@@ -385,16 +389,48 @@ export class GObject {
             throw Error("This object does not support set x!");
         }else{
             if (this.isCenterBased) {
-                console.log(v);
-                console.log(this.getVirtualRegion());
-
-                SVGGExtension.setX(this.svgGroup, v  - this.getVirtualRegion().x);
+                SVGGExtension.setX(this.svgGroup, v  - this.surfaceRegion.x);
             } else {
                 SVGGExtension.setX(this.svgGroup, v);
             }    
         }
 
     }
+    public set y(v: number) {
+        if(this.coordinateType == CoodinateType.Group00){
+            throw Error("This object does not support set y!");
+        }else{
+            if (this.isCenterBased) {
+                SVGGExtension.setY(this.svgGroup, v - this.surfaceRegion.y );
+            } else {
+                SVGGExtension.setY(this.svgGroup, v);
+            }    
+        }
+    }
+
+    public setVirtualXY(x : number, y : number){
+        const rect = this.getVirtualRegion();
+        if(this.coordinateType == CoodinateType.Group00){
+            throw Error("This object does not support set x!");
+        }else{
+            if (this.isCenterBased) {
+                SVGGExtension.setX(this.svgGroup, x  - rect.x);
+            } else {
+                SVGGExtension.setX(this.svgGroup, x);
+            }    
+        }
+        if(this.coordinateType == CoodinateType.Group00){
+            throw Error("This object does not support set y!");
+        }else{
+            if (this.isCenterBased) {
+                SVGGExtension.setY(this.svgGroup, y - rect.y );
+            } else {
+                SVGGExtension.setY(this.svgGroup, y);
+            }    
+        }
+
+    }
+
     /*
     public set virtualX(v: number) {
         if(this.coordinateType == CoodinateType.Group00){
@@ -410,17 +446,6 @@ export class GObject {
     }
     */
 
-    public set y(v: number) {
-        if(this.coordinateType == CoodinateType.Group00){
-            throw Error("This object does not support set y!");
-        }else{
-            if (this.isCenterBased) {
-                SVGGExtension.setY(this.svgGroup, v - this.getVirtualRegion().y );
-            } else {
-                SVGGExtension.setY(this.svgGroup, v);
-            }    
-        }
-    }
     /*
     public set virtualY(v: number) {
         if(this.coordinateType == CoodinateType.Group00){

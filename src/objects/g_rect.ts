@@ -116,7 +116,14 @@
         set height(value: number) {
             if (this.height != value) this.svgRectangle.setAttribute("height", value.toString());
         }
-
+        public get surfaceRegion() : Rectangle{
+            const x = this.svgRectangle.x.baseVal.value;
+            const y = this.svgRectangle.y.baseVal.value;
+            const w = this.width;
+            const h = this.height
+            return new Rectangle(x, y, w, h);
+        }
+    
         protected updateSurfaceLocation(){            
             const virtualRegion = this.getVirtualRegion();
             this.svgRectangle.x.baseVal.value = -virtualRegion.width / 2;

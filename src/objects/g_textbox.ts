@@ -52,9 +52,6 @@ export class GTextBox extends GVertex {
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
         this.svgText!.onclick = (e) => {
             const textRect = this.getVirtualRegion();
-            console.log(this.ExtraRegion)
-            //console.log(this.textRegion)
-            console.log(`${this.leftExtraLength}/${this.rightExtraLength}/${this.topExtraLength}/${this.bottomExtraLength}`)
 
             this.svgText!.style.border = "black"
 
@@ -277,13 +274,18 @@ export class GTextBox extends GVertex {
     }
     protected updateSurfaceSize(){
         const region = this.getVirtualRegion();
-        this.width = region.width;
-        this.height = region.height;        
+        if(this.width != region.width){
+            this.width = region.width;
+        }
+
+        if(this.height != region.height){
+            this.height = region.height;        
+        }
     }
     protected updateTextLocation(){
         //const textRect = this.textLocationRegion;
         //console.log(this.verticalAnchor + "/" + this.horizontalAnchor)
-        SVGTextExtension.gtSetXY(this.svgText, this.textLocationRegion, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+        SVGTextExtension.gtSetXY(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
     }
     protected updateSurfaceLocation(){
 
@@ -533,7 +535,7 @@ export class GTextBox extends GVertex {
         return this.getVirtualRegion().height;
     }
     
-    get ExtraRegion(): Rectangle {
+    getVirtualExtraRegion(): Rectangle {
         const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
         const w = textRect.width + this.leftExtraLength + this.rightExtraLength;
         const h = textRect.height + this.topExtraLength + this.bottomExtraLength;
@@ -541,7 +543,7 @@ export class GTextBox extends GVertex {
         const y = -h/2;
         return new Rectangle(x, y, w, h);
     }
-    get textLocationRegion(): Rectangle {
+    getVirtualTextLocationRegion(): Rectangle {
         const rect = this.getVirtualRegion();
         rect.x += this.leftExtraLength;
         rect.y += this.topExtraLength;
@@ -563,7 +565,7 @@ export class GTextBox extends GVertex {
             throw new UndefinedError();
             //return new Rectangle(this.cx, this.cy, 0, 0);
         }
-        const marginRect = this.ExtraRegion;
+        const marginRect = this.getVirtualExtraRegion();
 
         if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
             return marginRect;

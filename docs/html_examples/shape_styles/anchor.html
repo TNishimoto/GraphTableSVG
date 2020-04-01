@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Custom Style Attribute Samples</title>
-    <script src="../scripts/graph_table_svg.js"></script>
+    <title>Anchor Samples</title>
+    <script src="../../scripts/graph_table_svg.js"></script>
     <script>
         window.onload = () => {
             GraphTableSVG.Options.openSVG();
@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <svg width="900px" height="900px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
+    <svg width="900px" height="600px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
         <g-rect x="0" y="0" width="250" height="100" style="--horizontal-anchor:left">--horizontal-anchor:left</g-rect>
 
         <g-rect x="280" y="0" width="250" height="100" style="--horizontal-anchor:center">--horizontal-anchor:center</g-rect>
@@ -32,21 +32,6 @@
         <g-rect x="550" y="300" width="250" height="100" style="--vertical-anchor:bottom;--horizontal-anchor:right">
             <t>--vertical-anchor:bottom</t>
             <t>--horizontal-anchor:right</t>
-        </g-rect>
-        <g-rect x="0" y="450" width="250" height="100" style="--autosize-shape-to-fit-text:auto">
-            <t>--autosize-shape-to-fit-text:auto</t>
-        </g-rect>
-        <g-rect x="380" y="500" text:style="--margin-top:50;--margin-left:50;--margin-right:25;--margin-bottom:25">
-            <t>margin-top:50</t>
-            <t>margin-left:50</t>
-            <t>margin-right:25</t>
-            <t>margin-bottom:25</t>
-        </g-rect>
-        <g-rect x="650" y="500" style="--padding-top:50;--padding-left:50;--padding-right:25;--padding-bottom:25">
-            <t>padding-top:50</t>
-            <t>padding-left:50</t>
-            <t>padding-right:25</t>
-            <t>padding-bottom:25</t>
         </g-rect>
     </svg>
 </body>
