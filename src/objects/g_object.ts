@@ -385,6 +385,9 @@ export class GObject {
             throw Error("This object does not support set x!");
         }else{
             if (this.isCenterBased) {
+                console.log(v);
+                console.log(this.getVirtualRegion());
+
                 SVGGExtension.setX(this.svgGroup, v  - this.getVirtualRegion().x);
             } else {
                 SVGGExtension.setX(this.svgGroup, v);
@@ -463,6 +466,7 @@ export class GObject {
             if (this.height != value && value != null) this.svgGroup.setAttribute("data-height", value.toString());
         }
     }
+    /*
     public get fixedX(): number | null {
         return ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-fixedX", null);
     }
@@ -473,6 +477,7 @@ export class GObject {
             this.svgGroup.setAttribute("data-fixedX", v.toString());
         }
     }
+    
     public get fixedY(): number | null {
         return ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-fixedY", null);
     }
@@ -483,6 +488,7 @@ export class GObject {
             this.svgGroup.setAttribute("data-fixedY", v.toString());
         }
     }
+    */
     public get isCenterBased() {
         return true;
     }

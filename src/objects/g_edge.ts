@@ -10,7 +10,7 @@ import { ShapeObjectType, PathTextAlighnment, ConnectorPosition, msoDashStyle, C
 import * as CommonFunctions from "../common/common_functions"
 import { VBATranslateFunctions } from "../common/vba_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox";
-import {getLineType, setCpmoutedDashArray} from "../html/enum_extension";
+import {getLineType, setComputedDashArray} from "../html/enum_extension";
 
 import { GEdgeTextBox } from "./g_edge_textbox"
 import { GVertex } from "./g_vertex"
@@ -811,7 +811,7 @@ export class GEdge extends GEdgeTextBox {
         //this._observer.disconnect();
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null) {
-            setCpmoutedDashArray(this.svgPath);
+            setComputedDashArray(this.svgPath);
         }
         //this._observer.observe(this.svgGroup, this._observerOption);
         this.hasConnectedObserverFunction = true;

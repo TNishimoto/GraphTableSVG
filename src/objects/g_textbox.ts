@@ -15,7 +15,7 @@ import { GVertex } from "./g_vertex"
 
 import * as GOptions from "./g_options"
 import { AutoSizeShapeToFitText } from "../common/enums"
-import { setCpmoutedDashArray } from "../html/enum_extension";
+import { setComputedDashArray } from "../html/enum_extension";
 
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGElementExtension from "../interfaces/svg_element_extension"
@@ -52,8 +52,8 @@ export class GTextBox extends GVertex {
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
         this.svgText!.onclick = (e) => {
             const textRect = this.getVirtualRegion();
-            console.log(this.marginRegion)
-            console.log(this.textRegion)
+            console.log(this.ExtraRegion)
+            //console.log(this.textRegion)
             console.log(`${this.leftExtraLength}/${this.rightExtraLength}/${this.topExtraLength}/${this.bottomExtraLength}`)
 
             this.svgText!.style.border = "black"
@@ -266,6 +266,28 @@ export class GTextBox extends GVertex {
         ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.autoSizeShapeToFitText, value);
         //this.svgGroup.setPropertyStyleValue(AttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
     }
+    protected updateStyle(){
+        this.hasConnectedObserverFunction = false;
+        const dashStyle = this.msoDashStyle;
+        if (dashStyle != null && this.svgSurface != null) {
+            setComputedDashArray(this.svgSurface);
+        }
+        //this._observer.observe(this.svgGroup, this._observerOption);
+        this.hasConnectedObserverFunction = true;
+    }
+    protected updateSurfaceSize(){
+        const region = this.getVirtualRegion();
+        this.width = region.width;
+        this.height = region.height;        
+    }
+    protected updateTextLocation(){
+        //const textRect = this.textLocationRegion;
+        //console.log(this.verticalAnchor + "/" + this.horizontalAnchor)
+        SVGTextExtension.gtSetXY(this.svgText, this.textLocationRegion, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+    }
+    protected updateSurfaceLocation(){
+
+    }
     public update() {
         super.update();
         this._isUpdating = true;
@@ -276,13 +298,17 @@ export class GTextBox extends GVertex {
         if (this.svgText == null) {
             throw new TypeError("svgText is null");
         }
-        //SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
-        const region = this.getVirtualRegion();
-        //this.cx = region.x + (region.width/2);
-        //this.cy = region.y + (region.height/2);
+        this.updateStyle();
+        this.updateSurfaceSize();
+        this.updateTextLocation();
+        this.updateSurfaceLocation();
+        this._isUpdating = false;
+        //this._observer.observe(this.svgGroup, this.groupObserverOption);
+        this.hasConnectedObserverFunction = true;
 
-        this.width = region.width;
-        this.height = region.height;
+
+
+        //SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
         /*
         if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
             this.updateToFitText(true);
@@ -302,15 +328,16 @@ export class GTextBox extends GVertex {
             //this.innerRectangle
         }
         */
-        this.updateSurface();
+        //this.updateSurface();
 
-
+        /*
         if (this.fixedX != null && Math.abs(this.x - this.fixedX) > 20) {
             this.x = this.fixedX;
         }
         if (this.fixedY != null && Math.abs(this.y - this.fixedY) > 20) {
             this.y = this.fixedY;
         }
+        */
 
         /*
         if(this.fixedY != null){
@@ -320,29 +347,10 @@ export class GTextBox extends GVertex {
 
         //if (!this._isSpecialTextBox) {
 
-        const textRect = this.textRegion;
-        //SVGTextExtension.getVirtualRegion(this.svgText);
-        //const newTextRect = new Rectangle(-textRect.width / 2, -textRect.height / 2, textRect.width, textRect.height)
-        SVGTextExtension.gtSetXY(this.svgText, textRect, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
         // }
 
         //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
-        this._isUpdating = false;
-        //this._observer.observe(this.svgGroup, this.groupObserverOption);
-        this.hasConnectedObserverFunction = true;
 
-    }
-
-    protected updateSurface() {
-
-        //this._observer.disconnect();
-        this.hasConnectedObserverFunction = false;
-        const dashStyle = this.msoDashStyle;
-        if (dashStyle != null && this.svgSurface != null) {
-            setCpmoutedDashArray(this.svgSurface);
-        }
-        //this._observer.observe(this.svgGroup, this._observerOption);
-        this.hasConnectedObserverFunction = true;
     }
     /*
     protected updateToFitText(isWidth: boolean) {
@@ -525,21 +533,68 @@ export class GTextBox extends GVertex {
         return this.getVirtualRegion().height;
     }
     
-    get textRegion(): Rectangle {
-        const rect = this.marginRegion;
-        const w = rect.width - this.leftExtraLength - this.rightExtraLength;
-        const h = rect.height - this.topExtraLength - this.bottomExtraLength;
-        const x =rect.x + this.leftExtraLength;
-        const y = rect.y + this.topExtraLength;
-        return new Rectangle(x, y, w, h);
-    }
-    get marginRegion(): Rectangle {
+    get ExtraRegion(): Rectangle {
         const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
         const w = textRect.width + this.leftExtraLength + this.rightExtraLength;
         const h = textRect.height + this.topExtraLength + this.bottomExtraLength;
         const x = -w/2;
         const y = -h/2;
         return new Rectangle(x, y, w, h);
+    }
+    get textLocationRegion(): Rectangle {
+        const rect = this.getVirtualRegion();
+        rect.x += this.leftExtraLength;
+        rect.y += this.topExtraLength;
+        rect.width -= this.leftExtraLength + this.rightExtraLength;
+        rect.height -= this.topExtraLength + this.bottomExtraLength;
+        return rect;
+        /*
+        const rect = this.ExtraRegion;
+        const w = rect.width - this.leftExtraLength - this.rightExtraLength;
+        const h = rect.height - this.topExtraLength - this.bottomExtraLength;
+        const x =rect.x + this.leftExtraLength;
+        const y = rect.y + this.topExtraLength;
+        return new Rectangle(x, y, w, h);
+        */
+    }
+
+    public getVirtualRegion(): Rectangle {
+        if(this.svgText === undefined){
+            throw new UndefinedError();
+            //return new Rectangle(this.cx, this.cy, 0, 0);
+        }
+        const marginRect = this.ExtraRegion;
+
+        if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
+            return marginRect;
+        } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
+            let [x, y] = [0,0]
+            let [newWidth, newHeight] = [0,0]
+
+            if(this.width < marginRect.width){
+                newWidth = marginRect.width;
+                x = marginRect.x;
+            }else{
+                const surface_x = this.svgSurface != null ? SVGElementExtension.getX(this.svgSurface) : 0;
+                newWidth = this.width;
+                x = -this.width/2;
+            }
+            if(this.height < marginRect.height){
+                
+                newHeight =marginRect.height;
+                y = marginRect.y;
+            }else{
+                const surface_y = this.svgSurface != null ? SVGElementExtension.getY(this.svgSurface) : 0;
+                newHeight = this.height;
+                y = -this.height/2;
+            }
+            //const newWidth = this.width < width ? width : this.width;
+            //const newHeigth = this.height < height ? height : this.height;
+            return new Rectangle(x, y, newWidth, newHeight);
+        } else {
+            return new Rectangle(- (this.width / 2), - (this.height / 2), this.width, this.height);
+            //return new Rectangle(this.x, this.y, this.width, this.height);
+        }
     }
 
     get topExtraLength(): number {
@@ -563,51 +618,7 @@ export class GTextBox extends GVertex {
     }
     */
 
-    public getVirtualRegion(): Rectangle {
-        if(this.svgText === undefined){
-            throw new UndefinedError();
-            //return new Rectangle(this.cx, this.cy, 0, 0);
-        }
-        const marginRect = this.marginRegion;
-        /*
-        const textWidth = textRect.width < this._minimumWidth ? this._minimumWidth : textRect.width;
-        const textHeight = textRect.height < this._minimumHeight ? this._minimumHeight : textRect.height;
-        const width = textWidth + this.leftExtraLength + this.rightExtraLength;
-        const height = textHeight + this.topExtraLength + this.bottomExtraLength;
-        */
-
-
-        if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
-            return marginRect;
-        } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
-            let [x, y] = [0,0]
-            let [newWidth, newHeight] = [0,0]
-
-            if(this.width < marginRect.width){
-                newWidth = marginRect.width;
-                x = marginRect.x;
-            }else{
-                const surface_x = this.svgSurface != null ? SVGElementExtension.getX(this.svgSurface) : 0;
-                newWidth = this.width;
-                x = this.width/2;
-            }
-            if(this.height < marginRect.height){
-                
-                newHeight =marginRect.height;
-                y = marginRect.y;
-            }else{
-                const surface_y = this.svgSurface != null ? SVGElementExtension.getY(this.svgSurface) : 0;
-                newHeight = this.height;
-                y = this.height/2;
-            }
-            //const newWidth = this.width < width ? width : this.width;
-            //const newHeigth = this.height < height ? height : this.height;
-            return new Rectangle(x, y, newWidth, newHeight);
-        } else {
-            return new Rectangle(- (this.width / 2), - (this.height / 2), this.width, this.height);
-            //return new Rectangle(this.x, this.y, this.width, this.height);
-        }
-    }
+    
 
 }
 

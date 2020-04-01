@@ -27,7 +27,7 @@ function computeDashArray(type: msoDashStyle, width: number): string {
     return r.join(",");
 }
 
-export function setCpmoutedDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement): void {
+export function setComputedDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement): void {
     const type = ElementExtension.getPropertyStyleValue(svgLine,StyleNames.msoDashStyleName);
     if (type == null) {
 

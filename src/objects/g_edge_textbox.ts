@@ -14,7 +14,7 @@ import { GObject } from "./g_object"
 
 import * as GOptions from "./g_options"
 import { AutoSizeShapeToFitText } from "../common/enums"
-import {setCpmoutedDashArray} from "../html/enum_extension";
+import {setComputedDashArray} from "../html/enum_extension";
 
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGElementExtension from "../interfaces/svg_element_extension"
@@ -282,13 +282,14 @@ export class GEdgeTextBox extends GObject {
         }
         this.updateSurface();
 
-
+        /*
         if (this.fixedX != null && Math.abs(this.x - this.fixedX) > 20) {
             this.x = this.fixedX;
         }
         if (this.fixedY != null && Math.abs(this.y - this.fixedY) > 20) {
             this.y = this.fixedY;
         }
+        */
 
         /*
         if(this.fixedY != null){
@@ -313,7 +314,7 @@ export class GEdgeTextBox extends GObject {
         this.hasConnectedObserverFunction = false;
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null && this.svgSurface != null) {
-            setCpmoutedDashArray(this.svgSurface);
+            setComputedDashArray(this.svgSurface);
         }
         //this._observer.observe(this.svgGroup, this._observerOption);
         this.hasConnectedObserverFunction = true;

@@ -9,7 +9,7 @@
     import {Rectangle, VLine} from "../common/vline"
     import * as CSS from "../html/css"
     import * as GOptions  from "./g_options"
-    import {setCpmoutedDashArray} from "../html/enum_extension";
+    import {setComputedDashArray} from "../html/enum_extension";
     import * as ElementExtension from "../interfaces/element_extension"
     import * as DefaultClassNames from "../common/default_class_names"
 
@@ -117,26 +117,22 @@
             if (this.height != value) this.svgRectangle.setAttribute("height", value.toString());
         }
 
-        protected updateSurface() {
+        protected updateSurfaceLocation(){            
             const virtualRegion = this.getVirtualRegion();
             this.svgRectangle.x.baseVal.value = -virtualRegion.width / 2;
             this.svgRectangle.y.baseVal.value = -virtualRegion.height / 2;
-            //this.width = virtualRegion.width;
-            //this.height = virtualRegion.height;
-
-            //this.svgRectangle.x.baseVal.value = -this.width / 2;
-            //this.svgRectangle.y.baseVal.value = -this.height / 2;
-
-            //this._observer.disconnect();
+        }
+        /*
+        protected updateSurface() {
             this.hasConnectedObserverFunction = false;
             const dashStyle = this.msoDashStyle;
             if (dashStyle != null) {
-                setCpmoutedDashArray(this.svgRectangle);
+                setComputedDashArray(this.svgRectangle);
             }
             this.hasConnectedObserverFunction = true;
             //this._observer.observe(this.svgGroup, this._observerOption);
-
         }
+        */
         /**
                 * 接続部分の座標を返します。
                 * @param type
