@@ -88,38 +88,12 @@ export class GTextBox extends GVertex {
         super.setOption(option);
         //this.setBasicOption(option);
     }
-    initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
-        let b = false;
-        if (option.width !== undefined || option.height !== undefined) {
-            b = true;
-        }
-
-        const _option: GOptions.GTextBoxAttributes = <GOptions.GTextBoxAttributes>super.initializeOption(option);
-        /*
-        if(_option.class === undefined){
-            _option.class = { isAutoSizeShapeToFitText : true, verticalAnchor : VerticalAnchor.Middle, horizontalAnchor : HorizontalAnchor.Center }
-        }
-        if(typeof(_option.class) == "object" ){
-            if(_option.class.isAutoSizeShapeToFitText === undefined) _option.class.isAutoSizeShapeToFitText = true;
-            if(_option.class.verticalAnchor === undefined) _option.class.verticalAnchor = VerticalAnchor.Middle;
-            if(_option.class.horizontalAnchor === undefined) _option.class.horizontalAnchor = HorizontalAnchor.Center;
-        } 
-        */
-        //if (b && _option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = false;
-        //if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
-        //if (_option.verticalAnchor === undefined) _option.verticalAnchor = VerticalAnchor.Middle;
-        //if (_option.horizontalAnchor === undefined) _option.horizontalAnchor = HorizontalAnchor.Center;
-        if (_option.textClass === undefined) _option.textClass = DefaultClassNames.defaultTextClass;
-
-
-        return _option;
-    }
     /**
     * SVGTextElementを生成します。
     * @param className 生成するSVG要素のクラス属性名
     * @returns 生成されたSVGTextElement
     */
-    private static createSVGText(className: string | undefined | null, style: string | undefined): SVGTextElement {
+    public static createSVGText(className: string | undefined | null, style: string | undefined): SVGTextElement {
         const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
         _svgText.setAttribute(AttributeNames.objectIDName, (SVG.getNewID()).toString());

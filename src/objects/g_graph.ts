@@ -30,6 +30,7 @@ import * as SVGGExtension from "../interfaces/svg_g_extension"
 import { GPathTextBox } from "."
 import { LogicTable } from "../logics/logic_table"
 import { GTable } from "./g_table"
+import { ArgumentOutOfRangeError } from "../common/exceptions"
 
 
 
@@ -266,6 +267,7 @@ export class GGraph extends GObject {
      * @param child 
      * @param option 
      */
+    /*
     public appendChild(parent: GVertex, child: GVertex | null, option: { insertIndex?: number } = {}) {
         const _child = child == null ? GGraph.createVertex2(this) : child;
         const edge: GEdge = <any>GGraph.createEdge(this);
@@ -274,6 +276,7 @@ export class GGraph extends GObject {
         this.relocate();
 
     }
+    */
     public get relocateStyle(): string | null {
         return ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.relocateName)
     }
@@ -605,7 +608,7 @@ export class GGraph extends GObject {
                 case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent);
                 case ShapeObjectType.Ellipse: return new GEllipse(_parent);
                 case ShapeObjectType.Circle: return new GCircle(_parent);
-                case ShapeObjectType.Rect: return new GRect(_parent, option);
+                case ShapeObjectType.Rect: return new GRect(_parent);
             }
         }
         return new GEllipse(_parent);
@@ -636,15 +639,35 @@ export class GGraph extends GObject {
         const _parent: SVGElement = GGraph.getParent(parent);
 
         switch (type) {
-            case ShapeObjectType.Callout: return new GCallout(_parent);
-            case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent);
-            case ShapeObjectType.PathTextBox: return new GPathTextBox(_parent);
-            case ShapeObjectType.Ellipse: return new GEllipse(_parent);
-            case ShapeObjectType.Rect: return new GRect(_parent, option);
-            case ShapeObjectType.RectButton: return new GRectButton(_parent, option);
-            case ShapeObjectType.Circle: return new GCircle(_parent);
+            case ShapeObjectType.Callout:
+                const call = new GCallout(_parent);
+                call.setOption(option);
+                return call;
+            case ShapeObjectType.ArrowCallout:
+                const arr = new GArrowCallout(_parent);
+                arr.setOption(option);
+            case ShapeObjectType.Ellipse:
+                const ell = new GEllipse(_parent);
+                ell.setOption(option);
+                return ell;
+            case ShapeObjectType.Rect:
+                const rect = new GRect(_parent);
+                rect.setOption(option);
+                return rect;
+            case ShapeObjectType.Table:
+                const table = new GTable(_parent);
+                table.setOption(option);
+                return table;
+            case ShapeObjectType.RectButton:
+                const rectb = new GRectButton(_parent);
+                rectb.setOption(option);
+                return rectb;
+            case ShapeObjectType.Circle:
+                const circle = new GCircle(_parent);
+                circle.setOption(option);
+                return circle;
         }
-        throw Error("error");
+        throw new ArgumentOutOfRangeError();
     }
     public static createVertexTable(parent: SVGElement | string | GObject, obj : LogicTable): GVertex {
         const _parent: SVGElement = GGraph.getParent(parent);
@@ -656,8 +679,9 @@ export class GGraph extends GObject {
 
     public static createEdge(parent: SVGElement | string | GObject, option: any = {}): GEdge {
         const _parent: SVGElement = GGraph.getParent(parent);
-        return new GEdge(_parent, option);
-
+        const edge = new GEdge(_parent);
+        edge.setOption(option);
+        return edge;
 
     }
 

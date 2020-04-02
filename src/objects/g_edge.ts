@@ -28,21 +28,35 @@ import * as SVGTextExtensions from "../interfaces/svg_text_extension"
  */
 export class GEdge extends GEdgeTextBox {
 
-    constructor(svgbox: SVGElement | string, option: GOptions.GEdgeAttributes = {}) {
-        super(svgbox, option);
+    constructor(svgbox: SVGElement | string) {
+        super(svgbox);
         this._isSpecialTextBox = true;
         this.updateAttributes.push(AttributeNames.beginNodeName);
         this.updateAttributes.push(AttributeNames.endNodeName);
-
 
         const pathClass = this.svgSurface!.getAttribute("class");
         if (pathClass == DefaultClassNames.defaultSurfaceClass) {
             this.svgSurface!.setAttribute("class", DefaultClassNames.defaultPathSurfaceClass);
         }
+        this.svgText.textContent = "";
+
+        this._svgTextPath = SVG.createTextPath2(DefaultClassNames.defaultTextClass);
+        this.svgPath.id = `path-${this.objectID}`;
+
+        this.svgText.appendChild(this._svgTextPath);
+        this._svgTextPath.href.baseVal = `#${this.svgPath.id}`
+        
+
+        if (this.type == ShapeObjectType.Edge) this.firstFunctionAfterInitialized();
+
+        //this.setAppropriateText();
+    }
+
+    protected setBasicOption(option: GOptions.GEdgeAttributes) {
+        super.setBasicOption(option)
 
         //this._svgGroup = SVG.createGroup(svgbox);
-        const _option = <GOptions.GEdgeAttributes>this.initializeOption(option);
-        this.svgText.textContent = "";
+        //const _option = <GOptions.GEdgeAttributes>this.initializeOption(option);
         //const textClass = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultTextClass);
         if (option.textClass === undefined) option.textClass = DefaultClassNames.defaultTextClass;
 
@@ -52,23 +66,11 @@ export class GEdge extends GEdgeTextBox {
         }else if(typeof option.textClass == "object"){
             textClass = CSS.getOrCreateClassName(option.textClass);
         }
-        /*
-        if(typeof(className) == "string"){
-        }else{
-            const newClassName = CSS.getOrAddRule(className);
-            path.setAttribute("class", newClassName);
-        }
-        */
 
-        this._svgTextPath = SVG.createTextPath2(textClass);
-        this.svgPath.id = `path-${this.objectID}`;
 
-        this.svgText.appendChild(this._svgTextPath);
-        this._svgTextPath.href.baseVal = `#${this.svgPath.id}`
-
-        if (typeof _option.text == "string") {
-            Extensions.setTextContent(this.svgTextPath, _option.text);
-        } else if (Array.isArray(_option.text)) {
+        if (typeof option.text == "string") {
+            Extensions.setTextContent(this.svgTextPath, option.text);
+        } else if (Array.isArray(option.text)) {
 
         } else {
 
@@ -79,39 +81,24 @@ export class GEdge extends GEdgeTextBox {
         const strokeWidth = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke-width");
         const strokeWidth2 = strokeWidth == null ? undefined : strokeWidth;
 
-        if (_option.startMarker !== undefined) this.markerStart = GEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
-        if (_option.endMarker !== undefined) this.markerEnd = GEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+        if (option.startMarker !== undefined) this.markerStart = GEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+        if (option.endMarker !== undefined) this.markerEnd = GEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
-        this.pathPoints = [[_option.x1!, _option.y1!], [_option.x2!, _option.y2!]];
+        this.pathPoints = [[option.x1!, option.y1!], [option.x2!, option.y2!]];
 
-        if(typeof _option.beginVertex == "object"){
-            if (_option.beginVertex instanceof GVertex) this.beginVertex = _option.beginVertex;
+        if(typeof option.beginVertex == "object"){
+            if (option.beginVertex instanceof GVertex) this.beginVertex = option.beginVertex;
         }
-        if(typeof _option.endVertex == "object"){
-            if (_option.endVertex instanceof GVertex) this.endVertex = _option.endVertex;
-        }
-
-
-        if (_option.x3 !== undefined && _option.y3 !== undefined) {
-            this.controlPoint = [[_option.x3, _option.y3]];
+        if(typeof option.endVertex == "object"){
+            if (option.endVertex instanceof GVertex) this.endVertex = option.endVertex;
         }
 
 
-        //if (_option.beginConnectorType !== undefined) this.beginConnectorType = _option.beginConnectorType;
-        //if (_option.endConnectorType !== undefined) this.endConnectorType = _option.endConnectorType;
-        //if (_option.pathTextAlignment !== undefined) this.pathTextAlignment = _option.pathTextAlignment;
-        
-        //this.pathTextAlignment = PathTextAlighnment.begin;
-        //this.update();
-        //if (this.svgGroup.getPropertyStyleValue(AttributeNames.Style.PathTextAlignment) == null) {
-        //    this.pathTextAlignment = PathTextAlighnment.center;
-       // }
-
-        //this.update();
-        if (this.type == ShapeObjectType.Edge) this.firstFunctionAfterInitialized();
-
-        //this.setAppropriateText();
+        if (option.x3 !== undefined && option.y3 !== undefined) {
+            this.controlPoint = [[option.x3, option.y3]];
+        }
     }
+
     public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
         throw Error("Error!")
     }
@@ -175,7 +162,7 @@ export class GEdge extends GEdgeTextBox {
         }
         return _output;
     }
-
+    /*
     initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
         const _option = <GOptions.GEdgeAttributes>super.initializeOption(option);
 
@@ -205,15 +192,11 @@ export class GEdge extends GEdgeTextBox {
         }
 
 
-        //const styleBeginConnectorType = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.beginConnectorType);
-        //const styleEndConnectorType = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.endConnectorType);
-        //if (_option.beginConnectorType === undefined && styleBeginConnectorType === null) _option.beginConnectorType = ConnectorPosition.Auto;
-        //if (_option.endConnectorType === undefined && styleEndConnectorType === null) _option.endConnectorType = ConnectorPosition.Auto;
-        //if (_option.pathTextAlignment === undefined) _option.pathTextAlignment = PathTextAlighnment.center;
 
         return _option;
 
     }
+    */
     public isDrawnText() : boolean{
         const text = this.svgTextPath.textContent;
         if(text == null || text.length == 0){

@@ -19,7 +19,7 @@
             return <SVGRectElement>this._svgSurface;
         }
 
-        public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
+        public constructor(svgbox: SVGElement | string) {
             super(svgbox);
             this.updateAttributes.push("width");
             this.updateAttributes.push("height");

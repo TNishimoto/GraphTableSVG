@@ -61,7 +61,16 @@
         public get type(): ShapeObjectType {
             return "g-callout";
         }
-
+        protected updateSurfaceSize(){
+            const region = this.getVirtualRegion();
+            if(this.width != region.width){
+                this.width = region.width;
+            }
+    
+            if(this.height != region.height){
+                this.height = region.height;        
+            }
+        }
         public update() {
             super.update();
             const x1 = - (this.width / 2);

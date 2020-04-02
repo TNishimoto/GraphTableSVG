@@ -22,9 +22,10 @@ import { GCircle } from "../objects/g_circle";
 import * as GOptions from "../objects/g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import { LogicTable } from "../logics";
+import { ArgumentOutOfRangeError } from "../common/exceptions";
 
 //export namespace openSVGFunctions {
-    
+
 //}
 function isGCustomElement(element: SVGElement): boolean {
     const gObjectTypeAttr = element.getAttribute(AttributeNames.customElement);
@@ -91,17 +92,17 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
             const option = GCircle.constructAttributes(e, true);
             r = new GCircle(parent);
             r.setOption(option);
-        } 
+        }
         else if (type == ShapeObjectType.Rect) {
             const option = GRect.constructAttributes(e, true);
-            r = new GRect(parent, option);
+            r = new GRect(parent);
             r.setOption(option);
             //throw Error("error");
 
 
         } else if (type == ShapeObjectType.Edge) {
             const option = GEdge.constructAttributes(e, true);
-            r = new GEdge(parent, option);
+            r = new GEdge(parent);
             r.setOption(option);
         } else if (type == ShapeObjectType.Graph) {
             const option = GGraph.constructAttributes(e, true);
@@ -112,10 +113,10 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
             const logicTable = LogicTable.constructLogicTable(e);
             const option = GTable.constructAttributes(e, true);
 
-            const table =  new GTable(parent);
+            const table = new GTable(parent);
             table.setOption(option);
-            
-            if(logicTable !== null){
+
+            if (logicTable !== null) {
                 table.buildFromLogicTable(logicTable);
             }
             r = table;
@@ -123,7 +124,7 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
         }
         else if (type == ShapeObjectType.RectButton) {
             const option = GRectButton.constructAttributes(e, true);
-            r = new GRectButton(parent, option);
+            r = new GRectButton(parent);
             r.setOption(option);
         }
         else {
@@ -183,7 +184,7 @@ function observelazyElementTimer() {
     if (lazyElementDic.length > 0) setTimeout(observelazyElementTimer, timerInterval);
 }
 
-export function clearSVG(id : string){
+export function clearSVG(id: string) {
     const box = document.getElementById(id)!;
     box.innerHTML = "";
 }
@@ -262,18 +263,47 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
     }
 
     switch (type) {
-        case ShapeObjectType.Callout: return new GCallout(_parent);
-        case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent);
-        case ShapeObjectType.Ellipse: return new GEllipse(_parent);
-        case ShapeObjectType.Rect: return new GRect(_parent, option);
-        case ShapeObjectType.Edge: return new GEdge(_parent, option);
-        case ShapeObjectType.Graph: return new GGraph(_parent);
-        case ShapeObjectType.Table: return new GTable(_parent);
-        case ShapeObjectType.RectButton: return new GRectButton(_parent, option);
-        case ShapeObjectType.Circle: return new GCircle(_parent);
-        case ShapeObjectType.Object: return new GObject(_parent);
+        case ShapeObjectType.Callout:
+            const call = new GCallout(_parent);
+            call.setOption(option);
+            return call;
+        case ShapeObjectType.ArrowCallout:
+            const arr = new GArrowCallout(_parent);
+            arr.setOption(option);
+        case ShapeObjectType.Ellipse:
+            const ell = new GEllipse(_parent);
+            ell.setOption(option);
+            return ell;
+        case ShapeObjectType.Rect:
+            const rect = new GRect(_parent);
+            rect.setOption(option);
+            return rect;
+        case ShapeObjectType.Edge:
+            const edge = new GEdge(_parent);
+            edge.setOption(option);
+            return edge;
+        case ShapeObjectType.Graph:
+            const graph = new GGraph(_parent);
+            graph.setOption(option);
+            return graph;
+        case ShapeObjectType.Table:
+            const table = new GTable(_parent);
+            table.setOption(option);
+            return table;
+        case ShapeObjectType.RectButton:
+            const rectb = new GRectButton(_parent);
+            rectb.setOption(option);
+            return rectb;
+        case ShapeObjectType.Circle:
+            const circle = new GCircle(_parent);
+            circle.setOption(option);
+            return circle;
+        case ShapeObjectType.Object:
+            const obj = new GObject(_parent);
+            obj.setOption(option);
+            return obj;
     }
-    throw Error("error");
+    throw new ArgumentOutOfRangeError();
 }
 
 function toSVGUnknownElement(e: Element) {

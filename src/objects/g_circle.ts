@@ -23,24 +23,6 @@ export class GCircle extends GAbstractEllipseCircle  {
 
         //this.update();
     }
-    initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
-        const _option = { ...option };
-        if (this.svgSurface != null && this.svgSurface.className != null) {
-            const width = ElementExtension.getPropertyStyleNumberValue(this.svgSurface, StyleNames.defaultWidth, null);
-            const height = ElementExtension.getPropertyStyleNumberValue(this.svgSurface, StyleNames.defaultHeight, null);
-            if (width != null) _option.width = width;
-            if (height != null) _option.height = height;
-        }
-        if(_option.width === undefined && _option.height === undefined){
-            _option.width = 25;
-        }
-        //if (_option.width === undefined) _option.width = 25;
-        //if (_option.height === undefined) _option.height = 25;
-        //if (_option.cx === undefined) _option.cx = 0;
-        //if (_option.cy === undefined) _option.cy = 0;
-        if (_option.surfaceClass === undefined) _option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
-        return _option;
-    }
     protected createSurface(svgbox : SVGElement) : void {
         //if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
         this._svgSurface = GCircle.createCircle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);

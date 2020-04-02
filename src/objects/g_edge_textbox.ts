@@ -1,16 +1,15 @@
 /// <reference path="g_object.ts"/>
 import * as SVG from "../interfaces/svg"
 import * as CSS from "../html/css"
-import { VBATranslateFunctions } from "../common/vba_functions"
 
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
-import * as DefaultClassNames from "../common/default_class_names"
 import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../common/enums";
 import { Rectangle } from "../common/vline"
 import * as HTMLFunctions from "../html/html_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { GObject } from "./g_object"
+import { GTextBox } from "./g_textbox"
 
 import * as GOptions from "./g_options"
 import { AutoSizeShapeToFitText } from "../common/enums"
@@ -37,75 +36,43 @@ export class GEdgeTextBox extends GObject {
     protected _minimumWidth: number = 10;
     protected _minimumHeight: number = 10;
 
-    public constructor(svgbox: SVGElement | string, option: GOptions.GTextBoxAttributes = {}) {
+    public constructor(svgbox: SVGElement | string) {
         super(svgbox)
 
-        /*
-        this._svgText = GTextBox.createSVGText(this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultTextClass));
-        this.svgGroup.appendChild(this.svgText);
-        this._textObserver = new MutationObserver(this.textObserverFunc);
-        const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
-        this._textObserver.observe(this.svgText, option2);
-        */
-
-        const _option = <GOptions.GTextBoxAttributes>this.initializeOption(option);
-        const textClass = CSS.createCSSClass(_option.textClass);
-        const styleClass = CSS.createCSSClass(_option.textStyle);
-
-        this._svgText = GEdgeTextBox.createSVGText(textClass, styleClass);
+       this._svgText = GTextBox.createSVGText(undefined, undefined);
         this.svgGroup.appendChild(this.svgText);
         this._textObserver = new MutationObserver(this.textObserverFunc);
         const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
         this._textObserver.observe(this.svgText, option2);
 
-        if (typeof _option.text == "string") {
-            SVGTextExtension.setTextContent(this.svgText, _option.text);
-        } else if (Array.isArray(_option.text)) {
-            SVGTextBox.constructSVGTextByHTMLElements(this.svgText, _option.text, false);
+        if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
+    }
+    protected setBasicOption(option: GOptions.GTextBoxAttributes) {
+        const textClass = CSS.createCSSClass(option.textClass);
+        const styleClass = CSS.createCSSClass(option.textStyle);
+        GOptions.setClassAndStyle(this.svgText, textClass, styleClass);
+
+        if (typeof option.text == "string") {
+            SVGTextExtension.setTextContent(this.svgText, option.text);
+        } else if (Array.isArray(option.text)) {
+            SVGTextBox.constructSVGTextByHTMLElements(this.svgText, option.text, false);
+            SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
+
+
         } else {
 
         }
 
         const b = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.autoSizeShapeToFitText);
-
-        if (b === undefined && typeof (_option.style) == "object") {
-            const style: GOptions.GTextBoxCSS = _option.style;
+        if (b === undefined && typeof (option.style) == "object") {
+            const style: GOptions.GTextBoxCSS = option.style;
             if (style.autoSizeShapeToFitText !== undefined) {
                 this.isAutoSizeShapeToFitText = style.autoSizeShapeToFitText;
             }
         }
 
-        //if(_option.x !== undefined) this.x = _option.x;
-        //if(_option.y !== undefined) this.y = _option.y;
-        if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
     }
 
-    initializeOption(option: GOptions.GObjectAttributes): GOptions.GObjectAttributes {
-        let b = false;
-        if (option.width !== undefined || option.height !== undefined) {
-            b = true;
-        }
-
-        const _option: GOptions.GTextBoxAttributes = <GOptions.GTextBoxAttributes>super.initializeOption(option);
-        /*
-        if(_option.class === undefined){
-            _option.class = { isAutoSizeShapeToFitText : true, verticalAnchor : VerticalAnchor.Middle, horizontalAnchor : HorizontalAnchor.Center }
-        }
-        if(typeof(_option.class) == "object" ){
-            if(_option.class.isAutoSizeShapeToFitText === undefined) _option.class.isAutoSizeShapeToFitText = true;
-            if(_option.class.verticalAnchor === undefined) _option.class.verticalAnchor = VerticalAnchor.Middle;
-            if(_option.class.horizontalAnchor === undefined) _option.class.horizontalAnchor = HorizontalAnchor.Center;
-        } 
-        */
-        //if (b && _option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = false;
-        //if (_option.isAutoSizeShapeToFitText === undefined) _option.isAutoSizeShapeToFitText = true;
-        //if (_option.verticalAnchor === undefined) _option.verticalAnchor = VerticalAnchor.Middle;
-        //if (_option.horizontalAnchor === undefined) _option.horizontalAnchor = HorizontalAnchor.Center;
-        if (_option.textClass === undefined) _option.textClass = DefaultClassNames.defaultTextClass;
-
-
-        return _option;
-    }
     /**
     * SVGTextElementを生成します。
     * @param className 生成するSVG要素のクラス属性名
@@ -416,20 +383,6 @@ export class GEdgeTextBox extends GObject {
         return rect;
     }
 
-    /*
-    get marginLeft(): number {
-        return this.svgText.getPropertyStyleNumberValue("--margin-left", 0);
-    }
-    set marginLeft(value: number) {
-        this.svgText.setPropertyStyleValue("--margin-left", value.toString());
-    }
-    get marginTop(): number {
-        return this.svgText.getPropertyStyleNumberValue("--margin-top", 0);
-    }
-    set marginTop(value: number) {
-        this.svgText.setPropertyStyleValue("--margin-top", value.toString());
-    }
-    */
     public get svgElements(): SVGElement[] {
         const r: SVGElement[] = [];
         r.push(this.svgGroup);

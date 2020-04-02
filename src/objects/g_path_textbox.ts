@@ -74,10 +74,6 @@
             */
             return path;
         }
-        initializeOption(option: GOptions.GObjectAttributes) : GOptions.GObjectAttributes {
-            const _option = super.initializeOption(option);
-            return _option;
-        }
         /*
         get innerRectangle(): Rectangle {
             const rect = new Rectangle();
