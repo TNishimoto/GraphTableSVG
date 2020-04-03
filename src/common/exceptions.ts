@@ -17,3 +17,6 @@ export class NotSupportedError extends Error{
 export class ArgumentOutOfRangeError extends Error{
 
 }
+export class NullError extends Error{
+
+}
