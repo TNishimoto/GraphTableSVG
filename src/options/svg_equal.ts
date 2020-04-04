@@ -67,11 +67,13 @@ function equal_svgsvg(obj1: HTMLElement, obj2: HTMLElement) {
     }
 }
 */
-function equal(obj1_id: string, obj2_id: string) {
+function equal(obj1_id: string, obj2_id: string) : boolean {
     const obj1 = document.getElementById(obj1_id);
     const obj2 = document.getElementById(obj2_id);
     if (obj1 != null && obj2 != null) {
         equal_html(obj1, obj2, false);
+        obj2.style.backgroundColor = "yellow"
+        return true;
     } else {
         throw new NullError(`${obj1_id} / ${obj2_id}`);
 
@@ -91,12 +93,12 @@ export function equalityCheck(test_id: string, correct_id_firefox: string | null
     }else{
 
     }
-    console.log(`Browser: ${browser}`)
+    //console.log(`Browser: ${browser}`)
     if(correct_id != null){
         equal(test_id, correct_id);
-        console.log(`Check OK!: ${test_id} / ${correct_id}`)
+        //console.log(`Check OK!: ${test_id} / ${correct_id}`)
     }else{
-        console.log(`NULL`);
+        //console.log(`NULL`);
     }
 
 }

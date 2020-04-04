@@ -245,11 +245,6 @@ export function getVirtualWidth(text: SVGTSpanElement | SVGTextElement | SVGText
         return text.getBBox().width;    
     }else{
         throw Error("error!");
-        /*
-        const style = getComputedStyle(text);
-        const fontSize = CommonFunctions.toPX(style.fontSize!);
-        const fontFamily = style.fontFamily!;
-        */
     }
 
     /*

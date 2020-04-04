@@ -64,7 +64,7 @@
          * @param graph 
          */
         export function alignVerticeByChildren(graph: GGraph): void {
-            if (!graph.isShow) return;
+            if (!graph.isShown) return;
             const [xi, yi] = getXYIntervals(graph);
 
             if (graph.rootVertex != null) {
@@ -184,7 +184,7 @@
          * @param graph 
          */
         export function alignVerticeByLeave(graph: GGraph): void {
-            if (!graph.isShow) return;
+            if (!graph.isShown) return;
 
             graph.vertices.forEach((v) => { v.cx = 0; v.cy = 0 });
             const [xi, yi] = getXYIntervals(graph);

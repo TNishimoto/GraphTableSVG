@@ -48,21 +48,22 @@ export class GEdgeTextBox extends GObject {
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
     }
     protected setBasicOption(option: GOptions.GTextBoxAttributes) {
+        super.setBasicOption(option);
         const textClass = CSS.createCSSClass(option.textClass);
         const styleClass = CSS.createCSSClass(option.textStyle);
         GOptions.setClassAndStyle(this.svgText, textClass, styleClass);
-
+        
+        /*
         if (typeof option.text == "string") {
             SVGTextExtension.setTextContent(this.svgText, option.text);
+    
         } else if (Array.isArray(option.text)) {
             SVGTextBox.constructSVGTextByHTMLElements(this.svgText, option.text, false);
             SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
-
-
         } else {
 
         }
-
+        */
         const b = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.autoSizeShapeToFitText);
         if (b === undefined && typeof (option.style) == "object") {
             const style: GOptions.GTextBoxCSS = option.style;
@@ -70,7 +71,6 @@ export class GEdgeTextBox extends GObject {
                 this.isAutoSizeShapeToFitText = style.autoSizeShapeToFitText;
             }
         }
-
     }
 
     /**
@@ -148,6 +148,7 @@ export class GEdgeTextBox extends GObject {
 
 
     protected textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
+        if(! this.isShown) return;
         if (!this.isLocated) return;
         let b = false;
 
@@ -221,7 +222,7 @@ export class GEdgeTextBox extends GObject {
     public update() {
         super.update();
         this._isUpdating = true;
-        if (!this.isShow) return;
+        if (!this.isShown) return;
         //this._observer.disconnect();
         this.hasConnectedObserverFunction = false;
 

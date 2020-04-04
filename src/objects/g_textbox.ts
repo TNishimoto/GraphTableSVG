@@ -267,7 +267,7 @@ export class GTextBox extends GVertex {
     public update() {
         super.update();
         this._isUpdating = true;
-        if (!this.isShow) return;
+        if (!this.isShown) return;
         //this._observer.disconnect();
         this.hasConnectedObserverFunction = false;
 

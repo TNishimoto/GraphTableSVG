@@ -20,8 +20,10 @@ import * as GOptions  from "./g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
 import * as SVGTextExtensions from "../interfaces/svg_text_extension"
+import { HTML } from "..";
 
-
+import * as HTMLFunctions from "../html/html_functions";
+import { unwatchFile } from "fs";
 
 /**
  * 辺をSVGで表現するためのクラスです。
@@ -54,12 +56,11 @@ export class GEdge extends GEdgeTextBox {
 
     protected setBasicOption(option: GOptions.GEdgeAttributes) {
         super.setBasicOption(option)
-
         //this._svgGroup = SVG.createGroup(svgbox);
         //const _option = <GOptions.GEdgeAttributes>this.initializeOption(option);
         //const textClass = this.svgGroup.getPropertyStyleValue(AttributeNames.Style.defaultTextClass);
         if (option.textClass === undefined) option.textClass = DefaultClassNames.defaultTextClass;
-
+        
         let textClass : string | undefined;
         if(typeof option.textClass == "string"){
             textClass = option.textClass;
@@ -86,17 +87,24 @@ export class GEdge extends GEdgeTextBox {
 
         this.pathPoints = [[option.x1!, option.y1!], [option.x2!, option.y2!]];
 
+
         if(typeof option.beginVertex == "object"){
             if (option.beginVertex instanceof GVertex) this.beginVertex = option.beginVertex;
+        }else if(typeof option.beginVertex == "string"){
+            this.beginVertexID = option.beginVertex;
         }
+
         if(typeof option.endVertex == "object"){
             if (option.endVertex instanceof GVertex) this.endVertex = option.endVertex;
+        }else if(typeof option.endVertex == "string"){
+            this.endVertexID = option.endVertex;
         }
 
 
         if (option.x3 !== undefined && option.y3 !== undefined) {
             this.controlPoint = [[option.x3, option.y3]];
         }
+        
     }
 
     public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
@@ -781,10 +789,112 @@ export class GEdge extends GEdgeTextBox {
         })
 
     }
+    public get isShown() : boolean {
+        const b1 = super.isShown;
+        //const b2 = HTMLFunctions.isShow(this.svgTextPath);
+        const b2 = true;
+        const b3 = HTMLFunctions.isShow(this.svgText);
+
+        return b1 && b2 && b3;
+
+    }
+    private updateTextPath(){
+        //if(this.svgTextPath.textContent!.length == 0) return;
+        
+        if(!HTMLFunctions.isShow(this.svgTextPath)){
+            throw new Error();
+        }
+
+        if (this.pathTextAlignment == PathTextAlighnment.regularInterval) {
+            const pathLen = this.svgPath.getTotalLength();
+            const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
+            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgText);
+            if (strWidth > 0) {
+                const paddingWidth = pathLen - strWidth;
+                const paddingUnit = paddingWidth / (strLen + 1);
+                //const startPos = pathLen / (strLen + 1);
+                let textPathLen = pathLen - (paddingUnit * 2);
+                if (textPathLen <= 0) textPathLen = 5;
+                this.svgTextPath.setAttribute("startOffset", `${paddingUnit }`);
+                this.setRegularInterval(textPathLen);
+            }
+
+        }
+        else if (this.pathTextAlignment == PathTextAlighnment.end) {
+            this.svgTextPath.setAttribute("startOffset", `${0}`);
+            this.removeTextLengthAttribute();
+            //const textRect = SVGTextBox.getSize(this.svgText);
+            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgText);
+
+            //const box = this.svgText.getBBox();
+            const pathLen = this.svgPath.getTotalLength();
+            //this.svgTextPath.setAttribute("startOffset", `${0}`);
+            //this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
+            if (this.side == "right") {
+                this.svgTextPath.setAttribute("startOffset", `${0}`);
+            } else {
+                this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
+            }
+
+        }
+        else if (this.pathTextAlignment == PathTextAlighnment.center) {
+            this.removeTextLengthAttribute();
+            //const textRect = SVGTextBox.getSize(this.svgText);
+            //const strWidth = SVGTextExtensions.getVirtualWidth(this.svgTextPath);
+            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgText);
+            
+
+            //const box = this.svgText.getBBox();
+            const pathLen = this.svgPath.getTotalLength();
+            //const offset = (pathLen - strWidth) / 2;
+            const offset = (pathLen / 2) - (strWidth / 2);
+
+            if (this.side == "right") {
+                this.svgTextPath.setAttribute("startOffset", `${offset}`);
+            } else {
+                //this.svgTextPath.setAttribute("startOffset", `${0}`);
+
+                this.svgTextPath.setAttribute("startOffset", `${offset}`);
+            }
+            //こっちだとEdgeではおかしくなる
+            //this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    
+
+        }
+        else {
+            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgText);
+            const pathLen = this.svgPath.getTotalLength();
+            if (this.side == "right") {
+                this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
+            } else {
+                this.svgTextPath.setAttribute("startOffset", `${0}`);
+            }
+
+            //this.svgTextPath.setAttribute("startOffset", `${0}`);
+            this.removeTextLengthAttribute();
+            //this.svgText.textLength.baseVal.value = 0;
+        }
+    }
+    private updateLocation(){
+        const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
+        const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];
+
+        const [x1, y1] = this.beginVertex != null ? this.beginVertex.getLocation(this.beginConnectorType, cx2, cy2) : [cx1, cy1];
+        const [x2, y2] = this.endVertex != null ? this.endVertex.getLocation(this.endConnectorType, cx1, cy1) : [cx2, cy2];
+        const points: [number, number][] = this.pathPoints;
+
+        points[0] = [x1, y1];
+        points[points.length - 1] = [x2, y2];
+        this.pathPoints = points;
+
+    }
+    private get pathIsShown() : boolean{
+        return this.svgText.textContent!.length == 0 || HTMLFunctions.isShow(this.svgTextPath)
+    }
     /**
      * 再描画します。
      */
     public update(): boolean {
+        //const b = HTMLFunctions.isShow(this.svgTextPath);
 
         super.update();
 
@@ -799,12 +909,7 @@ export class GEdge extends GEdgeTextBox {
         //this._observer.observe(this.svgGroup, this._observerOption);
         this.hasConnectedObserverFunction = true;
 
-
-        const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
-        const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];
-
-        const [x1, y1] = this.beginVertex != null ? this.beginVertex.getLocation(this.beginConnectorType, cx2, cy2) : [cx1, cy1];
-        const [x2, y2] = this.endVertex != null ? this.endVertex.getLocation(this.endConnectorType, cx1, cy1) : [cx2, cy2];
+        this.updateLocation();
 
         //if(this.x != 0) throw Error("error!");
         /*
@@ -813,11 +918,6 @@ export class GEdge extends GEdgeTextBox {
         this.x2 = x2;
         this.y2 = y2;
         */
-        const points: [number, number][] = this.pathPoints;
-
-        points[0] = [x1, y1];
-        points[points.length - 1] = [x2, y2];
-        this.pathPoints = points;
 
         if (this.isAppropriatelyReverseMode) {
 
@@ -856,69 +956,9 @@ export class GEdge extends GEdgeTextBox {
         } else {
             this.svgText.setAttribute("dy", "0");
         }
+        this.updateTextPath();
 
 
-        if (this.pathTextAlignment == PathTextAlighnment.regularInterval) {
-            const pathLen = this.svgPath.getTotalLength();
-            const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
-            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgTextPath);
-            if (strWidth > 0) {
-                const paddingWidth = pathLen - strWidth;
-                const paddingUnit = paddingWidth / (strLen + 1);
-                //const startPos = pathLen / (strLen + 1);
-                let textPathLen = pathLen - (paddingUnit * 2);
-                if (textPathLen <= 0) textPathLen = 5;
-                this.svgTextPath.setAttribute("startOffset", `${paddingUnit }`);
-                this.setRegularInterval(textPathLen);
-            }
-
-        }
-        else if (this.pathTextAlignment == PathTextAlighnment.end) {
-            this.svgTextPath.setAttribute("startOffset", `${0}`);
-            this.removeTextLengthAttribute();
-            //const textRect = SVGTextBox.getSize(this.svgText);
-            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgTextPath);
-
-            //const box = this.svgText.getBBox();
-            const pathLen = this.svgPath.getTotalLength();
-            //this.svgTextPath.setAttribute("startOffset", `${0}`);
-            //this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
-            if (this.side == "right") {
-                this.svgTextPath.setAttribute("startOffset", `${0}`);
-            } else {
-                this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
-            }
-
-        }
-        else if (this.pathTextAlignment == PathTextAlighnment.center) {
-            this.removeTextLengthAttribute();
-            //const textRect = SVGTextBox.getSize(this.svgText);
-            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgTextPath);
-            //const box = this.svgText.getBBox();
-            const pathLen = this.svgPath.getTotalLength();
-            const offset = (pathLen - strWidth) / 2;
-            if (this.side == "right") {
-                this.svgTextPath.setAttribute("startOffset", `${offset}`);
-            } else {
-                this.svgTextPath.setAttribute("startOffset", `${offset}`);
-            }
-            //こっちだとEdgeではおかしくなる
-            //this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    
-
-        }
-        else {
-            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgTextPath);
-            const pathLen = this.svgPath.getTotalLength();
-            if (this.side == "right") {
-                this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
-            } else {
-                this.svgTextPath.setAttribute("startOffset", `${0}`);
-            }
-
-            //this.svgTextPath.setAttribute("startOffset", `${0}`);
-            this.removeTextLengthAttribute();
-            //this.svgText.textLength.baseVal.value = 0;
-        }
 
 
         return false;

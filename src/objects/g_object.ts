@@ -125,6 +125,8 @@ export class GObject {
         this.setBasicOption(option);
         this.setOptionalSize(option);
         this.setOptionalPosition(option)
+
+        this.update();
     }
     /*
     public get shape() : ShapeObjectType {
@@ -191,6 +193,7 @@ export class GObject {
         this.svgGroup.addEventListener(AttributeNames.resizeName, this.pUpdateFunc);
     }
     private pUpdateFunc = () => {
+        if(!this.isShown) return;
         this.resizeUpdate();
     }
     /*
@@ -269,7 +272,7 @@ export class GObject {
     public set tag(v: any) {
         this._tag = v;
     }
-    public get isShow() {
+    public get isShown() : boolean {
         return HTMLFunctions.isShow(this.svgGroup);
     }
 
@@ -547,6 +550,8 @@ export class GObject {
     protected observerFunction(x: MutationRecord[]) {
         //throw Error("error1");
 
+        if(!this.isShown) return;
+
         let b = false;
         if (!this.isLocated) return;
 
@@ -647,7 +652,12 @@ export class GObject {
             if (id in this.objectDic) {
                 return this.objectDic[id];
             } else {
-                return null;
+                const element : any = document.getElementById(id);
+                if(element !== null && element.operator !== undefined && element.operator instanceof GObject){
+                    return element.operator;
+                }else{
+                    return null;
+                }
             }
         }
     }
