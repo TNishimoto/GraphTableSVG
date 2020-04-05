@@ -804,11 +804,13 @@ export class GEdge extends GEdgeTextBox {
         if(!HTMLFunctions.isShow(this.svgTextPath)){
             throw new Error();
         }
+        const strWidth = SVGTextExtensions.getVirtualTextLineLength(this.svgTextPath); 
+        const pathLen = this.svgPath.getTotalLength();
+            
 
         if (this.pathTextAlignment == PathTextAlighnment.regularInterval) {
-            const pathLen = this.svgPath.getTotalLength();
+            //const pathLen = this.svgPath.getTotalLength();
             const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
-            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgText);
             if (strWidth > 0) {
                 const paddingWidth = pathLen - strWidth;
                 const paddingUnit = paddingWidth / (strLen + 1);
@@ -824,10 +826,11 @@ export class GEdge extends GEdgeTextBox {
             this.svgTextPath.setAttribute("startOffset", `${0}`);
             this.removeTextLengthAttribute();
             //const textRect = SVGTextBox.getSize(this.svgText);
-            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgText);
+            //const strWidth = SVGTextExtensions.getVirtualTextLineLength(this.svgTextPath); 
+            //const strWidth = SVGTextExtensions.getWidth(this.svgText);
 
             //const box = this.svgText.getBBox();
-            const pathLen = this.svgPath.getTotalLength();
+            //const pathLen = this.svgPath.getTotalLength();
             //this.svgTextPath.setAttribute("startOffset", `${0}`);
             //this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
             if (this.side == "right") {
@@ -839,21 +842,16 @@ export class GEdge extends GEdgeTextBox {
         }
         else if (this.pathTextAlignment == PathTextAlighnment.center) {
             this.removeTextLengthAttribute();
-            //const textRect = SVGTextBox.getSize(this.svgText);
-            //const strWidth = SVGTextExtensions.getVirtualWidth(this.svgTextPath);
-            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgText);
             
+            //const strWidth = SVGTextExtensions.getWidth(this.svgText);
+            //const strWidth = SVGTextExtensions.getVirtualTextLineLength(this.svgTextPath); 
 
-            //const box = this.svgText.getBBox();
-            const pathLen = this.svgPath.getTotalLength();
-            //const offset = (pathLen - strWidth) / 2;
+            //const pathLen = this.svgPath.getTotalLength();
             const offset = (pathLen / 2) - (strWidth / 2);
 
             if (this.side == "right") {
                 this.svgTextPath.setAttribute("startOffset", `${offset}`);
             } else {
-                //this.svgTextPath.setAttribute("startOffset", `${0}`);
-
                 this.svgTextPath.setAttribute("startOffset", `${offset}`);
             }
             //こっちだとEdgeではおかしくなる
@@ -861,8 +859,7 @@ export class GEdge extends GEdgeTextBox {
 
         }
         else {
-            const strWidth = SVGTextExtensions.getVirtualWidth(this.svgText);
-            const pathLen = this.svgPath.getTotalLength();
+            //const strWidth = SVGTextExtensions.getWidth(this.svgText);
             if (this.side == "right") {
                 this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
             } else {

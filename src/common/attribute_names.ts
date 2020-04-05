@@ -9,7 +9,7 @@ export const vertexCreatedEventName = "vertex_created";
 export const objectCreatedEventName = "object_created";
 export const GroupAttribute = "data-type";
 
-export const objectIDName: string = "data-objectID";
+export const objectIDName: string = "data-object-id";
 export const customElement: string = "data-custom";
 export const cellEmphasisCellClass: string = "___cell-emphasis";
 export const cellEmphasisBorderClass: string = "___border-emphasis";

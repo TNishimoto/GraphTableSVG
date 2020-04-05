@@ -56,7 +56,7 @@ export class GGraph extends GObject {
         if (option.relocateStyle !== undefined) {
             this.relocateStyle = option.relocateStyle;
         } else {
-            this.relocateStyle = "standard"
+            //this.relocateStyle = "standard"
         }
     }
     
@@ -291,13 +291,18 @@ export class GGraph extends GObject {
         const value = this.relocateStyle;
         if(this.graphAllocateFunction !== undefined){
             this.graphAllocateFunction(this);
+            console.log("a1");
         } else if (value != null) {
             if (value == "standard") {
                 GraphArrangement.standardTreeWidthArrangement(this);
+                console.log("a2");
+
             } else {
                 const p = Function("v", `return ${value}(v)`);
                 const f = <any>Function("graph", `${value}(graph)`);
                 f(this);
+                console.log("a3");
+
             }
         }
         //this.relocate();

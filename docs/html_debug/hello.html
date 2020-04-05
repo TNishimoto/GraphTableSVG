@@ -9,7 +9,9 @@
     <script>
         window.onload = () => {
             GraphTableSVG.Options.openSVG();
-            GraphTableSVG.Options.equalityCheck("test_svg", "correct_firefox", "correct_edge", "correct_chrome")
+            //document.getElementById("test_svg").children.item(0).operator.update();
+            console.log(document.getElementById("test_svg"))
+                //GraphTableSVG.Options.equalityCheck("test_svg", "correct_firefox", "correct_edge", "correct_chrome")
         };
     </script>
 </head>
@@ -22,9 +24,10 @@
         <fieldset>
             <legend>Firefox</legend>
             <svg id="correct_firefox" xmlns="http://www.w3.org/2000/svg" width="300pt" height="300pt" style="background:#e9e9e9;border:solid 1pt;">
-                <g data-objectID="0" data-type="g-rect" data-position-type="center" transform="matrix(1 0 0 1 100 100)">
-                    <rect width="102.9000015258789" height="27.200000762939453" class="___surface-default" x="-51.45" y="-13.6">
-                    </rect><text data-objectID="1" class="___text-default" x="-51.45000076293945" y="5.599998474121094">
+                <g data-object-id="0" data-type="g-rect" data-position-type="center"
+                    transform="matrix(1 0 0 1 100 100)">
+                    <rect width="102.9000015258789" height="27" class="___surface-default" x="-51.45" y="-13.5"></rect>
+                    <text data-object-id="1" class="___text-default" x="-51.45000076293945" y="5.5">
                         <tspan>hello world!</tspan>
                     </text>
                 </g>
@@ -34,27 +37,16 @@
     <div>
         <fieldset>
             <legend>Edge</legend>
-            <svg id="correct_edge" xmlns="http://www.w3.org/2000/svg" width="300pt" height="300pt" style="background:#e9e9e9;border:solid 1pt;">
-                <g xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 100, 100)" data-position-type="center"
-                    data-type="g-rect" data-objectID="0">
-                    <rect class="___surface-default" x="-44.235" y="-12.5" width="88.47" height="25" /><text
-                        class="___text-default" x="-44.24" y="6.075" data-objectID="1">
-                        <tspan>hello world!</tspan>
-                    </text></g>
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" id="correct_edge" style="background:#e9e9e9;border:solid 1pt;" width="300pt" height="300pt">
+        
+                <g transform="matrix(1, 0, 0, 1, 100, 100)" data-position-type="center" data-type="g-rect" data-object-id="0"><rect class="___surface-default" x="-44.235" y="-12.5" width="88.47" height="25" /><text class="___text-default" x="-44.24" y="6.075" data-object-id="1"><tspan>hello world!</tspan></text></g></svg>
         </fieldset>
     </div>
     <div>
         <fieldset>
             <legend>Chrome</legend>
-            <svg id="correct_chrome" xmlns="http://www.w3.org/2000/svg" width="300pt" height="300pt" style="background:#e9e9e9;border:solid 1pt;">
-                <g data-objectID="0" data-type="g-rect" data-position-type="center" transform="matrix(1 0 0 1 100 100)">
-                    <rect class="___surface-default" width="87.21875" height="25" y="-12.5" x="-43.6094"></rect><text
-                        data-objectID="1" class="___text-default" x="-43.6015625" y="6.3984375">
-                        <tspan>hello world!</tspan>
-                    </text>
-                </g>
-            </svg>
+            <svg id="correct_chrome" xmlns="http://www.w3.org/2000/svg" width="300pt" height="300pt" style="background:#e9e9e9;border:solid 1pt;">        
+                <g data-object-id="0" data-type="g-rect" data-position-type="center" transform="matrix(1 0 0 1 100 100)"><rect class="___surface-default" height="25" width="87.21875" y="-12.5" x="-43.6094"></rect><text data-object-id="1" class="___text-default" x="-43.6015625" y="6.3984375"><tspan>hello world!</tspan></text></g></svg>
         </fieldset>
     </div>
 

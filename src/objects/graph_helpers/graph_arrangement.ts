@@ -64,12 +64,12 @@ import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
                 }
                 else if(path.textContent.length == 1){
                     const padding = SVGTextBox.getRepresentativeFontSize(path);
-                    const edgeLen = (SVGTextExtensions.getVirtualWidth(path)) + (padding);
+                    const edgeLen = (SVGTextExtensions.getWidth(path)) + (padding);
                     if(edgeLen > childYInterval) childYInterval = edgeLen;    
                 }
                 else{
                     const padding = SVGTextBox.getRepresentativeFontSize(path);
-                    const edgeLen = (SVGTextExtensions.getVirtualWidth(path)) + (padding * 4);
+                    const edgeLen = (SVGTextExtensions.getWidth(path)) + (padding * 4);
                     if(edgeLen > childYInterval) childYInterval = edgeLen;    
                 }
             })

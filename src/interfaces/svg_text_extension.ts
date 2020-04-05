@@ -105,27 +105,27 @@ export function gtSetXY(text: SVGTextElement, rect: Rectangle, vAnchor: Vertical
     (<any>text).setAttribute('x', x.toString());
     (<any>text).setAttribute('y', y.toString());
 
-    const b2 = getSize(<any>text, true);
+    const box = getSize(<any>text, true);
 
-    const dy = b2.y - y;
-    const dx = b2.x - x;
+    const dy = box.y - y;
+    const dx = box.x - x;
 
     y -= dy;
     x -= dx;
     if (vAnchor == VerticalAnchor.Middle) {
-        y += (rect.height - b2.height) / 2
+        y += (rect.height - box.height) / 2
     } else if (vAnchor == VerticalAnchor.Bottom) {
-        y += rect.height - b2.height;
+        y += rect.height - box.height;
     }
 
     if (hAnchor == HorizontalAnchor.Center) {
-        x += (rect.width - b2.width) / 2;
+        x += (rect.width - box.width) / 2;
     } else if (hAnchor == HorizontalAnchor.Right) {
-        x += rect.width - b2.width;
+        x += rect.width - box.width;
     }
 
-    (<any>text).setAttribute('y', y.toString());
     (<any>text).setAttribute('x', x.toString());
+    (<any>text).setAttribute('y', y.toString());
 }
 
 
@@ -133,7 +133,7 @@ export function gtSetXY(text: SVGTextElement, rect: Rectangle, vAnchor: Vertical
 type CharInfo = { char: number, fontSize: number, fontFamily: string }
 
 const CharInfoMap: Map<CharInfo, number> = new Map();
-export function superComputeTextWidth(text: string, fontSize: number, fontFamily: string, fontWeight : string): number {
+function superComputeTextWidth(text: string, fontSize: number, fontFamily: string, fontWeight : string): number {
     var div = document.createElement('div');
     /*
     div.style.position = 'absolute';
@@ -195,7 +195,7 @@ export function superComputeTextWidth(text: string, fontSize: number, fontFamily
 
 }
 
-export function computeTextWidth(text: string | number, fontSize: number, fontFamily: string): number {
+function computeTextWidth(text: string | number, fontSize: number, fontFamily: string): number {
     if (typeof text == "string") {
         let width = 0;
         for (let i = 0; i < text.length; i++) {
@@ -228,7 +228,7 @@ export function computeTextWidth(text: string | number, fontSize: number, fontFa
         }
     }
 }
-export function getVirtualHeight(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {    
+export function getHeight(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {    
 
     const b = HTMLFunctions.isShow(text);
     if(b){    
@@ -238,7 +238,7 @@ export function getVirtualHeight(text: SVGTSpanElement | SVGTextElement | SVGTex
     }
 
 }
-export function getVirtualWidth(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {    
+export function getWidth(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {    
 
     const b = HTMLFunctions.isShow(text);
     if(b){    
@@ -268,6 +268,24 @@ export function getVirtualWidth(text: SVGTSpanElement | SVGTextElement | SVGText
     */
     
 }
+export function getVirtualTextLineLength(text: SVGTextElement | SVGTSpanElement | SVGTextPathElement): number {    
+
+    if (text instanceof SVGTSpanElement) {
+        const style = getComputedStyle(text);
+        const fontSize = CommonFunctions.toPX(style.fontSize!);
+        const fontFamily = style.fontFamily!;
+        const fontWeight = style.fontWeight!;
+
+        return superComputeTextWidth(text.textContent!, fontSize, fontFamily, fontWeight);
+    } else {
+
+        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(text).filter((v) => v.nodeName == "tspan");
+        let len = 0;
+        tspans.forEach((v) => { len += getVirtualTextLineLength(v) });
+        return len;
+    }
+}
+
 
 export function getSize(svgText: SVGTextElement, showChecked: boolean = false): Rectangle {
     let r = new Rectangle();
@@ -286,7 +304,7 @@ export function getSize(svgText: SVGTextElement, showChecked: boolean = false): 
 
 }
 
-export function getVirtualRegion(svgText: SVGTextElement): Rectangle {
+export function getRegion(svgText: SVGTextElement): Rectangle {
 
     const b = HTMLFunctions.isShow(svgText);
     let r = new Rectangle();

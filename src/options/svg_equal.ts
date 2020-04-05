@@ -19,10 +19,12 @@ function attributesToSet(obj1: Element, obj2: Element) : Set<string>{
 }
 function equal_attributes(obj1: Element, obj2: Element, attributeSet : Set<string>) : boolean{
     Array.from(attributeSet.values()).forEach((v) =>{
+
         const value1 = obj1.getAttribute(v);
         const value2 = obj2.getAttribute(v);
+
         if(value1 != value2){
-            throw new Error(v);
+            throw new Error(`${v}/${value1}/${value2}`);
         }
     })
     return true;
@@ -40,7 +42,7 @@ function equal_html(obj1: Element, obj2: Element, checkAttributes : boolean) : b
     if(childsize1 == childsize2){
         for(let i=0;i<childsize1;i++){            
             const node1 = obj1.children.item(i)!;
-            const node2 = obj1.children.item(i)!;
+            const node2 = obj2.children.item(i)!;
             const b = equal_html(node1, node2, true);
         }
     }else{
@@ -71,8 +73,19 @@ function equal(obj1_id: string, obj2_id: string) : boolean {
     const obj1 = document.getElementById(obj1_id);
     const obj2 = document.getElementById(obj2_id);
     if (obj1 != null && obj2 != null) {
-        equal_html(obj1, obj2, false);
-        obj2.style.backgroundColor = "yellow"
+        let errorFlag = false;
+        try{
+            equal_html(obj1, obj2, false);
+        }
+        catch(e){
+            errorFlag = true;
+            obj2.style.backgroundColor = "red"
+            throw e;
+
+        }
+        if(!errorFlag){
+            obj2.style.backgroundColor = "yellow"
+        }
         return true;
     } else {
         throw new NullError(`${obj1_id} / ${obj2_id}`);

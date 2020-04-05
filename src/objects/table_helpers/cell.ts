@@ -1397,7 +1397,7 @@ export class Cell {
     セルの仮想上の領域を返します。
     */
     public getVirtualRegion() : Rectangle {
-        const textRect = SVGTextExtension.getVirtualRegion(this.svgText);
+        const textRect = SVGTextExtension.getRegion(this.svgText);
         const rect = new Rectangle();
         rect.x = 0;
         rect.width = textRect.width + this.paddingRight + this.paddingLeft;
