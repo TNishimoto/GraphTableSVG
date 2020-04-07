@@ -8,6 +8,7 @@ import * as StyleNames from "../common/style_names"
 import * as ElementExtension from "./element_extension"
 import * as CommonFunctions from "../common/common_functions";
 import * as HTMLFunctions from "../html/html_functions";
+import {getVirtualRegion} from "./virtual_text";
 
 
 /**
@@ -56,62 +57,74 @@ export function setY(item: SVGTextElement, value: number): void {
     item.y.baseVal.getItem(0).value = value;
 
 }
-        /**
- * SVGTextElementのテキストを設定します。
- * @param text 設定するテキスト
- * @param isLatexMode TrueのときLatex表記を使用します。
- */
+/**
+* SVGTextElementのテキストを設定します。
+* @param text 設定するテキスト
+* @param isLatexMode TrueのときLatex表記を使用します。
+*/
 
-export function setTextContent(item: SVGTextElement, text: string, isLatexMode: boolean = false): void{
+export function setTextContent(item: SVGTextElement, text: string, isLatexMode: boolean = false): void {
     SVGTextBox.setTextToSVGText(item, text, isLatexMode);
 }
 //setTextContent(text: string): void;
 
-export function getMarginLeft(item: SVGTextElement): number{
+export function getMarginLeft(item: SVGTextElement): number {
     return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginLeft, 0)!;
 }
-export function setMarginLeft(item: SVGTextElement,value: number): void{
+export function setMarginLeft(item: SVGTextElement, value: number): void {
     ElementExtension.setPropertyStyleValue(item, StyleNames.marginLeft, value.toString());
 
 }
-export function getMarginTop(item: SVGTextElement): number{
+export function getMarginTop(item: SVGTextElement): number {
     return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginTop, 0)!;
 
 }
-export function setMarginTop(item: SVGTextElement,value: number): void{
+export function setMarginTop(item: SVGTextElement, value: number): void {
     ElementExtension.setPropertyStyleValue(item, StyleNames.marginTop, value.toString());
 
 }
-export function getMarginRight(item: SVGTextElement): number{
+export function getMarginRight(item: SVGTextElement): number {
     return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginRight, 0)!;
 
 }
-export function setMarginRight(item: SVGTextElement,value: number): void{
+export function setMarginRight(item: SVGTextElement, value: number): void {
     ElementExtension.setPropertyStyleValue(item, StyleNames.marginRight, value.toString());
 
 }
-export function getMarginBottom(item: SVGTextElement): number{
+export function getMarginBottom(item: SVGTextElement): number {
     return ElementExtension.getPropertyStyleNumberValue(item, StyleNames.marginBottom, 0)!;
 
 }
-export function setMarginBottom(item: SVGTextElement,value: number): void{
+export function setMarginBottom(item: SVGTextElement, value: number): void {
     ElementExtension.setPropertyStyleValue(item, StyleNames.marginBottom, value.toString());
 
 }
-export function gtSetXY(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText): void{
+export function gtSetXY(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText): boolean {
 
+    //let x = rect.x;
+    //let y = rect.y;
+    //(<any>text).setAttribute('x', x.toString());
+    //(<any>text).setAttribute('y', y.toString());
+
+    //const box1 = getSize(<any>text, true);
+    const box = getVirtualRegion(<any>text);
+    //console.log(`test`);
+    //console.log(box1)
+    //console.log(box)
+
+    //console.log(box1);
+
+    
+    //let y = rect.y - (box.y - rect.y);
+    //let x = rect.x - (box.x - rect.x);
+    //console.log(box);
+    let y = rect.y - box.y;
     let x = rect.x;
-    let y = rect.y;
-    (<any>text).setAttribute('x', x.toString());
-    (<any>text).setAttribute('y', y.toString());
 
-    const box = getSize(<any>text, true);
-
-    const dy = box.y - y;
-    const dx = box.x - x;
-
-    y -= dy;
-    x -= dx;
+    //y -= dy;
+    //x -= dx;
+    
+    //y += box.height;
     if (vAnchor == VerticalAnchor.Middle) {
         y += (rect.height - box.height) / 2
     } else if (vAnchor == VerticalAnchor.Bottom) {
@@ -124,126 +137,45 @@ export function gtSetXY(text: SVGTextElement, rect: Rectangle, vAnchor: Vertical
         x += rect.width - box.width;
     }
 
-    (<any>text).setAttribute('x', x.toString());
-    (<any>text).setAttribute('y', y.toString());
-}
+    const roundX = (Math.round(x * 100) / 100)
+    const roundY = (Math.round(y * 100) / 100)
 
+    const _x = (<any>text).getAttribute('x', x.toString());
+    const _y = (<any>text).getAttribute('y', y.toString());
+    let b = false;
 
-//type CharInfo = { char: number, fontSize: number, fontFamily: string }
-type CharInfo = { char: number, fontSize: number, fontFamily: string }
-
-const CharInfoMap: Map<CharInfo, number> = new Map();
-function superComputeTextWidth(text: string, fontSize: number, fontFamily: string, fontWeight : string): number {
-    var div = document.createElement('div');
-    /*
-    div.style.position = 'absolute';
-    div.style.height = 'auto';
-    div.style.width = 'auto';
-    div.style.whiteSpace = 'nowrap';
-    */
+    console.log(`${_x}/${roundX}/${_y}/${roundY}`)
     
-    var canvas = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    document.body.appendChild(div);
-    div.appendChild(canvas);
-
-
-    canvas.setAttribute("width", "300px");
-    canvas.setAttribute("height", "300px");
-    
-    canvas.setAttribute("viewBox", "0 0 300 300");
-
-
-
-    const svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    svgText.textContent = text;
-    svgText.style.fontFamily = fontFamily;
-    svgText.style.fontSize = fontSize.toString() + "px";
-    svgText.style.fontWeight = fontWeight;
-
-    svgText.setAttribute("x", "30");
-    svgText.setAttribute("y", "30");
-
-    canvas.appendChild(svgText);
-    /*
-    const b = HTMLFunctions.isShow(svgText);
-
-    if (b) {
-        const rect = svgText.getBBox();
-        return rect.width;
-    } else {
-        return 0;
+    if (_x != roundX) {
+        (<any>text).setAttribute('x', roundX.toString());
+        b = true;
     }
-    */
-    
-    const box = svgText.getBBox();
-    document.body.removeChild(div);
-    return box.width;
-    
-
-    /*
-    div.style.fontFamily = fontFamily;
-    div.style.fontSize = fontSize.toString() + "px"; // large enough for good resolution
-
-    div.innerHTML = String.fromCharCode(text);
-    document.body.appendChild(div);
-    var clientWidth = div.clientWidth;
-    CharInfoMap.set(info, clientWidth);
-
-    document.body.removeChild(div);
-    return clientWidth;
-    */
-
-}
-
-function computeTextWidth(text: string | number, fontSize: number, fontFamily: string): number {
-    if (typeof text == "string") {
-        let width = 0;
-        for (let i = 0; i < text.length; i++) {
-            const w = computeTextWidth(text.charCodeAt(i), fontSize, fontFamily);
-            width += w;
-        }
-
-        return width;
-    } else {
-        const info: CharInfo = { char: text, fontSize: fontSize, fontFamily: fontFamily };
-        if (CharInfoMap.has(info)) {
-            return CharInfoMap.get(info)!;
-        } else {
-
-            var div = document.createElement('div');
-            div.style.position = 'absolute';
-            div.style.height = 'auto';
-            div.style.width = 'auto';
-            div.style.whiteSpace = 'nowrap';
-            div.style.fontFamily = fontFamily;
-            div.style.fontSize = fontSize.toString() + "px"; // large enough for good resolution
-
-            div.innerHTML = String.fromCharCode(text);
-            document.body.appendChild(div);
-            var clientWidth = div.clientWidth;
-            CharInfoMap.set(info, clientWidth);
-
-            document.body.removeChild(div);
-            return clientWidth;
-        }
+    if (_y != roundY) {
+        (<any>text).setAttribute('y', roundY.toString());
+        b = true;
     }
+    return b;
 }
-export function getHeight(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {    
+
+
+
+
+export function getHeight(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {
 
     const b = HTMLFunctions.isShow(text);
-    if(b){    
-        return text.getBBox().height;    
-    }else{
+    if (b) {
+        return text.getBBox().height;
+    } else {
         throw Error("error!");
     }
 
 }
-export function getWidth(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {    
+export function getWidth(text: SVGTSpanElement | SVGTextElement | SVGTextPathElement): number {
 
     const b = HTMLFunctions.isShow(text);
-    if(b){    
-        return text.getBBox().width;    
-    }else{
+    if (b) {
+        return text.getBBox().width;
+    } else {
         throw Error("error!");
     }
 
@@ -266,25 +198,12 @@ export function getWidth(text: SVGTSpanElement | SVGTextElement | SVGTextPathEle
         return len;
     }
     */
-    
+
 }
-export function getVirtualTextLineLength(text: SVGTextElement | SVGTSpanElement | SVGTextPathElement): number {    
 
-    if (text instanceof SVGTSpanElement) {
-        const style = getComputedStyle(text);
-        const fontSize = CommonFunctions.toPX(style.fontSize!);
-        const fontFamily = style.fontFamily!;
-        const fontWeight = style.fontWeight!;
 
-        return superComputeTextWidth(text.textContent!, fontSize, fontFamily, fontWeight);
-    } else {
 
-        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(text).filter((v) => v.nodeName == "tspan");
-        let len = 0;
-        tspans.forEach((v) => { len += getVirtualTextLineLength(v) });
-        return len;
-    }
-}
+
 
 
 export function getSize(svgText: SVGTextElement, showChecked: boolean = false): Rectangle {
@@ -303,7 +222,23 @@ export function getSize(svgText: SVGTextElement, showChecked: boolean = false): 
     }
 
 }
+/*
+function getLines(text: SVGTextElement | SVGTSpanElement | SVGTextPathElement) : SVGTSpanElement[][] | SVGTextElement | SVGTSpanElement | SVGTextPathElement{
+    if (text instanceof SVGTSpanElement) {
+        return text;
+    } else {
+        const r : SVGTSpanElement[][] = new Array();
 
+        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(text).filter((v) => v.nodeName == "tspan");
+        tspans.forEach((v) =>{
+            
+        })
+        let len = 0;
+        tspans.forEach((v) => { len += getVirtualTextLineLength(v) });
+        return len;
+    }
+}
+*/
 export function getRegion(svgText: SVGTextElement): Rectangle {
 
     const b = HTMLFunctions.isShow(svgText);
@@ -311,12 +246,12 @@ export function getRegion(svgText: SVGTextElement): Rectangle {
     r.x = getX(svgText);
     r.y = getY(svgText);
 
-    if(b){    
-        const box = svgText.getBBox();    
+    if (b) {
+        const box = svgText.getBBox();
         r.width = box.width;
         r.height = box.height;
         return r;
-    }else{
+    } else {
         throw Error("error!");
     }
 

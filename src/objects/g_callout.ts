@@ -70,6 +70,7 @@
             if(this.height != region.height){
                 this.height = region.height;        
             }
+            return false;
         }
         public update() {
             super.update();

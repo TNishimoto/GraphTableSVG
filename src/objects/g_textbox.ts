@@ -21,6 +21,7 @@ import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGElementExtension from "../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { UndefinedError } from "../common/exceptions"
+import { getVirtualRegion} from "../interfaces/virtual_text"
 
 //namespace GraphTableSVG {
 
@@ -250,8 +251,6 @@ export class GTextBox extends GVertex {
     }
     protected updateSurfaceSize() : boolean{
         const region = this.getVirtualRegion();
-        console.log(SVGTextExtension.getRegion(this.svgText))
-        console.log(SVGTextExtension.getVirtualTextLineLength(this.svgText))
 
         let b = false;
         if(this.width != region.width){
@@ -265,13 +264,13 @@ export class GTextBox extends GVertex {
         }
         return b;
     }
-    protected updateTextLocation(){
+    protected updateTextLocation() : boolean {
         //const textRect = this.textLocationRegion;
         //console.log(this.verticalAnchor + "/" + this.horizontalAnchor)
-        SVGTextExtension.gtSetXY(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+        return SVGTextExtension.gtSetXY(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
     }
-    protected updateSurfaceLocation(){
-
+    protected updateSurfaceLocation() : boolean{
+        return true;
     }
     public update() {
         super.update();
@@ -283,15 +282,18 @@ export class GTextBox extends GVertex {
         if (this.svgText == null) {
             throw new TypeError("svgText is null");
         }
-        this.updateStyle();
-        this.updateSurfaceSize();
-        this.updateTextLocation();
-        this.updateSurfaceLocation();
+        const b1 : boolean = this.updateStyle();
+        const b2 : boolean = this.updateSurfaceSize();
+        const b3 : boolean =  this.updateTextLocation();
+        const b4 : boolean = this.updateSurfaceLocation();
         this._isUpdating = false;
         //this._observer.observe(this.svgGroup, this.groupObserverOption);
         this.hasConnectedObserverFunction = true;
 
 
+        if(b1 || b2 || b3 || b4){
+            this.update();
+        }
     }
     /*
     protected updateToFitText(isWidth: boolean) {
@@ -475,7 +477,9 @@ export class GTextBox extends GVertex {
     }
     
     getVirtualExtraRegion(): Rectangle {
-        const textRect = SVGTextExtension.getRegion(this.svgText);
+        const textRect = getVirtualRegion(this.svgText);
+
+        //const textRect = SVGTextExtension.getRegion(this.svgText);
         const w = textRect.width + this.leftExtraLength + this.rightExtraLength;
         const h = textRect.height + this.topExtraLength + this.bottomExtraLength;
         const x = -w/2;

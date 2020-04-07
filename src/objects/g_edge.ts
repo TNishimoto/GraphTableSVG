@@ -20,6 +20,8 @@ import * as GOptions  from "./g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
 import * as SVGTextExtensions from "../interfaces/svg_text_extension"
+import { getVirtualTextLineLength} from "../interfaces/virtual_text"
+
 import { HTML } from "..";
 
 import * as HTMLFunctions from "../html/html_functions";
@@ -804,7 +806,7 @@ export class GEdge extends GEdgeTextBox {
         if(!HTMLFunctions.isShow(this.svgTextPath)){
             throw new Error();
         }
-        const strWidth = SVGTextExtensions.getVirtualTextLineLength(this.svgTextPath); 
+        const strWidth = getVirtualTextLineLength(this.svgTextPath); 
         const pathLen = this.svgPath.getTotalLength();
             
 

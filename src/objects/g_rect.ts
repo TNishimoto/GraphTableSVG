@@ -128,6 +128,7 @@
             const virtualRegion = this.getVirtualRegion();
             this.svgRectangle.x.baseVal.value = -virtualRegion.width / 2;
             this.svgRectangle.y.baseVal.value = -virtualRegion.height / 2;
+            return false;
         }
         /*
         protected updateSurface() {
