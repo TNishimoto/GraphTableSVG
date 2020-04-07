@@ -291,17 +291,14 @@ export class GGraph extends GObject {
         const value = this.relocateStyle;
         if(this.graphAllocateFunction !== undefined){
             this.graphAllocateFunction(this);
-            console.log("a1");
         } else if (value != null) {
             if (value == "standard") {
                 GraphArrangement.standardTreeWidthArrangement(this);
-                console.log("a2");
 
             } else {
                 const p = Function("v", `return ${value}(v)`);
                 const f = <any>Function("graph", `${value}(graph)`);
                 f(this);
-                console.log("a3");
 
             }
         }

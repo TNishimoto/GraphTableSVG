@@ -110,7 +110,23 @@ export class Size {
 export type Point = {
     x: number, y: number
 }
+export function round100(value : number){
+    return Math.round(value * 100)/100;
+}
+export function escapeWithRound100(literals: TemplateStringsArray, ...placeholders: (number | string)[]) {
+    let result = "";
 
+    // interleave the literals with the placeholders
+    for (let i = 0; i < placeholders.length; i++) {
+        result += literals[i];
+        const p = placeholders[i];
+        result += typeof(p) === "string" ? p : round100(p).toString();
+    }
+
+    // add the last literal
+    result += literals[literals.length - 1];
+    return result;
+}
 /**
  * 四角形を表します。
  */
@@ -167,6 +183,7 @@ export class Rectangle {
             return new Rectangle(0, 0, 0, 0);
         }
     }
+
 }
 
 

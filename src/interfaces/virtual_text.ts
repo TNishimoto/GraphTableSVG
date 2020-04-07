@@ -5,19 +5,25 @@ import { Size, Rectangle } from "../common/vline";
 //type CharInfo = { char: number, fontSize: number, fontFamily: string }
 type CharInfo = { char: number, fontSize: number, fontFamily: string }
 
-type VirtualTSpan = { textContent : string, fontSize: string, fontFamily: string, fontWeight: string, type : "span" }
+type VirtualTSpan = { textContent : string, fontSize: string, fontFamily: string, fontWeight: string, type : "span", dx : string | null, dy : string | null }
 type virtualTText = { children : VirtualTSpan[] , type : "text" };
 
 function createTSpanElement(text : VirtualTSpan) : SVGTSpanElement {
-    const svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-    svgText.textContent = text.textContent;
-    svgText.style.fontFamily = text.fontFamily;
-    svgText.style.fontSize = text.fontSize;
-    //console.log(text.fontSize)
+    const tspanElement: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+    tspanElement.textContent = text.textContent;
+    tspanElement.style.fontFamily = text.fontFamily;
+    tspanElement.style.fontSize = text.fontSize;
     //CommonFunctions.toPX(style.fontSize!);
-    svgText.style.fontWeight = text.fontWeight;
+    tspanElement.style.fontWeight = text.fontWeight;
+    if(text.dx != null){
+        tspanElement.setAttribute("dx", text.dx);
+    }
+    if(text.dy != null){
+        tspanElement.setAttribute("dy", text.dy);
+    }
 
-    return svgText;
+
+    return tspanElement;
 }
 
 let baseX = 30;
@@ -42,8 +48,10 @@ function createTextElement(text : virtualTText) : SVGTextElement {
 function createVirtualTSpan(tspan : SVGTSpanElement) : VirtualTSpan{
     const textContent = tspan.textContent!;
     const style = window.getComputedStyle(tspan);
+    const dx = tspan.getAttribute("dx");
+    const dy = tspan.getAttribute("dy");
     
-    return { textContent: textContent, fontSize : style.fontSize, fontFamily : style.fontFamily, fontWeight : style.fontWeight, type: "span" }
+    return { textContent: textContent, fontSize : style.fontSize, fontFamily : style.fontFamily, fontWeight : style.fontWeight, type: "span", dx : dx, dy : dy }
 }
 function createVirtualText(svgText : SVGTextElement) : virtualTText{
     
@@ -197,10 +205,13 @@ export function getVirtualRegion(text: SVGTextElement | SVGTSpanElement | SVGTex
 
     if(text instanceof SVGTextElement){
         const vtext = createVirtualText(text);
+        const rect = superComputeRegion(vtext);
+        return rect;
         return superComputeRegion(vtext);
     }else if(text instanceof SVGTSpanElement){
         const vtext = createVirtualTSpan(text);
-        return superComputeRegion(vtext);
+        const rect = superComputeRegion(vtext);
+        return rect;
 
     }else{
         return new Rectangle();

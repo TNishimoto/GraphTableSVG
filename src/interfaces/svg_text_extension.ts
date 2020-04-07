@@ -1,4 +1,4 @@
-import { Size, Rectangle } from "../common/vline";
+import { Size, Rectangle, round100 } from "../common/vline";
 //import { CommonFunctions } from "../common/common_functions";
 //import { HTMLFunctions } from "./html_functions";
 import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../common/enums";
@@ -119,7 +119,7 @@ export function gtSetXY(text: SVGTextElement, rect: Rectangle, vAnchor: Vertical
     //let x = rect.x - (box.x - rect.x);
     //console.log(box);
     let y = rect.y - box.y;
-    let x = rect.x;
+    let x = rect.x - box.x;
 
     //y -= dy;
     //x -= dx;
@@ -137,14 +137,14 @@ export function gtSetXY(text: SVGTextElement, rect: Rectangle, vAnchor: Vertical
         x += rect.width - box.width;
     }
 
-    const roundX = (Math.round(x * 100) / 100)
-    const roundY = (Math.round(y * 100) / 100)
+    const roundX = round100(x);
+    const roundY = round100(y);
 
     const _x = (<any>text).getAttribute('x', x.toString());
     const _y = (<any>text).getAttribute('y', y.toString());
     let b = false;
 
-    console.log(`${_x}/${roundX}/${_y}/${roundY}`)
+    //console.log(`${_x}/${roundX}/${_y}/${roundY}`)
     
     if (_x != roundX) {
         (<any>text).setAttribute('x', roundX.toString());

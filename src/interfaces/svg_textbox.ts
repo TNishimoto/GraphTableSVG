@@ -1,5 +1,5 @@
 
-import { Size, Rectangle } from "../common/vline";
+import { Size, Rectangle, round100 } from "../common/vline";
 import * as CommonFunctions from "../common/common_functions";
 import * as HTMLFunctions from "../html/html_functions";
 import { HorizontalAnchor, VerticalAnchor } from "../common/enums";
@@ -48,6 +48,7 @@ function createTextSpans(text: string, className: string | null = null,
     fontsize: number = 12, dxOfFirstElement: number | null = null, dyOfFirstElement: number | null = null): SVGTSpanElement[] {
     let r: SVGTSpanElement[] = [];
     text += "_";
+    console.log(dxOfFirstElement);
     //const p: SVGTextElement = this;
     //p.textContent = "";
     //const h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
@@ -146,7 +147,7 @@ export function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexM
         } else {
             svgText.appendChild(createSingleTextSpan(lineText, null));
         }
-        dx = -width;
+        dx = - round100(width);
     }
     );
     if(!HTMLFunctions.isShow(svgText)){
@@ -247,7 +248,8 @@ function alignTextByHorizontalAnchor(svgText: SVGTextElement, hAnchor: Horizonta
                     const tLen = tl[p++].width;
 
                     if (x == 0 && y != 0) {
-                        v.setAttribute("dx", (dx + offset).toString());
+                        const new_dx = round100(dx + offset);
+                        v.setAttribute("dx", new_dx.toString());
                     }
                     width += tLen;
                 }
@@ -278,7 +280,12 @@ function alignTextAsText(svgText: SVGTextElement, showChecked: boolean) {
             const size = lengths[c++];
             if (size.height > heightMax) heightMax = size.height;
 
-            if (x == 0) v.setAttribute("dx", dx.toString());
+            if (x == 0){
+                dx = round100(dx);
+                console.log("sock" + dx);
+
+                v.setAttribute("dx", dx.toString());
+            } 
             if (x == 0) fstObj = v;
             width += size.width;
         }

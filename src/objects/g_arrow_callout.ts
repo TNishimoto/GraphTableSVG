@@ -5,13 +5,15 @@ import { GTextBox } from "./g_textbox"
 import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction, AutoSizeShapeToFitText, VBAShapeType } from "../common/enums";
 //import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
 import * as AttributeNames from "../common/attribute_names"
-import { Rectangle, VLine } from "../common/vline"
+import { Rectangle, VLine, escapeWithRound100 } from "../common/vline"
 import * as SVGTextBox from "../interfaces/svg_textbox";
 import * as GOptions from "./g_options"
 
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGTextExtensions from "../interfaces/svg_text_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
+
+
 
 export type _GShapeArrowCalloutAttributes = {
     arrowHeadWidth?: number,
@@ -272,13 +274,13 @@ export class GArrowCallout extends GPathTextBox {
             let hx2 = (this.arrowHeadWidth / 2)
             let hy = y1;
 
-            const mes = `H ${nx1} V ${ny} H ${hx1} L ${cx} ${hy} L ${hx2} ${ny} H ${nx2} V ${by1}`;
-            const top = `M ${bx1} ${by1} ${mes} H ${bx2}`;
+            const mes = escapeWithRound100 `H ${nx1} V ${ny} H ${hx1} L ${cx} ${hy} L ${hx2} ${ny} H ${nx2} V ${by1}`;
+            const top = escapeWithRound100 `M ${bx1} ${by1} ${mes} H ${bx2}`;
 
-            const right = `V ${by2}`;
-            const bottom = `H ${bx1}`;
-            const left = `V ${by1}`
-            this.svgPath.setAttribute("d", `${top} ${right} ${bottom} ${left} z`);
+            const right = escapeWithRound100 `V ${by2}`;
+            const bottom = escapeWithRound100 `H ${bx1}`;
+            const left = escapeWithRound100 `V ${by1}`
+            this.svgPath.setAttribute("d", escapeWithRound100 `${top} ${right} ${bottom} ${left} z`);
 
         } else if (this.direction == "left") {
             const bx1 = x1 + this.arrowHeadHeight + this.arrowNeckHeight;
@@ -296,11 +298,11 @@ export class GArrowCallout extends GPathTextBox {
             let hy2 = 0 - (this.arrowHeadWidth / 2)
             let hx = x1;
 
-            const top = `M ${bx1} ${by1} H ${bx2}`;
-            const right = `V ${by2}`;
-            const bottom = `H ${bx1}`;
-            const left = `V ${ny1} H ${nx} V ${hy1} L ${hx} ${cy} L ${nx} ${hy2} V ${ny2} H ${bx1} V ${by1}`
-            this.svgPath.setAttribute("d", `${top} ${right} ${bottom} ${left} z`);
+            const top = escapeWithRound100 `M ${bx1} ${by1} H ${bx2}`;
+            const right = escapeWithRound100 `V ${by2}`;
+            const bottom = escapeWithRound100 `H ${bx1}`;
+            const left = escapeWithRound100 `V ${ny1} H ${nx} V ${hy1} L ${hx} ${cy} L ${nx} ${hy2} V ${ny2} H ${bx1} V ${by1}`
+            this.svgPath.setAttribute("d", escapeWithRound100 `${top} ${right} ${bottom} ${left} z`);
 
 
         } else if (this.direction == "right") {
@@ -320,11 +322,11 @@ export class GArrowCallout extends GPathTextBox {
             let hy2 = 0 + (this.arrowHeadWidth / 2)
             let hx = x2;
 
-            const top = `M ${bx1} ${by1} H ${bx2}`;
-            const right = `V ${ny1} H ${nx} V ${hy1} L ${hx} ${cy} L ${nx} ${hy2} V ${ny2} H ${bx2} V ${by2}`;
-            const bottom = `H ${bx1}`;
-            const left = `V ${by1}`;
-            this.svgPath.setAttribute("d", `${top} ${right} ${bottom} ${left} z`);
+            const top = escapeWithRound100 `M ${bx1} ${by1} H ${bx2}`;
+            const right = escapeWithRound100 `V ${ny1} H ${nx} V ${hy1} L ${hx} ${cy} L ${nx} ${hy2} V ${ny2} H ${bx2} V ${by2}`;
+            const bottom = escapeWithRound100 `H ${bx1}`;
+            const left = escapeWithRound100 `V ${by1}`;
+            this.svgPath.setAttribute("d", escapeWithRound100 `${top} ${right} ${bottom} ${left} z`);
 
 
         } else {
@@ -346,11 +348,11 @@ export class GArrowCallout extends GPathTextBox {
             let hx1 = - (this.arrowHeadWidth / 2)
             let hx2 = (this.arrowHeadWidth / 2)
             let hy = y2;
-            const top = `M ${bx1} ${by1} H ${bx2}`;
-            const right = `V ${by2}`;
-            const bottom = `H ${nx2} V ${ny} H ${hx2} L ${cx} ${hy} L ${hx1} ${ny} H ${nx1} V ${by2} H ${bx1}`;
-            const left = `V ${by1}`
-            this.svgPath.setAttribute("d", `${top} ${right} ${bottom} ${left} z`);
+            const top = escapeWithRound100 `M ${bx1} ${by1} H ${bx2}`;
+            const right = escapeWithRound100 `V ${by2}`;
+            const bottom = escapeWithRound100 `H ${nx2} V ${ny} H ${hx2} L ${cx} ${hy} L ${hx1} ${ny} H ${nx1} V ${by2} H ${bx1}`;
+            const left = escapeWithRound100 `V ${by1}`
+            this.svgPath.setAttribute("d", escapeWithRound100 `${top} ${right} ${bottom} ${left} z`);
         }
     }
     public get shape(): VBAShapeType {

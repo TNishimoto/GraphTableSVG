@@ -7,7 +7,7 @@ import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
 import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../common/enums";
-import { Rectangle, PositionType } from "../common/vline"
+import { Rectangle, PositionType, round100 } from "../common/vline"
 import * as HTMLFunctions from "../html/html_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { GObject } from "./g_object"
@@ -270,8 +270,9 @@ export class GTextBox extends GVertex {
         return SVGTextExtension.gtSetXY(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
     }
     protected updateSurfaceLocation() : boolean{
-        return true;
+        return false;
     }
+    op : number =0;
     public update() {
         super.update();
         this._isUpdating = true;
@@ -290,8 +291,9 @@ export class GTextBox extends GVertex {
         //this._observer.observe(this.svgGroup, this.groupObserverOption);
         this.hasConnectedObserverFunction = true;
 
-
+        console.log(`${b1}/${b2}/${b3}/${b4}/`)
         if(b1 || b2 || b3 || b4){
+            
             this.update();
         }
     }
@@ -535,7 +537,7 @@ export class GTextBox extends GVertex {
             }
             //const newWidth = this.width < width ? width : this.width;
             //const newHeigth = this.height < height ? height : this.height;
-            return new Rectangle(x, y, newWidth, newHeight);
+            return new Rectangle(round100(x), round100(y), round100(newWidth), round100(newHeight));
         } else {
             return new Rectangle(- (this.width / 2), - (this.height / 2), this.width, this.height);
             //return new Rectangle(this.x, this.y, this.width, this.height);

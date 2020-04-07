@@ -6,7 +6,7 @@
     import { ShapeObjectType, ConnectorPosition, msoDashStyle, VBAShapeType } from "../common/enums";
     import * as AttributeNames from "../common/attribute_names"
     import * as StyleNames from "../common/style_names"
-    import {Rectangle, VLine} from "../common/vline"
+    import {Rectangle, VLine, round100} from "../common/vline"
     import * as CSS from "../html/css"
     import * as GOptions  from "./g_options"
     import {setComputedDashArray} from "../html/enum_extension";
@@ -101,20 +101,22 @@
         頂点の幅を返します。
         */
         get width(): number {
-            return this.svgRectangle.width.baseVal.value;
+            return round100(this.svgRectangle.width.baseVal.value);
         }
         set width(value: number) {
-            if (this.width != value) this.svgRectangle.setAttribute("width", value.toString());
+            const value100 = round100(value);
+            if (this.width != value100) this.svgRectangle.setAttribute("width", value100.toString());
 
         }
         /**
         頂点の高さを返します。
         */
         get height(): number {
-            return this.svgRectangle.height.baseVal.value;
+            return round100(this.svgRectangle.height.baseVal.value);
         }
         set height(value: number) {
-            if (this.height != value) this.svgRectangle.setAttribute("height", value.toString());
+            const value100 = round100(value);
+            if (this.height != value100) this.svgRectangle.setAttribute("height", value100.toString());
         }
         public get surfaceRegion() : Rectangle{
             const x = this.svgRectangle.x.baseVal.value;
