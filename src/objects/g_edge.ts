@@ -26,6 +26,7 @@ import { HTML } from "..";
 
 import * as HTMLFunctions from "../html/html_functions";
 import { unwatchFile } from "fs";
+import { escapeWithRound100, round100 } from "../common/vline";
 
 /**
  * 辺をSVGで表現するためのクラスです。
@@ -294,7 +295,7 @@ export class GEdge extends GEdgeTextBox {
         className: string | GOptions.surfaceClassCSS , style: string | undefined | GOptions.surfaceClassCSS): SVGPathElement {
         const path = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
         parent.appendChild(path);
-        path.setAttribute("d", `M ${x} ${y} L ${x2} ${y2}`);
+        path.setAttribute("d", escapeWithRound100 `M ${x} ${y} L ${x2} ${y2}`);
 
         
         GOptions.setClassAndStyle(path, className, style);
@@ -666,10 +667,14 @@ export class GEdge extends GEdgeTextBox {
         const number = this.svgText.textContent != null ? this.svgText.textContent.length : 0;
         if (number >= 2) {
             const w = diff / (number - 1)
-            this.svgText.setAttribute("letter-spacing", `${w}`);
+            ElementExtension.setAttributeNumber(this.svgText, "letter-spacing", w);
+            //this.svgText.setAttribute("letter-spacing", `${w}`);
         }
-        this.svgText.setAttribute("textLength", `${value}`);
-        this.svgTextPath.setAttribute("textLength", `${value}`);
+        ElementExtension.setAttributeNumber(this.svgText, "textLength", value);
+        ElementExtension.setAttributeNumber(this.svgTextPath, "textLength", value);
+
+        //this.svgText.setAttribute("textLength", `${value}`);
+        //this.svgTextPath.setAttribute("textLength", `${value}`);
 
     }
     private get pathPoints(): [number, number][] {
@@ -681,14 +686,14 @@ export class GEdge extends GEdgeTextBox {
 
         while (i < d.length) {
             if (d[i] == "M") {
-                r.push([Number(d[i + 1]), Number(d[i + 2])]);
+                r.push([round100(Number(d[i + 1])), round100(Number(d[i + 2])) ]);
                 i += 3;
             } else if (d[i] == "L") {
-                r.push([Number(d[i + 1]), Number(d[i + 2])]);
+                r.push([round100( Number(d[i + 1])), round100(Number(d[i + 2])) ]);
                 i += 3;
             } else if (d[i] == "Q") {
-                r.push([Number(d[i + 1]), Number(d[i + 2])]);
-                r.push([Number(d[i + 3]), Number(d[i + 4])]);
+                r.push( [round100(Number(d[i + 1])), round100(Number(d[i + 2]))]);
+                r.push([round100( Number(d[i + 3])), round100( Number(d[i + 4])) ]);
                 i += 5;
             } else {
 
@@ -710,17 +715,17 @@ export class GEdge extends GEdgeTextBox {
             const [x1, y1] = points[0];
             const [x2, y2] = points[1];
 
-            path = `M ${x1} ${y1} L ${x2} ${y2}`
+            path = escapeWithRound100 `M ${x1} ${y1} L ${x2} ${y2}`
         } else if (points.length == 3) {
             const [x1, y1] = points[0];
             const [x2, y2] = points[2];
             const [cx1, cy1] = points[1];
-            path = `M ${x1} ${y1} Q ${cx1} ${cy1} ${x2} ${y2}`
+            path = escapeWithRound100 `M ${x1} ${y1} Q ${cx1} ${cy1} ${x2} ${y2}`
         } else if (points.length == 1) {
             throw Error("path points ivnalid error");
         }
         else {
-            path = `M ${0} ${0} L ${0} ${0}`
+            path = escapeWithRound100 `M ${0} ${0} L ${0} ${0}`
         }
 
         const prevPath = this.svgPath.getAttribute("d");
@@ -800,6 +805,10 @@ export class GEdge extends GEdgeTextBox {
         return b1 && b2 && b3;
 
     }
+    private set startOffset(value : number){
+        ElementExtension.setAttributeNumber(this.svgTextPath, "startOffset", value);
+
+    }
     private updateTextPath(){
         //if(this.svgTextPath.textContent!.length == 0) return;
         
@@ -819,13 +828,14 @@ export class GEdge extends GEdgeTextBox {
                 //const startPos = pathLen / (strLen + 1);
                 let textPathLen = pathLen - (paddingUnit * 2);
                 if (textPathLen <= 0) textPathLen = 5;
-                this.svgTextPath.setAttribute("startOffset", `${paddingUnit }`);
+                this.startOffset = paddingUnit;
+                //this.svgTextPath.setAttribute("startOffset", `${paddingUnit }`);
                 this.setRegularInterval(textPathLen);
             }
 
         }
         else if (this.pathTextAlignment == PathTextAlighnment.end) {
-            this.svgTextPath.setAttribute("startOffset", `${0}`);
+            this.startOffset = 0;
             this.removeTextLengthAttribute();
             //const textRect = SVGTextBox.getSize(this.svgText);
             //const strWidth = SVGTextExtensions.getVirtualTextLineLength(this.svgTextPath); 
@@ -835,11 +845,14 @@ export class GEdge extends GEdgeTextBox {
             //const pathLen = this.svgPath.getTotalLength();
             //this.svgTextPath.setAttribute("startOffset", `${0}`);
             //this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
+            this.startOffset = this.side == "right" ? 0 : (pathLen - strWidth);
+            /*
             if (this.side == "right") {
                 this.svgTextPath.setAttribute("startOffset", `${0}`);
             } else {
                 this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
             }
+            */
 
         }
         else if (this.pathTextAlignment == PathTextAlighnment.center) {
@@ -851,22 +864,28 @@ export class GEdge extends GEdgeTextBox {
             //const pathLen = this.svgPath.getTotalLength();
             const offset = (pathLen / 2) - (strWidth / 2);
 
+            this.startOffset = offset;
+            /*
             if (this.side == "right") {
                 this.svgTextPath.setAttribute("startOffset", `${offset}`);
             } else {
                 this.svgTextPath.setAttribute("startOffset", `${offset}`);
             }
+            */
             //こっちだとEdgeではおかしくなる
             //this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    
 
         }
         else {
             //const strWidth = SVGTextExtensions.getWidth(this.svgText);
+            this.startOffset = this.side == "right" ? (pathLen - strWidth) : 0;
+            /*
             if (this.side == "right") {
                 this.svgTextPath.setAttribute("startOffset", `${pathLen - strWidth}`);
             } else {
                 this.svgTextPath.setAttribute("startOffset", `${0}`);
             }
+            */
 
             //this.svgTextPath.setAttribute("startOffset", `${0}`);
             this.removeTextLengthAttribute();

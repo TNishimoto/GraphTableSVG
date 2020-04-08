@@ -1,4 +1,5 @@
 import * as CommonFunctions from "../common/common_functions";
+import { round100 } from "../common/vline";
 
 export function getPropertyStyleValue(item : Element ,name: string): string | null{
     const p = (<any>item).style.getPropertyValue(name).trim();
@@ -116,6 +117,10 @@ export function gtGetAttribute(item:Element,name: string, defaultValue: string |
         return defaultValue;
     }
 }
+export function setAttributeNumber(item:Element, name: string, value: number){
+    item.setAttribute(name, round100(value).toString());
+}
+
 
 export function  gtGetAttributes(item:Element): { name: string, value: string }[]{
     //const p: Element = this;

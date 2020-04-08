@@ -22,10 +22,14 @@ function equal_attributes(obj1: Element, obj2: Element, attributeSet : Set<strin
 
         const value1 = obj1.getAttribute(v);
         const value2 = obj2.getAttribute(v);
+        if(v == "href" || v == "xlink:href"){
 
-        if(value1 != value2){
-            throw new Error(`${v}/${value1}/${value2}`);
+        }else{
+            if(value1 != value2){
+                throw new Error(`${v}/${value1}/${value2}`);
+            }        
         }
+
     })
     return true;
 }

@@ -48,7 +48,6 @@ function createTextSpans(text: string, className: string | null = null,
     fontsize: number = 12, dxOfFirstElement: number | null = null, dyOfFirstElement: number | null = null): SVGTSpanElement[] {
     let r: SVGTSpanElement[] = [];
     text += "_";
-    console.log(dxOfFirstElement);
     //const p: SVGTextElement = this;
     //p.textContent = "";
     //const h = parseInt(p.getPropertyStyleValueWithDefault("font-size", "12"));
@@ -282,7 +281,6 @@ function alignTextAsText(svgText: SVGTextElement, showChecked: boolean) {
 
             if (x == 0){
                 dx = round100(dx);
-                console.log("sock" + dx);
 
                 v.setAttribute("dx", dx.toString());
             } 
