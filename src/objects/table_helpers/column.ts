@@ -4,7 +4,8 @@
     
     import * as SVG from "../../interfaces/svg"   
     import {GTable} from "../g_table"
-    import { Rectangle, Size } from "../../common/vline";
+    import { Rectangle, Size, round100 } from "../../common/vline";
+import { setAttributeNumber } from "../../interfaces/element_extension";
 
     /**
      * 表の列を表現するクラスです。
@@ -38,7 +39,8 @@
         列の幅を設定します。
         */
         set width(value: number) {
-            this._svgGroup.setAttribute(CellColumn.rowWidthName, `${value}`);
+            setAttributeNumber(this._svgGroup, CellColumn.rowWidthName, value);
+            //this._svgGroup.setAttribute(CellColumn.rowWidthName, `${value}`);
             this.setWidthToCells();
             /*
             let b = false;
@@ -128,7 +130,7 @@
                 }
                 height += cell.master.getVirtualRegion().height;
             }
-            return new Size(width, height);
+            return new Size(round100(width), round100(height));
 
         }
         /*

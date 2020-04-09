@@ -691,8 +691,8 @@ export class GTable extends GVertex {
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {
                 const cell = this.cells[y][x];
-                const vAnchor = VBATranslateFunctions.ToVerticalAnchor(cell.verticalAnchor == null ? "" : cell.verticalAnchor);
-                const hAnchor = VBATranslateFunctions.ToHorizontalAnchor(cell.horizontalAnchor == null ? "" : cell.horizontalAnchor);
+                const vAnchor = VBATranslateFunctions.ToVerticalAnchor(cell.verticalAnchor);
+                const hAnchor = VBATranslateFunctions.ToHorizontalAnchor(cell.horizontalAnchor);
                 lines.push([` Call EditCellTextFrame(${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame, ${cell.paddingTop}, ${cell.paddingBottom}, ${cell.paddingLeft}, ${cell.paddingRight}, ${vAnchor}, ${hAnchor})`]);
             }
         }

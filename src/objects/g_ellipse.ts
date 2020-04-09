@@ -6,7 +6,7 @@
     import * as AttributeNames from "../common/attribute_names"
     import * as StyleNames from "../common/style_names"
     import * as DefaultClassNames from "../common/default_class_names"
-    import {Rectangle, VLine} from "../common/vline"
+    import {Rectangle, VLine, round100} from "../common/vline"
     import * as CSS from "../html/css"
     import * as GOptions  from "./g_options"
     import * as ElementExtension from "../interfaces/element_extension"
@@ -147,30 +147,31 @@
         }
         
         get width(): number {
-            return this.svgEllipse.rx.baseVal.value * 2;
+            return round100(this.svgEllipse.rx.baseVal.value * 2);
         }
         get height(): number {
-            return this.svgEllipse.ry.baseVal.value * 2;
+            return round100(this.svgEllipse.ry.baseVal.value * 2);
         }
         
 
 
         set width(value: number) {
             const _rx = value/2;
-            if (this.width != value) this.svgEllipse.setAttribute("rx", _rx.toString());
+            if (this.width != value) ElementExtension.setAttributeNumber(this.svgEllipse, "rx", _rx);
 
         }
 
         set height(value: number) {
             const _ry = value/2;
-            if (this.height != value) this.svgEllipse.setAttribute("ry", _ry.toString());
+            if (this.height != value) ElementExtension.setAttributeNumber(this.svgEllipse, "ry", _ry);
+            //this.svgEllipse.setAttribute("ry", _ry.toString());
         }
 
         get rx() : number{
-            return this.svgEllipse.rx.baseVal.value;
+            return round100(this.svgEllipse.rx.baseVal.value);
         }
         get ry() : number{
-            return this.svgEllipse.ry.baseVal.value;
+            return round100(this.svgEllipse.ry.baseVal.value);
         }
         public get type(): ShapeObjectType {
             return ShapeObjectType.Ellipse;

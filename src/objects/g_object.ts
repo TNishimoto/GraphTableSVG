@@ -392,6 +392,7 @@ export class GObject {
         }
     }
 
+
     public setVirtualXY(x : number, y : number){
         const rect = this.getVirtualRegion();
         if(this.coordinateType == CoodinateType.Group00){
@@ -457,7 +458,8 @@ export class GObject {
     }
     set width(value: number) {
         if (this.hasSize) {
-            if (this.width != value && value != null) this.svgGroup.setAttribute("data-width", value.toString());
+            if (this.width != value && value != null) ElementExtension.setAttributeNumber(this.svgGroup, "data-width", value);
+            //this.svgGroup.setAttribute("data-width", value.toString());
         }
     }
     /**
@@ -472,7 +474,8 @@ export class GObject {
     }
     set height(value: number) {
         if (this.hasSize) {
-            if (this.height != value && value != null) this.svgGroup.setAttribute("data-height", value.toString());
+            if (this.height != value && value != null) ElementExtension.setAttributeNumber(this.svgGroup, "data-height", value);
+            //this.svgGroup.setAttribute("data-height", value.toString());
         }
     }
     /*

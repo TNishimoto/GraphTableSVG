@@ -2,6 +2,7 @@
 //import { Padding, Rectangle } from "../common/vline";
 import { SVGToVBA } from "./svg_to_vba"
 import { GObject } from "../objects/g_object"
+import { runInThisContext } from "vm";
 
 //export namespace VBAMacroModal {
     export function showMacroModal(id :string | GObject){
@@ -12,6 +13,11 @@ import { GObject } from "../objects/g_object"
 
         }
     }
+    export function createMacroModalFromID(id : string) {
+        const code = SVGToVBA.create(id);
+        return createMacroModal(code);
+    }
+
     /**
      * マクロ用のモーダルを画面に生成します。
      * @param vbaCode モーダルに表示する貼り付けるVBAマクロ
@@ -47,7 +53,8 @@ import { GObject } from "../objects/g_object"
             mainDiv.style.width = "900px";
             mainDiv.style.height = "400px";
             mainDiv.style.left = `${((window.outerWidth - parseInt(mainDiv.style.width)) / 2)}px`;
-            mainDiv.style.top = `${((window.outerHeight - parseInt(mainDiv.style.height)) / 2)}px`;
+            //mainDiv.style.top = `${((window.outerHeight - parseInt(mainDiv.style.height)) / 2)}px`;
+            mainDiv.style.top = `${((window.outerHeight - parseInt(mainDiv.style.height)) / 16)}px`;
 
 
             mainDiv.style.display = "inline";

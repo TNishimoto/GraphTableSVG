@@ -46,8 +46,8 @@ export class ConsoleLineElement {
         this.fieldSetElement.appendChild(this.legendElement);
         this.title = title;
 
-        const createCanvas = type == "table" || type == "graph" || type == "log" || "group";
-        const createVBAButton = type == "table" || type == "graph" || type == "log" || "group";
+        const createCanvas = type == "table" || type == "graph" || type == "log" || type == "group";
+        const createVBAButton = type == "table" || type == "graph" || type == "log" || type == "group";
 
         if (createCanvas) {
             this.canvas = ConsoleLineElement.addSVGSVGElement(this.fieldSetElement);

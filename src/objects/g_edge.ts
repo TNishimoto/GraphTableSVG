@@ -20,13 +20,14 @@ import * as GOptions  from "./g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
 import * as SVGTextExtensions from "../interfaces/svg_text_extension"
-import { getVirtualTextLineLength} from "../interfaces/virtual_text"
+import { getVirtualRegion} from "../interfaces/virtual_text"
 
 import { HTML } from "..";
 
 import * as HTMLFunctions from "../html/html_functions";
 import { unwatchFile } from "fs";
 import { escapeWithRound100, round100 } from "../common/vline";
+import { getGraph } from "./graph_helpers/common_functions";
 
 /**
  * 辺をSVGで表現するためのクラスです。
@@ -658,20 +659,22 @@ export class GEdge extends GEdgeTextBox {
         if (this.svgTextPath.hasAttribute("textLength")) this.svgTextPath.removeAttribute("textLength");
         if (this.svgText.hasAttribute("letter-spacing")) this.svgText.removeAttribute("letter-spacing");
     }
-    private setRegularInterval(value: number): void {
+    private setRegularInterval(textPathLen: number, textWidth : number): void {
         this.removeTextLengthAttribute();
 
-        const textRect = SVGTextExtensions.getSize(this.svgText);
+        //const textRect = SVGTextExtensions.getSize(this.svgText);
         //const box = this.svgText.getBBox();
-        const diff = value - textRect.width;
+        /*
         const number = this.svgText.textContent != null ? this.svgText.textContent.length : 0;
         if (number >= 2) {
+            const diff = textPathLen - textWidth;        
             const w = diff / (number - 1)
-            ElementExtension.setAttributeNumber(this.svgText, "letter-spacing", w);
+            //ElementExtension.setAttributeNumber(this.svgText, "letter-spacing", w);
             //this.svgText.setAttribute("letter-spacing", `${w}`);
         }
-        ElementExtension.setAttributeNumber(this.svgText, "textLength", value);
-        ElementExtension.setAttributeNumber(this.svgTextPath, "textLength", value);
+        */
+        ElementExtension.setAttributeNumber(this.svgText, "textLength", textPathLen);
+        ElementExtension.setAttributeNumber(this.svgTextPath, "textLength", textPathLen);
 
         //this.svgText.setAttribute("textLength", `${value}`);
         //this.svgTextPath.setAttribute("textLength", `${value}`);
@@ -815,7 +818,10 @@ export class GEdge extends GEdgeTextBox {
         if(!HTMLFunctions.isShow(this.svgTextPath)){
             throw new Error();
         }
-        const strWidth = getVirtualTextLineLength(this.svgTextPath); 
+        //const strWidth = getVirtualTextLineLength(this.svgTextPath); 
+        const region = getVirtualRegion(this.svgText);
+        const strWidth = region.width; 
+
         const pathLen = this.svgPath.getTotalLength();
             
 
@@ -824,13 +830,18 @@ export class GEdge extends GEdgeTextBox {
             const strLen = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
             if (strWidth > 0) {
                 const paddingWidth = pathLen - strWidth;
-                const paddingUnit = paddingWidth / (strLen + 1);
-                //const startPos = pathLen / (strLen + 1);
-                let textPathLen = pathLen - (paddingUnit * 2);
-                if (textPathLen <= 0) textPathLen = 5;
-                this.startOffset = paddingUnit;
-                //this.svgTextPath.setAttribute("startOffset", `${paddingUnit }`);
-                this.setRegularInterval(textPathLen);
+                if(strLen != 0){
+                    const paddingUnit = paddingWidth / (strLen + 1);
+                    //const paddingUnit = paddingWidth / (strLen + 1);
+
+                    //const startPos = pathLen / (strLen + 1);
+                    let textPathLen = pathLen - (paddingUnit * 2);
+                    if (textPathLen <= 0) textPathLen = 5;
+                    this.startOffset = paddingUnit;
+                    //this.svgTextPath.setAttribute("startOffset", `${paddingUnit }`);
+                    this.setRegularInterval(textPathLen, strWidth);
+    
+                }
             }
 
         }
@@ -1160,6 +1171,10 @@ export class GEdge extends GEdgeTextBox {
     public get hasSize(): boolean {
         return false;
     }
+    
+    public get graph(): GObject | null {
+        return getGraph(this);
+    }
     /**
      * VBAコードを作成します。
      * @param shapes 
@@ -1170,6 +1185,9 @@ export class GEdge extends GEdgeTextBox {
         const fontSize = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgTextPath, "font-size", "12"));
         const fontFamily = VBATranslateFunctions.ToVBAFont(ElementExtension.getPropertyStyleValueWithDefault(this.svgTextPath, "font-family", "MS PGothic"));
         const fontBold = VBATranslateFunctions.ToFontBold(ElementExtension.getPropertyStyleValueWithDefault(this.svgTextPath, "font-weight", "none"));
+
+        const globalX = this.graph != null ? this.graph.x : 0;
+        const globalY = this.graph != null ? this.graph.y : 0;
 
         if (this.svgTextPath.textContent != null) {
             for (let i = 0; i < this.svgTextPath.textContent.length; i++) {
@@ -1183,9 +1201,9 @@ export class GEdge extends GEdgeTextBox {
                 const diffx = (fontSize * 1 / 2) * Math.sin((rad / 180) * Math.PI);
                 const diffy = (fontSize * 3 / 8) + ((fontSize * 3 / 8) * Math.cos((rad / 180) * Math.PI));
 
-                const left = p1.x + diffx;
+                const left = p1.x + globalX + diffx;
                 //const top = this.graph.svgGroup.getY() + p1.y - (fontSize / 2);
-                const top = p1.y - (fontSize * 1 / 4) - diffy;
+                const top = p1.y + globalY - (fontSize * 1 / 4) - diffy;
 
                 //const top = this.graph.svgGroup.getY() + p1.y - diffy;
                 s.push(`Sub create${id}_label_${i}(shapes_ As Shapes)`);

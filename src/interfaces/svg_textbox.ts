@@ -266,7 +266,7 @@ function alignTextAsText(svgText: SVGTextElement, showChecked: boolean) {
     const fs = parseInt(fontSize);
 
     let dx = 0;
-    let dy = fs;
+    //let dy = fs;
     let c = 0;
     const lengths = getComputedTextLengthsOfTSpans(svgText, showChecked);
     for (let y = 0; y < lineSpans.length; y++) {
@@ -311,7 +311,7 @@ export function constructSVGTextByHTMLElements(svgText: SVGTextElement, text: HT
         copy(v, tspan);
         return tspan;
     })
-    let dy = 0;
+    //let dy = 0;
 
     spans.forEach((v, i) => {
         svgText.appendChild(v);

@@ -441,12 +441,12 @@ export namespace HorizontalAnchor {
     export const Right: HorizontalAnchor = "right"
 
     export function toHorizontalAnchor(value: string): HorizontalAnchor {
-        if (value == "left") {
-            return "left";
+        if (value == "center") {
+            return "center";
         } else if (value == "right") {
             return "right";
-        } else {
-            return "center";
+        } else  {
+            return "left";
         }
     }
 }

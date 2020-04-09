@@ -99,7 +99,7 @@ export function setMarginBottom(item: SVGTextElement, value: number): void {
     ElementExtension.setPropertyStyleValue(item, StyleNames.marginBottom, value.toString());
 
 }
-export function gtSetXY(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText): boolean {
+export function setXY(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText): boolean {
 
     //let x = rect.x;
     //let y = rect.y;

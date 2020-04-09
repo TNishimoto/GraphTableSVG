@@ -13,7 +13,7 @@ export function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElemen
         }
     }
     const dashArray = ElementExtension.getPropertyStyleValue(svgLine,"stroke-dasharray");
-    if (dashArray != null) {
+    if (dashArray != null && dashArray != "none") {
         return msoDashStyle.msoLineDash;
     } else {
         return msoDashStyle.msoLineSolid;

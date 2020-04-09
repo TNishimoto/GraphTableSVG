@@ -2,7 +2,8 @@
     import {Cell, CellOption} from "./cell"
     import * as SVG from "../../interfaces/svg"
     import {GTable} from "../g_table"
-import { Rectangle, Size } from "../../common/vline";
+import { Rectangle, Size, round100 } from "../../common/vline";
+import { setAttributeNumber } from "../../interfaces/element_extension";
 
     /**
      * 表の行を表現するクラスです。
@@ -87,7 +88,8 @@ import { Rectangle, Size } from "../../common/vline";
         行の高さを設定します。
         */
         set height(value: number) {
-            this._svgGroup.setAttribute(CellRow.columnHeightName, `${value}`);
+            setAttributeNumber(this._svgGroup, CellRow.columnHeightName, value)
+            //this._svgGroup.setAttribute(CellRow.columnHeightName, `${value}`);
             this.setHeightToCells();
             /*
             let b = false;
@@ -121,7 +123,7 @@ import { Rectangle, Size } from "../../common/vline";
                 }
                 width += cell.master.getVirtualRegion().width;
             }
-            return new Size(width, height);
+            return new Size(round100(width), round100(height));
 
         }
 

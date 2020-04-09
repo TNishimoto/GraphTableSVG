@@ -12,6 +12,7 @@ import { GEdge } from "./g_edge"
 import { VirtualTree } from "./graph_helpers/virtual_tree"
 import {getLineType} from "../html/enum_extension";
 import * as ElementExtension from "../interfaces/element_extension"
+import { getGraph } from "./graph_helpers/common_functions";
 
 
 
@@ -255,6 +256,21 @@ export class GVertex extends GObject {
         p.height = this.height;
         return p;
     }
+    protected get globalX(): number {
+        if(this.graph != null){
+            return this.graph.x + this.x;
+        }else{
+            return this.x;
+        }
+    }
+    protected get globalY(): number {
+        if(this.graph != null){
+            return this.graph.y + this.y;
+        }else{
+            return this.y;
+        }
+    }
+
     public get shape(): VBAShapeType {
         return VBAShapeType.None;
     }
@@ -271,7 +287,9 @@ export class GVertex extends GObject {
         lines.push(`Sub create${id}(createdSlide As slide)`);
         lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
         lines.push(` Dim obj As Shape`);
-        lines.push(` Set obj = shapes_.AddShape(${this.shape}, ${this.x}, ${this.y}, ${this.width}, ${this.height})`);
+        lines.push(` Set obj = shapes_.AddShape(${this.shape}, ${this.globalX}, ${this.globalY}, ${this.width}, ${this.height})`);
+        console.log(this.globalX + "/" + this.x);
+        
 
         const svgText = this.tryGetSVGText();
         if(svgText != null)VBATranslateFunctions.TranslateSVGTextElement2(svgText, `obj.TextFrame.TextRange`).forEach((v) => lines.push(v));
@@ -300,15 +318,7 @@ export class GVertex extends GObject {
     }
 
     public get graph(): GObject | null {
-        const v = this.svgGroup.parentElement;
-        if (v != null && v instanceof SVGGElement && v.hasAttribute(AttributeNames.objectIDName)) {
-            const id = v.getAttribute(AttributeNames.objectIDName)!;
-            const obj = GObject.getObjectFromObjectID(id);
-            if (obj instanceof GObject) {
-                return obj;
-            }
-        }
-        return null;
+        return getGraph(this);
     }
 }
 

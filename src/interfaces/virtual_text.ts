@@ -54,13 +54,22 @@ function createVirtualTSpan(tspan : SVGTSpanElement) : VirtualTSpan{
     return { textContent: textContent, fontSize : style.fontSize, fontFamily : style.fontFamily, fontWeight : style.fontWeight, type: "span", dx : dx, dy : dy }
 }
 function createVirtualText(svgText : SVGTextElement) : virtualTText{
-    
-    const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName == "tspan");
+    const tpathItems = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName == "textPath");
+    let tspans : SVGTSpanElement[] = new Array();
+    if(tpathItems.length == 1){
+        const tpath = tpathItems[0];
+        tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(tpath).filter((v) => v.nodeName == "tspan");
+    }else{
+        tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName == "tspan");    
+    }
     const r : VirtualTSpan[] = new Array();
     tspans.forEach((v) =>{
         r.push(createVirtualTSpan(v));
     })
     return { type : "text", children : r};
+
+
+    
 }
 
 function superComputeRegion(text: virtualTText | VirtualTSpan): Rectangle {
@@ -184,6 +193,7 @@ function computeTextWidth(text: string | number, fontSize: number, fontFamily: s
         }
     }
 }
+/*
 export function getVirtualTextLineLength(text: SVGTextElement | SVGTSpanElement | SVGTextPathElement): number {
 
     if (text instanceof SVGTSpanElement) {
@@ -201,22 +211,26 @@ export function getVirtualTextLineLength(text: SVGTextElement | SVGTSpanElement 
         return len;
     }
 }
-export function getVirtualRegion(text: SVGTextElement | SVGTSpanElement | SVGTextPathElement): Rectangle {
+*/
+export function getVirtualRegion(text: SVGTextElement | SVGTSpanElement): Rectangle {
 
     if(text instanceof SVGTextElement){
         const vtext = createVirtualText(text);
         const rect = superComputeRegion(vtext);
         return rect;
-        return superComputeRegion(vtext);
-    }else if(text instanceof SVGTSpanElement){
+        //return superComputeRegion(vtext);
+    }else{
         const vtext = createVirtualTSpan(text);
         const rect = superComputeRegion(vtext);
         return rect;
 
-    }else{
+    }
+    /*
+    else{
         return new Rectangle();
 
     }
+    */
     /*
     if (text instanceof SVGTSpanElement) {
         const width = getVirtualTextLineLength(text);

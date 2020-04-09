@@ -18,7 +18,7 @@ export class SVGToVBA {
      * 入力要素をPowerpoint上で作成するVBAコードを作成します。
      * @param items 
      */
-    public static create(items: VBAObjectType[] | VBAObjectType): string {
+    public static create(items: VBAObjectType[] | VBAObjectType | string): string {
         //const id = 0;
         if (items instanceof Array) {
             const count = SVGToVBA.count(items);
@@ -69,7 +69,18 @@ export class SVGToVBA {
             s.push(SVGToVBA.cellFunctionCode);
             const r = VBATranslateFunctions.joinLines(s);
             return r;
-        } else {
+        }
+        else if(typeof(items) == "string"){
+            const id = items;
+            const obj = <any>document.getElementById(id);
+            if(obj != null && obj.operator instanceof GObject){
+                return SVGToVBA.create([obj.operator]);
+            }else{
+                throw new Error();
+            }
+
+        }
+        else {
             return SVGToVBA.create([items]);
         }
     }

@@ -267,7 +267,7 @@ export class GTextBox extends GVertex {
     protected updateTextLocation() : boolean {
         //const textRect = this.textLocationRegion;
         //console.log(this.verticalAnchor + "/" + this.horizontalAnchor)
-        return SVGTextExtension.gtSetXY(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+        return SVGTextExtension.setXY(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
     }
     protected updateSurfaceLocation() : boolean{
         return false;
@@ -291,9 +291,9 @@ export class GTextBox extends GVertex {
         //this._observer.observe(this.svgGroup, this.groupObserverOption);
         this.hasConnectedObserverFunction = true;
 
-        console.log(`${b1}/${b2}/${b3}/${b4}/`)
+        //console.log(`${b1}/${b2}/${b3}/${b4}/`)
         if(b1 || b2 || b3 || b4){
-            
+                
             this.update();
         }
     }
@@ -422,6 +422,7 @@ export class GTextBox extends GVertex {
     }
 
     public get msoDashStyle(): msoDashStyle | null {
+
         if (this.svgSurface != null) {
             const dashStyle = ElementExtension.getPropertyStyleValue(this.svgSurface, StyleNames.msoDashStyleName);
             if (dashStyle != null) {
@@ -455,7 +456,7 @@ export class GTextBox extends GVertex {
         lines.push(`Sub create${id}(createdSlide As slide)`);
         lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
         lines.push(` Dim obj As Shape`);
-        lines.push(` Set obj = shapes_.AddShape(${this.shape}, ${this.x}, ${this.y}, ${this.width}, ${this.height})`);
+        lines.push(` Set obj = shapes_.AddShape(${this.shape}, ${this.globalX}, ${this.globalY}, ${this.width}, ${this.height})`);
         lines.push(` Call EditTextFrame(obj.TextFrame, ${this.marginPaddingTop}, ${this.marginPaddingBottom}, ${this.marginPaddingLeft}, ${this.marginPaddingRight}, false, ppAutoSizeNone)`);
         lines.push(` Call EditAnchor(obj.TextFrame, ${vAnchor}, ${hAnchor})`);
 

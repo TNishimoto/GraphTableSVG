@@ -266,7 +266,7 @@ export class GEdgeTextBox extends GObject {
         */
 
         if (!this._isSpecialTextBox) {
-            SVGTextExtension.gtSetXY(this.svgText, this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+            SVGTextExtension.setXY(this.svgText, this.innerRectangleWithoutMargin, this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
         }
 
         //Graph.setXY(this.svgText, this.innerRectangle, vAnchor, hAnchor);
