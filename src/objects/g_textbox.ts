@@ -452,6 +452,7 @@ export class GTextBox extends GVertex {
         const vAnchor = VBATranslateFunctions.ToVerticalAnchor(this.verticalAnchor);
         const hAnchor = VBATranslateFunctions.ToHorizontalAnchor(this.horizontalAnchor);
 
+        console.log(this.globalX + "/" + this.x + "/" + this.surfaceRegion.x + "/" + this.shape);
 
         lines.push(`Sub create${id}(createdSlide As slide)`);
         lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);

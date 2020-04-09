@@ -288,7 +288,6 @@ export class GVertex extends GObject {
         lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
         lines.push(` Dim obj As Shape`);
         lines.push(` Set obj = shapes_.AddShape(${this.shape}, ${this.globalX}, ${this.globalY}, ${this.width}, ${this.height})`);
-        console.log(this.globalX + "/" + this.x);
         
 
         const svgText = this.tryGetSVGText();

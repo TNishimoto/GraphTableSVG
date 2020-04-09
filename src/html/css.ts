@@ -163,7 +163,7 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
             .${DefaultClassNames.defaultTextClass}{
                 fill : black;
                 font-size: 20px;
-                font-family: "'Times New Roman', 'Meiryo'";
+                font-family: "Times New Roman";
             }
             .${DefaultClassNames.defaultCellBackgroungClass}{
                 fill : white;
@@ -232,7 +232,7 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
                 fill : black;
                 font-size: 18px;
                 font-weight: bold;
-                font-family: "'Times New Roman', 'Meiryo'";
+                font-family: "'Times New Roman'";
             }
             .${DefaultClassNames.defaultConsoleColumnTitleCellUndefinedTextClass} {
                 fill : pink;

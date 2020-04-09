@@ -105,6 +105,13 @@
             }
         }
     
+        public get surfaceRegion() : Rectangle{
+            const x = -this.rx;
+            const y = -this.ry;
+            const w = this.width;
+            const h = this.height
+            return new Rectangle(x, y, w, h);
+        }
     }
     export class GEllipse extends GAbstractEllipseCircle {
         public get svgEllipse(): SVGEllipseElement {
@@ -176,6 +183,7 @@
         public get type(): ShapeObjectType {
             return ShapeObjectType.Ellipse;
         }
+        
         /*
         public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
 

@@ -1204,6 +1204,7 @@ export class GEdge extends GEdgeTextBox {
                 const left = p1.x + globalX + diffx;
                 //const top = this.graph.svgGroup.getY() + p1.y - (fontSize / 2);
                 const top = p1.y + globalY - (fontSize * 1 / 4) - diffy;
+                //const top = p1.y + globalY  - diffy;
 
                 //const top = this.graph.svgGroup.getY() + p1.y - diffy;
                 s.push(`Sub create${id}_label_${i}(shapes_ As Shapes)`);
