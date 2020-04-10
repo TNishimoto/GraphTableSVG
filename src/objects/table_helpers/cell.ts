@@ -132,6 +132,13 @@ export class Cell {
         const p2 = parseInt(p);
         return p2;
     }
+    get primitivePaddingLeft() : number{
+        return 3;
+    }
+    get primitivePaddingRight() : number{
+        return 3;
+    }
+
     /**
     テキストとセル間の左のパディング値を返します。
     */
@@ -458,7 +465,7 @@ export class Cell {
     セルのX座標を設定します。
     */
     set x(value: number) {
-        SVGGExtension.setX(this.svgGroup,value);
+        SVGGExtension.setX(this.svgGroup, value);
     }
     /**
     セルのY座標を返します。
@@ -470,7 +477,7 @@ export class Cell {
     セルのY座標を設定します。
     */
     set y(value: number) {
-        SVGGExtension.setY(this.svgGroup,value);
+        SVGGExtension.setY(this.svgGroup, value);
     }
 
     /**
@@ -1034,7 +1041,7 @@ export class Cell {
         }
 
     }
-    
+
 
     /**
      * 指定した方向の枠を取り除きます。
@@ -1401,23 +1408,23 @@ export class Cell {
     /**
     セルの仮想上の領域を返します。
     */
-    public getVirtualRegion() : Rectangle {
+    public getVirtualRegion(): Rectangle {
         //const textRect = SVGTextExtension.getRegion(this.svgText);
-        const textRect =  getVirtualRegion(this.svgText);
+        const textRect = getVirtualRegion(this.svgText);
 
         const rect = new Rectangle();
         rect.x = 0;
-        rect.width = textRect.width + this.paddingRight + this.paddingLeft;
+        rect.width = textRect.width + this.paddingRight + this.paddingLeft + this.primitivePaddingLeft + this.primitivePaddingRight;
         rect.y = 0;
         rect.height = textRect.height + this.paddingBottom + this.paddingTop;
         return rect;
     }
-    private getVirtualInnerRegion() : Rectangle {
+    private getVirtualInnerRegion(): Rectangle {
         //const rect = this.getVirtualRegion();
         const innerRec = new Rectangle();
-        innerRec.x = 0 + this.paddingLeft;
+        innerRec.x = 0 + this.paddingLeft + this.primitivePaddingLeft;
         innerRec.y = 0 + this.paddingTop;
-        innerRec.width = this.width - this.paddingLeft - this.paddingRight;
+        innerRec.width = this.width - this.paddingLeft - this.paddingRight - this.primitivePaddingLeft - this.primitivePaddingRight;
         innerRec.height = this.height - this.paddingBottom - this.paddingTop;
         //innerRec.width = rect.width - this.paddingLeft - this.paddingRight;
         //innerRec.height = rect.height - this.paddingBottom - this.paddingTop;
@@ -1429,7 +1436,7 @@ export class Cell {
             let w = 0;
             let h = 0;
             this.leftSideGroupCells.forEach((v) => h += this.table.rows[v.cellY].height
-        );
+            );
 
             this.upperSideGroupCells.forEach((v) => w += this.table.columns[v.cellX].width);
 
@@ -1451,14 +1458,14 @@ export class Cell {
         innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
         */
 
-    
-       const innerRect= this.getVirtualInnerRegion();
-       SVGTextExtension.setXY(this.svgText,innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None);
 
-       //const innerRect= this.getVirtualRegion();
+        const innerRect = this.getVirtualInnerRegion();
+        SVGTextExtension.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None);
 
-       //if (this.isLocated) {
-            //ObsoleteGraph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
+        //const innerRect= this.getVirtualRegion();
+
+        //if (this.isLocated) {
+        //ObsoleteGraph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
         //}
     }
 

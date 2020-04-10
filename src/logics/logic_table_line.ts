@@ -8,13 +8,14 @@ export type LogicCellLine = LogicCell[];
 
 //export type LogicTableDetailLine = LogicCell[]; 
 
-function setCell(cell: LogicCell, value: number | string | LogicCell, svgGroupOption: GOptions.CellAttributes = { class : defaultCellClass}) {
+function setCell(cell: LogicCell, value: number | string | LogicCell) {
     if (value instanceof LogicCell) {
         cell.copy(value);
     } else {
         cell.text.textContent = value.toString()
     }
-    cell.groupOption = svgGroupOption;
+    //if(cell.groupOption)
+    //cell.groupOption = svgGroupOption;
 
 }
 /*

@@ -153,10 +153,10 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment
             stroke : red !important;
             }
             .${DefaultClassNames.defaultCellClass}{
-                ${StyleNames.paddingTop} : 5px;
-                ${StyleNames.paddingLeft} : 5px;
-                ${StyleNames.paddingRight} : 5px;
-                ${StyleNames.paddingBottom} : 5px;
+                ${StyleNames.paddingTop} : 0px;
+                ${StyleNames.paddingLeft} : 0px;
+                ${StyleNames.paddingRight} : 0px;
+                ${StyleNames.paddingBottom} : 0px;
                 ${StyleNames.VerticalAnchor} : ${VerticalAnchor.Middle};
                 ${StyleNames.HorizontalAnchor} : ${HorizontalAnchor.Center};
             }

@@ -55,13 +55,12 @@ export class LogicCell {
     
     public copy(cell : LogicCell){
         this.text = cell.text;
-        this.groupOption = Object.create(cell.groupOption);
-        //this.cellStyle = cell.cellStyle;
-        this.backgroundOption = Object.create(cell.backgroundOption);
-        this.topBorderOption = Object.create(cell.topBorderOption);
-        this.leftBorderOption = Object.create(cell.leftBorderOption);
-        this.rightBorderOption = Object.create(cell.rightBorderOption);
-        this.bottomBorderOption = Object.create(cell.bottomBorderOption);
+        this.groupOption = {...cell.groupOption}
+        this.backgroundOption = {...cell.backgroundOption};
+        this.topBorderOption = {...cell.topBorderOption};
+        this.leftBorderOption = {...cell.leftBorderOption};
+        this.rightBorderOption = {...cell.rightBorderOption};
+        this.bottomBorderOption = {...cell.bottomBorderOption};
         /*
         if(cell.topBorderClass !== undefined)this.topBorderClass = cell.topBorderClass;
         if(cell.leftBorderClass !== undefined)this.leftBorderClass = cell.topBorderClass;
@@ -74,21 +73,19 @@ export class LogicCell {
         this.connectedColumnCount = cell.connectedColumnCount;
         this.item = cell.item;
     }
-    
+    /*
     public set(text: LogicText | undefined = undefined, isLatexMode: boolean = false, cellOption: GOptions.CellAttributes = { class : defaultCellClass}, backgroundOption: GOptions.backgroundOption = {},
         topBorderOption: GOptions.BorderAttributes = {}, leftBorderOption: GOptions.BorderAttributes = {}, rightBorderOption: GOptions.BorderAttributes = {}, bottomBorderOption: GOptions.BorderAttributes = {}) {
         if (text !== undefined) this.text = text;
-        //if (cellClass !== undefined) this.cellClass = ;
         this.groupOption = Object.create(cellOption)
-        //if (textClass !== undefined) this.textClass = textClass;
         this.backgroundOption = Object.create(backgroundOption);
         this.topBorderOption = Object.create(topBorderOption);
         this.leftBorderOption = Object.create(leftBorderOption);
         this.rightBorderOption = Object.create(rightBorderOption);
         this.bottomBorderOption = Object.create(bottomBorderOption);
 
-        //this.isLatexMode = isLatexMode;
     }
+    */
     /*
     public createTextElement(svgText: SVGTextElement) {
         if (this.tTexts != null) {
