@@ -9,6 +9,8 @@ import * as TreeArrangement from "./tree_arangement"
 import { Direction, ConnectorPosition } from "../../common/enums"
 import * as SVGTextBox from "../../interfaces/svg_textbox"
 import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
+import { GAbstractEdge } from "../g_abstract_edge"
+import { GAbstractTextEdge } from "../g_abstract_text_edge"
 
     export namespace GraphArrangement {
         export function standardTreeWidthArrangement(graph: GGraph): void {
@@ -59,18 +61,22 @@ import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
             }
             let childYInterval = yInterval;
             children.forEach((v)=>{
-                const path = v.parentEdge!.svgTextPath;
-                if(path.textContent == null || path.textContent.length == 0){
-                }
-                else if(path.textContent.length == 1){
-                    const padding = SVGTextBox.getRepresentativeFontSize(path);
-                    const edgeLen = (SVGTextExtensions.getWidth(path)) + (padding);
-                    if(edgeLen > childYInterval) childYInterval = edgeLen;    
-                }
-                else{
-                    const padding = SVGTextBox.getRepresentativeFontSize(path);
-                    const edgeLen = (SVGTextExtensions.getWidth(path)) + (padding * 4);
-                    if(edgeLen > childYInterval) childYInterval = edgeLen;    
+                const edge = v.parentEdge!;
+                if(edge instanceof GAbstractTextEdge){
+                    const path = edge.svgTextPath;
+                    if(path.textContent == null || path.textContent.length == 0){
+                    }
+                    else if(path.textContent.length == 1){
+                        const padding = SVGTextBox.getRepresentativeFontSize(path);
+                        const edgeLen = (SVGTextExtensions.getWidth(path)) + (padding);
+                        if(edgeLen > childYInterval) childYInterval = edgeLen;    
+                    }
+                    else{
+                        const padding = SVGTextBox.getRepresentativeFontSize(path);
+                        const edgeLen = (SVGTextExtensions.getWidth(path)) + (padding * 4);
+                        if(edgeLen > childYInterval) childYInterval = edgeLen;    
+                    }
+    
                 }
             })
 
@@ -98,7 +104,7 @@ import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
                 tree.subTreeRoot.cx = centerX;
             }
         }
-        function createExternalEdgeDicInPreorder(node : GVertex, incomingEdge : GEdge | null, externalEdges : Set<GEdge>, touchedVertexes : Set<GVertex>){
+        function createExternalEdgeDicInPreorder(node : GVertex, incomingEdge : GAbstractEdge | null, externalEdges : Set<GAbstractEdge>, touchedVertexes : Set<GVertex>){
             if(incomingEdge == null){
                 node.outcomingEdges.forEach((v)=>{
                     const child = v.endVertex;
@@ -125,10 +131,10 @@ import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
                 }    
             }
         }
-        function createExternalEdgeDicInlevelorder(graph :GGraph) : Set<GEdge>{
-            const externalEdges : Set<GEdge> = new Set();
+        function createExternalEdgeDicInlevelorder(graph :GGraph) : Set<GAbstractEdge>{
+            const externalEdges : Set<GAbstractEdge> = new Set();
             const touchedVertexes : Set<GVertex> = new Set();
-            const inputEdges : GEdge[] = new Array(0);
+            const inputEdges : GAbstractEdge[] = new Array(0);
 
             if(graph.vertices.length > 0){
                 const roots = graph.roots.length == 0? [graph.vertices[0]] : graph.roots; 
@@ -141,9 +147,9 @@ import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
             }
             return externalEdges;
         }
-        function createExternalEdgeDicInlevelorderSub(inputEdges : GEdge[], externalEdges : Set<GEdge>, touchedVertexes : Set<GVertex>, level : number){
+        function createExternalEdgeDicInlevelorderSub(inputEdges : GAbstractEdge[], externalEdges : Set<GAbstractEdge>, touchedVertexes : Set<GVertex>, level : number){
             //const edges = inputEdges.filter((v) => v.endVertex != null);
-            const nextEdges : GEdge[] = new Array(0);
+            const nextEdges : GAbstractEdge[] = new Array(0);
             inputEdges.forEach((v) =>{
                 if(v.endVertex != null){
                     const node = v.endVertex!;

@@ -13,6 +13,7 @@ import { VirtualTree } from "./graph_helpers/virtual_tree"
 import {getLineType} from "../html/enum_extension";
 import * as ElementExtension from "../interfaces/element_extension"
 import { getGraph } from "./graph_helpers/common_functions";
+import { GAbstractEdge } from "./g_abstract_edge";
 
 
 
@@ -73,10 +74,10 @@ export class GVertex extends GObject {
     /**
     入辺配列を返します。
     */
-    get outcomingEdges(): GEdge[] {
+    get outcomingEdges(): GAbstractEdge[] {
         const p = <number[]>JSON.parse(<string>ElementExtension.gtGetAttribute(this.svgGroup, "outcoming-edges", "[]"));
         const p2 = p.map((v) => GObject.getObjectFromObjectID(v.toString()));
-        return <GEdge[]>p2;
+        return <GAbstractEdge[]>p2;
     }
 
     /*
@@ -89,10 +90,10 @@ export class GVertex extends GObject {
     /**
     出辺配列を返します。
     */
-    get incomingEdges(): GEdge[] {
+    get incomingEdges(): GAbstractEdge[] {
         const p = <number[]>JSON.parse(<string>ElementExtension.gtGetAttribute(this.svgGroup, "incoming-edges", "[]"));
         const p2 = p.map((v) => GObject.getObjectFromObjectID(v.toString()));
-        return <GEdge[]>p2;
+        return <GAbstractEdge[]>p2;
 
     }
     /*
@@ -107,7 +108,7 @@ export class GVertex extends GObject {
      * @param edge
      * @param insertIndex
      */
-    public insertOutcomingEdge(edge: GEdge, insertIndex: number = this.outcomingEdges.length) {
+    public insertOutcomingEdge(edge: GAbstractEdge, insertIndex: number = this.outcomingEdges.length) {
         const p = this.outcomingEdges.indexOf(edge);
         if (p != -1) {
             throw new Error();
@@ -127,7 +128,7 @@ export class GVertex extends GObject {
      * 出辺を削除します。
      * @param edge
      */
-    public removeOutcomingEdge(edge: GEdge) {
+    public removeOutcomingEdge(edge: GAbstractEdge) {
         const p = this.outcomingEdges.indexOf(edge);
         if (p != null) {
             const edges = this.outcomingEdges;
@@ -146,7 +147,7 @@ export class GVertex extends GObject {
     * @param edge
     * @param insertIndex
     */
-    public insertIncomingEdge(edge: GEdge, insertIndex: number = this.incomingEdges.length) {
+    public insertIncomingEdge(edge: GAbstractEdge, insertIndex: number = this.incomingEdges.length) {
         const p = this.incomingEdges.indexOf(edge);
         if (p != -1) {
             throw new Error();
@@ -165,7 +166,7 @@ export class GVertex extends GObject {
      * 入辺を削除します。
      * @param edge
      */
-    public removeIncomingEdge(edge: GEdge) {
+    public removeIncomingEdge(edge: GAbstractEdge) {
         const p = this.incomingEdges.indexOf(edge);
         if (p != null) {
             const edges = this.incomingEdges;
@@ -198,7 +199,7 @@ export class GVertex extends GObject {
     /**
     親との間の辺を返します。
     */
-    get parentEdge(): GEdge | null {
+    get parentEdge(): GAbstractEdge | null {
         if (this.incomingEdges.length == 0) {
             return null;
         } else {
@@ -242,7 +243,7 @@ export class GVertex extends GObject {
     //    return new VirtualTree(this);
     //}
 
-    createVirtualTree(excludedEdgeDic?: Set<GEdge>): VirtualTree {
+    createVirtualTree(excludedEdgeDic?: Set<GAbstractEdge>): VirtualTree {
         return new VirtualTree(this, excludedEdgeDic);
     }
     /**

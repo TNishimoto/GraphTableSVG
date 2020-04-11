@@ -3,12 +3,13 @@
     import { GVertex } from "../g_vertex"    
     import { GEdge } from "../g_edge"    
     import {Rectangle} from "../../common/vline"
+import { GAbstractEdge } from "../g_abstract_edge";
 
     export class VirtualTree {
         subTreeRoot: GVertex;
-        externalEdges : Set<GEdge>;
+        externalEdges : Set<GAbstractEdge>;
 
-        constructor(_root: GVertex, _externalEdgeDic? : Set<GEdge>) {
+        constructor(_root: GVertex, _externalEdgeDic? : Set<GAbstractEdge>) {
             this.subTreeRoot = _root;
             if(_externalEdgeDic !== undefined){
                 this.externalEdges = _externalEdgeDic;
@@ -40,7 +41,7 @@
         /**
          * 根の親との間の辺を返します。
          */
-        get parentEdge(): GEdge | null {
+        get parentEdge(): GAbstractEdge | null {
             const p = this.subTreeRoot.incomingEdges.filter((v) => !this.externalEdges.has(v) && v.beginVertex != null);
             if(p.length != 0){
                 return p[0];

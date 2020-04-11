@@ -127,28 +127,32 @@ type _GGraphAttributes = {
 export type GGraphAttributes = _GGraphAttributes & GTextBoxAttributes; 
 
 
-type _GEdgeAttributes = {
+
+type _GAbstractEdgeAttributes = {
     x1?: number,
     x2?: number,
-    x3?: number,
 
     y1?: number,
     y2?: number,
-    y3?: number,
-
-    //beginConnectorType?: ConnectorPosition,
-    //endConnectorType?: ConnectorPosition,
     startMarker?: boolean,
     endMarker?: boolean,
     beginVertex?: object | string,
     endVertex?: object | string,
-    //pathTextAlignment?: PathTextAlighnment
 }
+type _GEdgeAttributes = {
+    x3?: number,
+    y3?: number,
+}
+
+
 type _GEdgeSVGGroupInfo = {
     class?: string | GEdgeStyleCSS
     style?: string | GEdgeStyleCSS
 }
-export type GEdgeAttributes = GTextBoxAttributesWithoutGroup & _GEdgeAttributes & _GEdgeSVGGroupInfo
+export type GAbstractEdgeAttributes = _GAbstractEdgeAttributes & _GEdgeSVGGroupInfo
+export type GAbstractTextEdgeAttributes = _GTextBoxAttribute & GAbstractEdgeAttributes;
+
+export type GEdgeAttributes = GAbstractTextEdgeAttributes & _GEdgeAttributes
 export type ConnectOption = {
     outcomingInsertIndex?: number,
     incomingInsertIndex?: number,

@@ -22,6 +22,7 @@ import * as SVGElementExtension from "../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { UndefinedError } from "../common/exceptions"
 import { getVirtualRegion} from "../interfaces/virtual_text"
+import { createSVGText } from "./element_builder"
 
 //namespace GraphTableSVG {
 
@@ -43,7 +44,7 @@ export class GTextBox extends GVertex {
     public constructor(svgbox: SVGElement | string) {
         super(svgbox)
 
-        this._svgText = GTextBox.createSVGText(undefined, undefined);
+        this._svgText = createSVGText(undefined, undefined);
         this.svgGroup.appendChild(this.svgText);
         this._textObserver = new MutationObserver(this.textObserverFunc);
         const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
@@ -89,42 +90,7 @@ export class GTextBox extends GVertex {
         super.setOption(option);
         //this.setBasicOption(option);
     }
-    /**
-    * SVGTextElementを生成します。
-    * @param className 生成するSVG要素のクラス属性名
-    * @returns 生成されたSVGTextElement
-    */
-    public static createSVGText(className: string | undefined | null, style: string | undefined): SVGTextElement {
-        const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-        _svgText.setAttribute(AttributeNames.objectIDName, (SVG.getNewID()).toString());
-        if (style !== undefined) {
-            _svgText.setAttribute("style", style);
-        }
-
-        //_svgText.style.textAnchor = "middle";
-        if(className === undefined){
-            _svgText.setAttribute("class", DefaultClassNames.defaultTextClass);
-        }
-        else if (className == null) {
-
-            /*
-            if (_svgText.style.fill == null || _svgText.style.fill == "") _svgText.style.fill = "black";
-            if (_svgText.style.fontSize == null || _svgText.style.fontSize == "") _svgText.style.fontSize = "14px";
-            if (_svgText.style.fontWeight == null || _svgText.style.fontWeight == "") _svgText.style.fontWeight = "bold";
-            if (_svgText.style.fontFamily == null || _svgText.style.fontFamily == "") _svgText.style.fontFamily = 'Times New Roman';
-            if (_svgText.style.getPropertyValue(StyleNames.marginLeft) == "") SVGTextExtension.setMarginLeft(_svgText, 10);
-            if (_svgText.style.getPropertyValue(StyleNames.marginRight) == "") SVGTextExtension.setMarginRight(_svgText, 10);
-            if (_svgText.style.getPropertyValue(StyleNames.marginTop) == "") SVGTextExtension.setMarginTop(_svgText, 10);
-            if (_svgText.style.getPropertyValue(StyleNames.marginBottom) == "") SVGTextExtension.setMarginBottom(_svgText, 10);
-            */
-        } else {
-            _svgText.setAttribute("class", className);
-
-            //_svgText.className = className;
-        }
-        return _svgText;
-    }
 
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GOptions.GTextBoxAttributes {
