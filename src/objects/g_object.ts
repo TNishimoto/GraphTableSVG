@@ -95,8 +95,8 @@ export class GObject {
             GOptions.setClassAndStyle(this.svgSurface, option.surfaceClass, option.surfaceStyle)
         }
 
-        this.width = option.width !== undefined ? option.width : 25;
-        this.height = option.height !== undefined ? option.height : 25;
+        this.setWidthWithoutUpdate(option.width !== undefined ? option.width : 25);
+        this.setHeightWithoutUpdate(option.height !== undefined ? option.height : 25);
     }
 
     protected setOptionalPosition(option: GOptions.GObjectAttributes){
@@ -462,6 +462,14 @@ export class GObject {
             //this.svgGroup.setAttribute("data-width", value.toString());
         }
     }
+    protected setWidthWithoutUpdate(value : number){
+        this.width = value;
+
+    }
+    protected setHeightWithoutUpdate(value : number){
+        this.height = value;
+    }
+
     /**
     頂点の高さを返します。
     */

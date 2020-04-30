@@ -220,12 +220,13 @@ export class GTextBox extends GVertex {
 
         let b = false;
         if(this.width != region.width){
-            this.width = region.width;
+            this.setWidthWithoutUpdate(region.width);
             b = true;
         }
 
         if(this.height != region.height){
-            this.height = region.height;        
+            this.setHeightWithoutUpdate(region.height);
+            //this.height = region.height;        
             b = true;
         }
         return b;

@@ -104,9 +104,17 @@
             return round100(this.svgRectangle.width.baseVal.value);
         }
         set width(value: number) {
+            //const value100 = round100(value);
+            //if (this.width != value100) this.svgRectangle.setAttribute("width", value100.toString());
+            this.setWidthWithoutUpdate(value);
+            this.update();
+        }
+        protected setWidthWithoutUpdate(value : number){
             const value100 = round100(value);
-            if (this.width != value100) this.svgRectangle.setAttribute("width", value100.toString());
-
+            if (this.width != value100){
+                this.svgRectangle.setAttribute("width", value100.toString());
+            }
+    
         }
         /**
         頂点の高さを返します。
@@ -115,9 +123,14 @@
             return round100(this.svgRectangle.height.baseVal.value);
         }
         set height(value: number) {
+            this.setHeightWithoutUpdate(value);
+            this.update();
+        }
+        protected setHeightWithoutUpdate(value : number){
             const value100 = round100(value);
             if (this.height != value100) this.svgRectangle.setAttribute("height", value100.toString());
         }
+
         public get surfaceRegion() : Rectangle{
             const x = this.svgRectangle.x.baseVal.value;
             const y = this.svgRectangle.y.baseVal.value;
