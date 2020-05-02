@@ -108,11 +108,6 @@ export function setXY(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAn
 
     //const box1 = getSize(<any>text, true);
     const box = getVirtualRegion(<any>text);
-    //console.log(`test`);
-    //console.log(box1)
-    //console.log(box)
-
-    //console.log(box1);
 
     
     //let y = rect.y - (box.y - rect.y);

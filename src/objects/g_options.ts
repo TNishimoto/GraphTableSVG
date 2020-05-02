@@ -1,7 +1,7 @@
 
 import * as CSS from "../html/css"
 //import * as AttributeNames from "../common/custtome_attributes"
-import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment, AutoSizeShapeToFitText, Direction } from "../common/enums";
+import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment, AutoSizeShapeToFitText, Direction, EdgeType } from "../common/enums";
 //import * as CSS from "../basic/html/css"
 //import * as SVG from "../basic/interface/svg"
 export type GraphAllocateFunction = (graph: object) => void
@@ -34,8 +34,8 @@ export type GTextBoxCSS = {
     horizontalAnchor?: HorizontalAnchor
 }
 export type GEdgeStyleCSS = {
-    beginConnectorType?: ConnectorPosition,
-    endConnectorType?: ConnectorPosition,
+    beginConnectorType?: ConnectorType,
+    endConnectorType?: ConnectorType,
     pathTextAlignment?: PathTextAlighnment
 } & GTextBoxCSS
 
@@ -138,10 +138,19 @@ type _GAbstractEdgeAttributes = {
     endMarker?: boolean,
     beginVertex?: object | string,
     endVertex?: object | string,
+
+    edgeType? : EdgeType 
+
 }
 type _GEdgeAttributes = {
     x3?: number,
     y3?: number,
+}
+export type ConnecterOption = {
+    outcomingInsertIndex?: number,
+    incomingInsertIndex?: number,
+    beginConnectorType?: ConnectorType,
+    endConnectorType?: ConnectorType
 }
 
 
@@ -149,16 +158,11 @@ type _GEdgeSVGGroupInfo = {
     class?: string | GEdgeStyleCSS
     style?: string | GEdgeStyleCSS
 }
-export type GAbstractEdgeAttributes = _GAbstractEdgeAttributes & _GEdgeSVGGroupInfo
+export type GAbstractEdgeAttributes = _GAbstractEdgeAttributes & _GEdgeSVGGroupInfo & ConnecterOption
 export type GAbstractTextEdgeAttributes = _GTextBoxAttribute & GAbstractEdgeAttributes;
 
-export type GEdgeAttributes = GAbstractTextEdgeAttributes & _GEdgeAttributes
-export type ConnectOption = {
-    outcomingInsertIndex?: number,
-    incomingInsertIndex?: number,
-    beginConnectorType?: ConnectorPosition,
-    endConnectorType?: ConnectorPosition
-}
+
+export type GEdgeAttributes = GAbstractTextEdgeAttributes & _GEdgeAttributes 
 
 
 export function setClassAndStyle(svg: SVGElement, className: string | object | undefined | null, style : string | object |undefined | null) {

@@ -1020,9 +1020,6 @@ export class Cell {
      *セルのサイズを再計算します。
      */
     private resize() {
-        //const innerRect= this.getVirtualInnerRegion();
-        //console.log(this.horizontalAnchor);
-        //SVGTextExtension.setXY(this.svgText,innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None);
 
         //SVGTextBox.sortText(this.svgText, this.horizontalAnchor, this._assurancevisibility);
         const [w, h] = this.calculatedSizeUsingGroup();

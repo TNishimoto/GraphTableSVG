@@ -2,7 +2,7 @@ import { GObject } from "./g_object";
 import * as DefaultClassNames from "../common/default_class_names"
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
-import { PathTextAlighnment, ConnectorPosition, msoDashStyle, CoodinateType } from "../common/enums";
+import { PathTextAlighnment, ConnectorType, msoDashStyle, CoodinateType, EdgeType } from "../common/enums";
 import { escapeWithRound100, round100 } from "../common/vline";
 import { GVertex } from "./g_vertex"
 import * as ElementExtension from "../interfaces/element_extension"
@@ -55,8 +55,41 @@ export class GAbstractEdge extends GObject {
         } else if (typeof option.endVertex == "string") {
             this.endVertexID = option.endVertex;
         }
+
+        
+        if(option.beginConnectorType != undefined){
+            this.beginConnectorType = option.beginConnectorType;
+        }
+        if(option.endConnectorType != undefined){
+            this.endConnectorType = option.endConnectorType;
+        }
+    }
+    get edgeType(): EdgeType {
+        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.EdgeType, "none");
+        if (b == "straight") {
+            return "straight";
+        } else if (b == "elbow") {
+            return "elbow";
+        } else if (b == "curve") {
+            return "curve";
+        } else {
+            return "none";
+        }
+        /*
+        if (b == undefined) {
+            return false;
+        } else {
+            return b;
+        }
+        */
     }
     
+
+    set edgeType(value: EdgeType) {
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.EdgeType, value);
+        //this.svgGroup.setPropertyStyleValue(AttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
+    }
+
     public get svgPath(): SVGPathElement {
         return <SVGPathElement>this.svgSurface;
     }
@@ -178,8 +211,8 @@ export class GAbstractEdge extends GObject {
                 r.push([round100(Number(d[i + 3])), round100(Number(d[i + 4]))]);
                 i += 5;
             } else {
-
-                throw Error("path points parse error");
+                
+                throw Error("path points parse error/" + dAttr);
             }
         }
 
@@ -187,21 +220,31 @@ export class GAbstractEdge extends GObject {
     }
     protected set pathPoints(points: [number, number][]) {
         let path = "";
-        if (points.length == 2) {
-            const [x1, y1] = points[0];
-            const [x2, y2] = points[1];
+        if(this.edgeType == "elbow"){
+            path += `M ${points[0][0]} ${points[0][1]} `;
+            for(let i=1;i< points.length-1;i++){
+                path += `L ${points[i][0]} ${points[i][1]} `;
+            }
+            path += `L ${points[points.length-1][0]} ${points[points.length-1][1]}`;
 
-            path = escapeWithRound100`M ${x1} ${y1} L ${x2} ${y2}`
-        } else if (points.length == 3) {
-            const [x1, y1] = points[0];
-            const [x2, y2] = points[2];
-            const [cx1, cy1] = points[1];
-            path = escapeWithRound100`M ${x1} ${y1} Q ${cx1} ${cy1} ${x2} ${y2}`
-        } else if (points.length == 1) {
-            throw Error("path points ivnalid error");
-        }
-        else {
-            path = escapeWithRound100`M ${0} ${0} L ${0} ${0}`
+        }else{
+            if (points.length == 2) {
+                const [x1, y1] = points[0];
+                const [x2, y2] = points[1];
+    
+                path = escapeWithRound100`M ${x1} ${y1} L ${x2} ${y2}`
+            } else if (points.length == 3) {
+                const [x1, y1] = points[0];
+                const [x2, y2] = points[2];
+                const [cx1, cy1] = points[1];
+                path = escapeWithRound100`M ${x1} ${y1} Q ${cx1} ${cy1} ${x2} ${y2}`
+            } else if (points.length == 1) {
+                throw Error("path points ivnalid error");
+            }
+            else {
+                path = escapeWithRound100`M ${0} ${0} L ${0} ${0}`
+            }
+    
         }
 
         const prevPath = this.svgPath.getAttribute("d");
@@ -309,28 +352,28 @@ export class GAbstractEdge extends GObject {
     /**
     開始接点の接続位置を返します。
     */
-    get beginConnectorType(): ConnectorPosition {
+    get beginConnectorType(): ConnectorType {
         const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.beginConnectorType);
-        return ConnectorPosition.ToConnectorPosition(p);
+        return ConnectorType.ToConnectorPosition(p);
     }
     /**
     開始接点の接続位置を設定します。
     */
-    set beginConnectorType(value: ConnectorPosition) {
+    set beginConnectorType(value: ConnectorType) {
         ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.beginConnectorType, value)
         //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, ToStrFromConnectorPosition(value));
     }
     /**
     終了接点の接続位置を返します。
     */
-    get endConnectorType(): ConnectorPosition {
+    get endConnectorType(): ConnectorType {
         const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.endConnectorType);
-        return ConnectorPosition.ToConnectorPosition(p);
+        return ConnectorType.ToConnectorPosition(p);
     }
     /**
     終了接点の接続位置を設定します。
     */
-    set endConnectorType(value: ConnectorPosition) {
+    set endConnectorType(value: ConnectorType) {
         ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.endConnectorType, value)
     }
 
@@ -487,17 +530,175 @@ export class GAbstractEdge extends GObject {
         }
         //if(this.beginVertexID != )
     }
-    protected updateLocation() {
+    public get beginConnectoPosition() : [number, number] {
         const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
         const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];
 
-        const [x1, y1] = this.beginVertex != null ? this.beginVertex.getLocation(this.beginConnectorType, cx2, cy2) : [cx1, cy1];
-        const [x2, y2] = this.endVertex != null ? this.endVertex.getLocation(this.endConnectorType, cx1, cy1) : [cx2, cy2];
+        const [x1, y1] = this.beginVertex != null ? this.beginVertex.getContactPosition(this.beginConnectorType, cx2, cy2) : [cx1, cy1];
+        return [x1, y1];
+    }
+    public get endConnectorPosition() : [number, number] {
+        const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
+        const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];
+        const [x2, y2] = this.endVertex != null ? this.endVertex.getContactPosition(this.endConnectorType, cx1, cy1) : [cx2, cy2];
+        return [x2, y2];
+    }
+    protected elbowCalculator(x1 : number, y1 :number, type1 : ConnectorType, x2 : number, y2 : number, type2 : ConnectorType, recursion : number = 0) : [number, number][]{
+        if(recursion > 6){
+            return [];
+        }
+        const gap = 30;
+        let area : "leftup" | "rightup" | "leftdown" | "rightdown" = "leftup";
+        if(x1 < x2){
+            if(y1 < y2){
+                area = "rightdown"
+            }else{
+                area = "rightup"
+            }
+        }else{
+            if(y1 < y2){
+                area = "leftdown"
+            }else{
+                area = "leftup"
+            }
+
+        }
+        const right = area == "rightdown" || area == "rightup";
+        const left = area == "leftdown" || area == "leftup";
+        const up = area == "rightup" || area == "leftup";
+        const down = area == "rightdown" || area == "leftdown";
+
+        if(type1 == ConnectorType.Bottom){
+            const x3 = x1;
+            const type3 = right ? ConnectorType.Right : ConnectorType.Left;
+            let y3 = 0;
+
+            if(type2 == ConnectorType.Top){
+                if(x1 == x2 && down){
+                    return [];
+                }else{
+                    y3 = y1 + gap;
+                }
+            }    
+            else if(type2 == ConnectorType.Left){
+                y3 = (area == "rightdown") ? y2 : y1 + gap;
+            }    
+            else if(type2 == ConnectorType.Right){
+                y3 = (area == "leftdown") ? y2 : y1 + gap;
+            }else{
+                y3 = down ? y2 + gap : y1 + gap;
+            }
+            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2, recursion+1);
+            arr.unshift([x3, y3]);
+            return arr;
+
+        }else if(type1 == ConnectorType.Right){
+            const y3 = y1;
+            const type3 = up ? ConnectorType.Top : ConnectorType.Bottom;
+            let x3 = 0;
+            if(type2 == ConnectorType.Top){
+                x3 = area == "rightdown" ? x2 : x1 + gap;
+            }
+            else if(type2 == ConnectorType.Bottom){
+                x3 = area == "rightup" ? x2 : x1 + gap;
+            }
+            else if(type2 == ConnectorType.Left){
+                if(y1 == y2 && right){
+                    return [];
+                }else{
+                    x3 = x1 + gap;
+                }
+            }
+            else{
+                x3 = right ? x2 + gap : x1 + gap;    
+            }
+            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2,recursion+1);
+            arr.unshift([x3, y3]);
+            return arr;    
+
+        }else if(type1 == ConnectorType.Left){
+            const y3 = y1;
+            const type3 = up ? ConnectorType.Top : ConnectorType.Bottom;
+            let x3 = 0;
+                
+            if(type2 == ConnectorType.Top){
+                x3 = area == "leftdown" ? x2 : x1 - gap;
+            }
+            else if(type2 == ConnectorType.Bottom){
+                x3 = area == "leftup" ? x2 : x1 - gap;
+            }
+            else if(type2 == ConnectorType.Right){
+                if(y1 == y2 && left){
+                    return [];
+                }else{
+                    x3 = x1 - gap;
+                }
+            }
+            else{
+                x3 = right ? x1 - gap : x2 - gap;    
+            }
+            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2,recursion+1);
+            arr.unshift([x3, y3]);
+            return arr;    
+        }else{
+            const x3 = x1;
+            const type3 = right ? ConnectorType.Right : ConnectorType.Left;
+            let y3 = 0;
+
+            if(type2 == ConnectorType.Bottom){
+                if(x1 == x2 && up){
+                    return [];
+                }else{
+                    y3 = y1 - gap;
+                }
+            }    
+            else if(type2 == ConnectorType.Left){
+                y3 = (area == "rightup") ? y2 : y1 - gap;
+            }    
+            else if(type2 == ConnectorType.Right){
+                y3 = (area == "leftup") ? y2 : y1 - gap;
+            }else{
+                //y3 = up ? y2 + gap : y1 - gap;
+                y3 = y1 - gap;
+
+            }
+            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2,recursion+1);
+            arr.unshift([x3, y3]);
+            return arr;
+
+        }
+
+    }
+    /*
+    protected computeElbowPositions() : [number, number][]{
+        const [x1, y1] = this.beginConnectoPosition;
+        const [x2, y2] = this.endConnectorPosition;
+
+        const arr = this.elbowCalculator(x1,y1, this.beginConnectorType, x2, y2, this.endConnectorType);
+        
+
+    }
+    */
+    protected updateLocation() {
+        const [x1, y1] = this.beginConnectoPosition;
+        const [x2, y2] = this.endConnectorPosition;
         const points: [number, number][] = this.pathPoints;
 
-        points[0] = [x1, y1];
-        points[points.length - 1] = [x2, y2];
-        this.pathPoints = points;
+        if(this.edgeType == "elbow"){
+            const elbowPositions = this.elbowCalculator(x1,y1, this.beginConnectorType, x2, y2, this.endConnectorType);
+            while(points.length > 0) points.pop();
+            points.push([x1, y1]);
+            elbowPositions.forEach((v) => points.push(v));
+            points.push([x2, y2]);
+            
+        }else if(this.edgeType == "curve"){
+
+        }else{
+            points[0] = [x1, y1];
+            points[points.length - 1] = [x2, y2];
+        }
+        this.pathPoints = points;    
+
     }
     private static connectedBeginVertexDic: { [key: string]: string; } = {};
     private static connectedEndVertexDic: { [key: string]: string; } = {};
@@ -541,11 +742,11 @@ export class GAbstractEdge extends GObject {
         const bct = ElementExtension.getPropertyStyleValue(e, StyleNames.beginConnectorType);
 
         if (bct != null && typeof (output.style) == "object") {
-            output.style.beginConnectorType = ConnectorPosition.ToConnectorPosition(bct);
+            output.style.beginConnectorType = ConnectorType.ToConnectorPosition(bct);
         }
         const ect = ElementExtension.getPropertyStyleValue(e, StyleNames.endConnectorType);
         if (ect != null && typeof (output.style) == "object") {
-            output.style.endConnectorType = ConnectorPosition.ToConnectorPosition(ect);
+            output.style.endConnectorType = ConnectorType.ToConnectorPosition(ect);
         }
 
 

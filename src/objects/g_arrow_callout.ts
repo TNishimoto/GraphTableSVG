@@ -2,7 +2,7 @@
 //namespace GraphTableSVG {
 import { GPathTextBox } from "./g_path_textbox"
 import { GTextBox } from "./g_textbox"
-import { ShapeObjectType, ConnectorPosition, msoDashStyle, Direction, AutoSizeShapeToFitText, VBAShapeType } from "../common/enums";
+import { ShapeObjectType, ConnectorType, msoDashStyle, Direction, AutoSizeShapeToFitText, VBAShapeType } from "../common/enums";
 //import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
 import * as AttributeNames from "../common/attribute_names"
 import { Rectangle, VLine, escapeWithRound100 } from "../common/vline"
@@ -403,30 +403,30 @@ export class GArrowCallout extends GPathTextBox {
              * @param x
              * @param y
              */
-    public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+    public getContactPosition(type: ConnectorType, x: number, y: number): [number, number] {
         const wr = this.width / 2;
         const hr = this.height / 2;
 
 
         switch (type) {
-            case ConnectorPosition.Top:
+            case ConnectorType.Top:
                 return [this.x, this.y - hr];
-            case ConnectorPosition.TopRight:
-            case ConnectorPosition.Right:
-            case ConnectorPosition.BottomRight:
+            case ConnectorType.TopRight:
+            case ConnectorType.Right:
+            case ConnectorType.BottomRight:
                 return [this.x + wr, this.y];
-            case ConnectorPosition.Bottom:
+            case ConnectorType.Bottom:
                 return [this.x, this.y + hr];
-            case ConnectorPosition.BottomLeft:
-            case ConnectorPosition.Left:
-            case ConnectorPosition.TopLeft:
+            case ConnectorType.BottomLeft:
+            case ConnectorType.Left:
+            case ConnectorType.TopLeft:
                 return [this.x - wr, this.y];
             default:
-                const autoType = this.getAutoPosition(x, y);
-                return this.getLocation(autoType, x, y);
+                const autoType = this.getContactAutoPosition(x, y);
+                return this.getContactPosition(autoType, x, y);
         }
     }
-    protected getAutoPosition(x: number, y: number): ConnectorPosition {
+    protected getContactAutoPosition(x: number, y: number): ConnectorType {
         const wr = this.width / 2;
         const hr = this.height / 2;
 
@@ -438,15 +438,15 @@ export class GArrowCallout extends GPathTextBox {
 
         if (b1) {
             if (b2) {
-                return ConnectorPosition.Top;
+                return ConnectorType.Top;
             } else {
-                return ConnectorPosition.Right;
+                return ConnectorType.Right;
             }
         } else {
             if (b2) {
-                return ConnectorPosition.Left;
+                return ConnectorType.Left;
             } else {
-                return ConnectorPosition.Bottom;
+                return ConnectorType.Bottom;
             }
         }
 

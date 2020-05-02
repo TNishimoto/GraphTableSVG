@@ -239,23 +239,25 @@ export namespace AutoSizeShapeToFitText {
 
 }
 
+export type EdgeType = "none" | "straight" | "elbow" | "curve";
 
-export type ConnectorPosition = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
-export namespace ConnectorPosition {
-    export const Top: ConnectorPosition = "top"
-    export const TopLeft: ConnectorPosition = "topleft"
-    export const Left: ConnectorPosition = "left"
-    export const BottomLeft: ConnectorPosition = "bottomleft"
-    export const Bottom: ConnectorPosition = "bottom"
-    export const BottomRight: ConnectorPosition = "bottomright"
-    export const Right: ConnectorPosition = "right"
-    export const TopRight: ConnectorPosition = "topright"
-    export const Auto: ConnectorPosition = "auto"
-    export function ToConnectorPosition(str: string | null): ConnectorPosition {
+
+export type ConnectorType = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
+export namespace ConnectorType {
+    export const Top: ConnectorType = "top"
+    export const TopLeft: ConnectorType = "topleft"
+    export const Left: ConnectorType = "left"
+    export const BottomLeft: ConnectorType = "bottomleft"
+    export const Bottom: ConnectorType = "bottom"
+    export const BottomRight: ConnectorType = "bottomright"
+    export const Right: ConnectorType = "right"
+    export const TopRight: ConnectorType = "topright"
+    export const Auto: ConnectorType = "auto"
+    export function ToConnectorPosition(str: string | null): ConnectorType {
         if (str == null) {
-            return ConnectorPosition.Auto;
+            return ConnectorType.Auto;
         } else {
-            return <ConnectorPosition>str;
+            return <ConnectorType>str;
             /*
             switch (str) {
                 case "top": return ConnectorPosition.Top;
@@ -272,7 +274,7 @@ export namespace ConnectorPosition {
             */
         }
     }
-    export function ToVBAConnectorPosition(shapeType: string, str: ConnectorPosition): number {
+    export function ToVBAConnectorPosition(shapeType: string, str: ConnectorType): number {
         if (shapeType == "circle") {
             switch (str) {
                 case "top": return 1;
@@ -300,7 +302,7 @@ export namespace ConnectorPosition {
             return 1;
         }
     }
-    export function ToVBAConnectorPosition2(shapeType: VBAShapeType, str: ConnectorPosition): number {
+    export function ToVBAConnectorPosition2(shapeType: VBAShapeType, str: ConnectorType): number {
         switch (shapeType) {
             case VBAShapeType.Oval:
             case VBAShapeType.UpArrowCallout:
@@ -461,6 +463,7 @@ export function parsePXString(item: string | null): number {
         }
     }
 }
+
 
 
 //}

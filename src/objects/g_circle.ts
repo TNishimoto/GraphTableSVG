@@ -1,7 +1,7 @@
 import {GVertex} from "./g_vertex"
 import {GTextBox} from "./g_textbox"
 import {GCalloutAttributes} from "./g_callout"
-import { ShapeObjectType, ConnectorPosition, msoDashStyle, VBAShapeType } from "../common/enums";
+import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"

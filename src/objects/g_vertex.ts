@@ -4,7 +4,7 @@ import { VBATranslateFunctions } from "../common/vba_functions"
 import { Rectangle } from "../common/vline"
 import * as AttributeNames from "../common/attribute_names"
 import * as DefaultClassNames from "../common/default_class_names"
-import { ConnectorPosition, msoDashStyle, VBAShapeType } from "../common/enums";
+import { ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
 import { GObject } from "./g_object"
 //import { GTextBox } from "./g_textbox"
 import { GEdge } from "./g_edge"
@@ -39,7 +39,7 @@ export class GVertex extends GObject {
     * @param x
     * @param y
     */
-    public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+    public getContactPosition(type: ConnectorType, x: number, y: number): [number, number] {
         return [this.cx, this.cy];
     }
 
@@ -49,9 +49,9 @@ export class GVertex extends GObject {
      * @param x 
      * @param y 
      */
-    public getConnectorType(type: ConnectorPosition, x: number, y: number): ConnectorPosition {
-        if (type == ConnectorPosition.Auto) {
-            return this.getAutoPosition(x, y);
+    public getConnectorType(type: ConnectorType, x: number, y: number): ConnectorType {
+        if (type == ConnectorType.Auto) {
+            return this.getContactAutoPosition(x, y);
         } else {
             return type;
         }
@@ -61,8 +61,8 @@ export class GVertex extends GObject {
      * @param x 
      * @param y 
      */
-    protected getAutoPosition(x: number, y: number): ConnectorPosition {
-        return ConnectorPosition.Top;
+    protected getContactAutoPosition(x: number, y: number): ConnectorType {
+        return ConnectorType.Top;
 
     }
 

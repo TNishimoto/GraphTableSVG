@@ -18,7 +18,7 @@ import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as GOptions from "./g_options"
 
-import { ShapeObjectType, VertexObjectType, VertexOrder, PathTextAlighnment, ConnectorPosition, Direction } from "../common/enums";
+import { ShapeObjectType, VertexObjectType, VertexOrder, PathTextAlighnment, ConnectorType, Direction } from "../common/enums";
 
 import { LogicTree, LogicTreeNode, LogicBasicShape } from "../logics/logic_tree"
 import { LogicGraph } from "../logics/logic_graph";
@@ -210,7 +210,7 @@ export class GGraph extends GObject {
             * @param option.beginConnectorType beginVertexの接続位置
             * @param option.endConnectorType endVertexの接続位置
             */
-    public connect(beginVertex: GVertex, edge: GEdge, endVertex: GVertex, option: GOptions.ConnectOption = {}) {
+    public connect(beginVertex: GVertex, edge: GEdge, endVertex: GVertex, option: GOptions.ConnecterOption = {}) {
 
         const oIndex = option.outcomingInsertIndex == undefined ? beginVertex.outcomingEdges.length : option.outcomingInsertIndex;
         const iIndex = option.incomingInsertIndex == undefined ? endVertex.incomingEdges.length : option.incomingInsertIndex;

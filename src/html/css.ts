@@ -3,7 +3,7 @@ import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
 
-import { HorizontalAnchor, VerticalAnchor, ConnectorPosition, PathTextAlighnment } from "../common/enums";
+import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } from "../common/enums";
 //export namespace CSS {
     /*
     interface IPoint2D {

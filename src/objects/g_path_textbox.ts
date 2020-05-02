@@ -3,7 +3,7 @@
 //namespace GraphTableSVG {
     import {Rectangle, VLine} from "../common/vline"
     import {GTextBox} from "./g_textbox"
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle, AutoSizeShapeToFitText } from "../common/enums";
+    import { ShapeObjectType, ConnectorType, msoDashStyle, AutoSizeShapeToFitText } from "../common/enums";
     import * as DefaultClassNames from "../common/default_class_names"
 
     import * as GOptions  from "./g_options"
@@ -40,30 +40,30 @@
         * @param x
         * @param y
         */
-        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+        public getContactPosition(type: ConnectorType, x: number, y: number): [number, number] {
             const wr = this.width / 2;
             const hr = this.height / 2;
 
 
             switch (type) {
-                case ConnectorPosition.Top:
+                case ConnectorType.Top:
                     return [this.cx, this.cy - hr];
-                case ConnectorPosition.TopRight:
-                case ConnectorPosition.Right:
-                case ConnectorPosition.BottomRight:
+                case ConnectorType.TopRight:
+                case ConnectorType.Right:
+                case ConnectorType.BottomRight:
                     return [this.cx + wr, this.cy];
-                case ConnectorPosition.Bottom:
+                case ConnectorType.Bottom:
                     return [this.cx, this.cy + hr];
-                case ConnectorPosition.BottomLeft:
-                case ConnectorPosition.Left:
-                case ConnectorPosition.TopLeft:
+                case ConnectorType.BottomLeft:
+                case ConnectorType.Left:
+                case ConnectorType.TopLeft:
                     return [this.cx - wr, this.cy];
                 default:
-                    const autoType = this.getAutoPosition(x, y);
-                    return this.getLocation(autoType, x, y);
+                    const autoType = this.getContactAutoPosition(x, y);
+                    return this.getContactPosition(autoType, x, y);
             }
         }
-        protected getAutoPosition(x: number, y: number): ConnectorPosition {
+        protected getContactAutoPosition(x: number, y: number): ConnectorType {
             const wr = this.width / 2;
             const hr = this.height / 2;
 
@@ -75,15 +75,15 @@
 
             if (b1) {
                 if (b2) {
-                    return ConnectorPosition.Top;
+                    return ConnectorType.Top;
                 } else {
-                    return ConnectorPosition.Right;
+                    return ConnectorType.Right;
                 }
             } else {
                 if (b2) {
-                    return ConnectorPosition.Left;
+                    return ConnectorType.Left;
                 } else {
-                    return ConnectorPosition.Bottom;
+                    return ConnectorType.Bottom;
                 }
             }
 

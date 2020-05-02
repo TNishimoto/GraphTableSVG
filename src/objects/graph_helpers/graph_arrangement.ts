@@ -6,7 +6,7 @@ import {GVertex} from "../g_vertex"
 import {VirtualTree} from "./virtual_tree"
 
 import * as TreeArrangement from "./tree_arangement"
-import { Direction, ConnectorPosition } from "../../common/enums"
+import { Direction, ConnectorType } from "../../common/enums"
 import * as SVGTextBox from "../../interfaces/svg_textbox"
 import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
 import { GAbstractEdge } from "../g_abstract_edge"
@@ -54,8 +54,8 @@ import { GAbstractTextEdge } from "../g_abstract_text_edge"
             if(direction == "down"){
                 const edge = tree.subTreeRoot.parentEdge;
                 if(edge != null){
-                    edge.endConnectorType = ConnectorPosition.Top;
-                    edge.beginConnectorType = ConnectorPosition.Bottom;
+                    edge.endConnectorType = ConnectorType.Top;
+                    edge.beginConnectorType = ConnectorType.Bottom;
 
                 }
             }

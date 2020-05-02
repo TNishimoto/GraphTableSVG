@@ -1,6 +1,6 @@
 //namespace GraphTableSVG {
 
-import { ShapeObjectType, ConnectorPosition } from "../common/enums";
+import { ShapeObjectType, ConnectorType } from "../common/enums";
 import * as CommonFunctions from "../common/common_functions"
 import { VBATranslateFunctions } from "../common/vba_functions"
 import { getLineType } from "../html/enum_extension";
@@ -8,6 +8,7 @@ import { getLineType } from "../html/enum_extension";
 import * as GOptions from "./g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import { GAbstractTextEdge } from "./g_abstract_text_edge";
+import { StyleNames } from "../common";
 
 /**
  * 辺をSVGで表現するためのクラスです。
@@ -27,6 +28,7 @@ export class GEdge extends GAbstractTextEdge {
 
         //this.setAppropriateText();
     }
+
 
     protected setBasicOption(option: GOptions.GEdgeAttributes) {
         super.setBasicOption(option);
@@ -132,8 +134,8 @@ export class GEdge extends GAbstractTextEdge {
                     r.push(` obj.Line.EndArrowheadWidth = msoArrowheadWide`);
                 }
 
-                const begType: number = ConnectorPosition.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
-                const endType: number = ConnectorPosition.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
+                const begType: number = ConnectorType.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
+                const endType: number = ConnectorType.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
                 r.push(` Call EditConnector(obj.ConnectorFormat, shapes_("${this.beginVertex.objectID}"), shapes_("${this.endVertex.objectID}"), ${begType}, ${endType})`)
                 const lineType = getLineType(this.svgPath);
                 const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke", "gray"));
@@ -167,8 +169,8 @@ export class GEdge extends GAbstractTextEdge {
                 const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
                 r.push(` Call EditLine(shapes_("${edgeID}").Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
 
-                const begType: number = j == 0 ? ConnectorPosition.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
-                const endType: number = j == this.VBAConnectorNumber ? ConnectorPosition.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y)) : 1;
+                const begType: number = j == 0 ? ConnectorType.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
+                const endType: number = j == this.VBAConnectorNumber ? ConnectorType.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y)) : 1;
                 r.push(` Call EditConnector(shapes_("${edgeID}").ConnectorFormat, shapes_("${beg}"), shapes_("${end}"), ${begType}, ${endType})`)
 
             }

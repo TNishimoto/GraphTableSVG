@@ -2,7 +2,7 @@
     import {GVertex} from "./g_vertex"
     import {GTextBox} from "./g_textbox"
     import {GCalloutAttributes} from "./g_callout"
-    import { ShapeObjectType, ConnectorPosition, msoDashStyle, VBAShapeType } from "../common/enums";
+    import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
     import * as AttributeNames from "../common/attribute_names"
     import * as StyleNames from "../common/style_names"
     import * as DefaultClassNames from "../common/default_class_names"
@@ -53,35 +53,35 @@
         }
         */
     
-        public getLocation(type: ConnectorPosition, x: number, y: number): [number, number] {
+        public getContactPosition(type: ConnectorType, x: number, y: number): [number, number] {
     
             const centerX = (Math.sqrt(2) / 2) * this.rx;
             const centerY = (Math.sqrt(2) / 2) * this.ry;
             
 
             switch (type) {
-                case ConnectorPosition.Top:
+                case ConnectorType.Top:
                     return [this.cx, this.cy - this.ry];
-                case ConnectorPosition.TopRight:
+                case ConnectorType.TopRight:
                     return [this.cx + centerX, this.cy - centerY];
-                case ConnectorPosition.Right:
+                case ConnectorType.Right:
                     return [this.cx + this.rx, this.cy];
-                case ConnectorPosition.BottomRight:
+                case ConnectorType.BottomRight:
                     return [this.cx + centerX, this.cy + centerY];
-                case ConnectorPosition.Bottom:
+                case ConnectorType.Bottom:
                     return [this.cx, this.cy + this.ry];
-                case ConnectorPosition.BottomLeft:
+                case ConnectorType.BottomLeft:
                     return [this.cx - centerX, this.cy + centerY];
-                case ConnectorPosition.Left:
+                case ConnectorType.Left:
                     return [this.cx - this.rx, this.cy];
-                case ConnectorPosition.TopLeft:
+                case ConnectorType.TopLeft:
                     return [this.cx - centerX, this.cy - centerY];
                 default:
-                    const autoType = this.getAutoPosition(x, y);
-                    return this.getLocation(autoType, x, y);
+                    const autoType = this.getContactAutoPosition(x, y);
+                    return this.getContactPosition(autoType, x, y);
             }
         }
-        protected getAutoPosition(x: number, y: number): ConnectorPosition {
+        protected getContactAutoPosition(x: number, y: number): ConnectorType {
             const radius = this.rx;
             const r = (Math.sqrt(2) / 2) * radius;
             const line1 = new VLine(this.x, this.y, this.x + r, this.y + r);
@@ -92,15 +92,15 @@
     
             if (b1) {
                 if (b2) {
-                    return ConnectorPosition.Top;
+                    return ConnectorType.Top;
                 } else {
-                    return ConnectorPosition.Right;
+                    return ConnectorType.Right;
                 }
             } else {
                 if (b2) {
-                    return ConnectorPosition.Left;
+                    return ConnectorType.Left;
                 } else {
-                    return ConnectorPosition.Bottom;
+                    return ConnectorType.Bottom;
                 }
             }
         }
@@ -191,21 +191,21 @@
             const centerY = (Math.sqrt(2) / 2) * this.svgEllipse.ry.baseVal.value;
 
             switch (type) {
-                case ConnectorPosition.Top:
+                case ConnectorType.Top:
                     return [this.cx, this.cy - this.ry];
-                case ConnectorPosition.TopRight:
+                case ConnectorType.TopRight:
                     return [this.cx + centerX, this.cy - centerY];
-                case ConnectorPosition.Right:
+                case ConnectorType.Right:
                     return [this.cx + this.rx, this.cy];
-                case ConnectorPosition.BottomRight:
+                case ConnectorType.BottomRight:
                     return [this.cx + centerX, this.cy + centerY];
-                case ConnectorPosition.Bottom:
+                case ConnectorType.Bottom:
                     return [this.cx, this.cy + this.ry];
-                case ConnectorPosition.BottomLeft:
+                case ConnectorType.BottomLeft:
                     return [this.cx - centerX, this.cy + centerY];
-                case ConnectorPosition.Left:
+                case ConnectorType.Left:
                     return [this.cx - this.rx, this.cy];
-                case ConnectorPosition.TopLeft:
+                case ConnectorType.TopLeft:
                     return [this.cx - centerX, this.cy - centerY];
                 default:
                     const autoType = this.getAutoPosition(x, y);
@@ -223,15 +223,15 @@
 
             if (b1) {
                 if (b2) {
-                    return ConnectorPosition.Top;
+                    return ConnectorType.Top;
                 } else {
-                    return ConnectorPosition.Right;
+                    return ConnectorType.Right;
                 }
             } else {
                 if (b2) {
-                    return ConnectorPosition.Left;
+                    return ConnectorType.Left;
                 } else {
-                    return ConnectorPosition.Bottom;
+                    return ConnectorType.Bottom;
                 }
             }
         }
