@@ -25,12 +25,14 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } f
         replaceMapper.set("fontSize", "font-size");
         replaceMapper.set("fontFamily", "font-family");
         replaceMapper.set("autoSizeShapeToFitText", StyleNames.autoSizeShapeToFitText);
-        replaceMapper.set("verticalAnchor", StyleNames.VerticalAnchor);
-        replaceMapper.set("horizontalAnchor", StyleNames.HorizontalAnchor);
+        replaceMapper.set("verticalAnchor", StyleNames.verticalAnchor);
+        replaceMapper.set("horizontalAnchor", StyleNames.horizontalAnchor);
 
         replaceMapper.set("beginConnectorType", StyleNames.beginConnectorType);
         replaceMapper.set("endConnectorType", StyleNames.endConnectorType);
-        replaceMapper.set("pathTextAlignment", StyleNames.PathTextAlignment);
+        replaceMapper.set("edgeType", StyleNames.edgeType);
+
+        replaceMapper.set("pathTextAlignment", StyleNames.pathTextAlignment);
         replaceMapper.set("paddingTop", StyleNames.paddingTop);
         replaceMapper.set("paddingLeft", StyleNames.paddingLeft);
         replaceMapper.set("paddingRight", StyleNames.paddingRight);
@@ -157,8 +159,8 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } f
                 ${StyleNames.paddingLeft} : 0px;
                 ${StyleNames.paddingRight} : 0px;
                 ${StyleNames.paddingBottom} : 0px;
-                ${StyleNames.VerticalAnchor} : ${VerticalAnchor.Middle};
-                ${StyleNames.HorizontalAnchor} : ${HorizontalAnchor.Center};
+                ${StyleNames.verticalAnchor} : ${VerticalAnchor.Middle};
+                ${StyleNames.horizontalAnchor} : ${HorizontalAnchor.Center};
             }
             .${DefaultClassNames.defaultTextClass}{
                 fill : black;
@@ -175,7 +177,7 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } f
 
             }
             .${DefaultClassNames.defaultEdgeClass}{
-                ${StyleNames.PathTextAlignment}: center;
+                ${StyleNames.pathTextAlignment}: center;
             }
 
             .${DefaultClassNames.defaultSurfaceClass}{

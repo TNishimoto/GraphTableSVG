@@ -120,8 +120,13 @@ export class GEdge extends GAbstractTextEdge {
         r.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
         r.push(` Dim obj As Shape`);
 
-        if (this.controlPoint.length == 0) {
-            r.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+        if (this.controlPoint.length == 0 || this.edgeType == "elbow") {
+
+            if(this.edgeType == "elbow"){
+                r.push(` Set obj = shapes_.AddConnector(msoConnectorElbow, 0, 0, 0, 0)`);
+            }else{
+                r.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+            }
             if (this.beginVertex != null && this.endVertex != null) {
                 if (this.markerStart != null) {
                     r.push(` obj.Line.BeginArrowheadLength = msoArrowheadLong`);

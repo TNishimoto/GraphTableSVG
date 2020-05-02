@@ -36,7 +36,8 @@ export type GTextBoxCSS = {
 export type GEdgeStyleCSS = {
     beginConnectorType?: ConnectorType,
     endConnectorType?: ConnectorType,
-    pathTextAlignment?: PathTextAlighnment
+    pathTextAlignment?: PathTextAlighnment,
+    edgeType? : EdgeType 
 } & GTextBoxCSS
 
 type _GTextBoxAttribute = {
@@ -139,7 +140,6 @@ type _GAbstractEdgeAttributes = {
     beginVertex?: object | string,
     endVertex?: object | string,
 
-    edgeType? : EdgeType 
 
 }
 type _GEdgeAttributes = {
@@ -158,7 +158,7 @@ type _GEdgeSVGGroupInfo = {
     class?: string | GEdgeStyleCSS
     style?: string | GEdgeStyleCSS
 }
-export type GAbstractEdgeAttributes = _GAbstractEdgeAttributes & _GEdgeSVGGroupInfo & ConnecterOption
+export type GAbstractEdgeAttributes = _GAbstractEdgeAttributes & _GEdgeSVGGroupInfo
 export type GAbstractTextEdgeAttributes = _GTextBoxAttribute & GAbstractEdgeAttributes;
 
 

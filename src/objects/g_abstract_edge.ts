@@ -56,16 +56,17 @@ export class GAbstractEdge extends GObject {
             this.endVertexID = option.endVertex;
         }
 
-        
+        /*
         if(option.beginConnectorType != undefined){
             this.beginConnectorType = option.beginConnectorType;
         }
         if(option.endConnectorType != undefined){
             this.endConnectorType = option.endConnectorType;
         }
+        */
     }
     get edgeType(): EdgeType {
-        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.EdgeType, "none");
+        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.edgeType, "none");
         if (b == "straight") {
             return "straight";
         } else if (b == "elbow") {
@@ -86,7 +87,7 @@ export class GAbstractEdge extends GObject {
     
 
     set edgeType(value: EdgeType) {
-        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.EdgeType, value);
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.edgeType, value);
         //this.svgGroup.setPropertyStyleValue(AttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
     }
 
@@ -186,11 +187,11 @@ export class GAbstractEdge extends GObject {
      * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
      */
     public get pathTextAlignment(): PathTextAlighnment {
-        const value = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.PathTextAlignment, "center");
+        const value = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.pathTextAlignment, "center");
         return PathTextAlighnment.toPathTextAlighnment(value);
     }
     public set pathTextAlignment(value: PathTextAlighnment) {
-        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.PathTextAlignment, value);
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.pathTextAlignment, value);
     }
     protected get pathPoints(): [number, number][] {
         const dAttr = this.svgPath.getAttribute("d");

@@ -157,27 +157,27 @@ export class GTextBox extends GVertex {
 
 
     get horizontalAnchor(): HorizontalAnchor {
-        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.HorizontalAnchor, "center");
+        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.horizontalAnchor, "center");
         return HorizontalAnchor.toHorizontalAnchor(b);
     }
     /**
     テキストの水平方向の配置設定を設定します。
     */
     set horizontalAnchor(value: HorizontalAnchor) {
-        if (this.horizontalAnchor != value) ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.HorizontalAnchor, value);
+        if (this.horizontalAnchor != value) ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.horizontalAnchor, value);
     }
     /**
     テキストの垂直方向の配置設定を返します。
     */
     get verticalAnchor(): VerticalAnchor {
-        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.VerticalAnchor, "middle");
+        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.verticalAnchor, "middle");
         return VerticalAnchor.toVerticalAnchor(b);
     }
     /**
     テキストの垂直方向の配置設定を設定します。
     */
     set verticalAnchor(value: VerticalAnchor) {
-        if (this.verticalAnchor != value) ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.VerticalAnchor, value);
+        if (this.verticalAnchor != value) ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.verticalAnchor, value);
     }
 
     /**

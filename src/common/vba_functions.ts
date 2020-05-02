@@ -10,6 +10,7 @@ export function parseInteger(value: string): number {
         return parseInt(value);
     }
 }
+/*
 export function visible(value: string): number {
     if (value == "hidden") {
         return 1.0;
@@ -17,6 +18,17 @@ export function visible(value: string): number {
         return 0;
     }
 }
+*/
+export function styleVisible(value: CSSStyleDeclaration): number {
+    if(value.visibility == "hidden"){
+        return 1.0;
+    }else if(value.stroke == "transparent"){
+        return 1.0;
+    }else{
+        return 0;
+    }
+}
+
 
 export class VBATranslateFunctions {
     public static grouping80(codes: string[][]): string[] {

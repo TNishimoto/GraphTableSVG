@@ -22,7 +22,7 @@ import { GCircle } from "../objects/g_circle";
 import * as GOptions from "../objects/g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import { LogicTable } from "../logics";
-import { ArgumentOutOfRangeError } from "../common/exceptions";
+import { ArgumentOutOfRangeError, NullError } from "../common/exceptions";
 
 //export namespace openSVGFunctions {
 
@@ -37,6 +37,30 @@ function isGCustomElement(element: SVGElement): boolean {
         return false;
     }
 
+}
+function getGObjectsSub(item: Element): GObject[] {
+    const arr: GObject[] = new Array();
+    const opr = (<any>item).operator;
+    if (opr != undefined && opr instanceof GObject) {
+        arr.push(opr);
+    } else {
+        for (let i = 0; i < item.children.length; i++) {
+            const child = item.children.item(i);
+            if (child != null) {
+                getGObjectsSub(child).forEach((v) =>{ arr.push(v)});
+            }
+        }    
+    }
+    return arr;
+}
+
+export function getGObjects(elementID: string): GObject[] {
+    const svg = document.getElementById(elementID);
+    if (svg == null) {
+        throw new NullError();
+    } else {
+        return getGObjectsSub(svg);
+    }
 }
 export function openCustomElement(id: string | SVGElement): GObject | null {
 

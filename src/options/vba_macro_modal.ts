@@ -3,6 +3,8 @@
 import { SVGToVBA } from "./svg_to_vba"
 import { GObject } from "../objects/g_object"
 import { runInThisContext } from "vm";
+import { getGObjects } from "./open_svg";
+import { VBAObjectType } from "./vba_object";
 
 //export namespace VBAMacroModal {
     export function showMacroModal(id :string | GObject){
@@ -14,7 +16,9 @@ import { runInThisContext } from "vm";
         }
     }
     export function createMacroModalFromID(id : string) {
-        const code = SVGToVBA.create(id);
+        const objects : VBAObjectType[] = getGObjects(id);
+
+        const code = SVGToVBA.create(objects);
         return createMacroModal(code);
     }
 

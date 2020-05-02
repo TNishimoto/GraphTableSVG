@@ -30,10 +30,10 @@ export const marginLeft: string = "--margin-left";
 export const marginRight: string = "--margin-right";
 export const marginBottom: string = "--margin-bottom";
 
-export const VerticalAnchor: string = "--vertical-anchor";
-export const HorizontalAnchor: string = "--horizontal-anchor";
-export const PathTextAlignment: string = "--path-text-alignment";
+export const verticalAnchor: string = "--vertical-anchor";
+export const horizontalAnchor: string = "--horizontal-anchor";
+export const pathTextAlignment: string = "--path-text-alignment";
 export const msoDashStyleName = "--stroke-style";
 export const relocateName = "--relocate";
 export const prohibitionOutOfRange: string = "--prohibition-out-of-range";
-export const EdgeType: string = "--edge-type";
+export const edgeType: string = "--edge-type";

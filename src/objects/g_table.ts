@@ -12,7 +12,7 @@ import { CellColumn } from "./table_helpers/column"
 import { BorderColumn, BorderRow } from "./table_helpers/border_row"
 import { Cell } from "./table_helpers/cell"
 import { Rectangle, VLine } from "../common/vline"
-import { VBATranslateFunctions, parseInteger, visible } from "../common/vba_functions"
+import { VBATranslateFunctions, parseInteger, styleVisible } from "../common/vba_functions"
 
 import * as CSS from "../html/css"
 import * as HTMLFunctions from "../html/html_functions"
@@ -701,20 +701,20 @@ export class GTable extends GVertex {
                 const cell = this.cells[y][x];
                 const upLineStyle = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(cell.svgTopBorder, "stroke", "gray"));
                 const upLineStrokeWidth = cell.svgTopBorder.style.strokeWidth != null ? parseInteger(cell.svgTopBorder.style.strokeWidth) : "";
-                const upLineVisibility = cell.svgTopBorder.style.visibility != null ? visible(cell.svgTopBorder.style.visibility) : "";
+                const upLineVisibility = cell.svgTopBorder.style.visibility != null ? styleVisible(cell.svgTopBorder.style) : "";
 
                 lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderTop), ${upLineStyle}, ${upLineStrokeWidth}, ${upLineVisibility})`]);
 
                 const leftLineStyle = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(cell.svgLeftBorder, "stroke", "gray"));
                 const leftLineStrokeWidth = cell.svgLeftBorder.style.strokeWidth != null ? parseInteger(cell.svgLeftBorder.style.strokeWidth) : "";
-                const leftLineVisibility = cell.svgLeftBorder.style.visibility != null ? visible(cell.svgLeftBorder.style.visibility) : "";
+                const leftLineVisibility = cell.svgLeftBorder.style.visibility != null ? styleVisible(cell.svgLeftBorder.style) : "";
 
                 lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderLeft), ${leftLineStyle}, ${leftLineStrokeWidth}, ${leftLineVisibility})`]);
                 if (x + 1 == this.columnCount) {
 
                     const rightLineStyle = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(cell.svgRightBorder, "stroke", "gray"));
                     const rightLineStrokeWidth = cell.svgRightBorder.style.strokeWidth != null ? parseInteger(cell.svgRightBorder.style.strokeWidth) : "";
-                    const rightLineVisibility = cell.svgRightBorder.style.visibility != null ? visible(cell.svgRightBorder.style.visibility) : "";
+                    const rightLineVisibility = cell.svgRightBorder.style.visibility != null ? styleVisible(cell.svgRightBorder.style) : "";
 
                     lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderRight), ${rightLineStyle}, ${rightLineStrokeWidth}, ${rightLineVisibility})`]);
                 }
@@ -722,7 +722,7 @@ export class GTable extends GVertex {
                 if (y + 1 == this.rowCount) {
                     const bottomLineStyle = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(cell.svgBottomBorder, "stroke", "gray"));
                     const bottomLineStrokeWidth = cell.svgBottomBorder.style.strokeWidth != null ? parseInteger(cell.svgBottomBorder.style.strokeWidth) : "";
-                    const bottomLineVisibility = cell.svgBottomBorder.style.visibility != null ? visible(cell.svgBottomBorder.style.visibility) : "";
+                    const bottomLineVisibility = cell.svgBottomBorder.style.visibility != null ? styleVisible(cell.svgBottomBorder.style) : "";
 
                     lines.push([` Call EditCellBorder(${tableName}.cell(${y + 1},${x + 1}).Borders(ppBorderBottom), ${bottomLineStyle}, ${bottomLineStrokeWidth}, ${bottomLineVisibility})`]);
                 }
