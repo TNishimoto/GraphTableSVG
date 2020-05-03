@@ -93,37 +93,43 @@ function save(data : string, path : string, title : string,type : "table" | "gra
     }
 
 }
-export function view(item: LogicTree | LogicGraph | LogicGroup | LogicTable, title: string = "", option : { filepath? : string, libraryPath? : string[] } = { }){
-    const tempLibraryPathList : string[] = option.libraryPath === undefined ? new Array(0) : option.libraryPath;
-    const collectedLibraryPathList = getAdditionalLibraryPathList(item);
-    tempLibraryPathList.forEach((v) => collectedLibraryPathList.add(v));
-    const libraryPathList = Array.from(collectedLibraryPathList.values());
-
-    if(item instanceof LogicTree || item instanceof LogicGraph){
-        const data = JSON.stringify(item);
-        //const debug = option.debug ? option.debug : false;
-        const filepath = option.filepath ? option.filepath : getSavePath();
-        if(item instanceof LogicTree){
-            const libraryPath = item.graphOption.drawingFunction === undefined ? null : item.graphOption.drawingFunction.url;
-            const additonalFunction = item.graphOption.drawingFunction === undefined ? null : item.graphOption.drawingFunction.functionName;
-            save(data, filepath, title, "tree", getMainLibPath(), libraryPathList);
-        }else{
-            save(data, filepath, title, "tree", getMainLibPath(), libraryPathList);
-        }
-        opener(filepath);
-
-    }else if(item instanceof LogicTable){
-        const data = JSON.stringify(item);
-        const filepath = option.filepath ? option.filepath : getSavePath();
-        save(data, filepath, title, "table", getMainLibPath(), libraryPathList);
-        opener(filepath);
+export function view(item: LogicTree | LogicGraph | LogicGroup | LogicTable | (LogicTree | LogicGraph | LogicGroup | LogicTable)[], title: string = "", option : { filepath? : string, libraryPath? : string[] } = { }){
+    if(item instanceof Array){
+        const group = LogicGroup.build(item);
+        view(group, title, option);
     }else{
-        const data = JSON.stringify(item);
-        const filepath = option.filepath ? option.filepath : getSavePath();
-        save(data, filepath, title, "group", getMainLibPath(), libraryPathList);
-        opener(filepath);
-
+        const tempLibraryPathList : string[] = option.libraryPath === undefined ? new Array(0) : option.libraryPath;
+        const collectedLibraryPathList = getAdditionalLibraryPathList(item);
+        tempLibraryPathList.forEach((v) => collectedLibraryPathList.add(v));
+        const libraryPathList = Array.from(collectedLibraryPathList.values());
+    
+        if(item instanceof LogicTree || item instanceof LogicGraph){
+            const data = JSON.stringify(item);
+            //const debug = option.debug ? option.debug : false;
+            const filepath = option.filepath ? option.filepath : getSavePath();
+            if(item instanceof LogicTree){
+                const libraryPath = item.option.drawingFunction === undefined ? null : item.option.drawingFunction.url;
+                const additonalFunction = item.option.drawingFunction === undefined ? null : item.option.drawingFunction.functionName;
+                save(data, filepath, title, "tree", getMainLibPath(), libraryPathList);
+            }else{
+                save(data, filepath, title, "tree", getMainLibPath(), libraryPathList);
+            }
+            opener(filepath);
+    
+        }else if(item instanceof LogicTable){
+            const data = JSON.stringify(item);
+            const filepath = option.filepath ? option.filepath : getSavePath();
+            save(data, filepath, title, "table", getMainLibPath(), libraryPathList);
+            opener(filepath);
+        }else{
+            const data = JSON.stringify(item);
+            const filepath = option.filepath ? option.filepath : getSavePath();
+            save(data, filepath, title, "group", getMainLibPath(), libraryPathList);
+            opener(filepath);
+    
+        }
     }
+    
 }
 export function table(item: any,  title: string = "", option : { filepath? : string } = { }) {
     if (item instanceof LogicTable) {

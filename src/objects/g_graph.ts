@@ -352,7 +352,7 @@ export class GGraph extends GObject {
     }
 
     public build(logicGraph: LogicGraph | LogicTree ) {
-        const option = logicGraph.graphOption;
+        const option = logicGraph.option;
         this.setOption(option);
         //if (option.isLatexMode == undefined) option.isLatexMode = false;
         this.clear();

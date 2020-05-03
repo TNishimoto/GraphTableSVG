@@ -8,5 +8,5 @@ node1.children.push(node2);
 node1.children.push(node3);
 const tree = new GraphTableSVG.Logics.LogicTree();
 tree.root = node1;
-tree.graphOption.drawingFunction = { url: null, functionName: "GraphTableSVG.Logics.Test", drawingFunction: null };
+tree.option.drawingFunction = { url: null, functionName: "GraphTableSVG.Logics.Test", drawingFunction: null };
 const result = GraphTableSVG.Console.view(tree, "aaa");

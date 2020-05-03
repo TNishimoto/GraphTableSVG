@@ -11,9 +11,16 @@ type LogicType = "LogicTree" | "LogicTable" | "LogicGraph" | "LogicGroup";
 export class LogicGroup {
     public items : (LogicGraph | LogicTree | LogicTable | LogicGroup)[] = new Array(0);
     public className : "LogicGroup" = "LogicGroup";
+    public itemOrder : "row" | "column" = "row"
+    public itemInterval : number = 50;
     public position? : UpperLeftPosition;
     constructor() {
         
+    }
+    public static build(itmes : (LogicGraph | LogicTree | LogicTable | LogicGroup)[]){
+        const p = new LogicGroup();
+        itmes.forEach((v) => { p.items.push(v)})
+        return p;
     }
     public buildFromObject(item : any){
         const temp = item["items"];
@@ -22,7 +29,11 @@ export class LogicGroup {
                 this.items.push(LogicGroup.buildLogicObjectFromObject(v));
             })
         }
+
         this.position = item["position"];
+        this.itemOrder = item["itemOrder"]
+        this.itemInterval = item["itemInterval"]
+
     }
 
     public static buildLogicObjectFromObject(obj : any) : LogicTree | LogicTable | LogicGraph | LogicGroup{
@@ -71,8 +82,8 @@ export function getAdditionalLibraryPathList(data : LogicGraph | LogicTree | Log
     }else if(data instanceof LogicGraph){
 
     }else if(data instanceof LogicTree){
-        if(data.graphOption.drawingFunction !== undefined && data.graphOption.drawingFunction.url != null){
-            r.add(data.graphOption.drawingFunction.url);
+        if(data.option.drawingFunction !== undefined && data.option.drawingFunction.url != null){
+            r.add(data.option.drawingFunction.url);
         }
     }else{
     }

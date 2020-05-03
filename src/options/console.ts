@@ -300,8 +300,8 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
         if (canvasID != null) {
             const ggraph = createShape(canvasID, "g-graph");
             ggraph.build(item);
-            if (item.graphOption.drawingFunction !== undefined) {
-                const drawingFunction = new Function("obj", `${item.graphOption.drawingFunction.functionName}(obj)`);
+            if (item.option.drawingFunction !== undefined) {
+                const drawingFunction = new Function("obj", `${item.option.drawingFunction.functionName}(obj)`);
                 drawingFunction(ggraph);
             }
             return [ggraph, <SVGElement>ggraph.svgGroup.parentNode];
@@ -312,8 +312,8 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
             const ggraph = createShape(consoleLine.canvas!, "g-graph");
             ggraph.build(item);
             consoleLine.addVBAObject(ggraph);
-            if (item.graphOption.drawingFunction !== undefined) {
-                const drawingFunction = new Function("obj", `${item.graphOption.drawingFunction.functionName}(obj)`);
+            if (item.option.drawingFunction !== undefined) {
+                const drawingFunction = new Function("obj", `${item.option.drawingFunction.functionName}(obj)`);
                 drawingFunction(ggraph);
             }
 
@@ -322,22 +322,33 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
 
         //graph(item);
     } else {
-
+        let gobject : GObject;  
+        let svg :  ConsoleLineElement | SVGElement;
         if (canvasID != null) {
-            const gobject = createShape(canvasID, "g-object");
-            item.items.forEach((v) => {
-                view(<any>v, title, gobject.svgGroup);
-            })
-            return [gobject, <SVGElement>gobject.svgGroup.parentNode]
+            gobject = createShape(canvasID, "g-object");
+            svg = <SVGElement>gobject.svgGroup.parentNode;
         } else {
             const code = getOrCreateCodeElement();
             const consoleLine = new ConsoleLineElement(code, "group", title);
-            const gobject = createShape(consoleLine.canvas!, "g-object");
-            item.items.forEach((v) => {
-                view(<any>v, title, gobject.svgGroup);
-            })
-            return [gobject, consoleLine];
+            gobject = createShape(consoleLine.canvas!, "g-object");
+            svg = consoleLine;
         }
+
+        let prevItem : GObject | null = null;
+        item.items.forEach((v) => {
+            if(item.itemOrder == "row"){
+                if(prevItem != null){
+                    if(v instanceof LogicTable || v instanceof LogicTree){
+                        v.option.position = { x: 0, y: prevItem.getRegion().bottom + item.itemInterval, type: "upper-left" }
+                    }
+                }
+            }
+
+            const [tmp1, tmp2] = view(<any>v, title, gobject.svgGroup);
+            prevItem = tmp1;
+        })
+        return [gobject, svg];
+
     }
 }
 /*

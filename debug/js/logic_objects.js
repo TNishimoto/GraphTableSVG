@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const GraphTableSVG = require("../../dist/nodejs_index");
+const logics_1 = require("../../dist/logics");
+const name = "hoge";
+const arr = new Array(0);
+arr.push("aaa");
+arr.push("bbb");
+arr.push("ccc");
+arr.push("dddd");
+const line = GraphTableSVG.Logics.toLogicCellLine(name, arr, { style: { verticalAnchor: "middle" } });
+console.log(line[2].groupOption);
+const table = GraphTableSVG.Logics.buildLogicTable([line]);
+const table2 = GraphTableSVG.Logics.buildLogicTable([line]);
+const group = logics_1.LogicGroup.build([table, table2]);
+GraphTableSVG.Console.view(group);
+console.log(table.cells[0][2].groupOption);

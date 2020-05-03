@@ -155,12 +155,12 @@ export class  LogicTreeNode {
     
 }
 export class LogicTree {
-    public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
+    public option: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
     public root : LogicTreeNode | null = null;
     private className : "LogicTree" = "LogicTree";
 
     public buildFromObject(obj : any){        
-        this.graphOption = obj["graphOption"];
+        this.option = obj["graphOption"];
         if(obj["root"] != null){
             this.root = new LogicTreeNode();
             this.root.buildFromObject(obj["root"]);

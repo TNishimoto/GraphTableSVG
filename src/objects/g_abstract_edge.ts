@@ -11,6 +11,7 @@ import { getGraph } from "./graph_helpers/common_functions";
 import { setComputedDashArray } from "../html/enum_extension";
 import * as GOptions from "./g_options"
 import { createPath } from "./element_builder"
+import { NullError, UndefinedError } from "../common/exceptions";
 
 export class GAbstractEdge extends GObject {
     constructor(svgbox: SVGElement | string) {
@@ -41,7 +42,9 @@ export class GAbstractEdge extends GObject {
         if (option.startMarker !== undefined) this.markerStart = GAbstractEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
         if (option.endMarker !== undefined) this.markerEnd = GAbstractEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
-        this.pathPoints = [[option.x1!, option.y1!], [option.x2!, option.y2!]];
+        if(option.x1 !== undefined && option.y1 !== undefined && option.x2 !== undefined && option.y2 !== undefined){
+            this.pathPoints = [[option.x1!, option.y1!], [option.x2!, option.y2!]];
+        }
 
 
         if (typeof option.beginVertex == "object") {
@@ -196,30 +199,39 @@ export class GAbstractEdge extends GObject {
     protected get pathPoints(): [number, number][] {
         const dAttr = this.svgPath.getAttribute("d");
         if (dAttr == null) throw Error("error");
-        const d = dAttr.split(" ");
-        let i = 0;
         const r: [number, number][] = [];
-
-        while (i < d.length) {
-            if (d[i] == "M") {
-                r.push([round100(Number(d[i + 1])), round100(Number(d[i + 2]))]);
-                i += 3;
-            } else if (d[i] == "L") {
-                r.push([round100(Number(d[i + 1])), round100(Number(d[i + 2]))]);
-                i += 3;
-            } else if (d[i] == "Q") {
-                r.push([round100(Number(d[i + 1])), round100(Number(d[i + 2]))]);
-                r.push([round100(Number(d[i + 3])), round100(Number(d[i + 4]))]);
-                i += 5;
-            } else {
-                
-                throw Error("path points parse error/" + dAttr);
+        if(dAttr.length > 0){
+            const d = dAttr.split(" ");
+            let i = 0;
+    
+            while (i < d.length) {
+                if (d[i] == "M") {
+                    r.push([round100(Number(d[i + 1])), round100(Number(d[i + 2]))]);
+                    i += 3;
+                } else if (d[i] == "L") {
+                    r.push([round100(Number(d[i + 1])), round100(Number(d[i + 2]))]);
+                    i += 3;
+                } else if (d[i] == "Q") {
+                    r.push([round100(Number(d[i + 1])), round100(Number(d[i + 2]))]);
+                    r.push([round100(Number(d[i + 3])), round100(Number(d[i + 4]))]);
+                    i += 5;
+                } else {
+                    
+                    throw Error("path points parse error/" + dAttr + "/" + dAttr.length);
+                }
             }
+    
+            return r;    
+        }else{
+            return r;
         }
-
-        return r;
     }
     protected set pathPoints(points: [number, number][]) {
+        points.forEach((v) =>{
+            if(v[0] === undefined){
+                throw new UndefinedError();
+            }
+        })
         let path = "";
         if(this.edgeType == "elbow"){
             path += `M ${points[0][0]} ${points[0][1]} `;
@@ -232,6 +244,8 @@ export class GAbstractEdge extends GObject {
             if (points.length == 2) {
                 const [x1, y1] = points[0];
                 const [x2, y2] = points[1];
+
+
     
                 path = escapeWithRound100`M ${x1} ${y1} L ${x2} ${y2}`
             } else if (points.length == 3) {
@@ -308,6 +322,7 @@ export class GAbstractEdge extends GObject {
         return this.pathPoints[0][0];
     }
     public set x1(value: number) {
+
         const p = this.pathPoints;
         p[0][0] = value;
         this.pathPoints = p;
@@ -319,6 +334,7 @@ export class GAbstractEdge extends GObject {
         return this.pathPoints[0][1];
     }
     public set y1(value: number) {
+
         const p = this.pathPoints;
         p[0][1] = value;
         this.pathPoints = p;
@@ -332,6 +348,7 @@ export class GAbstractEdge extends GObject {
         return d[d.length - 1][0];
     }
     public set x2(value: number) {
+
         const p = this.pathPoints;
         p[p.length - 1][0] = value;
         this.pathPoints = p;
@@ -698,6 +715,9 @@ export class GAbstractEdge extends GObject {
             points[0] = [x1, y1];
             points[points.length - 1] = [x2, y2];
         }
+        console.log("updateLocation");
+        console.log(points);
+        if(points[0][0] == undefined) throw new UndefinedError();
         this.pathPoints = points;    
 
     }

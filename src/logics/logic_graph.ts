@@ -16,7 +16,7 @@ export class LogicGraphNode {
 export class LogicGraph {
     public nodes: LogicGraphNode[] = [];
     public edges: LogicGraphEdge[] = [];
-    public graphOption: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
+    public option: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
     private className : string = "LogicGraph";
 
     construct(iten: any) {
