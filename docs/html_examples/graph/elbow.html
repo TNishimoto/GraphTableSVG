@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Elbow Coonector</title>
+    <script src="../../scripts/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.Options.openSVG();
+        };
+    </script>
+</head>
+
+<body>
+    <svg id="svgbox" width="900px" height="900px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
+
+        <g-rect x="100" y="100" id="aa1"/>
+        <g-rect x="200" y="200" id="aa2" />        
+        <g-edge begin-vertex="aa1" end-vertex="aa2" style="--edge-type:elbow;--begin-connector-type:bottom;--end-connector-type:top" ></g-edge>
+
+        <g-rect x="300" y="100" id="ab1"/>
+        <g-rect x="400" y="200" id="ab2" />        
+        <g-edge begin-vertex="ab1" end-vertex="ab2" style="--edge-type:elbow;--begin-connector-type:bottom;--end-connector-type:left" ></g-edge>
+
+        <g-rect x="500" y="100" id="ac1"/>
+        <g-rect x="600" y="200" id="ac2" />        
+        <g-edge begin-vertex="ac1" end-vertex="ac2" style="--edge-type:elbow;--begin-connector-type:bottom;--end-connector-type:right" ></g-edge>
+
+        <g-rect x="700" y="100" id="ad1"/>
+        <g-rect x="800" y="200" id="ad2" />        
+        <g-edge begin-vertex="ad1" end-vertex="ad2" style="--edge-type:elbow;--begin-connector-type:bottom;--end-connector-type:bottom" ></g-edge>
+
+        <g-rect x="100" y="300" id="ba1"/>
+        <g-rect x="200" y="400" id="ba2" />        
+        <g-edge begin-vertex="ba1" end-vertex="ba2" style="--edge-type:elbow;--begin-connector-type:right;--end-connector-type:top" ></g-edge>
+
+        <g-rect x="300" y="300" id="bb1"/>
+        <g-rect x="400" y="400" id="bb2" />        
+        <g-edge begin-vertex="bb1" end-vertex="bb2" style="--edge-type:elbow;--begin-connector-type:right;--end-connector-type:left" ></g-edge>
+
+        <g-rect x="500" y="300" id="bc1"/>
+        <g-rect x="600" y="400" id="bc2" />        
+        <g-edge begin-vertex="bc1" end-vertex="bc2" style="--edge-type:elbow;--begin-connector-type:right;--end-connector-type:right" ></g-edge>
+
+        <g-rect x="700" y="300" id="bd1"/>
+        <g-rect x="800" y="400" id="bd2" />        
+        <g-edge begin-vertex="bd1" end-vertex="bd2" style="--edge-type:elbow;--begin-connector-type:right;--end-connector-type:bottom" ></g-edge>
+
+        <g-rect x="100" y="500" id="ca1"/>
+        <g-rect x="200" y="600" id="ca2" />        
+        <g-edge begin-vertex="ca1" end-vertex="ca2" style="--edge-type:elbow;--begin-connector-type:left;--end-connector-type:top" ></g-edge>
+
+        <g-rect x="300" y="500" id="cb1"/>
+        <g-rect x="400" y="600" id="cb2" />        
+        <g-edge begin-vertex="cb1" end-vertex="cb2" style="--edge-type:elbow;--begin-connector-type:left;--end-connector-type:left" ></g-edge>
+
+        <g-rect x="500" y="500" id="cc1"/>
+        <g-rect x="600" y="600" id="cc2" />        
+        <g-edge begin-vertex="cc1" end-vertex="cc2" style="--edge-type:elbow;--begin-connector-type:left;--end-connector-type:right" ></g-edge>
+
+        <g-rect x="700" y="500" id="cd1"/>
+        <g-rect x="800" y="600" id="cd2" />        
+        <g-edge begin-vertex="cd1" end-vertex="cd2" style="--edge-type:elbow;--begin-connector-type:left;--end-connector-type:bottom" ></g-edge>
+
+        <g-rect x="100" y="700" id="da1"/>
+        <g-rect x="200" y="800" id="da2" />        
+        <g-edge begin-vertex="da1" end-vertex="da2" style="--edge-type:elbow;--begin-connector-type:top;--end-connector-type:top" ></g-edge>
+
+        <g-rect x="300" y="700" id="db1"/>
+        <g-rect x="400" y="800" id="db2" />        
+        <g-edge begin-vertex="db1" end-vertex="db2" style="--edge-type:elbow;--begin-connector-type:top;--end-connector-type:left" ></g-edge>
+
+        <g-rect x="500" y="700" id="dc1"/>
+        <g-rect x="600" y="800" id="dc2" />        
+        <g-edge begin-vertex="dc1" end-vertex="dc2" style="--edge-type:elbow;--begin-connector-type:top;--end-connector-type:right" ></g-edge>
+
+        <g-rect x="700" y="700" id="dd1"/>
+        <g-rect x="800" y="800" id="dd2" />        
+        <g-edge begin-vertex="dd1" end-vertex="dd2" style="--edge-type:elbow;--begin-connector-type:top;--end-connector-type:bottom" ></g-edge>
+    </svg>
+    <button onclick="GraphTableSVG.Options.createMacroModalFromID('svgbox')">VBA</button
+
+</body>
+
+</html>
