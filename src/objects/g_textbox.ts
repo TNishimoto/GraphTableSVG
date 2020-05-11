@@ -209,8 +209,7 @@ export class GTextBox extends GVertex {
         this.hasConnectedObserverFunction = false;
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null && this.svgSurface != null) {
-            setComputedDashArray(this.svgSurface);
-            b = true;
+            b = setComputedDashArray(this.svgSurface);
         }
         this.hasConnectedObserverFunction = true;
         return b;
@@ -240,7 +239,10 @@ export class GTextBox extends GVertex {
         return false;
     }
     op : number =0;
-    public update() {
+    private updateRec(n : number){
+        if(n > 10){
+            throw new Error("Update-Loop Error!");
+        }
         super.update();
         this._isUpdating = true;
         if (!this.isShown) return;
@@ -257,12 +259,16 @@ export class GTextBox extends GVertex {
         this._isUpdating = false;
         //this._observer.observe(this.svgGroup, this.groupObserverOption);
         this.hasConnectedObserverFunction = true;
-
+        
         //console.log(`${b1}/${b2}/${b3}/${b4}/`)
         if(b1 || b2 || b3 || b4){
                 
-            this.update();
+            this.updateRec(n+1);
         }
+
+    }
+    public update() {
+        this.updateRec(1);
     }
     /*
     protected updateToFitText(isWidth: boolean) {

@@ -715,8 +715,6 @@ export class GAbstractEdge extends GObject {
             points[0] = [x1, y1];
             points[points.length - 1] = [x2, y2];
         }
-        console.log("updateLocation");
-        console.log(points);
         if(points[0][0] == undefined) throw new UndefinedError();
         this.pathPoints = points;    
 

@@ -16,6 +16,11 @@ GraphTableSVG is a library outputting graphs and tables on svg.
 - [Stroke Style](https://codepen.io/mklemma/pen/RwwJeLd "Stroke Style")
 - [Arrow Callout](https://codepen.io/mklemma/pen/yLNwWee "Arrow Callout")
 - [Elbow Coonector](https://codepen.io/mklemma/pen/bGVoPBd "Elbow Coonector")
+- [Graph](https://codepen.io/mklemma/pen/gOOKzGz "Graph")
+- [Edge](https://codepen.io/mklemma/pen/eYYKPpB "Edge")
+
+
+
 
 
 

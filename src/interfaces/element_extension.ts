@@ -63,6 +63,19 @@ export  function getActiveStyle(item:Element): CSSStyleDeclaration{
 export function setPropertyStyleValue(item:Element, name: string, value: string | null): void{
     (<any>item).style.setProperty(name, value);
 }
+export function setPropertyStyleValue2(item:Element, name: string, value: string | null): boolean{
+    const style = getComputedStyle(item);
+    
+    const oldValue = style.getPropertyValue(name);  
+    if(oldValue == value){
+        return false;
+    }else{
+        (<any>item).style.setProperty(name, value);
+        return true;
+    }
+
+}
+
 
 export function gtGetAttributeNumber(item:Element,name: string, defaultValue: number | null): number | null{
     const value = item.getAttribute(name);

@@ -22,19 +22,29 @@ export function getLineType(svgLine: SVGLineElement | SVGPathElement | SVGElemen
 function computeDashArray(type: msoDashStyle, width: number): string {
     const r = [];
     for (let i = 0; i < msoDashStyle.dashArrayDic[type].length; i++) {
-        r.push(msoDashStyle.dashArrayDic[type][i] * width);
+        r.push(`${msoDashStyle.dashArrayDic[type][i] * width}px`);
     }
-    return r.join(",");
+    if(r.length == 0){
+        return "none"
+    }else{
+        return r.join(", ");
+    }
 }
 
-export function setComputedDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement): void {
+export function setComputedDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement): boolean {
     const type = ElementExtension.getPropertyStyleValue(svgLine,StyleNames.msoDashStyleName);
     if (type == null) {
-
+        return false;
     }
     else if (msoDashStyle.toMSODashStyle(type) != null) {
         const width = <number>ElementExtension.getPropertyStyleNumberValue(svgLine,"stroke-width", 2);
-        ElementExtension.setPropertyStyleValue(svgLine,"stroke-dasharray", computeDashArray(msoDashStyle.toMSODashStyle(type), width));
-        ElementExtension.setPropertyStyleValue(svgLine,"stroke-linecap", msoDashStyle.lineCapDic[type]);
+        const newDashArray = computeDashArray(msoDashStyle.toMSODashStyle(type), width);
+        const newLineCap = msoDashStyle.lineCapDic[type];
+        const b1 = ElementExtension.setPropertyStyleValue2(svgLine,"stroke-dasharray", newDashArray);
+        const b2 = ElementExtension.setPropertyStyleValue2(svgLine,"stroke-linecap", newLineCap);
+
+        return b1 || b2;
+    }else{
+        return false;
     }
 }
