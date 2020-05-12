@@ -30,6 +30,9 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } f
 
         replaceMapper.set("beginConnectorType", StyleNames.beginConnectorType);
         replaceMapper.set("endConnectorType", StyleNames.endConnectorType);
+        replaceMapper.set("startMarker", StyleNames.markerStart);
+        replaceMapper.set("endMarker", StyleNames.markerEnd);
+
         replaceMapper.set("edgeType", StyleNames.edgeType);
 
         replaceMapper.set("pathTextAlignment", StyleNames.pathTextAlignment);

@@ -33,12 +33,6 @@ export type GTextBoxCSS = {
     verticalAnchor?: VerticalAnchor,
     horizontalAnchor?: HorizontalAnchor
 }
-export type GEdgeStyleCSS = {
-    beginConnectorType?: ConnectorType,
-    endConnectorType?: ConnectorType,
-    pathTextAlignment?: PathTextAlighnment,
-    edgeType? : EdgeType 
-} & GTextBoxCSS
 
 type _GTextBoxAttribute = {
     text?: string | HTMLElement[],
@@ -129,19 +123,29 @@ export type GGraphAttributes = _GGraphAttributes & GTextBoxAttributes;
 
 
 
+//// EDGE
+export type GEdgeStyleCSS = {
+    startMarker?: boolean,
+    endMarker?: boolean,
+
+    beginConnectorType?: ConnectorType,
+    endConnectorType?: ConnectorType,
+    pathTextAlignment?: PathTextAlighnment,
+    edgeType? : EdgeType 
+} & GTextBoxCSS
+
 type _GAbstractEdgeAttributes = {
     x1?: number,
     x2?: number,
 
     y1?: number,
     y2?: number,
-    startMarker?: boolean,
-    endMarker?: boolean,
     beginVertex?: object | string,
     endVertex?: object | string,
 
 
 }
+
 type _GEdgeAttributes = {
     x3?: number,
     y3?: number,
@@ -158,10 +162,9 @@ type _GEdgeSVGGroupInfo = {
     class?: string | GEdgeStyleCSS
     style?: string | GEdgeStyleCSS
 }
+
 export type GAbstractEdgeAttributes = _GAbstractEdgeAttributes & _GEdgeSVGGroupInfo
 export type GAbstractTextEdgeAttributes = _GTextBoxAttribute & GAbstractEdgeAttributes;
-
-
 export type GEdgeAttributes = GAbstractTextEdgeAttributes & _GEdgeAttributes 
 
 

@@ -77,6 +77,8 @@ export class GAbstractTextEdge extends GAbstractEdge {
         output.textClass = ElementExtension.gtGetAttributeStringWithUndefined(e, "text:class");
         output.textStyle = ElementExtension.gtGetAttributeStringWithUndefined(e, "text:style");
 
+
+
         if (e.hasAttribute("text")) {
             output.text = <string>e.getAttribute("text");
         } else if (e.children.length > 0) {

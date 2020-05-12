@@ -39,8 +39,13 @@ export class GAbstractEdge extends GObject {
         const strokeWidth = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke-width");
         const strokeWidth2 = strokeWidth == null ? undefined : strokeWidth;
 
-        if (option.startMarker !== undefined) this.markerStart = GAbstractEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
-        if (option.endMarker !== undefined) this.markerEnd = GAbstractEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+        //console.log(option)
+        const style = getComputedStyle(this.svgGroup);
+        const markerStart = style.getPropertyValue(StyleNames.markerStart);
+        const markerEnd = style.getPropertyValue(StyleNames.markerEnd);
+
+        if (markerStart.length != 0) this.markerStart = GAbstractEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+        if (markerEnd.length != 0) this.markerEnd = GAbstractEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
         if(option.x1 !== undefined && option.y1 !== undefined && option.x2 !== undefined && option.y2 !== undefined){
             this.pathPoints = [[option.x1!, option.y1!], [option.x2!, option.y2!]];
@@ -747,14 +752,26 @@ export class GAbstractEdge extends GObject {
         }
     }
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GAbstractEdgeAttributes = {}): GOptions.GAbstractEdgeAttributes {
+        /*
+        const style = getComputedStyle(e);
+        const markerStart = style.getPropertyValue(StyleNames.markerStart);
+        if(markerStart == "true"){
+            output.startMarker = true;
+        }
+        const markerEnd = style.getPropertyValue(StyleNames.markerEnd);
+        if(markerEnd == "true"){
+            output.endMarker = true;
+        }
+        */
         GObject.constructAttributes(e, removeAttributes, output);
 
-
+        
         //const _output = <GOptions.GEdgeAttributes>GAbstractEdge.constructAttributes(e, removeAttributes, output);
         output.x1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "x1", 0);
         output.x2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "x2", 300);
         output.y1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "y1", 0);
         output.y2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "y2", 300);
+
 
         output.beginVertex = ElementExtension.gtGetAttributeStringWithUndefined(e, "begin-vertex");
         output.endVertex = ElementExtension.gtGetAttributeStringWithUndefined(e, "end-vertex");
@@ -769,8 +786,8 @@ export class GAbstractEdge extends GObject {
         }
 
 
-        output.startMarker = ElementExtension.gtGetStyleBooleanWithUndefined(e, StyleNames.markerStart);
-        output.endMarker = ElementExtension.gtGetAttributeBooleanWithUndefined(e, StyleNames.markerEnd);
+        //output.startMarker = ElementExtension.gtGetStyleBooleanWithUndefined(e, StyleNames.markerStart);
+        //output.endMarker = ElementExtension.gtGetAttributeBooleanWithUndefined(e, StyleNames.markerEnd);
 
         if (removeAttributes) {
             e.removeAttribute("x1");
