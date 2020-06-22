@@ -1,6 +1,7 @@
 ﻿//namespace GraphTableSVG {
 import * as AttributeNames from "./attribute_names"
 import * as StyleNames from "../common/style_names"
+import { stringify } from "querystring"
 
 /**
 ノードの並び順です。
@@ -49,6 +50,8 @@ export namespace VBAShapeType {
 
 
 export type VertexObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-circle" | "g-rect" | "g-path-textbox" | "g-rect-button" | "g-table";
+
+
 //export namespace VertexObjectType {
 //}
 

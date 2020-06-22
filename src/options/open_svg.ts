@@ -276,6 +276,8 @@ export function createShape(parent: SVGElement | string | GObject, type: "g-arro
 export function createShape(parent: SVGElement | string | GObject, type: "g-graph", option?: GOptions.GTextBoxAttributes): GGraph
 export function createShape(parent: SVGElement | string | GObject, type: "g-table", option?: GTableOption): GTable
 export function createShape(parent: SVGElement | string | GObject, type: "g-object", option?: GTableOption): GObject
+export function createShape(parent: SVGElement | string | GObject, type: "g-path-textbox", option?: GOptions.GTextBoxAttributes): GObject
+export function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option?: any): GObject
 export function createShape(parent: SVGElement | string | GObject, type: ShapeObjectType, option: any = {}): GObject {
     let _parent: SVGElement;
     if (parent instanceof GObject) {

@@ -3,6 +3,8 @@ export const beginNodeName: string = "data-begin-node";
 export const endNodeName: string = "data-end-node";
 export const isAppropriatelyReverseTextMode: string = "data-appropriately-reverse-text";
 export const controlPointName: string = "data-control-point";
+export const allowHoverName: string = "data-allow-hover";
+
 export const connectPositionChangedEventName = "connect_position_changed";
 export const resizeName = "resized";
 export const vertexCreatedEventName = "vertex_created";

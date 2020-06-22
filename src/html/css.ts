@@ -268,7 +268,15 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } f
             g[data-type="g-rect-button"] > text {
                 pointer-events: none;
             }
-    
+
+            g[data-allow-hover="true"] > rect, g[data-allow-hover="true"] > circle, g[data-allow-hover="true"] > ellipse, g[data-allow-hover="true"] > path {
+                transition-duration: 0.2s;
+            }
+            g[data-allow-hover="true"] > rect:not([disabled]):hover, g[data-allow-hover="true"] > circle:not([disabled]):hover, g[data-allow-hover="true"] > ellipse:not([disabled]):hover, g[data-allow-hover="true"] > path:not([disabled]):hover {
+                stroke-width: 3px;
+            }
+
+
             `
         return r;
     }

@@ -69,6 +69,10 @@ export class GObject {
 
         const __svg = <any>this.svgGroup
         __svg.operator = this;
+
+        this.allowHover = true;
+        console.log("set/" + this.allowHover)
+
         //this.setOptionInGObject(option);
 
         /*
@@ -716,5 +720,17 @@ export class GObject {
         DraggableObjectFunctions.appendDragFunctionsToDocument();
         DraggableObjectFunctions.draggable(this.svgSurface!, this.svgGroup);
     }
+
+    public get allowHover() : boolean{
+        return this.svgGroup.getAttribute(AttributeNames.allowHoverName) == "true";
+    }
+    public set allowHover(value : boolean){
+        if(value){
+            this.svgGroup.setAttribute(AttributeNames.allowHoverName, "true");
+        }else{
+            this.svgGroup.setAttribute(AttributeNames.allowHoverName, "false");
+        }
+    }
+
 }
 //}

@@ -20,6 +20,8 @@ import { GTable } from "../objects/g_table";
 import { GGraph } from "../objects/g_graph";
 import { LogicGroup } from "../logics/logic_group";
 import { GObject } from "../objects";
+import * as ToJSON from "./to_json";
+import { LogicCellLine, buildLogicTable, LogicCell } from "../logics";
 
 
 //export namespace Console {
@@ -38,7 +40,11 @@ export class ConsoleLineElement {
 
     constructor(parent: HTMLElement, type: "table" | "graph" | "log" | "textarea" | "group", title: string = "", option: { mainElement?: HTMLElement | GTable | GGraph } = {}) {
         this.canvasContainer = document.createElement("div");
-        parent.appendChild(this.canvasContainer);
+        if(parent.firstChild == null){
+            parent.appendChild(this.canvasContainer);
+        }else{
+            parent.insertBefore(this.canvasContainer,parent.firstChild)
+        }
 
         this.fieldSetElement = document.createElement("fieldset");
         this.canvasContainer.appendChild(this.fieldSetElement);
@@ -145,31 +151,26 @@ export class ConsoleLineElement {
         }
     }
 
-
-}
-function getCodeTag(): HTMLElement | null {
-    const collection = document.getElementsByTagName("code");
-    for (let i = 0; i < collection.length; i++) {
-        const item = collection.item(i);
-        if (item != null) {
-            const name = item.getAttribute("name");
-            if (name == "GraphTableSVG") {
-                return item;
-            }
-        }
-    }
-    return null;
 }
 
-function getOrCreateCodeElement(): HTMLElement {
+const defaultCodeBoxID : string = "GraphTableSVG-CodeBox" 
+/*
+function getCodeTag(containerID : string = defaultCodeBoxID ): HTMLElement | null {
+    const box = document.getElementById(containerID);
+    return box;
+}
+*/
+function getOrCreateCodeElement(containerID : string = defaultCodeBoxID ): HTMLElement {
     CSS.setGraphTableCSS();
-    const code = getCodeTag();
+    const code = document.getElementById(containerID);
+    //const code = getCodeTag(containerID);
     if (code != null) {
         return code;
     } else {
         const element = document.createElement("code");
-        document.body.appendChild(element);
-        element.setAttribute("name", "GraphTableSVG");
+        element.setAttribute("id", defaultCodeBoxID);
+        //document.body.appendChild(element);
+        //element.setAttribute("name", codeTagName);
 
         return element;
     }
@@ -184,37 +185,41 @@ function initialize(): void {
     }
 }
 */
-export function table(item: any, title: string = "", canvasID: string | null = null): [GTable, ConsoleLineElement | SVGElement] {
+export function table(item: any, title: string = "", canvasID_or_ContainerID: string | null = null): [GTable, ConsoleLineElement | SVGElement] {
     if (item instanceof LogicTable) {
-        return view(item, title, canvasID);
-    } else {
+        return view(item, title, canvasID_or_ContainerID);
+    } else if(item instanceof Array && item.every((v) => v instanceof LogicCell)){
+        const tableItem = buildLogicTable([item], { isRowLines: false })
+        return table(tableItem, title, canvasID_or_ContainerID);
+    } 
+    else {
 
         const tableDic = new TableDictionary();
         tableDic.construct(item);
         const logicTable = tableDic.toLogicTable();
-        return table(logicTable, title, canvasID);
+        return table(logicTable, title, canvasID_or_ContainerID);
     }
 
 
 }
-export function clear() {
-    const code = getOrCreateCodeElement();
+export function clear(containerID : string = defaultCodeBoxID ) {
+    const code = getOrCreateCodeElement(containerID);
     code.innerHTML = "";
 }
 
-export function graph(item: any | LogicTree | LogicGraph, title: string = "", canvasID: string | SVGElement | null = null): [GGraph, ConsoleLineElement | SVGElement] {
+export function graph(item: any | LogicTree | LogicGraph, title: string = "", canvasID_or_ContainerID: string | SVGElement | null = null): [GGraph, ConsoleLineElement | SVGElement] {
 
     if (item instanceof LogicTree || item instanceof LogicGraph) {
         if (item instanceof LogicTree) {
-            return view(item, title, canvasID);
+            return view(item, title, canvasID_or_ContainerID);
         } else {
-            return view(item, title, canvasID);
+            return view(item, title, canvasID_or_ContainerID);
         }
     } else {
         const tableDic = new TableDictionary();
         tableDic.construct(item);
         const logicGraph = tableDic.toLogicGraph();
-        return graph(logicGraph, title, canvasID);
+        return graph(logicGraph, title, canvasID_or_ContainerID);
     }
 }
 export function log(message: string, title: string = ""): ConsoleLineElement {
@@ -241,51 +246,71 @@ export function log(message: string, title: string = ""): ConsoleLineElement {
 function getRowCount(line: string, cols: number) {
     return Math.ceil(line.length / cols);
 }
-export function textarea(message: string, title: string = "", option?: { cols?: number, rows?: number }): ConsoleLineElement {
-    const code = getOrCreateCodeElement();
-    const textArea = document.createElement("textarea");
-    textArea.textContent = message;
-
-    const lines = message.split("\n");
-    let maxCols = 0;
-    lines.forEach((v) => {
-        if (v.length > maxCols) {
-            maxCols = v.length;
-        }
-    })
-    const defaultCols = maxCols < 240 ? maxCols + 5 : 245;
-
-    const newOption = option === undefined ? {} : option;
-    textArea.cols = newOption.cols === undefined ? defaultCols : newOption.cols;
-
-    let rowCount = 0;
-    lines.forEach((v) => rowCount += getRowCount(v, textArea.cols));
-
-
-    textArea.rows = newOption.rows === undefined ? rowCount : newOption.rows;
-    const consoleLine = new ConsoleLineElement(code, "textarea", title, { mainElement: textArea });
-    consoleLine.title = title;
-
-
-    //const canvasContainer = document.createElement("div");
-    //code.appendChild(canvasContainer);                
-
-    //consoleLine.canvasContainer.appendChild(textArea);
-    return consoleLine;
+export function textarea(message: any, title: string = "", option?: { cols?: number, rows?: number, container? : string } ): ConsoleLineElement {
+    if(typeof(message) != "string"){
+        return textarea(ToJSON.stringify(message), title, option);
+    }else{
+        const newOption = option === undefined ? {} : option;
+    
+        const code = getOrCreateCodeElement(newOption.container === undefined ? defaultCodeBoxID : newOption.container );
+        const textArea = document.createElement("textarea");
+        textArea.textContent = message;
+    
+        const lines = message.split("\n");
+        let maxCols = 0;
+        lines.forEach((v) => {
+            if (v.length > maxCols) {
+                maxCols = v.length;
+            }
+        })
+        const defaultCols = maxCols < 240 ? maxCols + 5 : 245;
+    
+        textArea.cols = newOption.cols === undefined ? defaultCols : newOption.cols;
+    
+        let rowCount = 0;
+        lines.forEach((v) => rowCount += getRowCount(v, textArea.cols));
+    
+    
+        textArea.rows = newOption.rows === undefined ? rowCount : newOption.rows;
+        const consoleLine = new ConsoleLineElement(code, "textarea", title, { mainElement: textArea });
+        consoleLine.title = title;
+    
+    
+        //const canvasContainer = document.createElement("div");
+        //code.appendChild(canvasContainer);                
+    
+        //consoleLine.canvasContainer.appendChild(textArea);
+        return consoleLine;
+    
+    }
 
 }
 export function view(item: LogicTable, title: string, canvasID: string | SVGElement | null): [GTable, ConsoleLineElement | SVGElement];
 export function view(item: LogicTree, title: string, canvasID: string | SVGElement | null): [GGraph, ConsoleLineElement | SVGElement];
 export function view(item: LogicGraph, title: string, canvasID: string | SVGElement | null): [GGraph, ConsoleLineElement | SVGElement];
 export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, title: string, canvasID: string | SVGElement | null = null): [GObject, ConsoleLineElement | SVGElement] {
-    if (item instanceof LogicTable) {
-        if (canvasID != null) {
-            const gtable = createShape(canvasID, "g-table");
-            gtable.buildFromLogicTable(item);
-            return [gtable, <SVGElement>gtable.svgGroup.parentNode];
+    let isCanvasID = false;
 
+    if (canvasID != null) {
+        if(typeof(canvasID) == "string"){
+            isCanvasID = (document.getElementById(canvasID) instanceof SVGSVGElement);
+        }else{
+            isCanvasID = canvasID instanceof SVGSVGElement;
+        }
+    }
+
+    if (item instanceof LogicTable) {
+
+
+
+        if (isCanvasID) {
+            const canvasItem = <string | SVGElement>canvasID;
+            const gtable = createShape(canvasItem, "g-table");
+            gtable.buildFromLogicTable(item);
+            return [gtable, <SVGElement>gtable.svgGroup.parentNode];    
         } else {
-            const code = getOrCreateCodeElement();
+            const containerID : string | null = canvasID == null ? null : <string>canvasID;
+            const code = containerID == null ? getOrCreateCodeElement() : getOrCreateCodeElement(containerID);
             const consoleLine = new ConsoleLineElement(code, "table", title);
             const gtable = createShape(consoleLine.canvas!, "g-table");
 
@@ -297,16 +322,21 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
         }
 
     } else if (item instanceof LogicTree || item instanceof LogicGraph) {
-        if (canvasID != null) {
-            const ggraph = createShape(canvasID, "g-graph");
+        if(isCanvasID){
+            const canvasItem = <string | SVGElement>canvasID;
+            const ggraph = createShape(canvasItem, "g-graph");
             ggraph.build(item);
             if (item.option.drawingFunction !== undefined) {
                 const drawingFunction = new Function("obj", `${item.option.drawingFunction.functionName}(obj)`);
                 drawingFunction(ggraph);
             }
             return [ggraph, <SVGElement>ggraph.svgGroup.parentNode];
-        } else {
-            const code = getOrCreateCodeElement();
+        }
+        else {
+            const containerID : string | null = canvasID == null ? null : <string>canvasID;
+            const code = containerID == null ? getOrCreateCodeElement() : getOrCreateCodeElement(containerID);
+
+            //const code = getOrCreateCodeElement();
             const consoleLine = new ConsoleLineElement(code, "graph", title);
             //const svg = addSVGSVGElement(code);
             const ggraph = createShape(consoleLine.canvas!, "g-graph");
