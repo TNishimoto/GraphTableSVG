@@ -22,6 +22,7 @@ import { LogicGroup } from "../logics/logic_group";
 import { GObject } from "../objects";
 import * as ToJSON from "./to_json";
 import { LogicCellLine, buildLogicTable, LogicCell } from "../logics";
+import { Exceptions } from "../common";
 
 
 //export namespace Console {
@@ -340,6 +341,10 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
             const consoleLine = new ConsoleLineElement(code, "graph", title);
             //const svg = addSVGSVGElement(code);
             const ggraph = createShape(consoleLine.canvas!, "g-graph");
+            if(item.option ===undefined){
+                throw new Exceptions.UndefinedError();
+            }
+    
             ggraph.build(item);
             consoleLine.addVBAObject(ggraph);
             if (item.option.drawingFunction !== undefined) {

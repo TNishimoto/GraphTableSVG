@@ -45,7 +45,18 @@ function toStringLineArray(item : any, name : string | null,padding : number) : 
                 const s = `${spacePadding(padding)}${name} = ${item.toString()}`;
                 r.push(s);
             }
-        } else if (typeof item === "object") {
+        } 
+        else if(item instanceof Map){
+
+            const arr : any[] = [];
+            item.forEach((value, key) => {
+                arr.push({ "key" : key, "value" : value} );
+            });
+            const center = toStringLineArray(arr, name, padding);
+            center.forEach((v) => r.push(v));
+
+        }
+        else if (typeof item === "object") {
             if(isPrimitiveObject(item)){
                 if(item == null){
                     const s = name == null ? `null` : `${name} = null` 

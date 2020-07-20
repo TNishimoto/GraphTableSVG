@@ -1,6 +1,6 @@
 {
     "name": "graph-table-svg",
-    "version": "0.0.99",
+    "version": "0.0.101",
     "description": "",
     "main": "./dist/nodejs_index.js",
     "scripts": {
@@ -15,14 +15,14 @@
     "author": "mklemma",
     "license": "MIT",
     "dependencies": {
-        "@types/node": "^13.13.4",
+        "@types/node": "^14.0.23",
         "opener": "^1.5.1"
     },
     "devDependencies": {
-        "ts-loader": "^7.0.2",
-        "typedoc": "^0.17.6",
-        "typescript": "^3.8.3",
+        "ts-loader": "^8.0.1",
+        "typedoc": "^0.17.8",
+        "typescript": "^3.9.7",
         "webpack": "^4.43.0",
-        "webpack-cli": "^3.3.11"
+        "webpack-cli": "^3.3.12"
     }
 }

@@ -31,6 +31,7 @@ import { GPathTextBox } from "."
 import { LogicTable } from "../logics/logic_table"
 import { GTable } from "./g_table"
 import { ArgumentOutOfRangeError } from "../common/exceptions"
+import { Exceptions } from "../common"
 
 
 
@@ -353,6 +354,9 @@ export class GGraph extends GObject {
 
     public build(logicGraph: LogicGraph | LogicTree ) {
         const option = logicGraph.option;
+        if(option ===undefined){
+            throw new Exceptions.UndefinedError();
+        }
         this.setOption(option);
         //if (option.isLatexMode == undefined) option.isLatexMode = false;
         this.clear();
