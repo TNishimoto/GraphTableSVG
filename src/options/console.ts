@@ -168,7 +168,9 @@ function getOrCreateCodeElement(containerID : string = defaultCodeBoxID ): HTMLE
     if (code != null) {
         return code;
     } else {
+
         const element = document.createElement("code");
+        document.body.appendChild(element)
         element.setAttribute("id", defaultCodeBoxID);
         //document.body.appendChild(element);
         //element.setAttribute("name", codeTagName);

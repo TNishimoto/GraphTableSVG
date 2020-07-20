@@ -149,9 +149,11 @@ export function setTextToSVGText(svgText: SVGTextElement, text: string, isLatexM
         dx = - round100(width);
     }
     );
+    
     if(!HTMLFunctions.isShow(svgText)){
         throw new Error();
     }
+    
 
 
 }

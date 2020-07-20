@@ -160,7 +160,7 @@ export class LogicTree {
     private className : "LogicTree" = "LogicTree";
 
     public buildFromObject(obj : any){        
-        this.option = obj["graphOption"];
+        this.option = obj["option"];
         if(obj["root"] != null){
             this.root = new LogicTreeNode();
             this.root.buildFromObject(obj["root"]);
