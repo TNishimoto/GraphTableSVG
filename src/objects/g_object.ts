@@ -71,7 +71,7 @@ export class GObject {
         __svg.operator = this;
 
         this.allowHover = true;
-        console.log("set/" + this.allowHover)
+        //console.log("set/" + this.allowHover)
 
         //this.setOptionInGObject(option);
 

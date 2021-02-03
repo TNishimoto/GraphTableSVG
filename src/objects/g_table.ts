@@ -9,7 +9,9 @@ import { createTextElementFromLogicCell } from "../logics/gobject_functions"
 
 import { CellRow } from "./table_helpers/row"
 import { CellColumn } from "./table_helpers/column"
-import { BorderColumn, BorderRow } from "./table_helpers/border_row"
+import { BorderRow } from "./table_helpers/border_row"
+import { BorderColumn } from "./table_helpers/border_column"
+
 import { Cell } from "./table_helpers/cell"
 import { Rectangle, VLine } from "../common/vline"
 import { VBATranslateFunctions, parseInteger, styleVisible } from "../common/vba_functions"
@@ -786,9 +788,9 @@ export class GTable extends GVertex {
 
     private firstSetSize() {
         this.createRowBorder(0, 1);
-        this.createRowBorder(0, 1);
+        this.createRowBorder(1, 1);
         this.createColumnBorder(0, 1);
-        this.createColumnBorder(0, 1);
+        this.createColumnBorder(1, 1);
         this._rows.splice(0, 0, new CellRow(this, 0, undefined));
         this._rows[0]._appendCell();
         this._columns.splice(0, 0, new CellColumn(this, 0));

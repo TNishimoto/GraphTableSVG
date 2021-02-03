@@ -12,7 +12,9 @@ import * as SVG from "../../interfaces/svg"
 //import {CellOption} from "../../options/attributes_option"
 import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../../common/enums";
 import * as SVGTextBox from "../../interfaces/svg_textbox"
-import { BorderRow, BorderColumn } from "./border_row"
+import { BorderRow } from "./border_row"
+import { BorderColumn } from "./border_column"
+
 import * as ElementExtension from "../../interfaces/element_extension"
 import * as SVGGExtension from "../../interfaces/svg_g_extension"
 import * as SVGElementExtension from "../../interfaces/svg_element_extension"

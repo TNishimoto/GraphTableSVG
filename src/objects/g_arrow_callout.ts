@@ -72,7 +72,6 @@ export class GArrowCallout extends GPathTextBox {
     }
     public setOption(option: GShapeArrowCalloutAttributes) {
         super.setOption(option)
-
     }
     /*
     static openCustomElement(e: SVGElement): ShapeArrowCallout {

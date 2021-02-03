@@ -22,18 +22,26 @@
            // const defaultSX = this.fixedX == null ? this.cx - 100 : this.fixedX - 50;
             //const defaultSY = this.fixedY == null ? this.cy - 100 : this.fixedY - 50;
             /*
-            this.speakerX = option.speakerX == undefined ? defaultSX : option.speakerX;
-            this.speakerY = option.speakerY == undefined ? defaultSY : option.speakerY;
             */
             if(this.type == ShapeObjectType.Callout) this.firstFunctionAfterInitialized();
         }
+        protected setBasicOption(option: GCalloutAttributes) {
+            super.setBasicOption(option);
+            this.speakerX = option.speakerX == undefined ? 0 : option.speakerX;
+            this.speakerY = option.speakerY == undefined ? 0 : option.speakerY;
+
+        }
+        public setOption(option: GCalloutAttributes) {
+            super.setOption(option)
+        }
+    
 
         static constructAttributes(e : Element, removeAttributes : boolean = false, output : GCalloutAttributes = {}) : GCalloutAttributes {        
             GTextBox.constructAttributes(e, removeAttributes, output);
 
 
-            if(e.hasAttribute("speaker-x"))output.speakerX = ElementExtension.gtGetAttributeNumber(e, "speaker-x", 200)!;
-            if(e.hasAttribute("speaker-y"))output.speakerY = ElementExtension.gtGetAttributeNumber(e, "speaker-y", 200)!;
+            if(e.hasAttribute("speaker-x"))output.speakerX = ElementExtension.gtGetAttributeNumber(e, "speaker-x", 0)!;
+            if(e.hasAttribute("speaker-y"))output.speakerY = ElementExtension.gtGetAttributeNumber(e, "speaker-y", 0)!;
 
             if(removeAttributes){
                 e.removeAttribute("speaker-x");
