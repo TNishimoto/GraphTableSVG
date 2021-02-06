@@ -767,14 +767,14 @@ export class GAbstractEdge extends GObject {
 
         
         //const _output = <GOptions.GEdgeAttributes>GAbstractEdge.constructAttributes(e, removeAttributes, output);
-        output.x1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "x1", 0);
-        output.x2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "x2", 300);
-        output.y1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "y1", 0);
-        output.y2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "y2", 300);
+        output.x1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.x1, 0);
+        output.x2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.x2, 300);
+        output.y1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.y1, 0);
+        output.y2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.y2, 300);
 
 
-        output.beginVertex = ElementExtension.gtGetAttributeStringWithUndefined(e, "begin-vertex");
-        output.endVertex = ElementExtension.gtGetAttributeStringWithUndefined(e, "end-vertex");
+        output.beginVertex = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.beginVertex);
+        output.endVertex = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.endVertex);
         const bct = ElementExtension.getPropertyStyleValue(e, StyleNames.beginConnectorType);
 
         if (bct != null && typeof (output.style) == "object") {
@@ -790,14 +790,14 @@ export class GAbstractEdge extends GObject {
         //output.endMarker = ElementExtension.gtGetAttributeBooleanWithUndefined(e, StyleNames.markerEnd);
 
         if (removeAttributes) {
-            e.removeAttribute("x1");
-            e.removeAttribute("x2");
+            e.removeAttribute(AttributeNames.x1);
+            e.removeAttribute(AttributeNames.x2);
 
-            e.removeAttribute("y1");
-            e.removeAttribute("y2");
+            e.removeAttribute(AttributeNames.y1);
+            e.removeAttribute(AttributeNames.y2);
 
-            e.removeAttribute("begin-vertex");
-            e.removeAttribute("end-vertex");
+            e.removeAttribute(AttributeNames.beginVertex);
+            e.removeAttribute(AttributeNames.endVertex);
 
         }
         return output;

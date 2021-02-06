@@ -73,7 +73,9 @@ export class GGraph extends GObject {
     public set graphAllocateFunction(value : GOptions.GraphAllocateFunction | undefined){
         (<any>this.svgGroup).__graph_allocate_function = value;
     }
-
+    public get isCenterBased() {
+        return false;
+    }
     public get vertices(): GVertex[] {
         const r: GVertex[] = [];
         HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(AttributeNames.objectIDName)).forEach((v) => {

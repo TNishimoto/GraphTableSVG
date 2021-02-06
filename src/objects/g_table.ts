@@ -61,10 +61,16 @@ export class GTable extends GVertex {
         this._svgColumnBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this._svgColumnBorderGroup.setAttribute("name", "columnBorderGroup");
 
+        this._svgColumnInfo = document.createElementNS('http://www.w3.org/2000/svg', 'metadata');
+        this._svgColumnInfo.setAttribute("name", "columnInfo");
+
+
         this._svgHiddenGroup.style.visibility = "hidden";
-        this.svgGroup.appendChild(this.svgHiddenGroup);
+        this._svgHiddenGroup.setAttribute("name", "hidden");
         this.svgGroup.appendChild(this.svgRowBorderGroup);
         this.svgGroup.appendChild(this.svgColumnBorderGroup);
+        this.svgGroup.appendChild(this.svgHiddenGroup);
+        this.svgGroup.appendChild(this.svgColumnInfo);
 
         this._cellTextObserver = new MutationObserver(this._cellTextObserverFunc);
         this.updateAttributes = [];
@@ -161,6 +167,8 @@ export class GTable extends GVertex {
     }
     // #region field
     private _svgHiddenGroup: SVGGElement;
+    private _svgColumnInfo: SVGMetadataElement;
+
     private _svgRowBorderGroup: SVGGElement;
     private _svgColumnBorderGroup: SVGGElement;
     public get svgRowBorderGroup() {
@@ -168,6 +176,9 @@ export class GTable extends GVertex {
     }
     public get svgColumnBorderGroup() {
         return this._svgColumnBorderGroup;
+    }
+    public get svgColumnInfo(){
+        return this._svgColumnInfo;
     }
 
     /**

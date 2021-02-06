@@ -11,7 +11,7 @@ export const defaultCellBackgroungClass: string = "___cell-background-default";
 export const defaultCellBorderClass: string = "___cell-border-default";
 
 export const defaultRectButtonSurfaceClass: string = "___rect-button-surface-default";
-export const defaultRectButtonClass: string = "___rect-button-surface-default";
+export const defaultRectButtonClass: string = "___rect-button-default";
 
 export const defaultEdgeClass: string = "__default-edge";
 export const defaultVertexClass: string = "__default-vertex";

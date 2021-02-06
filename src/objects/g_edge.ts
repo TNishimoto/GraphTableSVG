@@ -8,7 +8,7 @@ import { getLineType } from "../html/enum_extension";
 import * as GOptions from "./g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import { GAbstractTextEdge } from "./g_abstract_text_edge";
-import { StyleNames } from "../common";
+import { AttributeNames, StyleNames } from "../common";
 
 /**
  * 辺をSVGで表現するためのクラスです。
@@ -41,17 +41,17 @@ export class GEdge extends GAbstractTextEdge {
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GEdgeAttributes = {}): GOptions.GEdgeAttributes {
         GAbstractTextEdge.constructAttributes(e, removeAttributes, output);
         
-        if (e.hasAttribute("x3")) {
-            output.x3 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "x3", 0);
+        if (e.hasAttribute(AttributeNames.x3)) {
+            output.x3 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.x3, 0);
         }
-        if (e.hasAttribute("y3")) {
-            output.y3 = ElementExtension.gtGetAttributeNumberWithoutNull(e, "y3", 0);
+        if (e.hasAttribute(AttributeNames.y3)) {
+            output.y3 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.y3, 0);
         }
 
         
         if (removeAttributes) {
-            e.removeAttribute("x3");
-            e.removeAttribute("y3");
+            e.removeAttribute(AttributeNames.x3);
+            e.removeAttribute(AttributeNames.y3);
         }
         return output;
     }

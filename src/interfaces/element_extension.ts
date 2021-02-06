@@ -111,8 +111,20 @@ export function gtGetAttributeStringWithUndefined(item:Element,name: string): st
     } else {
         return undefined;
     }
-
 }
+export function gtGetInheritedAttributeString(item:Element,name: string): string | undefined{
+    const value = item.getAttribute(name);
+    if (value != null) {
+        return value;
+    } else {
+        if(item.parentElement == null){
+            return undefined;
+        }else{
+            return gtGetInheritedAttributeString(item.parentElement, name);
+        }
+    }
+}
+
 export function gtGetAttributeBooleanWithUndefined(item:Element,name: string): boolean | undefined{
     const value = item.getAttribute(name);
     if (value != null) {
@@ -166,4 +178,19 @@ export function hasStyleAttribute(item:Element,name: string): boolean{
     const p = getPropertyStyleValue(item ,name);
     return p !== null;
 
+}
+export function collectAttributesByPrefix(e : Element, prefix : string) : Map<string, string>{ 
+    const r = new Map<string, string>();
+    for(let i=0;i<e.attributes.length;i++){
+        const attr = e.attributes.item(i);
+        if(attr != null && attr.name.length > prefix.length){
+            const attrNames = attr.name.split(":");
+            if(attrNames.length == 2 && attrNames[0] == prefix){
+                r.set(attrNames[1], attr.value);
+            }
+
+
+        }
+    }
+    return r;
 }

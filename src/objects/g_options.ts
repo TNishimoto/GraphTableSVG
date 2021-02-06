@@ -90,6 +90,7 @@ type _GObjectAttributes = {
     surfaceClass?: string | surfaceClassCSS,
     surfaceStyle?: string | surfaceClassCSS,
     attributes?: { [key: string]: string; }
+    //surfaceAttributes? : { [key: string]: string; }
 
 }
 type _SVGGroupStyleInfo = {
@@ -189,6 +190,8 @@ export function setClassAndStyle(svg: SVGElement, className: string | object | u
         svg.setAttribute("style", cssString === undefined ? "" : cssString );
     }
 
+    
 }
+
 
 //}

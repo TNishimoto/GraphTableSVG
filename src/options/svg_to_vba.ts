@@ -10,10 +10,72 @@ import { VBAObjectType } from "./vba_object"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
+import { ShapeObjectType } from "../common/enums";
 
 
 export class SVGToVBA {
 
+    static collectVBAObjectTypesSub(svg : SVGElement, output : VBAObjectType[]) : void {
+        const dataVBA = svg.getAttribute("data-vba");
+        if(dataVBA == "false"){
+            return;
+        }
+
+        if(svg instanceof SVGGElement){
+            const dataType = svg.getAttribute("data-type");
+
+            if(dataType == null){
+                for(let i=0;i<svg.children.length;i++){
+                    const item = svg.children.item(i);
+                    if(item != null && item instanceof SVGElement){
+                        this.collectVBAObjectTypesSub(item, output);
+                    }
+                }
+            }else{
+                const type = ShapeObjectType.toShapeObjectType(dataType);
+                if(type != null){
+                    const gObject : VBAObjectType = (<any>svg).operator;
+                    output.push(gObject);
+                }
+            }
+
+        }else if (svg instanceof SVGPathElement){
+            output.push(svg);
+
+        }else if(svg instanceof SVGTextElement){
+            output.push(svg);
+        }else{
+
+        }
+    }
+
+
+    public static collectVBAObjectTypes(svgsvg : SVGSVGElement) : VBAObjectType[] {
+        const r :VBAObjectType[] = new Array();
+        for(let i=0;i<svgsvg.children.length;i++){
+            const item = svgsvg.children.item(i);
+            if(item != null && item instanceof SVGElement){
+                this.collectVBAObjectTypesSub(item, r);
+            }
+        }
+        return r;
+    }
+
+
+    public static convert(svgsvgID : string | SVGSVGElement) : string{
+        if(svgsvgID instanceof SVGSVGElement){
+            const types = this.collectVBAObjectTypes(svgsvgID);
+            return this.create(types);
+        }else{
+            const obj = <any>document.getElementById(svgsvgID);
+            if(obj instanceof SVGSVGElement){
+                return this.convert(obj);
+            }else{
+                throw new ReferenceError(`${svgsvgID} is not the ID of an SVGSVGElement.`);
+            }
+
+        }
+    }
     /**
      * 入力要素をPowerpoint上で作成するVBAコードを作成します。
      * @param items 

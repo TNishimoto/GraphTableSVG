@@ -230,17 +230,18 @@ export class GObject {
     
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GOptions.GObjectAttributes = {}): GOptions.GObjectAttributes {
-        output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, "class");
-        if (output.class === undefined) ElementExtension.gtGetAttributeStringWithUndefined(e, "group:class");
-        output.surfaceClass = ElementExtension.gtGetAttributeStringWithUndefined(e, "surface:class");
-        output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, "group:style");
-        if (e.hasAttribute("style")) output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, "style");
-        output.surfaceStyle = ElementExtension.gtGetAttributeStringWithUndefined(e, "surface:style");
+        output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
+        if (output.class === undefined) ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
+        output.surfaceClass = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.surfaceClassName);
+        output.surfaceStyle = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.surfaceStyle);
 
-        const cx = ElementExtension.gtGetAttributeNumberWithUndefined(e, "cx");
-        const cy = ElementExtension.gtGetAttributeNumberWithUndefined(e, "cy");
-        const x = ElementExtension.gtGetAttributeNumberWithUndefined(e, "x");
-        const y = ElementExtension.gtGetAttributeNumberWithUndefined(e, "y");
+        output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.style);
+        if (e.hasAttribute(AttributeNames.style)) output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.style );
+
+        const cx = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.cx);
+        const cy = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.cy);
+        const x = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.x);
+        const y = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.y);
         if(cx !== undefined || cy !== undefined){
             output.position = { type : "center", x : cx !== undefined ? cx : 0, y : cy !== undefined ? cy : 0}
         }else if(x !== undefined || y !== undefined){
@@ -249,24 +250,36 @@ export class GObject {
             output.position = { type : "center", x : 0, y : 0}
         }
         //const cx = 
-        output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, "width");
-        output.height = ElementExtension.gtGetAttributeNumberWithUndefined(e, "height");
+        output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.width );
+        output.height = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.height);
+
+        /*
+        const surfaceAttributes = ElementExtension.collectAttributesByPrefix(e, "surface");
+        if(surfaceAttributes.size > 0){
+            output.surfaceAttributes = {};
+            surfaceAttributes.forEach((value, key) =>{
+                output.surfaceAttributes![key] = value;
+            })
+        }
+        */
+
+        
 
 
         if (removeAttributes) {
-            e.removeAttribute("cx");
-            e.removeAttribute("cy");
-            e.removeAttribute("x");
-            e.removeAttribute("y");
-            e.removeAttribute("class");
-            e.removeAttribute("surface:class");
-            e.removeAttribute("group:class");
-            e.removeAttribute("surface:style");
-            e.removeAttribute("group:style");
-            e.removeAttribute("style");
+            e.removeAttribute(AttributeNames.cx);
+            e.removeAttribute(AttributeNames.cy);
+            e.removeAttribute(AttributeNames.x);
+            e.removeAttribute(AttributeNames.y);
+            e.removeAttribute(AttributeNames.className);
+            e.removeAttribute(AttributeNames.surfaceClassName);
+            //e.removeAttribute(AttributeNames.groupClassName);
+            e.removeAttribute(AttributeNames.surfaceStyle);
+            //e.removeAttribute(AttributeNames.groupStyle);
+            e.removeAttribute(AttributeNames.style);
 
-            e.removeAttribute("width");
-            e.removeAttribute("height");
+            e.removeAttribute(AttributeNames.width);
+            e.removeAttribute(AttributeNames.height);
         }
         return output;
     }

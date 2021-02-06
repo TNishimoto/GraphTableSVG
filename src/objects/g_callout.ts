@@ -7,6 +7,7 @@
     import * as GOptions  from "./g_options"
 
     import * as ElementExtension from "../interfaces/element_extension"
+import { AttributeNames } from "../common";
     
     export type GCalloutAttributes = GOptions.GTextBoxAttributes & {
         speakerX?: number,
@@ -40,12 +41,12 @@
             GTextBox.constructAttributes(e, removeAttributes, output);
 
 
-            if(e.hasAttribute("speaker-x"))output.speakerX = ElementExtension.gtGetAttributeNumber(e, "speaker-x", 0)!;
-            if(e.hasAttribute("speaker-y"))output.speakerY = ElementExtension.gtGetAttributeNumber(e, "speaker-y", 0)!;
+            if(e.hasAttribute(AttributeNames.speakerX))output.speakerX = ElementExtension.gtGetAttributeNumber(e, AttributeNames.speakerX, 0)!;
+            if(e.hasAttribute(AttributeNames.speakerY))output.speakerY = ElementExtension.gtGetAttributeNumber(e, AttributeNames.speakerY, 0)!;
 
             if(removeAttributes){
-                e.removeAttribute("speaker-x");
-                e.removeAttribute("speaker-y");
+                e.removeAttribute(AttributeNames.speakerX);
+                e.removeAttribute(AttributeNames.speakerY);
             }
 
             return output;

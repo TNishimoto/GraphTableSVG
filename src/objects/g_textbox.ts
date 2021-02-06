@@ -97,30 +97,30 @@ export class GTextBox extends GVertex {
 
         GObject.constructAttributes(e, removeAttributes, output);
         //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(AttributeNames.Style.autoSizeShapeToFitText);
-        const textChild = HTMLFunctions.getChildByNodeName(e, "text");
-        output.textClass = ElementExtension.gtGetAttributeStringWithUndefined(e, "text:class");
-        output.textStyle = ElementExtension.gtGetAttributeStringWithUndefined(e, "text:style");
+        //const textChild = HTMLFunctions.getChildByNodeName(e, AttributeNames.text);
+        output.textClass = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.textClass);
+        output.textStyle = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.textStyle);
 
-        if (e.hasAttribute("text")) {
-            output.text = <string>e.getAttribute("text");
-        } else if (e.children.length > 0) {
+        /*
+        if (e.hasAttribute(AttributeNames.text)) {
+            output.text = <string>e.getAttribute(AttributeNames.text);
+        }
+        */
+        if (e.children.length > 0) {
             const tNodes = HTMLFunctions.getTNodes(e);
             if (tNodes != null) {
                 tNodes.forEach((v) => v.remove())
                 output.text = tNodes;
             }
-        }
-        else if (textChild != null) {
-
         } else if (e.innerHTML.length > 0) {
             output.text = e.innerHTML;
         }
 
 
         if (removeAttributes) {
-            e.removeAttribute("text");
-            e.removeAttribute("text:class");
-            e.removeAttribute("text:style");
+            //e.removeAttribute(AttributeNames.text);
+            e.removeAttribute(AttributeNames.className);
+            e.removeAttribute(AttributeNames.textStyle);
 
             (<any>e).style.removeProperty(StyleNames.autoSizeShapeToFitText);
         }

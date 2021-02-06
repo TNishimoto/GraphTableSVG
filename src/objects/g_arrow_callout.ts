@@ -43,21 +43,21 @@ export class GArrowCallout extends GPathTextBox {
     }
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GShapeArrowCalloutAttributes = {}): GShapeArrowCalloutAttributes {
         GTextBox.constructAttributes(e, removeAttributes, output);
-        output.arrowNeckWidth = ElementExtension.gtGetAttributeNumberWithUndefined(e, "arrow-neck-width");
-        output.arrowNeckHeight = ElementExtension.gtGetAttributeNumberWithUndefined(e, "arrow-neck-height");
-        output.arrowHeadWidth = ElementExtension.gtGetAttributeNumberWithUndefined(e, "arrow-head-width");
-        output.arrowHeadHeight = ElementExtension.gtGetAttributeNumberWithUndefined(e, "arrow-head-height");
-        const p = <string>ElementExtension.gtGetAttributeStringWithUndefined(e, "direction");
+        output.arrowNeckWidth = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.arrowNeckWidth);
+        output.arrowNeckHeight = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.arrowNeckHeight);
+        output.arrowHeadWidth = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.arrowHeadWidth);
+        output.arrowHeadHeight = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.arrowNeckHeight);
+        const p = <string>ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.direction);
         if (p !== undefined) {
             output.direction = Direction.toDirection(p);
         }
 
         if (removeAttributes) {
-            e.removeAttribute("arrow-neck-width");
-            e.removeAttribute("arrow-neck-height");
-            e.removeAttribute("arrow-head-width");
-            e.removeAttribute("arrow-head-height");
-            e.removeAttribute("direction");
+            e.removeAttribute(AttributeNames.arrowNeckWidth);
+            e.removeAttribute(AttributeNames.arrowNeckHeight);
+            e.removeAttribute(AttributeNames.arrowHeadWidth);
+            e.removeAttribute(AttributeNames.arrowHeadHeight);
+            e.removeAttribute(AttributeNames.direction);
         }
 
         return output;

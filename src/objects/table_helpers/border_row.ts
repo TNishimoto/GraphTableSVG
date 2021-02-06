@@ -21,7 +21,6 @@
             return Number(this._svgGroup.getAttribute(Cell.cellYName));
         }
         public set borderY(v: number) {
-            console.log("SetY" + v);
             this._svgGroup.setAttribute(Cell.cellYName, `${v}`);
         }
         constructor(_table: GTable, _y: number, columnSize: number, borderClass?: string) {

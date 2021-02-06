@@ -14,16 +14,16 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
         private readonly table: GTable;
         //private readonly _cellX: number;
         public static readonly rowWidthName = "data-width";
-        private _svgGroup: SVGGElement;
+        private _svgMetaData: SVGMetadataElement;
 
         /**
         列の単位セルのX座標を返します。
         */
         public get cellX(): number {
-            return Number(this._svgGroup.getAttribute(Cell.cellXName));
+            return Number(this._svgMetaData.getAttribute(Cell.cellXName));
         }
         public set cellX(v: number) {
-            this._svgGroup.setAttribute(Cell.cellXName, `${v}`);
+            this._svgMetaData.setAttribute(Cell.cellXName, `${v}`);
             this.cells.forEach((w) => w.cellX = v);
         }
 
@@ -33,13 +33,13 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
         列の幅を返します。
         */
         get width(): number {
-            return Number(this._svgGroup.getAttribute(CellColumn.rowWidthName));
+            return Number(this._svgMetaData.getAttribute(CellColumn.rowWidthName));
         }
         /**
         列の幅を設定します。
         */
         set width(value: number) {
-            setAttributeNumber(this._svgGroup, CellColumn.rowWidthName, value);
+            setAttributeNumber(this._svgMetaData, CellColumn.rowWidthName, value);
             //this._svgGroup.setAttribute(CellColumn.rowWidthName, `${value}`);
             this.setWidthToCells();
             /*
@@ -104,13 +104,16 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
 
         constructor(_table: GTable, _x: number, _width : number = 30) {
             this.table = _table;
-            this._svgGroup = SVG.createGroup(this.table.svgGroup);
-            this._svgGroup.setAttribute("name", "cell_column");
+            this._svgMetaData = document.createElementNS('http://www.w3.org/2000/svg', 'metadata');
+            this._svgMetaData.setAttribute("name", "cell_column");
+            this.table.svgColumnInfo.appendChild(this._svgMetaData);
+
+            //this._svgMetaData = SVG.createGroup(this.table.svgColumnInfo);
 
 
             //this.table.svgGroup.appendChild(this._svgGroup);
             this.cellX = _x;
-            this._svgGroup.setAttribute(CellColumn.rowWidthName, `${_width}`);
+            this._svgMetaData.setAttribute(CellColumn.rowWidthName, `${_width}`);
             //this.width = this.getMaxWidth();
 
 
@@ -258,7 +261,7 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
             */
             const x = this.selfx;
             this.table.rows.forEach((v, i) => v._removeCell(x));
-            this._svgGroup.remove();
+            this._svgMetaData.remove();
             /*
             if (isUnit) {
                 if (this.table.columns.length > 1) {

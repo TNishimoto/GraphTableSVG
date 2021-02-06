@@ -23,6 +23,9 @@ import * as GOptions from "../objects/g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import { LogicTable } from "../logics";
 import { ArgumentOutOfRangeError, NullError } from "../common/exceptions";
+import * as SVG from "../interfaces/svg";
+//import { SVGToVBA } from ".";
+import { appendVBAButton } from "./vba_macro_modal";
 
 //export namespace openSVGFunctions {
 
@@ -140,6 +143,7 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
             const table = new GTable(parent);
             table.setOption(option);
 
+
             if (logicTable !== null) {
                 table.buildFromLogicTable(logicTable);
             }
@@ -235,10 +239,16 @@ export function openSVG(inputItem: string | Element | null = null, output: GObje
         svgElements.forEach((svgsvg) => openSVG(svgsvg, output));
         return output;
     } else if (inputItem instanceof SVGSVGElement) {
-
         const svgsvg: SVGSVGElement = inputItem;
+
+        const vbaAttr = inputItem.getAttribute("g-vba");
+        if(vbaAttr != null && vbaAttr == "true" ){
+            appendVBAButton(svgsvg);
+        }
+
         HTMLFunctions.getDescendants(svgsvg).forEach(v => {
             const shapeType = ShapeObjectType.toShapeObjectType(v.nodeName);
+            console.log(v.nodeName+ "/" +shapeType);
             if (shapeType != null) {
                 toSVGUnknownElement(v);
             }

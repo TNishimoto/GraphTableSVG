@@ -208,18 +208,11 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } f
                 stroke-width: 1px;
             }
 
-            .${DefaultClassNames.defaultRectButtonSurfaceClass}{
-                fill: #8EB8FF; 
-                stroke: black;
-            }
-            .${DefaultClassNames.defaultRectButtonSurfaceClass}[disabled]{
-                fill: #aaaaaa; 
-            }
-            .${DefaultClassNames.defaultRectButtonSurfaceClass}:not([disabled]):hover{
-                fill:#A4C6FF; 
-            }
-            .${DefaultClassNames.defaultRectButtonSurfaceClass}:not([disabled]):active{
-                fill:#8EB8FF; 
+            .${DefaultClassNames.defaultRectButtonClass}{
+                --padding-top: 5;
+                --padding-left: 15;
+                --padding-right: 15;
+                --padding-bottom: 5;
             }
 
             .___column_title_cellaa{
@@ -252,28 +245,37 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } f
 
 
             g[data-type="g-rect-button"] > rect {
-                stroke-width: 1px;
+                fill:#69c; 
+                stroke: #444444;
+                stroke-width: 3px;
                 transition-duration: 0.2s;
             }
 
             g[data-type="g-rect-button"] > rect[disabled]{
-                stroke-width: 1px;
+                stroke-width: 5px;
             }
             g[data-type="g-rect-button"] > rect:not([disabled]):hover {
-                stroke-width: 3px;
+                stroke-width: 1px;
+                fill: #79acdf;
+                stroke: white;
+
             }
             g[data-type="g-rect-button"] > rect:not([disabled]):active {
-                stroke-width: 1px;
+                stroke-width: 5px;
+                stroke: black;
+
             }
             g[data-type="g-rect-button"] > text {
                 pointer-events: none;
+                fill: white;
+                font-family: "'Arial'";
             }
 
             g[data-allow-hover="true"] > rect, g[data-allow-hover="true"] > circle, g[data-allow-hover="true"] > ellipse, g[data-allow-hover="true"] > path {
                 transition-duration: 0.2s;
             }
             g[data-allow-hover="true"] > rect:not([disabled]):hover, g[data-allow-hover="true"] > circle:not([disabled]):hover, g[data-allow-hover="true"] > ellipse:not([disabled]):hover, g[data-allow-hover="true"] > path:not([disabled]):hover {
-                stroke-width: 3px;
+                stroke-width: 1px;
             }
 
 

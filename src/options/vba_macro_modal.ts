@@ -5,8 +5,35 @@ import { GObject } from "../objects/g_object"
 import { runInThisContext } from "vm";
 import { getGObjects } from "./open_svg";
 import { VBAObjectType } from "./vba_object";
+import { getSVGSVG } from "../interfaces/svg";
 
 //export namespace VBAMacroModal {
+    export function processVBAButtonClickEvent(e : MouseEvent){
+        const target = e.target;
+        if(target instanceof SVGElement){
+            const svgsvg = getSVGSVG(target);
+            const types = SVGToVBA.collectVBAObjectTypes(svgsvg);
+            const vbaCode = SVGToVBA.create(types);
+            createMacroModal(vbaCode);
+        }else{
+            alert("Error!");
+        }
+    }
+
+    export function appendVBAButton(svgsvg : SVGSVGElement) : void {
+        const p = document.createElementNS('http://www.w3.org/2000/svg', "g-rect-button");
+        p.textContent = "VBA";
+        const rect = svgsvg.getBoundingClientRect();        
+        p.setAttribute("x", (rect.width - 100).toString() );
+        p.setAttribute("y", (rect.height - 50).toString());
+        p.setAttribute("data-vba", "false");
+
+
+        p.setAttribute("onclick", `GraphTableSVG.Options.processVBAButtonClickEvent(event)`);
+
+        svgsvg.appendChild(p);
+
+    }
     export function showMacroModal(id :string | GObject){
         if (id instanceof GObject) {
             const p = SVGToVBA.create(id);
@@ -40,7 +67,7 @@ import { VBAObjectType } from "./vba_object";
     →生成したコードをユーザーフォームに貼り付ける<br>
     →F5 or ユーザーフォームを実行<br>
     →木が貼られたスライドが１ページ目に挿入される<br>
-    ※サイズの大きすぎる木はマクロ実行時にエラーが出ます。
+    ※サイズの大きすぎるSVGはマクロ実行時にエラーが出ます。
     <br>
     <textarea id="codeBox" rows="8" cols="100" style="overflow:auto;"></textarea>
 `;
