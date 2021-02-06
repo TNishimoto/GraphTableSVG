@@ -305,7 +305,7 @@ export function sortText(svgText: SVGTextElement, hAnchor: HorizontalAnchor, sho
     alignTextAsText(svgText, showChecked);
     alignTextByHorizontalAnchor(svgText, hAnchor);
 }
-export function constructSVGTextByHTMLElements(svgText: SVGTextElement, text: HTMLElement[], isLatexMode: boolean) {
+export function constructSVGTextByHTMLElements(svgText: SVGTextElement | SVGTextPathElement, text: HTMLElement[], isLatexMode: boolean) {
     svgText.textContent = "";
     const spans = text.map((v, i) => {
         const tspan: SVGTSpanElement = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');

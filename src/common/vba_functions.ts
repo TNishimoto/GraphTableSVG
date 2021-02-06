@@ -1,4 +1,5 @@
 //namespace GraphTableSVG {
+import { HTMLFunctions } from "../html";
 import * as Color from "./color"
 import * as CommonFunctions from "./common_functions";
 
@@ -20,11 +21,11 @@ export function visible(value: string): number {
 }
 */
 export function styleVisible(value: CSSStyleDeclaration): number {
-    if(value.visibility == "hidden"){
+    if (value.visibility == "hidden") {
         return 1.0;
-    }else if(value.stroke == "transparent"){
+    } else if (value.stroke == "transparent") {
         return 1.0;
-    }else{
+    } else {
         return 0;
     }
 }
@@ -197,34 +198,70 @@ export class VBATranslateFunctions {
     public static TranslateSVGTextElement2(item: SVGTextElement, range: string): string[] {
 
         const lines: string[] = [];
-        const text = item.textContent == null ? "" : item.textContent;
+        //const text = item.textContent == null ? "" : item.textContent;
 
-        lines.push(`${range}.text = "${item.textContent}"`);
         if (item.children.length > 0) {
-            let pos = 1;
+            let textCode = "";
             for (let i = 0; i < item.children.length; i++) {
                 const child = item.children.item(i);
                 if (child != null && child.textContent != null && child.textContent.length > 0) {
-                    const css = getComputedStyle(child);
-                    if (css.fontSize == null) throw Error("error");
-                    if (css.fill == null) throw Error("error");
-
-                    const childColor = Color.createRGBFromColorName(css.fill);
-                    const fontName = this.getFont(css);
-                    const fontSize = CommonFunctions.toPX(css.fontSize);
-                    const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
-                    const len = child.textContent.length;
-
-                    let f = child.getAttribute("data-script");
-                    if (f == null) {
-                        f = "";
+                    const newLine = child.getAttribute("newline");
+                    if (newLine != null && newLine == "true") {
+                        textCode += `& vbCrLf `;
                     }
-                    lines.push(`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${childColor.r}, ${childColor.g}, ${childColor.b}), "${fontName}", ${fontSize}, ${fontBold} )`);
-                    pos += len;
+                    const text = HTMLFunctions.removeInvisibleCharacters(child.textContent);
+                    if (textCode.length > 0) {
+                        textCode += `& "${text}"`;
+                    } else {
+                        textCode = `"${text}"`;
+                    }
+
+                }
+            }
+
+            lines.push(`${range}.text = ${textCode}`);
+
+            let pos = 1;
+
+            for (let i = 0; i < item.children.length; i++) {
+                const child = item.children.item(i);
+                
+                if (child != null && child.textContent != null && child.textContent.length > 0) {                    
+                    const newLine = child.getAttribute("newline");
+                    if (newLine != null && newLine == "true") {
+                        pos++;
+                    }
+
+                    for (let j = 0; j < child.childNodes.length; j++) {
+                        const child2 = child.childNodes.item(j);
+                        const node = child2 instanceof SVGTSpanElement ? child2 : child;
+                        const textContent = HTMLFunctions.removeInvisibleCharacters(child2.textContent!); 
+                        const css = getComputedStyle(node);
+                        if (css.fontSize == null) throw Error("error");
+                        if (css.fill == null) throw Error("error");
+
+                        const childColor = Color.createRGBFromColorName(css.fill);
+                        const fontName = this.getFont(css);
+                        const fontSize = CommonFunctions.toPX(css.fontSize);
+                        const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
+                        const len = textContent.length;
+
+                        let f = node.getAttribute("data-script");
+                        if (f == null) {
+                            f = "";
+                        }
+                        lines.push(`Call EditTextRangeSub(${range},${pos}, ${len}, "${f}", Array(${childColor.r}, ${childColor.g}, ${childColor.b}), "${fontName}", ${fontSize}, ${fontBold} )`);
+                        pos += len;
+
+                    }
+
                 }
 
             }
         } else if (item.textContent != null && item.textContent.length > 0) {
+            const vbaText = HTMLFunctions.removeInvisibleCharacters(item.textContent);
+            lines.push(`${range}.text = "${vbaText}"`);
+
             const css = getComputedStyle(item);
             if (css.fontSize == null) throw Error("error");
             if (css.fill == null) throw Error("error");
@@ -234,7 +271,7 @@ export class VBATranslateFunctions {
             const fontSize = CommonFunctions.toPX(css.fontSize);
             const fontBold = Number(css.fontWeight) == 400 ? 0 : 1;
 
-            lines.push(`Call EditTextRangeSub(${range},${1}, ${item.textContent.length}, "", Array(${color.r}, ${color.g}, ${color.b}), "${fontName}", ${fontSize}, ${fontBold} )`);
+            lines.push(`Call EditTextRangeSub(${range},${1}, ${vbaText.length}, "", Array(${color.r}, ${color.g}, ${color.b}), "${fontName}", ${fontSize}, ${fontBold} )`);
         }
         return lines;
     }

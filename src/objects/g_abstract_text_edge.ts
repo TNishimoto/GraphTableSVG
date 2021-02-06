@@ -12,6 +12,7 @@ import * as CSS from "../html/css"
 import * as GOptions from "./g_options"
 import * as Extensions from "../interfaces/extensions"
 import { createSVGText } from "./element_builder";
+import * as SVGTextBox from "../interfaces/svg_textbox"
 
 export class GAbstractTextEdge extends GAbstractEdge {
     private static updateTextAttributes = ["style"]
@@ -64,6 +65,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
         if (typeof option.text == "string") {
             Extensions.setTextContent(this.svgTextPath, option.text);
         } else if (Array.isArray(option.text)) {
+            SVGTextBox.constructSVGTextByHTMLElements(this.svgTextPath, option.text, false);
 
         } else {
 

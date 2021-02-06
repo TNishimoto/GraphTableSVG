@@ -127,5 +127,25 @@ import * as AttributeNames from "../common/attribute_names"
 
         return b1 || b2 || b3 || b4;
     }
+    export function removeInvisibleCharacters(text : string) : string{
+        let prevSpace = true;
+        var l = text.split("\n");
+        var newContent = l.join('');
+        let s = "";
+        for (let j = 0; j < newContent.length; j++) {
+            const character = newContent[j];
+            const value = character.charCodeAt(0);
+            
+            if (value >= 32 && !(prevSpace && value == 32)) {
+                s += character;
+            }
+            if (value == 32) {
+                prevSpace = true;
+            } else {
+                prevSpace = false;
+            }            
+        }
+        return s;
+    }
 
 //}

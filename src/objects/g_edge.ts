@@ -8,7 +8,8 @@ import { getLineType } from "../html/enum_extension";
 import * as GOptions from "./g_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import { GAbstractTextEdge } from "./g_abstract_text_edge";
-import { AttributeNames, StyleNames } from "../common";
+import { AttributeNames, Color, StyleNames } from "../common";
+import { HTMLFunctions } from "../html";
 
 /**
  * 辺をSVGで表現するためのクラスです。
@@ -40,7 +41,7 @@ export class GEdge extends GAbstractTextEdge {
 
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GEdgeAttributes = {}): GOptions.GEdgeAttributes {
         GAbstractTextEdge.constructAttributes(e, removeAttributes, output);
-        
+
         if (e.hasAttribute(AttributeNames.x3)) {
             output.x3 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.x3, 0);
         }
@@ -48,7 +49,7 @@ export class GEdge extends GAbstractTextEdge {
             output.y3 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.y3, 0);
         }
 
-        
+
         if (removeAttributes) {
             e.removeAttribute(AttributeNames.x3);
             e.removeAttribute(AttributeNames.y3);
@@ -122,34 +123,45 @@ export class GEdge extends GAbstractTextEdge {
 
         if (this.controlPoint.length == 0 || this.edgeType == "elbow") {
 
-            if(this.edgeType == "elbow"){
-                r.push(` Set obj = shapes_.AddConnector(msoConnectorElbow, 0, 0, 0, 0)`);
-            }else{
-                r.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
+            if (this.edgeType == "elbow") {
+                r.push(` Set obj = shapes_.AddConnector(msoConnectorElbow, ${this.x1}, ${this.y1}, ${this.x2}, ${this.y2})`);
+            } else {
+                r.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, ${this.x1}, ${this.y1}, ${this.x2}, ${this.y2})`);
             }
-            if (this.beginVertex != null && this.endVertex != null) {
-                if (this.markerStart != null) {
-                    r.push(` obj.Line.BeginArrowheadLength = msoArrowheadLong`);
-                    r.push(` obj.Line.BeginArrowheadStyle = msoArrowheadTriangle`);
-                    r.push(` obj.Line.BeginArrowheadWidth = msoArrowheadWide`);
-                }
-                if (this.markerEnd != null) {
-                    r.push(` obj.Line.EndArrowheadLength = msoArrowheadLong`);
-                    r.push(` obj.Line.EndArrowheadStyle = msoArrowheadTriangle`);
-                    r.push(` obj.Line.EndArrowheadWidth = msoArrowheadWide`);
-                }
 
-                const begType: number = ConnectorType.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y));
-                const endType: number = ConnectorType.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y));
-                r.push(` Call EditConnector(obj.ConnectorFormat, shapes_("${this.beginVertex.objectID}"), shapes_("${this.endVertex.objectID}"), ${begType}, ${endType})`)
-                const lineType = getLineType(this.svgPath);
-                const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke", "gray"));
-                const strokeWidth = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke-width", "4"));
-                const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
-                r.push(` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
+            if (this.markerStart != null) {
+                r.push(` obj.Line.BeginArrowheadLength = msoArrowheadLong`);
+                r.push(` obj.Line.BeginArrowheadStyle = msoArrowheadTriangle`);
+                r.push(` obj.Line.BeginArrowheadWidth = msoArrowheadWide`);
+            }
+            if (this.markerEnd != null) {
+                r.push(` obj.Line.EndArrowheadLength = msoArrowheadLong`);
+                r.push(` obj.Line.EndArrowheadStyle = msoArrowheadTriangle`);
+                r.push(` obj.Line.EndArrowheadWidth = msoArrowheadWide`);
+            }
+            if (this.beginVertex != null) {
+                const endX = this.endVertex == null ? this.x2 : this.endVertex.x;
+                const endY = this.endVertex == null ? this.y2 : this.endVertex.y;
+
+                const begType: number = ConnectorType.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, endX, endY));
+                r.push(` Call obj.ConnectorFormat.BeginConnect(shapes_("${this.beginVertex.objectID}"), ${begType})`);
 
             }
-        } else if (this.controlPoint.length > 0 && this.beginVertex != null && this.endVertex != null) {
+            if (this.endVertex != null) {
+                const beginX = this.beginVertex == null ? this.x1 : this.beginVertex.x;
+                const beginY = this.beginVertex == null ? this.y1 : this.beginVertex.y;
+
+                const endType: number = ConnectorType.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, beginX, beginY));
+                r.push(` Call obj.ConnectorFormat.EndConnect(shapes_("${this.endVertex.objectID}"), ${endType})`);
+
+            }
+            const lineType = getLineType(this.svgPath);
+            const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke", "gray"));
+            const strokeWidth = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke-width", "4"));
+            const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+            r.push(` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
+
+        } else if (this.controlPoint.length > 0) {
 
             //subline.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0)`);
             //lineArr.push(i);
@@ -164,19 +176,35 @@ export class GEdge extends GAbstractTextEdge {
             for (let j = 0; j <= this.VBAConnectorNumber; j++) {
                 //const centerPoint = Common.bezierLocation([this.x1, this.y1], this.controlPoint[0], [this.x2, this.y2], 0.5);
                 const edgeID = `${this.objectID}_edge_${j}`;
-                const beg = j == 0 ? this.beginVertex.objectID : `${this.objectID}_node_${j - 1}`;
-                const end = j == this.VBAConnectorNumber ? this.endVertex.objectID : `${this.objectID}_node_${j}`;
 
-                r.push(` shapes_.AddConnector(msoConnectorStraight, 0, 0, 0, 0).name = "${this.objectID}_edge_${j}"`);
+                r.push(` shapes_.AddConnector(msoConnectorStraight, ${this.x1}, ${this.y1}, ${this.x2}, ${this.y2}).name = "${this.objectID}_edge_${j}"`);
+
+
+
                 const lineType = getLineType(this.svgPath);
                 const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke", "gray"));
                 const strokeWidth = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke-width", "4"));
                 const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
                 r.push(` Call EditLine(shapes_("${edgeID}").Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
 
-                const begType: number = j == 0 ? ConnectorType.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, this.endVertex.x, this.endVertex.y)) : 1;
-                const endType: number = j == this.VBAConnectorNumber ? ConnectorType.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, this.beginVertex.x, this.beginVertex.y)) : 1;
-                r.push(` Call EditConnector(shapes_("${edgeID}").ConnectorFormat, shapes_("${beg}"), shapes_("${end}"), ${begType}, ${endType})`)
+                if (this.beginVertex != null) {
+                    const beg = j == 0 ? this.beginVertex.objectID : `${this.objectID}_node_${j - 1}`;
+                    const endX = this.endVertex == null ? this.x2 : this.endVertex.x;
+                    const endY = this.endVertex == null ? this.y2 : this.endVertex.y;
+
+                    const begType: number = j == 0 ? ConnectorType.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, endX, endY)) : 1;
+                    r.push(` Call shapes_("${edgeID}").ConnectorFormat.BeginConnect(shapes_("${beg}"), ${begType})`);
+                }
+                if (this.endVertex != null) {
+                    const end = j == this.VBAConnectorNumber ? this.endVertex.objectID : `${this.objectID}_node_${j}`;
+                    const beginX = this.beginVertex == null ? this.x1 : this.beginVertex.x;
+                    const beginY = this.beginVertex == null ? this.y1 : this.beginVertex.y;
+
+                    const endType: number = j == this.VBAConnectorNumber ? ConnectorType.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, beginX, beginY)) : 1;
+                    r.push(` Call shapes_("${edgeID}").ConnectorFormat.EndConnect(shapes_("${end}"), ${endType})`);
+
+                }
+                //r.push(` Call EditConnector(shapes_("${edgeID}").ConnectorFormat, shapes_("${beg}"), shapes_("${end}"), ${begType}, ${endType})`)
 
             }
         }
@@ -202,6 +230,34 @@ export class GEdge extends GAbstractTextEdge {
         textCodes.forEach((v) => v.forEach((w) => r.push(w)));
         return r;
     }
+    private static getVisibleCharElements(e: SVGElement): [Element, string][] {
+        const r: [Element, string][] = new Array(0);
+
+        for (let i = 0; i < e.childNodes.length; i++) {
+            const child = e.childNodes.item(i);
+            if (child instanceof SVGTextPathElement) {
+                const r2 = this.getVisibleCharElements(child);
+                r2.forEach(([a, b]) => {
+                    r.push([a, b]);
+                })
+            } else if (child instanceof SVGTSpanElement) {
+                const r2 = this.getVisibleCharElements(child);
+                r2.forEach(([a, b]) => {
+                    r.push([a, b]);
+                })
+            } else {
+                if (child.textContent != null && child.textContent.length > 0) {
+                    const newText = HTMLFunctions.removeInvisibleCharacters(child.textContent!);
+                    for (let j = 0; j < newText.length; j++) {
+                        const character = newText[j];
+                        r.push([e, character]);                        
+                    }
+                }
+
+            }
+        }
+        return r;
+    }
     /**
      * VBAコードを作成します。
      * @param shapes 
@@ -209,22 +265,30 @@ export class GEdge extends GAbstractTextEdge {
      */
     public createVBACodeOfText(id: number): string[][] {
         const r: string[][] = [];
-        const fontSize = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgTextPath, "font-size", "12"));
-        const fontFamily = VBATranslateFunctions.ToVBAFont(ElementExtension.getPropertyStyleValueWithDefault(this.svgTextPath, "font-family", "MS PGothic"));
-        const fontBold = VBATranslateFunctions.ToFontBold(ElementExtension.getPropertyStyleValueWithDefault(this.svgTextPath, "font-weight", "none"));
+
 
         const globalX = this.graph != null ? this.graph.x : 0;
         const globalY = this.graph != null ? this.graph.y : 0;
 
-        if (this.svgTextPath.textContent != null) {
-            for (let i = 0; i < this.svgTextPath.textContent.length; i++) {
-                const s: string[] = new Array(0);
-                const p1 = this.svgTextPath.getStartPositionOfChar(i);
-                const p2 = this.svgTextPath.getEndPositionOfChar(i);
-                const width = Math.abs(p2.x - p1.x);
-                const height = Math.abs(p2.y - p1.y);
+        //let pid = 0;
+        const charInfoArray = GEdge.getVisibleCharElements(this.svgText);
+        charInfoArray.forEach(([parent, character], i) => {
+            console.log(character + "/"+ i + "/" + character.charCodeAt(0) )
+            if (parent instanceof SVGTSpanElement) {
+                //const character = this.svgText.textContent![i];
+                const fontSize = parseInt(ElementExtension.getInheritedPropertyStyleValueWithDefault(parent, "font-size", "12"));
+                const fontFamily = VBATranslateFunctions.ToVBAFont(ElementExtension.getInheritedPropertyStyleValueWithDefault(parent, "font-family", "MS PGothic"));
+                const fontBold = VBATranslateFunctions.ToFontBold(ElementExtension.getInheritedPropertyStyleValueWithDefault(parent, "font-weight", "none"));
+                const css = getComputedStyle(parent);
+                const childColor = Color.createRGBFromColorName(css.fill);
 
-                const rad = this.svgTextPath.getRotationOfChar(i);
+                const s: string[] = new Array(0);
+                const p1 = this.svgText.getStartPositionOfChar(i);
+                const p2 = this.svgText.getEndPositionOfChar(i);
+                const width = Math.abs(p2.x - p1.x);
+                //const height = Math.abs(p2.y - p1.y);
+
+                const rad = this.svgText.getRotationOfChar(i);
                 const diffx = (fontSize * 1 / 2) * Math.sin((rad / 180) * Math.PI);
                 const diffy = (fontSize * 3 / 8) + ((fontSize * 3 / 8) * Math.cos((rad / 180) * Math.PI));
 
@@ -235,23 +299,32 @@ export class GEdge extends GAbstractTextEdge {
 
                 //const top = this.graph.svgGroup.getY() + p1.y - diffy;
                 s.push(`Sub create${id}_label_${i}(shapes_ As Shapes)`);
-                s.push(`With shapes_.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${width},${fontSize})`);
-                s.push(`.TextFrame.TextRange.Text = "${this.svgTextPath.textContent[i]}"`);
+                s.push(`With shapes_.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${width},${fontSize})`);                
+                s.push(`.TextFrame.TextRange.Text = "${character}"`);
                 s.push(`.TextFrame.marginLeft = 0`);
                 s.push(`.TextFrame.marginRight = 0`);
                 s.push(`.TextFrame.marginTop = 0`);
                 s.push(`.TextFrame.marginBottom = 0`);
+                s.push(`.TextFrame.TextRange.Font.color.RGB = RGB(CInt(${childColor.r}), CInt(${childColor.g}), CInt(${childColor.b}))`);
                 s.push(`.TextFrame.TextRange.Font.Size = ${fontSize}`);
                 s.push(`.TextFrame.TextRange.Font.name = "${fontFamily}"`);
                 s.push(`.TextFrame.TextRange.Font.Bold = ${fontBold}`);
-                s.push(`.IncrementRotation(${this.svgTextPath.getRotationOfChar(i)})`);
+                s.push(`.IncrementRotation(${this.svgText.getRotationOfChar(i)})`);
                 //s.push(`.IncrementRotation(${this.svgText.transform.baseVal.getItem(0).angle})`);
                 s.push(`End With`);
                 s.push(`End Sub`);
                 r.push(s);
 
             }
+        })
+        /*
+        for (let i = 0; i < this.svgText.getNumberOfChars(); i++) {
         }
+        */
+        /*
+        if (this.svgTextPath.textContent != null) {
+        }
+        */
         return r;
     }
 }

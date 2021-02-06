@@ -248,7 +248,6 @@ export function openSVG(inputItem: string | Element | null = null, output: GObje
 
         HTMLFunctions.getDescendants(svgsvg).forEach(v => {
             const shapeType = ShapeObjectType.toShapeObjectType(v.nodeName);
-            console.log(v.nodeName+ "/" +shapeType);
             if (shapeType != null) {
                 toSVGUnknownElement(v);
             }

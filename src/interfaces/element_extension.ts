@@ -21,8 +21,24 @@ export function getPropertyStyleValue(item : Element ,name: string): string | nu
     } else {
         return p;
     }
-
 }
+export function getInheritedPropertyStyleValue(item : Element ,name: string): string | null{
+    const p = (<any>item).style.getPropertyValue(name).trim();
+    if (p.length == 0) {
+        const r = item.getAttribute("class");
+        const css = getComputedStyle(item);
+        const p2 = css.getPropertyValue(name).trim();
+        if (p2.length == 0) {
+            return null;
+        } else {
+            return p2;
+        }
+
+    } else {
+        return p;
+    }
+}
+
 
 export function gtGetStyleBooleanWithUndefined(item : Element ,name: string): boolean | undefined{
     const value = getPropertyStyleValue(item, name);
@@ -40,8 +56,16 @@ export function getPropertyStyleValueWithDefault(item : Element, name: string, d
     } else {
         return p;
     }
-
 }
+export function getInheritedPropertyStyleValueWithDefault(item : Element, name: string, defaultValue: string): string{
+    const p = getInheritedPropertyStyleValue(item, name);
+    if (p == null) {
+        return defaultValue;
+    } else {
+        return p;
+    }
+}
+
 export  function getPropertyStyleNumberValue(item:Element, name: string, defaultValue: number | null): number | null{
     const p = getPropertyStyleValue(item, name);
     if (p != null) {
