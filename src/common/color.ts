@@ -101,14 +101,14 @@
          * @param colorName
          */
         export function createRGBCodeFromColorName(colorName: string): string {
-            colorName = createHexCodeFromColorName(colorName);
-            if (colorName.substr(0, 3) === "rgb") {
-                return colorName;
+            const newColorName = createHexCodeFromColorName(colorName);
+            if (newColorName.substr(0, 3) === "rgb") {
+                return newColorName;
             } else {
-                if (colorNameArray.length === 6) {
-                    const r = colorName.substr(0, 2);
-                    const g = colorName.substr(2, 2);
-                    const b = colorName.substr(4, 2);
+                if (newColorName.length === 6) {
+                    const r = newColorName.substr(0, 2);
+                    const g = newColorName.substr(2, 2);
+                    const b = newColorName.substr(4, 2);
                     return `rgb(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)})`;
                 } else {
                     return `rgb(${80}, ${80}, ${80})`;

@@ -61,7 +61,7 @@ export class GVertex extends GObject {
      * @param x 
      * @param y 
      */
-    protected getContactAutoPosition(x: number, y: number): ConnectorType {
+    public getContactAutoPosition(x: number, y: number): ConnectorType {
         return ConnectorType.Top;
 
     }

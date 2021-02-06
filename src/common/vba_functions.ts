@@ -29,6 +29,10 @@ export function styleVisible(value: CSSStyleDeclaration): number {
         return 0;
     }
 }
+export function sanityze(text : string) : string{
+    return text.replace(/"/g, '""')
+    //return text.replace(`"`, `""`);
+}
 
 
 export class VBATranslateFunctions {
@@ -209,7 +213,7 @@ export class VBATranslateFunctions {
                     if (newLine != null && newLine == "true") {
                         textCode += `& vbCrLf `;
                     }
-                    const text = HTMLFunctions.removeInvisibleCharacters(child.textContent);
+                    const text = sanityze(HTMLFunctions.removeInvisibleCharacters(child.textContent));
                     if (textCode.length > 0) {
                         textCode += `& "${text}"`;
                     } else {
@@ -259,7 +263,7 @@ export class VBATranslateFunctions {
 
             }
         } else if (item.textContent != null && item.textContent.length > 0) {
-            const vbaText = HTMLFunctions.removeInvisibleCharacters(item.textContent);
+            const vbaText = sanityze(HTMLFunctions.removeInvisibleCharacters(item.textContent));
             lines.push(`${range}.text = "${vbaText}"`);
 
             const css = getComputedStyle(item);

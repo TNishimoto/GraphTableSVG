@@ -81,7 +81,7 @@
                     return this.getContactPosition(autoType, x, y);
             }
         }
-        protected getContactAutoPosition(x: number, y: number): ConnectorType {
+        public getContactAutoPosition(x: number, y: number): ConnectorType {
             const radius = this.rx;
             const r = (Math.sqrt(2) / 2) * radius;
             const line1 = new VLine(this.x, this.y, this.x + r, this.y + r);

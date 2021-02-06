@@ -2,7 +2,7 @@
 
 import { ShapeObjectType, ConnectorType } from "../common/enums";
 import * as CommonFunctions from "../common/common_functions"
-import { VBATranslateFunctions } from "../common/vba_functions"
+import { sanityze, VBATranslateFunctions } from "../common/vba_functions"
 import { getLineType } from "../html/enum_extension";
 
 import * as GOptions from "./g_options"
@@ -140,23 +140,38 @@ export class GEdge extends GAbstractTextEdge {
                 r.push(` obj.Line.EndArrowheadWidth = msoArrowheadWide`);
             }
             if (this.beginVertex != null) {
-                const endX = this.endVertex == null ? this.x2 : this.endVertex.x;
-                const endY = this.endVertex == null ? this.y2 : this.endVertex.y;
+                const endX = this.endVertex == null ? this.x2 : this.endVertex.cx;
+                const endY = this.endVertex == null ? this.y2 : this.endVertex.cy;
 
-                const begType: number = ConnectorType.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getConnectorType(this.beginConnectorType, endX, endY));
+                let begType = 0;
+
+                if(this.beginConnectorType == "auto"){
+                    begType = ConnectorType.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginVertex.getContactAutoPosition(endX, endY));
+                }else{
+                    begType = ConnectorType.ToVBAConnectorPosition2(this.beginVertex.shape, this.beginConnectorType);
+                }
+
                 r.push(` Call obj.ConnectorFormat.BeginConnect(shapes_("${this.beginVertex.objectID}"), ${begType})`);
 
             }
             if (this.endVertex != null) {
-                const beginX = this.beginVertex == null ? this.x1 : this.beginVertex.x;
-                const beginY = this.beginVertex == null ? this.y1 : this.beginVertex.y;
+                const beginX = this.beginVertex == null ? this.x1 : this.beginVertex.cx;
+                const beginY = this.beginVertex == null ? this.y1 : this.beginVertex.cy;
 
-                const endType: number = ConnectorType.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getConnectorType(this.endConnectorType, beginX, beginY));
+                let endType = 0;
+                if(this.endConnectorType == "auto"){
+                    endType = ConnectorType.ToVBAConnectorPosition2(this.endVertex.shape, this.endVertex.getContactAutoPosition(beginX, beginY));
+                }else{
+                    endType = ConnectorType.ToVBAConnectorPosition2(this.endVertex.shape, this.endConnectorType);
+                }
+
                 r.push(` Call obj.ConnectorFormat.EndConnect(shapes_("${this.endVertex.objectID}"), ${endType})`);
 
             }
             const lineType = getLineType(this.svgPath);
-            const lineColor = VBATranslateFunctions.colorToVBA(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke", "gray"));
+            const colorName = ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke", "gray");
+            const lineColor = VBATranslateFunctions.colorToVBA(colorName);
+
             const strokeWidth = parseInt(ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "stroke-width", "4"));
             const visible = ElementExtension.getPropertyStyleValueWithDefault(this.svgPath, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
             r.push(` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`);
@@ -273,7 +288,6 @@ export class GEdge extends GAbstractTextEdge {
         //let pid = 0;
         const charInfoArray = GEdge.getVisibleCharElements(this.svgText);
         charInfoArray.forEach(([parent, character], i) => {
-            console.log(character + "/"+ i + "/" + character.charCodeAt(0) )
             if (parent instanceof SVGTSpanElement) {
                 //const character = this.svgText.textContent![i];
                 const fontSize = parseInt(ElementExtension.getInheritedPropertyStyleValueWithDefault(parent, "font-size", "12"));
@@ -300,7 +314,7 @@ export class GEdge extends GAbstractTextEdge {
                 //const top = this.graph.svgGroup.getY() + p1.y - diffy;
                 s.push(`Sub create${id}_label_${i}(shapes_ As Shapes)`);
                 s.push(`With shapes_.AddTextBox(msoTextOrientationHorizontal, ${left}, ${top},${width},${fontSize})`);                
-                s.push(`.TextFrame.TextRange.Text = "${character}"`);
+                s.push(`.TextFrame.TextRange.Text = "${sanityze(character)}"`);
                 s.push(`.TextFrame.marginLeft = 0`);
                 s.push(`.TextFrame.marginRight = 0`);
                 s.push(`.TextFrame.marginTop = 0`);

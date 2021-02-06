@@ -185,7 +185,7 @@
                     return this.getContactPosition(autoType, x, y);
             }
         }
-        protected getContactAutoPosition(x: number, y: number): ConnectorType {
+        public getContactAutoPosition(x: number, y: number): ConnectorType {
             const wr = this.width / 2;
             const hr = this.height / 2;
 
