@@ -570,7 +570,10 @@ export class GAbstractEdge extends GObject {
         if(recursion > 6){
             return [];
         }
+        const xgap = Math.abs(x2 - x1) / 2;
+        const ygap = Math.abs(y2 - y1) / 2;
         const gap = 30;
+
         let area : "leftup" | "rightup" | "leftdown" | "rightdown" = "leftup";
         if(x1 < x2){
             if(y1 < y2){
@@ -600,14 +603,14 @@ export class GAbstractEdge extends GObject {
                 if(x1 == x2 && down){
                     return [];
                 }else{
-                    y3 = y1 + gap;
+                    y3 = y1 + ygap;
                 }
             }    
             else if(type2 == ConnectorType.Left){
                 y3 = (area == "rightdown") ? y2 : y1 + gap;
             }    
             else if(type2 == ConnectorType.Right){
-                y3 = (area == "leftdown") ? y2 : y1 + gap;
+                y3 = (area == "leftdown") ? y2 : y1 + ygap;
             }else{
                 y3 = down ? y2 + gap : y1 + gap;
             }
@@ -623,13 +626,13 @@ export class GAbstractEdge extends GObject {
                 x3 = area == "rightdown" ? x2 : x1 + gap;
             }
             else if(type2 == ConnectorType.Bottom){
-                x3 = area == "rightup" ? x2 : x1 + gap;
+                x3 = area == "rightup" ? x2 : x1 + xgap;
             }
             else if(type2 == ConnectorType.Left){
                 if(y1 == y2 && right){
                     return [];
                 }else{
-                    x3 = x1 + gap;
+                    x3 = x1 + xgap;
                 }
             }
             else{

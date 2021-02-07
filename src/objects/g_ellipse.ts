@@ -52,6 +52,34 @@
             return rect;
         }
         */
+        /*
+        public getPosition(type: ConnectorType) : [number, number]{
+            const centerX = (Math.sqrt(2) / 2) * this.rx;
+            const centerY = (Math.sqrt(2) / 2) * this.ry;
+
+            switch (type) {
+                case ConnectorType.Top:
+                    return [this.cx, this.cy - this.ry];
+                case ConnectorType.TopRight:
+                    return [this.cx + centerX, this.cy - centerY];
+                case ConnectorType.Right:
+                    return [this.cx + this.rx, this.cy];
+                case ConnectorType.BottomRight:
+                    return [this.cx + centerX, this.cy + centerY];
+                case ConnectorType.Bottom:
+                    return [this.cx, this.cy + this.ry];
+                case ConnectorType.BottomLeft:
+                    return [this.cx - centerX, this.cy + centerY];
+                case ConnectorType.Left:
+                    return [this.cx - this.rx, this.cy];
+                case ConnectorType.TopLeft:
+                    return [this.cx - centerX, this.cy - centerY];
+                default:
+                    return [this.cx, this.cy - this.ry];
+            }
+
+        }
+        */
     
         public getContactPosition(type: ConnectorType, x: number, y: number): [number, number] {
     
@@ -82,9 +110,29 @@
             }
         }
         public getContactAutoPosition(x: number, y: number): ConnectorType {
-            const radius = this.rx;
-            const r = (Math.sqrt(2) / 2) * radius;
-            const line1 = new VLine(this.x, this.y, this.x + r, this.y + r);
+            const centerX = (Math.sqrt(2) / 2) * this.rx;
+            const centerY = (Math.sqrt(2) / 2) * this.ry;
+
+            const lineTop = new VLine(x, y, this.cx, this.cy - centerY);
+            const lineTopRight = new VLine(x, y, this.cx + centerX, this.cy - centerY);
+            const lineRight = new VLine(x, y, this.cx + centerX, this.cy);
+            const lineBottomRight = new VLine(x, y, this.cx + centerX, this.cy + centerY);
+            const lineBottom = new VLine(x, y, this.cx, this.cy + centerY);
+            const lineBottomLeft = new VLine(x, y, this.cx - centerX, this.cy + centerY);
+            const lineLeft = new VLine(x, y, this.cx - centerX, this.cy);
+            const lineTopLeft = new VLine(x, y, this.cx - centerX, this.cy - centerY);
+            const arr : [number, ConnectorType][] = [ [lineTop.distance(), ConnectorType.Top], [lineTopRight.distance(), ConnectorType.TopRight], [lineRight.distance(), ConnectorType.Right], 
+            [lineBottomRight.distance(), ConnectorType.BottomRight], [lineBottom.distance(), ConnectorType.Bottom], [lineBottomLeft.distance(), ConnectorType.BottomLeft],
+            [lineLeft.distance(), ConnectorType.Left], [lineTopLeft.distance(), ConnectorType.TopLeft]];
+            const [minDis, minDir] = arr.reduce(([a,b],[c,d]) =>{
+                if(a < c){
+                    return [a, b];
+                }else{
+                    return [c,d];
+                }
+            })
+            return minDir;
+            /*
             const line2 = new VLine(this.x, this.y, this.x + r, this.y - r);
     
             const b1 = line1.contains(x, y);
@@ -103,6 +151,7 @@
                     return ConnectorType.Bottom;
                 }
             }
+            */
         }
     
         public get surfaceRegion() : Rectangle{

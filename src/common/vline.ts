@@ -33,6 +33,11 @@ export class VLine {
 
     constructor(public x1: number, public y1: number, public x2: number, public y2: number) {
     }
+    public distance() : number{
+        const l = Math.abs(this.x1- this.x2);
+        const r = Math.abs(this.y1 - this.y2);
+        return Math.sqrt(l * l) + Math.sqrt(r * r);
+    }
     public contains(x: number, y: number): boolean {
         const lineY = this.getY(x);
         if (lineY == null) {

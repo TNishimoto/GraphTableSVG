@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Elbow Coonector</title>
+    <script src="../../scripts/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.Options.openSVG();
+        };
+    </script>
+</head>
+
+<body>
+    <svg id="svgbox" width="800px" height="850px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;" g-vba="true">
+
+        <g-rect x="100" y="100" id="a1"/>
+        <g-rect x="300" y="300" id="a2" />        
+        <g-edge begin-vertex="a1" end-vertex="a2" style="--edge-type:elbow;--begin-connector-type:bottom;--end-connector-type:bottom;" surface:style="stroke:black" >bottom/bottom</g-edge>
+        <g-edge begin-vertex="a1" end-vertex="a2" style="--edge-type:elbow;--begin-connector-type:right;--end-connector-type:right;" surface:style="stroke:red">right/right</g-edge>
+        <g-edge begin-vertex="a1" end-vertex="a2" style="--edge-type:elbow;--begin-connector-type:left;--end-connector-type:left;" surface:style="stroke:blue">left/left</g-edge>
+        <g-edge begin-vertex="a1" end-vertex="a2" style="--edge-type:elbow;--begin-connector-type:top;--end-connector-type:top;" surface:style="stroke:green">top/top</g-edge>
+
+        <g-rect x="450" y="100" id="b1"/>
+        <g-rect x="650" y="300" id="b2" />        
+        <g-edge begin-vertex="b1" end-vertex="b2" style="--edge-type:elbow;--begin-connector-type:bottom;--end-connector-type:top;" surface:style="stroke:black">bottom/top</g-edge>
+        <g-edge begin-vertex="b1" end-vertex="b2" style="--edge-type:elbow;--begin-connector-type:right;--end-connector-type:left;" surface:style="stroke:red">right/left</g-edge>
+        <g-edge begin-vertex="b1" end-vertex="b2" style="--edge-type:elbow;--begin-connector-type:left;--end-connector-type:right;" surface:style="stroke:blue">left/right</g-edge>
+        <g-edge begin-vertex="b1" end-vertex="b2" style="--edge-type:elbow;--begin-connector-type:top;--end-connector-type:bottom;" surface:style="stroke:green">top/bottom</g-edge>
+
+        <g-rect x="100" y="450" id="c1"/>
+        <g-rect x="300" y="650" id="c2" />        
+        <g-edge begin-vertex="c1" end-vertex="c2" style="--edge-type:elbow;--begin-connector-type:bottom;--end-connector-type:left;" surface:style="stroke:black">bottom/left</g-edge>
+        <g-edge begin-vertex="c1" end-vertex="c2" style="--edge-type:elbow;--begin-connector-type:right;--end-connector-type:top;" surface:style="stroke:red">right/top</g-edge>
+        <g-edge begin-vertex="c1" end-vertex="c2" style="--edge-type:elbow;--begin-connector-type:left;--end-connector-type:bottom;" surface:style="stroke:blue">left/bottom</g-edge>
+        <g-edge begin-vertex="c1" end-vertex="c2" style="--edge-type:elbow;--begin-connector-type:top;--end-connector-type:right;" surface:style="stroke:green">top/right</g-edge>
+
+        <g-rect x="450" y="450" id="d1"/>
+        <g-rect x="650" y="650" id="d2" />        
+        <g-edge begin-vertex="d1" end-vertex="d2" style="--edge-type:elbow;--begin-connector-type:bottom;--end-connector-type:right;" surface:style="stroke:black">bottom/right</g-edge>
+        <g-edge begin-vertex="d1" end-vertex="d2" style="--edge-type:elbow;--begin-connector-type:right;--end-connector-type:bottom;" surface:style="stroke:red">right/bottom</g-edge>
+        <g-edge begin-vertex="d1" end-vertex="d2" style="--edge-type:elbow;--begin-connector-type:left;--end-connector-type:top;" surface:style="stroke:blue">left/top</g-edge>
+        <g-edge begin-vertex="d1" end-vertex="d2" style="--edge-type:elbow;--begin-connector-type:top;--end-connector-type:left;" surface:style="stroke:green">top/left</g-edge>
+
+    </svg>
+</body>
+
+</html>
