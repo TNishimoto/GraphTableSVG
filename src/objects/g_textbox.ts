@@ -218,13 +218,16 @@ export class GTextBox extends GVertex {
         const region = this.getVirtualRegion();
 
         let b = false;
-        if(this.width != region.width){
-            this.setWidthWithoutUpdate(region.width);
+        const widthRound100 = round100(region.width);
+        if(this.width != widthRound100){
+            this.setWidthWithoutUpdate(widthRound100);
             b = true;
         }
 
-        if(this.height != region.height){
-            this.setHeightWithoutUpdate(region.height);
+        const heightRound100 = round100(region.height);
+
+        if(this.height != heightRound100){
+            this.setHeightWithoutUpdate(heightRound100);
             //this.height = region.height;        
             b = true;
         }
@@ -261,8 +264,7 @@ export class GTextBox extends GVertex {
         this.hasConnectedObserverFunction = true;
         
         //console.log(`${b1}/${b2}/${b3}/${b4}/`)
-        if(b1 || b2 || b3 || b4){
-                
+        if(b1 || b2 || b3 || b4){                
             this.updateRec(n+1);
         }
 

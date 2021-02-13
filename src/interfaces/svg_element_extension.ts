@@ -50,3 +50,40 @@ export function getY(item : SVGElement) : number {
         throw new NotSupportedError();
     }
 }
+export function getBackgroundColor(obj: SVGRectElement | SVGCircleElement | SVGEllipseElement) : string {
+    const attr = obj.getAttribute("fill");
+    if(attr != null){
+        return attr;
+    }else{
+        const color = ElementExtension.getPropertyStyleValueWithDefault(obj, "fill", "gray");
+        return color;
+    }
+}
+export function getStrokeWidth(obj: SVGRectElement | SVGCircleElement | SVGPathElement | SVGEllipseElement) : number {
+    const attr = obj.getAttribute("stroke-width");
+
+    if(attr != null){
+        return parseInt(attr);
+    }else{
+        const strokeWidth : string | null = ElementExtension.getPropertyStyleValue(obj, "stroke-width");
+        if(strokeWidth == null){
+            const css = getComputedStyle(obj);
+            return parseInt(css.strokeWidth);        
+        }else{
+            return parseInt(strokeWidth);
+        }
+    }
+}
+export function getStrokeColor(obj: SVGRectElement | SVGCircleElement | SVGPathElement | SVGEllipseElement) : string {
+    const attr = obj.getAttribute("stroke");
+    
+
+
+    if(attr != null){
+        return attr;
+    }else{
+        const color = ElementExtension.getPropertyStyleValueWithDefault(obj, "stroke", "gray");
+        return color;
+    }
+
+}

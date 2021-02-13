@@ -4,7 +4,7 @@ import { SVGToVBA } from "./svg_to_vba"
 import { GObject } from "../objects/g_object"
 import { runInThisContext } from "vm";
 import { getGObjects } from "./open_svg";
-import { VBAObjectType } from "./vba_object";
+import { VBAObjectType, collectVBAObjectTypes } from "./vba_object";
 import { getSVGSVG } from "../interfaces/svg";
 
 //export namespace VBAMacroModal {
@@ -12,7 +12,7 @@ import { getSVGSVG } from "../interfaces/svg";
         const target = e.target;
         if(target instanceof SVGElement){
             const svgsvg = getSVGSVG(target);
-            const types = SVGToVBA.collectVBAObjectTypes(svgsvg);
+            const types = collectVBAObjectTypes(svgsvg);
             const vbaCode = SVGToVBA.create(types);
             createMacroModal(vbaCode);
         }else{

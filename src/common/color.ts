@@ -105,7 +105,10 @@
             if (newColorName.substr(0, 3) === "rgb") {
                 return newColorName;
             } else {
-                if (newColorName.length === 6) {
+                if(colorName[0] == "#"){
+                    return createRGBCodeFromColorName(colorName.substr(1));
+                }
+                else if (newColorName.length === 6) {
                     const r = newColorName.substr(0, 2);
                     const g = newColorName.substr(2, 2);
                     const b = newColorName.substr(4, 2);

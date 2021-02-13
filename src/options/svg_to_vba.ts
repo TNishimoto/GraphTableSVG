@@ -6,71 +6,30 @@ import { GGraph } from "../objects/g_graph"
 import { Rectangle } from "../common/vline";
 import * as CSS from "../html/css"
 import { VBATranslateFunctions } from "../common/vba_functions"
-import { VBAObjectType } from "./vba_object"
+import { isVBAObject, VBAObjectType, collectVBAObjectTypes, countVBSObjectNum } from "./vba_object"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
-import { ShapeObjectType } from "../common/enums";
+import { msoDashStyle, ShapeObjectType } from "../common/enums";
+import { msoDashStyleName } from "../common/style_names";
+import { getBackgroundColor, getStrokeColor, getStrokeWidth } from "../interfaces/svg_element_extension";
 
 
 export class SVGToVBA {
 
-    static collectVBAObjectTypesSub(svg : SVGElement, output : VBAObjectType[]) : void {
-        const dataVBA = svg.getAttribute("data-vba");
-        if(dataVBA == "false"){
-            return;
-        }
-
-        if(svg instanceof SVGGElement){
-            const dataType = svg.getAttribute("data-type");
-
-            if(dataType == null){
-                for(let i=0;i<svg.children.length;i++){
-                    const item = svg.children.item(i);
-                    if(item != null && item instanceof SVGElement){
-                        this.collectVBAObjectTypesSub(item, output);
-                    }
-                }
-            }else{
-                const type = ShapeObjectType.toShapeObjectType(dataType);
-                if(type != null){
-                    const gObject : VBAObjectType = (<any>svg).operator;
-                    output.push(gObject);
-                }
-            }
-
-        }else if (svg instanceof SVGPathElement){
-            output.push(svg);
-
-        }else if(svg instanceof SVGTextElement){
-            output.push(svg);
-        }else{
-
-        }
-    }
 
 
-    public static collectVBAObjectTypes(svgsvg : SVGSVGElement) : VBAObjectType[] {
-        const r :VBAObjectType[] = new Array();
-        for(let i=0;i<svgsvg.children.length;i++){
-            const item = svgsvg.children.item(i);
-            if(item != null && item instanceof SVGElement){
-                this.collectVBAObjectTypesSub(item, r);
-            }
-        }
-        return r;
-    }
 
 
-    public static convert(svgsvgID : string | SVGSVGElement) : string{
-        if(svgsvgID instanceof SVGSVGElement){
-            const types = this.collectVBAObjectTypes(svgsvgID);
+    public static convert(svgsvgID: string | SVGSVGElement): string {
+        if (svgsvgID instanceof SVGSVGElement) {
+            const types = collectVBAObjectTypes(svgsvgID);
             return this.create(types);
-        }else{
+        } else {
             const obj = <any>document.getElementById(svgsvgID);
-            if(obj instanceof SVGSVGElement){
+            if (obj instanceof SVGSVGElement) {
                 return this.convert(obj);
-            }else{
+            } else {
                 throw new ReferenceError(`${svgsvgID} is not the ID of an SVGSVGElement.`);
             }
 
@@ -83,7 +42,7 @@ export class SVGToVBA {
     public static create(items: VBAObjectType[] | VBAObjectType | string): string {
         //const id = 0;
         if (items instanceof Array) {
-            const count = SVGToVBA.count(items);
+            const count = countVBSObjectNum(items);
             const s: string[] = new Array(0);
 
             s.push(`Sub create()`);
@@ -105,19 +64,6 @@ export class SVGToVBA {
 
                     lines.forEach((v) => s.push(v));
                     id++;
-                } else if (item instanceof SVGPathElement) {
-                    //const lines = SVGToVBA.createVBACodeOfSVGPath(item, id++);
-                    const lines = SVGToVBA.createVBACodeOfSVGPath(item, id);
-
-                    lines.forEach((v) => s.push(v));
-                    id++;
-
-                } else if (item instanceof SVGTextElement) {
-                    //const lines = SVGToVBA.createVBACodeOfTextElement(item, id++);
-                    const lines = SVGToVBA.createVBACodeOfTextElement(item, id);
-
-                    lines.forEach((v) => s.push(v));
-                    id++;
                 } else if (item instanceof GGraph) {
                     const lines = item.createVBACode(id);
                     lines.forEach((v) => s.push(v));
@@ -126,18 +72,25 @@ export class SVGToVBA {
                     const lines = item.createVBACode(id);
                     lines.forEach((v) => s.push(v));
                     id += item.VBAObjectNum;
+                } else if (item instanceof SVGPathElement || item instanceof SVGRectElement || item instanceof SVGCircleElement || item instanceof SVGTextElement || item instanceof SVGEllipseElement) {
+                    //const lines = SVGToVBA.createVBACodeOfSVGPath(item, id++);
+                    const lines = SVGToVBA.createVBACodeOfSVGElement(item, id);
+
+                    lines.forEach((v) => s.push(v));
+                    id++;
+
                 }
             }
             s.push(SVGToVBA.cellFunctionCode);
             const r = VBATranslateFunctions.joinLines(s);
             return r;
         }
-        else if(typeof(items) == "string"){
+        else if (typeof (items) == "string") {
             const id = items;
             const obj = <any>document.getElementById(id);
-            if(obj != null && obj.operator instanceof GObject){
+            if (obj != null && obj.operator instanceof GObject) {
                 return SVGToVBA.create([obj.operator]);
-            }else{
+            } else {
                 throw new Error();
             }
 
@@ -146,29 +99,93 @@ export class SVGToVBA {
             return SVGToVBA.create([items]);
         }
     }
-    public static count(items: VBAObjectType[] | VBAObjectType): number {
-        //const id = 0;
-        if (items instanceof Array) {
-            let c = 0;
-            for (let i = 0; i < items.length; i++) {
-                const item = items[i];
-                if (item instanceof GTable) {
-                    c++;
-                } else if (item instanceof SVGPathElement) {
-                    c++;
-                } else if (item instanceof SVGTextElement) {
-                    c++;
-                } else if (item instanceof GGraph) {
-                    c += item.VBAObjectNum;
-                } else if (item instanceof GObject) {
-                    c += item.VBAObjectNum;
-                }
-            }
-            return c;
+
+    private static createVBACodeOfSVGElement(obj: SVGRectElement | SVGCircleElement | SVGPathElement | SVGTextElement | SVGEllipseElement, id: number): string[] {
+        const lines = new Array(0);
+        const visible = ElementExtension.getPropertyStyleValueWithDefault(obj, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+
+        lines.push(`Sub create${id}(createdSlide As slide)`);
+        lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
+
+        if (obj instanceof SVGTextElement) {
+            const sub: string[][] = [];
+            lines.push(` Dim txt As Shape`);
+            lines.push(` Set txt = shapes_.AddTextbox(msoTextOrientationHorizontal, ${SVGTextExtension.getX(obj)}, ${SVGTextExtension.getY(obj)}, 0, 0)`);
+            const fontSize = parseInt(ElementExtension.getPropertyStyleValueWithDefault(obj, "font-size", "24"));
+            const fontFamily = VBATranslateFunctions.ToVBAFont(ElementExtension.getPropertyStyleValueWithDefault(obj, "font-family", "MS PGothic"));
+            const fontBold = VBATranslateFunctions.ToFontBold(ElementExtension.getPropertyStyleValueWithDefault(obj, "font-weight", "none"));
+            lines.push([` Call EditTextFrame(txt.TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeShapeToFitText)`]);
+            VBATranslateFunctions.TranslateSVGTextElement(sub, obj, `txt.TextFrame.TextRange`);
+            sub.forEach((v) => lines.push(v[0]));
+            lines.push([` Call EditTextEffect(txt.TextEffect, ${fontSize}, "${fontFamily}")`]);
+
         } else {
-            return SVGToVBA.count([items]);
+            const lineColor = VBATranslateFunctions.colorToVBA(getStrokeColor(obj));
+            const strokeWidth = getStrokeWidth(obj);
+
+            if (obj instanceof SVGPathElement) {
+                const pos = Extensions.getPathLocations(obj);
+                lines.push(` Dim edges${id}(${pos.length - 1}) As Shape`);
+
+                for (let i = 0; i < pos.length - 1; i++) {
+                    lines.push(` Set edges${id}(${i}) = shapes_.AddConnector(msoConnectorStraight, ${pos[i][0]}, ${pos[i][1]}, ${pos[i + 1][0]}, ${pos[i + 1][1]})`);
+                    lines.push(` Call EditLine(edges${id}(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
+                }
+
+            } else {
+                const backColor = VBATranslateFunctions.colorToVBA(getBackgroundColor(obj));
+
+                lines.push(` Dim obj As Shape`);
+
+                if (obj instanceof SVGRectElement) {
+                    const rx = obj.getAttribute("rx") == null ? 0 : parseInt(obj.getAttribute("rx")!);
+                    const ry = obj.getAttribute("ry") == null ? 0 : parseInt(obj.getAttribute("ry")!);
+                    const maxr = Math.max(rx, ry);
+                    const shape = maxr == 0? "msoShapeRectangle" : "msoShapeRoundedRectangle";
+                    const width = obj.width.baseVal.value;
+                    const height = obj.height.baseVal.value;
+                    const x = obj.x.baseVal.value;
+                    const y = obj.y.baseVal.value;
+
+                    lines.push(` Set obj = shapes_.AddShape(${shape}, ${x}, ${y}, ${width}, ${height})`);
+
+                    if(maxr > 0){
+                        const ratio = maxr / width;
+                        lines.push(` obj.Adjustments.Item(1) = ${ratio}`);
+
+                    }
+                }
+                else if(obj instanceof SVGEllipseElement){
+                    const shape = "msoShapeOval"
+                    const width = obj.rx.baseVal.value * 2;
+                    const height = obj.ry.baseVal.value * 2;
+                    const x = obj.cx.baseVal.value - obj.rx.baseVal.value;
+                    const y = obj.cy.baseVal.value - obj.ry.baseVal.value;
+
+                    lines.push(` Set obj = shapes_.AddShape(${shape}, ${x}, ${y}, ${width}, ${height})`);
+
+                } 
+                else {
+
+                    const shape = "msoShapeOval"
+                    const width = obj.r.baseVal.value * 2;
+                    const height = obj.r.baseVal.value * 2;
+                    const x = obj.cx.baseVal.value - obj.r.baseVal.value;
+                    const y = obj.cy.baseVal.value - obj.r.baseVal.value;
+
+                    lines.push(` Set obj = shapes_.AddShape(${shape}, ${x}, ${y}, ${width}, ${height})`);
+
+                }
+                lines.push(` Call EditLine(obj.Line, ${lineColor}, ${msoDashStyle.msoLineSolid}, ${0}, ${strokeWidth}, ${visible})`);
+                lines.push(` Call EditCallOut(obj, "${id}", ${visible}, ${backColor})`)
+            }
+
         }
+
+        lines.push(`End Sub`);
+        return lines;
     }
+    /*
     private static createVBACodeOfSVGPath(path: SVGPathElement, id: number): string[] {
         const lines = new Array(0);
         const pos = Extensions.getPathLocations(path);
@@ -188,25 +205,28 @@ export class SVGToVBA {
         lines.push(`End Sub`);
         return lines;
     }
-    private static createVBACodeOfTextElement(element: SVGTextElement, id: number): string[] {
-        const lines = new Array(0);
-        const sub: string[][] = [];
-        lines.push(`Sub create${id}(createdSlide As slide)`);
-        lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
-        lines.push(` Dim txt As Shape`);
-        lines.push(` Set txt = shapes_.AddTextbox(msoTextOrientationHorizontal, ${SVGTextExtension.getX(element)}, ${SVGTextExtension.getY(element)}, 0, 0)`);
-        const fontSize = parseInt(ElementExtension.getPropertyStyleValueWithDefault(element, "font-size", "24"));
-        const fontFamily = VBATranslateFunctions.ToVBAFont(ElementExtension.getPropertyStyleValueWithDefault(element,"font-family", "MS PGothic"));
-        const fontBold = VBATranslateFunctions.ToFontBold(ElementExtension.getPropertyStyleValueWithDefault(element, "font-weight", "none"));
-        lines.push([` Call EditTextFrame(txt.TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeShapeToFitText)`]);
-        VBATranslateFunctions.TranslateSVGTextElement(sub, element, `txt.TextFrame.TextRange`);
-        sub.forEach((v) => lines.push(v[0]));
-        lines.push([` Call EditTextEffect(txt.TextEffect, ${fontSize}, "${fontFamily}")`]);
-
-
-        lines.push(`End Sub`);
-        return lines;
-    }
+    */
+    /*
+     private static createVBACodeOfTextElement(element: SVGTextElement, id: number): string[] {
+         const lines = new Array(0);
+         const sub: string[][] = [];
+         lines.push(`Sub create${id}(createdSlide As slide)`);
+         lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
+         lines.push(` Dim txt As Shape`);
+         lines.push(` Set txt = shapes_.AddTextbox(msoTextOrientationHorizontal, ${SVGTextExtension.getX(element)}, ${SVGTextExtension.getY(element)}, 0, 0)`);
+         const fontSize = parseInt(ElementExtension.getPropertyStyleValueWithDefault(element, "font-size", "24"));
+         const fontFamily = VBATranslateFunctions.ToVBAFont(ElementExtension.getPropertyStyleValueWithDefault(element,"font-family", "MS PGothic"));
+         const fontBold = VBATranslateFunctions.ToFontBold(ElementExtension.getPropertyStyleValueWithDefault(element, "font-weight", "none"));
+         lines.push([` Call EditTextFrame(txt.TextFrame, ${0}, ${0}, ${0}, ${0}, false, ppAutoSizeShapeToFitText)`]);
+         VBATranslateFunctions.TranslateSVGTextElement(sub, element, `txt.TextFrame.TextRange`);
+         sub.forEach((v) => lines.push(v[0]));
+         lines.push([` Call EditTextEffect(txt.TextEffect, ${fontSize}, "${fontFamily}")`]);
+ 
+ 
+         lines.push(`End Sub`);
+         return lines;
+     }
+     */
 
 
     public static cellFunctionCode: string = `
