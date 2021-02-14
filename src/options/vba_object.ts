@@ -6,7 +6,9 @@ import { GObject } from "../objects/g_object"
 import { ShapeObjectType } from "../common/enums";
 //    import {VBAObjectType} from "./svg_to_vba"
 
-export type VBAObjectType = SVGPathElement | SVGTextElement | GObject | SVGRectElement | SVGCircleElement | SVGEllipseElement;
+export type VBACodableSVG = SVGPathElement | SVGTextElement | SVGRectElement | SVGCircleElement | SVGEllipseElement | SVGLineElement | SVGPolylineElement | SVGPolygonElement;
+
+export type VBAObjectType = VBACodableSVG | GObject;
 
 function collectVBAObjectTypesSub(svg: SVGElement, output: VBAObjectType[]): void {
     const dataVBA = svg.getAttribute("data-vba");
@@ -71,6 +73,16 @@ export function collectVBAObjectTypes(svgsvg: SVGSVGElement): VBAObjectType[] {
     return r;
 }
 
+export function isVBACodableSVG(svg: SVGElement): boolean {
+    if (svg instanceof SVGPathElement || svg instanceof SVGTextElement || 
+        svg instanceof SVGRectElement || svg instanceof SVGCircleElement || svg instanceof SVGEllipseElement || 
+        svg instanceof SVGLineElement || svg instanceof SVGPolylineElement || svg instanceof SVGPolygonElement) {
+        return true;
+
+    }else{
+        return false;
+    }
+}
 
 export function isVBAObject(svg: SVGElement): boolean {
     if (svg instanceof SVGGElement) {
@@ -85,7 +97,7 @@ export function isVBAObject(svg: SVGElement): boolean {
             }
         }
 
-    } else if (svg instanceof SVGPathElement || svg instanceof SVGTextElement || svg instanceof SVGRectElement || svg instanceof SVGCircleElement || svg instanceof SVGEllipseElement) {
+    } else if (isVBACodableSVG(svg)) {
         return true;
 
     }

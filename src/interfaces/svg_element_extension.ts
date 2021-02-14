@@ -50,7 +50,7 @@ export function getY(item : SVGElement) : number {
         throw new NotSupportedError();
     }
 }
-export function getBackgroundColor(obj: SVGRectElement | SVGCircleElement | SVGEllipseElement) : string {
+export function getBackgroundColor(obj: SVGRectElement | SVGCircleElement | SVGEllipseElement | SVGPolygonElement | SVGPathElement) : string {
     const attr = obj.getAttribute("fill");
     if(attr != null){
         return attr;
@@ -59,7 +59,7 @@ export function getBackgroundColor(obj: SVGRectElement | SVGCircleElement | SVGE
         return color;
     }
 }
-export function getStrokeWidth(obj: SVGRectElement | SVGCircleElement | SVGPathElement | SVGEllipseElement) : number {
+export function getStrokeWidth(obj: SVGRectElement | SVGCircleElement | SVGPathElement | SVGEllipseElement | SVGLineElement| SVGPolylineElement) : number {
     const attr = obj.getAttribute("stroke-width");
 
     if(attr != null){
@@ -74,16 +74,34 @@ export function getStrokeWidth(obj: SVGRectElement | SVGCircleElement | SVGPathE
         }
     }
 }
-export function getStrokeColor(obj: SVGRectElement | SVGCircleElement | SVGPathElement | SVGEllipseElement) : string {
+export function getStrokeColor(obj: SVGRectElement | SVGCircleElement | SVGPathElement | SVGEllipseElement | SVGLineElement | SVGPolylineElement) : string {
     const attr = obj.getAttribute("stroke");
-    
-
-
     if(attr != null){
         return attr;
     }else{
-        const color = ElementExtension.getPropertyStyleValueWithDefault(obj, "stroke", "gray");
-        return color;
+        const color = ElementExtension.getPropertyStyleValueWithDefault(obj, "stroke", "NoColor");
+        if(color == "NoColor"){
+            const css = getComputedStyle(obj);
+            return css.stroke;        
+
+        }else{
+            return color;
+        }
+    }
+}
+export function getBackgroundVisible(obj: SVGElement) : boolean {
+    const backGroundvisible = ElementExtension.getPropertyStyleValue(obj, "visibility");
+    if(backGroundvisible != null){
+        return backGroundvisible == "visible";
+
+    }else{
+        const attr = obj.getAttribute("fill");
+        if(attr != null){
+            return !(attr == "none");
+        }else{
+            return true;
+        }
+    
     }
 
 }

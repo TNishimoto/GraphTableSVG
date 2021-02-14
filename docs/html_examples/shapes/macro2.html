@@ -14,13 +14,23 @@
 
 <body>
     <svg viewBox="0 0 600 600" width="600px" height="600px" style="background:#e9e9e9;border:solid 1pt;" xmlns="http://www.w3.org/2000/svg" g-vba="true">
-        <g-graph cx="100" cy="400">
-            <g-ellipse id="g1" cx="0" cy="0">g-graph</g-ellipse>
-            <g-ellipse id="g2" cx="-50" cy="100"></g-ellipse>
-            <g-ellipse id="g3" cx="50" cy="100"></g-ellipse>
-            <g-edge begin-vertex="g1" end-vertex="g2"></g-edge>
-            <g-edge begin-vertex="g1" end-vertex="g3"></g-edge>
-        </g-graph>
+        <polyline fill="none" stroke="blue" stroke-width="10" points="50,375
+                    150,375 150,325 250,325 250,375
+                    350,375 350,250 450,250 450,375
+                    550,375 550,175 650,175 650,375
+                    750,375 750,100 850,100 850,375
+                    950,375 950,25 1050,25 1050,375
+                    1150,375" />
+        <polygon fill="red" stroke="blue" stroke-width="10" points="350,75  379,161 469,161 397,215
+                    423,301 350,250 277,301 303,215
+                    231,161 321,161" />
+        <polygon fill="lime" stroke="blue" stroke-width="10" points="850,75  958,137.5 958,262.5
+                    850,325 742,262.6 742,137.5" />
+        <line x1="700" y1="300" x2="900" y2="100" stroke-width="20" />
+        <line x1="100" y1="100" x2="200" y2="200" stroke-width="25" stroke="black" />
+        <path d="M0,0 L 320, 0 320 , 160 0 , 160 z" fill="none" stroke="black" ></path>
+        <path d="M0,400 L320,0 320,160 Q160,320 0,160" fill="blue" ></path>
+        <path d="M -100,0 Q -50 50 0 0 T 100 0" fill="none" stroke="black"/>
     </svg>
 </body>
 

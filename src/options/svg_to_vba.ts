@@ -6,14 +6,14 @@ import { GGraph } from "../objects/g_graph"
 import { Rectangle } from "../common/vline";
 import * as CSS from "../html/css"
 import { VBATranslateFunctions } from "../common/vba_functions"
-import { isVBAObject, VBAObjectType, collectVBAObjectTypes, countVBSObjectNum } from "./vba_object"
+import { isVBAObject, VBAObjectType, collectVBAObjectTypes, countVBSObjectNum, isVBACodableSVG } from "./vba_object"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { msoDashStyle, ShapeObjectType } from "../common/enums";
 import { msoDashStyleName } from "../common/style_names";
-import { getBackgroundColor, getStrokeColor, getStrokeWidth } from "../interfaces/svg_element_extension";
-
+import { getBackgroundColor, getBackgroundVisible, getStrokeColor, getStrokeWidth } from "../interfaces/svg_element_extension";
+import * as Parser from 'svg-path-parser';
 
 export class SVGToVBA {
 
@@ -72,7 +72,7 @@ export class SVGToVBA {
                     const lines = item.createVBACode(id);
                     lines.forEach((v) => s.push(v));
                     id += item.VBAObjectNum;
-                } else if (item instanceof SVGPathElement || item instanceof SVGRectElement || item instanceof SVGCircleElement || item instanceof SVGTextElement || item instanceof SVGEllipseElement) {
+                } else if (isVBACodableSVG(item)) {
                     //const lines = SVGToVBA.createVBACodeOfSVGPath(item, id++);
                     const lines = SVGToVBA.createVBACodeOfSVGElement(item, id);
 
@@ -100,9 +100,9 @@ export class SVGToVBA {
         }
     }
 
-    private static createVBACodeOfSVGElement(obj: SVGRectElement | SVGCircleElement | SVGPathElement | SVGTextElement | SVGEllipseElement, id: number): string[] {
+    private static createVBACodeOfSVGElement(obj: SVGRectElement | SVGCircleElement | SVGPathElement | SVGTextElement | SVGEllipseElement | SVGLineElement | SVGPolylineElement, id: number): string[] {
         const lines = new Array(0);
-        const visible = ElementExtension.getPropertyStyleValueWithDefault(obj, "visibility", "visible") == "visible" ? "msoTrue" : "msoFalse";
+        const backGroundvisible = getBackgroundVisible(obj) ? "msoTrue" : "msoFalse";
 
         lines.push(`Sub create${id}(createdSlide As slide)`);
         lines.push(` Dim shapes_ As Shapes : Set shapes_ = createdSlide.Shapes`);
@@ -122,14 +122,110 @@ export class SVGToVBA {
         } else {
             const lineColor = VBATranslateFunctions.colorToVBA(getStrokeColor(obj));
             const strokeWidth = getStrokeWidth(obj);
+            const lineColorValue = getStrokeColor(obj);
+            const lineVisible = lineColorValue != "none" ? "msoTrue" : "msoFalse";
 
-            if (obj instanceof SVGPathElement) {
-                const pos = Extensions.getPathLocations(obj);
-                lines.push(` Dim edges${id}(${pos.length - 1}) As Shape`);
+            if (obj instanceof SVGPathElement || obj instanceof SVGLineElement || obj instanceof SVGPolylineElement || obj instanceof SVGPolygonElement) {
+                if(obj instanceof SVGPathElement){
+                    const backColor = VBATranslateFunctions.colorToVBA(getBackgroundColor(obj));
 
-                for (let i = 0; i < pos.length - 1; i++) {
-                    lines.push(` Set edges${id}(${i}) = shapes_.AddConnector(msoConnectorStraight, ${pos[i][0]}, ${pos[i][1]}, ${pos[i + 1][0]}, ${pos[i + 1][1]})`);
-                    lines.push(` Call EditLine(edges${id}(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
+                    lines.push(` Dim builder As FreeformBuilder`);
+
+                    const length = obj.getTotalLength();
+                    
+                    let d = 0;
+
+                    let p = obj.getPointAtLength(d);
+                    lines.push(` Set builder = shapes_.BuildFreeform(msoEditingCorner, ${p.x}, ${p.y}) `);
+                    d += 10;
+                    while(d < length){
+                        p = obj.getPointAtLength(d);
+                        lines.push(`builder.AddNodes msoSegmentLine, msoEditingAuto, ${p.x}, ${p.y}`);
+                        d += 10;
+                    }
+                    d = length;
+                    p = obj.getPointAtLength(d);
+
+
+
+                    lines.push(`builder.AddNodes msoSegmentLine, msoEditingAuto, ${p.x}, ${p.y}`);
+
+                    const commandAttr = obj.getAttribute("d");
+                    let hasClosePath = false;
+                    if(commandAttr != null){
+                        const commandList = Parser.parseSVG(commandAttr);
+                        commandList.forEach((v) =>{
+                            if(v.code=="Z" || v.code=="z"){
+                                hasClosePath =  true;
+                            }
+                        })
+                    }
+                    if(hasClosePath){
+                        p = obj.getPointAtLength(0);
+                        lines.push(`builder.AddNodes msoSegmentLine, msoEditingAuto, ${p.x}, ${p.y}`);
+                    }
+
+                    lines.push(` Dim obj As Shape`);
+                    lines.push(`Set obj = builder.ConvertToShape`);
+                    lines.push(` Call EditLine(obj.Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${lineVisible})`);
+                    lines.push(` Call EditCallOut(obj, "${id}", ${backGroundvisible}, ${backColor})`)
+
+                    /*
+                    const pos = Extensions.getPathLocations(obj);
+                    lines.push(` Dim edges${id}(${pos.length - 1}) As Shape`);
+    
+                    for (let i = 0; i < pos.length - 1; i++) {
+                        lines.push(` Set edges${id}(${i}) = shapes_.AddConnector(msoConnectorStraight, ${pos[i][0]}, ${pos[i][1]}, ${pos[i + 1][0]}, ${pos[i + 1][1]})`);
+                        lines.push(` Call EditLine(edges${id}(${i}).Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${visible})`);
+                    }
+                    */
+    
+                }
+                else if(obj instanceof SVGPolylineElement){
+                    lines.push(` Dim builder As FreeformBuilder`);
+                    const list = obj.points;
+                    let p = list.getItem(0);
+                    lines.push(` Set builder = shapes_.BuildFreeform(msoEditingCorner, ${p.x}, ${p.y}) `);
+
+                    for(let i=0;i<list.length;i++){
+                        p = list.getItem(i);
+                        lines.push(`builder.AddNodes msoSegmentLine, msoEditingAuto, ${p.x}, ${p.y}`);
+                    }
+                    lines.push(` Dim obj As Shape`);
+                    lines.push(`Set obj = builder.ConvertToShape`);
+                    lines.push(` Call EditLine(obj.Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${lineVisible})`);
+
+                }else if(obj instanceof SVGPolygonElement){
+                    const backColor = VBATranslateFunctions.colorToVBA(getBackgroundColor(obj));
+
+                    lines.push(` Dim builder As FreeformBuilder`);
+                    const list = obj.points;
+                    let p = list.getItem(0);
+                    lines.push(` Set builder = shapes_.BuildFreeform(msoEditingCorner, ${p.x}, ${p.y}) `);
+
+                    for(let i=0;i<list.length;i++){
+                        p = list.getItem(i);
+                        lines.push(`builder.AddNodes msoSegmentLine, msoEditingAuto, ${p.x}, ${p.y}`);
+                    }
+                    p = list.getItem(0);
+                    lines.push(`builder.AddNodes msoSegmentLine, msoEditingAuto, ${p.x}, ${p.y}`);
+
+
+                    lines.push(` Dim obj As Shape`);
+                    lines.push(`Set obj = builder.ConvertToShape`);
+                    lines.push(` Call EditLine(obj.Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${lineVisible})`);
+                    lines.push(` Call EditCallOut(obj, "${id}", ${backGroundvisible}, ${backColor})`)
+
+                }
+                else{
+                    const x1 = obj.x1.baseVal.value;
+                    const y1 = obj.y1.baseVal.value;
+                    const x2 = obj.x2.baseVal.value;
+                    const y2 = obj.y2.baseVal.value;
+                    lines.push(` Dim obj As Shape`);
+                    lines.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, ${x1}, ${y1}, ${x2}, ${y2})`);
+                    lines.push(` Call EditLine(obj.Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${lineVisible})`);
+
                 }
 
             } else {
@@ -176,8 +272,8 @@ export class SVGToVBA {
                     lines.push(` Set obj = shapes_.AddShape(${shape}, ${x}, ${y}, ${width}, ${height})`);
 
                 }
-                lines.push(` Call EditLine(obj.Line, ${lineColor}, ${msoDashStyle.msoLineSolid}, ${0}, ${strokeWidth}, ${visible})`);
-                lines.push(` Call EditCallOut(obj, "${id}", ${visible}, ${backColor})`)
+                lines.push(` Call EditLine(obj.Line, ${lineColor}, ${msoDashStyle.msoLineSolid}, ${0}, ${strokeWidth}, ${lineVisible})`);
+                lines.push(` Call EditCallOut(obj, "${id}", ${backGroundvisible}, ${backColor})`)
             }
 
         }

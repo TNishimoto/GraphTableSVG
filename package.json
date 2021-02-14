@@ -16,7 +16,9 @@
     "license": "MIT",
     "dependencies": {
         "@types/node": "^14.11.5",
-        "opener": "^1.5.2"
+        "@types/svg-path-parser": "^1.1.1",
+        "opener": "^1.5.2",
+        "svg-path-parser": "^1.1.0"
     },
     "devDependencies": {
         "ts-loader": "^8.0.4",
