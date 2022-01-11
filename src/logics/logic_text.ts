@@ -24,6 +24,10 @@ export class LogicTSpan{
         this.isLatexMode = obj["isLatexMode"];
     }
 }
+
+/**
+ * 描画されるテキストを表すクラス
+ */
 export class LogicText{
     public textContent : string | LogicTSpan[] = "";
     public class? : string | textClassCSS

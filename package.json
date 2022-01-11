@@ -5,7 +5,7 @@
     "main": "./dist/nodejs_index.js",
     "scripts": {
         "compile": "tsc -p . && tsc -p ./examples/ts && tsc -p ./debug/ts && webpack",
-        "typedoc": "typedoc --out ./docs/typedoc/ ./src/ -m commonjs"
+        "typedoc": "typedoc --out ./docs/typedoc/ ./src/"
     },
     "bin": {
         "graph-table-svg": "./bin/repl.js"
@@ -22,8 +22,8 @@
     },
     "devDependencies": {
         "ts-loader": "^9.2.2",
-        "typedoc": "^0.20.36",
-        "typescript": "^4.3.2",
+        "typedoc": "^0.20.37",
+        "typescript": "4.2",
         "webpack": "^5.38.1",
         "webpack-cli": "^4.7.0"
     }

@@ -4,6 +4,9 @@ import * as GOptions from "../objects/g_options"
 import { LogicCell } from "./logic_cell";
 import { defaultCellClass } from "../common/attribute_names";
 
+/**
+ * LogicCellの配列
+ */
 export type LogicCellLine = LogicCell[];
 
 //export type LogicTableDetailLine = LogicCell[]; 
@@ -76,7 +79,7 @@ export function getIndexArrayTableLine(length: number, zeroBased: boolean = true
     const arr = getIndexArray(length, zeroBased);
     const name = "Index"
     const r = { name: name, values: arr };
-    return toLogicCellLine(r.name, r.values);
+    return buildLogicCellLine(r.name, r.values);
 }
 
 
@@ -92,7 +95,15 @@ function setColumn2(table: LogicTable, ithColumn: number, line: LogicCellLine) {
         setCell(table.cells[i][ithColumn], v);
     })
 }
-export function toLogicCellLine( name: string, values: (number | string)[], svgGroupOption: GOptions.CellAttributes = { class : defaultCellClass}) : LogicCellLine{
+
+/**
+ * 与えられた入力列を表すLogicCellLineを返します。
+ * @param name 
+ * @param values 
+ * @param svgGroupOption 
+ * @returns 
+ */
+export function buildLogicCellLine( name: string, values: (number | string)[], svgGroupOption: GOptions.CellAttributes = { class : defaultCellClass}) : LogicCellLine{
     const titleCell = new LogicCell();
     titleCell.text.textContent = name;
     titleCell.groupOption = svgGroupOption;
@@ -111,6 +122,12 @@ export function toLogicCellLine( name: string, values: (number | string)[], svgG
     return [titleCell].concat(cells);
 }
 
+/**
+ * LogicCellLineの配列を表すLogicTableを構築します。
+ * @param lines 
+ * @param option 
+ * @returns 
+ */
 export function buildLogicTable(lines: LogicCellLine[], option?: { isRowLines?: boolean }): LogicTable {
     if (option == undefined) option = {};
     if (option.isRowLines == undefined) option.isRowLines = true;

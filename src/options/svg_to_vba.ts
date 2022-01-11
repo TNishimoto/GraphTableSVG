@@ -126,6 +126,7 @@ export class SVGToVBA {
             const lineVisible = lineColorValue != "none" ? "msoTrue" : "msoFalse";
 
             if (obj instanceof SVGPathElement || obj instanceof SVGLineElement || obj instanceof SVGPolylineElement || obj instanceof SVGPolygonElement) {
+                
                 if(obj instanceof SVGPathElement){
                     const backColor = VBATranslateFunctions.colorToVBA(getBackgroundColor(obj));
 
@@ -181,9 +182,9 @@ export class SVGToVBA {
                     */
     
                 }
-                else if(obj instanceof SVGPolylineElement){
+                else if(<any>obj instanceof SVGPolylineElement){
                     lines.push(` Dim builder As FreeformBuilder`);
-                    const list = obj.points;
+                    const list = (<any>obj).points;
                     let p = list.getItem(0);
                     lines.push(` Set builder = shapes_.BuildFreeform(msoEditingCorner, ${p.x}, ${p.y}) `);
 
@@ -195,11 +196,11 @@ export class SVGToVBA {
                     lines.push(`Set obj = builder.ConvertToShape`);
                     lines.push(` Call EditLine(obj.Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${lineVisible})`);
 
-                }else if(obj instanceof SVGPolygonElement){
-                    const backColor = VBATranslateFunctions.colorToVBA(getBackgroundColor(obj));
+                }else if(<any>obj instanceof SVGPolygonElement){
+                    const backColor = VBATranslateFunctions.colorToVBA(getBackgroundColor(<any>obj));
 
                     lines.push(` Dim builder As FreeformBuilder`);
-                    const list = obj.points;
+                    const list = (<any>obj).points;
                     let p = list.getItem(0);
                     lines.push(` Set builder = shapes_.BuildFreeform(msoEditingCorner, ${p.x}, ${p.y}) `);
 
@@ -218,10 +219,10 @@ export class SVGToVBA {
 
                 }
                 else{
-                    const x1 = obj.x1.baseVal.value;
-                    const y1 = obj.y1.baseVal.value;
-                    const x2 = obj.x2.baseVal.value;
-                    const y2 = obj.y2.baseVal.value;
+                    const x1 = (<any>obj).x1.baseVal.value;
+                    const y1 = (<any>obj).y1.baseVal.value;
+                    const x2 = (<any>obj).x2.baseVal.value;
+                    const y2 = (<any>obj).y2.baseVal.value;
                     lines.push(` Dim obj As Shape`);
                     lines.push(` Set obj = shapes_.AddConnector(msoConnectorStraight, ${x1}, ${y1}, ${x2}, ${y2})`);
                     lines.push(` Call EditLine(obj.Line, ${lineColor}, msoLineSolid, ${0}, ${strokeWidth}, ${lineVisible})`);

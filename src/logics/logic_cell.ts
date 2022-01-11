@@ -5,6 +5,9 @@ import * as GOptions from "../objects/g_options"
 
 import { LogicText } from "./logic_text";
 
+/**
+ * 表のセルを表す論理クラス
+ */
 export class LogicCell {
 
     public text: LogicText = new LogicText();
