@@ -1,3 +1,8 @@
+/**
+ * あああああああああああああ
+ * @module
+ */
+
 import {GObject} from "./g_object"
 import {GArrowCallout} from "./g_arrow_callout"
 import {GCallout} from "./g_callout"

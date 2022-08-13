@@ -6,12 +6,13 @@ import * as Logics from "./logics/index";
 import * as Console from "./options/console";
 import * as Debug from "./debug/debug";
 import * as Interfaces from "./interfaces/index";
+import * as TypeDoc from "./typedoc/index";
 
 
 
 export {
     HTML, Common, Objects, Logics, Options, 
-    Console, Debug, Interfaces
+    Console, Debug, Interfaces, TypeDoc
     //GUIObserver, HTMLFunctions, GUI, DraggableObject, 
     //LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, buildLogicObjectFromJSON,
     //GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox,

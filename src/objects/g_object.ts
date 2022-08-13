@@ -644,6 +644,24 @@ export class GObject {
         this.svgGroup.dispatchEvent(event);
 
     }
+
+    public get isDynamic() : boolean{
+        const p = this.svgGroup.getAttribute("data-is-dynamic");
+        return p == "true"; 
+    }
+    protected set isDynamic(value : boolean) {
+        this.svgGroup.setAttribute("data-is-dynamic", value == true ? "true" : "false");
+    }
+
+
+    public get isStable() : boolean{
+        const p = this.svgGroup.getAttribute("data-object-stable");
+        return p == "true"; 
+    }
+    protected set isStable(value : boolean) {
+        this.svgGroup.setAttribute("data-object-stable", value == true ? "true" : "false");
+    }
+
     protected _isUpdating: boolean = false;
     public update() {
         if (!this._isInitialized) {

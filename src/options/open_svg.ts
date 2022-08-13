@@ -97,6 +97,13 @@ export function openCustomElement(id: string | SVGElement): GObject | null {
         }
     }
 }
+
+/**
+ * g-rectなどのカスタムタグをGObjectに変換します。
+ * @param e カスタムタグのElement
+ * @param type 
+ * @returns 
+ */
 function createCustomElement(e: Element, type: ShapeObjectType): GObject | null {
     const parent = e.parentElement;
     if (parent instanceof SVGElement) {
@@ -124,6 +131,8 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
             const option = GRect.constructAttributes(e, true);
             r = new GRect(parent);
             r.setOption(option);
+
+            console.log("GRECT");
             //throw Error("error");
 
 

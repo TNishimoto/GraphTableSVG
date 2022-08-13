@@ -4,8 +4,10 @@
     "description": "",
     "main": "./dist/nodejs_index.js",
     "scripts": {
-        "compile": "tsc -p . && tsc -p ./examples/ts && tsc -p ./debug/ts && webpack",
-        "typedoc": "typedoc --out ./docs/typedoc/ ./src/"
+        "compile": "tsc -p . && webpack",
+        "typedoc": "tsc -p ./sub_projects/my-typedoc-plugin/ && typedoc --out ./docs/typedoc/ ./src/ --plugin ./sub_projects/my-typedoc-plugin", 
+        "typedoc_json": "typedoc --json ./docs/typedoc/output.json ./src/ --plugin ./sub_projects/my-typedoc-plugin"
+
     },
     "bin": {
         "graph-table-svg": "./bin/repl.js"

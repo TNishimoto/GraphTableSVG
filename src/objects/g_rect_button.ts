@@ -4,6 +4,9 @@
     import { ShapeObjectType } from "../common/enums";
 import { DefaultClassNames } from "../common";
 
+    /**
+     * GRectButtonです。
+     */
     export class GRectButton extends GRect {
         public constructor(svgbox: SVGElement | string) {
             super(svgbox);

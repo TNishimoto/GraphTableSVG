@@ -1,0 +1,41 @@
+{
+    "name": "my-typedoc-plugin",
+    "version": "0.0.1",
+    "description": "AAAAAAAAAAA",
+    "main": "./dist/main.js",
+    "exports": "./dist/main.js",
+    "types": "./dist/main.d.ts",
+    "files": [
+        "dist/"
+    ],
+    "scripts": {
+        "start": "tsc --watch",
+        "pretest": "npm link && npm link typedoc-plugin-extras",
+        "test": "typedoc --plugin typedoc-plugin-extras --favicon public/favicon.ico --footerDate --footerTime --footerTypedocVersion src/main.ts",
+        "build": "tsc",
+        "prepublishOnly": "npm run build"
+    },
+    "author": "mklemma",
+    "license": "MIT",
+    "bugs": {},
+    "repository": {},
+    "keywords": [
+        "date",
+        "time",
+        "favicon",
+        "typescript",
+        "documentation",
+        "typedocplugin",
+        "typedoc"
+    ],
+    "devDependencies": {
+        "@types/node": "^15.14.9",
+        "typescript": "^4.7.4"
+    },
+    "dependencies": {
+        "@types/libxmljs": "^0.18.7",
+        "@types/react": "^18.0.17",
+        "libxmljs": "^0.19.10",
+        "typedoc": "^0.23.10"
+    }
+}
