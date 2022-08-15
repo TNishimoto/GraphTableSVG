@@ -5,152 +5,152 @@ import * as DefaultClassNames from "../common/default_class_names"
 
 import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } from "../common/enums";
 //export namespace CSS {
-    /*
-    interface IPoint2D {
-        x: number;
-        y: number;
-      }
-      */
+/*
+interface IPoint2D {
+    x: number;
+    y: number;
+  }
+  */
 
-    export function buildClassNameFromSurfaceClassCSS(rule: object): string {
+export function buildClassNameFromSurfaceClassCSS(rule: object): string {
+    const _rule: Map<string, string> = toRuleMap(rule);
+    return getOrCreateClassName(_rule);
+}
+
+const CSSName: string = "___GraphTableCSS";
+let createdGraphTableCSS: boolean = false;
+const replaceMapper: Map<string, string> = new Map();
+
+function setupReplaceMapper() {
+    replaceMapper.set("fontSize", "font-size");
+    replaceMapper.set("fontFamily", "font-family");
+    replaceMapper.set("autoSizeShapeToFitText", StyleNames.autoSizeShapeToFitText);
+    replaceMapper.set("verticalAnchor", StyleNames.verticalAnchor);
+    replaceMapper.set("horizontalAnchor", StyleNames.horizontalAnchor);
+
+    replaceMapper.set("beginConnectorType", StyleNames.beginConnectorType);
+    replaceMapper.set("endConnectorType", StyleNames.endConnectorType);
+    replaceMapper.set("startMarker", StyleNames.markerStart);
+    replaceMapper.set("endMarker", StyleNames.markerEnd);
+
+    replaceMapper.set("edgeType", StyleNames.edgeType);
+
+    replaceMapper.set("pathTextAlignment", StyleNames.pathTextAlignment);
+    replaceMapper.set("paddingTop", StyleNames.paddingTop);
+    replaceMapper.set("paddingLeft", StyleNames.paddingLeft);
+    replaceMapper.set("paddingRight", StyleNames.paddingRight);
+    replaceMapper.set("paddingBottom", StyleNames.paddingBottom);
+
+    replaceMapper.set("strokeWidth", "stroke-width");
+
+}
+
+export function setGraphTableCSS() {
+    if (createdGraphTableCSS) return;
+    const item = document.head!.getElementsByClassName(CSSName);
+    if (item.length > 0) {
+        document.head!.removeChild(item[0]);
+    }
+    var blankStyle: HTMLStyleElement = document.createElement('style');
+
+    blankStyle.innerHTML = createCSS();
+    blankStyle.type = "text/css";
+    blankStyle.setAttribute("class", CSSName);
+    blankStyle.title = CSSName;
+
+
+    const head = document.getElementsByTagName('head');
+    const fstItem = head.item(0)!.firstChild;
+    if (fstItem == null) {
+        head.item(0)!.appendChild(blankStyle);
+
+    } else {
+        head.item(0)!.insertBefore(blankStyle, fstItem);
+    }
+
+    createdGraphTableCSS = true;
+}
+export function getGraphTableCSS(): HTMLStyleElement | null {
+    const item = document.getElementById(CSSName);
+    if (item instanceof HTMLStyleElement) {
+        return item;
+    } else {
+        return null;
+    }
+}
+export function getGraphTableStyleSheet(): CSSStyleSheet | null {
+    if (!createdGraphTableCSS) setGraphTableCSS();
+    for (let i = 0; i < document.styleSheets.length; i++) {
+        const css = document.styleSheets.item(i)!;
+        if (css.title == CSSName && css instanceof CSSStyleSheet) {
+            return css
+        }
+    }
+    return null;
+}
+
+export function getRuleContentString(rule: Map<string, string>): string {
+    const arr: string[] = new Array();
+    rule.forEach((value, key) => {
+        arr.push(key);
+    })
+    arr.sort();
+    const content = arr.map((key) => {
+        return `${key}: ${rule.get(key)};`;
+    }).join("\n");
+    return content;
+}
+export function toRuleMap(rule: object): Map<string, string> {
+    if (replaceMapper.size == 0) setupReplaceMapper();
+    const _rule: Map<string, string> = new Map();
+    Object.keys(rule).forEach((v) => {
+        if (replaceMapper.has(v)) {
+            _rule.set(replaceMapper.get(v)!, (<any>rule)[v]);
+        } else {
+            _rule.set(v, (<any>rule)[v]);
+        }
+        /*        
+        if(v == "fontSize"){
+            _rule.set("font-size", value);
+        }else if(v == "fontFamily"){
+            _rule.set("font-family", value);
+        }else{
+            _rule.set(v, (<any>rule)[v]);
+        }
+        */
+    })
+    return _rule;
+}
+
+const ruleInverseMap: Map<string, string> = new Map();
+let createdCSSRuleCount = 0;
+const generatedCSSRuleName = "--g-class-";
+
+export function getOrCreateClassName(rule: Map<string, string> | object): string {
+    if (rule instanceof Map) {
+        const ruleContentString = getRuleContentString(rule);
+        if (ruleInverseMap.has(ruleContentString)) {
+            return ruleInverseMap.get(ruleContentString)!;
+        } else {
+            const css = getGraphTableStyleSheet()!;
+            const className = `${generatedCSSRuleName}${createdCSSRuleCount++}`;
+            const cssRule = `.${className}{${ruleContentString}}`;
+            css.insertRule(cssRule, css.cssRules.length);
+            ruleInverseMap.set(ruleContentString, className);
+            return className;
+
+        }
+    } else {
         const _rule: Map<string, string> = toRuleMap(rule);
         return getOrCreateClassName(_rule);
     }
 
-    const CSSName: string = "___GraphTableCSS";
-    let createdGraphTableCSS: boolean = false;
-    const replaceMapper: Map<string, string> = new Map();
-
-    function setupReplaceMapper() {
-        replaceMapper.set("fontSize", "font-size");
-        replaceMapper.set("fontFamily", "font-family");
-        replaceMapper.set("autoSizeShapeToFitText", StyleNames.autoSizeShapeToFitText);
-        replaceMapper.set("verticalAnchor", StyleNames.verticalAnchor);
-        replaceMapper.set("horizontalAnchor", StyleNames.horizontalAnchor);
-
-        replaceMapper.set("beginConnectorType", StyleNames.beginConnectorType);
-        replaceMapper.set("endConnectorType", StyleNames.endConnectorType);
-        replaceMapper.set("startMarker", StyleNames.markerStart);
-        replaceMapper.set("endMarker", StyleNames.markerEnd);
-
-        replaceMapper.set("edgeType", StyleNames.edgeType);
-
-        replaceMapper.set("pathTextAlignment", StyleNames.pathTextAlignment);
-        replaceMapper.set("paddingTop", StyleNames.paddingTop);
-        replaceMapper.set("paddingLeft", StyleNames.paddingLeft);
-        replaceMapper.set("paddingRight", StyleNames.paddingRight);
-        replaceMapper.set("paddingBottom", StyleNames.paddingBottom);
-
-        replaceMapper.set("strokeWidth", "stroke-width");
-
-    }
-
-    export function setGraphTableCSS() {
-        if (createdGraphTableCSS) return;
-        const item = document.head!.getElementsByClassName(CSSName);
-        if (item.length > 0) {
-            document.head!.removeChild(item[0]);
-        }
-        var blankStyle: HTMLStyleElement = document.createElement('style');
-
-        blankStyle.innerHTML = createCSS();
-        blankStyle.type = "text/css";
-        blankStyle.setAttribute("class", CSSName);
-        blankStyle.title = CSSName;
+}
 
 
-        const head = document.getElementsByTagName('head');
-        const fstItem = head.item(0)!.firstChild;
-        if (fstItem == null) {
-            head.item(0)!.appendChild(blankStyle);
+export function createCSS(): string {
 
-        } else {
-            head.item(0)!.insertBefore(blankStyle, fstItem);
-        }
-
-        createdGraphTableCSS = true;
-    }
-    export function getGraphTableCSS(): HTMLStyleElement | null {
-        const item = document.getElementById(CSSName);
-        if (item instanceof HTMLStyleElement) {
-            return item;
-        } else {
-            return null;
-        }
-    }
-    export function getGraphTableStyleSheet(): CSSStyleSheet | null {
-        if (!createdGraphTableCSS) setGraphTableCSS();
-        for (let i = 0; i < document.styleSheets.length; i++) {
-            const css = document.styleSheets.item(i)!;
-            if (css.title == CSSName && css instanceof CSSStyleSheet) {
-                return css
-            }
-        }
-        return null;
-    }
-
-    export function getRuleContentString(rule: Map<string, string>): string {
-        const arr: string[] = new Array();
-        rule.forEach((value, key) => {
-            arr.push(key);
-        })
-        arr.sort();
-        const content = arr.map((key) => {
-            return `${key}: ${rule.get(key)};`;
-        }).join("\n");
-        return content;
-    }
-    export function toRuleMap(rule: object): Map<string, string> {
-        if (replaceMapper.size == 0) setupReplaceMapper();
-        const _rule: Map<string, string> = new Map();
-        Object.keys(rule).forEach((v) => {
-            if (replaceMapper.has(v)) {
-                _rule.set(replaceMapper.get(v)!, (<any>rule)[v]);
-            } else {
-                _rule.set(v, (<any>rule)[v]);
-            }
-            /*        
-            if(v == "fontSize"){
-                _rule.set("font-size", value);
-            }else if(v == "fontFamily"){
-                _rule.set("font-family", value);
-            }else{
-                _rule.set(v, (<any>rule)[v]);
-            }
-            */
-        })
-        return _rule;
-    }
-
-    const ruleInverseMap: Map<string, string> = new Map();
-    let createdCSSRuleCount = 0;
-    const generatedCSSRuleName = "--g-class-";
-
-    export function getOrCreateClassName(rule: Map<string, string> | object): string {
-        if (rule instanceof Map) {
-            const ruleContentString = getRuleContentString(rule);
-            if (ruleInverseMap.has(ruleContentString)) {
-                return ruleInverseMap.get(ruleContentString)!;
-            } else {
-                const css = getGraphTableStyleSheet()!;
-                const className = `${generatedCSSRuleName}${createdCSSRuleCount++}`;
-                const cssRule = `.${className}{${ruleContentString}}`;
-                css.insertRule(cssRule, css.cssRules.length);
-                ruleInverseMap.set(ruleContentString, className);
-                return className;
-
-            }
-        } else {
-            const _rule: Map<string, string> = toRuleMap(rule);
-            return getOrCreateClassName(_rule);
-        }
-
-    }
-
-
-    export function createCSS(): string {
-
-        const r = `
+    const r = `
             .${AttributeNames.cellEmphasisCellClass}{
             fill : yellow !important;
             }
@@ -280,48 +280,48 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } f
 
 
             `
-        return r;
+    return r;
+}
+export function createCSSString(obj: object | string | undefined): string | undefined {
+    if (typeof obj == "string") {
+        return obj;
+    } else if (typeof obj == "object") {
+        const styleContent = getRuleContentString(toRuleMap(obj));
+        return styleContent;
+    } else {
+        return undefined;
     }
-    export function createCSSString(obj : object | string | undefined) : string | undefined {
-        if(typeof obj == "string"){
-            return obj;
-        }else if(typeof obj == "object"){
-            const styleContent = getRuleContentString(toRuleMap(obj));
-            return styleContent;    
-        }else{
-            return undefined;
-        }
+}
+export function createCSSClass(obj: object | string | undefined): string | undefined {
+    if (typeof obj == "string") {
+        return obj;
+    } else if (typeof obj == "object") {
+        const styleClass = getOrCreateClassName(obj);
+        return styleClass;
+    } else {
+        return undefined;
     }
-    export function createCSSClass(obj : object | string | undefined) : string | undefined {
-        if(typeof obj == "string"){
-            return obj;
-        }else if(typeof obj == "object"){
-            const styleClass = getOrCreateClassName(obj);
-            return styleClass;    
-        }else{
-            return undefined;
-        }
-    }
-    export function setCSSClass(e : SVGElement, style : object | string | undefined | null){
-        if(style !== undefined){
-            //SVG.resetStyle(e.style);
-            if(style == null){
-                e.removeAttribute("class")
-            }else{
-                const styleClass = createCSSClass(style);
-                if(styleClass !== undefined){
-                    e.setAttribute("class", styleClass);    
-                }    
+}
+export function setCSSClass(e: SVGElement, style: object | string | undefined | null) {
+    if (style !== undefined) {
+        //SVG.resetStyle(e.style);
+        if (style == null) {
+            e.removeAttribute("class")
+        } else {
+            const styleClass = createCSSClass(style);
+            if (styleClass !== undefined) {
+                e.setAttribute("class", styleClass);
             }
         }
     }
-    export function setCSSStyle(e : SVGElement, style : object | string | undefined){
-        if(style !== undefined){
-            //SVG.resetStyle(e.style);
-            const styleClass = createCSSString(style);
-            if(styleClass !== undefined){
-                e.setAttribute("style", styleClass);    
-            }
+}
+export function setCSSStyle(e: SVGElement, style: object | string | undefined) {
+    if (style !== undefined) {
+        //SVG.resetStyle(e.style);
+        const styleClass = createCSSString(style);
+        if (styleClass !== undefined) {
+            e.setAttribute("style", styleClass);
         }
     }
+}
 //}

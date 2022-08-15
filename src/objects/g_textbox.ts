@@ -15,13 +15,13 @@ import { GVertex } from "./g_vertex"
 
 import * as GOptions from "./g_options"
 import { AutoSizeShapeToFitText } from "../common/enums"
-import { setComputedDashArray } from "../html/enum_extension";
+import { updateAppropriateDashArray, getUpdateFlagAppropriateDashArray } from "../html/enum_extension";
 
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGElementExtension from "../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { UndefinedError } from "../common/exceptions"
-import { getVirtualRegion} from "../interfaces/virtual_text"
+import { getVirtualRegion } from "../interfaces/virtual_text"
 import { createSVGText } from "./element_builder"
 
 //namespace GraphTableSVG {
@@ -146,7 +146,11 @@ export class GTextBox extends GVertex {
                 b = true;
             }
         }
-        if (b) this.update();
+        if (b){
+            this.resetUnstableCounter();
+            //this.update();
+
+        }
 
     };
 
@@ -204,48 +208,102 @@ export class GTextBox extends GVertex {
         ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.autoSizeShapeToFitText, value);
         //this.svgGroup.setPropertyStyleValue(AttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
     }
-    protected updateStyle() : boolean{
+
+    private updateStyleOrGetUpdateFlag(updateFlag: boolean) : boolean{
         let b = false;
-        this.hasConnectedObserverFunction = false;
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null && this.svgSurface != null) {
-            b = setComputedDashArray(this.svgSurface);
+
+            if (updateFlag) {
+                this.hasConnectedObserverFunction = false;                
+                b = updateAppropriateDashArray(this.svgSurface);
+                this.hasConnectedObserverFunction = true;
+            }else{
+                b = getUpdateFlagAppropriateDashArray(this.svgSurface);
+            }
+
         }
-        this.hasConnectedObserverFunction = true;
         return b;
+
     }
-    protected updateSurfaceSize() : boolean{
+
+    protected getUpdateFlagOfStyle(): boolean {
+        return this.updateStyleOrGetUpdateFlag(false);
+    }
+    protected updateStyle() : boolean {
+        return this.updateStyleOrGetUpdateFlag(true);
+    }
+    private updateSurfaceSizeOrGetUpdateFlag(updateFlag : boolean){
         const region = this.getVirtualRegion();
 
         let b = false;
         const widthRound100 = round100(region.width);
-        if(this.width != widthRound100){
-            this.setWidthWithoutUpdate(widthRound100);
+        if (this.width != widthRound100) {
+            if(updateFlag){
+                this.setWidthWithoutUpdate(widthRound100);
+            }
             b = true;
         }
 
         const heightRound100 = round100(region.height);
 
-        if(this.height != heightRound100){
-            this.setHeightWithoutUpdate(heightRound100);
+        if (this.height != heightRound100) {
+            if(updateFlag){
+                this.setHeightWithoutUpdate(heightRound100);
+            }
             //this.height = region.height;        
             b = true;
         }
         return b;
+
     }
-    protected updateTextLocation() : boolean {
-        //const textRect = this.textLocationRegion;
-        //console.log(this.verticalAnchor + "/" + this.horizontalAnchor)
-        return SVGTextExtension.setXY(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+    protected getUpdateFlagOfSurfaceSize() : boolean{
+        return this.updateSurfaceSizeOrGetUpdateFlag(false);        
     }
-    protected updateSurfaceLocation() : boolean{
+
+    protected updateSurfaceSize(): boolean {
+        return this.updateSurfaceSizeOrGetUpdateFlag(true);
+    }
+
+    /*
+    protected updateTextLocationOrGetUpdateFlag(executeUpdate : boolean): boolean {
+        return SVGTextExtension.up(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+    }
+    */
+
+    
+    protected updateTextLocation(): boolean {
+        return SVGTextExtension.updateLocation(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+    }
+    protected getUpdateFlagOfTextLocation() : boolean {
+        return SVGTextExtension.getUpdateFlagOfLocation(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
+    }
+    protected updateSurfaceLocation(): boolean {
         return false;
     }
-    op : number =0;
-    private updateRec(n : number){
-        if(n > 10){
-            throw new Error("Update-Loop Error!");
+    protected getUpdateFlagOfSurfaceLocation(): boolean {
+        return false;
+    }
+
+    op: number = 0;
+
+    public getUpdateFlag() : boolean{
+        const super_b = super.getUpdateFlag();
+        if (!this.isShown) return super_b;
+
+        if (this.svgText == null) {
+            throw new TypeError("svgText is null");
         }
+
+        const b1: boolean = this.getUpdateFlagOfStyle();
+        const b2: boolean = this.getUpdateFlagOfTextLocation();
+        const b3: boolean = this.getUpdateFlagOfSurfaceSize();
+        const b4: boolean = this.getUpdateFlagOfSurfaceLocation();
+
+        return super_b || b1 || b2 || b3 || b4;
+
+    }
+    private updateRec() : void {
         super.update();
         this._isUpdating = true;
         if (!this.isShown) return;
@@ -255,22 +313,25 @@ export class GTextBox extends GVertex {
         if (this.svgText == null) {
             throw new TypeError("svgText is null");
         }
-        const b1 : boolean = this.updateStyle();
-        const b2 : boolean = this.updateSurfaceSize();
-        const b3 : boolean =  this.updateTextLocation();
-        const b4 : boolean = this.updateSurfaceLocation();
+        this.updateStyle();
+        this.updateTextLocation();
+        this.updateSurfaceSize();
+        this.updateSurfaceLocation();
         this._isUpdating = false;
-        //this._observer.observe(this.svgGroup, this.groupObserverOption);
         this.hasConnectedObserverFunction = true;
-        
-        //console.log(`${b1}/${b2}/${b3}/${b4}/`)
-        if(b1 || b2 || b3 || b4){                
-            this.updateRec(n+1);
-        }
 
+        
     }
     public update() {
-        this.updateRec(1);
+        let counter = 1;
+        while(this.getUpdateFlag()){
+            if(counter > 10){
+                throw new Error("Update-Loop Error!");
+            }
+            this.updateRec();
+            counter++;
+        }
+        //return counter > 1;
     }
     /*
     protected updateToFitText(isWidth: boolean) {
@@ -453,15 +514,15 @@ export class GTextBox extends GVertex {
     public getVirtualHeight(): number {
         return this.getVirtualRegion().height;
     }
-    
+
     getVirtualExtraRegion(): Rectangle {
         const textRect = getVirtualRegion(this.svgText);
 
         //const textRect = SVGTextExtension.getRegion(this.svgText);
         const w = textRect.width + this.leftExtraLength + this.rightExtraLength;
         const h = textRect.height + this.topExtraLength + this.bottomExtraLength;
-        const x = -w/2;
-        const y = -h/2;
+        const x = -w / 2;
+        const y = -h / 2;
         return new Rectangle(x, y, w, h);
     }
     getVirtualTextLocationRegion(): Rectangle {
@@ -482,7 +543,7 @@ export class GTextBox extends GVertex {
     }
 
     public getVirtualRegion(): Rectangle {
-        if(this.svgText === undefined){
+        if (this.svgText === undefined) {
             throw new UndefinedError();
             //return new Rectangle(this.cx, this.cy, 0, 0);
         }
@@ -491,25 +552,25 @@ export class GTextBox extends GVertex {
         if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
             return marginRect;
         } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
-            let [x, y] = [0,0]
-            let [newWidth, newHeight] = [0,0]
+            let [x, y] = [0, 0]
+            let [newWidth, newHeight] = [0, 0]
 
-            if(this.width < marginRect.width){
+            if (this.width < marginRect.width) {
                 newWidth = marginRect.width;
                 x = marginRect.x;
-            }else{
-                const surface_x = this.svgSurface != null ? SVGElementExtension.getX(this.svgSurface) : 0;
+            } else {
+                //const surface_x = this.svgSurface != null ? SVGElementExtension.getX(this.svgSurface) : 0;
                 newWidth = this.width;
-                x = -this.width/2;
+                x = -this.width / 2;
             }
-            if(this.height < marginRect.height){
-                
-                newHeight =marginRect.height;
+            if (this.height < marginRect.height) {
+
+                newHeight = marginRect.height;
                 y = marginRect.y;
-            }else{
-                const surface_y = this.svgSurface != null ? SVGElementExtension.getY(this.svgSurface) : 0;
+            } else {
+                //const surface_y = this.svgSurface != null ? SVGElementExtension.getY(this.svgSurface) : 0;
                 newHeight = this.height;
-                y = -this.height/2;
+                y = -this.height / 2;
             }
             //const newWidth = this.width < width ? width : this.width;
             //const newHeigth = this.height < height ? height : this.height;
@@ -541,7 +602,7 @@ export class GTextBox extends GVertex {
     }
     */
 
-    
+
 
 }
 

@@ -170,7 +170,6 @@
         public constructor(svgbox: SVGElement | string) {
             super(svgbox);
             if(this.type == ShapeObjectType.Ellipse) this.firstFunctionAfterInitialized();
-            //this.update();
         }
         protected createSurface(svgbox : SVGElement) : void {
             //if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;

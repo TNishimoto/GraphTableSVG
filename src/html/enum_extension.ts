@@ -31,7 +31,9 @@ function computeDashArray(type: msoDashStyle, width: number): string {
     }
 }
 
-export function setComputedDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement): boolean {
+
+
+export function updateAppropriateDashArrayOrGetUpdateFlag(svgLine: SVGLineElement | SVGPathElement | SVGElement, updateFlag : boolean) : boolean {
     const type = ElementExtension.getPropertyStyleValue(svgLine,StyleNames.msoDashStyleName);
     if (type == null) {
         return false;
@@ -40,11 +42,26 @@ export function setComputedDashArray(svgLine: SVGLineElement | SVGPathElement | 
         const width = <number>ElementExtension.getPropertyStyleNumberValue(svgLine,"stroke-width", 2);
         const newDashArray = computeDashArray(msoDashStyle.toMSODashStyle(type), width);
         const newLineCap = msoDashStyle.lineCapDic[type];
-        const b1 = ElementExtension.setPropertyStyleValue2(svgLine,"stroke-dasharray", newDashArray);
-        const b2 = ElementExtension.setPropertyStyleValue2(svgLine,"stroke-linecap", newLineCap);
+        const b1 = newDashArray == ElementExtension.getPropertyStyleValue(svgLine, "stroke-dasharray")
+        if(updateFlag && b1){
+            ElementExtension.setPropertyStyleValue2(svgLine,"stroke-dasharray", newDashArray);
+        }
+        const b2 = newLineCap == ElementExtension.getPropertyStyleValue(svgLine, "stroke-linecap")
+        if(updateFlag && b2){
+            ElementExtension.setPropertyStyleValue2(svgLine,"stroke-linecap", newLineCap);
+        }
 
         return b1 || b2;
     }else{
         return false;
     }
+
+}
+export function updateAppropriateDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement): boolean {
+    return updateAppropriateDashArrayOrGetUpdateFlag(svgLine, true);
+}
+
+
+export function getUpdateFlagAppropriateDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement) : boolean {
+    return updateAppropriateDashArrayOrGetUpdateFlag(svgLine, false);
 }

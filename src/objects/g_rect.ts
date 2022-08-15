@@ -7,7 +7,7 @@ import * as StyleNames from "../common/style_names"
 import { Rectangle, VLine, round100 } from "../common/vline"
 import * as CSS from "../html/css"
 import * as GOptions from "./g_options"
-import { setComputedDashArray } from "../html/enum_extension";
+import { updateAppropriateDashArray } from "../html/enum_extension";
 import * as ElementExtension from "../interfaces/element_extension"
 import * as DefaultClassNames from "../common/default_class_names"
 
@@ -21,7 +21,7 @@ export class GRect extends GTextBox {
         return <SVGRectElement>this._svgSurface;
     }
 
-    public constructor(svgbox: SVGElement | string) {
+    public constructor(svgbox: SVGElement | string, option : GOptions.GTextBoxAttributes | null = null) {
         super(svgbox);
         this.updateAttributes.push("width");
         this.updateAttributes.push("height");
@@ -109,7 +109,8 @@ export class GRect extends GTextBox {
         //const value100 = round100(value);
         //if (this.width != value100) this.svgRectangle.setAttribute("width", value100.toString());
         this.setWidthWithoutUpdate(value);
-        this.update();
+        this.resetUnstableCounter();
+        //this.update();
     }
     protected setWidthWithoutUpdate(value: number) {
         const value100 = round100(value);
@@ -126,7 +127,9 @@ export class GRect extends GTextBox {
     }
     set height(value: number) {
         this.setHeightWithoutUpdate(value);
-        this.update();
+        this.resetUnstableCounter();
+        
+        //this.update();
     }
     protected setHeightWithoutUpdate(value: number) {
         const value100 = round100(value);

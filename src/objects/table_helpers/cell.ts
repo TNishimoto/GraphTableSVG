@@ -1459,7 +1459,7 @@ export class Cell {
 
 
         const innerRect = this.getVirtualInnerRegion();
-        SVGTextExtension.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None);
+        SVGTextExtension.updateLocation(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None);
 
         //const innerRect= this.getVirtualRegion();
 

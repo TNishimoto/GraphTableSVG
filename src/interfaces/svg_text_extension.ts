@@ -99,27 +99,13 @@ export function setMarginBottom(item: SVGTextElement, value: number): void {
     ElementExtension.setPropertyStyleValue(item, StyleNames.marginBottom, value.toString());
 
 }
-export function setXY(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText): boolean {
 
-    //let x = rect.x;
-    //let y = rect.y;
-    //(<any>text).setAttribute('x', x.toString());
-    //(<any>text).setAttribute('y', y.toString());
-
-    //const box1 = getSize(<any>text, true);
+function updateLocationOrGetUpdateFlag(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText, executeUpdate : boolean) : boolean{
     const box = getVirtualRegion(<any>text);
 
-    
-    //let y = rect.y - (box.y - rect.y);
-    //let x = rect.x - (box.x - rect.x);
-    //console.log(box);
     let y = rect.y - box.y;
     let x = rect.x - box.x;
 
-    //y -= dy;
-    //x -= dx;
-    
-    //y += box.height;
     if (vAnchor == VerticalAnchor.Middle) {
         y += (rect.height - box.height) / 2
     } else if (vAnchor == VerticalAnchor.Bottom) {
@@ -138,20 +124,30 @@ export function setXY(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAn
     const _x = (<any>text).getAttribute('x', x.toString());
     const _y = (<any>text).getAttribute('y', y.toString());
     let b = false;
-
-    //console.log(`${_x}/${roundX}/${_y}/${roundY}`)
     
     if (_x != roundX) {
-        (<any>text).setAttribute('x', roundX.toString());
-        b = true;
+        b = true;    
+        if(executeUpdate){
+            (<any>text).setAttribute('x', roundX.toString());
+        }
     }
     if (_y != roundY) {
-        (<any>text).setAttribute('y', roundY.toString());
         b = true;
+        if(executeUpdate){
+            (<any>text).setAttribute('y', roundY.toString());
+        }
     }
     return b;
+
 }
 
+export function updateLocation(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText): boolean {
+   return updateLocationOrGetUpdateFlag(text, rect, vAnchor, hAnchor, isAutoSizeShapeToFitText, true);
+}
+export function getUpdateFlagOfLocation(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText): boolean {
+    return updateLocationOrGetUpdateFlag(text, rect, vAnchor, hAnchor, isAutoSizeShapeToFitText, false);
+ }
+ 
 
 
 

@@ -122,7 +122,12 @@ export class GAbstractTextEdge extends GAbstractEdge {
                 b = true;
             }
         }
-        if (b) this.update();
+        if (b){
+            this.resetUnstableCounter();
+            //this.update();
+
+        }
+        
     };
     public get isShown(): boolean {
         const b1 = super.isShown;

@@ -599,12 +599,6 @@ export class GGraph extends GObject {
     protected resizeUpdate() {
         this.relocate();
     }
-    /*
-    public update() {
-        super.update();
-        
-    }
-    */
 
     private static createVertex2(parent: GGraph, option: GOptions.GTextBoxAttributes = {}): GVertex {
         let _parent = parent.svgGroup;

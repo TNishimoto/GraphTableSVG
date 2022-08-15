@@ -32,24 +32,7 @@ export function observeSVGBox(svgBox: SVGSVGElement, sizeFunc: () => Rectangle, 
     };
     _observer.observe(svgBox, option);
 }
-/*
-export function autostrech(svgBox: SVGSVGElement, objects : VBAObjectType[]){
-    objects.forEach((v)=>
-    {
-        if(v instanceof GObject){
-            v.update();
-        }
-    }
-    )
-    const rect = VBAObject.getRegion(objects);
 
-    GUI.setSVGBoxSize(svgBox, rect, new Padding(5,5,5,5));
-}
-
-export function autostretchObserve(svgBox: SVGSVGElement, objects : VBAObjectType[]) {
-    throw "NotImplementedException";
-}
-*/
 
 
 
@@ -160,8 +143,7 @@ export function observeSVGSVG(svgBox: SVGSVGElement, padding: Padding = new Padd
 }
 
 /**
- * SVGSVGElementの定期的に監視する関数です。この関数はGObjectが子孫となっているSVGSVGElementに対して必ず実行されます。
- * また監視が止まることはありません。
+ * SVGSVGElemenを定期的に監視する関数です。
  */
 function observeSVGSVGTimer() {
     

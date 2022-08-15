@@ -8,7 +8,7 @@ import { GVertex } from "./g_vertex"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVG from "../interfaces/svg"
 import { getGraph } from "./graph_helpers/common_functions";
-import { setComputedDashArray } from "../html/enum_extension";
+import { updateAppropriateDashArray } from "../html/enum_extension";
 import * as GOptions from "./g_options"
 import { createPath } from "./element_builder"
 import { NullError, UndefinedError } from "../common/exceptions";
@@ -187,7 +187,7 @@ export class GAbstractEdge extends GObject {
         this.hasConnectedObserverFunction = false;
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null) {
-            setComputedDashArray(this.svgPath);
+            updateAppropriateDashArray(this.svgPath);
         }
         this.hasConnectedObserverFunction = true;
     }
@@ -292,8 +292,8 @@ export class GAbstractEdge extends GObject {
         } else {
             this.beginVertexID = value.objectID;
         }
-
-        this.update();
+        this.resetUnstableCounter();
+        //this.update();
 
     }
     /**
@@ -316,8 +316,8 @@ export class GAbstractEdge extends GObject {
             this.endVertexID = value.objectID;
         }
 
-
-        this.update();
+        this.resetUnstableCounter();
+        //this.update();
 
     }
     /**
@@ -512,7 +512,8 @@ export class GAbstractEdge extends GObject {
         vertex.svgGroup.addEventListener(AttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
     }
     private connectPositionChangedFunc = () => {
-        this.update();
+        this.resetUnstableCounter();
+        //this.update();
     }
 
     protected updateConnectorInfo() {
