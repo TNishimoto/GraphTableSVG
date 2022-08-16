@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Text Examples</title>
+    <script>
+        window.onload = () => {
+
+            var div = document.createElement('div');
+            div.style.position = 'absolute';
+            div.style.height = 'auto';
+            div.style.width = 'auto';
+            div.style.whiteSpace = 'nowrap';
+            div.style.fontFamily = 'Times New Roman';
+            div.style.fontSize = '100pt'; // large enough for good resolution
+            div.style.border = "1px solid blue"; // for visible convenience
+            //div.innerHTML = "aaaaaaa"
+            //document.body.appendChild(div);
+
+
+            var character = "";
+            var string = "array = [";
+            let size = 65535;
+            for (var i = 0; i < size; i++) {
+                character = String.fromCharCode(i);
+                div.innerHTML = character;
+                document.body.appendChild(div);
+
+                var offsetWidth = div.offsetWidth;
+                var clientWidth = div.clientWidth;
+                console.log("ASCII: " + i + ", " + character + ", client width: " + div.clientWidth);
+
+                string = string + div.clientWidth;
+                if (i < size) {
+                    string = string + ", ";
+                    if (i % 126 == 0) {
+                        string += "</br>";
+                    }
+
+                }
+
+                document.body.removeChild(div);
+
+            }
+
+            var space_string = "! !";
+            div.innerHTML = space_string;
+            document.body.appendChild(div);
+            console.log("space width: " + div.clientWidth - space_string.charCodeAt(0) * 2);
+            document.body.removeChild(div);
+
+            string = string + "]";
+            div.innerHTML = string;
+            document.body.appendChild(div)
+
+        };
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

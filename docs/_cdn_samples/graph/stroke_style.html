@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Stroke Style Samples</title>
+    <script src="https://cdn.jsdelivr.net/gh/TNishimoto/GraphTableSVG@v0.0.121/dist/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.Options.openSVG();
+        };
+    </script>
+</head>
+
+<body>
+    <svg width="1200px" height="800px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
+        <g-rect x="10" y="10" width="50" height="50" id="A_10_1" surface:style="--stroke-style:msoLineDash;stroke-width:1px" />
+        <g-rect x="310" y="10" width="50" height="50" id="B_10_1" surface:style="--stroke-style:msoLineDash;stroke-width:3px"/>
+        <g-rect x="610" y="10" width="50" height="50" id="C_10_1" surface:style="--stroke-style:msoLineDash;stroke-width:6px"/>
+        <g-rect x="910" y="10" width="50" height="50" id="D_10_1" />
+        <g-edge begin-vertex="A_10_1" end-vertex="B_10_1" surface:style="--stroke-style:msoLineDash;stroke-width:1px">
+            msoLineDash(1px)</g-edge>
+        <g-edge begin-vertex="B_10_1" end-vertex="C_10_1" surface:style="--stroke-style:msoLineDash;stroke-width:3px">
+            3px</g-edge>
+        <g-edge begin-vertex="C_10_1" end-vertex="D_10_1" surface:style="--stroke-style:msoLineDash;stroke-width:6px">
+            6px</g-edge>
+
+        <g-rect x="10" y="110" width="50" height="50" id="A_10_2" surface:style="--stroke-style:msoLineDashDot;stroke-width:1px"/>
+        <g-rect x="310" y="110" width="50" height="50" id="B_10_2" surface:style="--stroke-style:msoLineDashDot;stroke-width:3px"/>
+        <g-rect x="610" y="110" width="50" height="50" id="C_10_2" surface:style="--stroke-style:msoLineDashDot;stroke-width:6px"/>
+        <g-rect x="910" y="110" width="50" height="50" id="D_10_2" />
+        <g-edge begin-vertex="A_10_2" end-vertex="B_10_2"
+            surface:style="--stroke-style:msoLineDashDot;stroke-width:1px">msoLineDashDot(1px)</g-edge>
+        <g-edge begin-vertex="B_10_2" end-vertex="C_10_2"
+            surface:style="--stroke-style:msoLineDashDot;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_2" end-vertex="D_10_2"
+            surface:style="--stroke-style:msoLineDashDot;stroke-width:6px">6px</g-edge>
+
+        <g-rect x="10" y="210" width="50" height="50" id="A_10_3" surface:style="--stroke-style:msoLineDashDotDot;stroke-width:1px"/>
+        <g-rect x="310" y="210" width="50" height="50" id="B_10_3" surface:style="--stroke-style:msoLineDashDotDot;stroke-width:3px"/>
+        <g-rect x="610" y="210" width="50" height="50" id="C_10_3" surface:style="--stroke-style:msoLineDashDotDot;stroke-width:6px"/>
+        <g-rect x="910" y="210" width="50" height="50" id="D_10_3" />
+        <g-edge begin-vertex="A_10_3" end-vertex="B_10_3"
+            surface:style="--stroke-style:msoLineDashDotDot;stroke-width:1px">msoLineDashDotDot(1px)</g-edge>
+        <g-edge begin-vertex="B_10_3" end-vertex="C_10_3"
+            surface:style="--stroke-style:msoLineDashDotDot;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_3" end-vertex="D_10_3"
+            surface:style="--stroke-style:msoLineDashDotDot;stroke-width:6px">6px</g-edge>
+
+        <g-rect x="10" y="310" width="50" height="50" id="A_10_4" surface:style="--stroke-style:msoLineLongDash;stroke-width:1px"/>
+        <g-rect x="310" y="310" width="50" height="50" id="B_10_4" surface:style="--stroke-style:msoLineLongDash;stroke-width:3px"/>
+        <g-rect x="610" y="310" width="50" height="50" id="C_10_4" surface:style="--stroke-style:msoLineLongDash;stroke-width:6px"/>
+        <g-rect x="910" y="310" width="50" height="50" id="D_10_4" />
+        <g-edge begin-vertex="A_10_4" end-vertex="B_10_4"
+            surface:style="--stroke-style:msoLineLongDash;stroke-width:1px">msoLineLongDash(1px)</g-edge>
+        <g-edge begin-vertex="B_10_4" end-vertex="C_10_4"
+            surface:style="--stroke-style:msoLineLongDash;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_4" end-vertex="D_10_4"
+            surface:style="--stroke-style:msoLineLongDash;stroke-width:6px">6px</g-edge>
+
+        <g-rect x="10" y="410" width="50" height="50" id="A_10_5" surface:style="--stroke-style:msoLineLongDashDot;stroke-width:1px"/>
+        <g-rect x="310" y="410" width="50" height="50" id="B_10_5" surface:style="--stroke-style:msoLineLongDashDot;stroke-width:3px"/>
+        <g-rect x="610" y="410" width="50" height="50" id="C_10_5" surface:style="--stroke-style:msoLineLongDashDot;stroke-width:6px"/>
+        <g-rect x="910" y="410" width="50" height="50" id="D_10_5" />
+        <g-edge begin-vertex="A_10_5" end-vertex="B_10_5"
+            surface:style="--stroke-style:msoLineLongDashDot;stroke-width:1px">msoLineLongDashDot(1px)</g-edge>
+        <g-edge begin-vertex="B_10_5" end-vertex="C_10_5"
+            surface:style="--stroke-style:msoLineLongDashDot;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_5" end-vertex="D_10_5"
+            surface:style="--stroke-style:msoLineLongDashDot;stroke-width:6px">6px</g-edge>
+
+        <g-rect x="10" y="510" width="50" height="50" id="A_10_6" surface:style="--stroke-style:msoLineRoundDot;stroke-width:1px"/>
+        <g-rect x="310" y="510" width="50" height="50" id="B_10_6" surface:style="--stroke-style:msoLineRoundDot;stroke-width:3px"/>
+        <g-rect x="610" y="510" width="50" height="50" id="C_10_6" surface:style="--stroke-style:msoLineRoundDot;stroke-width:6px"/>
+        <g-rect x="910" y="510" width="50" height="50" id="D_10_6" />
+        <g-edge begin-vertex="A_10_6" end-vertex="B_10_6"
+            surface:style="--stroke-style:msoLineRoundDot;stroke-width:1px">msoLineRoundDot(1px)</g-edge>
+        <g-edge begin-vertex="B_10_6" end-vertex="C_10_6"
+            surface:style="--stroke-style:msoLineRoundDot;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_6" end-vertex="D_10_6"
+            surface:style="--stroke-style:msoLineRoundDot;stroke-width:6px">6px</g-edge>
+
+        <g-rect x="10" y="610" width="50" height="50" id="A_10_7" surface:style="--stroke-style:msoLineSolid;stroke-width:1px"/>
+        <g-rect x="310" y="610" width="50" height="50" id="B_10_7" surface:style="--stroke-style:msoLineSolid;stroke-width:3px"/>
+        <g-rect x="610" y="610" width="50" height="50" id="C_10_7" surface:style="--stroke-style:msoLineSolid;stroke-width:6px"/>
+        <g-rect x="910" y="610" width="50" height="50" id="D_10_7" />
+        <g-edge begin-vertex="A_10_7" end-vertex="B_10_7" surface:style="--stroke-style:msoLineSolid;stroke-width:1px">
+            msoLineSolid(1px)</g-edge>
+        <g-edge begin-vertex="B_10_7" end-vertex="C_10_7" surface:style="--stroke-style:msoLineSolid;stroke-width:3px">
+            3px</g-edge>
+        <g-edge begin-vertex="C_10_7" end-vertex="D_10_7" surface:style="--stroke-style:msoLineSolid;stroke-width:6px">
+            6px</g-edge>
+
+        <g-rect x="10" y="710" width="50" height="50" id="A_10_8" surface:style="--stroke-style:msoLineSquareDot;stroke-width:1px"/>
+        <g-rect x="310" y="710" width="50" height="50" id="B_10_8" surface:style="--stroke-style:msoLineSquareDot;stroke-width:3px"/>
+        <g-rect x="610" y="710" width="50" height="50" id="C_10_8" surface:style="--stroke-style:msoLineSquareDot;stroke-width:6px"/>
+        <g-rect x="910" y="710" width="50" height="50" id="D_10_8" />
+        <g-edge begin-vertex="A_10_8" end-vertex="B_10_8"
+            surface:style="--stroke-style:msoLineSquareDot;stroke-width:1px">msoLineSquareDot(1px)</g-edge>
+        <g-edge begin-vertex="B_10_8" end-vertex="C_10_8"
+            surface:style="--stroke-style:msoLineSquareDot;stroke-width:3px">3px</g-edge>
+        <g-edge begin-vertex="C_10_8" end-vertex="D_10_8"
+            surface:style="--stroke-style:msoLineSquareDot;stroke-width:6px">6px</g-edge>
+    </svg>
+</body>
+
+</html>

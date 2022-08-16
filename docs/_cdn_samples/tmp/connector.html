@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Connector Samples</title>
+    <script src="https://cdn.jsdelivr.net/gh/TNishimoto/GraphTableSVG@v0.0.121/dist/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.Options.openSVG();
+        };
+    </script>
+</head>
+
+<body>
+    <svg width="700px" height="600px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
+        <g-rect x="50" y="30" width="120" height="30" id="L_1">top</g-rect>
+        <g-ellipse x="250" y="30" width="120" height="30" id="C_1">top</g-ellipse>
+        <g-rect x="450" y="30" width="120" height="30" id="R_1">top</g-rect>
+        <g-edge begin-vertex="L_1" end-vertex="C_1" style="--begin-connector-type:top;--end-connector-type:top"
+            surface:style="stroke:red"></g-edge>
+        <g-edge begin-vertex="C_1" end-vertex="R_1" style="--begin-connector-type:top;--end-connector-type:top"
+            surface:style="stroke:blue"></g-edge>
+
+
+    </svg>
+</body>
+
+</html>

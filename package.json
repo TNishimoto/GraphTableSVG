@@ -4,10 +4,11 @@
     "description": "",
     "main": "./dist/nodejs_index.js",
     "scripts": {
-        "compile": "tsc -p . && webpack",
-        "typedoc": "tsc -p ./sub_projects/my-typedoc-plugin/ && typedoc --out ./docs/typedoc/ ./src/ --plugin ./sub_projects/my-typedoc-plugin", 
+        "compile": "tsc -p . && webpack && cpx ./docs/scripts/graph_table_svg.js ./dist",
+        "copy": "cpx ./docs/scripts/graph_table_svg.js ./dist", 
+        "debug": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./scripts/sample_processor.ps1",
+        "typedoc": "tsc -p ./sub_projects/my-typedoc-plugin/ && typedoc --out ./docs/typedoc/ ./src/ --plugin ./sub_projects/my-typedoc-plugin",
         "typedoc_json": "typedoc --json ./docs/typedoc/output.json ./src/ --plugin ./sub_projects/my-typedoc-plugin"
-
     },
     "bin": {
         "graph-table-svg": "./bin/repl.js"
@@ -23,6 +24,7 @@
         "svg-path-parser": "^1.1.0"
     },
     "devDependencies": {
+        "cpx": "^1.5.0",
         "ts-loader": "^9.2.2",
         "typedoc": "^0.23.10",
         "typescript": "^4.7.4",

@@ -826,10 +826,6 @@ export class GObject {
             this.svgGroup.setAttribute(AttributeNames.allowHoverName, "false");
         }
     }
-    public writeComputedStyleToAttributes(): void {
-        const style = getComputedStyle(this.svgGroup);
-        
-    }
 
 
 

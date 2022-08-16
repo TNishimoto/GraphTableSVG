@@ -2,6 +2,7 @@
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
+import * as HTMLFunctions from "./html_functions"
 
 import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment } from "../common/enums";
 //export namespace CSS {
@@ -324,4 +325,96 @@ export function setCSSStyle(e: SVGElement, style: object | string | undefined) {
         }
     }
 }
+
+const exceptionStyleNames = ["marker-start", "marker-mid", "marker-end", "width", "height"];
+const cssPropertyNames: string[] = ["font-size", "fill", "stroke",
+    "font-family", "font-weight", "stroke-width", "background", "border", "background-color", "border-bottom-color", "border-bottom-style", "border-bottom-width",
+    "border-left-color", "border-left-style", "border-left-width", "border-right-color", "border-right-style", "border-right-width", "border-top-color", "border-top-style", "border-top-width"];
+
+
+function getPropertyStyleValue(item: HTMLElement | SVGElement, name: string): string | null {
+    const p = item.style.getPropertyValue(name).trim();
+    if (p.length == 0) {
+        const r = item.getAttribute("class");
+        if (r == null) {
+            return null;
+        } else {
+            const css = getComputedStyle(item);
+            //const css = getComputedStyle(item);
+            const p2 = css.getPropertyValue(name).trim();
+            if (p2.length == 0) {
+                return null;
+            } else {
+                return p2;
+            }
+        }
+    } else {
+        return p;
+    }
+}
+/**
+         * SVG要素のクラス属性名から取得できるCSSStyleDeclarationを要素のスタイル属性にセットします。
+         * @param svg 適用されるSVG要素
+         */
+export function setCSSToStyle(svg: HTMLElement | SVGElement, isComplete: boolean = true) {
+    if (isComplete) {
+        const css: CSSStyleDeclaration = getComputedStyle(svg);
+        if (css != null) {
+            for (let i = 0; i < css.length; i++) {
+                const name = css.item(i);
+                const value = css.getPropertyValue(name);
+                if (value.length > 0) {
+                    if (!exceptionStyleNames.some((v) => v == name)) {
+                        svg.style.setProperty(name, value);
+                    }
+                }
+            }
+        }
+
+    } else {
+        cssPropertyNames.forEach((v) => {
+            const value = getPropertyStyleValue(svg, v);
+            if (value != null) {
+                svg.style.setProperty(v, value);
+            }
+        });
+    }
+
+    /*
+    const css = getCSSStyle(svg);
+    if (css != null) {
+        let css2: CSSStyleDeclaration = css;
+        cssPropertyNames.forEach((v) => {                    
+            const value = css2.getPropertyValue(v).trim();
+            if (value.length > 0) {
+                svg.style.setProperty(v, value);
+            }
+        });
+    }
+    */
+}
+
+export function writeDownCSSToStyleAttributes(element: SVGSVGElement | SVGGElement | string): void {
+    if(element instanceof SVGSVGElement || element instanceof SVGGElement){
+        const elements = HTMLFunctions.getDescendantsByPostorder(element);
+        elements.forEach((v) => {
+            console.log(v.nodeName);
+            if (v instanceof SVGGeometryElement) {
+                setCSSToStyle(v, false);
+            }else if(v instanceof SVGTextElement){
+                setCSSToStyle(v, false);
+            }
+
+        })    
+    }else{
+        const id : string = element;
+        const v = document.getElementById(id);
+        if(v instanceof SVGSVGElement || v instanceof SVGGElement){
+            writeDownCSSToStyleAttributes(v);
+        }else{
+            throw new Error("Not found!");
+        }
+    }
+}
+
 //}
