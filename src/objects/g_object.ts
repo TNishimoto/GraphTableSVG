@@ -79,15 +79,15 @@ export class GObject {
 
         this.unstableCounter = unstableCounterDefault;
         if (parentElement instanceof SVGSVGElement) {
-            if((<any>parentElement)._gobjects === undefined){
+            if ((<any>parentElement)._gobjects === undefined) {
                 (<any>parentElement)._gobjects = new Map<string, GObject>();
 
                 setTimeout(updateSVGSVGTimer, timerInterval, parentElement);
                 console.log("regist");
 
             }
-            const map : Map<string, GObject> = (<any>parentElement)._gobjects;
-            if(map instanceof Map<string, GObject>){
+            const map: Map<string, GObject> = (<any>parentElement)._gobjects;
+            if (map instanceof Map<string, GObject>) {
                 map.set(this.objectID, this);
                 console.log("regist2");
 
@@ -108,43 +108,43 @@ export class GObject {
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
 
     }
-    
+
     public get unstableCounter(): number | null {
         const p = this.svgGroup.getAttribute(unstableCounterName);
-        if(p == null){
+        if (p == null) {
             return null;
-        }else{
+        } else {
             const num = Number(p);
             return num;
         }
     }
     protected set unstableCounter(value: number | null) {
-        if(value == null){
+        if (value == null) {
             this.svgGroup.removeAttribute(unstableCounterName)
-        }else{
+        } else {
             this.svgGroup.setAttribute(unstableCounterName, value.toString());
 
         }
     }
-    public resetUnstableCounter() : void {
+    public resetUnstableCounter(): void {
         this.unstableCounter = unstableCounterDefault;
     }
-    
 
-    protected setBasicOption(option: GOptions.GObjectAttributes) : void{
+
+    protected setBasicOption(option: GOptions.GObjectAttributes): void {
 
         GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
-        
-        if(option.attributes !== undefined){
-            Object.keys(option.attributes).forEach((v) =>{
-                const value : string = option.attributes![v];
+
+        if (option.attributes !== undefined) {
+            Object.keys(option.attributes).forEach((v) => {
+                const value: string = option.attributes![v];
                 this._svgGroup.setAttribute(v, value);
             })
         }
         if (typeof option.id !== "undefined") this.svgGroup.id = option.id;
     }
-    protected setOptionalSize(option: GOptions.GObjectAttributes){
-        if(this.svgSurface !== null){
+    protected setOptionalSize(option: GOptions.GObjectAttributes) {
+        if (this.svgSurface !== null) {
             GOptions.setClassAndStyle(this.svgSurface, option.surfaceClass, option.surfaceStyle)
         }
 
@@ -152,29 +152,29 @@ export class GObject {
         this.setHeightWithoutUpdate(option.height !== undefined ? option.height : 25);
     }
 
-    protected setOptionalPosition(option: GOptions.GObjectAttributes){
+    protected setOptionalPosition(option: GOptions.GObjectAttributes) {
 
-        if(option.position !== undefined){
-            if(option.position.type == "center"){
+        if (option.position !== undefined) {
+            if (option.position.type == "center") {
                 this.positionType = PositionType.Center;
                 this.cx = option.position.x;
                 this.cy = option.position.y;
-            }else{
-                
+            } else {
+
                 this.positionType = PositionType.UpperLeft;
                 this.setVirtualXY(option.position.x, option.position.y);
                 //this.x = option.position.x;
                 //this.y = option.position.y;
-                
+
             }
-        }else{
+        } else {
             this.positionType = PositionType.Center;
             this.__cx = 0;
             this.__cy = 0;
-    
+
         }
     }
-    public setOption(option: GOptions.GObjectAttributes){        
+    public setOption(option: GOptions.GObjectAttributes) {
         this.setBasicOption(option);
         this.setOptionalSize(option);
         this.setOptionalPosition(option)
@@ -182,7 +182,7 @@ export class GObject {
         this.resetUnstableCounter();
         //this.update();
     }
-    
+
 
     /*
     public get shape() : ShapeObjectType {
@@ -216,7 +216,7 @@ export class GObject {
         }
     }
 
-    public get coordinateType() : CoodinateType {
+    public get coordinateType(): CoodinateType {
         return "object-center"
     }
 
@@ -250,7 +250,7 @@ export class GObject {
         this.svgGroup.addEventListener(AttributeNames.resizeName, this.pUpdateFunc);
     }
     private pUpdateFunc = () => {
-        if(!this.isShown) return;
+        if (!this.isShown) return;
         this.resizeUpdate();
     }
     /*
@@ -281,7 +281,7 @@ export class GObject {
         this.resetUnstableCounter();
         //this.update();
     }
-    
+
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GOptions.GObjectAttributes = {}): GOptions.GObjectAttributes {
         output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
@@ -290,21 +290,21 @@ export class GObject {
         output.surfaceStyle = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.surfaceStyle);
 
         output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.style);
-        if (e.hasAttribute(AttributeNames.style)) output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.style );
+        if (e.hasAttribute(AttributeNames.style)) output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.style);
 
         const cx = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.cx);
         const cy = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.cy);
         const x = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.x);
         const y = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.y);
-        if(cx !== undefined || cy !== undefined){
-            output.position = { type : "center", x : cx !== undefined ? cx : 0, y : cy !== undefined ? cy : 0}
-        }else if(x !== undefined || y !== undefined){
-            output.position = { type : "upper-left", x : x !== undefined ? x : 0, y : y !== undefined ? y : 0}
-        }else{
-            output.position = { type : "center", x : 0, y : 0}
+        if (cx !== undefined || cy !== undefined) {
+            output.position = { type: "center", x: cx !== undefined ? cx : 0, y: cy !== undefined ? cy : 0 }
+        } else if (x !== undefined || y !== undefined) {
+            output.position = { type: "upper-left", x: x !== undefined ? x : 0, y: y !== undefined ? y : 0 }
+        } else {
+            output.position = { type: "center", x: 0, y: 0 }
         }
         //const cx = 
-        output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.width );
+        output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.width);
         output.height = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.height);
 
         /*
@@ -317,7 +317,7 @@ export class GObject {
         }
         */
 
-        
+
 
 
         if (removeAttributes) {
@@ -343,7 +343,7 @@ export class GObject {
     public set tag(v: any) {
         this._tag = v;
     }
-    public get isShown() : boolean {
+    public get isShown(): boolean {
         return HTMLFunctions.isShow(this.svgGroup);
     }
 
@@ -374,18 +374,18 @@ export class GObject {
         }
     }
     public set cx(value: number) {
-        if(this.coordinateType == CoodinateType.Group00){
+        if (this.coordinateType == CoodinateType.Group00) {
             //throw Error("This object does not support set cx!" + this.type);
         }
-        else{
+        else {
             if (this.isCenterBased) {
                 if (SVGGExtension.getX(this.svgGroup) != value) {
-                    SVGGExtension.setX(this.svgGroup,value);
+                    SVGGExtension.setX(this.svgGroup, value);
                 }
             } else {
-                SVGGExtension.setX(this.svgGroup,value - (this.width / 2));
+                SVGGExtension.setX(this.svgGroup, value - (this.width / 2));
             }
-    
+
         }
 
 
@@ -402,26 +402,26 @@ export class GObject {
         }
     }
     public set cy(value: number) {
-        if(this.coordinateType == CoodinateType.Group00){
+        if (this.coordinateType == CoodinateType.Group00) {
             //throw Error("This object does not support set cy!");
-        }else{
+        } else {
             if (this.isCenterBased) {
                 if (SVGGExtension.getY(this.svgGroup) != value) {
-                    SVGGExtension.setY(this.svgGroup,value);
+                    SVGGExtension.setY(this.svgGroup, value);
                 }
             } else {
-                SVGGExtension.setY(this.svgGroup,value - (this.height / 2));
-            }    
+                SVGGExtension.setY(this.svgGroup, value - (this.height / 2));
+            }
         }
 
     }
-    public get upperHeight() : number{
-        return (this.height /2);
+    public get upperHeight(): number {
+        return (this.height / 2);
     }
-    public get leftWidth() : number{
-        return (this.width /2);
+    public get leftWidth(): number {
+        return (this.width / 2);
     }
-    public get surfaceRegion() : Rectangle{
+    public get surfaceRegion(): Rectangle {
         return new Rectangle();
     }
 
@@ -440,49 +440,49 @@ export class GObject {
         }
     }
     public set x(v: number) {
-        if(this.coordinateType == CoodinateType.Group00){
+        if (this.coordinateType == CoodinateType.Group00) {
             throw Error("This object does not support set x!");
-        }else{
+        } else {
             if (this.isCenterBased) {
-                SVGGExtension.setX(this.svgGroup, v  - this.surfaceRegion.x);
+                SVGGExtension.setX(this.svgGroup, v - this.surfaceRegion.x);
             } else {
                 SVGGExtension.setX(this.svgGroup, v);
-            }    
+            }
         }
 
     }
     public set y(v: number) {
-        if(this.coordinateType == CoodinateType.Group00){
+        if (this.coordinateType == CoodinateType.Group00) {
             throw Error("This object does not support set y!");
-        }else{
+        } else {
             if (this.isCenterBased) {
-                SVGGExtension.setY(this.svgGroup, v - this.surfaceRegion.y );
+                SVGGExtension.setY(this.svgGroup, v - this.surfaceRegion.y);
             } else {
                 SVGGExtension.setY(this.svgGroup, v);
-            }    
+            }
         }
     }
 
 
-    public setVirtualXY(x : number, y : number){
+    public setVirtualXY(x: number, y: number) {
         const rect = this.getVirtualRegion();
-        if(this.coordinateType == CoodinateType.Group00){
+        if (this.coordinateType == CoodinateType.Group00) {
             throw Error("This object does not support set x!");
-        }else{
+        } else {
             if (this.isCenterBased) {
-                SVGGExtension.setX(this.svgGroup, x  - rect.x);
+                SVGGExtension.setX(this.svgGroup, x - rect.x);
             } else {
                 SVGGExtension.setX(this.svgGroup, x);
-            }    
+            }
         }
-        if(this.coordinateType == CoodinateType.Group00){
+        if (this.coordinateType == CoodinateType.Group00) {
             throw Error("This object does not support set y!");
-        }else{
+        } else {
             if (this.isCenterBased) {
-                SVGGExtension.setY(this.svgGroup, y - rect.y );
+                SVGGExtension.setY(this.svgGroup, y - rect.y);
             } else {
                 SVGGExtension.setY(this.svgGroup, y);
-            }    
+            }
         }
 
     }
@@ -533,11 +533,11 @@ export class GObject {
             //this.svgGroup.setAttribute("data-width", value.toString());
         }
     }
-    protected setWidthWithoutUpdate(value : number){
+    protected setWidthWithoutUpdate(value: number) {
         this.width = value;
 
     }
-    protected setHeightWithoutUpdate(value : number){
+    protected setHeightWithoutUpdate(value: number) {
         this.height = value;
     }
 
@@ -583,19 +583,19 @@ export class GObject {
     public get isCenterBased() {
         return true;
     }
-    public get positionType() : PositionType {
+    public get positionType(): PositionType {
         const str = this.svgGroup.getAttribute("data-position-type");
-        if(str !== undefined){
-            if(str == PositionType.Center){
+        if (str !== undefined) {
+            if (str == PositionType.Center) {
                 return PositionType.Center;
-            }else{
+            } else {
                 return PositionType.UpperLeft;
             }
-        }else{
+        } else {
             return PositionType.Center;
         }
     }
-    public set positionType(value : PositionType) {
+    public set positionType(value: PositionType) {
         this.svgGroup.setAttribute("data-position-type", value);
     }
 
@@ -605,7 +605,7 @@ export class GObject {
         return p == "true";
     }
     public set isProhibitionOutOfRange(v: boolean) {
-        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.prohibitionOutOfRange, v.toString());
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.prohibitionOutOfRange, v.toString());
 
     }
     public moveInCanvas() {
@@ -632,7 +632,7 @@ export class GObject {
     protected observerFunction(x: MutationRecord[]) {
         //throw Error("error1");
 
-        if(!this.isShown) return;
+        if (!this.isShown) return;
 
         let b = false;
         if (!this.isLocated) return;
@@ -653,10 +653,10 @@ export class GObject {
             }
         }
 
-        if (b){
+        if (b) {
             this.resetUnstableCounter();
             //this.update();
-        } 
+        }
 
     }
 
@@ -702,25 +702,25 @@ export class GObject {
 
     }
 
-    public get isDynamic() : boolean{
+    public get isDynamic(): boolean {
         const p = this.svgGroup.getAttribute("data-is-dynamic");
-        return p == "true"; 
+        return p == "true";
     }
-    protected set isDynamic(value : boolean) {
+    protected set isDynamic(value: boolean) {
         this.svgGroup.setAttribute("data-is-dynamic", value == true ? "true" : "false");
     }
 
 
-    public get isStable() : boolean{
+    public get isStable(): boolean {
         const p = this.svgGroup.getAttribute("data-object-stable");
-        return p == "true"; 
+        return p == "true";
     }
-    protected set isStable(value : boolean) {
+    protected set isStable(value: boolean) {
         this.svgGroup.setAttribute("data-object-stable", value == true ? "true" : "false");
     }
 
     protected _isUpdating: boolean = false;
-    public getUpdateFlag() : boolean{
+    public getUpdateFlag(): boolean {
         return false;
     }
 
@@ -762,10 +762,10 @@ export class GObject {
             if (id in this.objectDic) {
                 return this.objectDic[id];
             } else {
-                const element : any = document.getElementById(id);
-                if(element !== null && element.operator !== undefined && element.operator instanceof GObject){
+                const element: any = document.getElementById(id);
+                if (element !== null && element.operator !== undefined && element.operator instanceof GObject) {
                     return element.operator;
-                }else{
+                } else {
                     return null;
                 }
             }
@@ -794,10 +794,10 @@ export class GObject {
         rect.height = this.height;
         return rect;
     }
-    public getVirtualWidth() : number{
+    public getVirtualWidth(): number {
         return 0;
     }
-    public getVirtualHeight() : number{
+    public getVirtualHeight(): number {
         return 0;
     }
 
@@ -816,37 +816,43 @@ export class GObject {
         DraggableObjectFunctions.draggable(this.svgSurface!, this.svgGroup);
     }
 
-    public get allowHover() : boolean{
+    public get allowHover(): boolean {
         return this.svgGroup.getAttribute(AttributeNames.allowHoverName) == "true";
     }
-    public set allowHover(value : boolean){
-        if(value){
+    public set allowHover(value: boolean) {
+        if (value) {
             this.svgGroup.setAttribute(AttributeNames.allowHoverName, "true");
-        }else{
+        } else {
             this.svgGroup.setAttribute(AttributeNames.allowHoverName, "false");
         }
     }
+    public writeComputedStyleToAttributes(): void {
+        const style = getComputedStyle(this.svgGroup);
+        
+    }
+
+
 
 }
 
-function updateSVGSVGTimer(svgsvg :SVGSVGElement) {
+function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
     const obj = (<any>svgsvg)._gobjects;
-    if(obj instanceof Map<string, GObject>){
-        obj.forEach((value,key) =>{
-            if(value instanceof GObject){
+    if (obj instanceof Map<string, GObject>) {
+        obj.forEach((value, key) => {
+            if (value instanceof GObject) {
 
-                if(value.unstableCounter != null){
+                if (value.unstableCounter != null) {
                     console.log(`Update: ${key}, ${value.unstableCounter}`)
                     const b = value.getUpdateFlag();
-                    if(b){
+                    if (b) {
                         value.update();
-                        value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString() );
+                        value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
 
-                    }else{
-                        if(value.unstableCounter == 0){
+                    } else {
+                        if (value.unstableCounter == 0) {
                             value.svgGroup.removeAttribute(unstableCounterName)
-                        }else{
-                            value.svgGroup.setAttribute(unstableCounterName, (value.unstableCounter - 1 ).toString() );
+                        } else {
+                            value.svgGroup.setAttribute(unstableCounterName, (value.unstableCounter - 1).toString());
                         }
                     }
                 }
