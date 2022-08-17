@@ -1,45 +1,60 @@
-import { webkit, firefox, chromium,  ElementHandle, Locator} from 'playwright'
+import { webkit, firefox, chromium, ElementHandle, Locator } from 'playwright'
 import * as fs from 'fs';
+import * as path from 'path';
 
-const pathPrefix = 'file:///D:/github/GraphTableSVG/docs/examples';
+const pathPrefix = 'D:/github/GraphTableSVG/docs/_debug_examples';
+//const urlPathPrefix = 'file:///D:/github/GraphTableSVG/docs/_debug_examples';
+
+const outputPathPrefix = './output';
+const correctOutputPathPrefix = './correct_output';
 
 type BrowserNameType = 'webkit' | 'firefox' | 'chromium';
 
-async function outerHtml(elem: Locator) {
-  if(!elem) {
-      return undefined;
+
+function test(browserName: BrowserNameType, relativeDirPath: string | null, fileName: string) {
+  const debugDirPath = relativeDirPath == null ? pathPrefix : pathPrefix + "/" + relativeDirPath;
+  const outputDirPath = relativeDirPath == null ? outputPathPrefix : outputPathPrefix + "/" + relativeDirPath;
+  const correctOutputDirPath = relativeDirPath == null ? correctOutputPathPrefix : correctOutputPathPrefix + "/" + relativeDirPath;
+
+  if (!fs.existsSync(outputDirPath)) {
+    fs.mkdir(outputDirPath, (err) => {
+      if (err) { throw err; }
+      console.log(`Created folder: ${outputDirPath}`);
+    });
   }
 
-  //@ts-ignore
-  return await elem.evaluate(elem => elem.outerHTML);
-}
+  if (!fs.existsSync(correctOutputDirPath)) {
+    fs.mkdir(correctOutputDirPath, (err) => {
+      if (err) { throw err; }
+      console.log(`Created folder: ${correctOutputDirPath}`);
+    });
+  }
 
-function test(browserName : BrowserNameType){
   (async () => {
     let browser = null;
-    if(browserName == 'webkit'){
-      browser = await webkit.launch()  
-    }else if(browserName == 'firefox'){
-      browser = await firefox.launch()  
+    if (browserName == 'webkit') {
+      browser = await webkit.launch()
+    } else if (browserName == 'firefox') {
+      browser = await firefox.launch()
 
-    }else if(browserName == 'chromium'){
-      browser = await chromium.launch()  
+    } else if (browserName == 'chromium') {
+      browser = await chromium.launch()
     }
 
-    if(browser != null){
+    if (browser != null) {
       const page = await browser.newPage()
-      await page.goto(`${pathPrefix}/text/hello_world.html`)      
+      await page.goto(`file:///${debugDirPath}/${fileName}`)
       await page.waitForTimeout(1000);
 
-      while(true){
+      while (true) {
         const arrayOfUnstableObjects = page.locator('xpath=//*[name()="g" and @data-unstable-counter]')
         const counter = await arrayOfUnstableObjects.count();
         console.log(`counter: ${counter}`)
-        if(counter == 0){
+        if (counter == 0) {
           break;
-        }else{
+        } else {
           await page.waitForTimeout(1000);
-        }  
+        }
       }
 
 
@@ -64,24 +79,76 @@ function test(browserName : BrowserNameType){
       </body>
       `
 
-      fs.writeFile(`./output/text/hello_world/hello_world_${browserName}.html`, output_html, (err) => {
+      const outputHTMLPath = `${outputDirPath}/${browserName}_${fileName}`
+      fs.writeFile(outputHTMLPath, output_html, (err) => {
         if (err) throw err;
-        console.log('正常に書き込みが完了しました');
+        console.log(`Wrote: ${outputHTMLPath}`);
       });
-    
-      await page.screenshot({ path: `./output/text/hello_world/screenshot_${browserName}.png` })
-    
+
+      const outputPNGPath = `${outputDirPath}/${browserName}_${fileName}.png`
+
+      await page.screenshot({ path: outputPNGPath })
+      console.log(`Wrote: ${outputPNGPath}`);
+
+      const correctHTMLPath = `${correctOutputDirPath}/${browserName}_${fileName}`
+      const correctPNGPath = `${correctOutputDirPath}/${browserName}_${fileName}.png`
+
+      if (fs.existsSync(correctHTMLPath)) {
+        const correctHTML = fs.readFileSync(correctHTMLPath, 'utf-8');
+        if (correctHTML == output_html) {
+          console.log(`OK: ${fileName}`)
+        } else {
+          console.log(`NO: ${fileName}`)
+
+        }
+      } else {
+        fs.writeFile(correctHTMLPath, output_html, (err) => {
+          if (err) throw err;
+          console.log(`Wrote as the correct HTML: ${correctHTMLPath}`);
+        });
+        await page.screenshot({ path: correctPNGPath })
+        console.log(`Wrote as the correct PNG: ${correctPNGPath}`);
+
+      }
+
+
+
       await browser.close()
-  
+
     }
 
 
   })()
-  
+
 }
 
-test("firefox");
-test("chromium");
+function checkDirectory(relativePath: string | null) {
+  const dirPath = relativePath == null ? pathPrefix : pathPrefix + "/" + relativePath;
+  const files = fs.readdirSync(dirPath);
+  const fileList = files.filter((file) => {
+    const filePath = dirPath + "/" + file;
+    return fs.statSync(filePath).isFile() && /.*\.html$/.test(file);
+  })
+  console.log(fileList);
+  fileList.forEach((v) => {
+    test("firefox", relativePath, v);
+    test("chromium", relativePath, v);
+  })
+
+  const dirList = files.filter((file) => {
+    const subDirPath = dirPath + "/" + file;
+
+    return fs.statSync(subDirPath).isDirectory()
+  })
+  dirList.forEach((v) => {
+    const subDirPath = relativePath == null ? v : `${relativePath}/${v}`;
+    checkDirectory(subDirPath);
+  })
+  console.log(dirList);
+}
+
+checkDirectory(null);
+
 //test("webkit");
 
 
