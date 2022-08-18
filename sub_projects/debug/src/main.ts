@@ -1,12 +1,15 @@
 import { webkit, firefox, chromium, ElementHandle, Locator } from 'playwright'
 import * as fs from 'fs';
-import * as path from 'path';
+//import * as libxmljs from 'libxmljs';
+import { diffXML } from './diff_xml';
 
 const exampleRelativeDirPath = 'docs/_debug_examples';
 const outputRelativeDirPath = 'sub_projects/debug/output';
 const correctOutputRelativeDirPath = 'sub_projects/debug/correct_output';
 
 type BrowserNameType = 'webkit' | 'firefox' | 'chromium';
+
+
 
 /*
 function getAbsoluteFilePath(relativeDirPath: string, fileName: string) : string {
@@ -121,7 +124,8 @@ function test(browserName: BrowserNameType, currentRelativeDirPath: string, file
 
       if (fs.existsSync(correctHTMLPath)) {
         const correctHTML = fs.readFileSync(correctHTMLPath, 'utf-8');
-        if (correctHTML == output_html) {
+        const b = diffXML(correctHTML, output_html);
+        if (b) {
           console.log(`\x1b[42mOK: ${fileName} \x1b[49m`)
         } else {
           console.log(`\x1b[41mNO: ${fileName} \x1b[49m`)
