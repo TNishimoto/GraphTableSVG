@@ -6,7 +6,9 @@
     "scripts": {
         "compile": "tsc -p . && webpack && cpx ./docs/scripts/graph_table_svg.js ./dist",
         "copy": "cpx ./docs/scripts/graph_table_svg.js ./dist", 
-        "debug": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./scripts/sample_processor.ps1",
+        "copy_examples": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./scripts/sample_processor.ps1",
+        "debug_compile": "tsc -p ./sub_projects/debug",
+        "debug": "node ./sub_projects/debug/dist/main.js",
         "typedoc": "tsc -p ./sub_projects/my-typedoc-plugin/ && typedoc --out ./docs/typedoc/ ./src/ --plugin ./sub_projects/my-typedoc-plugin",
         "typedoc_json": "typedoc --json ./docs/typedoc/output.json ./src/ --plugin ./sub_projects/my-typedoc-plugin"
     },
