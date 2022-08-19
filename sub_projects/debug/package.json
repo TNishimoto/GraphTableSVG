@@ -3,5 +3,8 @@
     "@types/libxmljs": "^0.18.7",
     "libxmljs": "^0.19.10",
     "playwright": "^1.24.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.25.0"
   }
 }

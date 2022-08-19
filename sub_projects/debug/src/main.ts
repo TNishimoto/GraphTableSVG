@@ -1,5 +1,7 @@
 import { webkit, firefox, chromium, ElementHandle, Locator } from 'playwright'
 import * as fs from 'fs';
+import * as path from 'path';
+
 //import * as libxmljs from 'libxmljs';
 import { diffXML } from './diff_xml';
 
@@ -7,9 +9,18 @@ const exampleRelativeDirPath = 'docs/_debug_examples';
 const outputRelativeDirPath = 'sub_projects/debug/output';
 const correctOutputRelativeDirPath = 'sub_projects/debug/correct_output';
 
-type BrowserNameType = 'webkit' | 'firefox' | 'chromium';
+type BrowserNameType = 'webkit' | 'firefox' | 'chromium' | 'edge';
 
 
+function createDirectoryIfNotExist(dirPath : string){
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdir(dirPath, (err) => {
+      if (err) { throw err; }
+      console.log(`Created folder: ${dirPath}`);
+    });
+  }
+
+}
 
 /*
 function getAbsoluteFilePath(relativeDirPath: string, fileName: string) : string {
@@ -23,32 +34,33 @@ function getAbsoluteFilePath(relativeDirPath: string, fileName: string) : string
     }
 }
 */
-function getAbsoluteDirectoryPath(relativeDirPath: string) : string {
-  const name =  "GraphTableSVG";
+function getAbsoluteDirectoryPath(relativeDirPath: string): string {
+  const name = "GraphTableSVG";
   const p = __filename.indexOf(name);
   const baseDirPath = __filename.substring(0, p + name.length);
-  if(relativeDirPath == ""){
+  if (relativeDirPath == "") {
     return `${baseDirPath}`
-  }else{
+  } else {
     return `${baseDirPath}/${relativeDirPath}`
   }
 }
-function concatenatePaths(relativeDirPath1: string, relativeDirPath2: string) : string {
-  if(relativeDirPath1 == ""){
+function concatenatePaths(relativeDirPath1: string, relativeDirPath2: string): string {
+  if (relativeDirPath1 == "") {
     return relativeDirPath2;
-  }else{
-    if(relativeDirPath2 == ""){
+  } else {
+    if (relativeDirPath2 == "") {
       return relativeDirPath1;
-    }else{
+    } else {
       return `${relativeDirPath1}/${relativeDirPath2}`;
     }
-  
+
   }
 }
 
 
 
 function test(browserName: BrowserNameType, currentRelativeDirPath: string, fileName: string) {
+  console.log(`Processing...: ${fileName}, browser: ${browserName}`)
   const exampleDirPath = concatenatePaths(getAbsoluteDirectoryPath(exampleRelativeDirPath), currentRelativeDirPath);
   const outputDirPath = concatenatePaths(getAbsoluteDirectoryPath(outputRelativeDirPath), currentRelativeDirPath);
   const correctOutputDirPath = concatenatePaths(getAbsoluteDirectoryPath(correctOutputRelativeDirPath), currentRelativeDirPath);
@@ -56,21 +68,16 @@ function test(browserName: BrowserNameType, currentRelativeDirPath: string, file
   const outputHTMLPath = concatenatePaths(outputDirPath, `${browserName}_${fileName}`)
   const outputPNGPath = concatenatePaths(outputDirPath, `${browserName}_${fileName}.png`)
 
-  const correctHTMLPath = concatenatePaths(correctOutputDirPath, `${browserName}_${fileName}`)
-  const correctPNGPath = concatenatePaths(correctOutputDirPath, `${browserName}_${fileName}.png`)
-  if (!fs.existsSync(outputDirPath)) {
-    fs.mkdir(outputDirPath, (err) => {
-      if (err) { throw err; }
-      console.log(`Created folder: ${outputDirPath}`);
-    });
-  }
+  const exe = path.extname(fileName)
+  const filenameWithoutExe = fileName.substring(0, fileName.length - exe.length);
 
-  if (!fs.existsSync(correctOutputDirPath)) {
-    fs.mkdir(correctOutputDirPath, (err) => {
-      if (err) { throw err; }
-      console.log(`Created folder: ${correctOutputDirPath}`);
-    });
-  }
+  const correctHTMLPath = concatenatePaths(`${correctOutputDirPath}/${filenameWithoutExe}`, `${filenameWithoutExe}_${browserName}.html`)
+  const correctPNGPath = concatenatePaths(`${correctOutputDirPath}/${filenameWithoutExe}`, `${filenameWithoutExe}_${browserName}.png`)
+
+  createDirectoryIfNotExist(outputDirPath);
+  createDirectoryIfNotExist(correctOutputDirPath);
+  createDirectoryIfNotExist(`${correctOutputDirPath}/${filenameWithoutExe}`);
+
 
   (async () => {
     let browser = null;
@@ -81,14 +88,23 @@ function test(browserName: BrowserNameType, currentRelativeDirPath: string, file
 
     } else if (browserName == 'chromium') {
       browser = await chromium.launch()
+    } else if (browserName == 'edge') {
+      browser = await chromium.launch({
+        channel: 'msedge',
+      });
+
     }
+    let timeoutCounter = 0;
 
     if (browser != null) {
       const page = await browser.newPage()
       await page.goto(`file:///${absoluteFilePath}`)
       await page.waitForTimeout(1000);
 
-      while (true) {
+
+
+      while (timeoutCounter < 10) {
+
         const arrayOfUnstableObjects = page.locator('xpath=//*[name()="g" and @data-unstable-counter]')
         const counter = await arrayOfUnstableObjects.count();
         //console.log(`counter: ${counter}`)
@@ -96,11 +112,16 @@ function test(browserName: BrowserNameType, currentRelativeDirPath: string, file
           break;
         } else {
           await page.waitForTimeout(1000);
+          timeoutCounter++;
         }
       }
 
-      const bodyInnerHTML = await page.innerHTML('xpath=//body');
-      const output_html = `<!DOCTYPE html>
+      if (timeoutCounter < 10) {
+
+
+
+        const bodyInnerHTML = await page.innerHTML('xpath=//body');
+        const output_html = `<!DOCTYPE html>
       <html>
       
       <head>
@@ -112,38 +133,42 @@ function test(browserName: BrowserNameType, currentRelativeDirPath: string, file
       </body>
       `
 
-      fs.writeFile(outputHTMLPath, output_html, (err) => {
-        if (err) throw err;
-        console.log(`Wrote: ${outputHTMLPath}`);
-      });
+        fs.writeFile(outputHTMLPath, output_html, (err) => {
+          if (err) throw err;
+          console.log(`Wrote: ${outputHTMLPath}`);
+        });
 
 
-      await page.screenshot({ path: outputPNGPath })
-      console.log(`Wrote: ${outputPNGPath}`);
+        await page.screenshot({ path: outputPNGPath })
+        console.log(`Wrote: ${outputPNGPath}`);
 
 
-      if (fs.existsSync(correctHTMLPath)) {
-        const correctHTML = fs.readFileSync(correctHTMLPath, 'utf-8');
-        const b = diffXML(correctHTML, output_html);
-        if (b) {
-          console.log(`\x1b[42mOK: ${fileName} \x1b[49m`)
+        if (fs.existsSync(correctHTMLPath)) {
+          const correctHTML = fs.readFileSync(correctHTMLPath, 'utf-8');
+          const b = diffXML(correctHTML, output_html);
+          if (b) {
+            console.log(`\x1b[42mOK: ${fileName} \x1b[49m`)
+          } else {
+            console.log(`\x1b[41mNO: ${fileName} \x1b[49m`)
+
+          }
         } else {
-          console.log(`\x1b[41mNO: ${fileName} \x1b[49m`)
+          fs.writeFile(correctHTMLPath, output_html, (err) => {
+            if (err) throw err;
+            console.log(`Wrote as the correct HTML: ${correctHTMLPath}`);
+          });
+          await page.screenshot({ path: correctPNGPath })
+          console.log(`Wrote as the correct PNG: ${correctPNGPath}`);
 
         }
+
+
       } else {
-        fs.writeFile(correctHTMLPath, output_html, (err) => {
-          if (err) throw err;
-          console.log(`Wrote as the correct HTML: ${correctHTMLPath}`);
-        });
-        await page.screenshot({ path: correctPNGPath })
-        console.log(`Wrote as the correct PNG: ${correctPNGPath}`);
+        console.log(`\x1b[41mFailed (Timeout): ${fileName}, ${browserName} \x1b[49m`)
 
       }
-
-
-
       await browser.close()
+
 
     }
 
@@ -163,6 +188,8 @@ function checkDirectory(currentRelativePath: string) {
   fileList.forEach((v) => {
     test("firefox", currentRelativePath, v);
     test("chromium", currentRelativePath, v);
+    test("edge", currentRelativePath, v);
+
   })
 
   const dirList = files.filter((file) => {
