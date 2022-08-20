@@ -13,6 +13,7 @@ import * as GOptions from "./g_options"
 import * as Extensions from "../interfaces/extensions"
 import { createSVGText } from "./element_builder";
 import * as SVGTextBox from "../interfaces/svg_textbox"
+import { round100 } from "../common/vline";
 
 export class GAbstractTextEdge extends GAbstractEdge {
     private static updateTextAttributes = ["style"]
@@ -105,9 +106,19 @@ export class GAbstractTextEdge extends GAbstractEdge {
         }
         return output;
     }
-    private set startOffset(value : number){
-        ElementExtension.setAttributeNumber(this.svgTextPath, "startOffset", value);
+
+    private get startOffset() : number | null{
+        return ElementExtension.gtGetAttributeNumber(this.svgTextPath, "startOffset", null);
     }
+
+    private set startOffset(value : number | null){
+        if(value == null){
+            this.svgTextPath.removeAttribute("startOffset")
+        }else{
+            ElementExtension.setAttributeNumber(this.svgTextPath, "startOffset", value);
+        }
+    }
+    
     protected textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
         if(! this.isShown) return;
         if (!this.isLocated) return;
@@ -136,7 +147,64 @@ export class GAbstractTextEdge extends GAbstractEdge {
         return b1 && b2 && b3;
     }
 
+    private removeTextLengthAttributeOrGetUpdateFlag(withUpdate : boolean): boolean {
+        let b = false;
 
+        if (this.svgText.hasAttribute("textLength")){
+            b = true;
+            if(withUpdate){
+                this.svgText.removeAttribute("textLength");
+            }
+        } 
+        if (this.svgTextPath.hasAttribute("textLength")) {
+            b = true;
+            if(withUpdate){
+
+            this.svgTextPath.removeAttribute("textLength");
+            }
+
+        }
+        
+        if (this.svgText.hasAttribute("letter-spacing")) {
+            b = true;
+            if(withUpdate){
+                this.svgText.removeAttribute("letter-spacing");
+            }
+        }
+        return b;
+    }
+    
+    private setRegularIntervalOrGetUpdateFlag(newTextPathLen: number, newTextWidth : number, withUpdate : boolean): boolean {
+        let b = false;
+        const svgTextTextLength = ElementExtension.gtGetAttributeNumber(this.svgText, "textLength", null);
+        const svgTextPathTextLength = ElementExtension.gtGetAttributeNumber(this.svgTextPath, "textLength", null);
+        const svgTextLetterSpacing = ElementExtension.gtGetAttributeNumber(this.svgText, "letter-spacing", null);
+
+        if(newTextPathLen != svgTextTextLength){
+            b = true;
+            if(withUpdate){
+                ElementExtension.setAttributeNumber(this.svgText, "textLength", newTextPathLen);
+            }
+        }
+        if(newTextPathLen != svgTextPathTextLength){
+            b = true;
+            if(withUpdate){
+                ElementExtension.setAttributeNumber(this.svgTextPath, "textLength", newTextPathLen);
+            }
+
+        }
+
+        if(svgTextLetterSpacing != null){
+            b = true;
+            if(withUpdate){
+                this.svgText.removeAttribute("letter-spacing")
+            }
+        }
+        return b;    
+    }
+    
+
+    /*
     private removeTextLengthAttribute(): void {
         if (this.svgText.hasAttribute("textLength")) this.svgText.removeAttribute("textLength");
         if (this.svgTextPath.hasAttribute("textLength")) this.svgTextPath.removeAttribute("textLength");
@@ -147,6 +215,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
         ElementExtension.setAttributeNumber(this.svgText, "textLength", textPathLen);
         ElementExtension.setAttributeNumber(this.svgTextPath, "textLength", textPathLen);
     }
+    */
     public get isAppropriatelyReverseMode(): boolean {
         const p = this.svgGroup.getAttribute(AttributeNames.isAppropriatelyReverseTextMode);
         if (p == null) {
@@ -222,6 +291,154 @@ export class GAbstractTextEdge extends GAbstractEdge {
             return len != 0;
         }
     }
+    /**
+     * 再描画します。
+     */
+     public update(): void {
+        super.update();
+        /*
+        this.updateConnectorInfoOrGetUpdateFlag(true);
+        this.updateSurfaceOrGetUpdateFlag(true);
+        this.updateLocationOrGetUpdateFlag(true);
+        */
+        this.updateTextPathOrGetUpdateFlag(true);
+    }
+    public getUpdateFlag(): boolean {
+        const b1 = super.getUpdateFlag();
+        const b2 = this.updateTextPathOrGetUpdateFlag(false);
+
+        if(b1 || b2){
+            console.log(`AbstractTextEdge ${this.objectID}: ${b1} ${b2}`)
+        }
+
+        return b1 || b2;
+
+    }
+
+    protected updateTextPathOrGetUpdateFlag(withUpdate : boolean) : boolean {
+        const b1 = this.updateDYOrGetUpdateFlag(withUpdate);
+
+        /*
+        if (this.isAppropriatelyReverseMode) {
+            const degree = this.degree;
+            if (degree < -90 || degree > 90) {
+                //Rev
+                if (this.side == "left" || this.side == null) {
+                    this.revTextForApp();
+                }
+            } else {
+                if (this.side == "right") {
+                    this.revTextForApp();
+                }
+            }
+        }
+        */
+
+        if(!HTMLFunctions.isShow(this.svgTextPath)){
+            throw new Error();
+        }
+
+        const b2 = this.updatePathOffsetOrGetUpdateFlag(withUpdate);
+
+        if(b1 || b2){
+            console.log(`updateTextPathOrGetUpdateFlag ${this.objectID}: ${b1} ${b2}`)
+        }
+
+        return b1 || b2;
+
+    }
+    protected updateDYOrGetUpdateFlag(withUpdate : boolean) : boolean {
+        let b = false;
+        const strokeWidth = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke-width");
+        const oldDY = this.svgText.getAttribute("dy");
+        let newDY = "0";
+        if (strokeWidth != null) {
+            const diffy = CommonFunctions.toPX(strokeWidth) + 3;
+            newDY = `-${diffy}`;
+        }
+
+        if(oldDY != newDY){
+            b = true;
+            if(withUpdate){
+                this.svgText.setAttribute("dy", newDY);
+            }
+        }
+        return b;
+
+    }
+    
+    protected updatePathOffsetOrGetUpdateFlag(withUpdate : boolean) : boolean {
+        let b = false;
+        const region = getVirtualRegion(this.svgText);
+        const strWidth = round100(region.width); 
+        const pathLen = round100(this.svgPath.getTotalLength());
+            
+
+        if (this.pathTextAlignment == PathTextAlighnment.regularInterval) {
+            const strCharCount = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
+            if (strWidth > 0) {
+                const paddingWidth = round100(pathLen - strWidth);
+                if(strCharCount != 0){
+                    const paddingUnit = round100(paddingWidth / (strCharCount + 1));
+                    let textPathLen = round100(pathLen - (paddingUnit * 2));
+                    if (textPathLen <= 0) textPathLen = 5;
+
+                    if(this.startOffset != paddingUnit){
+                        b = true;
+                        if(withUpdate){
+                            this.startOffset = paddingUnit;
+                        }
+                    }
+
+                    b = b || this.setRegularIntervalOrGetUpdateFlag(textPathLen, strWidth, withUpdate);
+    
+                }
+            }
+
+        }
+        else if (this.pathTextAlignment == PathTextAlighnment.end) {
+            b = this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate);
+            const newStartOffset = round100(this.side == "right" ? 0 : (pathLen - strWidth));
+
+            if(this.startOffset != newStartOffset){
+                b = true;
+                if(withUpdate){
+                    this.startOffset = newStartOffset;
+                }
+            }
+
+        }
+        else if (this.pathTextAlignment == PathTextAlighnment.center) {
+            b = this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate);
+            const newStartOffset = round100((pathLen / 2) - (strWidth / 2));
+
+            if(this.startOffset != newStartOffset){
+                b = true;
+                if(withUpdate){
+                    this.startOffset = newStartOffset;
+                }
+            }
+
+            //こっちだとEdgeではおかしくなる
+            //this.svgTextPath.startOffset.baseVal.value = (pathLen - box.width)/2;                    
+
+        }
+        else {
+
+            b = this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate);
+            const newStartOffset = round100(this.side == "right" ? (pathLen - strWidth) : 0);
+
+            if(this.startOffset != newStartOffset){
+                b = true;
+                if(withUpdate){
+                    this.startOffset = newStartOffset;
+                }
+            }
+
+        }
+        return b;
+    }
+    /*
 
     protected updateTextPath(){
         const strokeWidth = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke-width");
@@ -290,4 +507,5 @@ export class GAbstractTextEdge extends GAbstractEdge {
             this.removeTextLengthAttribute();
         }
     }
+    */
 }

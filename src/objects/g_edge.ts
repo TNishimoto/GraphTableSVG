@@ -78,17 +78,6 @@ export class GEdge extends GAbstractTextEdge {
     }
 
 
-    /**
-     * 再描画します。
-     */
-    public update(): boolean {
-        super.update();
-        this.updateConnectorInfo();
-        this.updateSurface();
-        this.updateLocation();
-        this.updateTextPath();
-        return false;
-    }
 
 
     public setIndexDictionaryForVBA(vertexDic: { [key: string]: number; }, edgeDic: { [key: string]: number; }) {

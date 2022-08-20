@@ -83,13 +83,11 @@ export class GObject {
                 (<any>parentElement)._gobjects = new Map<string, GObject>();
 
                 setTimeout(updateSVGSVGTimer, timerInterval, parentElement);
-                console.log("regist");
 
             }
             const map: Map<string, GObject> = (<any>parentElement)._gobjects;
             if (map instanceof Map<string, GObject>) {
                 map.set(this.objectID, this);
-                console.log("regist2");
 
             }
 
@@ -108,6 +106,12 @@ export class GObject {
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
 
     }
+
+    /*
+    public setUnstableFlag() : void {
+        this.isStable = false;
+    }
+    */
 
     public get unstableCounter(): number | null {
         const p = this.svgGroup.getAttribute(unstableCounterName);
@@ -710,7 +714,7 @@ export class GObject {
         this.svgGroup.setAttribute("data-is-dynamic", value == true ? "true" : "false");
     }
 
-
+    /*
     public get isStable(): boolean {
         const p = this.svgGroup.getAttribute("data-object-stable");
         return p == "true";
@@ -718,6 +722,7 @@ export class GObject {
     protected set isStable(value: boolean) {
         this.svgGroup.setAttribute("data-object-stable", value == true ? "true" : "false");
     }
+    */
 
     protected _isUpdating: boolean = false;
     public getUpdateFlag(): boolean {
@@ -838,8 +843,9 @@ function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
             if (value instanceof GObject) {
 
                 if (value.unstableCounter != null) {
-                    console.log(`Update: ${key}, ${value.unstableCounter}`)
                     const b = value.getUpdateFlag();
+                    console.log(`Update: ${value.type} ${key}, ${value.unstableCounter} ${b}`)
+
                     if (b) {
                         value.update();
                         value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());

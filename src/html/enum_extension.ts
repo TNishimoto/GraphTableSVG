@@ -42,13 +42,19 @@ export function updateAppropriateDashArrayOrGetUpdateFlag(svgLine: SVGLineElemen
         const width = <number>ElementExtension.getPropertyStyleNumberValue(svgLine,"stroke-width", 2);
         const newDashArray = computeDashArray(msoDashStyle.toMSODashStyle(type), width);
         const newLineCap = msoDashStyle.lineCapDic[type];
-        const b1 = newDashArray == ElementExtension.getPropertyStyleValue(svgLine, "stroke-dasharray")
+        const oldDashArray = ElementExtension.getPropertyStyleValue(svgLine, "stroke-dasharray");
+        const b1 = !(newDashArray == oldDashArray)
         if(updateFlag && b1){
             ElementExtension.setPropertyStyleValue2(svgLine,"stroke-dasharray", newDashArray);
         }
-        const b2 = newLineCap == ElementExtension.getPropertyStyleValue(svgLine, "stroke-linecap")
+        const oldLineCap = ElementExtension.getPropertyStyleValue(svgLine, "stroke-linecap");
+        const b2 = !(newLineCap == oldLineCap)
         if(updateFlag && b2){
             ElementExtension.setPropertyStyleValue2(svgLine,"stroke-linecap", newLineCap);
+        }
+
+        if(b1 || b2){
+            console.log(`updateAppropriateDashArrayOrGetUpdateFlag ${newLineCap}=${oldLineCap} ${b2} ${newDashArray}=${oldDashArray} ${b1}`)
         }
 
         return b1 || b2;

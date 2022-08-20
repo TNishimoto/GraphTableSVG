@@ -12,7 +12,7 @@ const correctOutputRelativeDirPath = 'sub_projects/debug/correct_output';
 type BrowserNameType = 'webkit' | 'firefox' | 'chromium' | 'edge';
 
 
-function createDirectoryIfNotExist(dirPath : string){
+function createDirectoryIfNotExist(dirPath: string) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdir(dirPath, (err) => {
       if (err) { throw err; }
@@ -57,9 +57,20 @@ function concatenatePaths(relativeDirPath1: string, relativeDirPath2: string): s
   }
 }
 
+class TestResult {
+  public filename: string;
+  public browserName: BrowserNameType;
+  public message: string;
+  public constructor(_filename: string, _browserName: BrowserNameType, _message: string) {
+    this.filename = _filename;
+    this.browserName = _browserName;
+    this.message = _message;
+  }
+
+}
 
 
-function test(browserName: BrowserNameType, currentRelativeDirPath: string, fileName: string) {
+async function test(browserName: BrowserNameType, currentRelativeDirPath: string, fileName: string): Promise<TestResult> {
   console.log(`Processing...: ${fileName}, browser: ${browserName}`)
   const exampleDirPath = concatenatePaths(getAbsoluteDirectoryPath(exampleRelativeDirPath), currentRelativeDirPath);
   const outputDirPath = concatenatePaths(getAbsoluteDirectoryPath(outputRelativeDirPath), currentRelativeDirPath);
@@ -79,7 +90,7 @@ function test(browserName: BrowserNameType, currentRelativeDirPath: string, file
   createDirectoryIfNotExist(`${correctOutputDirPath}/${filenameWithoutExe}`);
 
 
-  (async () => {
+  const brres = async () => {
     let browser = null;
     if (browserName == 'webkit') {
       browser = await webkit.launch()
@@ -169,15 +180,20 @@ function test(browserName: BrowserNameType, currentRelativeDirPath: string, file
       }
       await browser.close()
 
+      return new TestResult(fileName, browserName, "");
 
+
+    }else{
+      throw new Error("No name Browser");
     }
 
 
-  })()
+  }
+  return brres();
 
 }
 
-function checkDirectory(currentRelativePath: string) {
+async function checkDirectory(currentRelativePath: string) {
   const fPath = concatenatePaths(exampleRelativeDirPath, currentRelativePath);
   const exampleCurrentAbsolutePath = getAbsoluteDirectoryPath(fPath);
   const files = fs.readdirSync(exampleCurrentAbsolutePath);
@@ -185,12 +201,16 @@ function checkDirectory(currentRelativePath: string) {
     const filePath = exampleCurrentAbsolutePath + "/" + file;
     return fs.statSync(filePath).isFile() && /.*\.html$/.test(file);
   })
-  fileList.forEach((v) => {
-    test("firefox", currentRelativePath, v);
-    test("chromium", currentRelativePath, v);
-    test("edge", currentRelativePath, v);
+  for (const vFileName of fileList) {
+    const result1 = await test("firefox", currentRelativePath, vFileName);
+    console.log(`Finished: ${result1.filename}, Browswer = ${result1.browserName}`)
+    const result2 = await test("chromium", currentRelativePath, vFileName);
+    console.log(`Finished: ${result2.filename}, Browswer = ${result2.browserName}`)
+    const result3 = await test("edge", currentRelativePath, vFileName);
+    console.log(`Finished: ${result3.filename}, Browswer = ${result3.browserName}`)
 
-  })
+  }
+
 
   const dirList = files.filter((file) => {
     const subDirPath = exampleCurrentAbsolutePath + "/" + file;

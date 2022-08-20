@@ -8,7 +8,7 @@ import { GVertex } from "./g_vertex"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVG from "../interfaces/svg"
 import { getGraph } from "./graph_helpers/common_functions";
-import { updateAppropriateDashArray } from "../html/enum_extension";
+import { updateAppropriateDashArrayOrGetUpdateFlag } from "../html/enum_extension";
 import * as GOptions from "./g_options"
 import { createPath } from "./element_builder"
 import { NullError, UndefinedError } from "../common/exceptions";
@@ -39,7 +39,6 @@ export class GAbstractEdge extends GObject {
         const strokeWidth = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke-width");
         const strokeWidth2 = strokeWidth == null ? undefined : strokeWidth;
 
-        //console.log(option)
         const style = getComputedStyle(this.svgGroup);
         const markerStart = style.getPropertyValue(StyleNames.markerStart);
         const markerEnd = style.getPropertyValue(StyleNames.markerEnd);
@@ -47,7 +46,7 @@ export class GAbstractEdge extends GObject {
         if (markerStart.length != 0) this.markerStart = GAbstractEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
         if (markerEnd.length != 0) this.markerEnd = GAbstractEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
-        if(option.x1 !== undefined && option.y1 !== undefined && option.x2 !== undefined && option.y2 !== undefined){
+        if (option.x1 !== undefined && option.y1 !== undefined && option.x2 !== undefined && option.y2 !== undefined) {
             this.pathPoints = [[option.x1!, option.y1!], [option.x2!, option.y2!]];
         }
 
@@ -92,7 +91,7 @@ export class GAbstractEdge extends GObject {
         }
         */
     }
-    
+
 
     set edgeType(value: EdgeType) {
         ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.edgeType, value);
@@ -108,7 +107,7 @@ export class GAbstractEdge extends GObject {
         return degree;
     }
 
-    
+
 
 
     /**
@@ -128,7 +127,7 @@ export class GAbstractEdge extends GObject {
     public get hasSize(): boolean {
         return false;
     }
-    
+
     public get graph(): GObject | null {
         return getGraph(this);
     }
@@ -164,6 +163,7 @@ export class GAbstractEdge extends GObject {
             this.svgGroup.setAttribute(AttributeNames.endNodeName, v);
         }
     }
+    /*
     protected updateSurface() {
         this.updateDashArray();
         if (this.markerStart != null) {
@@ -182,8 +182,8 @@ export class GAbstractEdge extends GObject {
 
     }
 
-    private updateDashArray(){
-        
+    private updateDashArray() {
+
         this.hasConnectedObserverFunction = false;
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null) {
@@ -191,6 +191,7 @@ export class GAbstractEdge extends GObject {
         }
         this.hasConnectedObserverFunction = true;
     }
+    */
     /**
      * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
      */
@@ -205,10 +206,10 @@ export class GAbstractEdge extends GObject {
         const dAttr = this.svgPath.getAttribute("d");
         if (dAttr == null) throw Error("error");
         const r: [number, number][] = [];
-        if(dAttr.length > 0){
+        if (dAttr.length > 0) {
             const d = dAttr.split(" ");
             let i = 0;
-    
+
             while (i < d.length) {
                 if (d[i] == "M") {
                     r.push([round100(Number(d[i + 1])), round100(Number(d[i + 2]))]);
@@ -221,37 +222,37 @@ export class GAbstractEdge extends GObject {
                     r.push([round100(Number(d[i + 3])), round100(Number(d[i + 4]))]);
                     i += 5;
                 } else {
-                    
+
                     throw Error("path points parse error/" + dAttr + "/" + dAttr.length);
                 }
             }
-    
-            return r;    
-        }else{
+
+            return r;
+        } else {
             return r;
         }
     }
     protected set pathPoints(points: [number, number][]) {
-        points.forEach((v) =>{
-            if(v[0] === undefined){
+        points.forEach((v) => {
+            if (v[0] === undefined) {
                 throw new UndefinedError();
             }
         })
         let path = "";
-        if(this.edgeType == "elbow"){
+        if (this.edgeType == "elbow") {
             path += `M ${points[0][0]} ${points[0][1]} `;
-            for(let i=1;i< points.length-1;i++){
+            for (let i = 1; i < points.length - 1; i++) {
                 path += `L ${points[i][0]} ${points[i][1]} `;
             }
-            path += `L ${points[points.length-1][0]} ${points[points.length-1][1]}`;
+            path += `L ${points[points.length - 1][0]} ${points[points.length - 1][1]}`;
 
-        }else{
+        } else {
             if (points.length == 2) {
                 const [x1, y1] = points[0];
                 const [x2, y2] = points[1];
 
 
-    
+
                 path = escapeWithRound100`M ${x1} ${y1} L ${x2} ${y2}`
             } else if (points.length == 3) {
                 const [x1, y1] = points[0];
@@ -264,7 +265,7 @@ export class GAbstractEdge extends GObject {
             else {
                 path = escapeWithRound100`M ${0} ${0} L ${0} ${0}`
             }
-    
+
         }
 
         const prevPath = this.svgPath.getAttribute("d");
@@ -516,6 +517,182 @@ export class GAbstractEdge extends GObject {
         //this.update();
     }
 
+    protected updateConnectorInfoOrGetUpdateFlag(withUpdate: boolean): boolean {
+        let b = false;
+        const oldBeginVertex = GAbstractEdge.getConnectedVertexFromDic(this, true);
+        const oldEndVertex = GAbstractEdge.getConnectedVertexFromDic(this, false);
+        if (this.beginVertex != oldBeginVertex) {
+            b = true;
+            if (withUpdate) {
+                if (oldBeginVertex != null) {
+                    this.removeVertexEvent(oldBeginVertex);
+                    if (oldBeginVertex.outcomingEdges.indexOf(this) != -1) {
+                        oldBeginVertex.removeOutcomingEdge(this);
+                    }
+                }
+
+                if (this.beginVertex != null) {
+                    this.addVertexEvent(this.beginVertex);
+                    if (this.beginVertex.outcomingEdges.indexOf(this) == -1) {
+                        this.beginVertex.insertOutcomingEdge(this);
+                    }
+                }
+                GAbstractEdge.setConnectedVertexFromDic(this, true);
+
+            }
+        }
+        if (this.endVertex != oldEndVertex) {
+            b = true;
+            if (withUpdate) {
+                if (oldEndVertex != null) {
+                    this.removeVertexEvent(oldEndVertex);
+                    if (oldEndVertex.incomingEdges.indexOf(this) != -1) {
+                        oldEndVertex.removeIncomingEdge(this);
+                    }
+                }
+
+                if (this.endVertex != null) {
+                    this.addVertexEvent(this.endVertex);
+                    if (this.endVertex.incomingEdges.indexOf(this) == -1) {
+                        this.endVertex.insertIncomingEdge(this);
+                    }
+                }
+                GAbstractEdge.setConnectedVertexFromDic(this, false);
+
+            }
+        }
+        return b;
+    }
+    protected updateDashArrayOrGetUpdateFlag(withUpdate: boolean) : boolean{
+        let b = false;
+        this.hasConnectedObserverFunction = false;
+        const dashStyle = this.msoDashStyle;
+        if (dashStyle != null) {
+            b = updateAppropriateDashArrayOrGetUpdateFlag(this.svgPath, withUpdate)
+        }
+        this.hasConnectedObserverFunction = true;
+        return b;
+    }
+    protected updateSurfaceOrGetUpdateFlag(withUpdate: boolean) : boolean{
+        let b = this.updateDashArrayOrGetUpdateFlag(withUpdate);
+        
+        if (this.markerStart != null) {
+            var node = <SVGPolygonElement>this.markerStart.firstChild;
+            if (this.lineColor != null) {
+                const fill = node.getAttribute("fill");
+                if(fill != this.lineColor){
+                    b = true;
+                    if(withUpdate){
+                        node.setAttribute("fill", this.lineColor);
+                    }
+                }
+            }
+        }
+        if (this.markerEnd != null) {
+            var node = <SVGPolygonElement>this.markerEnd.firstChild;
+            if (this.lineColor != null) {
+                const fill = node.getAttribute("fill");
+                if(fill != this.lineColor){
+                    b = true;
+                    if(withUpdate){
+                        node.setAttribute("fill", this.lineColor);
+                    }
+
+                }
+            }
+        }
+        return b;
+
+    }
+    protected updateLocationOrGetUpdateFlag(withUpdate: boolean) : boolean {
+        let b = false;
+        const [x1, y1] = this.beginConnectoPosition;
+        const [x2, y2] = this.endConnectorPosition;
+
+        const equalFunc = (prevObj : [number, number][], newObj: [number, number][]) : boolean  =>{
+            if(prevObj.length != newObj.length){
+                return false;
+            }else{
+                for(let i=0;i<prevObj.length;i++){
+                    if(prevObj[i][0] != newObj[i][0]){
+                        return false;
+                    }
+                    else if(prevObj[i][1] != newObj[i][1]){
+                        return false;
+                    }
+
+                }
+            }
+            return true;
+        }
+        const arrayRound100 = (obj : [number, number][]) =>{
+            for(let i = 0;i<obj.length;i++){
+                obj[i] = [round100(obj[i][0]), round100(obj[i][1])];
+            }
+        }
+
+        if (this.edgeType == "elbow") {
+            const points: [number, number][] = new Array();
+            const elbowPositions = this.elbowCalculator(x1, y1, this.beginConnectorType, x2, y2, this.endConnectorType);
+            points.push([x1, y1]);
+            elbowPositions.forEach((v) => points.push(v));
+            points.push([x2, y2]);
+            arrayRound100(points);
+
+            if(!equalFunc(this.pathPoints, points)){
+                b = true;
+                if(withUpdate){
+                    this.pathPoints = points;
+                }
+            }
+
+
+
+        } else if (this.edgeType == "curve") {
+
+        } else {
+            const points: [number, number][] = new Array();
+            this.pathPoints.forEach((v) => points.push(v));
+
+            points[0] = [x1, y1];
+            points[points.length - 1] = [x2, y2];
+            arrayRound100(points);
+
+
+            if(!equalFunc(this.pathPoints, points)){
+                b = true;
+
+                if(withUpdate){
+                    this.pathPoints = points;
+                }
+            }
+
+        }
+        //if (points[0][0] == undefined) throw new UndefinedError();
+        //this.pathPoints = points;
+
+        return b;
+
+    }
+
+    public getUpdateFlag(): boolean {
+        const b1 = super.getUpdateFlag();
+        const b2 = this.updateConnectorInfoOrGetUpdateFlag(false);
+        const b3 = this.updateSurfaceOrGetUpdateFlag(false);
+        const b4 = this.updateLocationOrGetUpdateFlag(false);
+        console.log(`AbstractEdge ${this.objectID}: ${b1} ${b2} ${b3} ${b4}`)
+
+        return b1 || b2 || b3 || b4;
+    }
+    public update(): void {
+        super.update();
+        const b2 = this.updateConnectorInfoOrGetUpdateFlag(true);
+        const b3 = this.updateSurfaceOrGetUpdateFlag(true);
+        const b4 = this.updateLocationOrGetUpdateFlag(true);
+
+    }
+
+    /*
     protected updateConnectorInfo() {
         const oldBeginVertex = GAbstractEdge.getConnectedVertexFromDic(this, true);
         const oldEndVertex = GAbstractEdge.getConnectedVertexFromDic(this, false);
@@ -554,38 +731,39 @@ export class GAbstractEdge extends GObject {
         }
         //if(this.beginVertexID != )
     }
-    public get beginConnectoPosition() : [number, number] {
+    */
+    public get beginConnectoPosition(): [number, number] {
         const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
         const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];
 
         const [x1, y1] = this.beginVertex != null ? this.beginVertex.getContactPosition(this.beginConnectorType, cx2, cy2) : [cx1, cy1];
         return [x1, y1];
     }
-    public get endConnectorPosition() : [number, number] {
+    public get endConnectorPosition(): [number, number] {
         const [cx1, cy1] = this.beginVertex != null ? [this.beginVertex.cx, this.beginVertex.cy] : [this.x1, this.y1];
         const [cx2, cy2] = this.endVertex != null ? [this.endVertex.cx, this.endVertex.cy] : [this.x2, this.y2];
         const [x2, y2] = this.endVertex != null ? this.endVertex.getContactPosition(this.endConnectorType, cx1, cy1) : [cx2, cy2];
         return [x2, y2];
     }
-    protected elbowCalculator(x1 : number, y1 :number, type1 : ConnectorType, x2 : number, y2 : number, type2 : ConnectorType, recursion : number = 0) : [number, number][]{
-        if(recursion > 6){
+    protected elbowCalculator(x1: number, y1: number, type1: ConnectorType, x2: number, y2: number, type2: ConnectorType, recursion: number = 0): [number, number][] {
+        if (recursion > 6) {
             return [];
         }
         const xgap = Math.abs(x2 - x1) / 2;
         const ygap = Math.abs(y2 - y1) / 2;
         const gap = 30;
 
-        let area : "leftup" | "rightup" | "leftdown" | "rightdown" = "leftup";
-        if(x1 < x2){
-            if(y1 < y2){
+        let area: "leftup" | "rightup" | "leftdown" | "rightdown" = "leftup";
+        if (x1 < x2) {
+            if (y1 < y2) {
                 area = "rightdown"
-            }else{
+            } else {
                 area = "rightup"
             }
-        }else{
-            if(y1 < y2){
+        } else {
+            if (y1 < y2) {
                 area = "leftdown"
-            }else{
+            } else {
                 area = "leftup"
             }
 
@@ -595,101 +773,101 @@ export class GAbstractEdge extends GObject {
         const up = area == "rightup" || area == "leftup";
         const down = area == "rightdown" || area == "leftdown";
 
-        if(type1 == ConnectorType.Bottom){
+        if (type1 == ConnectorType.Bottom) {
             const x3 = x1;
             const type3 = right ? ConnectorType.Right : ConnectorType.Left;
             let y3 = 0;
 
-            if(type2 == ConnectorType.Top){
-                if(x1 == x2 && down){
+            if (type2 == ConnectorType.Top) {
+                if (x1 == x2 && down) {
                     return [];
-                }else{
+                } else {
                     y3 = y1 + ygap;
                 }
-            }    
-            else if(type2 == ConnectorType.Left){
+            }
+            else if (type2 == ConnectorType.Left) {
                 y3 = (area == "rightdown") ? y2 : y1 + gap;
-            }    
-            else if(type2 == ConnectorType.Right){
+            }
+            else if (type2 == ConnectorType.Right) {
                 y3 = (area == "leftdown") ? y2 : y1 + ygap;
-            }else{
+            } else {
                 y3 = down ? y2 + gap : y1 + gap;
             }
-            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2, recursion+1);
+            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2, recursion + 1);
             arr.unshift([x3, y3]);
             return arr;
 
-        }else if(type1 == ConnectorType.Right){
+        } else if (type1 == ConnectorType.Right) {
             const y3 = y1;
             const type3 = up ? ConnectorType.Top : ConnectorType.Bottom;
             let x3 = 0;
-            if(type2 == ConnectorType.Top){
+            if (type2 == ConnectorType.Top) {
                 x3 = area == "rightdown" ? x2 : x1 + gap;
             }
-            else if(type2 == ConnectorType.Bottom){
+            else if (type2 == ConnectorType.Bottom) {
                 x3 = area == "rightup" ? x2 : x1 + xgap;
             }
-            else if(type2 == ConnectorType.Left){
-                if(y1 == y2 && right){
+            else if (type2 == ConnectorType.Left) {
+                if (y1 == y2 && right) {
                     return [];
-                }else{
+                } else {
                     x3 = x1 + xgap;
                 }
             }
-            else{
-                x3 = right ? x2 + gap : x1 + gap;    
+            else {
+                x3 = right ? x2 + gap : x1 + gap;
             }
-            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2,recursion+1);
+            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2, recursion + 1);
             arr.unshift([x3, y3]);
-            return arr;    
+            return arr;
 
-        }else if(type1 == ConnectorType.Left){
+        } else if (type1 == ConnectorType.Left) {
             const y3 = y1;
             const type3 = up ? ConnectorType.Top : ConnectorType.Bottom;
             let x3 = 0;
-                
-            if(type2 == ConnectorType.Top){
+
+            if (type2 == ConnectorType.Top) {
                 x3 = area == "leftdown" ? x2 : x1 - gap;
             }
-            else if(type2 == ConnectorType.Bottom){
+            else if (type2 == ConnectorType.Bottom) {
                 x3 = area == "leftup" ? x2 : x1 - gap;
             }
-            else if(type2 == ConnectorType.Right){
-                if(y1 == y2 && left){
+            else if (type2 == ConnectorType.Right) {
+                if (y1 == y2 && left) {
                     return [];
-                }else{
+                } else {
                     x3 = x1 - gap;
                 }
             }
-            else{
-                x3 = right ? x1 - gap : x2 - gap;    
+            else {
+                x3 = right ? x1 - gap : x2 - gap;
             }
-            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2,recursion+1);
+            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2, recursion + 1);
             arr.unshift([x3, y3]);
-            return arr;    
-        }else{
+            return arr;
+        } else {
             const x3 = x1;
             const type3 = right ? ConnectorType.Right : ConnectorType.Left;
             let y3 = 0;
 
-            if(type2 == ConnectorType.Bottom){
-                if(x1 == x2 && up){
+            if (type2 == ConnectorType.Bottom) {
+                if (x1 == x2 && up) {
                     return [];
-                }else{
+                } else {
                     y3 = y1 - gap;
                 }
-            }    
-            else if(type2 == ConnectorType.Left){
+            }
+            else if (type2 == ConnectorType.Left) {
                 y3 = (area == "rightup") ? y2 : y1 - gap;
-            }    
-            else if(type2 == ConnectorType.Right){
+            }
+            else if (type2 == ConnectorType.Right) {
                 y3 = (area == "leftup") ? y2 : y1 - gap;
-            }else{
+            } else {
                 //y3 = up ? y2 + gap : y1 - gap;
                 y3 = y1 - gap;
 
             }
-            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2,recursion+1);
+            const arr = this.elbowCalculator(x3, y3, type3, x2, y2, type2, recursion + 1);
             arr.unshift([x3, y3]);
             return arr;
 
@@ -706,28 +884,30 @@ export class GAbstractEdge extends GObject {
 
     }
     */
+   /*
     protected updateLocation() {
         const [x1, y1] = this.beginConnectoPosition;
         const [x2, y2] = this.endConnectorPosition;
         const points: [number, number][] = this.pathPoints;
 
-        if(this.edgeType == "elbow"){
-            const elbowPositions = this.elbowCalculator(x1,y1, this.beginConnectorType, x2, y2, this.endConnectorType);
-            while(points.length > 0) points.pop();
+        if (this.edgeType == "elbow") {
+            const elbowPositions = this.elbowCalculator(x1, y1, this.beginConnectorType, x2, y2, this.endConnectorType);
+            while (points.length > 0) points.pop();
             points.push([x1, y1]);
             elbowPositions.forEach((v) => points.push(v));
             points.push([x2, y2]);
-            
-        }else if(this.edgeType == "curve"){
 
-        }else{
+        } else if (this.edgeType == "curve") {
+
+        } else {
             points[0] = [x1, y1];
             points[points.length - 1] = [x2, y2];
         }
-        if(points[0][0] == undefined) throw new UndefinedError();
-        this.pathPoints = points;    
+        if (points[0][0] == undefined) throw new UndefinedError();
+        this.pathPoints = points;
 
     }
+    */
     private static connectedBeginVertexDic: { [key: string]: string; } = {};
     private static connectedEndVertexDic: { [key: string]: string; } = {};
     public static getConnectedVertexFromDic(edge: GAbstractEdge, isBegin: boolean): GVertex | null {
@@ -769,7 +949,7 @@ export class GAbstractEdge extends GObject {
         */
         GObject.constructAttributes(e, removeAttributes, output);
 
-        
+
         //const _output = <GOptions.GEdgeAttributes>GAbstractEdge.constructAttributes(e, removeAttributes, output);
         output.x1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.x1, 0);
         output.x2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.x2, 300);

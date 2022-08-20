@@ -70,6 +70,20 @@ export class GVertex extends GObject {
         return null;
     }
 
+    public update() {
+        if(this.getUpdateFlag()){
+            this.incomingEdges.forEach((v) =>{
+                v.resetUnstableCounter();
+            })
+            this.outcomingEdges.forEach((v) =>{
+                v.resetUnstableCounter();
+            })
+        }
+
+
+        super.update();
+    }
+
 
     /**
     入辺配列を返します。
