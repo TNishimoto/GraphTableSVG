@@ -600,6 +600,30 @@ export class GGraph extends GObject {
         this.relocate();
     }
 
+    public update(){
+        super.update();
+
+        this.vertices.forEach((v) =>{
+            v.update();
+        })
+        this.edges.forEach((v) =>{
+            v.update();
+        })
+
+        this.resizeUpdate();
+    }
+    public getUpdateFlag() : boolean {
+        const b0 = super.getUpdateFlag();
+        const arr1 = this.vertices.map((v) => v.getUpdateFlag());
+        const arr2 = this.edges.map((v) => v.getUpdateFlag());
+
+        const b1 = arr1.reduce((x, y) => x  || y, false);
+        const b2 = arr2.reduce((x, y) => x  || y, false);
+        return b0 || b1 || b2;
+
+
+    }
+
     private static createVertex2(parent: GGraph, option: GOptions.GTextBoxAttributes = {}): GVertex {
         let _parent = parent.svgGroup;
         if (option.class == undefined) option.class = DefaultClassNames.defaultVertexClass;

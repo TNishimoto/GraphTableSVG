@@ -10,6 +10,7 @@ const outputRelativeDirPath = 'sub_projects/debug/output';
 const correctOutputRelativeDirPath = 'sub_projects/debug/correct_output';
 
 type BrowserNameType = 'webkit' | 'firefox' | 'chromium' | 'edge';
+type ErrorType = 'TextMismatch' | 'TimeoutError' | 'UnexpectedError';
 
 
 function createDirectoryIfNotExist(dirPath: string) {
@@ -57,17 +58,43 @@ function concatenatePaths(relativeDirPath1: string, relativeDirPath2: string): s
   }
 }
 
+
+
 class TestResult {
-  public filename: string;
-  public browserName: BrowserNameType;
-  public message: string;
-  public constructor(_filename: string, _browserName: BrowserNameType, _message: string) {
+  public filename: string = "";
+  public browserName: BrowserNameType = "firefox";
+  public message: string = "";
+  public success: boolean | null = null;
+  public errorType : ErrorType | null = null;
+  /*
+  public constructor(_filename: string, _browserName: BrowserNameType, _message: string, _success: boolean | null, _errorType : ErrorType) {
+    
     this.filename = _filename;
     this.browserName = _browserName;
     this.message = _message;
+    this.success = _success;
+    this.errorType = _errorType;
+    
   }
-
+  */
 }
+
+class TestResultForFile {
+  public filename: string = "";
+  public arr: TestResult[] = new Array();
+
+  public getTestResult(): string {
+    let s = `${this.filename} \t Browsers = { `;
+    this.arr.forEach((v) => {
+      const msg = v.success ? `\x1b[42mOK\x1b[49m` : `\x1b[41m${v.errorType}\x1b[49m`;
+      s += `${v.browserName}: ${msg}\t`;
+    })
+    s += " }";
+    return s;
+  }
+}
+
+
 
 
 async function test(browserName: BrowserNameType, currentRelativeDirPath: string, fileName: string): Promise<TestResult> {
@@ -85,12 +112,19 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
   const correctHTMLPath = concatenatePaths(`${correctOutputDirPath}/${filenameWithoutExe}`, `${filenameWithoutExe}_${browserName}.html`)
   const correctPNGPath = concatenatePaths(`${correctOutputDirPath}/${filenameWithoutExe}`, `${filenameWithoutExe}_${browserName}.png`)
 
+  /*
   createDirectoryIfNotExist(outputDirPath);
   createDirectoryIfNotExist(correctOutputDirPath);
   createDirectoryIfNotExist(`${correctOutputDirPath}/${filenameWithoutExe}`);
+  */
 
 
   const brres = async () => {
+    let result = new TestResult();
+    result.filename = fileName;
+    result.browserName = browserName;
+
+    //let success: boolean | null = null;
     let browser = null;
     if (browserName == 'webkit') {
       browser = await webkit.launch()
@@ -159,8 +193,11 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
           const b = diffXML(correctHTML, output_html);
           if (b) {
             console.log(`\x1b[42mOK: ${fileName} \x1b[49m`)
+            result.success = true;
           } else {
             console.log(`\x1b[41mNO: ${fileName} \x1b[49m`)
+            result.success = false;
+            result.errorType = "TextMismatch";
 
           }
         } else {
@@ -176,24 +213,82 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
 
       } else {
         console.log(`\x1b[41mFailed (Timeout): ${fileName}, ${browserName} \x1b[49m`)
+        result.errorType = "TimeoutError";
+        result.success = false;
 
       }
       await browser.close()
 
-      return new TestResult(fileName, browserName, "");
+      return result;
 
 
-    }else{
+    } else {
       throw new Error("No name Browser");
     }
 
 
   }
-  return brres();
+  //let r : Promise<TestResult> | null = null;
+  try {
+    return brres();
+  } catch {
+
+    let result = new TestResult();
+    result.filename = fileName;
+    result.browserName = browserName;
+    result.success = false;
+    result.errorType = 'UnexpectedError';
+
+    return result;
+  }
+  /*
+  if(r != null){
+    return r;
+  }else{
+    throw new Error("Super Error");    
+  }
+  */
 
 }
 
-async function checkDirectory(currentRelativePath: string) {
+async function testAll(currentRelativeDirPath: string, fileName: string): Promise<TestResultForFile> {
+  const r = new TestResultForFile();
+  r.filename = fileName;
+
+  //let tr1 : TestResult | null = null;
+  const result1 = await test("firefox", currentRelativeDirPath, fileName);
+  console.log(`Finished: ${result1.filename}, Browswer = ${result1.browserName}`)
+  r.arr.push(result1);
+
+  const result2 = await test("chromium", currentRelativeDirPath, fileName);
+  console.log(`Finished: ${result2.filename}, Browswer = ${result2.browserName}`)
+  const result3 = await test("edge", currentRelativeDirPath, fileName);
+  console.log(`Finished: ${result3.filename}, Browswer = ${result3.browserName}`)
+  r.arr.push(result2);
+  r.arr.push(result3);
+  return r;
+
+}
+
+type DirectoryInfo = { dirPath: string, fileName: string };
+
+function createDirectories(info: DirectoryInfo) {
+  const currentRelativeDirPath = info.dirPath;
+  const fileName = info.fileName;
+  const outputDirPath = concatenatePaths(getAbsoluteDirectoryPath(outputRelativeDirPath), currentRelativeDirPath);
+  const correctOutputDirPath = concatenatePaths(getAbsoluteDirectoryPath(correctOutputRelativeDirPath), currentRelativeDirPath);
+  const exe = path.extname(fileName)
+  const filenameWithoutExe = fileName.substring(0, fileName.length - exe.length);
+
+
+  createDirectoryIfNotExist(outputDirPath);
+  createDirectoryIfNotExist(correctOutputDirPath);
+  createDirectoryIfNotExist(`${correctOutputDirPath}/${filenameWithoutExe}`);
+
+}
+
+function getFiles(currentRelativePath: string): DirectoryInfo[] {
+  const r: DirectoryInfo[] = new Array();
   const fPath = concatenatePaths(exampleRelativeDirPath, currentRelativePath);
   const exampleCurrentAbsolutePath = getAbsoluteDirectoryPath(fPath);
   const files = fs.readdirSync(exampleCurrentAbsolutePath);
@@ -202,12 +297,41 @@ async function checkDirectory(currentRelativePath: string) {
     return fs.statSync(filePath).isFile() && /.*\.html$/.test(file);
   })
   for (const vFileName of fileList) {
-    const result1 = await test("firefox", currentRelativePath, vFileName);
-    console.log(`Finished: ${result1.filename}, Browswer = ${result1.browserName}`)
-    const result2 = await test("chromium", currentRelativePath, vFileName);
-    console.log(`Finished: ${result2.filename}, Browswer = ${result2.browserName}`)
-    const result3 = await test("edge", currentRelativePath, vFileName);
-    console.log(`Finished: ${result3.filename}, Browswer = ${result3.browserName}`)
+    r.push({ dirPath: currentRelativePath, fileName: vFileName });
+  }
+
+
+  const dirList = files.filter((file) => {
+    const subDirPath = exampleCurrentAbsolutePath + "/" + file;
+
+    return fs.statSync(subDirPath).isDirectory()
+  })
+  for (const vDirName of dirList) {
+    const subDirPath = concatenatePaths(currentRelativePath, vDirName);
+    const resultArr = getFiles(subDirPath);
+    resultArr.forEach((v) => {
+      r.push(v);
+    })
+
+  }
+  return r;
+}
+
+
+
+async function checkDirectory(currentRelativePath: string): Promise<TestResultForFile[]> {
+  const r: TestResultForFile[] = new Array();
+  const fPath = concatenatePaths(exampleRelativeDirPath, currentRelativePath);
+  const exampleCurrentAbsolutePath = getAbsoluteDirectoryPath(fPath);
+  const files = fs.readdirSync(exampleCurrentAbsolutePath);
+  const fileList = files.filter((file) => {
+    const filePath = exampleCurrentAbsolutePath + "/" + file;
+    return fs.statSync(filePath).isFile() && /.*\.html$/.test(file);
+  })
+  for (const vFileName of fileList) {
+    const testAllResult = await testAll(currentRelativePath, vFileName);
+    r.push(testAllResult);
+
 
   }
 
@@ -217,15 +341,63 @@ async function checkDirectory(currentRelativePath: string) {
 
     return fs.statSync(subDirPath).isDirectory()
   })
-  dirList.forEach((v) => {
-    const subDirPath = concatenatePaths(currentRelativePath, v);
-    checkDirectory(subDirPath);
-  })
+  for (const vDirName of dirList) {
+    const subDirPath = concatenatePaths(currentRelativePath, vDirName);
+    const resultArr = await checkDirectory(subDirPath);
+    resultArr.forEach((v) => {
+      r.push(v);
+    })
+
+  }
+  return r;
 }
 
 //console.log(__filename)
 
-checkDirectory("");
+if (process.argv.length == 4) {
+  /*
+  const relativePath = process.argv[2];
+  const fileName = process.argv[3];
+  const result = testAll(relativePath, fileName);
+  result.then((v) =>{
+    v.print();
+  })
+  */
+} else {
+  const files = getFiles("");
+  files.forEach((v) => createDirectories(v));
+  const result = Promise.all(files.map(async (v) => {
+    const dummy = await testAll(v.dirPath, v.fileName);
+    return dummy;
+  }));
+  result.then((v) =>{
+    const s = v.map((w) => {
+      return w.getTestResult();
+    }).join("\n")
+    console.log(s);
+  
+  })
+
+  /*
+  const finalResult = checkDirectory("");
+
+  finalResult.then((v) =>{
+    console.log(`Result: ${v.length}`)
+    v.forEach((w) =>{
+      w.print();
+    })
+  })
+  */
+
+}
+
+/*
+for(var i = 0;i < process.argv.length; i++){
+  console.log("argv[" + i + "] = " + process.argv[i]);
+}
+*/
+
+
 
 //test("webkit");
 
