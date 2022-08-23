@@ -8,12 +8,13 @@
     <script>
         window.onload = () => {
             GraphTableSVG.Options.openSVG();
+            /* This comment is a landmark for data processing. */
         };
     </script>
 </head>
 
 <body>
-    <svg width="300px" height="300px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
+    <svg id="main" width="300px" height="300px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
         <g-table id="table" x="50" y="50" background:style="fill:aqua">
             <row background:style="fill:aqua" topborder:style="stroke-width:3px">
                 <cell background:style="fill:aqua" text:style="fill:blue" topborder:style="stroke-width:3px" bottomborder:style="stroke-width:3px">Index</cell>

@@ -853,6 +853,13 @@ function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
                     } else {
                         if (value.unstableCounter == 0) {
                             value.svgGroup.removeAttribute(unstableCounterName)
+
+                            const descendants = HTMLFunctions.getDescendants(value.svgGroup);
+                            descendants.forEach((v) =>{
+                                if(v.hasAttribute(unstableCounterName)){
+                                    v.removeAttribute(unstableCounterName);
+                                }
+                            })
                         } else {
                             value.svgGroup.setAttribute(unstableCounterName, (value.unstableCounter - 1).toString());
                         }

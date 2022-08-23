@@ -272,7 +272,8 @@ export class GTable extends GVertex {
     public set isAutoResized(value: boolean) {
         this._isAutoResized = value;
         if (value) {
-            this.update();
+            this.resetUnstableCounter();
+            //this.update();
         }
     }
 
@@ -304,7 +305,11 @@ export class GTable extends GVertex {
             this.fitSizeToOriginalCells(true);
 
         }
-        if (b) this.update();
+        if (b) {
+            this.resetUnstableCounter();
+            //this.update();
+
+        }
     };
     /**
     * テーブルの行方向の単位セルの数を返します。
@@ -595,7 +600,8 @@ export class GTable extends GVertex {
 
         //this.updateNodeRelations();
         if (this.isInitialized) {
-            this.update();
+            this.resetUnstableCounter();
+            //this.update();
         }
 
 
@@ -983,14 +989,17 @@ export class GTable extends GVertex {
     public removeRow(ithRow: number) {
         this.primitiveRemoveRow(ithRow, false);
         this.updateNodeRelations();
-        this.update();
+        this.resetUnstableCounter();
+        //this.update();
     }
 
 
     public removeColumn(ithColumn: number) {
         this.primitiveRemoveColumn(ithColumn, false);
         this.updateNodeRelations();
-        this.update();
+        this.resetUnstableCounter();
+        
+        //this.update();
     }
 
     private deleteXHorizontalBorders(i: number) {
@@ -1055,7 +1064,8 @@ export class GTable extends GVertex {
     public insertRow(ithRow: number) {
         this.primitiveInsertRow(ithRow, false);
         this.updateNodeRelations();
-        this.update();
+        this.resetUnstableCounter();
+        //this.update();
 
     }
     /**
@@ -1065,7 +1075,9 @@ export class GTable extends GVertex {
     public insertColumn(ithColumn: number) {
         this.primitiveInsertColumn(ithColumn, false)
         this.updateNodeRelations();
-        this.update();
+        this.resetUnstableCounter();
+        
+        //this.update();
     }
     /**
      * 新しい行を作って挿入します。
@@ -1092,7 +1104,8 @@ export class GTable extends GVertex {
         //this.insertColumn(this.columnCount);
         this.primitiveInsertColumn(this.columnCount, false)
         this.updateNodeRelations();
-        this.update();
+        this.resetUnstableCounter();
+        //this.update();
 
     }
 
@@ -1103,7 +1116,9 @@ export class GTable extends GVertex {
         //this.insertRow(this.rowCount);
         this.primitiveInsertRow(this.rowCount, false);
         this.updateNodeRelations();
-        this.update();
+        this.resetUnstableCounter();
+        
+        //this.update();
         //this.update();
     }
     // #endregion

@@ -22,19 +22,14 @@ function createDirectoryIfNotExist(dirPath: string) {
   }
 
 }
-
-/*
-function getAbsoluteFilePath(relativeDirPath: string, fileName: string) : string {
-    const name =  "GraphTableSVG";
-    const p = __filename.indexOf(name);
-    const baseDirPath = __filename.substring(0, p + name.length);
-    if(relativeDirPath == ""){
-      return `${baseDirPath}/${fileName}`
-    }else{
-      return `${baseDirPath}/${relativeDirPath}/${fileName}`
-    }
+function rightPadding(text : string, maxLen : number){
+  let s = text;
+  while(s.length < maxLen){
+    s+= " ";
+  }
+  return s;
 }
-*/
+
 function getAbsoluteDirectoryPath(relativeDirPath: string): string {
   const name = "GraphTableSVG";
   const p = __filename.indexOf(name);
@@ -84,9 +79,10 @@ class TestResultForFile {
   public arr: TestResult[] = new Array();
 
   public getTestResult(): string {
-    let s = `${this.filename} \t Browsers = { `;
+    let s = `${rightPadding(this.filename, 40)} \t Browsers = { `;
     this.arr.forEach((v) => {
-      const msg = v.success ? `\x1b[42mOK\x1b[49m` : `\x1b[41m${v.errorType}\x1b[49m`;
+      const type : string = v.errorType == null ? "null" : v.errorType;
+      const msg = v.success ? `\x1b[42mOK\x1b[49m` : `\x1b[41m${rightPadding(type, 13)}\x1b[49m`;
       s += `${v.browserName}: ${msg}\t`;
     })
     s += " }";
@@ -99,15 +95,16 @@ class TestResultForFile {
 
 async function test(browserName: BrowserNameType, currentRelativeDirPath: string, fileName: string): Promise<TestResult> {
   console.log(`Processing...: ${fileName}, browser: ${browserName}`)
+  const exe = path.extname(fileName)
+  const filenameWithoutExe = fileName.substring(0, fileName.length - exe.length);
+
   const exampleDirPath = concatenatePaths(getAbsoluteDirectoryPath(exampleRelativeDirPath), currentRelativeDirPath);
   const outputDirPath = concatenatePaths(getAbsoluteDirectoryPath(outputRelativeDirPath), currentRelativeDirPath);
   const correctOutputDirPath = concatenatePaths(getAbsoluteDirectoryPath(correctOutputRelativeDirPath), currentRelativeDirPath);
   const absoluteFilePath = concatenatePaths(exampleDirPath, fileName);
-  const outputHTMLPath = concatenatePaths(outputDirPath, `${browserName}_${fileName}`)
-  const outputPNGPath = concatenatePaths(outputDirPath, `${browserName}_${fileName}.png`)
+  const outputHTMLPath = concatenatePaths(`${outputDirPath}/${filenameWithoutExe}`, `${browserName}_${fileName}`)
+  const outputPNGPath = concatenatePaths(`${outputDirPath}/${filenameWithoutExe}`, `${browserName}_${fileName}.png`)
 
-  const exe = path.extname(fileName)
-  const filenameWithoutExe = fileName.substring(0, fileName.length - exe.length);
 
   const correctHTMLPath = concatenatePaths(`${correctOutputDirPath}/${filenameWithoutExe}`, `${filenameWithoutExe}_${browserName}.html`)
   const correctPNGPath = concatenatePaths(`${correctOutputDirPath}/${filenameWithoutExe}`, `${filenameWithoutExe}_${browserName}.png`)
@@ -282,6 +279,8 @@ function createDirectories(info: DirectoryInfo) {
 
 
   createDirectoryIfNotExist(outputDirPath);
+  createDirectoryIfNotExist(`${outputDirPath}/${filenameWithoutExe}`);
+
   createDirectoryIfNotExist(correctOutputDirPath);
   createDirectoryIfNotExist(`${correctOutputDirPath}/${filenameWithoutExe}`);
 
@@ -319,50 +318,20 @@ function getFiles(currentRelativePath: string): DirectoryInfo[] {
 
 
 
-async function checkDirectory(currentRelativePath: string): Promise<TestResultForFile[]> {
-  const r: TestResultForFile[] = new Array();
-  const fPath = concatenatePaths(exampleRelativeDirPath, currentRelativePath);
-  const exampleCurrentAbsolutePath = getAbsoluteDirectoryPath(fPath);
-  const files = fs.readdirSync(exampleCurrentAbsolutePath);
-  const fileList = files.filter((file) => {
-    const filePath = exampleCurrentAbsolutePath + "/" + file;
-    return fs.statSync(filePath).isFile() && /.*\.html$/.test(file);
-  })
-  for (const vFileName of fileList) {
-    const testAllResult = await testAll(currentRelativePath, vFileName);
-    r.push(testAllResult);
 
-
-  }
-
-
-  const dirList = files.filter((file) => {
-    const subDirPath = exampleCurrentAbsolutePath + "/" + file;
-
-    return fs.statSync(subDirPath).isDirectory()
-  })
-  for (const vDirName of dirList) {
-    const subDirPath = concatenatePaths(currentRelativePath, vDirName);
-    const resultArr = await checkDirectory(subDirPath);
-    resultArr.forEach((v) => {
-      r.push(v);
-    })
-
-  }
-  return r;
-}
 
 //console.log(__filename)
 
 if (process.argv.length == 4) {
-  /*
+  
   const relativePath = process.argv[2];
   const fileName = process.argv[3];
   const result = testAll(relativePath, fileName);
   result.then((v) =>{
-    v.print();
+      const s = v.getTestResult();
+      console.log(s);
   })
-  */
+  
 } else {
   const files = getFiles("");
   files.forEach((v) => createDirectories(v));
@@ -378,16 +347,6 @@ if (process.argv.length == 4) {
   
   })
 
-  /*
-  const finalResult = checkDirectory("");
-
-  finalResult.then((v) =>{
-    console.log(`Result: ${v.length}`)
-    v.forEach((w) =>{
-      w.print();
-    })
-  })
-  */
 
 }
 
