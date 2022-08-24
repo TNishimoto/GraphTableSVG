@@ -20,6 +20,7 @@ import * as SVGGExtension from "../../interfaces/svg_g_extension"
 import * as SVGElementExtension from "../../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../../interfaces/svg_text_extension"
 import { getVirtualRegion } from "../../interfaces/virtual_text"
+import { worker } from "cluster"
 
 //import { LogicCell } from "../logic/logic_cell"
 
@@ -34,6 +35,46 @@ export enum DirectionType {
 export enum DirectionType2 {
     topLeft = 0, bottomLeft = 1, bottomRight = 2, topRight = 3
 }
+type BorderCoodinateType = "x1" | "x2" | "y1" | "y2";
+
+function UpdateBorderCoodinateOrGetUpdateFlag(border : SVGLineElement, newValue : number, type : BorderCoodinateType, withUpdate : boolean) : boolean{
+    let b = false;
+    if(type == "x1"){
+        if(border.x1.baseVal.value != newValue){
+            b = true;
+            if(withUpdate){
+                border.x1.baseVal.value = newValue;
+            }
+        }
+    }else if(type == "x2"){
+        if(border.x2.baseVal.value != newValue){
+            b = true;
+            if(withUpdate){
+                border.x2.baseVal.value = newValue;
+            }
+        }
+    }else if(type == "y1"){
+        if(border.y1.baseVal.value != newValue){
+            b = true;
+            if(withUpdate){
+                border.y1.baseVal.value = newValue;
+            }
+        }
+
+    }else if(type == "y2"){
+        if(border.y2.baseVal.value != newValue){
+            b = true;
+            if(withUpdate){
+                border.y2.baseVal.value = newValue;
+            }
+        }
+    }else{
+        throw new Error("Unexpected Error");
+    }
+    return b;
+}
+
+
 /**
  * セルをSVGで表現するためのクラスです。
  */
@@ -944,19 +985,39 @@ export class Cell {
 
     }
 
+    private updateOrGetUpdateFlag(withUpdate : boolean) : boolean{
+        if (this.table.isNoneMode) return false ;
+        const className = this.svgGroup.getAttribute("class");
+        if (className != this.__currentClass) {
+            if(withUpdate){
+                this.recomputeDefaultProperties();
+                this.__currentClass = className;    
+            }else{
+                return true;
+            }
+        }
+        if(!withUpdate && this.resizeOrGetUpdateFlag(withUpdate)){
+            return true;
+        }
+        if(!withUpdate && this.locateSVGTextOrGetUpdateFlag(withUpdate)){
+            return true;
+        }
+        if(!withUpdate && this.relocationOrGetUpdateFlag(withUpdate)){
+            return true;
+        }
+        return false;
+
+    }
+
+    public getUpdateFlag(): boolean {
+        return this.updateOrGetUpdateFlag(false);
+    }
+
     /**
      * このセルを更新します。
      */
     public update() {
-        if (this.table.isNoneMode) return;
-        const className = this.svgGroup.getAttribute("class");
-        if (className != this.__currentClass) {
-            this.recomputeDefaultProperties();
-            this.__currentClass = className;
-        }
-        this.resize();
-        this.locateSVGText();
-        this.relocation();
+        this.updateOrGetUpdateFlag(true);
 
 
     }
@@ -1018,26 +1079,43 @@ export class Cell {
         }
     }
 
+    private resizeOrGetUpdateFlag(withUpdate : boolean) : boolean{
+        let b = false;
+        const [w, h] = this.calculatedSizeUsingGroup();
+        if (this.width != w) {
+            b = true;
+            if(withUpdate){
+                this.width = w;
+            }
+        }
+        if (this.height != h) {
+            b = true;
+            if(withUpdate){
+                this.height = h;
+            }
+        }
+        const rect = this.getVirtualRegion();
+        if (this.width < rect.width) {
+            b = true;
+            if(withUpdate){
+                this.width = rect.width;
+            }
+        }
+        if (this.height < rect.height) {
+            b = true;
+            if(withUpdate){
+                this.height = rect.height;
+            }
+        }
+        return b;
+
+    }
+
     /**
      *セルのサイズを再計算します。
      */
     private resize() {
-
-        //SVGTextBox.sortText(this.svgText, this.horizontalAnchor, this._assurancevisibility);
-        const [w, h] = this.calculatedSizeUsingGroup();
-        if (this.width != w) {
-            this.width = w;
-        }
-        if (this.height != h) {
-            this.height = h;
-        }
-        const rect = this.getVirtualRegion();
-        if (this.width < rect.width) {
-            this.width = rect.width;
-        }
-        if (this.height < rect.height) {
-            this.height = rect.height;
-        }
+        this.resizeOrGetUpdateFlag(true);
 
     }
 
@@ -1151,98 +1229,179 @@ export class Cell {
     // #endregion
     // #region relocate
 
-    /**
-     * 上枠の位置を再計算します。
-     */
-    private relocateTopBorder() {
-        if (!this.isMaster) return;
+    private relocateBottomBorderOrGetUpdateFlag(withUpdate : boolean) : boolean {
+        let b = false;
 
-        if (this.table.svgGroup.contains(this.svgTopBorder)) {
+        if (!this.isMaster){
+            return b;
+        }
+        if (this.table.svgGroup.contains(this.svgBottomBorder)) {
             if (this.isMaster) {
-                this.svgTopBorder.x1.baseVal.value = this.x;
-                this.svgTopBorder.x2.baseVal.value = this.x + this.computeBorderLength2(DirectionType.top);
-                this.svgTopBorder.y1.baseVal.value = this.y;
-                this.svgTopBorder.y2.baseVal.value = this.svgTopBorder.y1.baseVal.value;
-            } else if (this.topCell != null && this.topCell.isMaster) {
-                this.topCell.relocateBottomBorder();
+                const x1 = this.x;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, x1, "x1", withUpdate);
+
+                const x2 = this.x + this.computeBorderLength2(DirectionType.bottom);
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, x2, "x2", withUpdate);
+
+
+                const y1 = this.y + this.height;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, y1, "y1", withUpdate);
+
+
+                const y2 = this.svgBottomBorder.y1.baseVal.value;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, y2, "y2", withUpdate);
+                
+            } else if (this.bottomCell != null && this.bottomCell.isMaster) {
+                b = b || this.bottomCell.relocateTopBorderOrGetUpdateFlag(withUpdate);
             } else {
                 throw Error("error");
             }
         }
+        return b;
+
+    }
+
+
+    private relocateTopBorderOrGetUpdateFlag(withUpdate : boolean) : boolean {
+        let b = false;
+        if (!this.isMaster) return b;
+
+        if (this.table.svgGroup.contains(this.svgTopBorder)) {
+            if (this.isMaster) {
+                const x1 = this.x;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, x1, "x1", withUpdate);
+
+                const x2 = this.x + this.computeBorderLength2(DirectionType.top);
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, x2, "x2", withUpdate);
+
+                const y1 = this.y;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, y1, "y1", withUpdate);
+
+
+                const y2 = this.svgTopBorder.y1.baseVal.value;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, y2, "y2", withUpdate);
+
+            } else if (this.topCell != null && this.topCell.isMaster) {
+                b = b || this.topCell.relocateBottomBorderOrGetUpdateFlag(withUpdate);
+            } else {
+                throw Error("error");
+            }
+        }
+        return b;
+
+    }
+    private relocateLeftBorderOrGetUpdateFlag(withUpdate : boolean) : boolean {
+        let b = false;
+        if (!this.isMaster){
+            return b;
+        }
+
+        if (this.table.svgGroup.contains(this.svgLeftBorder)) {
+            if (this.isMaster) {
+                const x1 = this.x;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, x1, "x1", withUpdate);
+                
+                const x2 = this.svgLeftBorder.x1.baseVal.value;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, x2, "x2", withUpdate);
+
+                const y1 = this.y;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, y1, "y1", withUpdate);
+
+                const y2 = this.y + this.computeBorderLength2(DirectionType.left);
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, y2, "y2", withUpdate);
+            } else if (this.leftCell != null && this.leftCell.isMaster) {
+                b = b || this.leftCell.relocateRightBorderOrGetUpdateFlag(withUpdate);
+            } else {
+                throw Error("error");
+            }
+        }
+        return b;
+    }
+    private relocateRightBorderOrGetUpdateFlag(withUpdate : boolean) : boolean {
+        let b = false;
+        if (!this.isMaster){
+            return b;
+        }
+
+        if (this.table.svgGroup.contains(this.svgRightBorder)) {
+            if (this.isMaster) {
+                const x1 = this.x + this.width;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, x1, "x1", withUpdate);
+
+                const x2 = this.x + this.width;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, x2, "x2", withUpdate);
+
+                const y1 = this.y;
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, y1, "y1", withUpdate);
+
+                const y2 = this.y + this.computeBorderLength2(DirectionType.right);
+                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, y2, "y2", withUpdate);
+
+
+            } else if (this.rightCell != null && this.rightCell.isMaster) {
+                b = b || this.rightCell.relocateLeftBorderOrGetUpdateFlag(withUpdate);
+            } else {
+                throw Error("error");
+            }
+        }
+        return b;
+    }
+
+
+    /**
+     * 上枠の位置を再計算します。
+     */
+    private relocateTopBorder() {
+        this.relocateTopBorderOrGetUpdateFlag(true);
     }
     /**
      * 左枠の位置を再計算します。
      */
     private relocateLeftBorder() {
-        if (!this.isMaster) return;
-
-        if (this.table.svgGroup.contains(this.svgLeftBorder)) {
-            if (this.isMaster) {
-                this.svgLeftBorder.x1.baseVal.value = this.x;
-                this.svgLeftBorder.x2.baseVal.value = this.svgLeftBorder.x1.baseVal.value;
-                this.svgLeftBorder.y1.baseVal.value = this.y;
-                this.svgLeftBorder.y2.baseVal.value = this.y + this.computeBorderLength2(DirectionType.left);
-            } else if (this.leftCell != null && this.leftCell.isMaster) {
-                this.leftCell.relocateRightBorder();
-            } else {
-                throw Error("error");
-            }
-        }
+        this.relocateLeftBorderOrGetUpdateFlag(true);
     }
     /**
      * 右枠の位置を再計算します。
      */
     private relocateRightBorder() {
-        if (!this.isMaster) return;
-
-        if (this.table.svgGroup.contains(this.svgRightBorder)) {
-            if (this.isMaster) {
-
-                this.svgRightBorder.x1.baseVal.value = this.x + this.width;
-                this.svgRightBorder.x2.baseVal.value = this.svgRightBorder.x1.baseVal.value;
-                this.svgRightBorder.y1.baseVal.value = this.y;
-                this.svgRightBorder.y2.baseVal.value = this.y + this.computeBorderLength2(DirectionType.right);
-            } else if (this.rightCell != null && this.rightCell.isMaster) {
-                this.rightCell.relocateLeftBorder();
-            } else {
-                throw Error("error");
-            }
-        }
+        this.relocateRightBorderOrGetUpdateFlag(true);
     }
     /**
      * 下枠の位置を再計算します。
      */
     private relocateBottomBorder() {
-        if (!this.isMaster) return;
-        if (this.table.svgGroup.contains(this.svgBottomBorder)) {
-            if (this.isMaster) {
-                this.svgBottomBorder.x1.baseVal.value = this.x;
-                this.svgBottomBorder.x2.baseVal.value = this.x + this.computeBorderLength2(DirectionType.bottom);
-                this.svgBottomBorder.y1.baseVal.value = this.y + this.height;
-                this.svgBottomBorder.y2.baseVal.value = this.svgBottomBorder.y1.baseVal.value;
-            } else if (this.bottomCell != null && this.bottomCell.isMaster) {
-                this.bottomCell.relocateTopBorder();
-            } else {
-                throw Error("error");
-            }
-        }
+        this.relocateBottomBorderOrGetUpdateFlag(true);
     }
     /**
      *セルの位置を再計算します。
      */
-    public relocation() {
-        if (!CommonFunctions.IsDescendantOfBody(this.svgGroup)) return;
+     public relocationOrGetUpdateFlag(withUpdate: boolean) : boolean {
+        if (!CommonFunctions.IsDescendantOfBody(this.svgGroup)){
+            return false;
+        }
 
-        this.relocateTopBorder();
-        this.relocateLeftBorder();
-        this.relocateRightBorder();
-        this.relocateBottomBorder();
+        if(!withUpdate && this.relocateTopBorderOrGetUpdateFlag(withUpdate)){
+            return true;
+        }
+        if(!withUpdate && this.relocateLeftBorderOrGetUpdateFlag(withUpdate)){
+            return true;
+        }
+        if(!withUpdate && this.relocateRightBorderOrGetUpdateFlag(withUpdate)){
+            return true;
+        }
 
+        if(!withUpdate && this.relocateBottomBorderOrGetUpdateFlag(withUpdate)){
+            return true;
+        }
+        if(!withUpdate && this.locateSVGTextOrGetUpdateFlag(withUpdate)){
+            return true;
+        }
 
-        this.locateSVGText();
+        return false;
+    }
 
-
-
+     public relocation() {
+        this.relocationOrGetUpdateFlag(true);
     }
     // #endregion
 
@@ -1448,24 +1607,16 @@ export class Cell {
     /**
      * テキストを再描画します。
      */
-    private locateSVGText() {
-        /*
-        const innerRect = new Rectangle();
-        innerRect.x = this.innerExtraPaddingLeft + this.paddingLeft;
-        innerRect.y = this.paddingTop;
-        innerRect.height = this.height - this.paddingTop - this.paddingBottom;
-        innerRect.width = this.width - this.innerExtraPaddingLeft - this.innerExtraPaddingRight - this.paddingLeft - this.paddingRight;
-        */
-
-
+    private locateSVGTextOrGetUpdateFlag(withUpdate : boolean) : boolean{
         const innerRect = this.getVirtualInnerRegion();
-        SVGTextExtension.updateLocation(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None);
+        return SVGTextExtension.updateLocationOrGetUpdateFlag(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None, withUpdate);
 
-        //const innerRect= this.getVirtualRegion();
-
-        //if (this.isLocated) {
-        //ObsoleteGraph.setXY(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor);
-        //}
+    }
+    /**
+     * テキストを再描画します。
+     */
+    private locateSVGText() {
+        this.locateSVGTextOrGetUpdateFlag(true);
     }
 
 }

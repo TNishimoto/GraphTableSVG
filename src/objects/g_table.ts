@@ -1126,6 +1126,12 @@ export class GTable extends GVertex {
     // #region update
     private prevShow: boolean = false;
 
+    public getUpdateFlag(): boolean {
+        const b1 = super.getUpdateFlag();
+        return false;
+    }
+
+
     /**
     各セルのサイズを再計算します。
     */
@@ -1133,7 +1139,7 @@ export class GTable extends GVertex {
         super.update();
         //this._observer.disconnect();
         this.hasConnectedObserverFunction = false;
-        const display = ElementExtension.getPropertyStyleValue(this.svgGroup, "display");
+        //const display = ElementExtension.getPropertyStyleValue(this.svgGroup, "display");
 
         const b = HTMLFunctions.isShow(this.svgGroup);
         if (!b) {

@@ -100,7 +100,7 @@ export function setMarginBottom(item: SVGTextElement, value: number): void {
 
 }
 
-function updateLocationOrGetUpdateFlag(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText, executeUpdate : boolean) : boolean{
+export function updateLocationOrGetUpdateFlag(text: SVGTextElement, rect: Rectangle, vAnchor: VerticalAnchor | null, hAnchor: HorizontalAnchor | null, isAutoSizeShapeToFitText: AutoSizeShapeToFitText, executeUpdate : boolean) : boolean{
     const box = getVirtualRegion(<any>text);
 
     let y = rect.y - box.y;
