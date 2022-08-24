@@ -387,14 +387,31 @@ export class GTable extends GVertex {
     }
     // #endregion
 
+    public fitSizeToOriginalCellsWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {
+        let b = false;
+        for(let i = 0;i<this.rows.length;i++){
+            b = b || this.rows[i].fitHeightToOriginalCellWithUpdateFlag(allowShrink, withUpdate);
+            if(!withUpdate && b){
+                return b;
+            }
+        }
+        for(let i = 0;i<this.columns.length;i++){
+            b = b || this.columns[i].fitWidthToOriginalCellWithUpdateFlag(allowShrink, withUpdate);
+            if(!withUpdate && b){
+                return b;
+            }
+        }
+        return b;
+    }
+
+
     // #region method
     /**
      * セルの元々のサイズに合わせて表のサイズを調整します。
      * @param allowShrink 各行と各列が現在の幅より短くなることを許す
      */
     public fitSizeToOriginalCells(allowShrink: boolean) {
-        this.rows.forEach((v) => v.fitHeightToOriginalCell(allowShrink));
-        this.columns.forEach((v) => v.fitWidthToOriginalCell(allowShrink));
+        this.fitSizeToOriginalCellsWithUpdateFlag(allowShrink, true);
     }
 
 
@@ -1126,9 +1143,57 @@ export class GTable extends GVertex {
     // #region update
     private prevShow: boolean = false;
 
+    private tryUpdateWithUpdateFlag(withUpdate : boolean) : boolean{
+        let b = super.getUpdateFlag();
+
+        this.hasConnectedObserverFunction = false;
+
+        const xb = HTMLFunctions.isShow(this.svgGroup);
+        if (!xb) {
+            return false;
+        }
+
+        this._isDrawing = true;
+
+        const cells = this.cellArray;
+        for(let i =0;i<cells.length;i++){
+            b = b || cells[i].updateOrGetUpdateFlag(withUpdate);
+            if(!withUpdate && b){
+                this._isDrawing = false;
+                this.hasConnectedObserverFunction = true;        
+                return b;
+            }
+        }
+
+        b = b || this.fitSizeToOriginalCellsWithUpdateFlag(true, withUpdate);
+        if(!withUpdate && b){
+            this._isDrawing = false;
+            this.hasConnectedObserverFunction = true;    
+            return b;
+        }
+    
+        this.prevShow = false;
+
+
+        b = b || this.resizeWithUpdateFlag(withUpdate);
+
+        if(!withUpdate && b){
+            this._isDrawing = false;
+            this.hasConnectedObserverFunction = true;    
+            return b;
+        }
+
+        b = b || this.relocateWithUpdate(withUpdate);
+
+
+        this._isDrawing = false;
+        this.hasConnectedObserverFunction = true;
+        return b;
+    }
+
     public getUpdateFlag(): boolean {
-        const b1 = super.getUpdateFlag();
-        return false;
+        return this.tryUpdateWithUpdateFlag(false);
+        
     }
 
 
@@ -1136,29 +1201,7 @@ export class GTable extends GVertex {
     各セルのサイズを再計算します。
     */
     public update() {
-        super.update();
-        //this._observer.disconnect();
-        this.hasConnectedObserverFunction = false;
-        //const display = ElementExtension.getPropertyStyleValue(this.svgGroup, "display");
-
-        const b = HTMLFunctions.isShow(this.svgGroup);
-        if (!b) {
-            return;
-        }
-
-        this._isDrawing = true;
-        if (true) {
-            this.cellArray.forEach((v) => v.update());
-            //this.fitSizeToOriginalCells(false);
-            this.fitSizeToOriginalCells(true);
-            
-            this.prevShow = false;
-        }
-        this.resize();
-        this.relocation();
-        this._isDrawing = false;
-        this.hasConnectedObserverFunction = true;
-        //this._observer.observe(this.svgGroup, this.groupObserverOption);
+        this.tryUpdateWithUpdateFlag(true);
 
     }
 
@@ -1198,38 +1241,71 @@ export class GTable extends GVertex {
 
     }
 
+    private resizeWithUpdateFlag(withUpdate : boolean) : boolean {
+        let b = false;
+        for(let i = 0;i<this.rows.length;i++){
+            b = b || this.rows[i].resizeWithUpdate(withUpdate);
+            if(!withUpdate && b){
+                return b;
+            }
+        }
+
+        for(let i = 0;i<this.columns.length;i++){
+            b = b || this.columns[i].resizeWithUpdate(withUpdate);
+            if(!withUpdate && b){
+                return b;
+            }
+        }
+        return b;
+
+    }
+
 
     /**
      * サイズを再計算します。
      */
     private resize() {
-        this.rows.forEach((v) => v.resize());
-        this.columns.forEach((v) => v.resize());
+        this.resizeWithUpdateFlag(true);
 
+    }
+    private relocateWithUpdate(withUpdate:boolean) : boolean{
+        let b = false;
+        let height = 0;
+        for(let i=0;i<this.rows.length;i++){
+            b = b || this.rows[i].setYWithUpdate(height, withUpdate);
+            if(!withUpdate && b){
+                return b;
+            }
+            height += this.rows[i].height;
+
+        }
+
+        let width = 0;
+
+        for(let i=0;i<this.columns.length;i++){
+            b = b || this.columns[i].setXWithUpdate(width, withUpdate);
+            if(!withUpdate && b){
+                return b;
+            }
+            width += this.columns[i].width;
+
+        }
+
+        const cells = this.cellArray;
+        for(let i = 0;i<cells.length;i++){
+            b = b || cells[i].relocationOrGetUpdateFlag(withUpdate);
+            if(!withUpdate && b){
+                return b;
+            }
+        }
+
+        return b;
     }
     /**
      * 各セルの位置を再計算します。
      */
     private relocation() {
-        let height = 0;
-
-        this.rows.forEach(function (x, i, arr) {
-            x.setY(height);
-
-            height += x.height;
-        });
-
-
-        let width = 0;
-        this.columns.forEach(function (x, i, arr) {
-            x.setX(width);
-
-            width += x.width;
-        });
-
-        this.cellArray.forEach((v) => v.relocation());
-
-        //this.rows.forEach((v) => v.relocation());
+        this.relocateWithUpdate(true);
     }
     // #endregion
 

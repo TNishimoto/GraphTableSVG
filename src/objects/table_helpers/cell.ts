@@ -985,7 +985,8 @@ export class Cell {
 
     }
 
-    private updateOrGetUpdateFlag(withUpdate : boolean) : boolean{
+    public updateOrGetUpdateFlag(withUpdate : boolean) : boolean{
+        let b = false;
         if (this.table.isNoneMode) return false ;
         const className = this.svgGroup.getAttribute("class");
         if (className != this.__currentClass) {
@@ -996,16 +997,19 @@ export class Cell {
                 return true;
             }
         }
-        if(!withUpdate && this.resizeOrGetUpdateFlag(withUpdate)){
-            return true;
+        b = b || this.resizeOrGetUpdateFlag(withUpdate);
+        if(!withUpdate && b){
+            return b;
         }
-        if(!withUpdate && this.locateSVGTextOrGetUpdateFlag(withUpdate)){
-            return true;
+        b = b ||this.locateSVGTextOrGetUpdateFlag(withUpdate);
+        if(!withUpdate && b){
+            return b;
         }
-        if(!withUpdate && this.relocationOrGetUpdateFlag(withUpdate)){
-            return true;
+        b = b || this.relocationOrGetUpdateFlag(withUpdate);
+        if(!withUpdate && b){
+            return b;
         }
-        return false;
+        return b;
 
     }
 
@@ -1376,28 +1380,37 @@ export class Cell {
      *セルの位置を再計算します。
      */
      public relocationOrGetUpdateFlag(withUpdate: boolean) : boolean {
+        let b = false;
         if (!CommonFunctions.IsDescendantOfBody(this.svgGroup)){
             return false;
         }
 
-        if(!withUpdate && this.relocateTopBorderOrGetUpdateFlag(withUpdate)){
-            return true;
-        }
-        if(!withUpdate && this.relocateLeftBorderOrGetUpdateFlag(withUpdate)){
-            return true;
-        }
-        if(!withUpdate && this.relocateRightBorderOrGetUpdateFlag(withUpdate)){
-            return true;
+        b = b ||this.relocateTopBorderOrGetUpdateFlag(withUpdate);
+        if(!withUpdate && b){
+            return b;
         }
 
-        if(!withUpdate && this.relocateBottomBorderOrGetUpdateFlag(withUpdate)){
-            return true;
-        }
-        if(!withUpdate && this.locateSVGTextOrGetUpdateFlag(withUpdate)){
-            return true;
+        b = b || this.relocateLeftBorderOrGetUpdateFlag(withUpdate);
+        if(!withUpdate && b){
+            return b;
         }
 
-        return false;
+        b = b || this.relocateRightBorderOrGetUpdateFlag(withUpdate);
+        if(!withUpdate && b){
+            return b;
+        }
+
+        b = b || this.relocateBottomBorderOrGetUpdateFlag(withUpdate);
+        if(!withUpdate && b){
+            return b;
+        }
+
+        b = b || this.locateSVGTextOrGetUpdateFlag(withUpdate);
+        if(!withUpdate && b){
+            return b;
+        }
+
+        return b;
     }
 
      public relocation() {

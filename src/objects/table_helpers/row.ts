@@ -179,25 +179,37 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
             const cells = this.cells;
             return cells[cells.length - 1].svgRightBorder;
         }
-
-        public setHeightToCells() {
-            const height = this.height;
+        public setHeightToCellsWithUpdateFlag(withUpdate : boolean) : boolean {
             let b = false;
+            const height = this.height;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
                 if (cell.isMasterCellOfRowCountOne && cell.height != height) {
-                    cell.height = height;
                     b = true;
+                    if(withUpdate){
+                        cell.height = height;
+                    }
+                    if(!withUpdate && b){
+                        return b;
+                    }
                 }
             }
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
                 if (!cell.isMasterCellOfRowCountOne) {
-                    cell.update();
-                    //cell.resize();
-                    b = true;
+                    b = b || cell.updateOrGetUpdateFlag(withUpdate);
+
+                    if(!withUpdate && b){
+                        return b;
+                    }
                 }
             }
+            return b;
+
+        }
+
+        public setHeightToCells() {
+            this.setHeightToCellsWithUpdateFlag(true);
             // TODO : implement the event of the below code.
             //if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
         }
@@ -210,34 +222,71 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
             //this.height = this.getMaxHeight();
         }
         */
+
+        public resizeWithUpdate(withUpdate : boolean) : boolean {
+            let b = false;
+            const cells = this.cells;
+            for(let i = 0;i<cells.length;i++){
+                b = b || cells[i].updateOrGetUpdateFlag(withUpdate);
+                if(!withUpdate && b){
+                    return b;
+                }
+            }
+            b = b || this.setHeightToCellsWithUpdateFlag(withUpdate);
+            return b;
+        }
+
         /**
          * 行内のセルのサイズを再計算します。
          */
         public resize() {
-            this.cells.forEach((v) => v.update());
-            this.setHeightToCells();
+            this.resizeWithUpdate(true);
             //this.height = this.getMaxHeight();
         }
+        public fitHeightToOriginalCellWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {
+            let b = false;
+            const newHeight = allowShrink ? this.getVirtualSize().height : Math.max(this.height, this.getVirtualSize().height);
+
+            if(this.height != newHeight){
+                b = true;
+                if(withUpdate){
+                    this.height = newHeight;
+                }
+            }
+            return b;
+
+        }
+
         /**
          * セルの元々のサイズに合わせて行のサイズを調整します。
          * @param allowShrink 現在の行の幅より短くなることを許す
          */
         public fitHeightToOriginalCell(allowShrink: boolean) {
-            if (allowShrink) {
-                this.height = this.getVirtualSize().height;
-            } else {
-                this.height = Math.max(this.height, this.getVirtualSize().height);
-            }
+            this.fitHeightToOriginalCellWithUpdateFlag(allowShrink,true);
         }
+        public setYWithUpdate(posY: number, withUpdate : boolean) : boolean {
+            let b = false;
+            for (let x = 0; x < this.table.columnCount; x++) {
+                const cell = this.table.cells[this.cellY][x];
+                if(cell.y != posY){
+                    b = true;
+                    if(withUpdate){
+                        cell.y = posY;
+                    }
+                    if(!withUpdate && b){
+                        return b;
+                    }
+                }
+            }
+            return b;
+        }
+
         /**
          * 行内のセルのY座標を設定します。
          * 
          */
         public setY(posY: number) {
-            for (let x = 0; x < this.table.columnCount; x++) {
-                const cell = this.table.cells[this.cellY][x];
-                cell.y = posY;
-            }
+            this.setYWithUpdate(posY, true);
         }
         /**
          * この行の最大の縦幅を持つセルの縦幅を返します。
