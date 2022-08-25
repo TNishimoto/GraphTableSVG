@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 //import * as libxmljs from 'libxmljs';
-import { diffXML } from './diff_xml';
+import { diffXML, DiffXMLResult } from './diff_xml';
 
 const exampleRelativeDirPath = 'docs/_debug_examples';
 const outputRelativeDirPath = 'sub_projects/debug/output';
@@ -60,6 +60,8 @@ class TestResult {
   public browserName: BrowserNameType = "firefox";
   public message: string = "";
   public success: boolean | null = null;
+  public diffXMLResult: DiffXMLResult | null = null;
+
   public errorType : ErrorType | null = null;
   /*
   public constructor(_filename: string, _browserName: BrowserNameType, _message: string, _success: boolean | null, _errorType : ErrorType) {
@@ -88,6 +90,23 @@ class TestResultForFile {
     s += " }";
     return s;
   }
+
+  public getDetailMessages(): string | null {
+    let s = `${rightPadding(this.filename, 40)} \n Browsers = { `;
+    const b = this.arr.every((v) => v.success)
+    if(b){
+      return null;
+    }else{
+      this.arr.forEach((v) => {
+        const type : string = v.errorType == null ? "null" : v.errorType;
+        const msg = v.message;
+        s += `${v.browserName}: ${msg}\n`;
+      })
+      s += " }\n";
+      return s;  
+    }
+  }
+
 }
 
 
@@ -187,14 +206,15 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
 
         if (fs.existsSync(correctHTMLPath)) {
           const correctHTML = fs.readFileSync(correctHTMLPath, 'utf-8');
-          const b = diffXML(correctHTML, output_html);
-          if (b) {
+          result.diffXMLResult = diffXML(correctHTML, output_html);
+          if (result.diffXMLResult.diffType == null) {
             console.log(`\x1b[42mOK: ${fileName} \x1b[49m`)
             result.success = true;
           } else {
             console.log(`\x1b[41mNO: ${fileName} \x1b[49m`)
             result.success = false;
-            result.errorType = "TextMismatch";
+            result.message = `DiffXMLError: xpath = ${result.diffXMLResult.xpath}, type=${result.diffXMLResult.diffType}`
+            result.errorType = `TextMismatch`;
 
           }
         } else {
@@ -340,10 +360,16 @@ if (process.argv.length == 4) {
     return dummy;
   }));
   result.then((v) =>{
-    const s = v.map((w) => {
+    const s1 = v.map((w) => {
       return w.getTestResult();
     }).join("\n")
-    console.log(s);
+
+    const s2 = v.map((w) => {
+      return w.getDetailMessages();
+    }).filter((w) => w != null).join("\n")
+
+    console.log(s1);
+    console.log(s2);
   
   })
 
