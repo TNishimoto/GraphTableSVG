@@ -2,7 +2,7 @@
 //namespace GraphTableSVG {
 
 import * as CommonFunctions from "../../common/common_functions"
-import { Rectangle } from "../../common/vline"
+import { Rectangle, round100 } from "../../common/vline"
 import * as AttributeNames from "../../common/attribute_names"
 import * as DefaultClassNames from "../../common/default_class_names"
 import * as StyleNames from "../../common/style_names"
@@ -21,6 +21,7 @@ import * as SVGElementExtension from "../../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../../interfaces/svg_text_extension"
 import { getVirtualRegion } from "../../interfaces/virtual_text"
 import { worker } from "cluster"
+import { isFunction } from "util"
 
 //import { LogicCell } from "../logic/logic_cell"
 
@@ -37,42 +38,7 @@ export enum DirectionType2 {
 }
 type BorderCoodinateType = "x1" | "x2" | "y1" | "y2";
 
-function UpdateBorderCoodinateOrGetUpdateFlag(border : SVGLineElement, newValue : number, type : BorderCoodinateType, withUpdate : boolean) : boolean{
-    let b = false;
-    if(type == "x1"){
-        if(border.x1.baseVal.value != newValue){
-            b = true;
-            if(withUpdate){
-                border.x1.baseVal.value = newValue;
-            }
-        }
-    }else if(type == "x2"){
-        if(border.x2.baseVal.value != newValue){
-            b = true;
-            if(withUpdate){
-                border.x2.baseVal.value = newValue;
-            }
-        }
-    }else if(type == "y1"){
-        if(border.y1.baseVal.value != newValue){
-            b = true;
-            if(withUpdate){
-                border.y1.baseVal.value = newValue;
-            }
-        }
 
-    }else if(type == "y2"){
-        if(border.y2.baseVal.value != newValue){
-            b = true;
-            if(withUpdate){
-                border.y2.baseVal.value = newValue;
-            }
-        }
-    }else{
-        throw new Error("Unexpected Error");
-    }
-    return b;
-}
 
 
 /**
@@ -112,6 +78,82 @@ export class Cell {
         this._observer.observe(this.svgGroup, option2);
 
 
+    }
+    private UpdateBorderCoodinateOrGetUpdateFlag(borderType: DirectionType, newValue: number, type: BorderCoodinateType, withUpdate: boolean): boolean {
+        let b = false;
+        const oldValue = this.getBorderPosition(borderType, type);
+        const newValue100 = round100(newValue);
+
+        if(oldValue != newValue100){
+            b = true;
+            if(withUpdate){
+                this.setBorderPosition(borderType, type, newValue100);
+            }
+            if(!withUpdate && b){
+                console.log(`UpdateBorderCoodinateOrGetUpdateFlag: ${type} ${oldValue} ${newValue}`)
+            }
+        }
+        return b;
+    }
+    private getBorderPosition(borderType: DirectionType, positionType: BorderCoodinateType): number {
+
+        let border = this.svgTopBorder;
+        switch (borderType) {
+            case DirectionType.top:
+                border = this.svgTopBorder;
+                break;
+            case DirectionType.left:
+                border = this.svgLeftBorder;
+                break;
+            case DirectionType.right:
+                border = this.svgRightBorder;
+                break;
+            case DirectionType.bottom:
+                border = this.svgBottomBorder;
+                break;
+        }
+
+        switch (positionType) {
+            case "x1":
+                return round100(border.x1.baseVal.value);
+            case "x2":
+                return round100(border.x2.baseVal.value);
+            case "y1":
+                return round100(border.y1.baseVal.value);
+            case "y2":
+                return round100(border.y2.baseVal.value);
+        }
+        throw new Error("Error");
+    }
+    private setBorderPosition(borderType: DirectionType, positionType: BorderCoodinateType, newValue : number) {
+
+        let border = this.svgTopBorder;
+        switch (borderType) {
+            case DirectionType.top:
+                border = this.svgTopBorder;
+                break;
+            case DirectionType.left:
+                border = this.svgLeftBorder;
+                break;
+            case DirectionType.right:
+                border = this.svgRightBorder;
+                break;
+            case DirectionType.bottom:
+                border = this.svgBottomBorder;
+                break;
+        }
+
+        switch (positionType) {
+            case "x1":
+                border.x1.baseVal.value = round100(newValue);
+            case "x2":
+                border.x2.baseVal.value = round100(newValue);
+            case "y1":
+                border.y1.baseVal.value = round100(newValue);
+            case "y2":
+                border.y2.baseVal.value = round100(newValue);
+
+        }
     }
     // #region style
     private recomputeDefaultProperties() {
@@ -175,10 +217,10 @@ export class Cell {
         const p2 = parseInt(p);
         return p2;
     }
-    get primitivePaddingLeft() : number{
+    get primitivePaddingLeft(): number {
         return 3;
     }
-    get primitivePaddingRight() : number{
+    get primitivePaddingRight(): number {
         return 3;
     }
 
@@ -502,50 +544,53 @@ export class Cell {
     セルのX座標を返します。
     */
     get x(): number {
-        return SVGGExtension.getX(this.svgGroup);
+        return round100(SVGGExtension.getX(this.svgGroup));
     }
     /**
     セルのX座標を設定します。
     */
     set x(value: number) {
-        SVGGExtension.setX(this.svgGroup, value);
+        SVGGExtension.setX(this.svgGroup, round100(value));
     }
     /**
     セルのY座標を返します。
     */
     get y(): number {
-        return SVGGExtension.getY(this.svgGroup);
+        return round100(SVGGExtension.getY(this.svgGroup));
     }
     /**
     セルのY座標を設定します。
     */
     set y(value: number) {
-        SVGGExtension.setY(this.svgGroup, value);
+        SVGGExtension.setY(this.svgGroup, round100(value));
     }
 
     /**
     セルの幅を返します。
     */
     get width(): number {
-        return this.svgBackground.width.baseVal.value;
+        return round100(this.svgBackground.width.baseVal.value);
     }
     /**
     セルの幅を設定します。
     */
     set width(value: number) {
-        this.svgBackground.width.baseVal.value = value;
+        const newValue = round100(value);
+        this.svgBackground.width.baseVal.value = newValue;
     }
     /**
     セルの高さを返します。
     */
     get height(): number {
-        return this.svgBackground.height.baseVal.value;
+
+        return round100(this.svgBackground.height.baseVal.value);
     }
     /**
     セルの高さを設定します。
     */
     set height(value: number) {
-        this.svgBackground.height.baseVal.value = value;
+        const newValue = round100(value);
+        this.svgBackground.height.baseVal.value = newValue;
     }
     /**
     セルの領域を表すRectangleを返します。領域の基準は属しているテーブルのSVGGElementです。
@@ -648,10 +693,10 @@ export class Cell {
                 return 0;
                 //throw Error(`error ${d1} ${d2} ${e1} ${e2}`);
             } else {
-                return range[1] - range[0];
+                return round100(range[1]) - round100(range[0]);
             }
         } else {
-            return d2 - d1;
+            return round100(d2) - round100(d1);
         }
 
     }
@@ -985,28 +1030,31 @@ export class Cell {
 
     }
 
-    public updateOrGetUpdateFlag(withUpdate : boolean) : boolean{
+    public updateOrGetUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
-        if (this.table.isNoneMode) return false ;
+        if (this.table.isNoneMode) return false;
         const className = this.svgGroup.getAttribute("class");
         if (className != this.__currentClass) {
-            if(withUpdate){
+            if (withUpdate) {
                 this.recomputeDefaultProperties();
-                this.__currentClass = className;    
-            }else{
+                this.__currentClass = className;
+            } else {
                 return true;
             }
         }
         b = this.resizeOrGetUpdateFlag(withUpdate) || b;
-        if(!withUpdate && b){
+        if (!withUpdate && b) {
+            console.log("updateOrGetUpdateFlag: A1");
             return b;
         }
         b = this.locateSVGTextOrGetUpdateFlag(withUpdate) || b;
-        if(!withUpdate && b){
+        if (!withUpdate && b) {
+            console.log("updateOrGetUpdateFlag: A2");
             return b;
         }
         b = this.relocationOrGetUpdateFlag(withUpdate) || b;
-        if(!withUpdate && b){
+        if (!withUpdate && b) {
+            console.log("updateOrGetUpdateFlag: A3");
             return b;
         }
         return b;
@@ -1083,33 +1131,56 @@ export class Cell {
         }
     }
 
-    private resizeOrGetUpdateFlag(withUpdate : boolean) : boolean{
+    private resizeOrGetUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         const [w, h] = this.calculatedSizeUsingGroup();
+
+        if (w != this.width || h != this.height) {
+            console.log(`Compare: ${w} : ${this.width}, ${h} : ${this.height}`)
+        }
         if (this.width != w) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
                 this.width = w;
+            }
+            if (!withUpdate && b) {
+                return b;
             }
         }
         if (this.height != h) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
                 this.height = h;
             }
+            if (!withUpdate && b) {
+                return b;
+            }
+
         }
         const rect = this.getVirtualRegion();
         if (this.width < rect.width) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
                 this.width = rect.width;
             }
+            if (!withUpdate && b) {
+                console.log(`resizeOrGetUpdateFlag W: ${this.width} ${rect.width}`)
+
+                return b;
+            }
+
         }
         if (this.height < rect.height) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
                 this.height = rect.height;
             }
+            if (!withUpdate && b) {
+                console.log(`resizeOrGetUpdateFlag W: ${this.height} ${rect.height}`)
+
+                return b;
+            }
+
         }
         return b;
 
@@ -1233,30 +1304,30 @@ export class Cell {
     // #endregion
     // #region relocate
 
-    private relocateBottomBorderOrGetUpdateFlag(withUpdate : boolean) : boolean {
+    private relocateBottomBorderOrGetUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
 
-        if (!this.isMaster){
+        if (!this.isMaster) {
             return b;
         }
         if (this.table.svgGroup.contains(this.svgBottomBorder)) {
             if (this.isMaster) {
                 const x1 = this.x;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, x1, "x1", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.bottom, x1, "x1", withUpdate) || b;
 
                 const x2 = this.x + this.computeBorderLength2(DirectionType.bottom);
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, x2, "x2", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.bottom, x2, "x2", withUpdate) || b;
 
 
                 const y1 = this.y + this.height;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, y1, "y1", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.bottom, y1, "y1", withUpdate) || b;
 
 
-                const y2 = this.svgBottomBorder.y1.baseVal.value;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, y2, "y2", withUpdate)  || b;
-                
+                const y2 = this.getBorderPosition(DirectionType.bottom, "y1");
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.bottom, y2, "y2", withUpdate) || b;
+
             } else if (this.bottomCell != null && this.bottomCell.isMaster) {
-                b = this.bottomCell.relocateTopBorderOrGetUpdateFlag(withUpdate)  || b;
+                b = this.bottomCell.relocateTopBorderOrGetUpdateFlag(withUpdate) || b;
             } else {
                 throw Error("error");
             }
@@ -1266,27 +1337,27 @@ export class Cell {
     }
 
 
-    private relocateTopBorderOrGetUpdateFlag(withUpdate : boolean) : boolean {
+    private relocateTopBorderOrGetUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         if (!this.isMaster) return b;
 
         if (this.table.svgGroup.contains(this.svgTopBorder)) {
             if (this.isMaster) {
                 const x1 = this.x;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, x1, "x1", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.top, x1, "x1", withUpdate) || b;
 
                 const x2 = this.x + this.computeBorderLength2(DirectionType.top);
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, x2, "x2", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.top, x2, "x2", withUpdate) || b;
 
                 const y1 = this.y;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, y1, "y1", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.top, y1, "y1", withUpdate) || b;
 
 
-                const y2 = this.svgTopBorder.y1.baseVal.value;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, y2, "y2", withUpdate)  || b;
+                const y2 = this.getBorderPosition(DirectionType.top, "y1");
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.top, y2, "y2", withUpdate) || b;
 
             } else if (this.topCell != null && this.topCell.isMaster) {
-                b = this.topCell.relocateBottomBorderOrGetUpdateFlag(withUpdate)  || b;
+                b = this.topCell.relocateBottomBorderOrGetUpdateFlag(withUpdate) || b;
             } else {
                 throw Error("error");
             }
@@ -1294,56 +1365,56 @@ export class Cell {
         return b;
 
     }
-    private relocateLeftBorderOrGetUpdateFlag(withUpdate : boolean) : boolean {
+    private relocateLeftBorderOrGetUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
-        if (!this.isMaster){
+        if (!this.isMaster) {
             return b;
         }
 
         if (this.table.svgGroup.contains(this.svgLeftBorder)) {
             if (this.isMaster) {
                 const x1 = this.x;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, x1, "x1", withUpdate)  || b;
-                
-                const x2 = this.svgLeftBorder.x1.baseVal.value;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, x2, "x2", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.left, x1, "x1", withUpdate) || b;
+
+                const x2 = this.getBorderPosition(DirectionType.left, "x1");;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.left, x2, "x2", withUpdate) || b;
 
                 const y1 = this.y;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, y1, "y1", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.left, y1, "y1", withUpdate) || b;
 
                 const y2 = this.y + this.computeBorderLength2(DirectionType.left);
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, y2, "y2", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.left, y2, "y2", withUpdate) || b;
             } else if (this.leftCell != null && this.leftCell.isMaster) {
-                b = this.leftCell.relocateRightBorderOrGetUpdateFlag(withUpdate)  || b;
+                b = this.leftCell.relocateRightBorderOrGetUpdateFlag(withUpdate) || b;
             } else {
                 throw Error("error");
             }
         }
         return b;
     }
-    private relocateRightBorderOrGetUpdateFlag(withUpdate : boolean) : boolean {
+    private relocateRightBorderOrGetUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
-        if (!this.isMaster){
+        if (!this.isMaster) {
             return b;
         }
 
         if (this.table.svgGroup.contains(this.svgRightBorder)) {
             if (this.isMaster) {
                 const x1 = this.x + this.width;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, x1, "x1", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.right, x1, "x1", withUpdate) || b;
 
                 const x2 = this.x + this.width;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, x2, "x2", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.right, x2, "x2", withUpdate) || b;
 
                 const y1 = this.y;
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, y1, "y1", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.right, y1, "y1", withUpdate) || b;
 
                 const y2 = this.y + this.computeBorderLength2(DirectionType.right);
-                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, y2, "y2", withUpdate)  || b;
+                b = this.UpdateBorderCoodinateOrGetUpdateFlag(DirectionType.right, y2, "y2", withUpdate) || b;
 
 
             } else if (this.rightCell != null && this.rightCell.isMaster) {
-                b = this.rightCell.relocateLeftBorderOrGetUpdateFlag(withUpdate)  || b;
+                b = this.rightCell.relocateLeftBorderOrGetUpdateFlag(withUpdate) || b;
             } else {
                 throw Error("error");
             }
@@ -1379,41 +1450,41 @@ export class Cell {
     /**
      *セルの位置を再計算します。
      */
-     public relocationOrGetUpdateFlag(withUpdate: boolean) : boolean {
+    public relocationOrGetUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
-        if (!CommonFunctions.IsDescendantOfBody(this.svgGroup)){
+        if (!CommonFunctions.IsDescendantOfBody(this.svgGroup)) {
             return false;
         }
 
-        b = this.relocateTopBorderOrGetUpdateFlag(withUpdate)  || b;
-        if(!withUpdate && b){
+        b = this.relocateTopBorderOrGetUpdateFlag(withUpdate) || b;
+        if (!withUpdate && b) {
             return b;
         }
 
-        b = this.relocateLeftBorderOrGetUpdateFlag(withUpdate)  || b;
-        if(!withUpdate && b){
+        b = this.relocateLeftBorderOrGetUpdateFlag(withUpdate) || b;
+        if (!withUpdate && b) {
             return b;
         }
 
-        b = this.relocateRightBorderOrGetUpdateFlag(withUpdate)  || b;
-        if(!withUpdate && b){
+        b = this.relocateRightBorderOrGetUpdateFlag(withUpdate) || b;
+        if (!withUpdate && b) {
             return b;
         }
 
-        b = this.relocateBottomBorderOrGetUpdateFlag(withUpdate)  || b;
-        if(!withUpdate && b){
+        b = this.relocateBottomBorderOrGetUpdateFlag(withUpdate) || b;
+        if (!withUpdate && b) {
             return b;
         }
 
-        b = this.locateSVGTextOrGetUpdateFlag(withUpdate)  || b;
-        if(!withUpdate && b){
+        b = this.locateSVGTextOrGetUpdateFlag(withUpdate) || b;
+        if (!withUpdate && b) {
             return b;
         }
 
         return b;
     }
 
-     public relocation() {
+    public relocation() {
         this.relocationOrGetUpdateFlag(true);
     }
     // #endregion
@@ -1606,10 +1677,10 @@ export class Cell {
         if (this.isLocated) {
             let w = 0;
             let h = 0;
-            this.leftSideGroupCells.forEach((v) => h += this.table.rows[v.cellY].height
+            this.leftSideGroupCells.forEach((v) => h += round100(this.table.rows[v.cellY].height)
             );
 
-            this.upperSideGroupCells.forEach((v) => w += this.table.columns[v.cellX].width);
+            this.upperSideGroupCells.forEach((v) => w += round100(this.table.columns[v.cellX].width));
 
             return [w, h];
 
@@ -1620,7 +1691,7 @@ export class Cell {
     /**
      * テキストを再描画します。
      */
-    private locateSVGTextOrGetUpdateFlag(withUpdate : boolean) : boolean{
+    private locateSVGTextOrGetUpdateFlag(withUpdate: boolean): boolean {
         const innerRect = this.getVirtualInnerRegion();
         return SVGTextExtension.updateLocationOrGetUpdateFlag(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None, withUpdate);
 

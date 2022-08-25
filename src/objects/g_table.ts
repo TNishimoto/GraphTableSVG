@@ -1148,9 +1148,6 @@ export class GTable extends GVertex {
 
         this.hasConnectedObserverFunction = false;
 
-        if(withUpdate){
-            console.log(`A1`);
-        }
 
         const xb = HTMLFunctions.isShow(this.svgGroup);
         if (!xb) {
@@ -1159,9 +1156,6 @@ export class GTable extends GVertex {
 
         this._isDrawing = true;
 
-        if(withUpdate){
-            console.log(`A2`);
-        }
 
         const cells = this.cellArray;
         for(let i =0;i<cells.length;i++){
@@ -1174,9 +1168,6 @@ export class GTable extends GVertex {
             }
         }
 
-        if(withUpdate){
-            console.log(`A3`);
-        }
 
         b = this.fitSizeToOriginalCellsWithUpdateFlag(true, withUpdate) || b;
         if(!withUpdate && b){
@@ -1189,9 +1180,6 @@ export class GTable extends GVertex {
     
         this.prevShow = false;
 
-        if(withUpdate){
-            console.log(`A4`);
-        }
 
         b = this.resizeWithUpdateFlag(withUpdate) || b;
 
@@ -1203,9 +1191,6 @@ export class GTable extends GVertex {
             return b;
         }
 
-        if(withUpdate){
-            console.log(`A5`);
-        }
 
         b = this.relocateWithUpdate(withUpdate) || b;
 

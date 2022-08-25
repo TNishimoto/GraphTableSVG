@@ -1,6 +1,6 @@
 import * as CommonFunctions from "../common/common_functions";
 import * as HTMLFunctions from "../html/html_functions";
-import { Size, Rectangle } from "../common/vline";
+import { Size, Rectangle, round100 } from "../common/vline";
 
 //type CharInfo = { char: number, fontSize: number, fontFamily: string }
 type CharInfo = { char: number, fontSize: number, fontFamily: string }
@@ -91,7 +91,9 @@ function superComputeRegion(text: virtualTText | VirtualTSpan): Rectangle {
 
     const box = obj.getBBox();
     document.body.removeChild(div);
-    return new Rectangle(box.x -baseX, box.y - baseY, box.width, box.height);
+    const x = round100(box.x) - round100(baseX);
+    const y = round100(box.y) - round100(baseY);
+    return new Rectangle(x, y, round100(box.width), round100(box.height));
 
 
 }

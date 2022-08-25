@@ -17,7 +17,7 @@ import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 
 
-let timerInterval = 100;
+let timerInterval = 1000;
 let unstableCounterDefault = 10;
 const unstableCounterName = "data-unstable-counter";
 
