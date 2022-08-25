@@ -390,7 +390,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
                         }
                     }
 
-                    b = b || this.setRegularIntervalOrGetUpdateFlag(textPathLen, strWidth, withUpdate);
+                    b = this.setRegularIntervalOrGetUpdateFlag(textPathLen, strWidth, withUpdate) || b;
     
                 }
             }

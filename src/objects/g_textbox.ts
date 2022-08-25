@@ -288,19 +288,19 @@ export class GTextBox extends GVertex {
     op: number = 0;
 
     public getUpdateFlag() : boolean{
-        const super_b = super.getUpdateFlag();
-        if (!this.isShown) return super_b;
+        const b1 = super.getUpdateFlag();
+        if (!this.isShown) return b1;
 
         if (this.svgText == null) {
             throw new TypeError("svgText is null");
         }
 
-        const b1: boolean = this.getUpdateFlagOfStyle();
-        const b2: boolean = this.getUpdateFlagOfTextLocation();
-        const b3: boolean = this.getUpdateFlagOfSurfaceSize();
-        const b4: boolean = this.getUpdateFlagOfSurfaceLocation();
+        const b2: boolean = this.getUpdateFlagOfStyle();
+        const b3: boolean = this.getUpdateFlagOfTextLocation();
+        const b4: boolean = this.getUpdateFlagOfSurfaceSize();
+        const b5: boolean = this.getUpdateFlagOfSurfaceLocation();
 
-        return super_b || b1 || b2 || b3 || b4;
+        return b1 || b2 || b3 || b4 || b5;
 
     }
     private updateRec() : void {

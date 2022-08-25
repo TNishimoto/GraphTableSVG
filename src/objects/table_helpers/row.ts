@@ -197,7 +197,7 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
                 if (!cell.isMasterCellOfRowCountOne) {
-                    b = b || cell.updateOrGetUpdateFlag(withUpdate);
+                    b = cell.updateOrGetUpdateFlag(withUpdate)  || b;
 
                     if(!withUpdate && b){
                         return b;
@@ -227,12 +227,12 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
             let b = false;
             const cells = this.cells;
             for(let i = 0;i<cells.length;i++){
-                b = b || cells[i].updateOrGetUpdateFlag(withUpdate);
+                b = cells[i].updateOrGetUpdateFlag(withUpdate)  || b;
                 if(!withUpdate && b){
                     return b;
                 }
             }
-            b = b || this.setHeightToCellsWithUpdateFlag(withUpdate);
+            b = this.setHeightToCellsWithUpdateFlag(withUpdate)  || b;
             return b;
         }
 

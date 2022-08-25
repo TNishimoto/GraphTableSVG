@@ -390,13 +390,13 @@ export class GTable extends GVertex {
     public fitSizeToOriginalCellsWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {
         let b = false;
         for(let i = 0;i<this.rows.length;i++){
-            b = b || this.rows[i].fitHeightToOriginalCellWithUpdateFlag(allowShrink, withUpdate);
+            b = this.rows[i].fitHeightToOriginalCellWithUpdateFlag(allowShrink, withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }
         }
         for(let i = 0;i<this.columns.length;i++){
-            b = b || this.columns[i].fitWidthToOriginalCellWithUpdateFlag(allowShrink, withUpdate);
+            b = this.columns[i].fitWidthToOriginalCellWithUpdateFlag(allowShrink, withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }
@@ -1148,6 +1148,10 @@ export class GTable extends GVertex {
 
         this.hasConnectedObserverFunction = false;
 
+        if(withUpdate){
+            console.log(`A1`);
+        }
+
         const xb = HTMLFunctions.isShow(this.svgGroup);
         if (!xb) {
             return false;
@@ -1155,18 +1159,29 @@ export class GTable extends GVertex {
 
         this._isDrawing = true;
 
+        if(withUpdate){
+            console.log(`A2`);
+        }
+
         const cells = this.cellArray;
         for(let i =0;i<cells.length;i++){
-            b = b || cells[i].updateOrGetUpdateFlag(withUpdate);
+            b = cells[i].updateOrGetUpdateFlag(withUpdate) || b;
             if(!withUpdate && b){
+                console.log(`tryUpdateWithUpdateFlag: updateOrGetUpdateFlag`)
                 this._isDrawing = false;
                 this.hasConnectedObserverFunction = true;        
                 return b;
             }
         }
 
-        b = b || this.fitSizeToOriginalCellsWithUpdateFlag(true, withUpdate);
+        if(withUpdate){
+            console.log(`A3`);
+        }
+
+        b = this.fitSizeToOriginalCellsWithUpdateFlag(true, withUpdate) || b;
         if(!withUpdate && b){
+            console.log(`tryUpdateWithUpdateFlag: fitSizeToOriginalCellsWithUpdateFlag`)
+
             this._isDrawing = false;
             this.hasConnectedObserverFunction = true;    
             return b;
@@ -1174,17 +1189,30 @@ export class GTable extends GVertex {
     
         this.prevShow = false;
 
+        if(withUpdate){
+            console.log(`A4`);
+        }
 
-        b = b || this.resizeWithUpdateFlag(withUpdate);
+        b = this.resizeWithUpdateFlag(withUpdate) || b;
 
         if(!withUpdate && b){
+            console.log(`tryUpdateWithUpdateFlag: resizeWithUpdateFlag`)
+
             this._isDrawing = false;
             this.hasConnectedObserverFunction = true;    
             return b;
         }
 
-        b = b || this.relocateWithUpdate(withUpdate);
+        if(withUpdate){
+            console.log(`A5`);
+        }
 
+        b = this.relocateWithUpdate(withUpdate) || b;
+
+        if(!withUpdate && b){
+            console.log(`tryUpdateWithUpdateFlag: relocateWithUpdate`)
+
+        }
 
         this._isDrawing = false;
         this.hasConnectedObserverFunction = true;
@@ -1201,6 +1229,8 @@ export class GTable extends GVertex {
     各セルのサイズを再計算します。
     */
     public update() {
+        console.log("Update");
+        super.update();
         this.tryUpdateWithUpdateFlag(true);
 
     }
@@ -1244,14 +1274,14 @@ export class GTable extends GVertex {
     private resizeWithUpdateFlag(withUpdate : boolean) : boolean {
         let b = false;
         for(let i = 0;i<this.rows.length;i++){
-            b = b || this.rows[i].resizeWithUpdate(withUpdate);
+            b = this.rows[i].resizeWithUpdate(withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }
         }
 
         for(let i = 0;i<this.columns.length;i++){
-            b = b || this.columns[i].resizeWithUpdate(withUpdate);
+            b = this.columns[i].resizeWithUpdate(withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }
@@ -1269,11 +1299,15 @@ export class GTable extends GVertex {
 
     }
     private relocateWithUpdate(withUpdate:boolean) : boolean{
+        if(withUpdate){
+            console.log(`Update: relocateWithUpdate`)
+        }
         let b = false;
         let height = 0;
         for(let i=0;i<this.rows.length;i++){
-            b = b || this.rows[i].setYWithUpdate(height, withUpdate);
+            b = this.rows[i].setYWithUpdate(height, withUpdate)  || b;
             if(!withUpdate && b){
+                console.log(`relocateWithUpdate: setYWithUpdate`)
                 return b;
             }
             height += this.rows[i].height;
@@ -1283,8 +1317,10 @@ export class GTable extends GVertex {
         let width = 0;
 
         for(let i=0;i<this.columns.length;i++){
-            b = b || this.columns[i].setXWithUpdate(width, withUpdate);
+            b = this.columns[i].setXWithUpdate(width, withUpdate)  || b;
             if(!withUpdate && b){
+                console.log(`relocateWithUpdate: setXWithUpdate`)
+
                 return b;
             }
             width += this.columns[i].width;
@@ -1293,8 +1329,10 @@ export class GTable extends GVertex {
 
         const cells = this.cellArray;
         for(let i = 0;i<cells.length;i++){
-            b = b || cells[i].relocationOrGetUpdateFlag(withUpdate);
+            b = cells[i].relocationOrGetUpdateFlag(withUpdate) || b;
             if(!withUpdate && b){
+                console.log(`relocateWithUpdate: relocationOrGetUpdateFlag`)
+
                 return b;
             }
         }

@@ -84,7 +84,7 @@ export class CellColumn {
             const cell = this.table.cells[y][this.cellX];
             if (!cell.isMasterCellOfColumnCountOne) {
 
-                b = b || cell.updateOrGetUpdateFlag(withUpdate);
+                b = cell.updateOrGetUpdateFlag(withUpdate)  || b;
                 if (!withUpdate && b) {
                     return b;
                 }
@@ -177,12 +177,12 @@ export class CellColumn {
         let b = false;
         const cells = this.cells;
         for (let i = 0; i < cells.length; i++) {
-            b = b || cells[i].updateOrGetUpdateFlag(withUpdate);
+            b = cells[i].updateOrGetUpdateFlag(withUpdate)  || b;
             if (!withUpdate && b) {
                 return b;
             }
         }
-        b = b || this.setHeightToCellsWithUpdateFlag(withUpdate);
+        b = this.setHeightToCellsWithUpdateFlag(withUpdate)  || b;
 
         return b;
     }
@@ -215,6 +215,11 @@ export class CellColumn {
 
     public setXWithUpdate(posX : number, withUpdate : boolean) :boolean{
         let b = false;
+
+        if(withUpdate){
+            console.log(`setXWithUpdate: ${this.selfx}, ${posX}`)
+        }
+
         for (let y = 0; y < this.table.rowCount; y++) {
             const cell = this.table.cells[y][this.cellX];
             if(cell.x != posX){

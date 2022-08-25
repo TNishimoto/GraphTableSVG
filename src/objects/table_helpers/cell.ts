@@ -997,15 +997,15 @@ export class Cell {
                 return true;
             }
         }
-        b = b || this.resizeOrGetUpdateFlag(withUpdate);
+        b = this.resizeOrGetUpdateFlag(withUpdate) || b;
         if(!withUpdate && b){
             return b;
         }
-        b = b ||this.locateSVGTextOrGetUpdateFlag(withUpdate);
+        b = this.locateSVGTextOrGetUpdateFlag(withUpdate) || b;
         if(!withUpdate && b){
             return b;
         }
-        b = b || this.relocationOrGetUpdateFlag(withUpdate);
+        b = this.relocationOrGetUpdateFlag(withUpdate) || b;
         if(!withUpdate && b){
             return b;
         }
@@ -1242,21 +1242,21 @@ export class Cell {
         if (this.table.svgGroup.contains(this.svgBottomBorder)) {
             if (this.isMaster) {
                 const x1 = this.x;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, x1, "x1", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, x1, "x1", withUpdate)  || b;
 
                 const x2 = this.x + this.computeBorderLength2(DirectionType.bottom);
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, x2, "x2", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, x2, "x2", withUpdate)  || b;
 
 
                 const y1 = this.y + this.height;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, y1, "y1", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, y1, "y1", withUpdate)  || b;
 
 
                 const y2 = this.svgBottomBorder.y1.baseVal.value;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, y2, "y2", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgBottomBorder, y2, "y2", withUpdate)  || b;
                 
             } else if (this.bottomCell != null && this.bottomCell.isMaster) {
-                b = b || this.bottomCell.relocateTopBorderOrGetUpdateFlag(withUpdate);
+                b = this.bottomCell.relocateTopBorderOrGetUpdateFlag(withUpdate)  || b;
             } else {
                 throw Error("error");
             }
@@ -1273,20 +1273,20 @@ export class Cell {
         if (this.table.svgGroup.contains(this.svgTopBorder)) {
             if (this.isMaster) {
                 const x1 = this.x;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, x1, "x1", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, x1, "x1", withUpdate)  || b;
 
                 const x2 = this.x + this.computeBorderLength2(DirectionType.top);
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, x2, "x2", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, x2, "x2", withUpdate)  || b;
 
                 const y1 = this.y;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, y1, "y1", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, y1, "y1", withUpdate)  || b;
 
 
                 const y2 = this.svgTopBorder.y1.baseVal.value;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, y2, "y2", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgTopBorder, y2, "y2", withUpdate)  || b;
 
             } else if (this.topCell != null && this.topCell.isMaster) {
-                b = b || this.topCell.relocateBottomBorderOrGetUpdateFlag(withUpdate);
+                b = this.topCell.relocateBottomBorderOrGetUpdateFlag(withUpdate)  || b;
             } else {
                 throw Error("error");
             }
@@ -1303,18 +1303,18 @@ export class Cell {
         if (this.table.svgGroup.contains(this.svgLeftBorder)) {
             if (this.isMaster) {
                 const x1 = this.x;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, x1, "x1", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, x1, "x1", withUpdate)  || b;
                 
                 const x2 = this.svgLeftBorder.x1.baseVal.value;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, x2, "x2", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, x2, "x2", withUpdate)  || b;
 
                 const y1 = this.y;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, y1, "y1", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, y1, "y1", withUpdate)  || b;
 
                 const y2 = this.y + this.computeBorderLength2(DirectionType.left);
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, y2, "y2", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgLeftBorder, y2, "y2", withUpdate)  || b;
             } else if (this.leftCell != null && this.leftCell.isMaster) {
-                b = b || this.leftCell.relocateRightBorderOrGetUpdateFlag(withUpdate);
+                b = this.leftCell.relocateRightBorderOrGetUpdateFlag(withUpdate)  || b;
             } else {
                 throw Error("error");
             }
@@ -1330,20 +1330,20 @@ export class Cell {
         if (this.table.svgGroup.contains(this.svgRightBorder)) {
             if (this.isMaster) {
                 const x1 = this.x + this.width;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, x1, "x1", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, x1, "x1", withUpdate)  || b;
 
                 const x2 = this.x + this.width;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, x2, "x2", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, x2, "x2", withUpdate)  || b;
 
                 const y1 = this.y;
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, y1, "y1", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, y1, "y1", withUpdate)  || b;
 
                 const y2 = this.y + this.computeBorderLength2(DirectionType.right);
-                b = b || UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, y2, "y2", withUpdate);
+                b = UpdateBorderCoodinateOrGetUpdateFlag(this.svgRightBorder, y2, "y2", withUpdate)  || b;
 
 
             } else if (this.rightCell != null && this.rightCell.isMaster) {
-                b = b || this.rightCell.relocateLeftBorderOrGetUpdateFlag(withUpdate);
+                b = this.rightCell.relocateLeftBorderOrGetUpdateFlag(withUpdate)  || b;
             } else {
                 throw Error("error");
             }
@@ -1385,27 +1385,27 @@ export class Cell {
             return false;
         }
 
-        b = b ||this.relocateTopBorderOrGetUpdateFlag(withUpdate);
+        b = this.relocateTopBorderOrGetUpdateFlag(withUpdate)  || b;
         if(!withUpdate && b){
             return b;
         }
 
-        b = b || this.relocateLeftBorderOrGetUpdateFlag(withUpdate);
+        b = this.relocateLeftBorderOrGetUpdateFlag(withUpdate)  || b;
         if(!withUpdate && b){
             return b;
         }
 
-        b = b || this.relocateRightBorderOrGetUpdateFlag(withUpdate);
+        b = this.relocateRightBorderOrGetUpdateFlag(withUpdate)  || b;
         if(!withUpdate && b){
             return b;
         }
 
-        b = b || this.relocateBottomBorderOrGetUpdateFlag(withUpdate);
+        b = this.relocateBottomBorderOrGetUpdateFlag(withUpdate)  || b;
         if(!withUpdate && b){
             return b;
         }
 
-        b = b || this.locateSVGTextOrGetUpdateFlag(withUpdate);
+        b = this.locateSVGTextOrGetUpdateFlag(withUpdate)  || b;
         if(!withUpdate && b){
             return b;
         }
