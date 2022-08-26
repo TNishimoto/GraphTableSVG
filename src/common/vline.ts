@@ -118,6 +118,10 @@ export type Point = {
 export function round100(value : number){
     return Math.round(value * 100)/100;
 }
+export function nearlyEqual(value1 :number, value2 : number) : boolean {
+    const abs = Math.abs(value1 - value2);
+    return abs < 0.1
+}
 export function escapeWithRound100(literals: TemplateStringsArray, ...placeholders: (number | string)[]) {
     let result = "";
 

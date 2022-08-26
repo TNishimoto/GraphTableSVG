@@ -680,7 +680,10 @@ export class GAbstractEdge extends GObject {
         const b2 = this.updateConnectorInfoOrGetUpdateFlag(false);
         const b3 = this.updateSurfaceOrGetUpdateFlag(false);
         const b4 = this.updateLocationOrGetUpdateFlag(false);
-        console.log(`AbstractEdge ${this.objectID}: ${b1} ${b2} ${b3} ${b4}`)
+        const b = b1 || b2 || b3 || b4;
+        if(b){
+            console.log(`AbstractEdge ${this.objectID}: ${b1} ${b2} ${b3} ${b4}`)
+        }
 
         return b1 || b2 || b3 || b4;
     }

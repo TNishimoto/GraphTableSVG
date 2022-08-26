@@ -1,7 +1,7 @@
 //namespace GraphTableSVG {
 import * as CommonFunctions from "../common/common_functions"
 import * as GUIObserver from "../html/gui_observer"
-import { Rectangle, PositionType } from "../common/vline"
+import { Rectangle, PositionType, round100, nearlyEqual } from "../common/vline"
 import { CoodinateType } from "../common/enums"
 
 import * as SVG from "../interfaces/svg"
@@ -152,8 +152,8 @@ export class GObject {
             GOptions.setClassAndStyle(this.svgSurface, option.surfaceClass, option.surfaceStyle)
         }
 
-        this.setWidthWithoutUpdate(option.width !== undefined ? option.width : 25);
-        this.setHeightWithoutUpdate(option.height !== undefined ? option.height : 25);
+        this.width = (option.width !== undefined ? option.width : 25);
+        this.height = (option.height !== undefined ? option.height : 25);
     }
 
     protected setOptionalPosition(option: GOptions.GObjectAttributes) {
@@ -526,17 +526,21 @@ export class GObject {
     */
     get width(): number {
         if (this.hasSize) {
-            return <number>ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-width", 0);
+            return round100(<number>ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-width", 0));
         } else {
             return 0;
         }
     }
     set width(value: number) {
+        const newValue = round100(value);
         if (this.hasSize) {
-            if (this.width != value && value != null) ElementExtension.setAttributeNumber(this.svgGroup, "data-width", value);
+            if (!nearlyEqual(this.width, newValue)) {
+                ElementExtension.setAttributeNumber(this.svgGroup, "data-width", newValue);
+            }
             //this.svgGroup.setAttribute("data-width", value.toString());
         }
     }
+    /*
     protected setWidthWithoutUpdate(value: number) {
         this.width = value;
 
@@ -544,6 +548,7 @@ export class GObject {
     protected setHeightWithoutUpdate(value: number) {
         this.height = value;
     }
+    */
 
     /**
     頂点の高さを返します。
@@ -556,8 +561,12 @@ export class GObject {
         }
     }
     set height(value: number) {
+        const newValue = round100(value);
         if (this.hasSize) {
-            if (this.height != value && value != null) ElementExtension.setAttributeNumber(this.svgGroup, "data-height", value);
+            if (! nearlyEqual(this.height, newValue)) {
+                ElementExtension.setAttributeNumber(this.svgGroup, "data-height", newValue)
+            }
+
             //this.svgGroup.setAttribute("data-height", value.toString());
         }
     }
@@ -839,7 +848,7 @@ export class GObject {
 let updateSVGSVGTimerCounter = 0;
 function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
     updateSVGSVGTimerCounter++;
-    console.log(`updateSVGSVGTimerCounter: ${updateSVGSVGTimerCounter}`)
+    //console.log(`updateSVGSVGTimerCounter: ${updateSVGSVGTimerCounter}`)
     const obj = (<any>svgsvg)._gobjects;
     if (obj instanceof Map<string, GObject>) {
         obj.forEach((value, key) => {
@@ -850,22 +859,24 @@ function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
                     console.log(`Update: ${value.type} ${key}, ${value.unstableCounter} ${b}`)
 
                     if (b) {
+
                         value.update();
                         const counter = value.svgGroup.getAttribute(unstableCounterName);
-                        if(counter == null){
+                        if (counter == null) {
                             value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
-                        }else{
+                        } else {
                             const newCounter = Number.parseInt(counter) + 5;
-                            value.svgGroup.setAttribute(unstableCounterName, (newCounter).toString() );
+                            value.svgGroup.setAttribute(unstableCounterName, (newCounter).toString());
                         }
 
                     } else {
+
                         if (value.unstableCounter == 0) {
                             value.svgGroup.removeAttribute(unstableCounterName)
 
                             const descendants = HTMLFunctions.getDescendants(value.svgGroup);
-                            descendants.forEach((v) =>{
-                                if(v.hasAttribute(unstableCounterName)){
+                            descendants.forEach((v) => {
+                                if (v.hasAttribute(unstableCounterName)) {
                                     v.removeAttribute(unstableCounterName);
                                 }
                             })
@@ -873,6 +884,7 @@ function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
                             value.svgGroup.setAttribute(unstableCounterName, (value.unstableCounter - 1).toString());
                         }
                     }
+
                 }
             }
         })

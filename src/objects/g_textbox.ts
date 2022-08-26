@@ -7,7 +7,7 @@ import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
 import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../common/enums";
-import { Rectangle, PositionType, round100 } from "../common/vline"
+import { Rectangle, PositionType, round100, nearlyEqual } from "../common/vline"
 import * as HTMLFunctions from "../html/html_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { GObject } from "./g_object"
@@ -23,6 +23,7 @@ import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { UndefinedError } from "../common/exceptions"
 import { getVirtualRegion } from "../interfaces/virtual_text"
 import { createSVGText } from "./element_builder"
+import { Debug } from ".."
 
 //namespace GraphTableSVG {
 
@@ -209,7 +210,7 @@ export class GTextBox extends GVertex {
         //this.svgGroup.setPropertyStyleValue(AttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
     }
 
-    private updateStyleOrGetUpdateFlag(updateFlag: boolean) : boolean{
+    protected updateStyleWithUpdateFlag(updateFlag: boolean) : boolean{
         let b = false;
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null && this.svgSurface != null) {
@@ -226,43 +227,39 @@ export class GTextBox extends GVertex {
         return b;
 
     }
-
+    /*
     protected getUpdateFlagOfStyle(): boolean {
-        return this.updateStyleOrGetUpdateFlag(false);
+        return this.updateStyleWithUpdateFlag(false);
     }
     protected updateStyle() : boolean {
-        return this.updateStyleOrGetUpdateFlag(true);
+        return this.updateStyleWithUpdateFlag(true);
     }
-    private updateSurfaceSizeOrGetUpdateFlag(updateFlag : boolean){
+    */
+    protected updateSurfaceSizeWithUpdateFlag(withUpdate : boolean){
         const region = this.getVirtualRegion();
 
         let b = false;
         const widthRound100 = round100(region.width);
-        if (this.width != widthRound100) {
-            if(updateFlag){
-                this.setWidthWithoutUpdate(widthRound100);
+
+        if (!nearlyEqual(this.width, widthRound100)) {
+            if(withUpdate){
+                this.width = widthRound100;
+
             }
             b = true;
         }
 
         const heightRound100 = round100(region.height);
 
-        if (this.height != heightRound100) {
-            if(updateFlag){
-                this.setHeightWithoutUpdate(heightRound100);
+        if (!nearlyEqual(this.height, heightRound100)) {
+            if(withUpdate){
+                this.height = heightRound100;
             }
             //this.height = region.height;        
             b = true;
         }
         return b;
 
-    }
-    protected getUpdateFlagOfSurfaceSize() : boolean{
-        return this.updateSurfaceSizeOrGetUpdateFlag(false);        
-    }
-
-    protected updateSurfaceSize(): boolean {
-        return this.updateSurfaceSizeOrGetUpdateFlag(true);
     }
 
     /*
@@ -295,12 +292,18 @@ export class GTextBox extends GVertex {
             throw new TypeError("svgText is null");
         }
 
-        const b2: boolean = this.getUpdateFlagOfStyle();
+        const b2: boolean = this.updateStyleWithUpdateFlag(false);
         const b3: boolean = this.getUpdateFlagOfTextLocation();
-        const b4: boolean = this.getUpdateFlagOfSurfaceSize();
+        const b4: boolean = this.updateSurfaceSizeWithUpdateFlag(false);
         const b5: boolean = this.getUpdateFlagOfSurfaceLocation();
 
-        return b1 || b2 || b3 || b4 || b5;
+        
+        const b = b1 || b2 || b3 || b4 || b5;
+        if(b){
+            console.log(`Update ${this.type} ${b1} ${b2} ${b3} ${b4} ${b5}`)
+        }
+
+        return b;
 
     }
     private updateRec() : void {
@@ -313,9 +316,9 @@ export class GTextBox extends GVertex {
         if (this.svgText == null) {
             throw new TypeError("svgText is null");
         }
-        this.updateStyle();
+        this.updateStyleWithUpdateFlag(true);
         this.updateTextLocation();
-        this.updateSurfaceSize();
+        this.updateSurfaceSizeWithUpdateFlag(true);
         this.updateSurfaceLocation();
         this._isUpdating = false;
         this.hasConnectedObserverFunction = true;
@@ -323,14 +326,17 @@ export class GTextBox extends GVertex {
         
     }
     public update() {
-        let counter = 1;
+
+        //let counter = 1;
+        this.updateRec();
+        /*
         while(this.getUpdateFlag()){
             if(counter > 10){
                 throw new Error("Update-Loop Error!");
             }
-            this.updateRec();
             counter++;
         }
+        */
         //return counter > 1;
     }
     /*

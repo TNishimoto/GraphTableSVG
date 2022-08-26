@@ -73,11 +73,11 @@ import { AttributeNames } from "../common";
         protected updateSurfaceSize(){
             const region = this.getVirtualRegion();
             if(this.width != region.width){
-                this.setWidthWithoutUpdate(region.width);
+                this.width = region.width;
             }
     
             if(this.height != region.height){
-                this.setHeightWithoutUpdate(this.height = region.height);        
+                this.height = region.height;        
             }
             return false;
         }

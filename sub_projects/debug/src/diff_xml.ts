@@ -1,6 +1,13 @@
 import * as libxmljs from 'libxmljs';
 import * as libxmlts from './libxmlts';
 
+export function round100(value : number){
+    return Math.round(value * 100)/100;
+}
+export function nearlyEqual(value1 :number, value2 : number) : boolean {
+    const abs = Math.abs(value1 - value2);
+    return abs < 0.1
+}
 
 type DiffType = "MismatchValue" | "MismatchName" | "MismatchChildrenCount" | "MismatchTextContent" | "Disappeared" | "Other"
 
@@ -50,12 +57,25 @@ function diffAttrs(e1 : libxmlts.libxmlts.Element, e2 : libxmlts.libxmlts.Elemen
             result.diffType = "Disappeared";
             return result;
         }else{
-            if(kv1.value != value2){
-                result.xpath = getXPath(kv1);
-                result.diffType = "MismatchValue";
-
-                return result;
+            if(Number.isNaN(kv1.value) && Number.isNaN(value2)){
+                const num1 = round100(Number.parseFloat(kv1.value));
+                const num2 = round100(Number.parseFloat(value2));
+                if(!nearlyEqual(num1, num2)){
+                    result.xpath = getXPath(kv1);
+                    result.diffType = "MismatchValue";
+    
+                    return result;
+                }
+            }else{
+                if(kv1.value != value2){
+                    result.xpath = getXPath(kv1);
+                    result.diffType = "MismatchValue";
+    
+                    return result;
+                }
+    
             }
+
         }
     }
 
@@ -66,6 +86,17 @@ function diffAttrs(e1 : libxmlts.libxmlts.Element, e2 : libxmlts.libxmlts.Elemen
             result.diffType = "Disappeared";
             return result;
         }else{
+            if(Number.isNaN(value1) && Number.isNaN(kv2.value)){
+                const num1 = round100(Number.parseFloat(value1));
+                const num2 = round100(Number.parseFloat(kv2.value));
+                if(!nearlyEqual(num1, num2)){
+                    result.xpath = getXPath(kv2);
+                    result.diffType = "MismatchValue";
+    
+                    return result;
+                }
+            }
+
             if(kv2.value != value1){
                 result.xpath = getXPath(kv2);
                 result.diffType = "MismatchValue";

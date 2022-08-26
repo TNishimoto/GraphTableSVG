@@ -1,5 +1,6 @@
 import libxmljs = require('libxmljs');
 
+
 export namespace libxmlts {
 
     export type NodeType = "text" | "attribute" | "element" | "cdata" | "comment" | "pi" | "dtd" | "document";
