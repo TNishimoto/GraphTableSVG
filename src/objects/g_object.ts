@@ -836,7 +836,10 @@ export class GObject {
 
 }
 
+let updateSVGSVGTimerCounter = 0;
 function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
+    updateSVGSVGTimerCounter++;
+    console.log(`updateSVGSVGTimerCounter: ${updateSVGSVGTimerCounter}`)
     const obj = (<any>svgsvg)._gobjects;
     if (obj instanceof Map<string, GObject>) {
         obj.forEach((value, key) => {
@@ -848,7 +851,13 @@ function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
 
                     if (b) {
                         value.update();
-                        value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
+                        const counter = value.svgGroup.getAttribute(unstableCounterName);
+                        if(counter == null){
+                            value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
+                        }else{
+                            const newCounter = Number.parseInt(counter) + 5;
+                            value.svgGroup.setAttribute(unstableCounterName, (newCounter).toString() );
+                        }
 
                     } else {
                         if (value.unstableCounter == 0) {

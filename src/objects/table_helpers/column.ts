@@ -214,18 +214,19 @@ export class CellColumn {
     }
 
     public setXWithUpdate(posX : number, withUpdate : boolean) :boolean{
+        const posx100 = round100(posX);
         let b = false;
 
         if(withUpdate){
-            console.log(`setXWithUpdate: ${this.selfx}, ${posX}`)
+            console.log(`setXWithUpdate: ${this.selfx}, ${posx100}`)
         }
 
         for (let y = 0; y < this.table.rowCount; y++) {
             const cell = this.table.cells[y][this.cellX];
-            if(cell.x != posX){
+            if(cell.x != posx100){
                 b = true;
                 if(withUpdate){
-                    cell.x = posX;
+                    cell.x = posx100;
                 }
 
                 if(!withUpdate && b){

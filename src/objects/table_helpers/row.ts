@@ -265,13 +265,14 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
             this.fitHeightToOriginalCellWithUpdateFlag(allowShrink,true);
         }
         public setYWithUpdate(posY: number, withUpdate : boolean) : boolean {
+            const posY100 = round100(posY);
             let b = false;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                if(cell.y != posY){
+                if(cell.y != posY100){
                     b = true;
                     if(withUpdate){
-                        cell.y = posY;
+                        cell.y = posY100;
                     }
                     if(!withUpdate && b){
                         return b;

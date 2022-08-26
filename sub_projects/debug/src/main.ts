@@ -1,4 +1,4 @@
-import { webkit, firefox, chromium, ElementHandle, Locator } from 'playwright'
+import { webkit, firefox, chromium, ElementHandle, Locator, Page } from 'playwright'
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -22,10 +22,10 @@ function createDirectoryIfNotExist(dirPath: string) {
   }
 
 }
-function rightPadding(text : string, maxLen : number){
+function rightPadding(text: string, maxLen: number) {
   let s = text;
-  while(s.length < maxLen){
-    s+= " ";
+  while (s.length < maxLen) {
+    s += " ";
   }
   return s;
 }
@@ -53,7 +53,52 @@ function concatenatePaths(relativeDirPath1: string, relativeDirPath2: string): s
   }
 }
 
+async function outerHtml(elem: Locator) {
+  if (!elem) {
+    return undefined;
+  }
 
+  //@ts-ignore
+  return await elem.evaluate(elem => elem.outerHTML);
+}
+
+async function getVisibleHTML(page: Page, browserName: BrowserNameType): Promise<string> {
+  const bodyInnerHTML = await page.innerHTML('xpath=//body');
+  const output_html = `<!DOCTYPE html>
+      <html>
+      
+      <head>
+          <meta charset="utf-8" />
+          <title>Test ${browserName}</title>
+      </head>
+      <body>
+      ${bodyInnerHTML}
+      </body>
+      `
+  return bodyInnerHTML;
+}
+
+async function saveOutputHTMLAndPNG(page: Page, browserName: BrowserNameType, htmlPath: string, pngPath: string, overwrite: boolean): Promise<void> {
+  const outputHTML = await getVisibleHTML(page, browserName);
+
+  const b1 = !overwrite && fs.existsSync(htmlPath);
+
+  if (!b1) {
+    await fs.writeFile(htmlPath, outputHTML, (err) => {
+      if (err) throw err;
+      console.log(`Saved: ${htmlPath}`);
+    });
+  }
+
+  const b2 = !overwrite && fs.existsSync(pngPath);
+
+  if (!b2) {
+    await page.screenshot({ path: pngPath })
+    console.log(`Saved: ${pngPath}`);
+  }
+
+
+}
 
 class TestResult {
   public filename: string = "";
@@ -62,7 +107,7 @@ class TestResult {
   public success: boolean | null = null;
   public diffXMLResult: DiffXMLResult | null = null;
 
-  public errorType : ErrorType | null = null;
+  public errorType: ErrorType | null = null;
   /*
   public constructor(_filename: string, _browserName: BrowserNameType, _message: string, _success: boolean | null, _errorType : ErrorType) {
     
@@ -83,7 +128,7 @@ class TestResultForFile {
   public getTestResult(): string {
     let s = `${rightPadding(this.filename, 40)} \t Browsers = { `;
     this.arr.forEach((v) => {
-      const type : string = v.errorType == null ? "null" : v.errorType;
+      const type: string = v.errorType == null ? "null" : v.errorType;
       const msg = v.success ? `\x1b[42mOK\x1b[49m` : `\x1b[41m${rightPadding(type, 13)}\x1b[49m`;
       s += `${v.browserName}: ${msg}\t`;
     })
@@ -94,16 +139,16 @@ class TestResultForFile {
   public getDetailMessages(): string | null {
     let s = `${rightPadding(this.filename, 40)} \n Browsers = { `;
     const b = this.arr.every((v) => v.success)
-    if(b){
+    if (b) {
       return null;
-    }else{
+    } else {
       this.arr.forEach((v) => {
-        const type : string = v.errorType == null ? "null" : v.errorType;
+        const type: string = v.errorType == null ? "null" : v.errorType;
         const msg = v.message;
         s += `${v.browserName}: ${msg}\n`;
       })
       s += " }\n";
-      return s;  
+      return s;
     }
   }
 
@@ -140,6 +185,7 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
     result.filename = fileName;
     result.browserName = browserName;
 
+
     //let success: boolean | null = null;
     let browser = null;
     if (browserName == 'webkit') {
@@ -160,9 +206,15 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
     if (browser != null) {
       const page = await browser.newPage()
       await page.goto(`file:///${absoluteFilePath}`)
+      await page.on('console', msg => console.log(`\u001b[33m ${msg.text()} \u001b[0m`))
+      // Listen for all console events and handle errors
+      await page.on('console', msg => {
+        if (msg.type() === 'error')
+          console.log(`\u001b[31m Error text: "${msg.text()}" \u001b[0m`);
+      });
+
+
       await page.waitForTimeout(1000);
-
-
 
       while (timeoutCounter < 10) {
 
@@ -172,40 +224,26 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
         if (counter == 0) {
           break;
         } else {
+          const fst = await arrayOfUnstableObjects.first();
+          const html = await outerHtml(fst);
+          console.log(html);
+
           await page.waitForTimeout(1000);
           timeoutCounter++;
         }
       }
 
+      await saveOutputHTMLAndPNG(page, browserName, outputHTMLPath, outputPNGPath, true);
+
+
       if (timeoutCounter < 10) {
 
 
 
-        const bodyInnerHTML = await page.innerHTML('xpath=//body');
-        const output_html = `<!DOCTYPE html>
-      <html>
-      
-      <head>
-          <meta charset="utf-8" />
-          <title>Test ${browserName}</title>
-      </head>
-      <body>
-      ${bodyInnerHTML}
-      </body>
-      `
-
-        fs.writeFile(outputHTMLPath, output_html, (err) => {
-          if (err) throw err;
-          console.log(`Wrote: ${outputHTMLPath}`);
-        });
-
-
-        await page.screenshot({ path: outputPNGPath })
-        console.log(`Wrote: ${outputPNGPath}`);
-
+        const output_html = await getVisibleHTML(page, browserName);
 
         if (fs.existsSync(correctHTMLPath)) {
-          const correctHTML = fs.readFileSync(correctHTMLPath, 'utf-8');
+          const correctHTML = await fs.readFileSync(correctHTMLPath, 'utf-8');
           result.diffXMLResult = diffXML(correctHTML, output_html);
           if (result.diffXMLResult.diffType == null) {
             console.log(`\x1b[42mOK: ${fileName} \x1b[49m`)
@@ -217,15 +255,8 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
             result.errorType = `TextMismatch`;
 
           }
-        } else {
-          fs.writeFile(correctHTMLPath, output_html, (err) => {
-            if (err) throw err;
-            console.log(`Wrote as the correct HTML: ${correctHTMLPath}`);
-          });
-          await page.screenshot({ path: correctPNGPath })
-          console.log(`Wrote as the correct PNG: ${correctPNGPath}`);
-
         }
+        await saveOutputHTMLAndPNG(page, browserName, correctHTMLPath, correctPNGPath, false);
 
 
       } else {
@@ -343,15 +374,15 @@ function getFiles(currentRelativePath: string): DirectoryInfo[] {
 //console.log(__filename)
 
 if (process.argv.length == 4) {
-  
+
   const relativePath = process.argv[2];
   const fileName = process.argv[3];
   const result = testAll(relativePath, fileName);
-  result.then((v) =>{
-      const s = v.getTestResult();
-      console.log(s);
+  result.then((v) => {
+    const s = v.getTestResult();
+    console.log(s);
   })
-  
+
 } else {
   const files = getFiles("");
   files.forEach((v) => createDirectories(v));
@@ -359,7 +390,7 @@ if (process.argv.length == 4) {
     const dummy = await testAll(v.dirPath, v.fileName);
     return dummy;
   }));
-  result.then((v) =>{
+  result.then((v) => {
     const s1 = v.map((w) => {
       return w.getTestResult();
     }).join("\n")
@@ -370,7 +401,7 @@ if (process.argv.length == 4) {
 
     console.log(s1);
     console.log(s2);
-  
+
   })
 
 
