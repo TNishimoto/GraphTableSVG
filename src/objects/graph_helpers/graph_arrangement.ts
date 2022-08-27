@@ -11,6 +11,7 @@ import * as SVGTextBox from "../../interfaces/svg_textbox"
 import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
 import { GAbstractEdge } from "../g_abstract_edge"
 import { GAbstractTextEdge } from "../g_abstract_text_edge"
+import { getVirtualRegion } from "../../interfaces/virtual_text"
 
 export namespace GraphArrangement {
     export function standardTreeWidthArrangement(graph: GGraph): void {
@@ -64,16 +65,23 @@ export namespace GraphArrangement {
             const edge = v.parentEdge!;
             if (edge instanceof GAbstractTextEdge) {
                 const path = edge.svgTextPath;
+                const textElement = edge.svgText;
+
                 if (path.textContent == null || path.textContent.length == 0) {
                 }
                 else if (path.textContent.length == 1) {
                     const padding = SVGTextBox.getRepresentativeFontSize(path);
-                    const edgeLen = (SVGTextExtensions.getWidth(path)) + (padding);
+                    const textVRegion = getVirtualRegion(textElement);
+                    const edgeLen = Math.max(textVRegion.width, textVRegion.height) + (padding);
                     if (edgeLen > childYInterval) childYInterval = edgeLen;
                 }
                 else {
                     const padding = SVGTextBox.getRepresentativeFontSize(path);
-                    const edgeLen = (SVGTextExtensions.getWidth(path)) + (padding * 4);
+                    const textVRegion = getVirtualRegion(textElement);
+                    
+                    const edgeLen = Math.max(textVRegion.width, textVRegion.height) + (padding * 4);
+
+                    //const edgeLen = (SVGTextExtensions.getWidth(path)) + (padding * 4);
                     if (edgeLen > childYInterval) childYInterval = edgeLen;
                 }
 

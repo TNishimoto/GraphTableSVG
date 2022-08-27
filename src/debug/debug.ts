@@ -1,6 +1,8 @@
 
 
   import { LogicTree, LogicTreeNode} from "../logics/logic_tree"
+
+
     //export namespace Debug {
         function randomTreeArray(node_num : number, max_degree : number) : [LogicTree, LogicTreeNode[]] {
             const nodes : LogicTreeNode[] = new Array(0);

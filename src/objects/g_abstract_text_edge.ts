@@ -14,6 +14,7 @@ import * as Extensions from "../interfaces/extensions"
 import { createSVGText } from "./element_builder";
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { round100 } from "../common/vline";
+import { debugMode } from "../common/debugger";
 
 export class GAbstractTextEdge extends GAbstractEdge {
     private static updateTextAttributes = ["style"]
@@ -307,8 +308,8 @@ export class GAbstractTextEdge extends GAbstractEdge {
         const b1 = super.getUpdateFlag();
         const b2 = this.updateTextPathOrGetUpdateFlag(false);
 
-        if(b1 || b2){
-            console.log(`AbstractTextEdge ${this.objectID}: ${b1} ${b2}`)
+        if(debugMode && (b1 || b2)){
+            console.log(`GAbstractTextEdge::getUpdateFlag Type = ${this.type} ID = ${this.objectID}: b1 = ${b1}, b2 = ${b2}`)
         }
 
         return b1 || b2;

@@ -137,9 +137,9 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
         if (counter == 0) {
           break;
         } else {
-          const fst = await arrayOfUnstableObjects.first();
-          const html = await outerHtml(fst);
-          console.log(html);
+          //const fst = await arrayOfUnstableObjects.first();
+          //const html = await outerHtml(fst);
+          //console.log(html);
 
           await page.waitForTimeout(1000);
           timeoutCounter++;

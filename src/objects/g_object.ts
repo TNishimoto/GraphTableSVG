@@ -17,9 +17,6 @@ import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 
 
-let timerInterval = 100;
-let unstableCounterDefault = 10;
-const unstableCounterName = "data-unstable-counter";
 
 
 
@@ -77,12 +74,12 @@ export class GObject {
 
         this.allowHover = true;
 
-        this.unstableCounter = unstableCounterDefault;
+        this.unstableCounter = GOptions.unstableCounterDefault;
         if (parentElement instanceof SVGSVGElement) {
             if ((<any>parentElement)._gobjects === undefined) {
                 (<any>parentElement)._gobjects = new Map<string, GObject>();
 
-                setTimeout(updateSVGSVGTimer, timerInterval, parentElement);
+                setTimeout(GOptions.updateSVGSVGTimer, GOptions.timerInterval, parentElement);
 
             }
             const map: Map<string, GObject> = (<any>parentElement)._gobjects;
@@ -114,7 +111,7 @@ export class GObject {
     */
 
     public get unstableCounter(): number | null {
-        const p = this.svgGroup.getAttribute(unstableCounterName);
+        const p = this.svgGroup.getAttribute(GOptions.unstableCounterName);
         if (p == null) {
             return null;
         } else {
@@ -124,14 +121,14 @@ export class GObject {
     }
     protected set unstableCounter(value: number | null) {
         if (value == null) {
-            this.svgGroup.removeAttribute(unstableCounterName)
+            this.svgGroup.removeAttribute(GOptions.unstableCounterName)
         } else {
-            this.svgGroup.setAttribute(unstableCounterName, value.toString());
+            this.svgGroup.setAttribute(GOptions.unstableCounterName, value.toString());
 
         }
     }
     public resetUnstableCounter(): void {
-        this.unstableCounter = unstableCounterDefault;
+        this.unstableCounter = GOptions.unstableCounterDefault;
     }
 
 
@@ -843,54 +840,6 @@ export class GObject {
 
 
 
-}
-
-let updateSVGSVGTimerCounter = 0;
-function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
-    updateSVGSVGTimerCounter++;
-    //console.log(`updateSVGSVGTimerCounter: ${updateSVGSVGTimerCounter}`)
-    const obj = (<any>svgsvg)._gobjects;
-    if (obj instanceof Map<string, GObject>) {
-        obj.forEach((value, key) => {
-            if (value instanceof GObject) {
-
-                if (value.unstableCounter != null) {
-                    const b = value.getUpdateFlag();
-                    console.log(`Update: ${value.type} ${key}, ${value.unstableCounter} ${b}`)
-
-                    if (b) {
-
-                        value.update();
-                        const counter = value.svgGroup.getAttribute(unstableCounterName);
-                        if (counter == null) {
-                            value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
-                        } else {
-                            const newCounter = Number.parseInt(counter) + 5;
-                            value.svgGroup.setAttribute(unstableCounterName, (newCounter).toString());
-                        }
-
-                    } else {
-
-                        if (value.unstableCounter == 0) {
-                            value.svgGroup.removeAttribute(unstableCounterName)
-
-                            const descendants = HTMLFunctions.getDescendants(value.svgGroup);
-                            descendants.forEach((v) => {
-                                if (v.hasAttribute(unstableCounterName)) {
-                                    v.removeAttribute(unstableCounterName);
-                                }
-                            })
-                        } else {
-                            value.svgGroup.setAttribute(unstableCounterName, (value.unstableCounter - 1).toString());
-                        }
-                    }
-
-                }
-            }
-        })
-    }
-
-    setTimeout(updateSVGSVGTimer, timerInterval, svgsvg);
 }
 
 //}

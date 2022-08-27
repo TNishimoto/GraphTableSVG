@@ -221,7 +221,8 @@ export function getVirtualRegion(text: SVGTextElement | SVGTSpanElement): Rectan
         const rect = superComputeRegion(vtext);
         return rect;
         //return superComputeRegion(vtext);
-    }else{
+    }
+    else{
         const vtext = createVirtualTSpan(text);
         const rect = superComputeRegion(vtext);
         return rect;

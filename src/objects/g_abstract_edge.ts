@@ -3,7 +3,7 @@ import * as DefaultClassNames from "../common/default_class_names"
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import { PathTextAlighnment, ConnectorType, msoDashStyle, CoodinateType, EdgeType } from "../common/enums";
-import { escapeWithRound100, round100 } from "../common/vline";
+import { escapeWithRound100, nearlyEqual, round100 } from "../common/vline";
 import { GVertex } from "./g_vertex"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVG from "../interfaces/svg"
@@ -12,6 +12,7 @@ import { updateAppropriateDashArrayOrGetUpdateFlag } from "../html/enum_extensio
 import * as GOptions from "./g_options"
 import { createPath } from "./element_builder"
 import { NullError, UndefinedError } from "../common/exceptions";
+import { debugMode } from "../common/debugger";
 
 export class GAbstractEdge extends GObject {
     constructor(svgbox: SVGElement | string) {
@@ -604,7 +605,7 @@ export class GAbstractEdge extends GObject {
         return b;
 
     }
-    protected updateLocationOrGetUpdateFlag(withUpdate: boolean) : boolean {
+    private updateLocationWithUpdateFlag(withUpdate: boolean) : boolean {
         let b = false;
         const [x1, y1] = this.beginConnectoPosition;
         const [x2, y2] = this.endConnectorPosition;
@@ -614,10 +615,10 @@ export class GAbstractEdge extends GObject {
                 return false;
             }else{
                 for(let i=0;i<prevObj.length;i++){
-                    if(prevObj[i][0] != newObj[i][0]){
+                    if(!nearlyEqual(prevObj[i][0], newObj[i][0])){
                         return false;
                     }
-                    else if(prevObj[i][1] != newObj[i][1]){
+                    else if(!nearlyEqual(prevObj[i][1], newObj[i][1])){
                         return false;
                     }
 
@@ -679,10 +680,10 @@ export class GAbstractEdge extends GObject {
         const b1 = super.getUpdateFlag();
         const b2 = this.updateConnectorInfoOrGetUpdateFlag(false);
         const b3 = this.updateSurfaceOrGetUpdateFlag(false);
-        const b4 = this.updateLocationOrGetUpdateFlag(false);
+        const b4 = this.updateLocationWithUpdateFlag(false);
         const b = b1 || b2 || b3 || b4;
-        if(b){
-            console.log(`AbstractEdge ${this.objectID}: ${b1} ${b2} ${b3} ${b4}`)
+        if(debugMode && b){
+            console.log(`GAbstractEdge::getUpdateFlag Type = ${this.type} ID = ${this.objectID}: b1 = ${b1}, b2 = ${b2}, b3 = ${b3}, b4 = ${b4}`)
         }
 
         return b1 || b2 || b3 || b4;
@@ -691,7 +692,7 @@ export class GAbstractEdge extends GObject {
         super.update();
         const b2 = this.updateConnectorInfoOrGetUpdateFlag(true);
         const b3 = this.updateSurfaceOrGetUpdateFlag(true);
-        const b4 = this.updateLocationOrGetUpdateFlag(true);
+        const b4 = this.updateLocationWithUpdateFlag(true);
 
     }
 

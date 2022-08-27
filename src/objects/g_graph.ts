@@ -32,6 +32,7 @@ import { LogicTable } from "../logics/logic_table"
 import { GTable } from "./g_table"
 import { ArgumentOutOfRangeError } from "../common/exceptions"
 import { Exceptions } from "../common"
+import { debugMode } from "../common/debugger"
 
 
 
@@ -299,7 +300,7 @@ export class GGraph extends GObject {
                 GraphArrangement.standardTreeWidthArrangement(this);
 
             } else {
-                const p = Function("v", `return ${value}(v)`);
+                //const p = Function("v", `return ${value}(v)`);
                 const f = <any>Function("graph", `${value}(graph)`);
                 f(this);
 
@@ -619,6 +620,11 @@ export class GGraph extends GObject {
 
         const b1 = arr1.reduce((x, y) => x  || y, false);
         const b2 = arr2.reduce((x, y) => x  || y, false);
+
+        const b = b0 || b1 || b2;
+        if(debugMode && b){
+            console.log(`getUpdateFlag Type = ${this.type} ID = ${this.objectID}: (b0 = ${b0}, b1 = ${b1}, b2 = ${b2})`)
+        }
         return b0 || b1 || b2;
 
 

@@ -6,6 +6,56 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment, Au
 //import * as SVG from "../basic/interface/svg"
 export type GraphAllocateFunction = (graph: object) => void
 import {CenterPosition, UpperLeftPosition} from "../common/vline"
+import * as HTMLFunctions from "../html/html_functions"
+
+export const timerInterval = 1000;
+export const unstableCounterDefault = 10;
+export const unstableCounterName = "data-unstable-counter";
+
+let updateSVGSVGTimerCounter = 0;
+export function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
+    updateSVGSVGTimerCounter++;
+    //console.log(`updateSVGSVGTimerCounter: ${updateSVGSVGTimerCounter}`)
+    const obj = (<any>svgsvg)._gobjects;
+    if (obj instanceof Map) {
+        obj.forEach((value, key) => {
+            if (value.unstableCounter != null) {
+                const b = value.getUpdateFlag();
+
+                if (b) {
+                    console.log(`Update: ${value.type} ${key}, ${value.unstableCounter} ${b}`)
+
+                    value.update();
+                    const counter = value.svgGroup.getAttribute(unstableCounterName);
+                    if (counter == null) {
+                        value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
+                    } else {
+                        //const newCounter = Number.parseInt(counter) + 5;
+                        value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
+                    }
+
+                } else {
+
+                    if (value.unstableCounter == 0) {
+                        value.svgGroup.removeAttribute(unstableCounterName)
+
+                        const descendants = HTMLFunctions.getDescendants(value.svgGroup);
+                        descendants.forEach((v) => {
+                            if (v.hasAttribute(unstableCounterName)) {
+                                v.removeAttribute(unstableCounterName);
+                            }
+                        })
+                    } else {
+                        value.svgGroup.setAttribute(unstableCounterName, (value.unstableCounter - 1).toString());
+                    }
+                }
+
+            }
+        })
+    }
+
+    setTimeout(updateSVGSVGTimer, timerInterval, svgsvg);
+}
 
 
 //export namespace GOptions{
