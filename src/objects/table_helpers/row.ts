@@ -197,7 +197,7 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
                 if (!cell.isMasterCellOfRowCountOne) {
-                    b = cell.updateOrGetUpdateFlag(withUpdate)  || b;
+                    b = cell.tryUpdateWithUpdateFlag(withUpdate)  || b;
 
                     if(!withUpdate && b){
                         return b;
@@ -227,7 +227,7 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
             let b = false;
             const cells = this.cells;
             for(let i = 0;i<cells.length;i++){
-                b = cells[i].updateOrGetUpdateFlag(withUpdate)  || b;
+                b = cells[i].tryUpdateWithUpdateFlag(withUpdate)  || b;
                 if(!withUpdate && b){
                     return b;
                 }

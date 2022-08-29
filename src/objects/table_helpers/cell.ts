@@ -2,7 +2,7 @@
 //namespace GraphTableSVG {
 
 import * as CommonFunctions from "../../common/common_functions"
-import { Rectangle, round100 } from "../../common/vline"
+import { nearlyEqual, Rectangle, round100 } from "../../common/vline"
 import * as AttributeNames from "../../common/attribute_names"
 import * as DefaultClassNames from "../../common/default_class_names"
 import * as StyleNames from "../../common/style_names"
@@ -1031,7 +1031,7 @@ export class Cell {
 
     }
 
-    public updateOrGetUpdateFlag(withUpdate: boolean): boolean {
+    public tryUpdateWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         if (this.table.isNoneMode) return false;
         const className = this.svgGroup.getAttribute("class");
@@ -1043,20 +1043,20 @@ export class Cell {
                 return true;
             }
         }
-        b = this.resizeOrGetUpdateFlag(withUpdate) || b;
+        b = this.tryResizeWithUpdateFlag(withUpdate) || b;
         if (!withUpdate && b) {
-            Debugger.updateFlagLog(this, this.updateOrGetUpdateFlag, this.resizeOrGetUpdateFlag.name)
+            Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag, this.tryResizeWithUpdateFlag.name)
             return b;
         }
-        b = this.locateSVGTextOrGetUpdateFlag(withUpdate) || b;
+        b = this.tryLocateSVGTextWithUpdateFlag(withUpdate) || b;
         if (!withUpdate && b) {
-            Debugger.updateFlagLog(this, this.updateOrGetUpdateFlag, this.locateSVGTextOrGetUpdateFlag.name)
+            Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag, this.tryLocateSVGTextWithUpdateFlag.name)
 
             return b;
         }
-        b = this.relocationOrGetUpdateFlag(withUpdate) || b;
+        b = this.tryRelocateWithUpdateFlag(withUpdate) || b;
         if (!withUpdate && b) {
-            Debugger.updateFlagLog(this, this.updateOrGetUpdateFlag, this.relocationOrGetUpdateFlag.name)
+            Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag, this.tryRelocateWithUpdateFlag.name)
             return b;
         }
         return b;
@@ -1064,14 +1064,14 @@ export class Cell {
     }
 
     public getUpdateFlag(): boolean {
-        return this.updateOrGetUpdateFlag(false);
+        return this.tryUpdateWithUpdateFlag(false);
     }
 
     /**
      * このセルを更新します。
      */
     public update() {
-        this.updateOrGetUpdateFlag(true);
+        this.tryUpdateWithUpdateFlag(true);
 
 
     }
@@ -1133,28 +1133,27 @@ export class Cell {
         }
     }
 
-    private resizeOrGetUpdateFlag(withUpdate: boolean): boolean {
+    private tryResizeWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         const [w, h] = this.calculatedSizeUsingGroup();
 
-        if (!withUpdate && ( w != this.width || h != this.height)) {
-            Debugger.updateFlagLog(this, this.resizeOrGetUpdateFlag, `Compare: ${w} : ${this.width}, ${h} : ${this.height}`)
-        }
-        if (this.width != w) {
+        if (!nearlyEqual(this.width, w)) {
             b = true;
             if (withUpdate) {
                 this.width = w;
             }
             if (!withUpdate && b) {
+                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `Compare: ${w} : ${this.width}, ${h} : ${this.height}`)
                 return b;
             }
         }
-        if (this.height != h) {
+        if (!nearlyEqual(this.height, h)) {
             b = true;
             if (withUpdate) {
                 this.height = h;
             }
             if (!withUpdate && b) {
+                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `Compare: ${w} : ${this.width}, ${h} : ${this.height}`)
                 return b;
             }
 
@@ -1166,7 +1165,7 @@ export class Cell {
                 this.width = rect.width;
             }
             if (!withUpdate && b) {
-                Debugger.updateFlagLog(this, this.resizeOrGetUpdateFlag, `W: ${this.width} ${rect.width}`)
+                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `W: ${this.width} ${rect.width}`)
                 return b;
             }
 
@@ -1177,7 +1176,7 @@ export class Cell {
                 this.height = rect.height;
             }
             if (!withUpdate && b) {
-                Debugger.updateFlagLog(this, this.resizeOrGetUpdateFlag, `W: ${this.height} ${rect.height}`)
+                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `W: ${this.height} ${rect.height}`)
 
                 return b;
             }
@@ -1191,7 +1190,7 @@ export class Cell {
      *セルのサイズを再計算します。
      */
     private resize() {
-        this.resizeOrGetUpdateFlag(true);
+        this.tryResizeWithUpdateFlag(true);
 
     }
 
@@ -1451,7 +1450,7 @@ export class Cell {
     /**
      *セルの位置を再計算します。
      */
-    public relocationOrGetUpdateFlag(withUpdate: boolean): boolean {
+    public tryRelocateWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         if (!CommonFunctions.IsDescendantOfBody(this.svgGroup)) {
             return false;
@@ -1477,7 +1476,7 @@ export class Cell {
             return b;
         }
 
-        b = this.locateSVGTextOrGetUpdateFlag(withUpdate) || b;
+        b = this.tryLocateSVGTextWithUpdateFlag(withUpdate) || b;
         if (!withUpdate && b) {
             return b;
         }
@@ -1486,7 +1485,7 @@ export class Cell {
     }
 
     public relocation() {
-        this.relocationOrGetUpdateFlag(true);
+        this.tryRelocateWithUpdateFlag(true);
     }
     // #endregion
 
@@ -1692,7 +1691,7 @@ export class Cell {
     /**
      * テキストを再描画します。
      */
-    private locateSVGTextOrGetUpdateFlag(withUpdate: boolean): boolean {
+    private tryLocateSVGTextWithUpdateFlag(withUpdate: boolean): boolean {
         const innerRect = this.getVirtualInnerRegion();
         return SVGTextExtension.updateLocationOrGetUpdateFlag(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None, withUpdate);
 
@@ -1701,7 +1700,7 @@ export class Cell {
      * テキストを再描画します。
      */
     private locateSVGText() {
-        this.locateSVGTextOrGetUpdateFlag(true);
+        this.tryLocateSVGTextWithUpdateFlag(true);
     }
 
 }

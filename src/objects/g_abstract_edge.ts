@@ -8,11 +8,11 @@ import { GVertex } from "./g_vertex"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVG from "../interfaces/svg"
 import { getGraph } from "./graph_helpers/common_functions";
-import { updateAppropriateDashArrayOrGetUpdateFlag } from "../html/enum_extension";
+import { tryUpdateAppropriateDashArrayWithUpdateFlag } from "../html/enum_extension";
 import * as GOptions from "./g_options"
 import { createPath } from "./element_builder"
 import { NullError, UndefinedError } from "../common/exceptions";
-import { debugMode } from "../common/debugger";
+import { Debugger, debugMode } from "../common/debugger";
 
 export class GAbstractEdge extends GObject {
     constructor(svgbox: SVGElement | string) {
@@ -518,12 +518,16 @@ export class GAbstractEdge extends GObject {
         //this.update();
     }
 
-    protected updateConnectorInfoOrGetUpdateFlag(withUpdate: boolean): boolean {
+    private tryUpdateConnectorWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         const oldBeginVertex = GAbstractEdge.getConnectedVertexFromDic(this, true);
         const oldEndVertex = GAbstractEdge.getConnectedVertexFromDic(this, false);
         if (this.beginVertex != oldBeginVertex) {
             b = true;
+            if(!withUpdate){
+                Debugger.updateFlagLog(this, this.tryUpdateConnectorWithUpdateFlag, `this.beginVertex != oldBeginVertex`)
+                return b;
+            }
             if (withUpdate) {
                 if (oldBeginVertex != null) {
                     this.removeVertexEvent(oldBeginVertex);
@@ -544,6 +548,11 @@ export class GAbstractEdge extends GObject {
         }
         if (this.endVertex != oldEndVertex) {
             b = true;
+            if(!withUpdate){
+                Debugger.updateFlagLog(this, this.tryUpdateConnectorWithUpdateFlag, `this.endVertex != oldEndVertex`)
+                return b;
+            }
+
             if (withUpdate) {
                 if (oldEndVertex != null) {
                     this.removeVertexEvent(oldEndVertex);
@@ -564,18 +573,22 @@ export class GAbstractEdge extends GObject {
         }
         return b;
     }
-    protected updateDashArrayOrGetUpdateFlag(withUpdate: boolean) : boolean{
+    private tryUpdateDashArrayWithUpdateFlag(withUpdate: boolean) : boolean{
         let b = false;
         this.hasConnectedObserverFunction = false;
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null) {
-            b = updateAppropriateDashArrayOrGetUpdateFlag(this.svgPath, withUpdate)
+            b = tryUpdateAppropriateDashArrayWithUpdateFlag(this.svgPath, withUpdate)
         }
         this.hasConnectedObserverFunction = true;
         return b;
     }
-    protected updateSurfaceOrGetUpdateFlag(withUpdate: boolean) : boolean{
-        let b = this.updateDashArrayOrGetUpdateFlag(withUpdate);
+    private updateSurfaceWithUpdateFlag(withUpdate: boolean) : boolean{
+        let b = this.tryUpdateDashArrayWithUpdateFlag(withUpdate);
+
+        if(!withUpdate && b){
+            Debugger.updateFlagLog(this, this.updateSurfaceWithUpdateFlag, "this.tryUpdateDashArrayWithUpdateFlag")
+        }
         
         if (this.markerStart != null) {
             var node = <SVGPolygonElement>this.markerStart.firstChild;
@@ -583,8 +596,12 @@ export class GAbstractEdge extends GObject {
                 const fill = node.getAttribute("fill");
                 if(fill != this.lineColor){
                     b = true;
+                    
                     if(withUpdate){
                         node.setAttribute("fill", this.lineColor);
+                    }else{
+                        Debugger.updateFlagLog(this, this.updateSurfaceWithUpdateFlag, "fill != this.lineColor (markerStart)")
+                        return b;
                     }
                 }
             }
@@ -597,6 +614,9 @@ export class GAbstractEdge extends GObject {
                     b = true;
                     if(withUpdate){
                         node.setAttribute("fill", this.lineColor);
+                    }else{
+                        Debugger.updateFlagLog(this, this.updateSurfaceWithUpdateFlag, "fill != this.lineColor (markerEnd)")
+                        return b;
                     }
 
                 }
@@ -678,20 +698,30 @@ export class GAbstractEdge extends GObject {
 
     public getUpdateFlag(): boolean {
         const b1 = super.getUpdateFlag();
-        const b2 = this.updateConnectorInfoOrGetUpdateFlag(false);
-        const b3 = this.updateSurfaceOrGetUpdateFlag(false);
+        if(b1){
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `super.getUpdateFlag()`)
+        }
+        const b2 = this.tryUpdateConnectorWithUpdateFlag(false);
+        if(b2){
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `this.tryUpdateConnectorWithUpdateFlag(false)`)
+        }
+
+        const b3 = this.updateSurfaceWithUpdateFlag(false);
+
+        if(b3){
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `this.updateSurfaceWithUpdateFlag(false)`)
+        }
         const b4 = this.updateLocationWithUpdateFlag(false);
-        const b = b1 || b2 || b3 || b4;
-        if(debugMode == "ObserveUpdateFlag" && b){
-            console.log(`GAbstractEdge::getUpdateFlag Type = ${this.type} ID = ${this.objectID}: b1 = ${b1}, b2 = ${b2}, b3 = ${b3}, b4 = ${b4}`)
+        if(b4){
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `this.updateLocationWithUpdateFlag(false)`)
         }
 
         return b1 || b2 || b3 || b4;
     }
     public update(): void {
         super.update();
-        const b2 = this.updateConnectorInfoOrGetUpdateFlag(true);
-        const b3 = this.updateSurfaceOrGetUpdateFlag(true);
+        const b2 = this.tryUpdateConnectorWithUpdateFlag(true);
+        const b3 = this.updateSurfaceWithUpdateFlag(true);
         const b4 = this.updateLocationWithUpdateFlag(true);
 
     }

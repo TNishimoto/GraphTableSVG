@@ -85,7 +85,7 @@ export class CellColumn {
             const cell = this.table.cells[y][this.cellX];
             if (!cell.isMasterCellOfColumnCountOne) {
 
-                b = cell.updateOrGetUpdateFlag(withUpdate)  || b;
+                b = cell.tryUpdateWithUpdateFlag(withUpdate)  || b;
                 if (!withUpdate && b) {
                     return b;
                 }
@@ -178,7 +178,7 @@ export class CellColumn {
         let b = false;
         const cells = this.cells;
         for (let i = 0; i < cells.length; i++) {
-            b = cells[i].updateOrGetUpdateFlag(withUpdate)  || b;
+            b = cells[i].tryUpdateWithUpdateFlag(withUpdate)  || b;
             if (!withUpdate && b) {
                 return b;
             }

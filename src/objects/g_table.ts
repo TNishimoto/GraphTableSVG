@@ -1160,10 +1160,10 @@ export class GTable extends GVertex {
 
         const cells = this.cellArray;
         for(let i =0;i<cells.length;i++){
-            b = cells[i].updateOrGetUpdateFlag(withUpdate) || b;
+            b = cells[i].tryUpdateWithUpdateFlag(withUpdate) || b;
             if(!withUpdate && b){
                 
-                Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag,`${cells[i].updateOrGetUpdateFlag.name}`);
+                Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag,`${cells[i].tryUpdateWithUpdateFlag.name}`);
                 this._isDrawing = false;
                 this.hasConnectedObserverFunction = true;        
                 return b;
@@ -1315,9 +1315,9 @@ export class GTable extends GVertex {
 
         const cells = this.cellArray;
         for(let i = 0;i<cells.length;i++){
-            b = cells[i].relocationOrGetUpdateFlag(withUpdate) || b;
+            b = cells[i].tryRelocateWithUpdateFlag(withUpdate) || b;
             if(!withUpdate && b){
-                Debugger.updateFlagLog(this, this.relocateWithUpdate, cells[i].relocationOrGetUpdateFlag.name)
+                Debugger.updateFlagLog(this, this.relocateWithUpdate, cells[i].tryRelocateWithUpdateFlag.name)
 
 
                 return b;

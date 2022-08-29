@@ -1,10 +1,10 @@
 import * as DefaultClassNames from "../common/default_class_names"
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
-import { PathTextAlighnment} from "../common/enums";
+import { PathTextAlighnment } from "../common/enums";
 import * as HTMLFunctions from "../html/html_functions";
 import * as SVG from "../interfaces/svg"
-import { getVirtualRegion} from "../interfaces/virtual_text"
+import { getVirtualRegion } from "../interfaces/virtual_text"
 import { GAbstractEdge } from "./g_abstract_edge";
 import * as CommonFunctions from "../common/common_functions"
 import * as ElementExtension from "../interfaces/element_extension"
@@ -13,8 +13,8 @@ import * as GOptions from "./g_options"
 import * as Extensions from "../interfaces/extensions"
 import { createSVGText } from "./element_builder";
 import * as SVGTextBox from "../interfaces/svg_textbox"
-import { round100 } from "../common/vline";
-import { debugMode } from "../common/debugger";
+import { nearlyEqual, round100 } from "../common/vline";
+import { Debugger, debugMode } from "../common/debugger";
 
 export class GAbstractTextEdge extends GAbstractEdge {
     private static updateTextAttributes = ["style"]
@@ -86,14 +86,14 @@ export class GAbstractTextEdge extends GAbstractEdge {
         if (e.hasAttribute(AttributeNames.text)) {
             output.text = <string>e.getAttribute(AttributeNames.text);
         } else
-        */ 
+        */
         if (e.children.length > 0) {
             const tNodes = HTMLFunctions.getTNodes(e);
             if (tNodes != null) {
                 tNodes.forEach((v) => v.remove())
                 output.text = tNodes;
             }
-        }else if (e.innerHTML.length > 0) {
+        } else if (e.innerHTML.length > 0) {
             output.text = e.innerHTML;
         }
 
@@ -108,20 +108,20 @@ export class GAbstractTextEdge extends GAbstractEdge {
         return output;
     }
 
-    private get startOffset() : number | null{
+    private get startOffset(): number | null {
         return ElementExtension.gtGetAttributeNumber(this.svgTextPath, "startOffset", null);
     }
 
-    private set startOffset(value : number | null){
-        if(value == null){
+    private set startOffset(value: number | null) {
+        if (value == null) {
             this.svgTextPath.removeAttribute("startOffset")
-        }else{
+        } else {
             ElementExtension.setAttributeNumber(this.svgTextPath, "startOffset", value);
         }
     }
-    
+
     protected textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
-        if(! this.isShown) return;
+        if (!this.isShown) return;
         if (!this.isLocated) return;
         let b = false;
 
@@ -134,12 +134,12 @@ export class GAbstractTextEdge extends GAbstractEdge {
                 b = true;
             }
         }
-        if (b){
+        if (b) {
             this.resetUnstableCounter();
             //this.update();
 
         }
-        
+
     };
     public get isShown(): boolean {
         const b1 = super.isShown;
@@ -148,62 +148,62 @@ export class GAbstractTextEdge extends GAbstractEdge {
         return b1 && b2 && b3;
     }
 
-    private removeTextLengthAttributeOrGetUpdateFlag(withUpdate : boolean): boolean {
+    private removeTextLengthAttributeOrGetUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
 
-        if (this.svgText.hasAttribute("textLength")){
+        if (this.svgText.hasAttribute("textLength")) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
                 this.svgText.removeAttribute("textLength");
             }
-        } 
+        }
         if (this.svgTextPath.hasAttribute("textLength")) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
 
-            this.svgTextPath.removeAttribute("textLength");
+                this.svgTextPath.removeAttribute("textLength");
             }
 
         }
-        
+
         if (this.svgText.hasAttribute("letter-spacing")) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
                 this.svgText.removeAttribute("letter-spacing");
             }
         }
         return b;
     }
-    
-    private setRegularIntervalOrGetUpdateFlag(newTextPathLen: number, newTextWidth : number, withUpdate : boolean): boolean {
+
+    private setRegularIntervalOrGetUpdateFlag(newTextPathLen: number, newTextWidth: number, withUpdate: boolean): boolean {
         let b = false;
         const svgTextTextLength = ElementExtension.gtGetAttributeNumber(this.svgText, "textLength", null);
         const svgTextPathTextLength = ElementExtension.gtGetAttributeNumber(this.svgTextPath, "textLength", null);
         const svgTextLetterSpacing = ElementExtension.gtGetAttributeNumber(this.svgText, "letter-spacing", null);
 
-        if(newTextPathLen != svgTextTextLength){
+        if (newTextPathLen != svgTextTextLength) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
                 ElementExtension.setAttributeNumber(this.svgText, "textLength", newTextPathLen);
             }
         }
-        if(newTextPathLen != svgTextPathTextLength){
+        if (newTextPathLen != svgTextPathTextLength) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
                 ElementExtension.setAttributeNumber(this.svgTextPath, "textLength", newTextPathLen);
             }
 
         }
 
-        if(svgTextLetterSpacing != null){
+        if (svgTextLetterSpacing != null) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
                 this.svgText.removeAttribute("letter-spacing")
             }
         }
-        return b;    
+        return b;
     }
-    
+
 
     /*
     private removeTextLengthAttribute(): void {
@@ -295,29 +295,36 @@ export class GAbstractTextEdge extends GAbstractEdge {
     /**
      * 再描画します。
      */
-     public update(): void {
+    public update(): void {
         super.update();
         /*
         this.updateConnectorInfoOrGetUpdateFlag(true);
         this.updateSurfaceOrGetUpdateFlag(true);
         this.updateLocationOrGetUpdateFlag(true);
         */
-        this.updateTextPathOrGetUpdateFlag(true);
+        this.tryUpdateTextPathWithUpdateFlag(true);
     }
     public getUpdateFlag(): boolean {
         const b1 = super.getUpdateFlag();
-        const b2 = this.updateTextPathOrGetUpdateFlag(false);
+        if (b1) {
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `super.getUpdateFlag()`)
+        }
 
-        if(debugMode == "ObserveUpdateFlag" && (b1 || b2)){
-            console.log(`GAbstractTextEdge::getUpdateFlag Type = ${this.type} ID = ${this.objectID}: b1 = ${b1}, b2 = ${b2}`)
+        const b2 = this.tryUpdateTextPathWithUpdateFlag(false);
+        if (b2) {
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `this.updateTextPathOrGetUpdateFlag`)
         }
 
         return b1 || b2;
 
     }
 
-    protected updateTextPathOrGetUpdateFlag(withUpdate : boolean) : boolean {
-        const b1 = this.updateDYOrGetUpdateFlag(withUpdate);
+    private tryUpdateTextPathWithUpdateFlag(withUpdate: boolean): boolean {
+
+        const b1 = this.tryUpdateDYWithUpdateFlag(withUpdate);
+        if (!withUpdate && b1) {
+            Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `this.updateDYOrGetUpdateFlag(withUpdate)`)
+        }
 
         /*
         if (this.isAppropriatelyReverseMode) {
@@ -335,20 +342,20 @@ export class GAbstractTextEdge extends GAbstractEdge {
         }
         */
 
-        if(!HTMLFunctions.isShow(this.svgTextPath)){
+        if (!HTMLFunctions.isShow(this.svgTextPath)) {
             throw new Error();
         }
 
-        const b2 = this.updatePathOffsetOrGetUpdateFlag(withUpdate);
+        const b2 = this.tryUpdatePathOffsetWithUpdateFlag(withUpdate);
 
-        if(b1 || b2){
-            console.log(`updateTextPathOrGetUpdateFlag ${this.objectID}: ${b1} ${b2}`)
+        if (!withUpdate && b2) {
+            Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `this.updatePathOffsetOrGetUpdateFlag(withUpdate)`)
         }
 
         return b1 || b2;
 
     }
-    protected updateDYOrGetUpdateFlag(withUpdate : boolean) : boolean {
+    protected tryUpdateDYWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         const strokeWidth = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke-width");
         const oldDY = this.svgText.getAttribute("dy");
@@ -358,65 +365,96 @@ export class GAbstractTextEdge extends GAbstractEdge {
             newDY = `-${diffy}`;
         }
 
-        if(oldDY != newDY){
+        if (oldDY != newDY) {
             b = true;
-            if(withUpdate){
+            if (withUpdate) {
                 this.svgText.setAttribute("dy", newDY);
+            } else {
+                Debugger.updateFlagLog(this, this.tryUpdateDYWithUpdateFlag, `oldDY != newDY`);
+                return b;
             }
         }
         return b;
 
     }
-    
-    protected updatePathOffsetOrGetUpdateFlag(withUpdate : boolean) : boolean {
+
+    protected tryUpdatePathOffsetWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         const region = getVirtualRegion(this.svgText);
-        const strWidth = round100(region.width); 
+        const strWidth = round100(region.width);
         const pathLen = round100(this.svgPath.getTotalLength());
-            
+
 
         if (this.pathTextAlignment == PathTextAlighnment.regularInterval) {
             const strCharCount = this.svgTextPath.textContent == null ? 0 : this.svgTextPath.textContent.length;
             if (strWidth > 0) {
                 const paddingWidth = round100(pathLen - strWidth);
-                if(strCharCount != 0){
+                if (strCharCount != 0) {
                     const paddingUnit = round100(paddingWidth / (strCharCount + 1));
                     let textPathLen = round100(pathLen - (paddingUnit * 2));
                     if (textPathLen <= 0) textPathLen = 5;
-
-                    if(this.startOffset != paddingUnit){
+                    const _startOffset = this.startOffset;
+                    const xb = _startOffset == null || !nearlyEqual(_startOffset, paddingUnit);
+                    if (xb) {
                         b = true;
-                        if(withUpdate){
+                        if (withUpdate) {
                             this.startOffset = paddingUnit;
+                        } else {
+                            Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, this.startOffset != paddingUnit`)
+                            return b;
                         }
                     }
 
                     b = this.setRegularIntervalOrGetUpdateFlag(textPathLen, strWidth, withUpdate) || b;
-    
+
+                    if (!withUpdate && b) {
+                        Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, this.setRegularIntervalOrGetUpdateFlag(textPathLen, strWidth, withUpdate)`)
+                        return b;
+                    }
+
                 }
             }
 
         }
         else if (this.pathTextAlignment == PathTextAlighnment.end) {
             b = this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate);
-            const newStartOffset = round100(this.side == "right" ? 0 : (pathLen - strWidth));
+            if(!withUpdate && b){
+                Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate)`)
 
-            if(this.startOffset != newStartOffset){
+                return b;
+            }
+            const newStartOffset = round100(this.side == "right" ? 0 : (pathLen - strWidth));
+            const _startOffset = this.startOffset;
+            const xb = _startOffset == null || !nearlyEqual(_startOffset, newStartOffset);
+            if (xb) {
                 b = true;
-                if(withUpdate){
+                if (withUpdate) {
                     this.startOffset = newStartOffset;
+                }else{
+                    Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, _startOffset == null || !nearlyEqual(_startOffset, newStartOffset)`)
+                    return b;
                 }
             }
 
         }
         else if (this.pathTextAlignment == PathTextAlighnment.center) {
             b = this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate);
-            const newStartOffset = round100((pathLen / 2) - (strWidth / 2));
+            if(!withUpdate && b){
+                Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate)`)
 
-            if(this.startOffset != newStartOffset){
+                return b;
+            }
+            const newStartOffset = round100((pathLen / 2) - (strWidth / 2));
+            const _startOffset = this.startOffset;
+            const xb = _startOffset == null || !nearlyEqual(_startOffset, newStartOffset);
+
+            if (xb) {
                 b = true;
-                if(withUpdate){
+                if (withUpdate) {
                     this.startOffset = newStartOffset;
+                }else{
+                    Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, _startOffset == null || !nearlyEqual(_startOffset, newStartOffset)`)
+                    return b;
                 }
             }
 
@@ -427,12 +465,22 @@ export class GAbstractTextEdge extends GAbstractEdge {
         else {
 
             b = this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate);
-            const newStartOffset = round100(this.side == "right" ? (pathLen - strWidth) : 0);
+            if(!withUpdate && b){
+                Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate)`)
 
-            if(this.startOffset != newStartOffset){
+                return b;
+            }
+            const newStartOffset = round100(this.side == "right" ? (pathLen - strWidth) : 0);
+            const _startOffset = this.startOffset;
+            const xb = _startOffset == null || !nearlyEqual(_startOffset, newStartOffset);
+
+            if (xb) {
                 b = true;
-                if(withUpdate){
+                if (withUpdate) {
                     this.startOffset = newStartOffset;
+                }else{
+                    Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, _startOffset == null || !nearlyEqual(_startOffset, newStartOffset)`)
+                    return b;
                 }
             }
 

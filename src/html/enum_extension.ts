@@ -1,3 +1,4 @@
+import { Debugger } from "../common/debugger";
 import { msoDashStyle } from "../common/enums";
 import * as StyleNames from "../common/style_names"
 
@@ -33,7 +34,7 @@ function computeDashArray(type: msoDashStyle, width: number): string {
 
 
 
-export function updateAppropriateDashArrayOrGetUpdateFlag(svgLine: SVGLineElement | SVGPathElement | SVGElement, updateFlag : boolean) : boolean {
+export function tryUpdateAppropriateDashArrayWithUpdateFlag(svgLine: SVGLineElement | SVGPathElement | SVGElement, updateFlag : boolean) : boolean {
     const type = ElementExtension.getPropertyStyleValue(svgLine,StyleNames.msoDashStyleName);
     if (type == null) {
         return false;
@@ -44,19 +45,26 @@ export function updateAppropriateDashArrayOrGetUpdateFlag(svgLine: SVGLineElemen
         const newLineCap = msoDashStyle.lineCapDic[type];
         const oldDashArray = ElementExtension.getPropertyStyleValue(svgLine, "stroke-dasharray");
         const b1 = !(newDashArray == oldDashArray)
-        if(updateFlag && b1){
-            ElementExtension.setPropertyStyleValue2(svgLine,"stroke-dasharray", newDashArray);
+        if(b1){
+            if(updateFlag){
+                ElementExtension.setPropertyStyleValue2(svgLine,"stroke-dasharray", newDashArray);
+            }else{
+                Debugger.updateFlagLog(svgLine, tryUpdateAppropriateDashArrayWithUpdateFlag, "!(newDashArray == oldDashArray)")
+                return true;
+            }
+    
         }
         const oldLineCap = ElementExtension.getPropertyStyleValue(svgLine, "stroke-linecap");
         const b2 = !(newLineCap == oldLineCap)
-        if(updateFlag && b2){
-            ElementExtension.setPropertyStyleValue2(svgLine,"stroke-linecap", newLineCap);
+        if(b2){
+            if(updateFlag){
+                ElementExtension.setPropertyStyleValue2(svgLine,"stroke-linecap", newLineCap);
+            }else{
+                Debugger.updateFlagLog(svgLine, tryUpdateAppropriateDashArrayWithUpdateFlag, "!(newLineCap == oldLineCap)")
+                return true;
+            }
+                
         }
-
-        if(b1 || b2){
-            console.log(`updateAppropriateDashArrayOrGetUpdateFlag ${newLineCap}=${oldLineCap} ${b2} ${newDashArray}=${oldDashArray} ${b1}`)
-        }
-
         return b1 || b2;
     }else{
         return false;
@@ -64,10 +72,10 @@ export function updateAppropriateDashArrayOrGetUpdateFlag(svgLine: SVGLineElemen
 
 }
 export function updateAppropriateDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement): boolean {
-    return updateAppropriateDashArrayOrGetUpdateFlag(svgLine, true);
+    return tryUpdateAppropriateDashArrayWithUpdateFlag(svgLine, true);
 }
 
 
 export function getUpdateFlagAppropriateDashArray(svgLine: SVGLineElement | SVGPathElement | SVGElement) : boolean {
-    return updateAppropriateDashArrayOrGetUpdateFlag(svgLine, false);
+    return tryUpdateAppropriateDashArrayWithUpdateFlag(svgLine, false);
 }
