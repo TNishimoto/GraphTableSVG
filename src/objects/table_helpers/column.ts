@@ -218,9 +218,6 @@ export class CellColumn {
         const posx100 = round100(posX);
         let b = false;
 
-        if(!withUpdate){
-            Debugger.updateFlagLog(this, this.setXWithUpdate, `${this.selfx}, ${posx100}`)
-        }
 
         for (let y = 0; y < this.table.rowCount; y++) {
             const cell = this.table.cells[y][this.cellX];
@@ -231,6 +228,8 @@ export class CellColumn {
                 }
 
                 if(!withUpdate && b){
+                    Debugger.updateFlagLog(this, this.setXWithUpdate, `${this.selfx}, ${posx100}`)
+
                     return b;
                 }
 
