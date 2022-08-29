@@ -7,6 +7,7 @@ import { HorizontalAnchor, VerticalAnchor, ConnectorType, PathTextAlighnment, Au
 export type GraphAllocateFunction = (graph: object) => void
 import {CenterPosition, UpperLeftPosition} from "../common/vline"
 import * as HTMLFunctions from "../html/html_functions"
+import { Debugger } from "../common/debugger";
 
 export const timerInterval = 1000;
 export const unstableCounterDefault = 10;
@@ -23,7 +24,7 @@ export function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
                 const b = value.getUpdateFlag();
 
                 if (b) {
-                    console.log(`Update: ${value.type} ${key}, ${value.unstableCounter} ${b}`)
+                    Debugger.updateFlagLog(value, updateSVGSVGTimer, `${value.type} ${key}, ${value.unstableCounter} ${b}`)
 
                     value.update();
                     const counter = value.svgGroup.getAttribute(unstableCounterName);

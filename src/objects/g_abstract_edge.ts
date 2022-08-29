@@ -587,7 +587,7 @@ export class GAbstractEdge extends GObject {
         let b = this.tryUpdateDashArrayWithUpdateFlag(withUpdate);
 
         if(!withUpdate && b){
-            Debugger.updateFlagLog(this, this.updateSurfaceWithUpdateFlag, "this.tryUpdateDashArrayWithUpdateFlag")
+            Debugger.updateFlagLog(this, this.updateSurfaceWithUpdateFlag, `${this.tryUpdateDashArrayWithUpdateFlag.name}`)
         }
         
         if (this.markerStart != null) {
@@ -699,21 +699,21 @@ export class GAbstractEdge extends GObject {
     public getUpdateFlag(): boolean {
         const b1 = super.getUpdateFlag();
         if(b1){
-            Debugger.updateFlagLog(this, this.getUpdateFlag, `super.getUpdateFlag()`)
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${super.getUpdateFlag.name}`)
         }
         const b2 = this.tryUpdateConnectorWithUpdateFlag(false);
         if(b2){
-            Debugger.updateFlagLog(this, this.getUpdateFlag, `this.tryUpdateConnectorWithUpdateFlag(false)`)
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.tryUpdateConnectorWithUpdateFlag.name}`)
         }
 
         const b3 = this.updateSurfaceWithUpdateFlag(false);
 
         if(b3){
-            Debugger.updateFlagLog(this, this.getUpdateFlag, `this.updateSurfaceWithUpdateFlag(false)`)
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.updateSurfaceWithUpdateFlag.name}`)
         }
         const b4 = this.updateLocationWithUpdateFlag(false);
         if(b4){
-            Debugger.updateFlagLog(this, this.getUpdateFlag, `this.updateLocationWithUpdateFlag(false)`)
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.updateLocationWithUpdateFlag.name}`)
         }
 
         return b1 || b2 || b3 || b4;

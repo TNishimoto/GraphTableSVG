@@ -307,12 +307,12 @@ export class GAbstractTextEdge extends GAbstractEdge {
     public getUpdateFlag(): boolean {
         const b1 = super.getUpdateFlag();
         if (b1) {
-            Debugger.updateFlagLog(this, this.getUpdateFlag, `super.getUpdateFlag()`)
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${super.getUpdateFlag.name}`)
         }
 
         const b2 = this.tryUpdateTextPathWithUpdateFlag(false);
         if (b2) {
-            Debugger.updateFlagLog(this, this.getUpdateFlag, `this.updateTextPathOrGetUpdateFlag`)
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.tryUpdateTextPathWithUpdateFlag.name}`)
         }
 
         return b1 || b2;
@@ -323,7 +323,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
 
         const b1 = this.tryUpdateDYWithUpdateFlag(withUpdate);
         if (!withUpdate && b1) {
-            Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `this.updateDYOrGetUpdateFlag(withUpdate)`)
+            Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `${this.tryUpdateDYWithUpdateFlag.name}`)
         }
 
         /*
@@ -349,7 +349,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
         const b2 = this.tryUpdatePathOffsetWithUpdateFlag(withUpdate);
 
         if (!withUpdate && b2) {
-            Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `this.updatePathOffsetOrGetUpdateFlag(withUpdate)`)
+            Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `${this.tryUpdatePathOffsetWithUpdateFlag.name}`)
         }
 
         return b1 || b2;
@@ -408,7 +408,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
                     b = this.setRegularIntervalOrGetUpdateFlag(textPathLen, strWidth, withUpdate) || b;
 
                     if (!withUpdate && b) {
-                        Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, this.setRegularIntervalOrGetUpdateFlag(textPathLen, strWidth, withUpdate)`)
+                        Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, ${this.setRegularIntervalOrGetUpdateFlag.name}`)
                         return b;
                     }
 
@@ -419,7 +419,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
         else if (this.pathTextAlignment == PathTextAlighnment.end) {
             b = this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate);
             if(!withUpdate && b){
-                Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate)`)
+                Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, ${this.removeTextLengthAttributeOrGetUpdateFlag.name}`)
 
                 return b;
             }
@@ -440,7 +440,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
         else if (this.pathTextAlignment == PathTextAlighnment.center) {
             b = this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate);
             if(!withUpdate && b){
-                Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate)`)
+                Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, ${this.removeTextLengthAttributeOrGetUpdateFlag.name}`)
 
                 return b;
             }
@@ -466,7 +466,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
 
             b = this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate);
             if(!withUpdate && b){
-                Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, this.removeTextLengthAttributeOrGetUpdateFlag(withUpdate)`)
+                Debugger.updateFlagLog(this, this.tryUpdatePathOffsetWithUpdateFlag, `pathTextAlignment = ${this.pathTextAlignment}, ${this.removeTextLengthAttributeOrGetUpdateFlag.name}`)
 
                 return b;
             }

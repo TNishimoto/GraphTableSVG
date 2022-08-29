@@ -24,6 +24,7 @@ import { UndefinedError } from "../common/exceptions"
 import { getVirtualRegion } from "../interfaces/virtual_text"
 import { createSVGText } from "./element_builder"
 import { Debug } from ".."
+import { Debugger } from "../common/debugger"
 
 //namespace GraphTableSVG {
 
@@ -286,22 +287,46 @@ export class GTextBox extends GVertex {
 
     public getUpdateFlag() : boolean{
         const b1 = super.getUpdateFlag();
+        if(b1){
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${super.getUpdateFlag.name}`)
+            return b1;
+        }
+
         if (!this.isShown) return b1;
+
 
         if (this.svgText == null) {
             throw new TypeError("svgText is null");
         }
 
         const b2: boolean = this.updateStyleWithUpdateFlag(false);
+        if(b2){
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.updateStyleWithUpdateFlag.name}`)
+            return b2;
+        }
+
         const b3: boolean = this.getUpdateFlagOfTextLocation();
+        if(b3){
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.getUpdateFlagOfTextLocation.name}`)
+            return b3;
+        }
+
+
         const b4: boolean = this.updateSurfaceSizeWithUpdateFlag(false);
+        if(b4){
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.updateSurfaceSizeWithUpdateFlag.name}`)
+            return b3;
+        }
+
         const b5: boolean = this.getUpdateFlagOfSurfaceLocation();
+        if(b4){
+            Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.getUpdateFlagOfSurfaceLocation.name}`)
+            return b3;
+        }
+
 
         
         const b = b1 || b2 || b3 || b4 || b5;
-        if(b){
-            console.log(`Update ${this.type} ${b1} ${b2} ${b3} ${b4} ${b5}`)
-        }
 
         return b;
 

@@ -1217,7 +1217,6 @@ export class GTable extends GVertex {
     各セルのサイズを再計算します。
     */
     public update() {
-        console.log("Update");
         super.update();
         this.tryUpdateWithUpdateFlag(true);
 
