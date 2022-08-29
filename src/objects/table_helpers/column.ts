@@ -6,6 +6,7 @@ import * as SVG from "../../interfaces/svg"
 import { GTable } from "../g_table"
 import { Rectangle, Size, round100 } from "../../common/vline";
 import { setAttributeNumber } from "../../interfaces/element_extension";
+import { Debugger } from "../../common/debugger";
 
 /**
  * 表の列を表現するクラスです。
@@ -217,8 +218,8 @@ export class CellColumn {
         const posx100 = round100(posX);
         let b = false;
 
-        if(withUpdate){
-            console.log(`setXWithUpdate: ${this.selfx}, ${posx100}`)
+        if(!withUpdate){
+            Debugger.updateFlagLog(this, this.setXWithUpdate, `${this.selfx}, ${posx100}`)
         }
 
         for (let y = 0; y < this.table.rowCount; y++) {

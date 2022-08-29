@@ -682,7 +682,7 @@ export class GAbstractEdge extends GObject {
         const b3 = this.updateSurfaceOrGetUpdateFlag(false);
         const b4 = this.updateLocationWithUpdateFlag(false);
         const b = b1 || b2 || b3 || b4;
-        if(debugMode && b){
+        if(debugMode == "ObserveUpdateFlag" && b){
             console.log(`GAbstractEdge::getUpdateFlag Type = ${this.type} ID = ${this.objectID}: b1 = ${b1}, b2 = ${b2}, b3 = ${b3}, b4 = ${b4}`)
         }
 

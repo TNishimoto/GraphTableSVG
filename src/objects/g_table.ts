@@ -25,6 +25,7 @@ import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { GVertex } from "./g_vertex";
 import {CenterPosition, UpperLeftPosition} from "../common/vline"
 import { UndefinedError } from "../common/exceptions";
+import { Debugger, debugMode } from "../common/debugger";
 
 //namespace GraphTableSVG {
 
@@ -1161,7 +1162,8 @@ export class GTable extends GVertex {
         for(let i =0;i<cells.length;i++){
             b = cells[i].updateOrGetUpdateFlag(withUpdate) || b;
             if(!withUpdate && b){
-                console.log(`tryUpdateWithUpdateFlag: updateOrGetUpdateFlag`)
+                
+                Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag,`${cells[i].updateOrGetUpdateFlag.name}`);
                 this._isDrawing = false;
                 this.hasConnectedObserverFunction = true;        
                 return b;
@@ -1171,7 +1173,7 @@ export class GTable extends GVertex {
 
         b = this.fitSizeToOriginalCellsWithUpdateFlag(true, withUpdate) || b;
         if(!withUpdate && b){
-            console.log(`tryUpdateWithUpdateFlag: fitSizeToOriginalCellsWithUpdateFlag`)
+            Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag,`${this.fitSizeToOriginalCellsWithUpdateFlag.name}`);
 
             this._isDrawing = false;
             this.hasConnectedObserverFunction = true;    
@@ -1184,7 +1186,8 @@ export class GTable extends GVertex {
         b = this.resizeWithUpdateFlag(withUpdate) || b;
 
         if(!withUpdate && b){
-            console.log(`tryUpdateWithUpdateFlag: resizeWithUpdateFlag`)
+            Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag,this.resizeWithUpdateFlag.name);
+
 
             this._isDrawing = false;
             this.hasConnectedObserverFunction = true;    
@@ -1195,7 +1198,7 @@ export class GTable extends GVertex {
         b = this.relocateWithUpdate(withUpdate) || b;
 
         if(!withUpdate && b){
-            console.log(`tryUpdateWithUpdateFlag: relocateWithUpdate`)
+            Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag,this.relocateWithUpdate.name);
 
         }
 
@@ -1284,15 +1287,12 @@ export class GTable extends GVertex {
 
     }
     private relocateWithUpdate(withUpdate:boolean) : boolean{
-        if(withUpdate){
-            console.log(`Update: relocateWithUpdate`)
-        }
         let b = false;
         let height = 0;
         for(let i=0;i<this.rows.length;i++){
             b = this.rows[i].setYWithUpdate(height, withUpdate)  || b;
             if(!withUpdate && b){
-                console.log(`relocateWithUpdate: setYWithUpdate`)
+                Debugger.updateFlagLog(this, this.relocateWithUpdate, this.rows[i].setYWithUpdate.name)
                 return b;
             }
             height += this.rows[i].height;
@@ -1304,7 +1304,8 @@ export class GTable extends GVertex {
         for(let i=0;i<this.columns.length;i++){
             b = this.columns[i].setXWithUpdate(width, withUpdate)  || b;
             if(!withUpdate && b){
-                console.log(`relocateWithUpdate: setXWithUpdate`)
+                Debugger.updateFlagLog(this, this.relocateWithUpdate, this.columns[i].setXWithUpdate.name)
+
 
                 return b;
             }
@@ -1316,7 +1317,8 @@ export class GTable extends GVertex {
         for(let i = 0;i<cells.length;i++){
             b = cells[i].relocationOrGetUpdateFlag(withUpdate) || b;
             if(!withUpdate && b){
-                console.log(`relocateWithUpdate: relocationOrGetUpdateFlag`)
+                Debugger.updateFlagLog(this, this.relocateWithUpdate, cells[i].relocationOrGetUpdateFlag.name)
+
 
                 return b;
             }

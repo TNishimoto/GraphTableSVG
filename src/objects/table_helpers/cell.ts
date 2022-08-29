@@ -22,6 +22,7 @@ import * as SVGTextExtension from "../../interfaces/svg_text_extension"
 import { getVirtualRegion } from "../../interfaces/virtual_text"
 import { worker } from "cluster"
 import { isFunction } from "util"
+import { Debugger } from "../../common/debugger"
 
 //import { LogicCell } from "../logic/logic_cell"
 
@@ -90,7 +91,7 @@ export class Cell {
                 this.setBorderPosition(borderType, type, newValue100);
             }
             if(!withUpdate && b){
-                console.log(`UpdateBorderCoodinateOrGetUpdateFlag: ${type} ${oldValue} ${newValue}`)
+                Debugger.updateFlagLog(this, this.UpdateBorderCoodinateOrGetUpdateFlag, `${type} ${oldValue} ${newValue}`)
             }
         }
         return b;
@@ -1044,17 +1045,18 @@ export class Cell {
         }
         b = this.resizeOrGetUpdateFlag(withUpdate) || b;
         if (!withUpdate && b) {
-            console.log("updateOrGetUpdateFlag: A1");
+            Debugger.updateFlagLog(this, this.updateOrGetUpdateFlag, this.resizeOrGetUpdateFlag.name)
             return b;
         }
         b = this.locateSVGTextOrGetUpdateFlag(withUpdate) || b;
         if (!withUpdate && b) {
-            console.log("updateOrGetUpdateFlag: A2");
+            Debugger.updateFlagLog(this, this.updateOrGetUpdateFlag, this.locateSVGTextOrGetUpdateFlag.name)
+
             return b;
         }
         b = this.relocationOrGetUpdateFlag(withUpdate) || b;
         if (!withUpdate && b) {
-            console.log("updateOrGetUpdateFlag: A3");
+            Debugger.updateFlagLog(this, this.updateOrGetUpdateFlag, this.relocationOrGetUpdateFlag.name)
             return b;
         }
         return b;
@@ -1135,8 +1137,8 @@ export class Cell {
         let b = false;
         const [w, h] = this.calculatedSizeUsingGroup();
 
-        if (w != this.width || h != this.height) {
-            console.log(`Compare: ${w} : ${this.width}, ${h} : ${this.height}`)
+        if (!withUpdate && ( w != this.width || h != this.height)) {
+            Debugger.updateFlagLog(this, this.resizeOrGetUpdateFlag, `Compare: ${w} : ${this.width}, ${h} : ${this.height}`)
         }
         if (this.width != w) {
             b = true;
@@ -1164,8 +1166,7 @@ export class Cell {
                 this.width = rect.width;
             }
             if (!withUpdate && b) {
-                console.log(`resizeOrGetUpdateFlag W: ${this.width} ${rect.width}`)
-
+                Debugger.updateFlagLog(this, this.resizeOrGetUpdateFlag, `W: ${this.width} ${rect.width}`)
                 return b;
             }
 
@@ -1176,7 +1177,7 @@ export class Cell {
                 this.height = rect.height;
             }
             if (!withUpdate && b) {
-                console.log(`resizeOrGetUpdateFlag W: ${this.height} ${rect.height}`)
+                Debugger.updateFlagLog(this, this.resizeOrGetUpdateFlag, `W: ${this.height} ${rect.height}`)
 
                 return b;
             }
