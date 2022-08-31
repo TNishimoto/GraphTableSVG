@@ -15,6 +15,8 @@ import {GRect} from "./g_rect"
 import {GTable, GTableOption} from "./g_table"
 import {GTextBox} from "./g_textbox"
 import {GVertex} from "./g_vertex"
+import {GForeignObject} from "./g_foreign_object"
+
 import {VirtualTree} from "./graph_helpers/virtual_tree"
 import {GraphArrangement} from "./graph_helpers/graph_arrangement"
 import * as TreeArrangement from "./graph_helpers/tree_arrangement"
@@ -26,5 +28,5 @@ import * as GOptions from "./g_options"
 
 export {
     GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox, GOptions, VirtualTree, TreeArrangement, 
-    GTableOption
+    GTableOption, GForeignObject
 }

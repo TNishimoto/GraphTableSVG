@@ -49,7 +49,7 @@ export namespace VBAShapeType {
 }
 
 
-export type VertexObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-circle" | "g-rect" | "g-path-textbox" | "g-rect-button" | "g-table";
+export type VertexObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-circle" | "g-rect" | "g-path-textbox" | "g-rect-button" | "g-table" | "g-foreign-object" | "g-foreign-button";
 
 
 //export namespace VertexObjectType {
@@ -69,6 +69,8 @@ export namespace ShapeObjectType {
     export const Table: ShapeObjectType = "g-table"
     export const Object: ShapeObjectType = "g-object"
     export const Edge: ShapeObjectType = "g-edge"
+    export const ForeignObject: ShapeObjectType = "g-foreign-object"
+    export const ForeignButton: ShapeObjectType = "g-foreign-button"
 
     const typeDic: { [key: string]: boolean; } = {
         "g-callout": true,
@@ -81,7 +83,9 @@ export namespace ShapeObjectType {
         "g-table": true,
         "g-object": true,
         "g-path-textbox": true,
-        "g-rect-button": true
+        "g-rect-button": true,
+        "g-foreign-button": true
+
     }
     const customTypeDic: { [key: string]: boolean; } = {
         "row": true,

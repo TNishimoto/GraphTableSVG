@@ -26,6 +26,8 @@ import { ArgumentOutOfRangeError, NullError } from "../common/exceptions";
 import * as SVG from "../interfaces/svg";
 //import { SVGToVBA } from ".";
 import { appendVBAButton } from "./vba_macro_modal";
+import { GForeignObject } from "../objects";
+import { GForeignButton } from "../objects/g_foreign_button";
 
 //export namespace openSVGFunctions {
 
@@ -50,9 +52,9 @@ function getGObjectsSub(item: Element): GObject[] {
         for (let i = 0; i < item.children.length; i++) {
             const child = item.children.item(i);
             if (child != null) {
-                getGObjectsSub(child).forEach((v) =>{ arr.push(v)});
+                getGObjectsSub(child).forEach((v) => { arr.push(v) });
             }
-        }    
+        }
     }
     return arr;
 }
@@ -132,8 +134,6 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
             r = new GRect(parent);
             r.setOption(option);
 
-            console.log("GRECT");
-            //throw Error("error");
 
 
         } else if (type == ShapeObjectType.Edge) {
@@ -164,6 +164,12 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
             r = new GRectButton(parent);
             r.setOption(option);
         }
+        else if (type == ShapeObjectType.ForeignButton) {
+            const option = GRectButton.constructAttributes(e, true);
+            r = new GForeignButton(parent);
+            r.setOption(option);
+        }
+
         else {
             return null;
         }
@@ -171,6 +177,7 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
         //属性の移動と元オブジェクトの削除
         const attrs = ElementExtension.gtGetAttributes(e);
         HTMLFunctions.getChildren(e).forEach((v) => r.svgGroup.appendChild(v));
+        console.log(e);
         e.remove();
         attrs.forEach((v) => {
             var items = v.name.split(":");
@@ -251,7 +258,7 @@ export function openSVG(inputItem: string | Element | null = null, output: GObje
         const svgsvg: SVGSVGElement = inputItem;
 
         const vbaAttr = inputItem.getAttribute("g-vba");
-        if(vbaAttr != null && vbaAttr == "true" ){
+        if (vbaAttr != null && vbaAttr == "true") {
             appendVBAButton(svgsvg);
         }
 
@@ -306,6 +313,7 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
         _parent = <any>document.getElementById(parent);
     }
 
+    console.log(`${type} ${option}`);
     switch (type) {
         case ShapeObjectType.Callout:
             const call = new GCallout(_parent);
@@ -342,6 +350,11 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
             const circle = new GCircle(_parent);
             circle.setOption(option);
             return circle;
+        case ShapeObjectType.ForeignButton:
+            const button = new GForeignButton(_parent);
+            button.setOption(option);
+            return button;
+
         case ShapeObjectType.Object:
             const obj = new GObject(_parent);
             obj.setOption(option);
