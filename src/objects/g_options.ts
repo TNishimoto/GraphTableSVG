@@ -27,6 +27,8 @@ export function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
                     Debugger.updateFlagLog(value, updateSVGSVGTimer, `${value.type} ${key}, ${value.unstableCounter} ${b}`)
 
                     value.update();
+                    Debugger.updateFlagLog(value, updateSVGSVGTimer, `Update`)
+
                     const counter = value.svgGroup.getAttribute(unstableCounterName);
                     if (counter == null) {
                         value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());

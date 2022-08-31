@@ -4,7 +4,7 @@ import { Cell, CellOption } from "./cell"
 
 import * as SVG from "../../interfaces/svg"
 import { GTable } from "../g_table"
-import { Rectangle, Size, round100 } from "../../common/vline";
+import { Rectangle, Size, round100, nearlyEqual } from "../../common/vline";
 import { setAttributeNumber } from "../../interfaces/element_extension";
 import { Debugger } from "../../common/debugger";
 
@@ -70,13 +70,15 @@ export class CellColumn {
 
         for (let y = 0; y < this.table.rowCount; y++) {
             const cell = this.table.cells[y][this.cellX];
-            if (cell.isMasterCellOfColumnCountOne && cell.width != width) {
+            if (cell.isMasterCellOfColumnCountOne && !nearlyEqual(cell.width, width)) {
                 b = true;
                 if (withUpdate) {
                     cell.width = width;
                 }
 
                 if (!withUpdate && b) {
+                    Debugger.updateFlagLog(this, this.setHeightToCellsWithUpdateFlag, `${cell.width} != ${width} y = ${y}`)
+
                     return true;
                 }
             }
@@ -87,6 +89,7 @@ export class CellColumn {
 
                 b = cell.tryUpdateWithUpdateFlag(withUpdate)  || b;
                 if (!withUpdate && b) {
+                    Debugger.updateFlagLog(this, this.setHeightToCellsWithUpdateFlag, `${cell.tryUpdateWithUpdateFlag.name} y = ${y}`)
                     return b;
                 }
             }

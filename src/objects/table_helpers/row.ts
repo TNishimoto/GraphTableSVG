@@ -2,8 +2,9 @@
     import {Cell, CellOption} from "./cell"
     import * as SVG from "../../interfaces/svg"
     import {GTable} from "../g_table"
-import { Rectangle, Size, round100 } from "../../common/vline";
+import { Rectangle, Size, round100, nearlyEqual } from "../../common/vline";
 import { setAttributeNumber } from "../../interfaces/element_extension";
+import { Debugger } from "../../common/debugger";
 
     /**
      * 表の行を表現するクラスです。
@@ -184,12 +185,14 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
             const height = this.height;
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
-                if (cell.isMasterCellOfRowCountOne && cell.height != height) {
+                if (cell.isMasterCellOfRowCountOne && !nearlyEqual(cell.height, height)) {
                     b = true;
                     if(withUpdate){
                         cell.height = height;
                     }
                     if(!withUpdate && b){
+                        Debugger.updateFlagLog(this, this.setHeightToCellsWithUpdateFlag, `${cell.height} != ${height}`)
+
                         return b;
                     }
                 }
@@ -200,6 +203,7 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
                     b = cell.tryUpdateWithUpdateFlag(withUpdate)  || b;
 
                     if(!withUpdate && b){
+                        Debugger.updateFlagLog(this, this.setHeightToCellsWithUpdateFlag, `${cell.tryUpdateWithUpdateFlag.name} x = ${x}`)
                         return b;
                     }
                 }
