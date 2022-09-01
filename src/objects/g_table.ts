@@ -391,13 +391,13 @@ export class GTable extends GVertex {
     public fitSizeToOriginalCellsWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {
         let b = false;
         for(let i = 0;i<this.rows.length;i++){
-            b = this.rows[i].fitHeightToOriginalCellWithUpdateFlag(allowShrink, withUpdate) || b;
+            b = this.rows[i].tryFitHeightWithUpdateFlag(allowShrink, withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }
         }
         for(let i = 0;i<this.columns.length;i++){
-            b = this.columns[i].fitWidthToOriginalCellWithUpdateFlag(allowShrink, withUpdate) || b;
+            b = this.columns[i].tryFitWidthWithUpdateFlag(allowShrink, withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }

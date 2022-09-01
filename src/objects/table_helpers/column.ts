@@ -15,7 +15,7 @@ export class CellColumn {
     private readonly table: GTable;
     //private readonly _cellX: number;
     public static readonly rowWidthName = "data-width";
-    public static readonly defaultWidth = 30;
+    public static readonly defaultWidth = 20;
 
     private _svgMetaData: SVGMetadataElement;
 
@@ -199,13 +199,16 @@ export class CellColumn {
 
         this.tryResizeWithUpdateFlag(true);
     }
-    public fitWidthToOriginalCellWithUpdateFlag(allowShrink: boolean, withUpdate: boolean): boolean {
+    public tryFitWidthWithUpdateFlag(allowShrink: boolean, withUpdate: boolean): boolean {
         let b = false;
-        const newWidth = allowShrink ? this.getVirtualSize().width : Math.max(this.width, this.getVirtualSize().width);
-        if (this.width != newWidth) {
+        const __width = allowShrink ? this.getVirtualSize().width : Math.max(this.width, this.getVirtualSize().width);
+        const newWidth = Math.max(CellColumn.defaultWidth, round100(__width));
+        if (!nearlyEqual(this.width, newWidth)) {
             b = true;
             if (withUpdate) {
                 this.width = newWidth;
+            }else{
+                Debugger.updateFlagLog(this, this.tryFitWidthWithUpdateFlag, `Width: ${this.width} -> ${newWidth}`)
             }
         }
         return b;
@@ -216,7 +219,7 @@ export class CellColumn {
      * @param allowShrink 現在の列の幅より短くなることを許す
      */
     public fitWidthToOriginalCell(allowShrink: boolean) {
-        this.fitWidthToOriginalCellWithUpdateFlag(allowShrink, true);
+        this.tryFitWidthWithUpdateFlag(allowShrink, true);
     }
 
     public setXWithUpdate(posX : number, withUpdate : boolean) :boolean{

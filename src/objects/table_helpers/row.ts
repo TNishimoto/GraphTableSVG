@@ -14,7 +14,7 @@ import { Debugger } from "../../common/debugger";
         //private readonly _cellY: number;
         private _svgGroup: SVGGElement;
         public static readonly columnHeightName = "data-height";
-        public static readonly defaultHeight = 30;
+        public static readonly defaultHeight = 20;
         constructor(_table: GTable, _y: number, _height: number = CellRow.defaultHeight) {
             this.table = _table;
             this._svgGroup = SVG.createGroup(this.table.svgGroup);
@@ -248,14 +248,17 @@ import { Debugger } from "../../common/debugger";
             this.tryResizeWithUpdateFlag(true);
             //this.height = this.getMaxHeight();
         }
-        public fitHeightToOriginalCellWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {
+        public tryFitHeightWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {
             let b = false;
-            const newHeight = allowShrink ? this.getVirtualSize().height : Math.max(this.height, this.getVirtualSize().height);
+            const __height = allowShrink ? this.getVirtualSize().height : Math.max(this.height, this.getVirtualSize().height);
+            const newHeight = Math.max(CellRow.defaultHeight, round100(__height));
 
-            if(this.height != newHeight){
+            if(!nearlyEqual(this.height, newHeight)){
                 b = true;
                 if(withUpdate){
                     this.height = newHeight;
+                }else{
+                    Debugger.updateFlagLog(this, this.tryFitHeightWithUpdateFlag, `Height: ${this.height} -> ${newHeight}`)
                 }
             }
             return b;
@@ -267,7 +270,7 @@ import { Debugger } from "../../common/debugger";
          * @param allowShrink 現在の行の幅より短くなることを許す
          */
         public fitHeightToOriginalCell(allowShrink: boolean) {
-            this.fitHeightToOriginalCellWithUpdateFlag(allowShrink,true);
+            this.tryFitHeightWithUpdateFlag(allowShrink,true);
         }
         public setYWithUpdate(posY: number, withUpdate : boolean) : boolean {
             const posY100 = round100(posY);
