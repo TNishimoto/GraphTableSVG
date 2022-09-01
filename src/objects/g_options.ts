@@ -33,8 +33,20 @@ export function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
                     if (counter == null) {
                         value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
                     } else {
+                        const counterNumber = Number.parseInt(counter);
+                        if(Debugger.getDebugMode() == "ObserveUpdateFlag"){
+                            if(counterNumber > unstableCounterDefault + 10){
+                                throw new Error("Infinite Update Error")
+                            }else{
+                                console.log(`Update -> ${counterNumber + 1}`)
+                                value.svgGroup.setAttribute(unstableCounterName, (counterNumber + 1).toString());
+                            }
+
+
+                        }else{
+                            value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
+                        }
                         //const newCounter = Number.parseInt(counter) + 5;
-                        value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
                     }
 
                 } else {

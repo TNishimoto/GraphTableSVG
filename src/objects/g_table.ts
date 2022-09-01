@@ -25,7 +25,7 @@ import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { GVertex } from "./g_vertex";
 import {CenterPosition, UpperLeftPosition} from "../common/vline"
 import { UndefinedError } from "../common/exceptions";
-import { Debugger, debugMode } from "../common/debugger";
+import { Debugger } from "../common/debugger";
 
 //namespace GraphTableSVG {
 
@@ -1183,10 +1183,10 @@ export class GTable extends GVertex {
         this.prevShow = false;
 
 
-        b = this.resizeWithUpdateFlag(withUpdate) || b;
+        b = this.tryResizeWithUpdateFlag(withUpdate) || b;
 
         if(!withUpdate && b){
-            Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag,this.resizeWithUpdateFlag.name);
+            Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag,this.tryResizeWithUpdateFlag.name);
 
 
             this._isDrawing = false;
@@ -1258,17 +1258,17 @@ export class GTable extends GVertex {
 
     }
 
-    private resizeWithUpdateFlag(withUpdate : boolean) : boolean {
+    private tryResizeWithUpdateFlag(withUpdate : boolean) : boolean {
         let b = false;
         for(let i = 0;i<this.rows.length;i++){
-            b = this.rows[i].resizeWithUpdate(withUpdate) || b;
+            b = this.rows[i].tryResizeWithUpdateFlag(withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }
         }
 
         for(let i = 0;i<this.columns.length;i++){
-            b = this.columns[i].resizeWithUpdate(withUpdate) || b;
+            b = this.columns[i].tryResizeWithUpdateFlag(withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }
@@ -1282,7 +1282,7 @@ export class GTable extends GVertex {
      * サイズを再計算します。
      */
     private resize() {
-        this.resizeWithUpdateFlag(true);
+        this.tryResizeWithUpdateFlag(true);
 
     }
     private relocateWithUpdate(withUpdate:boolean) : boolean{

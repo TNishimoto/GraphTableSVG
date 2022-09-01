@@ -12,7 +12,7 @@ import { tryUpdateAppropriateDashArrayWithUpdateFlag } from "../html/enum_extens
 import * as GOptions from "./g_options"
 import { createPath } from "./element_builder"
 import { NullError, UndefinedError } from "../common/exceptions";
-import { Debugger, debugMode } from "../common/debugger";
+import { Debugger } from "../common/debugger";
 
 export class GAbstractEdge extends GObject {
     constructor(svgbox: SVGElement | string) {

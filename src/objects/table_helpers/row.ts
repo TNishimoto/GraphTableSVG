@@ -14,7 +14,8 @@ import { Debugger } from "../../common/debugger";
         //private readonly _cellY: number;
         private _svgGroup: SVGGElement;
         public static readonly columnHeightName = "data-height";
-        constructor(_table: GTable, _y: number, _height: number = 30) {
+        public static readonly defaultHeight = 30;
+        constructor(_table: GTable, _y: number, _height: number = CellRow.defaultHeight) {
             this.table = _table;
             this._svgGroup = SVG.createGroup(this.table.svgGroup);
             this.svgGroup.setAttribute("name", "cell_row");
@@ -89,7 +90,7 @@ import { Debugger } from "../../common/debugger";
         行の高さを設定します。
         */
         set height(value: number) {
-            setAttributeNumber(this._svgGroup, CellRow.columnHeightName, value)
+            setAttributeNumber(this._svgGroup, CellRow.columnHeightName, round100(value))
             //this._svgGroup.setAttribute(CellRow.columnHeightName, `${value}`);
             this.setHeightToCells();
             /*
@@ -182,7 +183,7 @@ import { Debugger } from "../../common/debugger";
         }
         public setHeightToCellsWithUpdateFlag(withUpdate : boolean) : boolean {
             let b = false;
-            const height = this.height;
+            const height = Math.max(this.height, CellRow.defaultHeight);
             for (let x = 0; x < this.table.columnCount; x++) {
                 const cell = this.table.cells[this.cellY][x];
                 if (cell.isMasterCellOfRowCountOne && !nearlyEqual(cell.height, height)) {
@@ -227,7 +228,7 @@ import { Debugger } from "../../common/debugger";
         }
         */
 
-        public resizeWithUpdate(withUpdate : boolean) : boolean {
+        public tryResizeWithUpdateFlag(withUpdate : boolean) : boolean {
             let b = false;
             const cells = this.cells;
             for(let i = 0;i<cells.length;i++){
@@ -244,7 +245,7 @@ import { Debugger } from "../../common/debugger";
          * 行内のセルのサイズを再計算します。
          */
         public resize() {
-            this.resizeWithUpdate(true);
+            this.tryResizeWithUpdateFlag(true);
             //this.height = this.getMaxHeight();
         }
         public fitHeightToOriginalCellWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {

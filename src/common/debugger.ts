@@ -1,18 +1,29 @@
 
 export type DebugMode = "ObserveUpdateFlag" | "None"
 
-export const debugMode : DebugMode = "ObserveUpdateFlag";
+const debugMode : DebugMode = "ObserveUpdateFlag";
 
 
-let objID : number | undefined = undefined;
+let objID : string | null = null;
+let updateObjID : string | null = null;
+
 let counter = 0;
 
 export class Debugger {
+    public static getDebugMode() : DebugMode{
+        return debugMode;        
+    }
     public static updateFlagLog(obj : any, func : any, msg : string){
         if(debugMode == "ObserveUpdateFlag"){
             const type = obj.constructor.name;
-            const id = obj.objectID;
-            const name = func.name;
+            let id : string | null = null;
+            let name = func.name;
+
+            if(type == "Cell"){
+                id = `{X = ${obj.cellX}, Y = ${obj.cellY}}`
+            }else{
+                id = (<number>obj.objectID).toString();
+            }
             const styles = 'color: yellow; background-color: black;';
 
 
@@ -30,7 +41,41 @@ export class Debugger {
             console.log(`${s} %c (ID = ${id}) object = ${type}, function = ${name}(${msg})`, styles)
             //console.trace(obj);
             if(name == "updateSVGSVGTimer"){
-                objID = undefined;
+                objID = null;
+                counter = 0;
+            }
+
+        }
+    }
+    public static updateLog(obj : any, func : any, msg : string){
+        if(debugMode == "ObserveUpdateFlag"){
+            const type = obj.constructor.name;
+            let id : string | null = null;
+            let name = func.name;
+
+            if(type == "Cell"){
+                id = `{X = ${obj.cellX}, Y = ${obj.cellY}}`
+            }else{
+                id = (<number>obj.objectID).toString();
+            }
+            const styles = 'color: black; background-color: aqua;';
+
+
+            let s = "";
+            if(updateObjID == id){
+                for(let i=0;i<counter;i++){
+                    s += "\t";
+                }
+                counter++;
+            }else{
+                updateObjID = id;
+                counter = 1;
+            }
+
+            console.log(`${s} %c (ID = ${id}) object = ${type}, function = ${name}(${msg})`, styles)
+            //console.trace(obj);
+            if(name == "updateSVGSVGTimer"){
+                updateObjID = null;
                 counter = 0;
             }
 

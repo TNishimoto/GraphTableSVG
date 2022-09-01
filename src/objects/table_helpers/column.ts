@@ -15,6 +15,8 @@ export class CellColumn {
     private readonly table: GTable;
     //private readonly _cellX: number;
     public static readonly rowWidthName = "data-width";
+    public static readonly defaultWidth = 30;
+
     private _svgMetaData: SVGMetadataElement;
 
     /**
@@ -66,7 +68,7 @@ export class CellColumn {
 
     public setHeightToCellsWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
-        const width = this.width;
+        const width = Math.max(this.width, CellColumn.defaultWidth);
 
         for (let y = 0; y < this.table.rowCount; y++) {
             const cell = this.table.cells[y][this.cellX];
@@ -118,7 +120,7 @@ export class CellColumn {
         return this.cells.length;
     }
 
-    constructor(_table: GTable, _x: number, _width: number = 30) {
+    constructor(_table: GTable, _x: number, _width: number = CellColumn.defaultWidth) {
         this.table = _table;
         this._svgMetaData = document.createElementNS('http://www.w3.org/2000/svg', 'metadata');
         this._svgMetaData.setAttribute("name", "cell_column");
@@ -177,7 +179,7 @@ export class CellColumn {
         //this.width = this.getMaxWidth();
     }
     */
-    public resizeWithUpdate(withUpdate: boolean) {
+    public tryResizeWithUpdateFlag(withUpdate: boolean) {
         let b = false;
         const cells = this.cells;
         for (let i = 0; i < cells.length; i++) {
@@ -195,7 +197,7 @@ export class CellColumn {
      */
     public resize() {
 
-        this.resizeWithUpdate(true);
+        this.tryResizeWithUpdateFlag(true);
     }
     public fitWidthToOriginalCellWithUpdateFlag(allowShrink: boolean, withUpdate: boolean): boolean {
         let b = false;

@@ -14,7 +14,7 @@ import * as Extensions from "../interfaces/extensions"
 import { createSVGText } from "./element_builder";
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { nearlyEqual, round100 } from "../common/vline";
-import { Debugger, debugMode } from "../common/debugger";
+import { Debugger } from "../common/debugger";
 
 export class GAbstractTextEdge extends GAbstractEdge {
     private static updateTextAttributes = ["style"]

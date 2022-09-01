@@ -23,6 +23,8 @@ import { getVirtualRegion } from "../../interfaces/virtual_text"
 import { worker } from "cluster"
 import { isFunction } from "util"
 import { Debugger } from "../../common/debugger"
+import { CellColumn } from "./column"
+import { CellRow } from "./row"
 
 //import { LogicCell } from "../logic/logic_cell"
 
@@ -88,6 +90,8 @@ export class Cell {
         if(!nearlyEqual(oldValue,newValue100)){
             b = true;
             if(withUpdate){
+                Debugger.updateLog(this, this.tryUpdateBorderCoodinateWithUpdateFlag, `${type} ${oldValue} ${newValue}`)
+
                 this.setBorderPosition(borderType, type, newValue100);
             }
             if(!withUpdate && b){
@@ -1043,6 +1047,7 @@ export class Cell {
                 return true;
             }
         }
+
         b = this.tryResizeWithUpdateFlag(withUpdate) || b;
         if (!withUpdate && b) {
             Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag, this.tryResizeWithUpdateFlag.name)
@@ -1135,25 +1140,31 @@ export class Cell {
 
     private tryResizeWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
+        if(!this.isMaster){
+            return false;
+        }
         const [w, h] = this.calculatedSizeUsingGroup();
 
         if (!nearlyEqual(this.width, w)) {
             b = true;
             if (withUpdate) {
+                Debugger.updateLog(this, this.tryResizeWithUpdateFlag, `Width: ${this.width} -> ${w}`)
                 this.width = w;
             }
             if (!withUpdate && b) {
-                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `Compare: ${w} : ${this.width}, ${h} : ${this.height}`)
+                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `Width: ${this.width} -> ${w}`)
                 return b;
             }
         }
         if (!nearlyEqual(this.height, h)) {
             b = true;
             if (withUpdate) {
+                Debugger.updateLog(this, this.tryResizeWithUpdateFlag, `Height: ${this.height} -> ${h}`)
                 this.height = h;
+
             }
             if (!withUpdate && b) {
-                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `Compare: ${w} : ${this.width}, ${h} : ${this.height}`)
+                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `Height: ${this.height} -> ${h}`)
                 return b;
             }
 
@@ -1162,10 +1173,12 @@ export class Cell {
         if (this.width < rect.width) {
             b = true;
             if (withUpdate) {
+                Debugger.updateLog(this, this.tryResizeWithUpdateFlag, `W: ${this.width} << ${rect.width}`)
+
                 this.width = rect.width;
             }
             if (!withUpdate && b) {
-                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `W: ${this.width} ${rect.width}`)
+                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `W: ${this.width} << ${rect.width}`)
                 return b;
             }
 
@@ -1173,10 +1186,12 @@ export class Cell {
         if (this.height < rect.height) {
             b = true;
             if (withUpdate) {
+                Debugger.updateLog(this, this.tryResizeWithUpdateFlag, `H: ${this.height} << ${rect.height}`)
+
                 this.height = rect.height;
             }
             if (!withUpdate && b) {
-                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `W: ${this.height} ${rect.height}`)
+                Debugger.updateFlagLog(this, this.tryResizeWithUpdateFlag, `H: ${this.height} << ${rect.height}`)
 
                 return b;
             }
@@ -1312,6 +1327,7 @@ export class Cell {
         }
         if (this.table.svgGroup.contains(this.svgBottomBorder)) {
             if (this.isMaster) {
+                console.log(`x1`);
                 const x1 = this.x;
                 b = this.tryUpdateBorderCoodinateWithUpdateFlag(DirectionType.bottom, x1, "x1", withUpdate) || b;
                 if(!withUpdate && b){
@@ -1341,6 +1357,7 @@ export class Cell {
                     Debugger.updateFlagLog(this, this.tryRelocateBottomBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
                     return b;
                 }
+                console.log(`x1End`);
 
             } else if (this.bottomCell != null && this.bottomCell.isMaster) {
                 b = this.bottomCell.tryRelocateTopBorderWithUpdateFlag(withUpdate) || b;
@@ -1517,46 +1534,61 @@ export class Cell {
      *セルの位置を再計算します。
      */
     public tryRelocateWithUpdateFlag(withUpdate: boolean): boolean {
-        let b = false;
+        //let b = false;
         if (!CommonFunctions.IsDescendantOfBody(this.svgGroup)) {
             return false;
         }
 
-        b = this.tryRelocateTopBorderWithUpdateFlag(withUpdate) || b;
-        if (!withUpdate && b) {
+        const b1 = this.tryRelocateTopBorderWithUpdateFlag(withUpdate);
+        if(withUpdate && b1){
+            Debugger.updateLog(this,this.tryRelocateWithUpdateFlag, `${this.tryRelocateTopBorderWithUpdateFlag.name}`)
+        }
+        if (!withUpdate && b1) {
             Debugger.updateFlagLog(this,this.tryRelocateWithUpdateFlag, `${this.tryRelocateTopBorderWithUpdateFlag.name}`)
-            return b;
+            return true;
         }
 
-        b = this.tryRelocateLeftBorderWithUpdateFlag(withUpdate) || b;
-        if (!withUpdate && b) {
+        const b2 = this.tryRelocateLeftBorderWithUpdateFlag(withUpdate);
+        if(withUpdate && b2){
+            Debugger.updateLog(this,this.tryRelocateWithUpdateFlag, `${this.tryRelocateLeftBorderWithUpdateFlag.name}`)
+        }
+
+        if (!withUpdate && b2) {
             Debugger.updateFlagLog(this,this.tryRelocateWithUpdateFlag, `${this.tryRelocateLeftBorderWithUpdateFlag.name}`)
-
-            return b;
+            return true;
         }
 
-        b = this.tryRelocateRightBorderWithUpdateFlag(withUpdate) || b;
-        if (!withUpdate && b) {
+        const b3 = this.tryRelocateRightBorderWithUpdateFlag(withUpdate);
+        if(withUpdate && b3){
+            Debugger.updateLog(this,this.tryRelocateWithUpdateFlag, `${this.tryRelocateRightBorderWithUpdateFlag.name}`)
+        }
+
+        if (!withUpdate && b3) {
             Debugger.updateFlagLog(this,this.tryRelocateWithUpdateFlag, `${this.tryRelocateRightBorderWithUpdateFlag.name}`)
 
-            return b;
+            return true;
         }
 
-        b = this.tryRelocateBottomBorderWithUpdateFlag(withUpdate) || b;
-        if (!withUpdate && b) {
+        const b4 = this.tryRelocateBottomBorderWithUpdateFlag(withUpdate);
+        if(withUpdate && b4){
+            Debugger.updateLog(this,this.tryRelocateWithUpdateFlag, `${this.tryRelocateBottomBorderWithUpdateFlag.name}`)
+        }
+
+        if (!withUpdate && b4) {
             Debugger.updateFlagLog(this,this.tryRelocateWithUpdateFlag, `${this.tryRelocateBottomBorderWithUpdateFlag.name}`)
-
-            return b;
+            return true;
         }
 
-        b = this.tryLocateSVGTextWithUpdateFlag(withUpdate) || b;
-        if (!withUpdate && b) {
+        const b5 = this.tryLocateSVGTextWithUpdateFlag(withUpdate);
+        if(withUpdate && b5){
+            Debugger.updateLog(this,this.tryRelocateWithUpdateFlag, `${this.tryLocateSVGTextWithUpdateFlag.name}`)
+        }
+        if (!withUpdate && b5) {
             Debugger.updateFlagLog(this,this.tryRelocateWithUpdateFlag, `${this.tryLocateSVGTextWithUpdateFlag.name}`)
-
-            return b;
+            return true;
         }
 
-        return b;
+        return b1 || b2 || b3 || b4 || b5;
     }
 
     public relocation() {
@@ -1756,11 +1788,13 @@ export class Cell {
             );
 
             this.upperSideGroupCells.forEach((v) => w += round100(this.table.columns[v.cellX].width));
+            const newW = Math.max(CellColumn.defaultWidth, w);
+            const newH = Math.max(CellRow.defaultHeight, h);
 
-            return [w, h];
+            return [newW, newH];
 
         } else {
-            return [0, 0];
+            return [CellColumn.defaultWidth, CellRow.defaultHeight];
         }
     }
     /**
