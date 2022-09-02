@@ -73,7 +73,7 @@ export class LogicCell {
         }
         */
         this.connectedRowCount = cell.connectedRowCount;
-        this.connectedColumnCount = cell.connectedColumnCount;
+        this.connectedColumnCount = cell.connectedColumnCount;        
         this.item = cell.item;
     }
     /*

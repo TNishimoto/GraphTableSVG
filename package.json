@@ -1,6 +1,6 @@
 {
     "name": "graph-table-svg",
-    "version": "0.0.121",
+    "version": "0.0.126",
     "description": "",
     "main": "./dist/nodejs_index.js",
     "scripts": {

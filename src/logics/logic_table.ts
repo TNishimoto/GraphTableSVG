@@ -20,10 +20,6 @@ import { GTableOption } from "../objects/g_table"
  */
 export class LogicTable {
     public cells: LogicCell[][];
-    //public columnWidths: (number | null)[];
-    //public rowHeights: (number | null)[];
-
-    //public tableClassName: string | null = null;
     public option: GTableOption = {};
     private className: "LogicTable" = "LogicTable";
 

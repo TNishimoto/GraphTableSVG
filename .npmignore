@@ -1,16 +1,10 @@
 # .npmignore
 /.vscode
-/docs/images
-/docs/typedoc
-/docs/html_examples
-/docs/html_debug
-
-/docs/sample
-/my
-/develop
+/docs
 /temp
-/dist_temp
+/old
 /examples
 /debug
 /editor
+/sub_projects
 

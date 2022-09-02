@@ -3,11 +3,14 @@ import * as CSS from "../html/css";
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 
 
+export type TextDecorationType = "none" | "underline" | "overline" | "line-through" | "blink";
+
 export class LogicTSpan{
     public textContent : string = "";
     public class? : string | textClassCSS
     public style? : string | textClassCSS
     public isLatexMode : boolean = false;
+    public textDecoration : TextDecorationType | null = null;
 
     public createTSpan() : SVGTSpanElement {
 
@@ -15,6 +18,10 @@ export class LogicTSpan{
         tspan.textContent = this.textContent;
         CSS.setCSSClass(tspan, this.class);
         CSS.setCSSStyle(tspan, this.style);
+        if(this.textDecoration != null){
+            tspan.setAttribute("text-decoration", this.textDecoration)
+        }
+
         return tspan;
     }
     public parse(obj : any) : void{
@@ -22,6 +29,7 @@ export class LogicTSpan{
         this.class = obj["class"];
         this.style = obj["style"];
         this.isLatexMode = obj["isLatexMode"];
+        this.textDecoration = obj["textDecoration"];
     }
 }
 
@@ -33,6 +41,7 @@ export class LogicText{
     public class? : string | textClassCSS
     public style? : string | textClassCSS
     public isLatexMode : boolean = false;
+    public textDecoration : TextDecorationType | null = null;
 
     constructor(_text : string | LogicTSpan[] | null = null, _class? : string | textClassCSS, _style? : string | textClassCSS ){
         if(_text == null){
@@ -56,6 +65,11 @@ export class LogicText{
                 svgText.appendChild(v);
             })
         }
+        console.log(`X: ${this.textDecoration}`)
+
+        if(this.textDecoration != null){
+            svgText.setAttribute("text-decoration", this.textDecoration)
+        }
         
     }
     public buildFromObject(obj:any) : void{
@@ -72,6 +86,7 @@ export class LogicText{
         this.class = obj["class"];
         this.style = obj["style"];
         this.isLatexMode = obj["isLatexMode"];
+        this.textDecoration = obj["textDecoration"];
 
     }
 }
