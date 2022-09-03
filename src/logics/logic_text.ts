@@ -1,6 +1,7 @@
 import { textClassCSS } from "../objects/g_options";
 import * as CSS from "../html/css";
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
+import { setSVGReteral, TextReteral } from "./gobject_reterals";
 
 
 export type TextDecorationType = "none" | "underline" | "overline" | "line-through" | "blink";
@@ -88,5 +89,14 @@ export class LogicText{
         this.isLatexMode = obj["isLatexMode"];
         this.textDecoration = obj["textDecoration"];
 
+    }
+    public toReteral() : TextReteral {
+        const obj : TextReteral = <any> new Object();
+        if(typeof this.textContent == "string"){
+            obj.text = this.textContent;            
+        }else{
+            setSVGReteral(obj, "t", undefined, this.class, this.style);
+        }
+        return obj;
     }
 }

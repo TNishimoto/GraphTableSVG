@@ -6,6 +6,7 @@ import { LogicCell } from "./logic_cell"
 import * as ElementExtension from "../interfaces/element_extension"
 import { ShapeObjectType } from "../common/enums"
 import { GTableOption } from "../objects/g_table"
+import { setSVGReteral, TableReteral, RowReteral } from "./gobject_reterals"
 
 
 
@@ -262,17 +263,17 @@ export class LogicTable {
         const textClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.textClass);
         const textStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.textStyle);
 
-        const topBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement,AttributeNames.topBorderClassName);
-        const topBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement,AttributeNames.topBorderStyle);
+        const topBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.topBorderClassName);
+        const topBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.topBorderStyle);
 
-        const leftBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement,AttributeNames.leftBorderClassName);
-        const leftBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement,AttributeNames.leftBorderStyle);
+        const leftBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.leftBorderClassName);
+        const leftBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.leftBorderStyle);
 
-        const rightBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement,AttributeNames.rightBorderClassName);
-        const rightBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement,AttributeNames.rightBorderStyle);
+        const rightBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.rightBorderClassName);
+        const rightBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.rightBorderStyle);
 
-        const bottomBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement,AttributeNames.bottomBorderClassName);
-        const bottomBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement,AttributeNames.bottomBorderStyle);
+        const bottomBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.bottomBorderClassName);
+        const bottomBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.bottomBorderStyle);
 
 
 
@@ -332,6 +333,7 @@ export class LogicTable {
         if (tNodes != null) outputCell.tTexts = tNodes;
 
     }
+
 
     public static constructHTMLLogicTable(e: Element): LogicTable | null {
         const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
@@ -400,5 +402,23 @@ export class LogicTable {
         }
         return logicTable;
     }
+
+    public toReteral(): TableReteral {
+        const obj: TableReteral = <any>new Object();
+        setSVGReteral(obj, "g-table", this.option.id, this.option.class, this.option.style);
+        obj.children = new Array();
+        for (let i = 0; i < this.rowCount; i++) {
+            const row: RowReteral = <any>new Object();
+            row.children = new Array();
+            this.getRow(i).forEach((v) => {
+                const cell = v.toReteral();
+                row.children.push(cell);
+            }
+            )
+            obj.children.push(row);
+        }
+        return obj;
+    }
+
 }
 

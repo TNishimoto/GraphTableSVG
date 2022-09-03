@@ -2,8 +2,10 @@ import {defaultCellClass} from "../common/attribute_names"
 
 //import { Cell } from "../object/table_helpers/cell"
 import * as GOptions from "../objects/g_options"
+import { CellReteral, setSVGReteral } from "./gobject_reterals";
 
 import { LogicText } from "./logic_text";
+
 
 /**
  * 表のセルを表す論理クラス
@@ -11,26 +13,13 @@ import { LogicText } from "./logic_text";
 export class LogicCell {
 
     public text: LogicText = new LogicText();
-    //public textClass?: string | GOptions.textClassCSS;
-    //public textStyle?: string | GOptions.textClassCSS;
     public groupOption : GOptions.CellAttributes = { class : defaultCellClass}
-    //public cellClass?: string | GOptions.GTextBoxCSS = defaultCellClass;
-    //public cellStyle?: string | GOptions.GTextBoxCSS;
-    
-
-
     public backgroundOption: GOptions.backgroundOption = {};
     public topBorderOption: GOptions.BorderAttributes = {};
     public leftBorderOption: GOptions.BorderAttributes = {};
     public rightBorderOption: GOptions.BorderAttributes = {};
     public bottomBorderOption: GOptions.BorderAttributes = {};
 
-
-    //public topBorderClass?: string | null;
-    //public leftBorderClass?: string | null;
-    //public rightBorderClass?: string | null;
-    //public bottomBorderClass?: string | null;
-    //public svgText: SVGTextElement | null = null;
     public connectedColumnCount: number = 1;
     public connectedRowCount: number = 1;
     public tTexts: HTMLElement[] | null = null;
@@ -76,49 +65,16 @@ export class LogicCell {
         this.connectedColumnCount = cell.connectedColumnCount;        
         this.item = cell.item;
     }
-    /*
-    public set(text: LogicText | undefined = undefined, isLatexMode: boolean = false, cellOption: GOptions.CellAttributes = { class : defaultCellClass}, backgroundOption: GOptions.backgroundOption = {},
-        topBorderOption: GOptions.BorderAttributes = {}, leftBorderOption: GOptions.BorderAttributes = {}, rightBorderOption: GOptions.BorderAttributes = {}, bottomBorderOption: GOptions.BorderAttributes = {}) {
-        if (text !== undefined) this.text = text;
-        this.groupOption = Object.create(cellOption)
-        this.backgroundOption = Object.create(backgroundOption);
-        this.topBorderOption = Object.create(topBorderOption);
-        this.leftBorderOption = Object.create(leftBorderOption);
-        this.rightBorderOption = Object.create(rightBorderOption);
-        this.bottomBorderOption = Object.create(bottomBorderOption);
 
-    }
-    */
-    /*
-    public createTextElement(svgText: SVGTextElement) {
-        if (this.tTexts != null) {
-            SVGTextBox.constructSVGTextByHTMLElements(svgText, this.tTexts, true);
-        } else if (this.text instanceof LogicText) {
-            this.text.setTextElement(svgText);
+    public toReteral() : CellReteral {
+        const p : CellReteral = <any>new Object();
+        setSVGReteral(p, "cell", undefined, this.groupOption.class, this.groupOption.style);
+        if(this.connectedRowCount > 1){
+            p.h = this.connectedRowCount;
         }
-    }
-    */
-    /*
-    public set(text: string | null = null, isLatexMode: boolean = false, cellClass: string | null = null, backgroundClass: string | null = null, textClass: string | null = null
-        , topBorderClass: string | null = null, leftBorderClass: string | null = null, rightBorderClass: string | null = null, bottomBorderClass: string | null = null) {
-        if (text != null) this.text = text;
-        if (cellClass != null) this.cellClass = cellClass;
-        if (textClass != null) this.textClass = textClass;
-        if (backgroundClass != null) this.backgroundClass = backgroundClass;
-        if (topBorderClass != null) this.topBorderClass = topBorderClass;
-        if (leftBorderClass != null) this.leftBorderClass = leftBorderClass;
-        if (rightBorderClass != null) this.rightBorderClass = rightBorderClass;
-        if (bottomBorderClass != null) this.bottomBorderClass = bottomBorderClass;
-        this.isLatexMode = isLatexMode;
-    }
-    */
-    /*
-    public checkCell(): boolean {
-        if (this.masterCell != null) {
-
-        } else {
-
+        if(this.connectedColumnCount > 1){
+            p.w = this.connectedColumnCount
         }
+        return p;
     }
-    */
 }
