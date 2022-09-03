@@ -1,4 +1,11 @@
-export type SVGReteral = { tag : string | undefined, id : string | undefined, class : string | undefined, style: string | undefined }
+
+export type SVGOptionReteral = { id : string | undefined, class : string | undefined, style: string | undefined }
+export type SVGReteral = { tag : string | undefined  } & SVGOptionReteral
+
+export type SVGSVGOptionReteral = { width : number | string | undefined, height : number | string | undefined, vba : boolean | undefined, shrink : boolean | undefined } & SVGOptionReteral;
+
+export type SVGSVGReteral = { xmlns : string, children : SVGReteral[] } & SVGReteral & SVGSVGOptionReteral
+
 export type TextReteral = { text : string | undefined } & SVGReteral;
 
 export type SubBackgroundReteral = { background_style : string | undefined, background_class : string | undefined, background_id : string | undefined}

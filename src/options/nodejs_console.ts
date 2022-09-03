@@ -4,6 +4,8 @@ import { LogicGraph, LogicGraphNode } from "../logics/logic_graph"
 
 import { LogicTable } from "../logics/logic_table"
 import { LogicGroup, getAdditionalLibraryPathList } from "../logics/logic_group";
+import { toHTML } from "../logics/gobject_reterals";
+import { LogicSVGSVG } from "../logics/logic_svgsvg";
 //import { CommonFunctions } from "../common/common_functions";
 /*
 import { createShape } from "./open_svg";
@@ -52,6 +54,10 @@ function getMainLibPath() : string {
     return path;
 }
 
+function addIndent(lines : string[], indent : string) : string {
+    return lines.map((v) => indent + v ).join("\n")
+}
+
 function save(data : string, path : string, title : string,type : "table" | "graph" | "tree" | "group", graphTableSVGPath : string ,additionalLibraryPathList : string[] = new Array(0)){
     const env = process.env
 
@@ -72,12 +78,6 @@ function save(data : string, path : string, title : string,type : "table" | "gra
                 const logicData = \`${data}\`                
                 const obj = GraphTableSVG.Logics.buildLogicObjectFromJSON(logicData);
                 GraphTableSVG.Console.view(obj, "${title}");
-                //if(obj instanceof GraphTableSVG.Logics.LogicTable){
-                //    GraphTableSVG.Console.table(obj, "${title}");    
-                //}else if(obj instanceof GraphTableSVG.Logics.LogicTree){
-                //    const graphResult = GraphTableSVG.Console.graph(obj, "${title}");    
-                //}else if(obj instanceof GraphTableSVG.Logics.LogicGraph){
-                //}
             };
         </script>
     </head>
@@ -93,7 +93,41 @@ function save(data : string, path : string, title : string,type : "table" | "gra
     }
 
 }
-export function view(item: LogicTree | LogicGraph | LogicGroup | LogicTable | (LogicTree | LogicGraph | LogicGroup | LogicTable)[], title: string = "", option : { filepath? : string, libraryPath? : string[] } = { }){
+function save2(svgHTML : string[], path : string, title : string, graphTableSVGPath : string ,additionalLibraryPathList : string[] = new Array(0)){
+    const env = process.env
+
+    //const scriptPath = env.DEBUG == "TRUE" ? `../docs/scripts/graph_table_svg.js` : "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js"
+
+    const pathListLines = additionalLibraryPathList.length == 0 ? "" : additionalLibraryPathList.map((v) => `<script src="${v}"></script>`).join("\n");
+
+    const ptext =`
+    <!DOCTYPE html>
+    <html>    
+    <head>
+        <meta charset="utf-8" />
+        <title>View</title>
+        <script src="${graphTableSVGPath}"></script>
+        ${pathListLines}
+        <script>
+            window.onload = () => {
+                GraphTableSVG.Options.openSVG();
+            };
+        </script>
+    </head>
+    
+    <body>
+${addIndent(svgHTML, "        ")}
+    </body>
+    
+    </html>
+    `
+    try {
+        fs.writeFileSync(path, ptext);
+    } catch (e) {
+    }
+
+}
+export function view(item: LogicTree | LogicGraph | LogicGroup | LogicTable | LogicSVGSVG | (LogicTree | LogicGraph | LogicGroup | LogicTable)[], title: string = "", option : { filepath? : string, libraryPath? : string[] } = { }){
     if(item instanceof Array){
         const group = LogicGroup.build(item);
         view(group, title, option);
@@ -121,7 +155,15 @@ export function view(item: LogicTree | LogicGraph | LogicGroup | LogicTable | (L
             const filepath = option.filepath ? option.filepath : getSavePath();
             save(data, filepath, title, "table", getMainLibPath(), libraryPathList);
             opener(filepath);
-        }else{
+        }
+        else if(item instanceof LogicSVGSVG){
+            const sx = item.toReteral();
+            const htmlLines = toHTML(sx, "    ");
+            const filepath = option.filepath ? option.filepath : getSavePath();
+            save2(htmlLines, filepath, title, getMainLibPath(), libraryPathList);
+            opener(filepath);
+        }
+        else{
             const data = JSON.stringify(item);
             const filepath = option.filepath ? option.filepath : getSavePath();
             save(data, filepath, title, "group", getMainLibPath(), libraryPathList);

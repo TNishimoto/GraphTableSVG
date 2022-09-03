@@ -4,6 +4,7 @@ import { LogicGraph } from "./logic_graph";
 
 import {CenterPosition, UpperLeftPosition} from "../common/vline"
 import {UndefinedError} from "../common/exceptions"
+import { LogicSVGSVG } from "./logic_svgsvg";
 
 type LogicType = "LogicTree" | "LogicTable" | "LogicGraph" | "LogicGroup";
 
@@ -69,7 +70,7 @@ export function buildLogicObjectFromJSON(data : string) : LogicTree | LogicTable
     return LogicGroup.buildLogicObjectFromObject(obj);
 }
 
-export function getAdditionalLibraryPathList(data : LogicGraph | LogicTree | LogicTable | LogicGroup) : Set<string> {
+export function getAdditionalLibraryPathList(data : LogicGraph | LogicTree | LogicTable | LogicGroup | LogicSVGSVG) : Set<string> {
     const r = new Set<string>();
     if(data instanceof LogicGroup){
         data.items.forEach((v) =>{
