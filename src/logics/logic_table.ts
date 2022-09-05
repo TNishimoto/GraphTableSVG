@@ -6,7 +6,7 @@ import { LogicCell } from "./logic_cell"
 import * as ElementExtension from "../interfaces/element_extension"
 import { ShapeObjectType } from "../common/enums"
 import { GTableOption } from "../objects/g_table"
-import { setSVGReteral, TableReteral, RowReteral } from "./gobject_reterals"
+import { setSVGReteral, TableReteral, RowReteral, TableOptionReteral, deepCopy } from "./gobject_reterals"
 
 
 
@@ -21,7 +21,7 @@ import { setSVGReteral, TableReteral, RowReteral } from "./gobject_reterals"
  */
 export class LogicTable {
     public cells: LogicCell[][];
-    public option: GTableOption = {};
+    public option: TableOptionReteral;
     private className: "LogicTable" = "LogicTable";
 
     public get rowCount(): number {
@@ -62,11 +62,14 @@ export class LogicTable {
 
     }
 
-    public constructor(option: { columnCount: number, rowCount: number, option?: GTableOption } = { columnCount: 3, rowCount: 3, option: {} }) {
+    public constructor(option: { columnCount: number, rowCount: number, table_option?: TableOptionReteral } = { columnCount: 3, rowCount: 3 }) {
         //if (option.columnCount == undefined) option.columnCount = 3;
         //if (option.rowCount == undefined) option.rowCount = 3;
-        if (option !== undefined) {
-            this.option = option;
+        this.option = <any>new Object();
+        //this.option.x = 0;
+        //this.option.y = 0;
+        if (option.table_option !== undefined) {
+            this.option = <any>deepCopy(option.table_option);
         }
 
         //this.position = option.position;
@@ -140,16 +143,16 @@ export class LogicTable {
         }
         return r;
     }
-    public static create(str: string[][], option?: GTableOption): LogicTable {
-        const table = new LogicTable({ columnCount: str[0].length, rowCount: str.length, option: option });
+    public static create(str: string[][], option?: TableOptionReteral): LogicTable {
+        const table = new LogicTable({ columnCount: str[0].length, rowCount: str.length, table_option: option });
 
         for (let y = 0; y < str.length; y++) {
             for (let x = 0; x < str[y].length; x++) {
                 const p = str[y][x].split("%%%");
                 table.cells[y][x].text.textContent = p[0];
                 if (p.length == 3) {
-                    table.cells[y][x].connectedColumnCount = Number(p[1]);
-                    table.cells[y][x].connectedRowCount = Number(p[2]);
+                    table.cells[y][x].option.w = Number(p[1]);
+                    table.cells[y][x].option.h = Number(p[2]);
                 }
             }
         }
@@ -320,11 +323,11 @@ export class LogicTable {
         outputCell.text.textContent = cellElement.innerHTML;
         if (cellElement.hasAttribute("w")) {
             const w = Number(cellElement.getAttribute("w"));
-            outputCell.connectedColumnCount = w;
+            outputCell.option.w = w;
         }
         if (cellElement.hasAttribute("h")) {
             const h = Number(cellElement.getAttribute("h"));
-            outputCell.connectedRowCount = h;
+            outputCell.option.h = h;
         }
         //const tNodes = openSVGFunctions.getTNodes(cells[y][x]);
 
@@ -404,11 +407,12 @@ export class LogicTable {
     }
 
     public toReteral(): TableReteral {
-        const obj: TableReteral = <any>new Object();
-        setSVGReteral(obj, "g-table", this.option.id, this.option.class, this.option.style);
+        const obj: TableReteral = <any>deepCopy(this.option);
+        obj.tag = "g-table"
         obj.children = new Array();
         for (let i = 0; i < this.rowCount; i++) {
             const row: RowReteral = <any>new Object();
+            row.tag = "row";
             row.children = new Array();
             this.getRow(i).forEach((v) => {
                 const cell = v.toReteral();

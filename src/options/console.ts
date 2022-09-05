@@ -375,9 +375,14 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
         item.items.forEach((v) => {
             if(item.itemOrder == "row"){
                 if(prevItem != null){
-                    if(v instanceof LogicTable || v instanceof LogicTree){
+                    if(v instanceof LogicTable){
+                        v.option.positionType = { x: 0, y: prevItem.getRegion().bottom + item.itemInterval, type: "upper-left" }
+                    }
+                    else if(v instanceof LogicTree){
                         v.option.position = { x: 0, y: prevItem.getRegion().bottom + item.itemInterval, type: "upper-left" }
                     }
+
+
                 }
             }
 

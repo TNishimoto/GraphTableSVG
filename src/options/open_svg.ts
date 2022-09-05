@@ -141,13 +141,14 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
             r = new GEdge(parent);
             r.setOption(option);
         } else if (type == ShapeObjectType.Graph) {
-            const option = GGraph.constructAttributes(e, true);
+            const option = GGraph.constructAttributes(e, true, {}, "center");
             r = new GGraph(parent);
             r.setOption(option);
             //(<GGraph>r).relocate();
         } else if (type == ShapeObjectType.Table) {
             const logicTable = LogicTable.constructLogicTable(e);
             const option = GTable.constructAttributes(e, true);
+            
 
             const table = new GTable(parent);
             table.setOption(option);

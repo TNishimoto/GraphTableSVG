@@ -142,7 +142,7 @@ export class GTable extends GVertex {
         //const widthsStr = e.getPropertyStyleValue("--widths");
 
         //const table = LogicTable.constructLogicTable(e);
-        GObject.constructAttributes(e, removeAttributes, output);
+        GObject.constructAttributes(e, removeAttributes, output, "upper-left");
         /*
         if (table != null) {
             output.table = table;
@@ -538,7 +538,7 @@ export class GTable extends GVertex {
             const cellInfo = logicTable.cells[y][x];
             if (cellInfo != null) {
                 //CSS.setCSSClass(cell.svgGroup, cellInfo.cellClass);
-                GOptions.setClassAndStyle(cell.svgGroup, cellInfo.groupOption.class, cellInfo.groupOption.style);
+                GOptions.setClassAndStyle(cell.svgGroup, cellInfo.option.class, cellInfo.option.style);
                 GOptions.setClassAndStyle(cell.svgBackground, cellInfo.backgroundOption.class, cellInfo.backgroundOption.style);
 
                 createTextElementFromLogicCell(cellInfo, cell.svgText);
@@ -557,8 +557,8 @@ export class GTable extends GVertex {
     public buildFromLogicTable(logicTable: LogicTable) {
 
         //if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
-        logicTable.option.columnCount = logicTable.columnCount;
-        logicTable.option.rowCount = logicTable.rowCount;
+        //logicTable.option.columnCount = logicTable.columnCount;
+        //logicTable.option.rowCount = logicTable.rowCount;
         this.setOption(logicTable.option);
         //this.setSize(logicTable.columnCount, logicTable.rowCount);
 

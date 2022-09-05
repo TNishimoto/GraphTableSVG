@@ -6,6 +6,7 @@ import { LogicTable } from "../logics/logic_table"
 import { LogicGroup, getAdditionalLibraryPathList } from "../logics/logic_group";
 import { toHTML } from "../logics/gobject_reterals";
 import { LogicSVGSVG } from "../logics/logic_svgsvg";
+import { Debugger } from "../common/debugger";
 //import { CommonFunctions } from "../common/common_functions";
 /*
 import { createShape } from "./open_svg";
@@ -35,12 +36,24 @@ function getSavePath() : string {
     if(env.GTS_DEBUG == "TRUE" && env.GTS_DIR === undefined){
         throw Error("DEBUG ERROR");
     }
-
+    const yyyymmdd = new Intl.DateTimeFormat(
+        undefined,
+        {
+          year:   'numeric',
+          month:  '2-digit',
+          day:    '2-digit',
+          hour:   '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        }
+      )
+    const date : string = yyyymmdd.format( new Date()).replace(/\//g, "_").replace(/\:/g, "_").replace(/ /g, "_");
     //const tmpdir = env.DEBUG == "TRUE" ? `D:/github/GraphTableSVG/temp`: os.tmpdir();
     const tmpdir = env.GTS_DEBUG == "TRUE" && env.GTS_DIR !== undefined ? env.GTS_DIR: os.tmpdir();
     
-    const rand : string = (Math.floor( Math.random() * 100000000 )).toString();
-    const filepath = `${tmpdir}/graph_table_svg_table_${rand}.html`;
+    
+    //const rand : string = (Math.floor( Math.random() * 100000000 )).toString();
+    const filepath = `${tmpdir}/graph_table_svg_table_${date}.html`;
     return filepath;
 }
 function getMainLibPath() : string {
@@ -48,8 +61,12 @@ function getMainLibPath() : string {
     if(env.GTS_DEBUG == "TRUE" && env.GTS_PATH === undefined){
         throw Error("DEBUG ERROR");
     }
+    let path = "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js";
+    if(Debugger.getDebugMode() == "Node"){
+        path = "file:///D:/github/GraphTableSVG/docs/scripts/graph_table_svg.js"
+    }
 
-    const path = env.GTS_DEBUG == "TRUE" && env.GTS_PATH !== undefined ? env.GTS_PATH : "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js";
+    //const path = env.GTS_DEBUG == "TRUE" && env.GTS_PATH !== undefined ? env.GTS_PATH : "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js";
     
     return path;
 }
@@ -105,7 +122,7 @@ function save2(svgHTML : string[], path : string, title : string, graphTableSVGP
     <html>    
     <head>
         <meta charset="utf-8" />
-        <title>View</title>
+        <title>${title}</title>
         <script src="${graphTableSVGPath}"></script>
         ${pathListLines}
         <script>

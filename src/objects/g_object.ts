@@ -284,7 +284,7 @@ export class GObject {
     }
 
     static constructAttributes(e: Element,
-        removeAttributes: boolean = false, output: GOptions.GObjectAttributes = {}): GOptions.GObjectAttributes {
+        removeAttributes: boolean = false, output: GOptions.GObjectAttributes = {}, defaultPositionType : "center" | "upper-left" ): GOptions.GObjectAttributes {
         output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
         if (output.class === undefined) ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
         output.surfaceClass = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.surfaceClassName);
@@ -302,7 +302,7 @@ export class GObject {
         } else if (x !== undefined || y !== undefined) {
             output.position = { type: "upper-left", x: x !== undefined ? x : 0, y: y !== undefined ? y : 0 }
         } else {
-            output.position = { type: "center", x: 0, y: 0 }
+            output.position = { type: defaultPositionType, x: 0, y: 0 }
         }
         //const cx = 
         output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.width);

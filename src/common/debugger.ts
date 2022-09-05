@@ -1,7 +1,7 @@
 
-export type DebugMode = "ObserveUpdateFlag" | "None"
+export type DebugMode = "ObserveUpdateFlag" | "Node" | "None"
 
-const debugMode : DebugMode = "ObserveUpdateFlag";
+const debugMode : DebugMode = "Node";
 
 
 let objID : string | null = null;

@@ -28,11 +28,11 @@ import { LogicTable } from "../logics/logic_table"
                         const td: HTMLTableDataCellElement = document.createElement("td");
 
                         const cell = table.cells[y][x];
-                        if (cell.connectedRowCount > 1) {
-                            td.setAttribute("rowspan", cell.connectedRowCount.toString());
+                        if (cell.option.h != undefined && cell.option.h > 1) {
+                            td.setAttribute("rowspan", cell.option.h.toString());
                         }
-                        if (cell.connectedColumnCount > 1) {
-                            td.setAttribute("columnspan", cell.connectedColumnCount.toString());
+                        if (cell.option.w != undefined &&cell.option.w > 1) {
+                            td.setAttribute("columnspan", cell.option.w.toString());
                         }
                         for (let ty = 0; ty < cell.connectedRowCount; ty++) {
                             for (let tx = 0; tx < cell.connectedColumnCount; tx++) {

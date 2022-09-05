@@ -981,7 +981,7 @@ export class GAbstractEdge extends GObject {
             output.endMarker = true;
         }
         */
-        GObject.constructAttributes(e, removeAttributes, output);
+        GObject.constructAttributes(e, removeAttributes, output, "center");
 
 
         //const _output = <GOptions.GEdgeAttributes>GAbstractEdge.constructAttributes(e, removeAttributes, output);

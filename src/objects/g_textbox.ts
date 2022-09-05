@@ -97,7 +97,7 @@ export class GTextBox extends GVertex {
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GOptions.GTextBoxAttributes {
 
-        GObject.constructAttributes(e, removeAttributes, output);
+        GObject.constructAttributes(e, removeAttributes, output, "center");
         //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(AttributeNames.Style.autoSizeShapeToFitText);
         //const textChild = HTMLFunctions.getChildByNodeName(e, AttributeNames.text);
         output.textClass = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.textClass);

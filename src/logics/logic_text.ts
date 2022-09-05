@@ -93,7 +93,7 @@ export class LogicText{
     public toReteral() : TextReteral {
         const obj : TextReteral = <any> new Object();
         if(typeof this.textContent == "string"){
-            obj.text = this.textContent;            
+            obj.textContent = this.textContent;            
         }else{
             setSVGReteral(obj, "t", undefined, this.class, this.style);
         }

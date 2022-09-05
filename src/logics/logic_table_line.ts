@@ -3,6 +3,7 @@ import { LogicTable } from "./logic_table"
 import * as GOptions from "../objects/g_options"
 import { LogicCell } from "./logic_cell";
 import { defaultCellClass } from "../common/attribute_names";
+import { CellOptionReteral, deepCopy } from "./gobject_reterals";
 
 /**
  * LogicCellの配列
@@ -103,10 +104,12 @@ function setColumn2(table: LogicTable, ithColumn: number, line: LogicCellLine) {
  * @param svgGroupOption 
  * @returns 
  */
-export function buildLogicCellLine( name: string, values: (number | string)[], svgGroupOption: GOptions.CellAttributes = { class : defaultCellClass}) : LogicCellLine{
+export function buildLogicCellLine( name: string, values: (number | string)[], cellOption: CellOptionReteral | undefined = undefined) : LogicCellLine{
     const titleCell = new LogicCell();
     titleCell.text.textContent = name;
-    titleCell.groupOption = svgGroupOption;
+    if(cellOption != undefined){
+        titleCell.option = <any>deepCopy(cellOption);
+    }
     /*
     if(cellClass !== undefined){
         titleCell.cellClass = cellClass;
@@ -115,7 +118,9 @@ export function buildLogicCellLine( name: string, values: (number | string)[], s
     const cells = values.map((v) =>{
         const cell = new LogicCell();
         cell.text.textContent = v.toString();
-        cell.groupOption = svgGroupOption;
+        if(cellOption != undefined){
+            cell.option = <any>deepCopy(cellOption);
+        }
         return cell;
     })
 

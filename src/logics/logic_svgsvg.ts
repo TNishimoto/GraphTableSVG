@@ -17,6 +17,8 @@ export class LogicSVGSVG {
         obj.xmlns = "http://www.w3.org/2000/svg"
         obj.tag = "svg";
         obj.children = new Array();
+
+
         this.items.forEach((v) =>{ 
             if(v instanceof LogicTable){
                 obj.children.push(v.toReteral());
@@ -24,5 +26,11 @@ export class LogicSVGSVG {
         } )
         return obj;
 
+    }
+
+    public static createDefaultSVGSVG() : LogicSVGSVG {
+        const v = new LogicSVGSVG();
+        v.option.style = "background:#e9e9e9;border:solid 1pt;"
+        return v;
     }
 }
