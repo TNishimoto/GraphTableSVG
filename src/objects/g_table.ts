@@ -559,8 +559,12 @@ export class GTable extends GVertex {
         //if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
         //logicTable.option.columnCount = logicTable.columnCount;
         //logicTable.option.rowCount = logicTable.rowCount;
-        this.setOption(logicTable.option);
         //this.setSize(logicTable.columnCount, logicTable.rowCount);
+        const option = {...logicTable.option};
+        (<any>option).rowCount = logicTable.rowCount;
+        (<any>option).columnCount = logicTable.columnCount;
+        
+        this.setOption(option);
 
         //GOptions.setClassAndStyle(this.svgGroup, logicTable.option.class, logicTable.option.style);
         /*

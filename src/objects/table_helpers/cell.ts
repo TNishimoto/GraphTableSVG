@@ -25,6 +25,7 @@ import { isFunction } from "util"
 import { Debugger } from "../../common/debugger"
 import { CellColumn } from "./column"
 import { CellRow } from "./row"
+import { GOptions } from ".."
 
 //import { LogicCell } from "../logic/logic_cell"
 
@@ -83,6 +84,27 @@ export class Cell {
 
 
     }
+    public get unstableCounter(): number | null {
+        const p = this.svgGroup.getAttribute(GOptions.unstableCounterName);
+        if (p == null) {
+            return null;
+        } else {
+            const num = Number(p);
+            return num;
+        }
+    }
+    private set unstableCounter(value: number | null) {
+        if (value == null) {
+            this.svgGroup.removeAttribute(GOptions.unstableCounterName)
+        } else {
+            this.svgGroup.setAttribute(GOptions.unstableCounterName, value.toString());
+
+        }
+    }
+    public resetUnstableCounter(): void {
+        this.unstableCounter = GOptions.unstableCounterDefault;
+    }
+
     private tryUpdateBorderCoodinateWithUpdateFlag(borderType: DirectionType, newValue: number, type: BorderCoodinateType, withUpdate: boolean): boolean {
         let b = false;
         const oldValue = this.getBorderPosition(borderType, type);

@@ -6,7 +6,7 @@ export type SVGReteral = { tag?: string } & SVGOptionReteral
 
 export type BorderOptionReteral = {} & SVGOptionReteral;
 
-export type SVGSVGOptionReteral = { width?: number | string, height?: number | string, vba?: boolean, shrink?: boolean } & SVGOptionReteral;
+export type SVGSVGOptionReteral = { width?: number | string, height?: number | string, g_vba?: boolean, g_shrink?: boolean } & SVGOptionReteral;
 
 export type SVGSVGReteral = { xmlns: string, children: SVGReteral[] } & SVGReteral & SVGSVGOptionReteral
 
@@ -89,6 +89,10 @@ function toSpecialAttributes(obj: Object, prefixName: string): string[] {
 export function toHTML(obj: SVGReteral, indent: string): string[] {
     const r: string[] = new Array();
     const tag = (<any>obj)["tag"];
+
+    const replaceDic : Map<string, string> = new Map();
+    //replaceDic.set("shrink", "g-shrink")
+
     if (tag != undefined) {
         let fstLine = `<${tag}`
         console.log(obj);
@@ -98,10 +102,15 @@ export function toHTML(obj: SVGReteral, indent: string): string[] {
             } else if (key == "children") {
 
             } else {
+                const newKey = key.toLowerCase().replace("_", "-");
                 const value = (<any>obj)[key]
                 if (typeof value == "string" || typeof value == "number") {
-                    fstLine += ` ${key.toLowerCase()}="${value}"`;
-                } else if (value instanceof Object) {
+                    fstLine += ` ${newKey}="${value}"`;
+                } 
+                else if(typeof value == "boolean"){
+                    fstLine += ` ${newKey}="${value ? "true" : "false"}"`;
+                }
+                else if (value instanceof Object) {
                     const ind = key.indexOf("Option");
                     if (ind != -1 && ind == key.length - 6) {
                         const prefixName = key.substring(0, key.length - 6).toLowerCase();

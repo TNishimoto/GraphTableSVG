@@ -13,6 +13,9 @@ export class Debugger {
     public static getDebugMode() : DebugMode{
         return debugMode;        
     }
+    public static getStopWatchFlag() : boolean{
+        return true;
+    }
     public static updateFlagLog(obj : any, func : any, msg : string){
         if(debugMode == "ObserveUpdateFlag"){
             const type = obj.constructor.name;

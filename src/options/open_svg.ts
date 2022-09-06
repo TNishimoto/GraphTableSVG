@@ -148,15 +148,23 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
         } else if (type == ShapeObjectType.Table) {
             const logicTable = LogicTable.constructLogicTable(e);
             const option = GTable.constructAttributes(e, true);
-            
+            if(logicTable != null){
+                option.rowCount = logicTable.rowCount;
+                option.columnCount = logicTable.columnCount
 
+            }
+
+            const oldTimex1 = new Date();
             const table = new GTable(parent);
             table.setOption(option);
-
-
             if (logicTable !== null) {
                 table.buildFromLogicTable(logicTable);
             }
+            const oldTimex2 = new Date();
+            const diffx = oldTimex2.getTime() - oldTimex1.getTime();
+            console.log(`First Construction: ObjectID = ${table.objectID}: Constructin time = ${Math.abs(diffx) / 1000}s`);
+
+
             r = table;
 
         }

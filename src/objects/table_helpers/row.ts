@@ -5,6 +5,7 @@
 import { Rectangle, Size, round100, nearlyEqual } from "../../common/vline";
 import { setAttributeNumber } from "../../interfaces/element_extension";
 import { Debugger } from "../../common/debugger";
+import { GOptions } from "..";
 
     /**
      * 表の行を表現するクラスです。
@@ -31,6 +32,27 @@ import { Debugger } from "../../common/debugger";
             //this.height = this.getMaxHeight();
 
         }
+        public get unstableCounter(): number | null {
+            const p = this.svgGroup.getAttribute(GOptions.unstableCounterName);
+            if (p == null) {
+                return null;
+            } else {
+                const num = Number(p);
+                return num;
+            }
+        }
+        private set unstableCounter(value: number | null) {
+            if (value == null) {
+                this.svgGroup.removeAttribute(GOptions.unstableCounterName)
+            } else {
+                this.svgGroup.setAttribute(GOptions.unstableCounterName, value.toString());
+    
+            }
+        }
+        public resetUnstableCounter(): void {
+            this.unstableCounter = GOptions.unstableCounterDefault;
+        }
+    
         private createCell(cellX: number, cellY: number): Cell {
             const cellClass = undefined; //this.table.defaultCellClass == null ? undefined : this.table.defaultCellClass;
             const borderClass = undefined
