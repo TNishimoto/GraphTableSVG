@@ -51,7 +51,7 @@ let uniqueCellID = 0;
 /**
  * セルをSVGで表現するためのクラスです。
  */
-export class Cell {
+export class Cell implements GObserver.ITextBox, GObserver.IObject {
 
     constructor(parent: GTable, _px: number, _py: number, option: CellOption = {}) {
         this._svgGroup = SVG.createGroup(null);
@@ -74,6 +74,9 @@ export class Cell {
         this._svgText = SVG.createText(textClass);
         this.svgGroup.appendChild(this.svgText);
 
+        this.stableFlag = false;
+
+
         //const borderClass = option.borderClass === undefined ? null : option.borderClass;
 
         //const option1: MutationObserverInit = { childList: true, subtree: true };
@@ -85,15 +88,37 @@ export class Cell {
         const option2: MutationObserverInit = { attributes: true };
         this._observer.observe(this.svgGroup, option2);
 
-        this._uniqueCellID = uniqueCellID++;
         const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
         if(svgsvgAncestor != null){            
-            GObserver.registerGObject(svgsvgAncestor, this, `${this.table.objectID}_${this._uniqueCellID}`)
+            GObserver.registerGObject(svgsvgAncestor, this)
         }
 
 
     }
-    private _uniqueCellID : number = 0;
+    public updateSurfaceWithoutSVGText() : boolean{
+        if(this.childrenStableFlag){
+            this.tryUpdateWithUpdateFlag(true);        
+            return true;
+
+        }else{
+            return false;
+        }
+    }
+
+    public get stableFlag(): boolean {
+        return this.svgGroup.getAttribute(GObserver.ObjectStableFlagName) == "true";
+    }
+    private set stableFlag(b : boolean){
+        this.svgGroup.setAttribute(GObserver.ObjectStableFlagName, b ? "true" : "false");
+    }
+    public get childrenStableFlag() : boolean{
+        const b = this.svgText.getAttribute(GObserver.ObjectStableFlagName);
+        return b == "true";
+    }
+
+    public get objectID(): string {
+        return this.svgGroup.getAttribute(AttributeNames.objectIDName)!;
+    }
     public get unstableCounter(): number | null {
         const p = this.svgGroup.getAttribute(GObserver.unstableCounterName);
         if (p == null) {

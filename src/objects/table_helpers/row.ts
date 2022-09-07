@@ -7,11 +7,13 @@ import { setAttributeNumber } from "../../interfaces/element_extension";
 import { Debugger } from "../../common/debugger";
 import { GOptions } from "..";
 import * as GObserver from "../g_observer";
+import * as AttributeNames from "../../common/attribute_names"
+import { getSVGSVGAncestor } from "../../html/html_functions";
 
     /**
      * 表の行を表現するクラスです。
      */
-    export class CellRow {
+    export class CellRow implements GObserver.IObject {
         private readonly table: GTable;
         //private readonly _cellY: number;
         private _svgGroup: SVGGElement;
@@ -21,11 +23,18 @@ import * as GObserver from "../g_observer";
             this.table = _table;
             this._svgGroup = SVG.createGroup(this.table.svgGroup);
             this.svgGroup.setAttribute("name", "cell_row");
+            this.stableFlag = false;
             this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgRowBorderGroup);
 
             this.cellY = _y;
             this._svgGroup.setAttribute(CellRow.columnHeightName, `${_height}`);
             this.unstableCounter = GObserver.unstableCounterDefault;
+
+            const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
+            if(svgsvgAncestor != null){            
+                GObserver.registerGObject(svgsvgAncestor, this)
+            }
+    
 
             /*
             for(let i=0;i<cellCount;i++){
@@ -55,6 +64,26 @@ import * as GObserver from "../g_observer";
         public resetUnstableCounter(): void {
             this.unstableCounter = GObserver.unstableCounterDefault;
         }
+        public get childrenStableFlag() : boolean{
+            let b = true;
+            for(let i = 0;i<this._cells.length;i++){
+                if(!this._cells[i].stableFlag){
+                    b = false;
+                    break;
+                }
+            }
+            return b;
+
+        }
+        public updateSurfaceWithoutSVGText() : boolean {
+            if(this.childrenStableFlag){
+                return true;
+
+            }else{
+                return false;
+            }
+        }
+    
     
         private createCell(cellX: number, cellY: number): Cell {
             const cellClass = undefined; //this.table.defaultCellClass == null ? undefined : this.table.defaultCellClass;
@@ -91,10 +120,16 @@ import * as GObserver from "../g_observer";
             return this.cells.length;
         }
 
-        public get svgGroup(): SVGElement {
+        public get svgGroup(): SVGGElement {
             return this._svgGroup;
         }
-
+        public get stableFlag(): boolean {
+            return this.svgGroup.getAttribute(GObserver.ObjectStableFlagName) == "true";
+        }
+        private set stableFlag(b : boolean){
+            this.svgGroup.setAttribute(GObserver.ObjectStableFlagName, b ? "true" : "false");
+        }
+    
         /**
         列の単位セルのY座標を返します。
         */
@@ -416,6 +451,10 @@ import * as GObserver from "../g_observer";
                 }
             })
         }
+        public get objectID(): string {
+            return this.svgGroup.getAttribute(AttributeNames.objectIDName)!;
+        }
+    
     }
 
 //}

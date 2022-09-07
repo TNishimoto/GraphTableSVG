@@ -1,5 +1,6 @@
 
 export type GraphAllocateFunction = (graph: object) => void
+import { objectIDName } from "../common/attribute_names";
 import { Debugger } from "../common/debugger";
 import { nearlyEqual, round100 } from "../common/vline";
 
@@ -13,8 +14,42 @@ const timerDic: Map<string, Date> = new Map();
 
 export const svgTextBBoxWidthName = "data-bbox-width";
 export const svgTextBBoxHeightName = "data-bbox-height";
-export const svgTextBBoxStableName = "data-bbox-stable";
+export const ObjectStableFlagName = "data-stable-flag";
 
+export interface IObject {
+    get svgGroup() : SVGGElement;
+    get objectID() : string;
+    get stableFlag() : boolean;
+    get childrenStableFlag() : boolean;
+    updateSurfaceWithoutSVGText() : boolean;
+
+}
+export interface ITextBox {
+    get svgGroup() : SVGGElement;
+    get objectID() : string;
+    get stableFlag() : boolean;
+    get childrenStableFlag() : boolean;
+    updateSurfaceWithoutSVGText() : boolean;
+
+    get svgText() : SVGTextElement;
+}
+
+function bubbleFalse(obj : SVGElement){
+    const objectID = obj.getAttribute(objectIDName);
+    if(objectID != null){
+        const attr = obj.getAttribute(ObjectStableFlagName);
+        if(attr != "false"){
+            obj.setAttribute(ObjectStableFlagName, "false");
+        }
+    }
+
+    const parent = obj.parentElement;
+    if(parent instanceof SVGElement){
+        if(!(parent instanceof SVGSVGElement)){
+            bubbleFalse(parent);
+        }
+    }
+}
 
 export function updateText(svgText: SVGTextElement) {
     const bbox = svgText.getBBox();
@@ -49,21 +84,19 @@ export function updateText(svgText: SVGTextElement) {
         b = true;
     }
 
-    const stableFlag = svgText.getAttribute(svgTextBBoxStableName);
+    const stableFlag = svgText.getAttribute(ObjectStableFlagName);
     if (b) {
-        if (stableFlag != "false") {
-            svgText.setAttribute(svgTextBBoxStableName, "false");
-        }
+        bubbleFalse(svgText);
     } else {
         if (stableFlag == "false") {
-            svgText.setAttribute(svgTextBBoxStableName, "true");
+            svgText.setAttribute(ObjectStableFlagName, "true");
         }
     }
 }
 export function textObserveTimer(svgsvg: SVGSVGElement) {
     const obj = (<any>svgsvg)._gobjects;
     if (obj instanceof Map) {
-        obj.forEach((value, key) => {
+        obj.forEach((value : ITextBox, key) => {
             const svgText = value.svgText;
             if(svgText instanceof SVGTextElement){
                 updateText(svgText);
@@ -107,7 +140,7 @@ export function decrementUnstableCounter(value: any) {
 
 
 
-export function registerGObject(svgsvg: SVGSVGElement, obj: Object, objectID: string) {
+export function registerGObject(svgsvg: SVGSVGElement, obj: IObject) {
     if ((<any>svgsvg)._gobjects === undefined) {
         (<any>svgsvg)._gobjects = new Map<string, Object>();
 
@@ -117,7 +150,7 @@ export function registerGObject(svgsvg: SVGSVGElement, obj: Object, objectID: st
 
     const map: Map<string, Object> = (<any>svgsvg)._gobjects;
     if (map instanceof Map) {
-        map.set(objectID, obj);
+        map.set(obj.objectID, obj);
 
     }
 
@@ -129,9 +162,20 @@ export function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
     //console.log(`updateSVGSVGTimerCounter: ${updateSVGSVGTimerCounter}`)
     const obj = (<any>svgsvg)._gobjects;
     if (obj instanceof Map) {
-        obj.forEach((value, key) => {
+        obj.forEach((value : IObject, key) => {
             const objectID: string = value.objectID;
-
+            const b = value.stableFlag;
+            if(!b){
+                const b2 = value.childrenStableFlag;
+                if(b2){
+                    const b3 = value.updateSurfaceWithoutSVGText();
+                    if(b3){
+                        value.svgGroup.setAttribute(ObjectStableFlagName, "true");
+                    }
+                }
+            }
+            
+            /*
             if (value.unstableCounter != null) {
                 const oldTimex1 = new Date();
                 const b = value.getUpdateFlag();
@@ -180,6 +224,7 @@ export function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
                 }
 
             }
+            */
         })
     }
 

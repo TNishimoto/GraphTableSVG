@@ -1289,6 +1289,17 @@ export class GTable extends GVertex {
         this.tryResizeWithUpdateFlag(true);
 
     }
+    public get childrenStableFlag() : boolean{
+        let b = true;
+        for(let i = 0;i<this.rows.length;i++){
+            if(!this.rows[i].stableFlag){
+                b = false;
+                break;
+            }
+        }
+        return b;
+
+    }
     private relocateWithUpdate(withUpdate:boolean) : boolean{
         let b = false;
         let height = 0;

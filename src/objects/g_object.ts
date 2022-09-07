@@ -26,7 +26,7 @@ export type GObjectMaps = {
     surfaceAttributes?: Map<string, string>;
     textAttributes?: Map<string, string>;
 }
-export class GObject {
+export class GObject implements GObserver.IObject {
 
     protected _svgSurface: SVGElement | null = null;
     protected _tag: any;
@@ -42,6 +42,7 @@ export class GObject {
             GUIObserver.observeSVGSVG(parentElement);
         }
         this._svgGroup = SVG.createGroup(parentElement);
+        this.stableFlag = false;
 
         /*
         GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
@@ -79,7 +80,7 @@ export class GObject {
 
         const svgsvgAncestor = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
         if (svgsvgAncestor instanceof SVGSVGElement) {
-            GObserver.registerGObject(svgsvgAncestor, this, this.objectID)
+            GObserver.registerGObject(svgsvgAncestor, this)
 
         }
 
@@ -96,6 +97,21 @@ export class GObject {
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
 
     }
+    public get stableFlag(): boolean {
+        return this.svgGroup.getAttribute(GObserver.ObjectStableFlagName) == "true";
+    }
+    protected set stableFlag(b : boolean){
+        this.svgGroup.setAttribute(GObserver.ObjectStableFlagName, b ? "true" : "false");
+    }
+    public get childrenStableFlag() : boolean{
+        return true;
+    }
+    public updateSurfaceWithoutSVGText() : boolean{
+        this.update();        
+        return true;
+    }
+
+
 
     /*
     public setUnstableFlag() : void {
