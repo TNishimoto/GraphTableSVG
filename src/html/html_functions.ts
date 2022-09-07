@@ -147,5 +147,18 @@ import * as AttributeNames from "../common/attribute_names"
         }
         return s;
     }
+    export function getSVGSVGAncestor(e: HTMLElement | SVGElement): SVGSVGElement | null {
+        const parent = e.parentElement;
+        if(parent == null){
+            return null;
+        }else{
+            if(parent instanceof SVGSVGElement){
+                return parent;
+            }else{
+                return getSVGSVGAncestor(parent);
+            }
+        }
+
+    }
 
 //}

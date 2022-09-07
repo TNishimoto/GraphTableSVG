@@ -1318,9 +1318,9 @@ export class GTable extends GVertex {
 
         const cells = this.cellArray;
         for(let i = 0;i<cells.length;i++){
-            b = cells[i].tryRelocateWithUpdateFlag(withUpdate) || b;
+            b = cells[i].tryLocateSVGTextWithUpdateFlag(withUpdate) || b;
             if(!withUpdate && b){
-                Debugger.updateFlagLog(this, this.relocateWithUpdate, cells[i].tryRelocateWithUpdateFlag.name)
+                Debugger.updateFlagLog(this, this.relocateWithUpdate, cells[i].tryLocateSVGTextWithUpdateFlag.name)
 
 
                 return b;

@@ -26,6 +26,8 @@ import { Debugger } from "../../common/debugger"
 import { CellColumn } from "./column"
 import { CellRow } from "./row"
 import { GOptions } from ".."
+import * as GObserver from "../g_observer"
+import { getSVGSVGAncestor } from "../../html/html_functions"
 
 //import { LogicCell } from "../logic/logic_cell"
 
@@ -41,10 +43,10 @@ export type DirectionType = "top" | "left" | "right" | "bottom";
 export enum DirectionType2 {
     topLeft = 0, bottomLeft = 1, bottomRight = 2, topRight = 3
 }
-type BorderCoodinateType = "x1" | "x2" | "y1" | "y2";
+export type BorderCoodinateType = "x1" | "x2" | "y1" | "y2";
 
 
-
+let uniqueCellID = 0;
 
 /**
  * セルをSVGで表現するためのクラスです。
@@ -77,15 +79,23 @@ export class Cell {
         //const option1: MutationObserverInit = { childList: true, subtree: true };
         //this.table.cellTextObserver.observe(this.svgText, option1);
 
+        this.unstableCounter = GObserver.unstableCounterDefault;
 
         this._observer = new MutationObserver(this._observerFunc);
         const option2: MutationObserverInit = { attributes: true };
         this._observer.observe(this.svgGroup, option2);
 
+        this._uniqueCellID = uniqueCellID++;
+        const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
+        if(svgsvgAncestor != null){            
+            GObserver.registerGObject(svgsvgAncestor, this, `${this.table.objectID}_${this._uniqueCellID}`)
+        }
+
 
     }
+    private _uniqueCellID : number = 0;
     public get unstableCounter(): number | null {
-        const p = this.svgGroup.getAttribute(GOptions.unstableCounterName);
+        const p = this.svgGroup.getAttribute(GObserver.unstableCounterName);
         if (p == null) {
             return null;
         } else {
@@ -94,36 +104,19 @@ export class Cell {
         }
     }
     private set unstableCounter(value: number | null) {
+        console.log(`${this.cellX} ${this.cellY} ${value}`)
         if (value == null) {
-            this.svgGroup.removeAttribute(GOptions.unstableCounterName)
+            this.svgGroup.removeAttribute(GObserver.unstableCounterName)
         } else {
-            this.svgGroup.setAttribute(GOptions.unstableCounterName, value.toString());
+            this.svgGroup.setAttribute(GObserver.unstableCounterName, value.toString());
 
         }
     }
     public resetUnstableCounter(): void {
-        this.unstableCounter = GOptions.unstableCounterDefault;
+        this.unstableCounter = GObserver.unstableCounterDefault;
     }
 
-    private tryUpdateBorderCoodinateWithUpdateFlag(borderType: DirectionType, newValue: number, type: BorderCoodinateType, withUpdate: boolean): boolean {
-        let b = false;
-        const oldValue = this.getBorderPosition(borderType, type);
-        const newValue100 = round100(newValue);
-
-        if (!nearlyEqual(oldValue, newValue100)) {
-            b = true;
-            if (withUpdate) {
-                Debugger.updateLog(this, this.tryUpdateBorderCoodinateWithUpdateFlag, `Border = ${borderType}, Position = ${type}: ${oldValue}->${newValue}`)
-
-                this.setBorderPosition(borderType, type, newValue100);
-            }
-            if (!withUpdate && b) {
-                Debugger.updateFlagLog(this, this.tryUpdateBorderCoodinateWithUpdateFlag, `Border = ${borderType}, Position = ${type}: ${oldValue}->${newValue}`)
-            }
-        }
-        return b;
-    }
-    private getBorderPosition(borderType: DirectionType, positionType: BorderCoodinateType): number {
+    public getBorderPosition(borderType: DirectionType, positionType: BorderCoodinateType): number {
 
         let border = this.svgTopBorder;
         switch (borderType) {
@@ -153,36 +146,7 @@ export class Cell {
         }
         throw new Error("Error");
     }
-    private setBorderPosition(borderType: DirectionType, positionType: BorderCoodinateType, newValue: number) {
-
-        let border = this.svgTopBorder;
-        switch (borderType) {
-            case "top":
-                border = this.svgTopBorder;
-                break;
-            case "left":
-                border = this.svgLeftBorder;
-                break;
-            case "right":
-                border = this.svgRightBorder;
-                break;
-            case "bottom":
-                border = this.svgBottomBorder;
-                break;
-        }
-
-        switch (positionType) {
-            case "x1":
-                border.x1.baseVal.value = round100(newValue);
-            case "x2":
-                border.x2.baseVal.value = round100(newValue);
-            case "y1":
-                border.y1.baseVal.value = round100(newValue);
-            case "y2":
-                border.y2.baseVal.value = round100(newValue);
-
-        }
-    }
+    
     // #region style
     private recomputeDefaultProperties() {
         /*
@@ -707,7 +671,7 @@ export class Cell {
         return [this.master.cellY, this.master.mostBottomCellY];
     }
 
-    private computeBorderLength2(dir: DirectionType): number {
+    public computeBorderLength2(dir: DirectionType): number {
         //const andFunc = ((v, w) => v);
 
         const d1 = dir == "top" || dir == "bottom" ? this.master.x : this.master.y;
@@ -1091,9 +1055,9 @@ export class Cell {
 
             return b;
         }
-        b = this.tryRelocateWithUpdateFlag(withUpdate) || b;
+        b = this.tryLocateSVGTextWithUpdateFlag(withUpdate) || b;
         if (!withUpdate && b) {
-            Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag, this.tryRelocateWithUpdateFlag.name)
+            Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag, this.tryLocateSVGTextWithUpdateFlag.name)
             return b;
         }
         return b;
@@ -1351,336 +1315,44 @@ export class Cell {
     // #endregion
     // #region relocate
 
-    private tryRelocateBottomBorderWithUpdateFlag(withUpdate: boolean): boolean {
 
-        if (!this.isMaster) {
-            return false;
-        }
-        if (this.table.svgGroup.contains(this.svgBottomBorder)) {
-            if (this.isMaster) {
-                const x1 = this.x;
-                const b1 = this.tryUpdateBorderCoodinateWithUpdateFlag("bottom", x1, "x1", withUpdate);
-                if (withUpdate && b1) {
-                    Debugger.updateLog(this, this.tryRelocateBottomBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                }
-
-                if (!withUpdate && b1) {
-                    Debugger.updateFlagLog(this, this.tryRelocateBottomBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                    return true;
-                }
-
-                const x2 = this.x + this.computeBorderLength2("bottom");
-                const b2 = this.tryUpdateBorderCoodinateWithUpdateFlag("bottom", x2, "x2", withUpdate);
-                if (withUpdate && b2) {
-                    Debugger.updateLog(this, this.tryRelocateBottomBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                }
-                if (!withUpdate && b2) {
-                    Debugger.updateFlagLog(this, this.tryRelocateBottomBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                    return true;
-                }
-
-
-                const y1 = this.y + this.height;
-                const b3 = this.tryUpdateBorderCoodinateWithUpdateFlag("bottom", y1, "y1", withUpdate);
-                if (withUpdate && b3) {
-                    Debugger.updateLog(this, this.tryRelocateBottomBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                }
-
-                if (!withUpdate && b3) {
-                    Debugger.updateFlagLog(this, this.tryRelocateBottomBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                    return true;
-                }
-
-
-                const y2 = this.getBorderPosition("bottom", "y1");
-                const b4 = this.tryUpdateBorderCoodinateWithUpdateFlag("bottom", y2, "y2", withUpdate);
-                if (withUpdate && b4) {
-                    Debugger.updateLog(this, this.tryRelocateBottomBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                }
-                if (!withUpdate && b4) {
-                    Debugger.updateFlagLog(this, this.tryRelocateBottomBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                    return true;
-                }
-                return b1 || b2 || b3 || b4;
-            } else if (this.bottomCell != null && this.bottomCell.isMaster) {
-                const b = this.bottomCell.tryRelocateTopBorderWithUpdateFlag(withUpdate);
-                return b;
-            } else {
-                throw Error("error");
-            }
-        }else{
-            return false;
-        }
-
-    }
-
-
-    private tryRelocateTopBorderWithUpdateFlag(withUpdate: boolean): boolean {
-        //let b = false;
-        if (!this.isMaster) return false;
-
-        if (this.table.svgGroup.contains(this.svgTopBorder)) {
-            if (this.isMaster) {
-                const x1 = this.x;
-                const b1 = this.tryUpdateBorderCoodinateWithUpdateFlag("top", x1, "x1", withUpdate);
-                if (withUpdate && b1) {
-                    Debugger.updateLog(this, this.tryRelocateTopBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                }
-                if (!withUpdate && b1) {
-                    Debugger.updateFlagLog(this, this.tryRelocateTopBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                    return true;
-                }
-
-                const x2 = this.x + this.computeBorderLength2("top");
-                const b2 = this.tryUpdateBorderCoodinateWithUpdateFlag("top", x2, "x2", withUpdate);
-                if (withUpdate && b2) {
-                    Debugger.updateLog(this, this.tryRelocateTopBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                }
-                if (!withUpdate && b2) {
-                    Debugger.updateFlagLog(this, this.tryRelocateTopBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                    return true;
-                }
-
-                const y1 = this.y;
-                const b3 = this.tryUpdateBorderCoodinateWithUpdateFlag("top", y1, "y1", withUpdate);
-                if (withUpdate && b3) {
-                    Debugger.updateLog(this, this.tryRelocateTopBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                }
-                if (!withUpdate && b3) {
-                    Debugger.updateFlagLog(this, this.tryRelocateTopBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                    return true;
-                }
-
-
-                const y2 = this.getBorderPosition("top", "y1");
-                const b4 = this.tryUpdateBorderCoodinateWithUpdateFlag("top", y2, "y2", withUpdate);
-                if (withUpdate && b4) {
-                    Debugger.updateLog(this, this.tryRelocateTopBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                }
-                if (!withUpdate && b4) {
-                    Debugger.updateFlagLog(this, this.tryRelocateTopBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                    return true;
-                }
-                return b1 || b2 || b3 || b4;
-
-            } else if (this.topCell != null && this.topCell.isMaster) {
-                const b = this.topCell.tryRelocateBottomBorderWithUpdateFlag(withUpdate);
-                return b;
-            } else {
-                throw Error("error");
-            }
-        } else {
-            return false;
-        }
-
-    }
-    private tryRelocateLeftBorderWithUpdateFlag(withUpdate: boolean): boolean {
-        if (!this.isMaster) {
-            return false;
-        }
-
-        if (this.table.svgGroup.contains(this.svgLeftBorder)) {
-            if (this.isMaster) {
-                const x1 = this.x;
-                const b1 = this.tryUpdateBorderCoodinateWithUpdateFlag("left", x1, "x1", withUpdate);
-                if (withUpdate && b1) {
-                    Debugger.updateLog(this, this.tryRelocateLeftBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                }
-                if (!withUpdate && b1) {
-                    Debugger.updateFlagLog(this, this.tryRelocateLeftBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                    return true;
-                }
-
-                const x2 = this.getBorderPosition("left", "x1");;
-                const b2 = this.tryUpdateBorderCoodinateWithUpdateFlag("left", x2, "x2", withUpdate);
-                if (withUpdate && b2) {
-                    Debugger.updateLog(this, this.tryRelocateLeftBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                }
-
-                if (!withUpdate && b2) {
-                    Debugger.updateFlagLog(this, this.tryRelocateLeftBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                    return true;
-                }
-
-                const y1 = this.y;
-                const b3 = this.tryUpdateBorderCoodinateWithUpdateFlag("left", y1, "y1", withUpdate);
-                if (withUpdate && b3) {
-                    Debugger.updateLog(this, this.tryRelocateLeftBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                }
-                if (!withUpdate && b3) {
-                    Debugger.updateFlagLog(this, this.tryRelocateLeftBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                    return true;
-                }
-
-                const y2 = this.y + this.computeBorderLength2("left");
-                const b4 = this.tryUpdateBorderCoodinateWithUpdateFlag("left", y2, "y2", withUpdate);
-                if (withUpdate && b4) {
-                    Debugger.updateLog(this, this.tryRelocateLeftBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                }
-
-                if (!withUpdate && b4) {
-                    Debugger.updateFlagLog(this, this.tryRelocateLeftBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                    return true;
-                }
-                return b1 || b2 || b3 || b4;
-
-            } else if (this.leftCell != null && this.leftCell.isMaster) {
-                const b = this.leftCell.tryRelocateRightBorderWithUpdateFlag(withUpdate);
-                return b;
-            } else {
-                throw Error("error");
-            }
-        }else{
-            return false;
-        }
-    }
-    private tryRelocateRightBorderWithUpdateFlag(withUpdate: boolean): boolean {
-        if (!this.isMaster) {
-            return false;
-        }
-
-        if (this.table.svgGroup.contains(this.svgRightBorder)) {
-            if (this.isMaster) {
-                const x1 = this.x + this.width;
-                const b1 = this.tryUpdateBorderCoodinateWithUpdateFlag("right", x1, "x1", withUpdate);
-                if (withUpdate && b1) {
-                    Debugger.updateFlagLog(this, this.tryRelocateRightBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                }
-                if (!withUpdate && b1) {
-                    Debugger.updateFlagLog(this, this.tryRelocateRightBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                    return true;
-                }
-
-                const x2 = this.x + this.width;
-                const b2 = this.tryUpdateBorderCoodinateWithUpdateFlag("right", x2, "x2", withUpdate);
-                if (withUpdate && b2) {
-                    Debugger.updateLog(this, this.tryRelocateRightBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                }
-                if (!withUpdate && b2) {
-                    Debugger.updateFlagLog(this, this.tryRelocateRightBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                    return true;
-                }
-
-                const y1 = this.y;
-                const b3 = this.tryUpdateBorderCoodinateWithUpdateFlag("right", y1, "y1", withUpdate);
-                if (withUpdate && b3) {
-                    Debugger.updateLog(this, this.tryRelocateRightBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                }
-                if (!withUpdate && b3) {
-                    Debugger.updateFlagLog(this, this.tryRelocateRightBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                    return true;
-                }
-
-                const y2 = this.y + this.computeBorderLength2("right");
-                const b4 = this.tryUpdateBorderCoodinateWithUpdateFlag("right", y2, "y2", withUpdate);
-                if (withUpdate && b4) {
-                    Debugger.updateLog(this, this.tryRelocateRightBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                }
-
-                if (!withUpdate && b4) {
-                    Debugger.updateFlagLog(this, this.tryRelocateRightBorderWithUpdateFlag, `${this.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                    return true;
-                }
-                return b1 || b2 || b3 || b4;
-            } else if (this.rightCell != null && this.rightCell.isMaster) {
-                const b = this.rightCell.tryRelocateLeftBorderWithUpdateFlag(withUpdate);
-                return b;
-            } else {
-                throw Error("error");
-            }
-        }else{
-            return false;
-        }
-    }
-
-
-    /**
-     * 上枠の位置を再計算します。
-     */
+    /*
     private relocateTopBorder() {
         this.tryRelocateTopBorderWithUpdateFlag(true);
     }
-    /**
-     * 左枠の位置を再計算します。
-     */
     private relocateLeftBorder() {
         this.tryRelocateLeftBorderWithUpdateFlag(true);
     }
-    /**
-     * 右枠の位置を再計算します。
-     */
     private relocateRightBorder() {
         this.tryRelocateRightBorderWithUpdateFlag(true);
     }
-    /**
-     * 下枠の位置を再計算します。
-     */
     private relocateBottomBorder() {
         this.tryRelocateBottomBorderWithUpdateFlag(true);
     }
-    /**
-     *セルの位置を再計算します。
-     */
-    public tryRelocateWithUpdateFlag(withUpdate: boolean): boolean {
+    */
+
+    /*
+    public tryAAA(withUpdate: boolean): boolean {
         //let b = false;
         if (!CommonFunctions.IsDescendantOfBody(this.svgGroup)) {
             return false;
         }
 
-        const b1 = this.tryRelocateTopBorderWithUpdateFlag(withUpdate);
-        if (withUpdate && b1) {
-            Debugger.updateLog(this, this.tryRelocateWithUpdateFlag, `${this.tryRelocateTopBorderWithUpdateFlag.name}`)
-        }
-        if (!withUpdate && b1) {
-            Debugger.updateFlagLog(this, this.tryRelocateWithUpdateFlag, `${this.tryRelocateTopBorderWithUpdateFlag.name}`)
-            return true;
-        }
-
-        const b2 = this.tryRelocateLeftBorderWithUpdateFlag(withUpdate);
-        if (withUpdate && b2) {
-            Debugger.updateLog(this, this.tryRelocateWithUpdateFlag, `${this.tryRelocateLeftBorderWithUpdateFlag.name}`)
-        }
-
-        if (!withUpdate && b2) {
-            Debugger.updateFlagLog(this, this.tryRelocateWithUpdateFlag, `${this.tryRelocateLeftBorderWithUpdateFlag.name}`)
-            return true;
-        }
-
-        const b3 = this.tryRelocateRightBorderWithUpdateFlag(withUpdate);
-        if (withUpdate && b3) {
-            Debugger.updateLog(this, this.tryRelocateWithUpdateFlag, `${this.tryRelocateRightBorderWithUpdateFlag.name}`)
-        }
-
-        if (!withUpdate && b3) {
-            Debugger.updateFlagLog(this, this.tryRelocateWithUpdateFlag, `${this.tryRelocateRightBorderWithUpdateFlag.name}`)
-
-            return true;
-        }
-
-        const b4 = this.tryRelocateBottomBorderWithUpdateFlag(withUpdate);
-        if (withUpdate && b4) {
-            Debugger.updateLog(this, this.tryRelocateWithUpdateFlag, `${this.tryRelocateBottomBorderWithUpdateFlag.name}`)
-        }
-
-        if (!withUpdate && b4) {
-            Debugger.updateFlagLog(this, this.tryRelocateWithUpdateFlag, `${this.tryRelocateBottomBorderWithUpdateFlag.name}`)
-            return true;
-        }
-
         const b5 = this.tryLocateSVGTextWithUpdateFlag(withUpdate);
         if (withUpdate && b5) {
-            Debugger.updateLog(this, this.tryRelocateWithUpdateFlag, `${this.tryLocateSVGTextWithUpdateFlag.name}`)
+            Debugger.updateLog(this, this.tryAAA, `${this.tryLocateSVGTextWithUpdateFlag.name}`)
         }
         if (!withUpdate && b5) {
-            Debugger.updateFlagLog(this, this.tryRelocateWithUpdateFlag, `${this.tryLocateSVGTextWithUpdateFlag.name}`)
+            Debugger.updateFlagLog(this, this.tryAAA, `${this.tryLocateSVGTextWithUpdateFlag.name}`)
             return true;
         }
 
-        return b1 || b2 || b3 || b4 || b5;
+        return b5;
     }
+    */
 
     public relocation() {
-        this.tryRelocateWithUpdateFlag(true);
+        this.tryLocateSVGTextWithUpdateFlag(true);
     }
     // #endregion
 
@@ -1888,7 +1560,7 @@ export class Cell {
     /**
      * テキストを再描画します。
      */
-    private tryLocateSVGTextWithUpdateFlag(withUpdate: boolean): boolean {
+    public tryLocateSVGTextWithUpdateFlag(withUpdate: boolean): boolean {
         const innerRect = this.getVirtualInnerRegion();
         return SVGTextExtension.updateLocationOrGetUpdateFlag(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None, withUpdate);
 

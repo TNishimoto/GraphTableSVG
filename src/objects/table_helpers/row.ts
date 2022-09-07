@@ -6,6 +6,7 @@ import { Rectangle, Size, round100, nearlyEqual } from "../../common/vline";
 import { setAttributeNumber } from "../../interfaces/element_extension";
 import { Debugger } from "../../common/debugger";
 import { GOptions } from "..";
+import * as GObserver from "../g_observer";
 
     /**
      * 表の行を表現するクラスです。
@@ -24,6 +25,8 @@ import { GOptions } from "..";
 
             this.cellY = _y;
             this._svgGroup.setAttribute(CellRow.columnHeightName, `${_height}`);
+            this.unstableCounter = GObserver.unstableCounterDefault;
+
             /*
             for(let i=0;i<cellCount;i++){
                 this._cells.push(this.createCell(i, _y));
@@ -33,7 +36,7 @@ import { GOptions } from "..";
 
         }
         public get unstableCounter(): number | null {
-            const p = this.svgGroup.getAttribute(GOptions.unstableCounterName);
+            const p = this.svgGroup.getAttribute(GObserver.unstableCounterName);
             if (p == null) {
                 return null;
             } else {
@@ -43,14 +46,14 @@ import { GOptions } from "..";
         }
         private set unstableCounter(value: number | null) {
             if (value == null) {
-                this.svgGroup.removeAttribute(GOptions.unstableCounterName)
+                this.svgGroup.removeAttribute(GObserver.unstableCounterName)
             } else {
-                this.svgGroup.setAttribute(GOptions.unstableCounterName, value.toString());
+                this.svgGroup.setAttribute(GObserver.unstableCounterName, value.toString());
     
             }
         }
         public resetUnstableCounter(): void {
-            this.unstableCounter = GOptions.unstableCounterDefault;
+            this.unstableCounter = GObserver.unstableCounterDefault;
         }
     
         private createCell(cellX: number, cellY: number): Cell {
@@ -396,6 +399,22 @@ import { GOptions } from "..";
             } else {
                 return range;
             }
+        }
+
+
+        public getBase1UpdateFlag(){
+            const b = this.cells.every((v) => v.unstableCounter == null);
+            return !b;
+        }
+        public base1Update(){
+            this.cells.forEach((v) => {
+                const b = v.tryUpdateWithUpdateFlag(true);
+                if(b){
+                    v.resetUnstableCounter();
+                }else{
+                    GObserver.decrementUnstableCounter(v);
+                }
+            })
         }
     }
 

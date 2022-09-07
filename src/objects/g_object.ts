@@ -15,6 +15,7 @@ import { ShapeObjectType } from "../common/enums";
 import * as  GOptions from "./g_options";
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
+import * as GObserver from "./g_observer"
 
 
 
@@ -74,19 +75,11 @@ export class GObject {
 
         this.allowHover = true;
 
-        this.unstableCounter = GOptions.unstableCounterDefault;
-        if (parentElement instanceof SVGSVGElement) {
-            if ((<any>parentElement)._gobjects === undefined) {
-                (<any>parentElement)._gobjects = new Map<string, GObject>();
+        this.unstableCounter = GObserver.unstableCounterDefault;
 
-                setTimeout(GOptions.updateSVGSVGTimer, GOptions.timerInterval, parentElement);
-
-            }
-            const map: Map<string, GObject> = (<any>parentElement)._gobjects;
-            if (map instanceof Map<string, GObject>) {
-                map.set(this.objectID, this);
-
-            }
+        const svgsvgAncestor = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
+        if (svgsvgAncestor instanceof SVGSVGElement) {
+            GObserver.registerGObject(svgsvgAncestor, this, this.objectID)
 
         }
 
@@ -111,7 +104,7 @@ export class GObject {
     */
 
     public get unstableCounter(): number | null {
-        const p = this.svgGroup.getAttribute(GOptions.unstableCounterName);
+        const p = this.svgGroup.getAttribute(GObserver.unstableCounterName);
         if (p == null) {
             return null;
         } else {
@@ -121,14 +114,14 @@ export class GObject {
     }
     protected set unstableCounter(value: number | null) {
         if (value == null) {
-            this.svgGroup.removeAttribute(GOptions.unstableCounterName)
+            this.svgGroup.removeAttribute(GObserver.unstableCounterName)
         } else {
-            this.svgGroup.setAttribute(GOptions.unstableCounterName, value.toString());
+            this.svgGroup.setAttribute(GObserver.unstableCounterName, value.toString());
 
         }
     }
     public resetUnstableCounter(): void {
-        this.unstableCounter = GOptions.unstableCounterDefault;
+        this.unstableCounter = GObserver.unstableCounterDefault;
     }
 
 
