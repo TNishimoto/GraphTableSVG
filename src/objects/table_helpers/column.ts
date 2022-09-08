@@ -206,7 +206,7 @@ export class CellColumn {
         this.tryResizeWithUpdateFlag(true);
     }
     */
-    public tryFitWidthWithUpdateFlag(allowShrink: boolean, withUpdate: boolean): boolean {
+    public tryUpdateWidthWithUpdateFlag(allowShrink: boolean, withUpdate: boolean): boolean {
         let b = false;
         const __width = allowShrink ? this.getVirtualSize().width : Math.max(this.width, this.getVirtualSize().width);
         const newWidth = Math.max(CellColumn.defaultWidth, round100(__width));
@@ -215,7 +215,7 @@ export class CellColumn {
             if (withUpdate) {
                 this.width = newWidth;
             }else{
-                Debugger.updateFlagLog(this, this.tryFitWidthWithUpdateFlag, `Width: ${this.width} -> ${newWidth}`)
+                Debugger.updateFlagLog(this, this.tryUpdateWidthWithUpdateFlag, `Width: ${this.width} -> ${newWidth}`)
             }
         }
         return b;
@@ -226,7 +226,7 @@ export class CellColumn {
      * @param allowShrink 現在の列の幅より短くなることを許す
      */
     public fitWidthToOriginalCell(allowShrink: boolean) {
-        this.tryFitWidthWithUpdateFlag(allowShrink, true);
+        this.tryUpdateWidthWithUpdateFlag(allowShrink, true);
     }
 
     public setXWithUpdate(posX : number, withUpdate : boolean) :boolean{

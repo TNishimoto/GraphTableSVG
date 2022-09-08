@@ -23,10 +23,10 @@ import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { GVertex } from "./g_vertex";
-import {CenterPosition, UpperLeftPosition} from "../common/vline"
+import { CenterPosition, UpperLeftPosition } from "../common/vline"
 import { UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
-import { UpdateBorder } from "./table_helpers/update_border";
+import { UpdateTable } from "./table_helpers/update_table";
 
 //namespace GraphTableSVG {
 
@@ -37,10 +37,10 @@ export type _GTableOption = {
     rowHeight?: number,
     columnWidth?: number,
     //table?: LogicTable
-    
+
     columnWidths?: (number | null)[];
     rowHeights?: (number | null)[];
-    position? : CenterPosition | UpperLeftPosition;
+    position?: CenterPosition | UpperLeftPosition;
 
 }
 export type GTableOption = GOptions.GObjectAttributes & _GTableOption;
@@ -78,7 +78,7 @@ export class GTable extends GVertex {
         this.updateAttributes = [];
         this.isConstructing = true;
         this.firstSetSize();
-        this.setSize(1,1)
+        this.setSize(1, 1)
 
         /*
         if (option.table === undefined) {
@@ -108,24 +108,24 @@ export class GTable extends GVertex {
         if (this.type == ShapeObjectType.Table) this.firstFunctionAfterInitialized();
 
     }
-    private _cellMap : Map<string, Cell> = new Map();
-    public getCellFromObjectID(id : string) : Cell | null{
+    private _cellMap: Map<string, Cell> = new Map();
+    public getCellFromObjectID(id: string): Cell | null {
         const cell = this._cellMap.get(id);
-        if(cell == undefined){
+        if (cell == undefined) {
             return null;
-        }else{
+        } else {
             return cell;
         }
     }
 
-    protected setBasicOption(option: GTableOption) : void{
+    protected setBasicOption(option: GTableOption): void {
         super.setBasicOption(option);
         const columnCount = option.columnCount !== undefined ? option.columnCount : 5;
         const rowCount = option.rowCount !== undefined ? option.rowCount : 5;
-        this.setSize(columnCount , rowCount);
+        this.setSize(columnCount, rowCount);
 
     }
-    protected setOptionalSize(option: GTableOption){
+    protected setOptionalSize(option: GTableOption) {
         super.setOptionalSize(option);
         if (option.rowHeight !== undefined) {
             this.rows.forEach((v) => v.height = <number>option.rowHeight);
@@ -135,7 +135,7 @@ export class GTable extends GVertex {
         }
 
     }
-    public setOption(option: GTableOption){
+    public setOption(option: GTableOption) {
         super.setOption(option);
     }
 
@@ -148,13 +148,10 @@ export class GTable extends GVertex {
         return false;
     }
 
-    public updateSurfaceWithoutSVGText() : boolean{
-        let b = false;
+    public updateSurfaceWithoutSVGText(): boolean {
         const withUpdate = true;
 
         this.hasConnectedObserverFunction = false;
-
-
         const xb = HTMLFunctions.isShow(this.svgGroup);
         if (!xb) {
             return false;
@@ -162,32 +159,22 @@ export class GTable extends GVertex {
 
         this._isDrawing = true;
 
-        let b1 = true;
-        while(b1){
-            b1 = this.fitSizeToOriginalCellsWithUpdateFlag(true, withUpdate);
-            if(b1){
-                b = true;
-            }
-        }
-
-
-    
-        this.prevShow = false;
-
-
-        //b = this.tryResizeWithUpdateFlag(withUpdate) || b;
-        const b2 = UpdateBorder.updateCellSizeAfterUpdatingRowsAndColumns(this.rows, this.columns, withUpdate);
-
-
-
-        const b3 = UpdateBorder.relocateCellsAfterUpdatingCellSize(this.rows, this.columns, withUpdate);
-
-        const b4= UpdateBorder.tryUpdateBorders(this.createCellArray(), true);
+        const b1 = UpdateTable.tryUpdateRowHeightAndColumnWidthWithUpdateFlag(this.rows, this.columns, true, withUpdate);
+        const b2 = UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns(this.rows, this.columns, withUpdate);
+        const b3 = UpdateTable.relocateCellsAfterUpdatingCellSize(this.rows, this.columns, withUpdate);
+        const b4 = UpdateTable.tryUpdateBorders(this.createCellArray(), withUpdate);
 
 
         this._isDrawing = false;
         this.hasConnectedObserverFunction = true;
-        return b || b2 || b3 || b4;
+        return b1 || b2 || b3 || b4;
+
+
+
+        //this.prevShow = false;
+
+
+        //b = this.tryResizeWithUpdateFlag(withUpdate) || b;
 
     }
     static constructAttributes(e: Element,
@@ -231,7 +218,7 @@ export class GTable extends GVertex {
     public get svgColumnBorderGroup() {
         return this._svgColumnBorderGroup;
     }
-    public get svgColumnInfo(){
+    public get svgColumnInfo() {
         return this._svgColumnInfo;
     }
 
@@ -261,23 +248,23 @@ export class GTable extends GVertex {
 
     private isConstructing = false;
     get width(): number {
-        if(this.columns ===undefined){
+        if (this.columns === undefined) {
             return 0;
-        }else{
+        } else {
             let width = 0;
             this.columns.forEach((v) => width += v.width);
-            return width;    
+            return width;
         }
     }
     set width(value: number) {
     }
     get height(): number {
-        if(this.rows === undefined){
+        if (this.rows === undefined) {
             return 0;
-        }else{
+        } else {
             let height = 0;
             this.rows.forEach((v) => height += v.height);
-            return height;    
+            return height;
         }
 
     }
@@ -356,7 +343,7 @@ export class GTable extends GVertex {
         if (b2 && !this.isConstructing) {
             //if(this.cellArray.some((v)=>v.isErrorCell)) throw new Error("err!");
             //this.fitSizeToOriginalCells(false);
-            this.fitSizeToOriginalCells(true);
+            //this.fitSizeToOriginalCells(true);
 
         }
         if (b) {
@@ -441,22 +428,24 @@ export class GTable extends GVertex {
     }
     // #endregion
 
+    /*
     public fitSizeToOriginalCellsWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {
         let b = false;
         for(let i = 0;i<this.rows.length;i++){
-            b = this.rows[i].tryFitHeightWithUpdateFlag(allowShrink, withUpdate) || b;
+            b = this.rows[i].tryUpdateHeightWithUpdateFlag(allowShrink, withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }
         }
         for(let i = 0;i<this.columns.length;i++){
-            b = this.columns[i].tryFitWidthWithUpdateFlag(allowShrink, withUpdate) || b;
+            b = this.columns[i].tryUpdateWidthWithUpdateFlag(allowShrink, withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }
         }
         return b;
     }
+    */
 
 
     // #region method
@@ -464,9 +453,9 @@ export class GTable extends GVertex {
      * セルの元々のサイズに合わせて表のサイズを調整します。
      * @param allowShrink 各行と各列が現在の幅より短くなることを許す
      */
-    public fitSizeToOriginalCells(allowShrink: boolean) {
-        this.fitSizeToOriginalCellsWithUpdateFlag(allowShrink, true);
-    }
+    // public fitSizeToOriginalCells(allowShrink: boolean) {
+    //    this.fitSizeToOriginalCellsWithUpdateFlag(allowShrink, true);
+    //}
 
 
     /**
@@ -613,10 +602,10 @@ export class GTable extends GVertex {
         //logicTable.option.columnCount = logicTable.columnCount;
         //logicTable.option.rowCount = logicTable.rowCount;
         //this.setSize(logicTable.columnCount, logicTable.rowCount);
-        const option = {...logicTable.option};
+        const option = { ...logicTable.option };
         (<any>option).rowCount = logicTable.rowCount;
         (<any>option).columnCount = logicTable.columnCount;
-        
+
         this.setOption(option);
 
         //GOptions.setClassAndStyle(this.svgGroup, logicTable.option.class, logicTable.option.style);
@@ -1073,7 +1062,7 @@ export class GTable extends GVertex {
         this.primitiveRemoveColumn(ithColumn, false);
         this.updateNodeRelations();
         //this.resetUnstableCounter();
-        
+
         //this.update();
     }
 
@@ -1151,7 +1140,7 @@ export class GTable extends GVertex {
         this.primitiveInsertColumn(ithColumn, false)
         this.updateNodeRelations();
         //this.resetUnstableCounter();
-        
+
         //this.update();
     }
     /**
@@ -1192,14 +1181,14 @@ export class GTable extends GVertex {
         this.primitiveInsertRow(this.rowCount, false);
         this.updateNodeRelations();
         //this.resetUnstableCounter();
-        
+
         //this.update();
         //this.update();
     }
     // #endregion
 
     // #region update
-    private prevShow: boolean = false;
+    //private prevShow: boolean = false;
 
     /*
     private tryUpdateWithUpdateFlag(withUpdate : boolean) : boolean{
@@ -1367,10 +1356,10 @@ export class GTable extends GVertex {
 
     }
     */
-    public get childrenStableFlag() : boolean{
+    public get childrenStableFlag(): boolean {
         let b = true;
-        for(let i = 0;i<this.rows.length;i++){
-            if(!this.rows[i].stableFlag){
+        for (let i = 0; i < this.rows.length; i++) {
+            if (!this.rows[i].stableFlag) {
                 b = false;
                 break;
             }
@@ -1499,10 +1488,10 @@ export class GTable extends GVertex {
         }
 
     }
-    public getVirtualWidth() : number{
+    public getVirtualWidth(): number {
         return this.columns.reduce((w, v) => w + v.getVirtualSize().width, 0);
     }
-    public getVirtualHeight() : number{
+    public getVirtualHeight(): number {
         return this.rows.reduce((w, v) => w + v.getVirtualSize().height, 0);
     }
 

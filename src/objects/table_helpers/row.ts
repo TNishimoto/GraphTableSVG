@@ -315,7 +315,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
             //this.tryResizeWithUpdateFlag(true);
             //this.height = this.getMaxHeight();
         //}
-        public tryFitHeightWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {
+        public tryUpdateHeightWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {
             let b = false;
             const __height = allowShrink ? this.getVirtualSize().height : Math.max(this.height, this.getVirtualSize().height);
             const newHeight = Math.max(CellRow.defaultHeight, round100(__height));
@@ -325,7 +325,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
                 if(withUpdate){
                     this.height = newHeight;
                 }else{
-                    Debugger.updateFlagLog(this, this.tryFitHeightWithUpdateFlag, `Height: ${this.height} -> ${newHeight}`)
+                    Debugger.updateFlagLog(this, this.tryUpdateHeightWithUpdateFlag, `Height: ${this.height} -> ${newHeight}`)
                 }
             }
             return b;
@@ -337,7 +337,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
          * @param allowShrink 現在の行の幅より短くなることを許す
          */
         public fitHeightToOriginalCell(allowShrink: boolean) {
-            this.tryFitHeightWithUpdateFlag(allowShrink,true);
+            this.tryUpdateHeightWithUpdateFlag(allowShrink,true);
         }
         public setYWithUpdate(posY: number, withUpdate : boolean) : boolean {
             const posY100 = round100(posY);
