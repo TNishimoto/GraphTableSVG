@@ -85,21 +85,21 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
         }
     
     
-        private createCell(cellX: number, cellY: number): Cell {
+        private createCell(cellX: number, cellY: number, cellMap : Map<string, Cell>): Cell {
             const cellClass = undefined; //this.table.defaultCellClass == null ? undefined : this.table.defaultCellClass;
             const borderClass = undefined
             //this.table.defaultBorderClass == null ? undefined : this.table.defaultBorderClass;
 
             const option: CellOption = { cellClass: cellClass, borderClass: borderClass };
-            return new Cell(this.table, cellX, cellY, option);
+            return new Cell(this.table, cellX, cellY, cellMap, option);
         }
-        public _insertCell(i: number) {
-            const cell = this.createCell(i, this.cellY);
+        public _insertCell(i: number, cellMap : Map<string, Cell> ) {
+            const cell = this.createCell(i, this.cellY, cellMap);
             this.cells.splice(i, 0, cell);
         }
-        public _appendCell(num: number = 1) {
+        public _appendCell(cellMap : Map<string, Cell>, num: number = 1) {
             for (let i = 0; i < num; i++) {
-                const cell = this.createCell(this.cells.length, this.cellY);
+                const cell = this.createCell(this.cells.length, this.cellY, cellMap);
                 this.cells.push(cell);
             }
         }

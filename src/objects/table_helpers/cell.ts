@@ -53,7 +53,7 @@ let uniqueCellID = 0;
  */
 export class Cell implements GObserver.ITextBox, GObserver.IObject {
 
-    constructor(parent: GTable, _px: number, _py: number, option: CellOption = {}) {
+    constructor(parent: GTable, _px: number, _py: number, cellMap : Map<string, Cell>, option: CellOption = {}) {
         this._svgGroup = SVG.createGroup(null);
         this._table = parent;
 
@@ -73,6 +73,10 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
         const textClass = DefaultClassNames.defaultTextClass;
         this._svgText = SVG.createText(textClass);
         this.svgGroup.appendChild(this.svgText);
+
+        cellMap.set(this.objectID, this);
+
+
 
         this.stableFlag = false;
 
@@ -426,8 +430,8 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
     /**
      * マスターセルのIDを返します。
      */
-    public get masterID(): number {
-        return this.table.cells[this.masterCellY][this.masterCellX].ID;
+    public get masterObjectID(): string {
+        return this.table.cells[this.masterCellY][this.masterCellX].objectID;
     }
     /*
     public set masterID(id: number) {
@@ -438,7 +442,7 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
      * マスターセルを返します。
      */
     public get master(): Cell {
-        return this.table.cellArray[this.masterID];
+        return this.table.getCellFromObjectID(this.masterObjectID)!;
     }
     /**
     単位セルを基準にした自身のX座標を返します。
@@ -484,7 +488,7 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
      * このセルがマスターセルのときに限りTrueを返します。
      */
     get isMaster(): boolean {
-        return this.ID == this.masterID;
+        return this.objectID == this.masterObjectID;
     }
     /**
      * このセルが奴隷セルのときに限りTrueを返します。
@@ -492,12 +496,11 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
     get isSlave(): boolean {
         return !this.isMaster;
     }
-    /**
-    セルのIDを返します。
-    */
+   /*
     get ID(): number {
         return this.cellX + (this.cellY * this.table.columnCount);
     }
+    */
 
     get isErrorCell(): boolean {
         return this.table.cells[this.cellY][this.cellX] != this;
@@ -623,25 +626,34 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
      * グループセルの横幅を返します。
      */
     get computeGroupWidth(): number {
-        const p = this.master.upperSideGroupCells;
-        const x2 = p[p.length - 1].cellX;
-        let w = 0;
-        for (let i = this.cellX; i <= x2; i++) {
-            w += this.table.columns[i].width;
+        if(this.isSingleCell){
+            return this.width;
+        }else{
+            const p = this.master.upperSideGroupCells;
+            const x2 = p[p.length - 1].cellX;
+            let w = 0;
+            for (let i = this.cellX; i <= x2; i++) {
+                w += this.table.columns[i].width;
+            }
+            return w;    
         }
-        return w;
     }
     /**
      * グループセルの縦幅を返します。
      */
     get computeGroupHeight(): number {
-        const p = this.master.leftSideGroupCells;
-        const y2 = p[p.length - 1].cellY;
-        let w = 0;
-        for (let i = this.cellY; i <= y2; i++) {
-            w += this.table.rows[i].height;
+        if(this.isSingleCell){
+            return this.height;
+        }else{
+            const p = this.master.leftSideGroupCells;
+            const y2 = p[p.length - 1].cellY;
+            let w = 0;
+            for (let i = this.cellY; i <= y2; i++) {
+                w += this.table.rows[i].height;
+            }
+            return w;
+    
         }
-        return w;
 
     }
 
@@ -699,21 +711,29 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
     public computeBorderLength2(dir: DirectionType): number {
         //const andFunc = ((v, w) => v);
 
+
         const d1 = dir == "top" || dir == "bottom" ? this.master.x : this.master.y;
+
         const d2 = dir == "top" || dir == "bottom" ? this.master.x + this.computeGroupWidth : this.master.y + this.computeGroupHeight;
 
+        
         const nextCell = this.getNextMasterCell(dir);
         if (nextCell != null) {
             const e1 = dir == "top" || dir == "bottom" ? nextCell.x : nextCell.y;
+            
             const e2 = dir == "top" || dir == "bottom" ? nextCell.x + nextCell.computeGroupWidth : nextCell.y + nextCell.computeGroupHeight;
+            //const e2 = nextCell.x;
 
+            
             const range = Cell.computeOverlapRange([d1, d2], [e1, e2]);
+
+
             if (range == null) {
                 return 0;
-                //throw Error(`error ${d1} ${d2} ${e1} ${e2}`);
             } else {
                 return round100(range[1]) - round100(range[0]);
             }
+            
         } else {
             if (dir == "top" || dir == "bottom") {
                 const newW = Math.max(CellColumn.defaultWidth, round100(d2) - round100(d1));
@@ -724,6 +744,7 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
 
             }
         }
+        
 
     }
     // #endregion
@@ -794,7 +815,7 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
         if (this.isMaster) {
             let w = 0;
             let now: Cell | null = this;
-            while (now != null && this.ID == now.masterID) {
+            while (now != null && this.objectID == now.masterObjectID) {
                 now = this.rightCell;
                 w++;
             }
@@ -810,7 +831,7 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
         if (this.isMaster) {
             let h = 0;
             let now: Cell | null = this;
-            while (now != null && this.ID == now.masterID) {
+            while (now != null && this.objectID == now.masterObjectID) {
                 now = this.bottomCell;
                 h++;
             }
@@ -879,7 +900,7 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
     getNextMasterCell(direction: DirectionType): Cell | null {
         const nextCell = this.getNextCell(direction);
         return nextCell == null ? null :
-            nextCell.masterID != this.masterID ? nextCell.master : nextCell.getNextMasterCell(direction);
+            nextCell.masterObjectID != this.masterObjectID ? nextCell.master : nextCell.getNextMasterCell(direction);
     }
 
     /**
@@ -980,9 +1001,9 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
     private getNextGroupCells(direction: DirectionType): Cell[] {
         if (this.isMaster) {
             //if(this.isErrorCell) throw new Error("error!");
-            let w: Cell[] = [this];
+            const w: Cell[] = [this];
             let now: Cell | null = this.getNextCell(direction);
-            while (now != null && this.ID == now.masterID) {
+            while (now != null && this.objectID == now.masterObjectID) {
                 w.push(now);
 
                 now = now.getNextCell(direction);
@@ -1415,21 +1436,21 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
         for (let x = 0; x < w; x++) {
             const topCell = range[0][x].topCell;
             if (topCell != null) {
-                if (range[0][x].masterID == topCell.masterID) return false;
+                if (range[0][x].masterObjectID == topCell.masterObjectID) return false;
             }
             const bottomCell = range[h - 1][x].bottomCell;
             if (bottomCell != null) {
-                if (range[h - 1][x].masterID == bottomCell.masterID) return false;
+                if (range[h - 1][x].masterObjectID == bottomCell.masterObjectID) return false;
             }
         }
         for (let y = 0; y < h; y++) {
             const leftCell = range[y][0].leftCell;
             if (leftCell != null) {
-                if (range[y][0].masterID == leftCell.masterID) return false;
+                if (range[y][0].masterObjectID == leftCell.masterObjectID) return false;
             }
             const rightCell = range[y][w - 1].rightCell;
             if (rightCell != null) {
-                if (range[y][w - 1].masterID == rightCell.masterID) return false;
+                if (range[y][w - 1].masterObjectID == rightCell.masterObjectID) return false;
             }
         }
         return true;

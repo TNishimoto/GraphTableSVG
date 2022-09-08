@@ -108,6 +108,16 @@ export class GTable extends GVertex {
         if (this.type == ShapeObjectType.Table) this.firstFunctionAfterInitialized();
 
     }
+    private _cellMap : Map<string, Cell> = new Map();
+    public getCellFromObjectID(id : string) : Cell | null{
+        const cell = this._cellMap.get(id);
+        if(cell == undefined){
+            return null;
+        }else{
+            return cell;
+        }
+    }
+
     protected setBasicOption(option: GTableOption) : void{
         super.setBasicOption(option);
         const columnCount = option.columnCount !== undefined ? option.columnCount : 5;
@@ -393,7 +403,7 @@ export class GTable extends GVertex {
     各セルを表す配列を返します。テーブルの左上のセルから右に向かってインデックスが割り当てられ、
     テーブル右下のセルが配列の最後の値となります。読み取り専用です。
     */
-    get cellArray(): Cell[] {
+    createCellArray(): Cell[] {
         const arr = new Array(0);
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {
@@ -524,7 +534,7 @@ export class GTable extends GVertex {
     * 強調セルを全て返します。
     */
     public getEmphasizedCells(): Cell[] {
-        return this.cellArray.filter((v) => v.isEmphasized);
+        return this.createCellArray().filter((v) => v.isEmphasized);
     }
     /**
     * 表を文字列に変換した結果を返します。
@@ -564,7 +574,7 @@ export class GTable extends GVertex {
                 this.cellTextObserver.disconnect();
             } else {
                 const option1: MutationObserverInit = { childList: true, subtree: true };
-                this.cellArray.forEach((v) => {
+                this.createCellArray().forEach((v) => {
                     this.cellTextObserver.observe(v.svgText, option1);
                 })
             }
@@ -812,7 +822,7 @@ export class GTable extends GVertex {
 
             }
         }
-        this.cellArray.forEach((v) => {
+        this.createCellArray().forEach((v) => {
             if (v.isMaster) {
                 const cells = v.cellsInGroup;
                 for (let y = 0; y < cells.length; y++) {
@@ -873,7 +883,7 @@ export class GTable extends GVertex {
         this.createColumnBorder(0, 1);
         this.createColumnBorder(1, 1);
         this._rows.splice(0, 0, new CellRow(this, 0, undefined));
-        this._rows[0]._appendCell();
+        this._rows[0]._appendCell(this._cellMap);
         this._columns.splice(0, 0, new CellColumn(this, 0));
     }
 
@@ -1092,7 +1102,7 @@ export class GTable extends GVertex {
         const columnCount = this.columnCount;
         const row = new CellRow(this, i, undefined);
         this._rows.splice(i, 0, row);
-        row._appendCell(columnCount);
+        row._appendCell(this._cellMap, columnCount);
         /*
         for (let x = 0; x < this.columnCount; x++) {
             cell[x] = this.createCell(x, i);
@@ -1102,7 +1112,7 @@ export class GTable extends GVertex {
     }
     private createColumn(i: number) {
         for (let y = 0; y < this.rowCount; y++) {
-            this.rows[y]._insertCell(i);
+            this.rows[y]._insertCell(i, this._cellMap);
             //const cell = this.createCell(i, y);
             //this.cells[y].splice(i, 0, cell);
         }
@@ -1302,7 +1312,7 @@ export class GTable extends GVertex {
             }
         })
 
-        this.cellArray.forEach((v) => v.updateNodeRelations());
+        this.createCellArray().forEach((v) => v.updateNodeRelations());
 
     }
 
@@ -1331,7 +1341,7 @@ export class GTable extends GVertex {
         let b  = false;
 
         const date1 = new Date();
-        this.cellArray.forEach((v) =>{
+        (this.createCellArray()).forEach((v) =>{
             if(v.isMaster){
                 b = UpdateBorder.tryUpdateBordersWithUpdateFlag(v, withUpdate) || b;
             }

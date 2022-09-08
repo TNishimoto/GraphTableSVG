@@ -66,7 +66,6 @@ export class LogicText{
                 svgText.appendChild(v);
             })
         }
-        console.log(`X: ${this.textDecoration}`)
 
         if(this.textDecoration != null){
             svgText.setAttribute("text-decoration", this.textDecoration)

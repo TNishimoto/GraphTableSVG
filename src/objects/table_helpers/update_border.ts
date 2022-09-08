@@ -40,18 +40,18 @@ export class UpdateBorder {
                 border = cell.svgBottomBorder;
                 break;
         }
-
+        
         switch (positionType) {
             case "x1":
-                border.x1.baseVal.value = round100(newValue);
+                border.setAttribute("x1", round100(newValue).toString());
             case "x2":
-                border.x2.baseVal.value = round100(newValue);
+                border.setAttribute("x2", round100(newValue).toString());
             case "y1":
-                border.y1.baseVal.value = round100(newValue);
+                border.setAttribute("y1", round100(newValue).toString());
             case "y2":
-                border.y2.baseVal.value = round100(newValue);
-
+                border.setAttribute("y2", round100(newValue).toString());
         }
+        
     }
     public static tryRelocateBottomBorderWithUpdateFlag(cell : Cell, withUpdate: boolean): boolean {
 
@@ -121,6 +121,7 @@ export class UpdateBorder {
         //let b = false;
         if (!cell.isMaster) return false;
 
+
         if (cell.table.svgGroup.contains(cell.svgTopBorder)) {
             if (cell.isMaster) {
                 const x1 = cell.x;
@@ -133,6 +134,7 @@ export class UpdateBorder {
                     return true;
                 }
 
+                //const x2 = cell.x;
                 const x2 = cell.x + cell.computeBorderLength2("top");
                 const b2 = UpdateBorder.tryUpdateBorderCoodinateWithUpdateFlag(cell,"top", x2, "x2", withUpdate);
                 if (withUpdate && b2) {
@@ -300,6 +302,7 @@ export class UpdateBorder {
      public static tryUpdateBordersWithUpdateFlag(cell : Cell, withUpdate: boolean): boolean {
         //let b = false;
 
+        
         const b1 = UpdateBorder.tryRelocateTopBorderWithUpdateFlag(cell, withUpdate);
         if (withUpdate && b1) {
             Debugger.updateLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateTopBorderWithUpdateFlag.name}`)
@@ -308,6 +311,8 @@ export class UpdateBorder {
             Debugger.updateFlagLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateTopBorderWithUpdateFlag.name}`)
             return true;
         }
+
+        
 
         const b2 = UpdateBorder.tryRelocateLeftBorderWithUpdateFlag(cell, withUpdate);
         if (withUpdate && b2) {
@@ -339,6 +344,7 @@ export class UpdateBorder {
             Debugger.updateFlagLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateBottomBorderWithUpdateFlag.name}`)
             return true;
         }
+        
 
 
         return b1 || b2 || b3 || b4;
