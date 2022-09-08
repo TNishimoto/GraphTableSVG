@@ -135,7 +135,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
             }
         }
         if (b) {
-            this.resetUnstableCounter();
+            //this.resetUnstableCounter();
             //this.update();
 
         }

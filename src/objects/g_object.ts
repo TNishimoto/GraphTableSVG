@@ -76,7 +76,7 @@ export class GObject implements GObserver.IObject {
 
         this.allowHover = true;
 
-        this.unstableCounter = GObserver.unstableCounterDefault;
+        //this.unstableCounter = GObserver.unstableCounterDefault;
 
         const svgsvgAncestor = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
         if (svgsvgAncestor instanceof SVGSVGElement) {
@@ -119,6 +119,7 @@ export class GObject implements GObserver.IObject {
     }
     */
 
+    /*
     public get unstableCounter(): number | null {
         const p = this.svgGroup.getAttribute(GObserver.unstableCounterName);
         if (p == null) {
@@ -139,6 +140,7 @@ export class GObject implements GObserver.IObject {
     public resetUnstableCounter(): void {
         this.unstableCounter = GObserver.unstableCounterDefault;
     }
+    */
 
 
     protected setBasicOption(option: GOptions.GObjectAttributes): void {
@@ -189,7 +191,7 @@ export class GObject implements GObserver.IObject {
         this.setOptionalSize(option);
         this.setOptionalPosition(option)
 
-        this.resetUnstableCounter();
+        //this.resetUnstableCounter();
         //this.update();
     }
 
@@ -243,7 +245,7 @@ export class GObject implements GObserver.IObject {
         this._isInitialized = true;
 
         //this.update();
-        this.resetUnstableCounter();
+        //this.resetUnstableCounter();
         if (this.__cx !== undefined) this.cx = this.__cx;
         if (this.__cy !== undefined) this.cy = this.__cy;
 
@@ -288,7 +290,7 @@ export class GObject implements GObserver.IObject {
     */
 
     protected resizeUpdate() {
-        this.resetUnstableCounter();
+        //this.resetUnstableCounter();
         //this.update();
     }
 
@@ -673,7 +675,7 @@ export class GObject implements GObserver.IObject {
         }
 
         if (b) {
-            this.resetUnstableCounter();
+            //this.resetUnstableCounter();
             //this.update();
         }
 

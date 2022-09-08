@@ -28,7 +28,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
 
             this.cellY = _y;
             this._svgGroup.setAttribute(CellRow.columnHeightName, `${_height}`);
-            this.unstableCounter = GObserver.unstableCounterDefault;
+            //this.unstableCounter = GObserver.unstableCounterDefault;
 
             const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
             if(svgsvgAncestor != null){            
@@ -44,6 +44,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
             //this.height = this.getMaxHeight();
 
         }
+        /*
         public get unstableCounter(): number | null {
             const p = this.svgGroup.getAttribute(GObserver.unstableCounterName);
             if (p == null) {
@@ -64,6 +65,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
         public resetUnstableCounter(): void {
             this.unstableCounter = GObserver.unstableCounterDefault;
         }
+        */
         public get childrenStableFlag() : boolean{
             let b = true;
             for(let i = 0;i<this._cells.length;i++){
@@ -152,7 +154,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
         set height(value: number) {
             setAttributeNumber(this._svgGroup, CellRow.columnHeightName, round100(value))
             //this._svgGroup.setAttribute(CellRow.columnHeightName, `${value}`);
-            this.setHeightToCells();
+            //this.setHeightToCells();
             /*
             let b = false;
             for (let x = 0; x < this.table.columnCount; x++) {
@@ -241,6 +243,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
             const cells = this.cells;
             return cells[cells.length - 1].svgRightBorder;
         }
+        /*
         public setHeightToCellsWithUpdateFlag(withUpdate : boolean) : boolean {
             let b = false;
             const height = Math.max(this.height, CellRow.defaultHeight);
@@ -272,12 +275,13 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
             return b;
 
         }
+        */
 
-        public setHeightToCells() {
-            this.setHeightToCellsWithUpdateFlag(true);
+        //public setHeightToCells() {
+            //this.setHeightToCellsWithUpdateFlag(true);
             // TODO : implement the event of the below code.
             //if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
-        }
+        //}
         /**
          * この行を更新します。
          */
@@ -288,6 +292,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
         }
         */
 
+        /*
         public tryResizeWithUpdateFlag(withUpdate : boolean) : boolean {
             let b = false;
             const cells = this.cells;
@@ -300,14 +305,16 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
             b = this.setHeightToCellsWithUpdateFlag(withUpdate)  || b;
             return b;
         }
+        */
 
         /**
          * 行内のセルのサイズを再計算します。
          */
-        public resize() {
-            this.tryResizeWithUpdateFlag(true);
+        //public resize() {
+            //this.setHeightToCellsWithUpdateFlag(true);
+            //this.tryResizeWithUpdateFlag(true);
             //this.height = this.getMaxHeight();
-        }
+        //}
         public tryFitHeightWithUpdateFlag(allowShrink: boolean, withUpdate : boolean) : boolean {
             let b = false;
             const __height = allowShrink ? this.getVirtualSize().height : Math.max(this.height, this.getVirtualSize().height);
@@ -436,7 +443,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
             }
         }
 
-
+        /*
         public getBase1UpdateFlag(){
             const b = this.cells.every((v) => v.unstableCounter == null);
             return !b;
@@ -451,6 +458,7 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
                 }
             })
         }
+        */
         public get objectID(): string {
             return this.svgGroup.getAttribute(AttributeNames.objectIDName)!;
         }

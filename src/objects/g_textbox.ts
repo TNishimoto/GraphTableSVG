@@ -149,7 +149,7 @@ export class GTextBox extends GVertex {
             }
         }
         if (b){
-            this.resetUnstableCounter();
+            //this.resetUnstableCounter();
             //this.update();
 
         }

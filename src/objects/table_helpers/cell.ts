@@ -86,7 +86,7 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
         //const option1: MutationObserverInit = { childList: true, subtree: true };
         //this.table.cellTextObserver.observe(this.svgText, option1);
 
-        this.unstableCounter = GObserver.unstableCounterDefault;
+        //this.unstableCounter = GObserver.unstableCounterDefault;
 
         this._observer = new MutationObserver(this._observerFunc);
         const option2: MutationObserverInit = { attributes: true };
@@ -123,6 +123,7 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
     public get objectID(): string {
         return this.svgGroup.getAttribute(AttributeNames.objectIDName)!;
     }
+    /*
     public get unstableCounter(): number | null {
         const p = this.svgGroup.getAttribute(GObserver.unstableCounterName);
         if (p == null) {
@@ -144,6 +145,7 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
     public resetUnstableCounter(): void {
         this.unstableCounter = GObserver.unstableCounterDefault;
     }
+    */
 
     public getBorderPosition(borderType: DirectionType, positionType: BorderCoodinateType): number {
 

@@ -71,6 +71,7 @@ export class GVertex extends GObject {
     }
 
     public update() {
+        /*
         if(this.getUpdateFlag()){
             this.incomingEdges.forEach((v) =>{
                 v.resetUnstableCounter();
@@ -79,6 +80,7 @@ export class GVertex extends GObject {
                 v.resetUnstableCounter();
             })
         }
+        */
 
 
         super.update();

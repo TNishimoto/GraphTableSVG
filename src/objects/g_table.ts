@@ -176,17 +176,18 @@ export class GTable extends GVertex {
 
 
         //b = this.tryResizeWithUpdateFlag(withUpdate) || b;
+        const b2 = UpdateBorder.updateCellSizeAfterUpdatingRowsAndColumns(this.rows, this.columns, withUpdate);
 
 
 
-        const b3 = this.relocateWithUpdate(withUpdate);
+        const b3 = UpdateBorder.relocateCellsAfterUpdatingCellSize(this.rows, this.columns, withUpdate);
 
-        const b4= this.updateBorders();
+        const b4= UpdateBorder.tryUpdateBorders(this.createCellArray(), true);
 
 
         this._isDrawing = false;
         this.hasConnectedObserverFunction = true;
-        return b || b3 || b4;
+        return b || b2 || b3 || b4;
 
     }
     static constructAttributes(e: Element,
@@ -325,7 +326,7 @@ export class GTable extends GVertex {
     public set isAutoResized(value: boolean) {
         this._isAutoResized = value;
         if (value) {
-            this.resetUnstableCounter();
+            //this.resetUnstableCounter();
             //this.update();
         }
     }
@@ -359,7 +360,7 @@ export class GTable extends GVertex {
 
         }
         if (b) {
-            this.resetUnstableCounter();
+            //this.resetUnstableCounter();
             //this.update();
 
         }
@@ -674,7 +675,7 @@ export class GTable extends GVertex {
 
         //this.updateNodeRelations();
         if (this.isInitialized) {
-            this.resetUnstableCounter();
+            //this.resetUnstableCounter();
             //this.update();
         }
 
@@ -1063,7 +1064,7 @@ export class GTable extends GVertex {
     public removeRow(ithRow: number) {
         this.primitiveRemoveRow(ithRow, false);
         this.updateNodeRelations();
-        this.resetUnstableCounter();
+        //this.resetUnstableCounter();
         //this.update();
     }
 
@@ -1071,7 +1072,7 @@ export class GTable extends GVertex {
     public removeColumn(ithColumn: number) {
         this.primitiveRemoveColumn(ithColumn, false);
         this.updateNodeRelations();
-        this.resetUnstableCounter();
+        //this.resetUnstableCounter();
         
         //this.update();
     }
@@ -1138,7 +1139,7 @@ export class GTable extends GVertex {
     public insertRow(ithRow: number) {
         this.primitiveInsertRow(ithRow, false);
         this.updateNodeRelations();
-        this.resetUnstableCounter();
+        //this.resetUnstableCounter();
         //this.update();
 
     }
@@ -1149,7 +1150,7 @@ export class GTable extends GVertex {
     public insertColumn(ithColumn: number) {
         this.primitiveInsertColumn(ithColumn, false)
         this.updateNodeRelations();
-        this.resetUnstableCounter();
+        //this.resetUnstableCounter();
         
         //this.update();
     }
@@ -1178,7 +1179,7 @@ export class GTable extends GVertex {
         //this.insertColumn(this.columnCount);
         this.primitiveInsertColumn(this.columnCount, false)
         this.updateNodeRelations();
-        this.resetUnstableCounter();
+        //this.resetUnstableCounter();
         //this.update();
 
     }
@@ -1190,7 +1191,7 @@ export class GTable extends GVertex {
         //this.insertRow(this.rowCount);
         this.primitiveInsertRow(this.rowCount, false);
         this.updateNodeRelations();
-        this.resetUnstableCounter();
+        //this.resetUnstableCounter();
         
         //this.update();
         //this.update();
@@ -1320,14 +1321,16 @@ export class GTable extends GVertex {
     private tryResizeWithUpdateFlag(withUpdate : boolean) : boolean {
         let b = false;
         for(let i = 0;i<this.rows.length;i++){
-            b = this.rows[i].tryResizeWithUpdateFlag(withUpdate) || b;
+            //b = this.rows[i].tryResizeWithUpdateFlag(withUpdate) || b;
+            b = this.rows[i].setHeightToCellsWithUpdateFlag(withUpdate) || b;
+
             if(!withUpdate && b){
                 return b;
             }
         }
 
         for(let i = 0;i<this.columns.length;i++){
-            b = this.columns[i].tryResizeWithUpdateFlag(withUpdate) || b;
+            b = this.columns[i].setWidthToCellsWithUpdateFlag(withUpdate) || b;
             if(!withUpdate && b){
                 return b;
             }
@@ -1336,6 +1339,7 @@ export class GTable extends GVertex {
 
     }
     */
+    /*
     private updateBorders() : boolean{
         const withUpdate = true;
         let b  = false;
@@ -1351,6 +1355,7 @@ export class GTable extends GVertex {
 
         return b;
     }
+    */
 
 
     /**
@@ -1373,54 +1378,11 @@ export class GTable extends GVertex {
         return b;
 
     }
-    private relocateWithUpdate(withUpdate:boolean) : boolean{
-        let b = false;
-        let height = 0;
-        for(let i=0;i<this.rows.length;i++){
-            b = this.rows[i].setYWithUpdate(height, withUpdate)  || b;
-            if(!withUpdate && b){
-                Debugger.updateFlagLog(this, this.relocateWithUpdate, this.rows[i].setYWithUpdate.name)
-                return b;
-            }
-            height += this.rows[i].height;
-
-        }
-
-        let width = 0;
-
-        for(let i=0;i<this.columns.length;i++){
-            b = this.columns[i].setXWithUpdate(width, withUpdate)  || b;
-            if(!withUpdate && b){
-                Debugger.updateFlagLog(this, this.relocateWithUpdate, this.columns[i].setXWithUpdate.name)
-
-
-                return b;
-            }
-            width += this.columns[i].width;
-
-        }
-
-        /*
-        const cells = this.cellArray;
-        for(let i = 0;i<cells.length;i++){
-            b = cells[i].tryLocateSVGTextWithUpdateFlag(withUpdate) || b;
-            if(!withUpdate && b){
-                Debugger.updateFlagLog(this, this.relocateWithUpdate, cells[i].tryLocateSVGTextWithUpdateFlag.name)
-
-
-                return b;
-            }
-        }
-        */
-
-        return b;
-    }
-    /**
-     * 各セルの位置を再計算します。
-     */
+    /*
     private relocation() {
         this.relocateWithUpdate(true);
     }
+    */
     // #endregion
 
 

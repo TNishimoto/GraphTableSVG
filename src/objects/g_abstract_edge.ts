@@ -294,7 +294,6 @@ export class GAbstractEdge extends GObject {
         } else {
             this.beginVertexID = value.objectID;
         }
-        this.resetUnstableCounter();
         //this.update();
 
     }
@@ -318,7 +317,6 @@ export class GAbstractEdge extends GObject {
             this.endVertexID = value.objectID;
         }
 
-        this.resetUnstableCounter();
         //this.update();
 
     }
@@ -514,7 +512,6 @@ export class GAbstractEdge extends GObject {
         vertex.svgGroup.addEventListener(AttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
     }
     private connectPositionChangedFunc = () => {
-        this.resetUnstableCounter();
         //this.update();
     }
 

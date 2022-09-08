@@ -44,7 +44,7 @@ export class CellColumn {
     set width(value: number) {
         setAttributeNumber(this._svgMetaData, CellColumn.rowWidthName, value);
         //this._svgGroup.setAttribute(CellColumn.rowWidthName, `${value}`);
-        this.setWidthToCells();
+        //this.setWidthToCells();
         /*
         let b = false;
         for (let y = 0; y < this.table.rowCount; y++) {
@@ -65,8 +65,8 @@ export class CellColumn {
         if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
         */
     }
-
-    public setHeightToCellsWithUpdateFlag(withUpdate: boolean): boolean {
+    /*
+    public setWidthToCellsWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         const width = Math.max(this.width, CellColumn.defaultWidth);
 
@@ -79,7 +79,7 @@ export class CellColumn {
                 }
 
                 if (!withUpdate && b) {
-                    Debugger.updateFlagLog(this, this.setHeightToCellsWithUpdateFlag, `${cell.width} != ${width} y = ${y}`)
+                    Debugger.updateFlagLog(this, this.setWidthToCellsWithUpdateFlag, `${cell.width} != ${width} y = ${y}`)
 
                     return true;
                 }
@@ -91,7 +91,7 @@ export class CellColumn {
 
                 b = cell.tryUpdateWithUpdateFlag(withUpdate)  || b;
                 if (!withUpdate && b) {
-                    Debugger.updateFlagLog(this, this.setHeightToCellsWithUpdateFlag, `${cell.tryUpdateWithUpdateFlag.name} y = ${y}`)
+                    Debugger.updateFlagLog(this, this.setWidthToCellsWithUpdateFlag, `${cell.tryUpdateWithUpdateFlag.name} y = ${y}`)
                     return b;
                 }
             }
@@ -99,12 +99,15 @@ export class CellColumn {
         return b;
 
     }
+    */
+    /*
     private setWidthToCells() {
-        this.setHeightToCellsWithUpdateFlag(true);
+        this.setWidthToCellsWithUpdateFlag(true);
         // TODO : implement the event of the below code.
         //if (b && !this.table.isDrawing && this.table.isAutoResized) this.table.update();
 
     }
+    */
     /**
      * この列のセルの配列を返します。
      */
@@ -179,6 +182,7 @@ export class CellColumn {
         //this.width = this.getMaxWidth();
     }
     */
+   /*
     public tryResizeWithUpdateFlag(withUpdate: boolean) {
         let b = false;
         const cells = this.cells;
@@ -192,13 +196,16 @@ export class CellColumn {
 
         return b;
     }
+    */
     /**
      * 列内のセルのサイズを再計算します。
      */
+    /*
     public resize() {
 
         this.tryResizeWithUpdateFlag(true);
     }
+    */
     public tryFitWidthWithUpdateFlag(allowShrink: boolean, withUpdate: boolean): boolean {
         let b = false;
         const __width = allowShrink ? this.getVirtualSize().width : Math.max(this.width, this.getVirtualSize().width);

@@ -109,7 +109,6 @@ export class GRect extends GTextBox {
         //const value100 = round100(value);
         //if (this.width != value100) this.svgRectangle.setAttribute("width", value100.toString());
         this.setWidthWithoutUpdate(value);
-        this.resetUnstableCounter();
         //this.update();
     }
     protected setWidthWithoutUpdate(value: number) {
@@ -127,7 +126,6 @@ export class GRect extends GTextBox {
     }
     set height(value: number) {
         this.setHeightWithoutUpdate(value);
-        this.resetUnstableCounter();
         
         //this.update();
     }

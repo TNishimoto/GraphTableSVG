@@ -4,6 +4,8 @@
 import { nearlyEqual, round100 } from "../../common/vline"
 import { Debugger } from "../../common/debugger"
 import { DirectionType, BorderCoodinateType, Cell } from "./cell"
+import { CellRow } from "./row";
+import { CellColumn } from "./column";
 export class UpdateBorder {
     public static tryUpdateBorderCoodinateWithUpdateFlag(cell: Cell, borderType: DirectionType, newValue: number, type: BorderCoodinateType, withUpdate: boolean): boolean {
         let b = false;
@@ -348,6 +350,107 @@ export class UpdateBorder {
 
 
         return b1 || b2 || b3 || b4;
+    }
+    public static tryUpdateBorders(cellArray : Cell[], withUpdate : boolean) : boolean{
+        let b  = false;
+
+        const date1 = new Date();
+        cellArray.forEach((v) =>{
+            if(v.isMaster){
+                b = UpdateBorder.tryUpdateBordersWithUpdateFlag(v, withUpdate) || b;
+            }
+        })
+        const date2 = new Date();
+        Debugger.showTime(date1, date2, `Table: X`, "updateBorders")
+
+        return b;
+    }
+
+    public static updateCellSizeAfterUpdatingRowsAndColumns(rows : CellRow[], columns : CellColumn[], withUpdate : boolean) : boolean{
+        let b = false;
+
+        for(let y = 0;y<rows.length;y++){
+            const height = Math.max(rows[y].height, CellRow.defaultHeight);
+
+            for(let x = 0;x<rows[y].length;x++){
+                const width = Math.max(columns[x].width, CellColumn.defaultWidth);
+
+                const cell = rows[y].cells[x];
+                if (cell.isMasterCellOfRowCountOne && !nearlyEqual(cell.height, height)) {
+                    b = true;
+                    if(withUpdate){
+                        cell.height = height;
+                    }
+                    if(!withUpdate && b){
+                        Debugger.updateFlagLog(this, UpdateBorder.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.height} != ${height}`)
+    
+                        return b;
+                    }
+                }
+                if (cell.isMasterCellOfColumnCountOne && !nearlyEqual(cell.width, width)) {
+                    b = true;
+                    if (withUpdate) {
+                        cell.width = width;
+                    }
+    
+                    if (!withUpdate && b) {
+                        Debugger.updateFlagLog(this, UpdateBorder.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.width} != ${width} y = ${y}`)
+    
+                        return true;
+                    }
+                }
+                
+
+                if (!cell.isMasterCellOfRowCountOne) {
+                    b = cell.tryUpdateWithUpdateFlag(withUpdate)  || b;
+    
+                    if(!withUpdate && b){
+                        Debugger.updateFlagLog(this, UpdateBorder.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.tryUpdateWithUpdateFlag.name} x = ${x}`)
+                        return b;
+                    }
+                }
+                if (!cell.isMasterCellOfColumnCountOne) {
+
+                    b = cell.tryUpdateWithUpdateFlag(withUpdate)  || b;
+                    if (!withUpdate && b) {
+                        Debugger.updateFlagLog(this, UpdateBorder.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.tryUpdateWithUpdateFlag.name} y = ${y}`)
+                        return b;
+                    }
+                }
+            }
+    
+        }
+
+        return b;
+    }
+    public static relocateCellsAfterUpdatingCellSize(rows : CellRow[], columns : CellColumn[], withUpdate : boolean) : boolean{
+        let b = false;
+        let height = 0;
+        for(let i=0;i<rows.length;i++){
+            b = rows[i].setYWithUpdate(height, withUpdate)  || b;
+            if(!withUpdate && b){
+                Debugger.updateFlagLog(this, UpdateBorder.relocateCellsAfterUpdatingCellSize, rows[i].setYWithUpdate.name)
+                return b;
+            }
+            height += rows[i].height;
+
+        }
+
+        let width = 0;
+
+        for(let i=0;i<columns.length;i++){
+            b = columns[i].setXWithUpdate(width, withUpdate)  || b;
+            if(!withUpdate && b){
+                Debugger.updateFlagLog(this, UpdateBorder.relocateCellsAfterUpdatingCellSize, columns[i].setXWithUpdate.name)
+
+
+                return b;
+            }
+            width += columns[i].width;
+
+        }
+
+        return b;
     }
 
 }

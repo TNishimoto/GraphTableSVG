@@ -6,8 +6,8 @@ import { nearlyEqual, round100 } from "../common/vline";
 
 
 export const timerInterval = 100;
-export const unstableCounterDefault = 10;
-export const unstableCounterName = "data-unstable-counter";
+//export const unstableCounterDefault = 10;
+//export const unstableCounterName = "data-unstable-counter";
 
 let updateSVGSVGTimerCounter = 0;
 const timerDic: Map<string, Date> = new Map();
@@ -107,7 +107,7 @@ export function textObserveTimer(svgsvg: SVGSVGElement) {
 
     //AAAAAAAAAAAAAAAAAAAA
 }
-
+/*
 export function decrementUnstableCounter(value: any) {
     const objectID: string | undefined = value.objectID;
     if (value.unstableCounter == 0) {
@@ -125,18 +125,19 @@ export function decrementUnstableCounter(value: any) {
                 }
             }
         }
-        /*
+        
         const descendants = HTMLFunctions.getDescendants(value.svgGroup);
         descendants.forEach((v) => {
             if (v.hasAttribute(unstableCounterName)) {
                 v.removeAttribute(unstableCounterName);
             }
         })
-        */
+        
     } else {
         value.svgGroup.setAttribute(unstableCounterName, (value.unstableCounter - 1).toString());
     }
 }
+*/
 
 
 
