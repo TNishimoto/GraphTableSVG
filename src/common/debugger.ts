@@ -16,6 +16,13 @@ export class Debugger {
     public static getStopWatchFlag() : boolean{
         return true;
     }
+    public static showTime(oldTime : Date, newTime : Date, name : string, msg : string){
+        const diffx = newTime.getTime() - oldTime.getTime();
+        const styles = 'color: black; background-color: lightgreen;';
+
+        console.log(`%c Timer: name = ${name}: UpdateTime = ${Math.abs(diffx) / 1000}s`, styles);
+
+    }
     public static updateFlagLog(obj : any, func : any, msg : string){
         if(debugMode == "ObserveUpdateFlag"){
             const type = obj.constructor.name;

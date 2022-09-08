@@ -297,46 +297,46 @@ export class UpdateBorder {
      /**
      *セルの位置を再計算します。
      */
-     public static tryRelocateWithUpdateFlag(cell : Cell, withUpdate: boolean): boolean {
+     public static tryUpdateBordersWithUpdateFlag(cell : Cell, withUpdate: boolean): boolean {
         //let b = false;
 
         const b1 = UpdateBorder.tryRelocateTopBorderWithUpdateFlag(cell, withUpdate);
         if (withUpdate && b1) {
-            Debugger.updateLog(this, UpdateBorder.tryRelocateWithUpdateFlag, `${UpdateBorder.tryRelocateTopBorderWithUpdateFlag.name}`)
+            Debugger.updateLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateTopBorderWithUpdateFlag.name}`)
         }
         if (!withUpdate && b1) {
-            Debugger.updateFlagLog(this, UpdateBorder.tryRelocateWithUpdateFlag, `${UpdateBorder.tryRelocateTopBorderWithUpdateFlag.name}`)
+            Debugger.updateFlagLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateTopBorderWithUpdateFlag.name}`)
             return true;
         }
 
         const b2 = UpdateBorder.tryRelocateLeftBorderWithUpdateFlag(cell, withUpdate);
         if (withUpdate && b2) {
-            Debugger.updateLog(this, UpdateBorder.tryRelocateWithUpdateFlag, `${UpdateBorder.tryRelocateLeftBorderWithUpdateFlag.name}`)
+            Debugger.updateLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateLeftBorderWithUpdateFlag.name}`)
         }
 
         if (!withUpdate && b2) {
-            Debugger.updateFlagLog(this, UpdateBorder.tryRelocateWithUpdateFlag, `${UpdateBorder.tryRelocateLeftBorderWithUpdateFlag.name}`)
+            Debugger.updateFlagLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateLeftBorderWithUpdateFlag.name}`)
             return true;
         }
 
         const b3 = UpdateBorder.tryRelocateRightBorderWithUpdateFlag(cell, withUpdate);
         if (withUpdate && b3) {
-            Debugger.updateLog(this, UpdateBorder.tryRelocateWithUpdateFlag, `${UpdateBorder.tryRelocateRightBorderWithUpdateFlag.name}`)
+            Debugger.updateLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateRightBorderWithUpdateFlag.name}`)
         }
 
         if (!withUpdate && b3) {
-            Debugger.updateFlagLog(this, UpdateBorder.tryRelocateWithUpdateFlag, `${UpdateBorder.tryRelocateRightBorderWithUpdateFlag.name}`)
+            Debugger.updateFlagLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateRightBorderWithUpdateFlag.name}`)
 
             return true;
         }
 
         const b4 = UpdateBorder.tryRelocateBottomBorderWithUpdateFlag(cell, withUpdate);
         if (withUpdate && b4) {
-            Debugger.updateLog(this, UpdateBorder.tryRelocateWithUpdateFlag, `${UpdateBorder.tryRelocateBottomBorderWithUpdateFlag.name}`)
+            Debugger.updateLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateBottomBorderWithUpdateFlag.name}`)
         }
 
         if (!withUpdate && b4) {
-            Debugger.updateFlagLog(this, UpdateBorder.tryRelocateWithUpdateFlag, `${UpdateBorder.tryRelocateBottomBorderWithUpdateFlag.name}`)
+            Debugger.updateFlagLog(this, UpdateBorder.tryUpdateBordersWithUpdateFlag, `${UpdateBorder.tryRelocateBottomBorderWithUpdateFlag.name}`)
             return true;
         }
 

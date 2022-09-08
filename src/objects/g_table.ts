@@ -26,6 +26,7 @@ import { GVertex } from "./g_vertex";
 import {CenterPosition, UpperLeftPosition} from "../common/vline"
 import { UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
+import { UpdateBorder } from "./table_helpers/update_border";
 
 //namespace GraphTableSVG {
 
@@ -137,6 +138,47 @@ export class GTable extends GVertex {
         return false;
     }
 
+    public updateSurfaceWithoutSVGText() : boolean{
+        let b = false;
+        const withUpdate = true;
+
+        this.hasConnectedObserverFunction = false;
+
+
+        const xb = HTMLFunctions.isShow(this.svgGroup);
+        if (!xb) {
+            return false;
+        }
+
+        this._isDrawing = true;
+
+        let b1 = true;
+        while(b1){
+            b1 = this.fitSizeToOriginalCellsWithUpdateFlag(true, withUpdate);
+            if(b1){
+                b = true;
+            }
+        }
+
+
+    
+        this.prevShow = false;
+
+
+        //b = this.tryResizeWithUpdateFlag(withUpdate) || b;
+
+
+
+        const b3 = this.relocateWithUpdate(withUpdate);
+
+        const b4= this.updateBorders();
+
+
+        this._isDrawing = false;
+        this.hasConnectedObserverFunction = true;
+        return b || b3 || b4;
+
+    }
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GTableOption = {}): GTableOption {
         //const widthsStr = e.getPropertyStyleValue("--widths");
@@ -1148,6 +1190,7 @@ export class GTable extends GVertex {
     // #region update
     private prevShow: boolean = false;
 
+    /*
     private tryUpdateWithUpdateFlag(withUpdate : boolean) : boolean{
         let b = super.getUpdateFlag();
 
@@ -1210,6 +1253,7 @@ export class GTable extends GVertex {
         this.hasConnectedObserverFunction = true;
         return b;
     }
+    /*
 
     public getUpdateFlag(): boolean {
         return this.tryUpdateWithUpdateFlag(false);
@@ -1222,7 +1266,7 @@ export class GTable extends GVertex {
     */
     public update() {
         super.update();
-        this.tryUpdateWithUpdateFlag(true);
+        //this.tryUpdateWithUpdateFlag(true);
 
     }
 
@@ -1262,6 +1306,7 @@ export class GTable extends GVertex {
 
     }
 
+    /*
     private tryResizeWithUpdateFlag(withUpdate : boolean) : boolean {
         let b = false;
         for(let i = 0;i<this.rows.length;i++){
@@ -1280,15 +1325,33 @@ export class GTable extends GVertex {
         return b;
 
     }
+    */
+    private updateBorders() : boolean{
+        const withUpdate = true;
+        let b  = false;
+
+        const date1 = new Date();
+        this.cellArray.forEach((v) =>{
+            if(v.isMaster){
+                b = UpdateBorder.tryUpdateBordersWithUpdateFlag(v, withUpdate) || b;
+            }
+        })
+        const date2 = new Date();
+        Debugger.showTime(date1, date2, `Table: ${this.objectID}`, "updateBorders")
+
+        return b;
+    }
 
 
     /**
      * サイズを再計算します。
      */
+    /*
     private resize() {
         this.tryResizeWithUpdateFlag(true);
 
     }
+    */
     public get childrenStableFlag() : boolean{
         let b = true;
         for(let i = 0;i<this.rows.length;i++){
@@ -1327,6 +1390,7 @@ export class GTable extends GVertex {
 
         }
 
+        /*
         const cells = this.cellArray;
         for(let i = 0;i<cells.length;i++){
             b = cells[i].tryLocateSVGTextWithUpdateFlag(withUpdate) || b;
@@ -1337,6 +1401,7 @@ export class GTable extends GVertex {
                 return b;
             }
         }
+        */
 
         return b;
     }
