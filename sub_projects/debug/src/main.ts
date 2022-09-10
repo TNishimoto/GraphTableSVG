@@ -1,16 +1,12 @@
-import { webkit, firefox, chromium, ElementHandle, Locator, Page } from 'playwright'
-import * as fs from 'fs';
-import * as path from 'path';
+import { webkit, firefox, chromium, ElementHandle, Locator, Page, Browser } from 'playwright'
 
-import { BrowserNameType, ErrorType, rightPadding, concatenatePaths, getAbsoluteDirectoryPath, outerHtml, getVisibleHTML, saveOutputHTMLAndPNG, createDirectoryIfNotExist } from "./browser"
+import * as path from 'path';
+import { BrowserNameType, rightPadding, getFiles,createDirectoryIfNotExist, createDirectories,FilePathManager, getAbusoluteOutputHTMLFolderPath, getAbusoluteOutputScreenShotFolderPath } from "./file_manager"
+
+import { ErrorType, BroswerExecutionResult } from "./playwright_test"
 
 //import * as libxmljs from 'libxmljs';
 import { diffXML, DiffXMLResult } from './diff_xml';
-
-const exampleRelativeDirPath = 'docs/_debug_examples';
-const outputRelativeDirPath = 'sub_projects/debug/output';
-const correctOutputRelativeDirPath = 'sub_projects/debug/correct_output';
-
 
 
 class TestResult {
@@ -21,17 +17,6 @@ class TestResult {
   public diffXMLResult: DiffXMLResult | null = null;
 
   public errorType: ErrorType | null = null;
-  /*
-  public constructor(_filename: string, _browserName: BrowserNameType, _message: string, _success: boolean | null, _errorType : ErrorType) {
-    
-    this.filename = _filename;
-    this.browserName = _browserName;
-    this.message = _message;
-    this.success = _success;
-    this.errorType = _errorType;
-    
-  }
-  */
 }
 
 class TestResultForFile {
@@ -67,11 +52,21 @@ class TestResultForFile {
   }
 
 }
+/*
+class FilePathManager{
+  info : DirectoryInfo;
+  constructor(_info : DirectoryInfo){
+    this.info = _info;
+  }
+}
+*/
 
 
 
 
-async function test(browserName: BrowserNameType, currentRelativeDirPath: string, fileName: string, printMessage : boolean): Promise<TestResult> {
+
+/*
+async function test(browserName: BrowserNameType, currentRelativeDirPath: string, fileName: string, printMessage: boolean): Promise<BroswerExecutionResult> {
   console.log(`Processing...: ${fileName}, browser: ${browserName}`)
   const exe = path.extname(fileName)
   const filenameWithoutExe = fileName.substring(0, fileName.length - exe.length);
@@ -87,6 +82,12 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
   const correctHTMLPath = concatenatePaths(`${correctOutputDirPath}/${filenameWithoutExe}`, `${filenameWithoutExe}_${browserName}.html`)
   const correctPNGPath = concatenatePaths(`${correctOutputDirPath}/${filenameWithoutExe}`, `${filenameWithoutExe}_${browserName}.png`)
 
+  const executionResult = BroswerExecutionResult.emulateHTML(absoluteFilePath, browserName, printMessage);
+  return executionResult;
+
+  */
+
+
   /*
   createDirectoryIfNotExist(outputDirPath);
   createDirectoryIfNotExist(correctOutputDirPath);
@@ -94,10 +95,10 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
   */
 
 
+
+  /*
   const brres = async () => {
-    let result = new TestResult();
-    result.filename = fileName;
-    result.browserName = browserName;
+
 
 
     //let success: boolean | null = null;
@@ -120,13 +121,13 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
     if (browser != null) {
       const page = await browser.newPage()
       await page.goto(`file:///${absoluteFilePath}`)
-      if(printMessage){
+      if (printMessage) {
         await page.on('console', msg => console.log(`\u001b[33m ${msg.text()} \u001b[0m`))
         // Listen for all console events and handle errors
         await page.on('console', msg => {
           if (msg.type() === 'error')
             console.log(`\u001b[31m Error text: "${msg.text()}" \u001b[0m`);
-        });  
+        });
       }
 
 
@@ -187,8 +188,11 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
 
 
   }
+  */
   //let r : Promise<TestResult> | null = null;
+  /*
   try {
+
     return brres();
   } catch {
 
@@ -200,6 +204,7 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
 
     return result;
   }
+  */
   /*
   if(r != null){
     return r;
@@ -208,9 +213,11 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
   }
   */
 
-}
+//}
 
-async function testAll(currentRelativeDirPath: string, fileName: string, printMessage : boolean): Promise<TestResultForFile> {
+
+/*
+async function testAll(currentRelativeDirPath: string, fileName: string, printMessage: boolean): Promise<TestResultForFile> {
   const r = new TestResultForFile();
   r.filename = fileName;
 
@@ -226,71 +233,64 @@ async function testAll(currentRelativeDirPath: string, fileName: string, printMe
   r.arr.push(result2);
   r.arr.push(result3);
   return r;
-
 }
-
-type DirectoryInfo = { dirPath: string, fileName: string };
-
-function createDirectories(info: DirectoryInfo) {
-  const currentRelativeDirPath = info.dirPath;
-  const fileName = info.fileName;
-  const outputDirPath = concatenatePaths(getAbsoluteDirectoryPath(outputRelativeDirPath), currentRelativeDirPath);
-  const correctOutputDirPath = concatenatePaths(getAbsoluteDirectoryPath(correctOutputRelativeDirPath), currentRelativeDirPath);
-  const exe = path.extname(fileName)
-  const filenameWithoutExe = fileName.substring(0, fileName.length - exe.length);
+*/
 
 
-  createDirectoryIfNotExist(outputDirPath);
-  createDirectoryIfNotExist(`${outputDirPath}/${filenameWithoutExe}`);
 
-  createDirectoryIfNotExist(correctOutputDirPath);
-  createDirectoryIfNotExist(`${correctOutputDirPath}/${filenameWithoutExe}`);
-
-}
-
-function getFiles(currentRelativePath: string): DirectoryInfo[] {
-  const r: DirectoryInfo[] = new Array();
-  const fPath = concatenatePaths(exampleRelativeDirPath, currentRelativePath);
-  const exampleCurrentAbsolutePath = getAbsoluteDirectoryPath(fPath);
-  const files = fs.readdirSync(exampleCurrentAbsolutePath);
-  const fileList = files.filter((file) => {
-    const filePath = exampleCurrentAbsolutePath + "/" + file;
-    return fs.statSync(filePath).isFile() && /.*\.html$/.test(file);
-  })
-  for (const vFileName of fileList) {
-    r.push({ dirPath: currentRelativePath, fileName: vFileName });
-  }
-
-
-  const dirList = files.filter((file) => {
-    const subDirPath = exampleCurrentAbsolutePath + "/" + file;
-
-    return fs.statSync(subDirPath).isDirectory()
-  })
-  for (const vDirName of dirList) {
-    const subDirPath = concatenatePaths(currentRelativePath, vDirName);
-    const resultArr = getFiles(subDirPath);
-    resultArr.forEach((v) => {
-      r.push(v);
+async function processor2(items : FilePathManager[]){
+  const results = await Promise.all(items.map(async (w) =>{
+    const dummy = BroswerExecutionResult.emulateHTML(w.absoluteFilePath, w.browserName, false, w.outputHTMLPath, w.outputPNGPath);
+    dummy.then((x) =>{
+     console.log(`${w.absoluteFilePath}: ${x.success}`)  
     })
+    return dummy;  
+  }))
+  return results;
 
-  }
-  return r;
 }
 
+async function processor(items : FilePathManager[]){
+  const r2 : FilePathManager[][] = new Array();
+  r2.push(new Array(0));
+  items.forEach((v) =>{
+    const p = r2.length-1;
+    if(r2[p].length < 8){
+      r2[p].push(v);
+    }else{
+      r2.push(new Array(0));
+      r2[p+1].push(v);
+    }
+  })
 
+  const xxx : BroswerExecutionResult[] = new Array();
+
+  for(let i=0;i<r2.length;i++){
+    console.log(`Process: ${i}`)
+    const result = await processor2(r2[i]);
+    result.forEach((v) =>{
+      xxx.push(v);
+    })
+  }
+  return xxx;
+}
 
 
 
 //console.log(__filename)
+
+
+createDirectoryIfNotExist(getAbusoluteOutputHTMLFolderPath());
+createDirectoryIfNotExist(getAbusoluteOutputScreenShotFolderPath());
 
 if (process.argv.length == 4) {
 
   const relativePath = process.argv[2];
   const fileName = process.argv[3];
   const files = getFiles("");
-  files.forEach((v) => createDirectories(v));
+  files.forEach((v) => createDirectories({dirPath : v.dirPath, fileName : v.filename}));
 
+  /*
   const result = testAll(relativePath, fileName, true);
   result.then((v) => {
     const s = v.getTestResult();
@@ -298,10 +298,37 @@ if (process.argv.length == 4) {
     console.log(s);
     console.log(v.getDetailMessages());
   })
+  */
 
 } else {
   const files = getFiles("");
-  files.forEach((v) => createDirectories(v));
+  //files.forEach((v) => createDirectories({dirPath : v.dirPath, fileName : v.filename}));
+
+  const results = processor(files);
+  results.then((v) =>{
+    console.log("END");
+  })
+
+  //result.then((v) => {
+    /*
+    const s1 = v.map((w) => {
+      return w.getTestResult();
+    }).join("\n")
+
+    const s2 = v.map((w) => {
+      return w.getDetailMessages();
+    }).filter((w) => w != null).join("\n")
+
+    console.log(s1);
+    console.log(s2);
+    */
+
+  //})
+  
+
+
+  //files.forEach((v) => console.log(v.dirPath + "   " + v.fileName))
+  /*
   const result = Promise.all(files.map(async (v) => {
     const dummy = await testAll(v.dirPath, v.fileName, false);
     return dummy;
@@ -319,6 +346,7 @@ if (process.argv.length == 4) {
     console.log(s2);
 
   })
+  */
 
 
 }
