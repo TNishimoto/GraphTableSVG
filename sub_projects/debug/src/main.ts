@@ -2,7 +2,7 @@ import { webkit, firefox, chromium, ElementHandle, Locator, Page } from 'playwri
 import * as fs from 'fs';
 import * as path from 'path';
 
-import {BrowserNameType, ErrorType, rightPadding, concatenatePaths, getAbsoluteDirectoryPath, outerHtml, getVisibleHTML, saveOutputHTMLAndPNG, createDirectoryIfNotExist} from "./browser"
+import { BrowserNameType, ErrorType, rightPadding, concatenatePaths, getAbsoluteDirectoryPath, outerHtml, getVisibleHTML, saveOutputHTMLAndPNG, createDirectoryIfNotExist } from "./browser"
 
 //import * as libxmljs from 'libxmljs';
 import { diffXML, DiffXMLResult } from './diff_xml';
@@ -56,8 +56,9 @@ class TestResultForFile {
       return null;
     } else {
       this.arr.forEach((v) => {
-        const type: string = v.errorType == null ? "null" : v.errorType;
+        //const type: string = v.errorType == null ? "null" : v.errorType;
         const msg = v.message;
+
         s += `${v.browserName}: ${msg}\n`;
       })
       s += " }\n";
@@ -70,7 +71,7 @@ class TestResultForFile {
 
 
 
-async function test(browserName: BrowserNameType, currentRelativeDirPath: string, fileName: string): Promise<TestResult> {
+async function test(browserName: BrowserNameType, currentRelativeDirPath: string, fileName: string, printMessage : boolean): Promise<TestResult> {
   console.log(`Processing...: ${fileName}, browser: ${browserName}`)
   const exe = path.extname(fileName)
   const filenameWithoutExe = fileName.substring(0, fileName.length - exe.length);
@@ -119,28 +120,25 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
     if (browser != null) {
       const page = await browser.newPage()
       await page.goto(`file:///${absoluteFilePath}`)
-      await page.on('console', msg => console.log(`\u001b[33m ${msg.text()} \u001b[0m`))
-      // Listen for all console events and handle errors
-      await page.on('console', msg => {
-        if (msg.type() === 'error')
-          console.log(`\u001b[31m Error text: "${msg.text()}" \u001b[0m`);
-      });
+      if(printMessage){
+        await page.on('console', msg => console.log(`\u001b[33m ${msg.text()} \u001b[0m`))
+        // Listen for all console events and handle errors
+        await page.on('console', msg => {
+          if (msg.type() === 'error')
+            console.log(`\u001b[31m Error text: "${msg.text()}" \u001b[0m`);
+        });  
+      }
 
 
       await page.waitForTimeout(1000);
 
       while (timeoutCounter < 10) {
 
-        const arrayOfUnstableObjects = page.locator('xpath=//*[name()="g" and @data-unstable-counter]')
+        const arrayOfUnstableObjects = page.locator('xpath=//*[name()="g" and @data-stable-flag="false"]')
         const counter = await arrayOfUnstableObjects.count();
-        //console.log(`counter: ${counter}`)
         if (counter == 0) {
           break;
         } else {
-          //const fst = await arrayOfUnstableObjects.first();
-          //const html = await outerHtml(fst);
-          //console.log(html);
-
           await page.waitForTimeout(1000);
           timeoutCounter++;
         }
@@ -212,18 +210,18 @@ async function test(browserName: BrowserNameType, currentRelativeDirPath: string
 
 }
 
-async function testAll(currentRelativeDirPath: string, fileName: string): Promise<TestResultForFile> {
+async function testAll(currentRelativeDirPath: string, fileName: string, printMessage : boolean): Promise<TestResultForFile> {
   const r = new TestResultForFile();
   r.filename = fileName;
 
   //let tr1 : TestResult | null = null;
-  const result1 = await test("firefox", currentRelativeDirPath, fileName);
+  const result1 = await test("firefox", currentRelativeDirPath, fileName, printMessage);
   console.log(`Finished: ${result1.filename}, Browswer = ${result1.browserName}`)
   r.arr.push(result1);
 
-  const result2 = await test("chromium", currentRelativeDirPath, fileName);
+  const result2 = await test("chromium", currentRelativeDirPath, fileName, printMessage);
   console.log(`Finished: ${result2.filename}, Browswer = ${result2.browserName}`)
-  const result3 = await test("edge", currentRelativeDirPath, fileName);
+  const result3 = await test("edge", currentRelativeDirPath, fileName, printMessage);
   console.log(`Finished: ${result3.filename}, Browswer = ${result3.browserName}`)
   r.arr.push(result2);
   r.arr.push(result3);
@@ -290,17 +288,22 @@ if (process.argv.length == 4) {
 
   const relativePath = process.argv[2];
   const fileName = process.argv[3];
-  const result = testAll(relativePath, fileName);
+  const files = getFiles("");
+  files.forEach((v) => createDirectories(v));
+
+  const result = testAll(relativePath, fileName, true);
   result.then((v) => {
     const s = v.getTestResult();
+
     console.log(s);
+    console.log(v.getDetailMessages());
   })
 
 } else {
   const files = getFiles("");
   files.forEach((v) => createDirectories(v));
   const result = Promise.all(files.map(async (v) => {
-    const dummy = await testAll(v.dirPath, v.fileName);
+    const dummy = await testAll(v.dirPath, v.fileName, false);
     return dummy;
   }));
   result.then((v) => {

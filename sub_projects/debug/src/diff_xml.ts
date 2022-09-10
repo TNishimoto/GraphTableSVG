@@ -42,11 +42,14 @@ function diffAttrs(e1 : libxmlts.libxmlts.Element, e2 : libxmlts.libxmlts.Elemen
     const attr1 = e1.attrs();
     const map1 : Map<string, string> = new Map();
     attr1.forEach((v) => map1.set(v.name, v.value));
+
     
 
     const attr2 = e2.attrs();
     const map2 : Map<string, string> = new Map();
     attr2.forEach((v) => map2.set(v.name, v.value));
+
+
 
     for(let kv1 of attr1){
         
@@ -118,8 +121,10 @@ function diffNode(e1 : libxmlts.libxmlts.InnerNode, e2 : libxmlts.libxmlts.Inner
         return result;
     }else{
         if(e1 instanceof libxmlts.libxmlts.Element && e2 instanceof libxmlts.libxmlts.Element){
+
             const b1 = diffAttrs(e1, e2);
-            if(b1 == null){
+
+            if(b1.diffType == null){
                 const children1 = e1.childNodes();
                 const children2 = e2.childNodes();
                 if(children1.length != children2.length){
@@ -188,6 +193,7 @@ function diffNode(e1 : libxmlts.libxmlts.InnerNode, e2 : libxmlts.libxmlts.Inner
 
 
 export function diffXML(xml1 : string, xml2 : string) : DiffXMLResult{
+
     const xmlDoc1 = new libxmlts.libxmlts.Document(libxmljs.parseHtmlString(xml1));
     const xmlDoc2 = new libxmlts.libxmlts.Document(libxmljs.parseHtmlString(xml2));
     const b = diffNode(xmlDoc1.root, xmlDoc2.root);
