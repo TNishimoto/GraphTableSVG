@@ -1,10 +1,10 @@
 import { webkit, firefox, chromium, ElementHandle, Locator, Page } from 'playwright'
-import {BrowserNameType} from "./file_manager"
+import { BrowserNameType, FilePathManager } from "./file_manager"
 import * as fs from 'fs';
 
 export type ErrorType = 'TextMismatch' | 'TimeoutError' | 'UnexpectedError';
-function isSpecialNode(nodeName : string) : boolean{
-    const dic : Set<string> = new  Set();
+function isSpecialNode(nodeName: string): boolean {
+    const dic: Set<string> = new Set();
     dic.add("svg");
     dic.add("g");
     dic.add("rect");
@@ -22,11 +22,11 @@ function isSpecialNode(nodeName : string) : boolean{
 
     return dic.has(nodeName);
 }
-function HTMLCaptialNodeToProperName(nodeName : string) : string{
+function HTMLCaptialNodeToProperName(nodeName: string): string {
     const p = nodeName.toLowerCase();
-    if(p == "textpath"){
+    if (p == "textpath") {
         return "textPath";
-    }else{
+    } else {
         return p;
     }
 }
@@ -43,20 +43,20 @@ export async function outerHtml(elem: Locator) {
 }
 
 type NodeAttribute = { name: string, value: string | null }
-function sanityze(attribute : NodeAttribute) : string {
-    if(attribute.value != null){
+function sanityze(attribute: NodeAttribute): string {
+    if (attribute.value != null) {
         const p1 = attribute.value.indexOf(`"`) == -1;
         const p2 = attribute.value.indexOf(`'`) == -1;
-        
-        if(p1){
+
+        if (p1) {
             return `${attribute.name}="${attribute.value}"`;
-        }else if(p2){
+        } else if (p2) {
             return `${attribute.name}='${attribute.value}'`;
-        }else{
+        } else {
             const sanitizedValue = attribute.value.replace(/'/g, "&#39;")
             return `${attribute.name}='${sanitizedValue}'`;
         }
-    }else{
+    } else {
         return "";
     }
 
@@ -66,7 +66,7 @@ export async function getAllAttributes(page: Locator): Promise<NodeAttribute[]> 
     const el_attrs = await page.evaluate(el => el.getAttributeNames())
 
     const r: NodeAttribute[] = new Array();
-    for(let i = 0;i<el_attrs.length;i++){
+    for (let i = 0; i < el_attrs.length; i++) {
         const name = el_attrs[i];
         const value = await page.getAttribute(name);
         r.push({ name: name, value: value })
@@ -76,58 +76,58 @@ export async function getAllAttributes(page: Locator): Promise<NodeAttribute[]> 
 }
 
 
-export async function convertFromPageToLines(root: Page, xpath : string | null): Promise<string[]> {
+export async function convertFromPageToLines(root: Page, xpath: string | null): Promise<string[]> {
 
-    const r : string[] = new Array();
+    const r: string[] = new Array();
 
     const childrenXPathCodes = await getXPathCodeOfChildren(root, xpath);
     for (let i = 0; i < childrenXPathCodes.length; i++) {
         const nextNodePath = xpath == null ? `/${childrenXPathCodes[i]}` : `${xpath}/${childrenXPathCodes[i]}`;
         const lines = await toHTMLLines(root, nextNodePath, "")
-        lines.forEach((v) =>{
+        lines.forEach((v) => {
             r.push(v);
         })
     }
 
     return r;
 }
-export async function getXPathCodeOfChildren(root: Page, xpath : string | null): Promise<string[]> {
+export async function getXPathCodeOfChildren(root: Page, xpath: string | null): Promise<string[]> {
     const nodes = await root.locator(`xpath=${xpath == null ? "" : xpath}/*`);
     const count = await nodes.count();
 
-    const dic : Map<string, number> = new Map();
-    const r : string[] = new Array(0);
+    const dic: Map<string, number> = new Map();
+    const r: string[] = new Array(0);
 
     for (let i = 0; i < count; i++) {
-        const upperName = await nodes.nth(i).evaluate(el => el.nodeName); 
+        const upperName = await nodes.nth(i).evaluate(el => el.nodeName);
 
         const name = HTMLCaptialNodeToProperName(upperName);
-        if(!dic.has(name)){
+        if (!dic.has(name)) {
             dic.set(name, 1);
-        }else{
+        } else {
             dic.set(name, dic.get(name)! + 1);
         }
         const nextNodeCount = dic.get(name)!;
-        let nextNodePath ="";
-        if(isSpecialNode(name)){
+        let nextNodePath = "";
+        if (isSpecialNode(name)) {
             nextNodePath = `*[name()="${name}"][${nextNodeCount}]`
-        }else{
+        } else {
             nextNodePath = `${name}[${nextNodeCount}]`;
-    
+
         }
         r.push(nextNodePath);
-    
-    }    
+
+    }
 
     return r;
 }
 
 
-export async function toHTMLLines(root: Page, xpath : string, indent : string): Promise<string[]> {
-    const nodeCandidates = await root.locator(`xpath=${xpath}`); 
-    const nodeCandidatesCount = await nodeCandidates.count(); 
+export async function toHTMLLines(root: Page, xpath: string, indent: string): Promise<string[]> {
+    const nodeCandidates = await root.locator(`xpath=${xpath}`);
+    const nodeCandidatesCount = await nodeCandidates.count();
 
-    if(nodeCandidatesCount == 0){
+    if (nodeCandidatesCount == 0) {
         throw new Error(`XPATH Not Found: ${xpath}`);
     }
 
@@ -139,33 +139,33 @@ export async function toHTMLLines(root: Page, xpath : string, indent : string): 
 
     const nodeName = HTMLCaptialNodeToProperName(nodeCapitalName);
 
-    const r : string[] = new Array();
+    const r: string[] = new Array();
 
     const childrenXPathCodes = await getXPathCodeOfChildren(root, xpath);
     let nodeInfo = "";
-    if(attributes.length == 0){
+    if (attributes.length == 0) {
         nodeInfo = `${nodeName}`;
-    }else{
+    } else {
         nodeInfo = `${nodeName} ${attributeLine}`;
     }
 
-    if(childrenXPathCodes.length >= 1){
+    if (childrenXPathCodes.length >= 1) {
         r.push(`${indent}<${nodeInfo}>`)
 
         for (let i = 0; i < childrenXPathCodes.length; i++) {
             const nextNodePath = `${xpath}/${childrenXPathCodes[i]}`;
             const lines = await toHTMLLines(root, nextNodePath, "    " + indent)
-            lines.forEach((v) =>{
+            lines.forEach((v) => {
                 r.push(v);
             })
-        }    
+        }
         r.push(`${indent}</${nodeName}>`)
 
-    }else {
-        const text : string | null = await node.textContent();
-        if(text == null || text.length == 0){
+    } else {
+        const text: string | null = await node.textContent();
+        if (text == null || text.length == 0) {
             r.push(`${indent}<${nodeInfo}/>`)
-        }else{
+        } else {
             r.push(`${indent}<${nodeInfo}>${text}</${nodeName}>`)
         }
     }
@@ -223,105 +223,113 @@ export async function saveOutputHTMLAndPNG(page: Page, browserName: BrowserNameT
 }
 
 export class BroswerExecutionResult {
-    //browser: Browser;
-    //page: Page;
     success: boolean = false;
     errorType: ErrorType | null = null
     browserName: BrowserNameType = "firefox";
     constructor() {
     }
-  
-    /*
-    async save(correctHTMLPath: string, correctPNGPath: string) {
-      const output_html = await getVisibleHTML(this.page, this.browserName);
-      await saveOutputHTMLAndPNG(this.page, this.browserName, correctHTMLPath, correctPNGPath, false);
-    }
-    */
-    /*
-    async createResult(fileName : string){
-     let result = new TestResult();
-     result.filename = fileName;
-     result.browserName = this.browserName;
-    }
-    */
-  
-    /*
-    static async emulateHTML2(file : FilePathManager, printMessage: boolean): Promise<BroswerExecutionResult> {
-  
-    
-  
-    }
-    */
-  
-  
-    static async emulateHTML(filepath: string, browserName: BrowserNameType, printMessage: boolean, outputHTMLPath : string, outputPNGPath : string): Promise<BroswerExecutionResult> {
-      console.log(`Processing...: ${filepath}, browser: ${browserName}`)
-  
-      let browser = null;
-      if (browserName == 'webkit') {
-        browser = await webkit.launch()
-      } else if (browserName == 'firefox') {
-        browser = await firefox.launch()
-  
-      } else if (browserName == 'chromium') {
-        browser = await chromium.launch()
-      } else if (browserName == 'edge') {
-        browser = await chromium.launch({
-          channel: 'msedge',
-        });
-  
-      }
-      let timeoutCounter = 0;
-  
-      if (browser != null) {
-        const page = await browser.newPage()
-        await page.goto(`file:///${filepath}`)
-        if (printMessage) {
-          await page.on('console', msg => console.log(`\u001b[33m ${msg.text()} \u001b[0m`))
-          // Listen for all console events and handle errors
-          await page.on('console', msg => {
-            if (msg.type() === 'error')
-              console.log(`\u001b[31m Error text: "${msg.text()}" \u001b[0m`);
-          });
+
+
+
+    static async emulateHTML(filepath: string, browserName: BrowserNameType, printMessage: boolean, outputHTMLPath: string, outputPNGPath: string): Promise<BroswerExecutionResult> {
+        console.log(`Processing...: ${filepath}, browser: ${browserName}`)
+
+        let browser = null;
+        if (browserName == 'webkit') {
+            browser = await webkit.launch()
+        } else if (browserName == 'firefox') {
+            browser = await firefox.launch()
+
+        } else if (browserName == 'chromium') {
+            browser = await chromium.launch()
+        } else if (browserName == 'edge') {
+            browser = await chromium.launch({
+                channel: 'msedge',
+            });
+
         }
-  
-  
-        await page.waitForTimeout(1000);
-  
-        while (timeoutCounter < 10) {
-  
-          const arrayOfUnstableObjects = page.locator('xpath=//*[name()="g" and @data-stable-flag="false"]')
-          const counter = await arrayOfUnstableObjects.count();
-          if (counter == 0) {
-            break;
-          } else {
+        let timeoutCounter = 0;
+
+        if (browser != null) {
+            const page = await browser.newPage()
+            await page.goto(`file:///${filepath}`)
+            if (printMessage) {
+                await page.on('console', msg => console.log(`\u001b[33m ${msg.text()} \u001b[0m`))
+                // Listen for all console events and handle errors
+                await page.on('console', msg => {
+                    if (msg.type() === 'error')
+                        console.log(`\u001b[31m Error text: "${msg.text()}" \u001b[0m`);
+                });
+            }
+
+
             await page.waitForTimeout(1000);
-            timeoutCounter++;
-          }
-        }
-        const r = new BroswerExecutionResult();
-  
-        if (timeoutCounter >= 10) {
-          r.success = false;
-          r.errorType = "TimeoutError";
-          console.log(`\x1b[41mFailed (Timeout): ${filepath}, ${browserName} \x1b[49m`)
+
+            while (timeoutCounter < 10) {
+
+                const arrayOfUnstableObjects = page.locator('xpath=//*[name()="g" and @data-stable-flag="false"]')
+                const counter = await arrayOfUnstableObjects.count();
+                if (counter == 0) {
+                    break;
+                } else {
+                    await page.waitForTimeout(1000);
+                    timeoutCounter++;
+                }
+            }
+            const r = new BroswerExecutionResult();
+
+            if (timeoutCounter >= 10) {
+                r.success = false;
+                r.errorType = "TimeoutError";
+                console.log(`\x1b[41mFailed (Timeout): ${filepath}, ${browserName} \x1b[49m`)
+            } else {
+                r.success = true;
+            }
+            await saveOutputHTMLAndPNG(page, browserName, outputHTMLPath, outputPNGPath, true);
+            browser.close();
+
+            return r;
         } else {
-          r.success = true;
+            throw new Error("Error");
         }
-        await saveOutputHTMLAndPNG(page, browserName, outputHTMLPath, outputPNGPath, true);
-        browser.close();
+
+    }
+
+}
+async function playwrightTestSub(items : FilePathManager[]){
+    const results = await Promise.all(items.map(async (w) =>{
+      const dummy = BroswerExecutionResult.emulateHTML(w.absoluteFilePath, w.browserName, false, w.outputHTMLPath, w.outputPNGPath);
+      dummy.then((x) =>{
+       console.log(`${w.absoluteFilePath}: ${x.success}`)  
+      })
+      return dummy;  
+    }))
+    return results;
   
-        return r;
-      } else {
-        throw new Error("Error");
+  }
+  
+  export async function playwrightTest(items : FilePathManager[]){
+    const r2 : FilePathManager[][] = new Array();
+    r2.push(new Array(0));
+    items.forEach((v) =>{
+      const p = r2.length-1;
+      if(r2[p].length < 8){
+        r2[p].push(v);
+      }else{
+        r2.push(new Array(0));
+        r2[p+1].push(v);
       }
+    })
   
+    const xxx : BroswerExecutionResult[] = new Array();
+  
+    for(let i=0;i<r2.length;i++){
+      console.log(`Process: ${i}`)
+      const result = await playwrightTestSub(r2[i]);
+      result.forEach((v) =>{
+        xxx.push(v);
+      })
     }
-    /*
-    static async emulateHTMLAll(currentRelativeDirPath: string, fileName: string, printMessage: boolean): Promise<TestResultForFile> {
-      throw new Error("Error");
-    }
-    */
-    
+    return xxx;
   }
   
