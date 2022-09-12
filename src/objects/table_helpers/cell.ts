@@ -28,6 +28,8 @@ import { CellRow } from "./row"
 import { GOptions } from ".."
 import * as GObserver from "../g_observer"
 import { getSVGSVGAncestor } from "../../html/html_functions"
+import {ITextBox} from "../i_object"
+import { GlobalGObjectManager } from "../global_gobject_manager"
 
 //import { LogicCell } from "../logic/logic_cell"
 
@@ -51,7 +53,7 @@ let uniqueCellID = 0;
 /**
  * セルをSVGで表現するためのクラスです。
  */
-export class Cell implements GObserver.ITextBox, GObserver.IObject {
+export class Cell implements ITextBox {
 
     constructor(parent: GTable, _px: number, _py: number, cellMap : Map<string, Cell>, option: CellOption = {}) {
         this._svgGroup = SVG.createGroup(null);
@@ -93,8 +95,9 @@ export class Cell implements GObserver.ITextBox, GObserver.IObject {
         this._observer.observe(this.svgGroup, option2);
 
         const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
-        if(svgsvgAncestor != null){            
-            GObserver.registerGObject(svgsvgAncestor, this)
+        if(svgsvgAncestor != null){       
+            const xb = GlobalGObjectManager.tryRegisterSVGSVGElement(svgsvgAncestor);
+            xb.registerObject(this);     
         }
 
 

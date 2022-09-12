@@ -14,7 +14,7 @@ import { HTMLFunctions } from "../html";
 /**
  * 辺をSVGで表現するためのクラスです。
  */
-export class GEdge extends GAbstractTextEdge {
+export class GEdge extends GAbstractTextEdge  {
     //private isFixTextSize: boolean = false;
     protected surfaceAttributes: string[] = [];
     protected _minimumWidth: number = 10;

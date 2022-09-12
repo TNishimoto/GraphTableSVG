@@ -15,6 +15,7 @@ import { createSVGText } from "./element_builder";
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { nearlyEqual, round100 } from "../common/vline";
 import { Debugger } from "../common/debugger";
+import { ObjectStableFlagName } from "./g_observer";
 
 export class GAbstractTextEdge extends GAbstractEdge {
     private static updateTextAttributes = ["style"]
@@ -55,6 +56,16 @@ export class GAbstractTextEdge extends GAbstractEdge {
     public get svgTextPath(): SVGTextPathElement {
         return this._svgTextPath;
     }
+
+    public get childrenStableFlag() : boolean{        
+        const b1 = this.svgPath.getAttribute(ObjectStableFlagName);
+        const b2 = this.svgText.getAttribute(ObjectStableFlagName);
+
+        return b1 == "true" && b2 == "true";
+    }
+
+
+
 
     protected setBasicOption(option: GOptions.GAbstractTextEdgeAttributes) {
 
@@ -320,7 +331,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
     }
 
     private tryUpdateTextPathWithUpdateFlag(withUpdate: boolean): boolean {
-
+        console.log(`Update Edge: ${this.objectID}: [${this.x1}, ${this.y1}] [${this.x2}, ${this.y2}] ${this.pathTextAlignment}`);
         const b1 = this.tryUpdateDYWithUpdateFlag(withUpdate);
         if (!withUpdate && b1) {
             Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `${this.tryUpdateDYWithUpdateFlag.name}`)
@@ -448,6 +459,8 @@ export class GAbstractTextEdge extends GAbstractEdge {
             const _startOffset = this.startOffset;
             const xb = _startOffset == null || !nearlyEqual(_startOffset, newStartOffset);
 
+            console.log(`XXX: ${this.objectID} ${pathLen} ${strWidth} ${newStartOffset} ${_startOffset} ${xb}`);
+
             if (xb) {
                 b = true;
                 if (withUpdate) {
@@ -487,6 +500,12 @@ export class GAbstractTextEdge extends GAbstractEdge {
         }
         return b;
     }
+    public updateSurfaceWithoutSVGText() : boolean{
+        console.log(`${this.updateSurfaceWithoutSVGText.name}: ${this.objectID}`)
+        this.update();
+        return true;
+    }
+
     /*
 
     protected updateTextPath(){

@@ -10,6 +10,7 @@ import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGElementExtension from "../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import * as DefaultClassNames from "../common/default_class_names"
+import { GObject } from "./g_object";
 /**
      * SVGPathElementを生成します。
      * @param parent 生成したSVGPathElementを子に追加する要素
@@ -25,6 +26,8 @@ export function createPath(parent: SVGElement | HTMLElement, x: number, y: numbe
     const path = <SVGPathElement>document.createElementNS('http://www.w3.org/2000/svg', 'path');
     parent.appendChild(path);
     path.setAttribute("d", escapeWithRound100`M ${x} ${y} L ${x2} ${y2}`);
+
+    path.setAttribute(AttributeNames.objectIDName, (SVG.getNewID()).toString());
 
 
     GOptions.setClassAndStyle(path, className, style);

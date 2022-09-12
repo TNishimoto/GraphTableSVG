@@ -16,8 +16,8 @@ import * as  GOptions from "./g_options";
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 import * as GObserver from "./g_observer"
-
-
+import {IObject} from "./i_object"
+import { GlobalGObjectManager } from "./global_gobject_manager"
 
 
 
@@ -26,7 +26,7 @@ export type GObjectMaps = {
     surfaceAttributes?: Map<string, string>;
     textAttributes?: Map<string, string>;
 }
-export class GObject implements GObserver.IObject {
+export class GObject implements IObject {
 
     protected _svgSurface: SVGElement | null = null;
     protected _tag: any;
@@ -80,7 +80,9 @@ export class GObject implements GObserver.IObject {
 
         const svgsvgAncestor = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
         if (svgsvgAncestor instanceof SVGSVGElement) {
-            GObserver.registerGObject(svgsvgAncestor, this)
+            
+            const xb = GlobalGObjectManager.tryRegisterSVGSVGElement(svgsvgAncestor);
+            xb.registerObject(this)
 
         }
 
@@ -110,6 +112,11 @@ export class GObject implements GObserver.IObject {
         this.update();        
         return true;
     }
+    /*
+    public get id() : string | null{
+        return this.svgGroup.getAttribute("id");
+    }
+    */
 
 
 
@@ -263,7 +270,6 @@ export class GObject implements GObserver.IObject {
     }
     private pUpdateFunc = () => {
         if (!this.isShown) return;
-        this.resizeUpdate();
     }
     /*
     private addOnLoadEvent() {
@@ -289,10 +295,6 @@ export class GObject implements GObserver.IObject {
     }
     */
 
-    protected resizeUpdate() {
-        //this.resetUnstableCounter();
-        //this.update();
-    }
 
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GOptions.GObjectAttributes = {}, defaultPositionType : "center" | "upper-left" ): GOptions.GObjectAttributes {

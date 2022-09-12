@@ -48,7 +48,7 @@
         export function getParseString(tree : GVertex) : string {
             let str = "";
             str += "(";
-            tree.outcomingEdges.forEach((v)=>{
+            tree.outgoingEdges.forEach((v)=>{
                 if(v.endVertex != null){
                     str += getParseString(v.endVertex);
                 }

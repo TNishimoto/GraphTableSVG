@@ -14,6 +14,8 @@ import {getLineType} from "../html/enum_extension";
 import * as ElementExtension from "../interfaces/element_extension"
 import { getGraph } from "./graph_helpers/common_functions";
 import { GAbstractEdge } from "./g_abstract_edge";
+import { HTMLFunctions } from "../html";
+import { LocalGObjectManager } from "./global_gobject_manager";
 
 
 
@@ -73,14 +75,17 @@ export class GVertex extends GObject {
     public update() {
         /*
         if(this.getUpdateFlag()){
-            this.incomingEdges.forEach((v) =>{
-                v.resetUnstableCounter();
-            })
-            this.outcomingEdges.forEach((v) =>{
-                v.resetUnstableCounter();
-            })
         }
         */
+       /*
+        this.incomingEdges.forEach((v) =>{
+            v.resetUnstableCounter();
+        })
+        this.outcomingEdges.forEach((v) =>{
+            v.resetUnstableCounter();
+        })
+        */
+    
 
 
         super.update();
@@ -90,10 +95,20 @@ export class GVertex extends GObject {
     /**
     入辺配列を返します。
     */
-    get outcomingEdges(): GAbstractEdge[] {
-        const p = <number[]>JSON.parse(<string>ElementExtension.gtGetAttribute(this.svgGroup, "outcoming-edges", "[]"));
-        const p2 = p.map((v) => GObject.getObjectFromObjectID(v.toString()));
-        return <GAbstractEdge[]>p2;
+    get outgoingEdges(): GAbstractEdge[] {
+        const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
+        if(svgsvg != null){
+            const manager : LocalGObjectManager | undefined = (<any>svgsvg)._manager;
+            if(manager != undefined){
+                const arr = manager.getOutgoingEdges(this);
+                if(arr == null){
+                    return new Array(0);
+                }else{
+                    return arr.map((v) => <GAbstractEdge>v);
+                }
+            }
+        }
+        return new Array(0);
     }
 
     /*
@@ -107,9 +122,21 @@ export class GVertex extends GObject {
     出辺配列を返します。
     */
     get incomingEdges(): GAbstractEdge[] {
-        const p = <number[]>JSON.parse(<string>ElementExtension.gtGetAttribute(this.svgGroup, "incoming-edges", "[]"));
-        const p2 = p.map((v) => GObject.getObjectFromObjectID(v.toString()));
-        return <GAbstractEdge[]>p2;
+        const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
+        if(svgsvg != null){
+            const manager : LocalGObjectManager | undefined = (<any>svgsvg)._manager;
+            if(manager != undefined){
+                const arr = manager.getIncmoingEdges(this);
+                if(arr == null){
+                    return new Array(0);
+                }else{
+                    return arr.map((v) => <GAbstractEdge>v);
+                }
+            }
+        }
+        return new Array(0);
+
+
 
     }
     /*
@@ -124,12 +151,14 @@ export class GVertex extends GObject {
      * @param edge
      * @param insertIndex
      */
-    public insertOutcomingEdge(edge: GAbstractEdge, insertIndex: number = this.outcomingEdges.length) {
-        const p = this.outcomingEdges.indexOf(edge);
+    public insertOutcomingEdge(edge: GAbstractEdge, insertIndex: number = this.outgoingEdges.length) {
+        throw new Error("Error");
+        /*
+        const p = this.outgoingEdges.indexOf(edge);
         if (p != -1) {
             throw new Error();
         } else {
-            const edges = this.outcomingEdges;
+            const edges = this.outgoingEdges;
             edges.splice(insertIndex, 0, edge);
             const newEdges = JSON.stringify(edges.map((v) => Number(v.objectID)));
             this.svgGroup.setAttribute("outcoming-edges", newEdges);
@@ -138,6 +167,7 @@ export class GVertex extends GObject {
                 edge.beginVertex = this;
             }
         }
+        */
 
     }
     /**
@@ -145,9 +175,11 @@ export class GVertex extends GObject {
      * @param edge
      */
     public removeOutcomingEdge(edge: GAbstractEdge) {
-        const p = this.outcomingEdges.indexOf(edge);
+        throw new Error("Error");
+        /*
+        const p = this.outgoingEdges.indexOf(edge);
         if (p != null) {
-            const edges = this.outcomingEdges;
+            const edges = this.outgoingEdges;
             edges.splice(p, 1);
             const newEdges = JSON.stringify(edges.map((v) => Number(v.objectID)));
             this.svgGroup.setAttribute("outcoming-edges", newEdges);
@@ -157,6 +189,7 @@ export class GVertex extends GObject {
                 edge.beginVertex = null;
             }
         }
+        */
     }
     /**
     * 入辺を挿入します。
@@ -164,6 +197,8 @@ export class GVertex extends GObject {
     * @param insertIndex
     */
     public insertIncomingEdge(edge: GAbstractEdge, insertIndex: number = this.incomingEdges.length) {
+        throw new Error("Error");
+        /*
         const p = this.incomingEdges.indexOf(edge);
         if (p != -1) {
             throw new Error();
@@ -177,12 +212,15 @@ export class GVertex extends GObject {
                 edge.endVertex = this;
             }
         }
+        */
     }
     /**
      * 入辺を削除します。
      * @param edge
      */
     public removeIncomingEdge(edge: GAbstractEdge) {
+        throw new Error("Error");
+        /*
         const p = this.incomingEdges.indexOf(edge);
         if (p != null) {
             const edges = this.incomingEdges;
@@ -195,14 +233,15 @@ export class GVertex extends GObject {
                 edge.endVertex = null;
             }
         }
+        */
     }
     public dispose() {
         while (this.incomingEdges.length > 0) {
             this.removeIncomingEdge(this.incomingEdges[0]);
         }
 
-        while (this.outcomingEdges.length > 0) {
-            this.removeOutcomingEdge(this.outcomingEdges[0]);
+        while (this.outgoingEdges.length > 0) {
+            this.removeOutcomingEdge(this.outgoingEdges[0]);
         }
 
     }
@@ -243,14 +282,14 @@ export class GVertex extends GObject {
     出辺配列を返します。
     */
     public get children(): GVertex[] {
-        return this.outcomingEdges.filter((v) => v.endVertex != null).map((v) => <GVertex>v.endVertex);
+        return this.outgoingEdges.filter((v) => v.endVertex != null).map((v) => <GVertex>v.endVertex);
     }
 
     /**
     このVertexが葉のときTrueを返します。
     */
     get isLeaf(): boolean {
-        return this.outcomingEdges.length == 0;
+        return this.outgoingEdges.length == 0;
     }
     /**
      * このVertexを頂点とする仮想部分木を作成します。
@@ -336,6 +375,19 @@ export class GVertex extends GObject {
     public get graph(): GObject | null {
         return getGraph(this);
     }
+
+    public updateSurfaceWithoutSVGText() : boolean{
+        super.updateSurfaceWithoutSVGText();
+        console.log(`Update(vertex): ${this.objectID}, ${this.incomingEdges.length} ${this.outgoingEdges.length}`)
+        this.incomingEdges.forEach((e) =>{
+            e.update();
+        })
+        this.outgoingEdges.forEach((e) =>{
+            e.update();
+        })
+        return true;
+    }
+
 }
 
 //}

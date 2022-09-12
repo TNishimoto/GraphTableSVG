@@ -3,36 +3,21 @@ export type GraphAllocateFunction = (graph: object) => void
 import { objectIDName } from "../common/attribute_names";
 import { Debugger } from "../common/debugger";
 import { nearlyEqual, round100 } from "../common/vline";
+import {IObject, ITextBox} from "./i_object"
 
 
 export const timerInterval = 100;
 //export const unstableCounterDefault = 10;
 //export const unstableCounterName = "data-unstable-counter";
 
-let updateSVGSVGTimerCounter = 0;
 const timerDic: Map<string, Date> = new Map();
 
 export const svgTextBBoxWidthName = "data-bbox-width";
 export const svgTextBBoxHeightName = "data-bbox-height";
+export const svgPathLenName = "data-path-length";
+
 export const ObjectStableFlagName = "data-stable-flag";
 
-export interface IObject {
-    get svgGroup() : SVGGElement;
-    get objectID() : string;
-    get stableFlag() : boolean;
-    get childrenStableFlag() : boolean;
-    updateSurfaceWithoutSVGText() : boolean;
-
-}
-export interface ITextBox {
-    get svgGroup() : SVGGElement;
-    get objectID() : string;
-    get stableFlag() : boolean;
-    get childrenStableFlag() : boolean;
-    updateSurfaceWithoutSVGText() : boolean;
-
-    get svgText() : SVGTextElement;
-}
 
 function bubbleFalse(obj : SVGElement){
     const objectID = obj.getAttribute(objectIDName);
@@ -51,7 +36,38 @@ function bubbleFalse(obj : SVGElement){
     }
 }
 
-export function updateText(svgText: SVGTextElement) {
+export function updatePathByTimer(svgPath: SVGPathElement) : boolean {
+    const pathLen = round100(svgPath.getTotalLength());
+
+    let b = false;
+    let prevPathLen = 0;
+
+    if (svgPath.hasAttribute(svgPathLenName)) {
+        prevPathLen = Number.parseFloat(svgPath.getAttribute(svgPathLenName)!)
+        if (!nearlyEqual(prevPathLen, pathLen)) {
+            svgPath.setAttribute(svgPathLenName, pathLen.toString());
+            b = true;
+        }
+
+    } else {
+        svgPath.setAttribute(svgPathLenName, pathLen.toString());
+        b = true;
+    }
+
+
+    const stableFlag = svgPath.getAttribute(ObjectStableFlagName);
+    if (b) {
+        bubbleFalse(svgPath);
+    } else {
+        if (stableFlag == "false") {
+            svgPath.setAttribute(ObjectStableFlagName, "true");
+        }
+    }
+    return b;
+}
+
+
+export function updateTextByTimer(svgText: SVGTextElement) {
     const bbox = svgText.getBBox();
     const width = round100(bbox.width);
     const height = round100(bbox.height);
@@ -93,20 +109,6 @@ export function updateText(svgText: SVGTextElement) {
         }
     }
 }
-export function textObserveTimer(svgsvg: SVGSVGElement) {
-    const obj = (<any>svgsvg)._gobjects;
-    if (obj instanceof Map) {
-        obj.forEach((value : ITextBox, key) => {
-            const svgText = value.svgText;
-            if(svgText instanceof SVGTextElement){
-                updateText(svgText);
-            }
-        })
-
-    }
-
-    //AAAAAAAAAAAAAAAAAAAA
-}
 /*
 export function decrementUnstableCounter(value: any) {
     const objectID: string | undefined = value.objectID;
@@ -141,93 +143,4 @@ export function decrementUnstableCounter(value: any) {
 
 
 
-export function registerGObject(svgsvg: SVGSVGElement, obj: IObject) {
-    if ((<any>svgsvg)._gobjects === undefined) {
-        (<any>svgsvg)._gobjects = new Map<string, Object>();
 
-        setTimeout(updateSVGSVGTimer, timerInterval, svgsvg);
-
-    }
-
-    const map: Map<string, Object> = (<any>svgsvg)._gobjects;
-    if (map instanceof Map) {
-        map.set(obj.objectID, obj);
-
-    }
-
-}
-
-export function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
-    updateSVGSVGTimerCounter++;
-    textObserveTimer(svgsvg);
-    //console.log(`updateSVGSVGTimerCounter: ${updateSVGSVGTimerCounter}`)
-    const obj = (<any>svgsvg)._gobjects;
-    if (obj instanceof Map) {
-        obj.forEach((value : IObject, key) => {
-            const objectID: string = value.objectID;
-            const b = value.stableFlag;
-            if(!b){
-                const b2 = value.childrenStableFlag;
-                if(b2){
-                    const b3 = value.updateSurfaceWithoutSVGText();
-                    if(b3){
-                        value.svgGroup.setAttribute(ObjectStableFlagName, "true");
-                    }
-                }
-            }
-            
-            /*
-            if (value.unstableCounter != null) {
-                const oldTimex1 = new Date();
-                const b = value.getUpdateFlag();
-                const oldTimex2 = new Date();
-                const diffx = oldTimex2.getTime() - oldTimex1.getTime();
-                console.log(`X ObjectID = ${objectID}: UpdateTime = ${Math.abs(diffx) / 1000}s`);
-
-                if (b) {
-                    if (Debugger.getStopWatchFlag()) {
-                        const oldTime = timerDic.get(objectID);
-                        if (oldTime == undefined) {
-                            console.log(`ObjectID = ${objectID}: Update Start`);
-                            timerDic.set(objectID, new Date());
-                        }
-                    }
-
-                    Debugger.updateFlagLog(value, updateSVGSVGTimer, `${value.type} ${key}, ${value.unstableCounter} ${b}`)
-
-                    value.update();
-                    Debugger.updateFlagLog(value, updateSVGSVGTimer, `Update`)
-
-
-                    const counter = value.svgGroup.getAttribute(unstableCounterName);
-                    if (counter == null) {
-                        value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
-
-                    } else {
-                        const counterNumber = Number.parseInt(counter);
-                        if (Debugger.getDebugMode() == "ObserveUpdateFlag") {
-                            if (counterNumber > unstableCounterDefault + 10) {
-                                throw new Error("Infinite Update Error")
-                            } else {
-                                value.svgGroup.setAttribute(unstableCounterName, (counterNumber + 1).toString());
-                            }
-
-
-                        } else {
-                            value.svgGroup.setAttribute(unstableCounterName, (unstableCounterDefault).toString());
-                        }
-                        //const newCounter = Number.parseInt(counter) + 5;
-                    }
-
-                } else {
-                    decrementUnstableCounter(value);
-
-                }
-
-            }
-            */
-        })
-    }
-
-    setTimeout(updateSVGSVGTimer, timerInterval, svgsvg);
-}

@@ -54,12 +54,14 @@ export class GTextBox extends GVertex {
 
 
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
+        /*
         this.svgText!.onclick = (e) => {
             const textRect = this.getVirtualRegion();
 
             this.svgText!.style.border = "black"
 
         }
+        */
     }
     protected setBasicOption(option: GOptions.GTextBoxAttributes) {
         super.setBasicOption(option)

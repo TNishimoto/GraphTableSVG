@@ -114,7 +114,7 @@ export namespace GraphArrangement {
     }
     function createExternalEdgeDicInPreorder(node: GVertex, incomingEdge: GAbstractEdge | null, externalEdges: Set<GAbstractEdge>, touchedVertexes: Set<GVertex>) {
         if (incomingEdge == null) {
-            node.outcomingEdges.forEach((v) => {
+            node.outgoingEdges.forEach((v) => {
                 const child = v.endVertex;
                 if (child != null) {
                     createExternalEdgeDicInPreorder(child, v, externalEdges, touchedVertexes);
@@ -126,7 +126,7 @@ export namespace GraphArrangement {
 
 
 
-                node.outcomingEdges.forEach((v) => {
+                node.outgoingEdges.forEach((v) => {
                     const child = v.endVertex;
                     if (child != null) {
                         createExternalEdgeDicInPreorder(child, v, externalEdges, touchedVertexes);
@@ -149,7 +149,7 @@ export namespace GraphArrangement {
 
             roots.forEach((v => {
                 touchedVertexes.add(v);
-                v.outcomingEdges.forEach((w) => inputEdges.push(w));
+                v.outgoingEdges.forEach((w) => inputEdges.push(w));
             }))
             createExternalEdgeDicInlevelorderSub(inputEdges, externalEdges, touchedVertexes, 0);
         }
@@ -163,7 +163,7 @@ export namespace GraphArrangement {
                 const node = v.endVertex!;
                 if (!touchedVertexes.has(node)) {
                     touchedVertexes.add(node)
-                    node.outcomingEdges.forEach((w) => nextEdges.push(w));
+                    node.outgoingEdges.forEach((w) => nextEdges.push(w));
                 } else {
                     externalEdges.add(v);
                 }

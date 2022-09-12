@@ -25,7 +25,7 @@ import { GAbstractEdge } from "../g_abstract_edge";
          */
         get children(): GVertex[] {
             //const p = this;
-            return this.subTreeRoot.outcomingEdges.filter((v) => !this.externalEdges.has(v) && v.endVertex != null).map((v) => v.endVertex!)
+            return this.subTreeRoot.outgoingEdges.filter((v) => !this.externalEdges.has(v) && v.endVertex != null).map((v) => v.endVertex!)
             /*
             return this.subTreeRoot.children.map(function (x, i, arr) {
                 return x;
@@ -159,7 +159,7 @@ import { GAbstractEdge } from "../g_abstract_edge";
         get leaves(): GVertex[] {
             //const p = this;
             return this.getSubtree().filter( (x) =>{
-                const r = x.outcomingEdges.filter((v) => !this.externalEdges.has(v) && v.endVertex != null).length;
+                const r = x.outgoingEdges.filter((v) => !this.externalEdges.has(v) && v.endVertex != null).length;
                 return r == 0;
             })
 

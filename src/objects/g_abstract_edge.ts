@@ -13,8 +13,12 @@ import * as GOptions from "./g_options"
 import { createPath } from "./element_builder"
 import { NullError, UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
+import { IEdge } from "./i_object";
+import { HTMLFunctions } from "../html";
+import { LocalGObjectManager } from "./global_gobject_manager";
+import { ObjectStableFlagName } from "./g_observer";
 
-export class GAbstractEdge extends GObject {
+export class GAbstractEdge extends GObject implements IEdge {
     constructor(svgbox: SVGElement | string) {
         super(svgbox);
 
@@ -108,6 +112,10 @@ export class GAbstractEdge extends GObject {
         return degree;
     }
 
+    public get childrenStableFlag() : boolean{        
+        const b = this.svgPath.getAttribute(ObjectStableFlagName);
+        return b == "true";
+    }
 
 
 
@@ -133,14 +141,25 @@ export class GAbstractEdge extends GObject {
         return getGraph(this);
     }
 
-    protected get beginVertexID(): string | null {
+    public get beginVertexID(): string | null {
         return this.svgGroup.getAttribute(AttributeNames.beginNodeName);
     }
     protected set beginVertexID(v: string | null) {
+
+        console.log(`Set: ${this.objectID} ${this.beginVertexID} -> ${v}`)
+
         if (v == null) {
             this.svgGroup.removeAttribute(AttributeNames.beginNodeName);
         } else {
             this.svgGroup.setAttribute(AttributeNames.beginNodeName, v);
+        }
+        
+        const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
+        if(svgsvg != null){
+            const manager : LocalGObjectManager | undefined = (<any>svgsvg)._manager;
+            if(manager != undefined){
+                manager.registerBeginVertexID(this, v);
+            }
         }
     }
     /**
@@ -154,7 +173,7 @@ export class GAbstractEdge extends GObject {
         }
     }
 
-    protected get endVertexID(): string | null {
+    public get endVertexID(): string | null {
         return this.svgGroup.getAttribute(AttributeNames.endNodeName);
     }
     protected set endVertexID(v: string | null) {
@@ -163,6 +182,14 @@ export class GAbstractEdge extends GObject {
         } else {
             this.svgGroup.setAttribute(AttributeNames.endNodeName, v);
         }
+        const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
+        if(svgsvg != null){
+            const manager : LocalGObjectManager | undefined = (<any>svgsvg)._manager;
+            if(manager != undefined){
+                manager.registerEndVertexID(this, v);
+            }
+        }
+
     }
     /*
     protected updateSurface() {
@@ -528,14 +555,14 @@ export class GAbstractEdge extends GObject {
             if (withUpdate) {
                 if (oldBeginVertex != null) {
                     this.removeVertexEvent(oldBeginVertex);
-                    if (oldBeginVertex.outcomingEdges.indexOf(this) != -1) {
+                    if (oldBeginVertex.outgoingEdges.indexOf(this) != -1) {
                         oldBeginVertex.removeOutcomingEdge(this);
                     }
                 }
 
                 if (this.beginVertex != null) {
                     this.addVertexEvent(this.beginVertex);
-                    if (this.beginVertex.outcomingEdges.indexOf(this) == -1) {
+                    if (this.beginVertex.outgoingEdges.indexOf(this) == -1) {
                         this.beginVertex.insertOutcomingEdge(this);
                     }
                 }

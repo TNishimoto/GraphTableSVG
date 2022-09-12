@@ -216,7 +216,7 @@ export class GGraph extends GObject {
             */
     public connect(beginVertex: GVertex, edge: GEdge, endVertex: GVertex, option: GOptions.ConnecterOption = {}) {
 
-        const oIndex = option.outcomingInsertIndex == undefined ? beginVertex.outcomingEdges.length : option.outcomingInsertIndex;
+        const oIndex = option.outcomingInsertIndex == undefined ? beginVertex.outgoingEdges.length : option.outcomingInsertIndex;
         const iIndex = option.incomingInsertIndex == undefined ? endVertex.incomingEdges.length : option.incomingInsertIndex;
         //this._connect(node1, edge, node2);
 
@@ -244,7 +244,7 @@ export class GGraph extends GObject {
                 });
             });
         } else {
-            const edges = node.outcomingEdges;
+            const edges = node.outgoingEdges;
             if (order == VertexOrder.Preorder) {
                 r.push(node);
                 edges.forEach((v) => {
@@ -597,10 +597,6 @@ export class GGraph extends GObject {
     public get type(): ShapeObjectType {
         return ShapeObjectType.Graph;
     }
-    protected resizeUpdate() {
-        this.relocate();
-    }
-
     public update(){
         super.update();
 
@@ -611,7 +607,8 @@ export class GGraph extends GObject {
             v.update();
         })
 
-        this.resizeUpdate();
+        this.relocate();
+
     }
     public getUpdateFlag() : boolean {
         const b0 = super.getUpdateFlag();
@@ -717,6 +714,24 @@ export class GGraph extends GObject {
 
     }
 
+    public updateSurfaceWithoutSVGText() : boolean{
+        //super.updateSurfaceWithoutSVGText();
+        
+        /*
+        this.vertices.forEach((v) =>{
+            v.update();
+        })
+        */
+       /*
+        this.edges.forEach((v) =>{
+            v.update();
+        })
+        */
+        
+
+        this.relocate();
+        return true;
+    }
 }
 
 

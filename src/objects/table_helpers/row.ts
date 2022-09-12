@@ -9,11 +9,13 @@ import { GOptions } from "..";
 import * as GObserver from "../g_observer";
 import * as AttributeNames from "../../common/attribute_names"
 import { getSVGSVGAncestor } from "../../html/html_functions";
+import {IObject} from "../i_object"
+import { GlobalGObjectManager } from "../global_gobject_manager";
 
     /**
      * 表の行を表現するクラスです。
      */
-    export class CellRow implements GObserver.IObject {
+    export class CellRow implements IObject {
         private readonly table: GTable;
         //private readonly _cellY: number;
         private _svgGroup: SVGGElement;
@@ -31,8 +33,9 @@ import { getSVGSVGAncestor } from "../../html/html_functions";
             //this.unstableCounter = GObserver.unstableCounterDefault;
 
             const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
-            if(svgsvgAncestor != null){            
-                GObserver.registerGObject(svgsvgAncestor, this)
+            if(svgsvgAncestor != null){
+                const xb = GlobalGObjectManager.tryRegisterSVGSVGElement(svgsvgAncestor);
+                xb.registerObject(this);
             }
     
 
