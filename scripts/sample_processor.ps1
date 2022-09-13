@@ -3,21 +3,22 @@ $sampleFolderDir = $PSScriptRoot + "/../docs/examples"
 $cdnOutputDir = $PSScriptRoot + "/../docs/_cdn_examples"
 $debugOutputDir = $PSScriptRoot + "/../docs/_debug_examples"
 
-$cdnScriptPath = "https://cdn.jsdelivr.net/gh/TNishimoto/GraphTableSVG@v0.0.121/dist/graph_table_svg.js"
+$cdnScriptPath = "https://cdn.jsdelivr.net/gh/TNishimoto/GraphTableSVG@v0.0.127/dist/graph_table_svg.js"
 
 
 function CopySampleHtml($source, $target, $depth, $isCDN) {
     $contents = Get-Content $source -RAW
+    $msg1 = "/* This comment is a landmark for data processing. */"
     If($isCDN){
         If($depth -eq 1 ){
             $contents = $contents.Replace("../scripts/graph_table_svg.js", $cdnScriptPath)
         }elseif ($depth -eq 2) {
             $contents = $contents.Replace("../../scripts/graph_table_svg.js", $cdnScriptPath)
         }
+        $contents = $contents.Replace($msg1, "")
         Set-Content -Path $target -Value $contents
 
     }else{
-        $msg1 = "/* This comment is a landmark for data processing. */"
         $msg2 = 'id="main"'
 
         $code = 'GraphTableSVG.HTML.CSS.writeDownCSSToStyleAttributes("main");'
