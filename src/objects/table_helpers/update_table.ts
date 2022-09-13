@@ -15,12 +15,12 @@ export class UpdateTable {
         if (!nearlyEqual(oldValue, newValue100)) {
             b = true;
             if (withUpdate) {
-                Debugger.updateLog(this, UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag, `Border = ${borderType}, Position = ${type}: ${oldValue}->${newValue}`)
+                Debugger.updateLog(cell, UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag, `Border = ${borderType}, Position = ${type}: ${oldValue}->${newValue}`)
 
                 UpdateTable.setBorderPosition(cell, borderType, type, newValue100);
             }
             if (!withUpdate && b) {
-                Debugger.updateFlagLog(this, UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag, `Border = ${borderType}, Position = ${type}: ${oldValue}->${newValue}`)
+                Debugger.updateFlagLog(cell, UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag, `Border = ${borderType}, Position = ${type}: ${oldValue}->${newValue}`)
             }
         }
         return b;
@@ -64,45 +64,32 @@ export class UpdateTable {
             if (cell.isMaster) {
                 const x1 = cell.x;
                 const b1 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell, "bottom", x1, "x1", withUpdate);
-                if (withUpdate && b1) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                }
-
                 if (!withUpdate && b1) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
                     return true;
                 }
 
                 const x2 = cell.x + cell.computeBorderLength2("bottom");
                 const b2 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell, "bottom", x2, "x2", withUpdate);
-                if (withUpdate && b2) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                }
                 if (!withUpdate && b2) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
                     return true;
                 }
 
 
                 const y1 = cell.y + cell.height;
                 const b3 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell, "bottom", y1, "y1", withUpdate);
-                if (withUpdate && b3) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                }
 
                 if (!withUpdate && b3) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
                     return true;
                 }
 
 
                 const y2 = cell.getBorderPosition("bottom", "y1");
                 const b4 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell, "bottom", y2, "y2", withUpdate);
-                if (withUpdate && b4) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                }
                 if (!withUpdate && b4) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateBottomBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
                     return true;
                 }
                 return b1 || b2 || b3 || b4;
@@ -128,43 +115,31 @@ export class UpdateTable {
             if (cell.isMaster) {
                 const x1 = cell.x;
                 const b1 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"top", x1, "x1", withUpdate);
-                if (withUpdate && b1) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                }
                 if (!withUpdate && b1) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
                     return true;
                 }
 
                 //const x2 = cell.x;
                 const x2 = cell.x + cell.computeBorderLength2("top");
                 const b2 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"top", x2, "x2", withUpdate);
-                if (withUpdate && b2) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                }
                 if (!withUpdate && b2) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
                     return true;
                 }
 
                 const y1 = cell.y;
                 const b3 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"top", y1, "y1", withUpdate);
-                if (withUpdate && b3) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                }
                 if (!withUpdate && b3) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
                     return true;
                 }
 
 
                 const y2 = cell.getBorderPosition("top", "y1");
                 const b4 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"top", y2, "y2", withUpdate);
-                if (withUpdate && b4) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                }
                 if (!withUpdate && b4) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateTopBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
                     return true;
                 }
                 return b1 || b2 || b3 || b4;
@@ -189,43 +164,29 @@ export class UpdateTable {
             if (cell.isMaster) {
                 const x1 = cell.x;
                 const b1 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"left", x1, "x1", withUpdate);
-                if (withUpdate && b1) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                }
                 if (!withUpdate && b1) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
                     return true;
                 }
 
                 const x2 = cell.getBorderPosition("left", "x1");;
                 const b2 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"left", x2, "x2", withUpdate);
-                if (withUpdate && b2) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                }
-
                 if (!withUpdate && b2) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
                     return true;
                 }
 
                 const y1 = cell.y;
                 const b3 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"left", y1, "y1", withUpdate);
-                if (withUpdate && b3) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                }
                 if (!withUpdate && b3) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
                     return true;
                 }
 
                 const y2 = cell.y + cell.computeBorderLength2("left");
                 const b4 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"left", y2, "y2", withUpdate);
-                if (withUpdate && b4) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                }
-
                 if (!withUpdate && b4) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateLeftBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
                     return true;
                 }
                 return b1 || b2 || b3 || b4;
@@ -249,42 +210,29 @@ export class UpdateTable {
             if (cell.isMaster) {
                 const x1 = cell.x + cell.width;
                 const b1 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"right", x1, "x1", withUpdate);
-                if (withUpdate && b1) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
-                }
                 if (!withUpdate && b1) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x1`)
                     return true;
                 }
 
                 const x2 = cell.x + cell.width;
                 const b2 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"right", x2, "x2", withUpdate);
-                if (withUpdate && b2) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
-                }
                 if (!withUpdate && b2) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} x2`)
                     return true;
                 }
 
                 const y1 = cell.y;
                 const b3 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"right", y1, "y1", withUpdate);
-                if (withUpdate && b3) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
-                }
                 if (!withUpdate && b3) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y1`)
                     return true;
                 }
 
                 const y2 = cell.y + cell.computeBorderLength2("right");
                 const b4 = UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag(cell,"right", y2, "y2", withUpdate);
-                if (withUpdate && b4) {
-                    Debugger.updateLog(this, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
-                }
-
                 if (!withUpdate && b4) {
-                    Debugger.updateFlagLog(this, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
+                    Debugger.updateFlagLog(cell, UpdateTable.tryRelocateRightBorderWithUpdateFlag, `${UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag.name} y2`)
                     return true;
                 }
                 return b1 || b2 || b3 || b4;
@@ -306,44 +254,29 @@ export class UpdateTable {
 
         
         const b1 = UpdateTable.tryRelocateTopBorderWithUpdateFlag(cell, withUpdate);
-        if (withUpdate && b1) {
-            Debugger.updateLog(this, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateTopBorderWithUpdateFlag.name}`)
-        }
         if (!withUpdate && b1) {
-            Debugger.updateFlagLog(this, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateTopBorderWithUpdateFlag.name}`)
+            Debugger.updateFlagLog(cell, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateTopBorderWithUpdateFlag.name}`)
             return true;
         }
 
         
 
         const b2 = UpdateTable.tryRelocateLeftBorderWithUpdateFlag(cell, withUpdate);
-        if (withUpdate && b2) {
-            Debugger.updateLog(this, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateLeftBorderWithUpdateFlag.name}`)
-        }
-
         if (!withUpdate && b2) {
-            Debugger.updateFlagLog(this, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateLeftBorderWithUpdateFlag.name}`)
+            Debugger.updateFlagLog(cell, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateLeftBorderWithUpdateFlag.name}`)
             return true;
         }
 
         const b3 = UpdateTable.tryRelocateRightBorderWithUpdateFlag(cell, withUpdate);
-        if (withUpdate && b3) {
-            Debugger.updateLog(this, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateRightBorderWithUpdateFlag.name}`)
-        }
-
         if (!withUpdate && b3) {
-            Debugger.updateFlagLog(this, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateRightBorderWithUpdateFlag.name}`)
+            Debugger.updateFlagLog(cell, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateRightBorderWithUpdateFlag.name}`)
 
             return true;
         }
 
         const b4 = UpdateTable.tryRelocateBottomBorderWithUpdateFlag(cell, withUpdate);
-        if (withUpdate && b4) {
-            Debugger.updateLog(this, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateBottomBorderWithUpdateFlag.name}`)
-        }
-
         if (!withUpdate && b4) {
-            Debugger.updateFlagLog(this, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateBottomBorderWithUpdateFlag.name}`)
+            Debugger.updateFlagLog(cell, UpdateTable.tryUpdateBordersWithUpdateFlag, `${UpdateTable.tryRelocateBottomBorderWithUpdateFlag.name}`)
             return true;
         }
         
@@ -382,7 +315,7 @@ export class UpdateTable {
                         cell.height = height;
                     }
                     if(!withUpdate && b){
-                        Debugger.updateFlagLog(this, UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.height} != ${height}`)
+                        Debugger.updateFlagLog(cell, UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.height} != ${height}`)
     
                         return b;
                     }
@@ -394,7 +327,7 @@ export class UpdateTable {
                     }
     
                     if (!withUpdate && b) {
-                        Debugger.updateFlagLog(this, UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.width} != ${width} y = ${y}`)
+                        Debugger.updateFlagLog(cell, UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.width} != ${width} y = ${y}`)
     
                         return true;
                     }
@@ -405,7 +338,7 @@ export class UpdateTable {
                     b = cell.tryUpdateWithUpdateFlag(withUpdate)  || b;
     
                     if(!withUpdate && b){
-                        Debugger.updateFlagLog(this, UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.tryUpdateWithUpdateFlag.name} x = ${x}`)
+                        Debugger.updateFlagLog(cell, UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.tryUpdateWithUpdateFlag.name} x = ${x}`)
                         return b;
                     }
                 }
@@ -413,7 +346,7 @@ export class UpdateTable {
 
                     b = cell.tryUpdateWithUpdateFlag(withUpdate)  || b;
                     if (!withUpdate && b) {
-                        Debugger.updateFlagLog(this, UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.tryUpdateWithUpdateFlag.name} y = ${y}`)
+                        Debugger.updateFlagLog(cell, UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.tryUpdateWithUpdateFlag.name} y = ${y}`)
                         return b;
                     }
                 }
@@ -429,7 +362,7 @@ export class UpdateTable {
         for(let i=0;i<rows.length;i++){
             b = rows[i].setYWithUpdate(height, withUpdate)  || b;
             if(!withUpdate && b){
-                Debugger.updateFlagLog(this, UpdateTable.relocateCellsAfterUpdatingCellSize, rows[i].setYWithUpdate.name)
+                Debugger.updateFlagLog(rows[i], UpdateTable.relocateCellsAfterUpdatingCellSize, rows[i].setYWithUpdate.name)
                 return b;
             }
             height += rows[i].height;
@@ -441,7 +374,7 @@ export class UpdateTable {
         for(let i=0;i<columns.length;i++){
             b = columns[i].setXWithUpdate(width, withUpdate)  || b;
             if(!withUpdate && b){
-                Debugger.updateFlagLog(this, UpdateTable.relocateCellsAfterUpdatingCellSize, columns[i].setXWithUpdate.name)
+                Debugger.updateFlagLog(columns[i], UpdateTable.relocateCellsAfterUpdatingCellSize, columns[i].setXWithUpdate.name)
 
 
                 return b;

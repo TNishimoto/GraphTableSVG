@@ -155,7 +155,6 @@ export function toHTML(obj: SVGReteral, indent: string): string[] {
         //r.push(lstLine);
 
     } else {
-        console.log(`No tag: ${obj}`)
         const textContent = (<any>obj)["textContent"];
         if (typeof textContent == "string") {
             return [`${textContent}`];

@@ -1,7 +1,7 @@
 
-export type DebugMode = "ObserveUpdateFlag" | "None"
+export type DebugMode = "None"
 
-const debugMode : DebugMode = "ObserveUpdateFlag";
+const debugMode : DebugMode = "None";
 
 
 let objID : string | null = null;
@@ -21,6 +21,9 @@ export class Debugger {
     }
     public static getNodePathFlag() : boolean{
         return true;
+    }
+    public static getObserveUpdateFlag() : boolean {
+        return false;
     }
     public static showTime(oldTime : Date, newTime : Date, name : string, msg : string){
         const diffx = newTime.getTime() - oldTime.getTime();
@@ -63,7 +66,7 @@ export class Debugger {
     }
 
     public static updateFlagLog(obj : any, func : any, msg : string){
-        if(debugMode == "ObserveUpdateFlag"){
+        if(Debugger.getObserveUpdateFlag()){
             const type = obj.constructor.name;
             let id : string | null = null;
             let name = func.name;
@@ -99,7 +102,7 @@ export class Debugger {
         }
     }
     public static updateLog(obj : any, func : any, msg : string){
-        if(debugMode == "ObserveUpdateFlag"){
+        if(Debugger.getObserveUpdateFlag()){
             const type = obj.constructor.name;
             let id : string | null = null;
             let name = func.name;
