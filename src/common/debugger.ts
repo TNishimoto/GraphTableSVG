@@ -1,5 +1,5 @@
 
-export type DebugMode = "ObserveUpdateFlag" | "Node" | "None"
+export type DebugMode = "ObserveUpdateFlag" | "None"
 
 const debugMode : DebugMode = "ObserveUpdateFlag";
 
@@ -14,9 +14,12 @@ export class Debugger {
         return debugMode;        
     }
     public static getStopWatchFlag() : boolean{
-        return true;
+        return false;
     }
     public static getStableFlagWatchFlag() : boolean {
+        return false;
+    }
+    public static getNodePathFlag() : boolean{
         return true;
     }
     public static showTime(oldTime : Date, newTime : Date, name : string, msg : string){
@@ -32,11 +35,13 @@ export class Debugger {
             let id : string | null = null;
             let name = func.name;
 
-            if(type == "Cell"){
-                id = `{X = ${obj.cellX}, Y = ${obj.cellY}}`
+            const xid : string | undefined = (obj.objectID)
+            if(xid != undefined){
+                id = xid;                
             }else{
-                id = (<number>obj.objectID).toString();
+                id = null;
             }
+            
             const styles = 'color: yellow; background-color: black;';
 
 
@@ -63,11 +68,13 @@ export class Debugger {
             let id : string | null = null;
             let name = func.name;
 
-            if(type == "Cell"){
-                id = `{X = ${obj.cellX}, Y = ${obj.cellY}}`
+            const xid : string | undefined = (obj.objectID)
+            if(xid != undefined){
+                id = xid;                
             }else{
-                id = (<number>obj.objectID).toString();
+                id = null;
             }
+            
             const styles = 'color: yellow; background-color: black;';
 
 
@@ -97,11 +104,13 @@ export class Debugger {
             let id : string | null = null;
             let name = func.name;
 
-            if(type == "Cell"){
-                id = `{X = ${obj.cellX}, Y = ${obj.cellY}}`
+            const xid : string | undefined = (obj.objectID)
+            if(xid != undefined){
+                id = xid;                
             }else{
-                id = (<number>obj.objectID).toString();
+                id = null;
             }
+            
             const styles = 'color: black; background-color: aqua;';
 
 

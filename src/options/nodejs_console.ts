@@ -62,7 +62,7 @@ function getMainLibPath() : string {
         throw Error("DEBUG ERROR");
     }
     let path = "https://cdn.jsdelivr.net/npm/graph-table-svg/docs/scripts/graph_table_svg.js";
-    if(Debugger.getDebugMode() == "Node"){
+    if(Debugger.getNodePathFlag()){
         path = "file:///D:/github/GraphTableSVG/docs/scripts/graph_table_svg.js"
     }
 

@@ -126,29 +126,6 @@ export class Cell implements ITextBox {
     public get objectID(): string {
         return this.svgGroup.getAttribute(AttributeNames.objectIDName)!;
     }
-    /*
-    public get unstableCounter(): number | null {
-        const p = this.svgGroup.getAttribute(GObserver.unstableCounterName);
-        if (p == null) {
-            return null;
-        } else {
-            const num = Number(p);
-            return num;
-        }
-    }
-    private set unstableCounter(value: number | null) {
-        console.log(`${this.cellX} ${this.cellY} ${value}`)
-        if (value == null) {
-            this.svgGroup.removeAttribute(GObserver.unstableCounterName)
-        } else {
-            this.svgGroup.setAttribute(GObserver.unstableCounterName, value.toString());
-
-        }
-    }
-    public resetUnstableCounter(): void {
-        this.unstableCounter = GObserver.unstableCounterDefault;
-    }
-    */
 
     public getBorderPosition(borderType: DirectionType, positionType: BorderCoodinateType): number {
 

@@ -88,7 +88,6 @@ export class GObject implements IObject {
 
 
 
-        //console.log("set/" + this.allowHover)
 
         //this.setOptionInGObject(option);
 

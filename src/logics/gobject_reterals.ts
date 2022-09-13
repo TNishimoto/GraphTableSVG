@@ -95,7 +95,6 @@ export function toHTML(obj: SVGReteral, indent: string): string[] {
 
     if (tag != undefined) {
         let fstLine = `<${tag}`
-        console.log(obj);
         for (const key in obj) {
             if (key == "tag") {
 
@@ -127,8 +126,6 @@ export function toHTML(obj: SVGReteral, indent: string): string[] {
         const centerLines: string[] = new Array();
 
         const children = (<any>obj)["children"];
-        //console.log(`tag = ${tag}, children: ${children}`)
-        //console.log(children);
         if (Array.isArray(children)) {
             children.forEach((v) => {
                 const lines = toHTML(v, indent);

@@ -378,7 +378,6 @@ export class GVertex extends GObject {
 
     public updateSurfaceWithoutSVGText() : boolean{
         super.updateSurfaceWithoutSVGText();
-        console.log(`Update(vertex): ${this.objectID}, ${this.incomingEdges.length} ${this.outgoingEdges.length}`)
         this.incomingEdges.forEach((e) =>{
             e.update();
         })

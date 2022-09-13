@@ -146,7 +146,6 @@ export class GAbstractEdge extends GObject implements IEdge {
     }
     protected set beginVertexID(v: string | null) {
 
-        console.log(`Set: ${this.objectID} ${this.beginVertexID} -> ${v}`)
 
         if (v == null) {
             this.svgGroup.removeAttribute(AttributeNames.beginNodeName);

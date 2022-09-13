@@ -154,15 +154,11 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
 
             }
 
-            const oldTimex1 = new Date();
             const table = new GTable(parent);
             table.setOption(option);
             if (logicTable !== null) {
                 table.buildFromLogicTable(logicTable);
             }
-            const oldTimex2 = new Date();
-            const diffx = oldTimex2.getTime() - oldTimex1.getTime();
-            console.log(`First Construction: ObjectID = ${table.objectID}: Constructin time = ${Math.abs(diffx) / 1000}s`);
 
 
             r = table;
@@ -186,7 +182,6 @@ function createCustomElement(e: Element, type: ShapeObjectType): GObject | null 
         //属性の移動と元オブジェクトの削除
         const attrs = ElementExtension.gtGetAttributes(e);
         HTMLFunctions.getChildren(e).forEach((v) => r.svgGroup.appendChild(v));
-        console.log(e);
         e.remove();
         attrs.forEach((v) => {
             var items = v.name.split(":");
@@ -322,7 +317,6 @@ export function createShape(parent: SVGElement | string | GObject, type: ShapeOb
         _parent = <any>document.getElementById(parent);
     }
 
-    console.log(`${type} ${option}`);
     switch (type) {
         case ShapeObjectType.Callout:
             const call = new GCallout(_parent);

@@ -331,7 +331,6 @@ export class GAbstractTextEdge extends GAbstractEdge {
     }
 
     private tryUpdateTextPathWithUpdateFlag(withUpdate: boolean): boolean {
-        console.log(`Update Edge: ${this.objectID}: [${this.x1}, ${this.y1}] [${this.x2}, ${this.y2}] ${this.pathTextAlignment}`);
         const b1 = this.tryUpdateDYWithUpdateFlag(withUpdate);
         if (!withUpdate && b1) {
             Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `${this.tryUpdateDYWithUpdateFlag.name}`)
@@ -459,7 +458,6 @@ export class GAbstractTextEdge extends GAbstractEdge {
             const _startOffset = this.startOffset;
             const xb = _startOffset == null || !nearlyEqual(_startOffset, newStartOffset);
 
-            console.log(`XXX: ${this.objectID} ${pathLen} ${strWidth} ${newStartOffset} ${_startOffset} ${xb}`);
 
             if (xb) {
                 b = true;
@@ -501,7 +499,6 @@ export class GAbstractTextEdge extends GAbstractEdge {
         return b;
     }
     public updateSurfaceWithoutSVGText() : boolean{
-        console.log(`${this.updateSurfaceWithoutSVGText.name}: ${this.objectID}`)
         this.update();
         return true;
     }

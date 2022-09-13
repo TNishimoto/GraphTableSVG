@@ -40,7 +40,6 @@ export function textObserveTimer(manager: LocalGObjectManager) {
 
 export function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
     updateSVGSVGTimerCounter++;
-    //console.log(`updateSVGSVGTimerCounter: ${updateSVGSVGTimerCounter}`)
     const manager = (<any>svgsvg)._manager;
     if (manager instanceof LocalGObjectManager) {
         textObserveTimer(manager);

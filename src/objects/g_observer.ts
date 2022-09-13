@@ -109,38 +109,6 @@ export function updateTextByTimer(svgText: SVGTextElement) {
         }
     }
 }
-/*
-export function decrementUnstableCounter(value: any) {
-    const objectID: string | undefined = value.objectID;
-    if (value.unstableCounter == 0) {
-        value.svgGroup.removeAttribute(unstableCounterName)
-        if (Debugger.getStopWatchFlag()) {
-            console.log(`ObjectID = ${objectID}: Update END`);
-
-            const nowDate = new Date();
-            if (objectID != undefined) {
-                const oldDate = timerDic.get(objectID);
-                if (oldDate != undefined) {
-                    timerDic.delete(objectID);
-                    const diff = nowDate.getTime() - oldDate.getTime();
-                    console.log(`ObjectID = ${objectID}: UpdateTime = ${Math.abs(diff) / 1000}s`);
-                }
-            }
-        }
-        
-        const descendants = HTMLFunctions.getDescendants(value.svgGroup);
-        descendants.forEach((v) => {
-            if (v.hasAttribute(unstableCounterName)) {
-                v.removeAttribute(unstableCounterName);
-            }
-        })
-        
-    } else {
-        value.svgGroup.setAttribute(unstableCounterName, (value.unstableCounter - 1).toString());
-    }
-}
-*/
-
 
 
 
