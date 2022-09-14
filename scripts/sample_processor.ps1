@@ -3,7 +3,7 @@ $sampleFolderDir = $PSScriptRoot + "/../docs/examples"
 $cdnOutputDir = $PSScriptRoot + "/../docs/_cdn_examples"
 $debugOutputDir = $PSScriptRoot + "/../docs/_debug_examples"
 
-$cdnScriptPath = "https://cdn.jsdelivr.net/gh/TNishimoto/GraphTableSVG@v0.0.127/dist/graph_table_svg.js"
+$cdnScriptPath = "https://cdn.jsdelivr.net/npm/graph-table-svg@0.0.127/dist/graph_table_svg.js"
 
 
 function CopySampleHtml($source, $target, $depth, $isCDN) {

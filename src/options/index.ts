@@ -1,4 +1,5 @@
-import { openSVG, openHTML, openCustomElement,  lazyOpenSVG, createShape, clearSVG } from "./open_svg";
+import { openSVG, openHTML, convertFromElementWithCustomElementAttributeToGObject,  lazyOpenSVG, clearSVG } from "./open_svg";
+import { createGObject } from "./create_g_object"
 import {equalityCheck} from "./svg_equal"
 import {stringify} from "./to_json"
 
@@ -9,6 +10,6 @@ import { createMacroModalFromID, processVBAButtonClickEvent } from "./vba_macro_
 import * as EditorHelper from "./editor_helper"
 
 export{
-    openSVG, openHTML, openCustomElement,  lazyOpenSVG, createShape, clearSVG, equalityCheck, SVGToVBA, createMacroModalFromID, EditorHelper, stringify, 
+    openSVG, openHTML, convertFromElementWithCustomElementAttributeToGObject as openCustomElement,  lazyOpenSVG, createGObject as createShape, clearSVG, equalityCheck, SVGToVBA, createMacroModalFromID, EditorHelper, stringify, 
     processVBAButtonClickEvent, VBAObject
 }

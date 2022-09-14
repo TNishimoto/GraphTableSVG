@@ -173,6 +173,8 @@ export class LogicTable {
         });
         const logicTable = new LogicTable({ columnCount: columnSize, rowCount: rows.length });
 
+        
+
 
 
         //output.table = new LogicTable({ rowCount: rows.length, columnCount: columnSize });

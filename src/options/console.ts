@@ -4,7 +4,7 @@ import { LogicGraph } from "../logics/logic_graph"
 
 import { LogicTable } from "../logics/logic_table"
 //import { CommonFunctions } from "../common/common_functions";
-import { createShape } from "./open_svg";
+import { createGObject } from "./create_g_object";
 import * as SVGTextBox from "../interfaces/svg_textbox";
 import * as SVGTextExtension from "../interfaces/svg_text_extension";
 
@@ -308,14 +308,14 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
 
         if (isCanvasID) {
             const canvasItem = <string | SVGElement>canvasID;
-            const gtable = createShape(canvasItem, "g-table");
+            const gtable = createGObject(canvasItem, "g-table");
             gtable.buildFromLogicTable(item);
             return [gtable, <SVGElement>gtable.svgGroup.parentNode];    
         } else {
             const containerID : string | null = canvasID == null ? null : <string>canvasID;
             const code = containerID == null ? getOrCreateCodeElement() : getOrCreateCodeElement(containerID);
             const consoleLine = new ConsoleLineElement(code, "table", title);
-            const gtable = createShape(consoleLine.canvas!, "g-table");
+            const gtable = createGObject(consoleLine.canvas!, "g-table");
 
             gtable.buildFromLogicTable(item);
             gtable.x = 0;
@@ -327,7 +327,7 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
     } else if (item instanceof LogicTree || item instanceof LogicGraph) {
         if(isCanvasID){
             const canvasItem = <string | SVGElement>canvasID;
-            const ggraph = createShape(canvasItem, "g-graph");
+            const ggraph = createGObject(canvasItem, "g-graph");
             ggraph.build(item);
             if (item.option.drawingFunction !== undefined) {
                 const drawingFunction = new Function("obj", `${item.option.drawingFunction.functionName}(obj)`);
@@ -342,7 +342,7 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
             //const code = getOrCreateCodeElement();
             const consoleLine = new ConsoleLineElement(code, "graph", title);
             //const svg = addSVGSVGElement(code);
-            const ggraph = createShape(consoleLine.canvas!, "g-graph");
+            const ggraph = createGObject(consoleLine.canvas!, "g-graph");
             if(item.option ===undefined){
                 throw new Exceptions.UndefinedError();
             }
@@ -362,12 +362,12 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
         let gobject : GObject;  
         let svg :  ConsoleLineElement | SVGElement;
         if (canvasID != null) {
-            gobject = createShape(canvasID, "g-object");
+            gobject = createGObject(canvasID, "g-object");
             svg = <SVGElement>gobject.svgGroup.parentNode;
         } else {
             const code = getOrCreateCodeElement();
             const consoleLine = new ConsoleLineElement(code, "group", title);
-            gobject = createShape(consoleLine.canvas!, "g-object");
+            gobject = createGObject(consoleLine.canvas!, "g-object");
             svg = consoleLine;
         }
 
