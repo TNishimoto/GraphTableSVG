@@ -64,6 +64,10 @@ export const y3 : string = "y3";
 
 export const width : string = "width";
 export const height : string = "height";
+export const rowHeight : string = "row-height";
+export const columnWidth : string = "column-width";
+
+
 
 export const beginVertex : string = "begin-vertex";
 export const endVertex : string = "end-vertex";

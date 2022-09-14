@@ -2,7 +2,7 @@ import {defaultCellClass} from "../common/attribute_names"
 
 //import { Cell } from "../object/table_helpers/cell"
 import * as GOptions from "../objects/g_options"
-import { BackgroundOptionReteral, BorderOptionReteral, CellOptionReteral, CellReteral, setSVGReteral } from "./gobject_reterals";
+import { SurfaceOptionReteral, BorderOptionReteral, CellOptionReteral, CellReteral, setSVGReteral } from "./gobject_reterals";
 
 import { LogicText } from "./logic_text";
 
@@ -14,7 +14,7 @@ export class LogicCell {
 
     public text: LogicText = new LogicText();
     public option : CellOptionReteral;
-    public get backgroundOption() : BackgroundOptionReteral{
+    public get backgroundOption() : SurfaceOptionReteral{
         return this.option.backgroundOption;
     }
     public get topBorderOption() : BorderOptionReteral{

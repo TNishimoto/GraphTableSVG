@@ -27,6 +27,7 @@ import { CenterPosition, UpperLeftPosition } from "../common/vline"
 import { UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
 import { UpdateTable } from "./table_helpers/update_table";
+import { TableOptionReteral } from "../logics/gobject_reterals";
 
 //namespace GraphTableSVG {
 
@@ -137,6 +138,20 @@ export class GTable extends GVertex {
     }
     public setOption(option: GTableOption) {
         super.setOption(option);
+    }
+    public assignOption(option : TableOptionReteral){
+        super.assignOption(option);
+        const columnCount = (<any>option).columnCount ?? 5;
+        const rowCount = (<any>option).rowCount ?? 5;
+        this.setSize(columnCount, rowCount);
+
+        if (option.rowHeight !== undefined) {
+            this.rows.forEach((v) => v.height = <number>option.rowHeight);
+        }
+        if (option.columnWidth !== undefined) {
+            this.columns.forEach((v) => v.width = <number>option.columnWidth);
+        }
+
     }
 
     private _isNoneMode: boolean = false;
@@ -602,11 +617,13 @@ export class GTable extends GVertex {
         //logicTable.option.columnCount = logicTable.columnCount;
         //logicTable.option.rowCount = logicTable.rowCount;
         //this.setSize(logicTable.columnCount, logicTable.rowCount);
-        const option = { ...logicTable.option };
+        const option : TableOptionReteral = { ...logicTable.option };
         (<any>option).rowCount = logicTable.rowCount;
         (<any>option).columnCount = logicTable.columnCount;
 
-        this.setOption(option);
+        console.log(option)
+
+        this.assignOption(option);
 
         //GOptions.setClassAndStyle(this.svgGroup, logicTable.option.class, logicTable.option.style);
         /*

@@ -1,4 +1,6 @@
-import { CenterPosition, UpperLeftPosition } from "../common/vline";
+import { AttributeNames } from "../common";
+import { CenterPosition, PositionType, UpperLeftPosition } from "../common/vline";
+import * as ElementExtension from "../interfaces/element_extension"
 
 export type SVGOptionReteral = { id?: string, class?: string, style?: string }
 export type SVGReteral = { tag?: string } & SVGOptionReteral
@@ -12,24 +14,26 @@ export type SVGSVGReteral = { xmlns: string, children: SVGReteral[] } & SVGReter
 
 export type TextReteral = { textContent?: string } & SVGReteral;
 
-export type BackgroundOptionReteral = {} & SVGOptionReteral;
+export type SurfaceOptionReteral = {} & SVGOptionReteral;
 export type TextOptionReteral = {} & SVGOptionReteral;
 
-export type GVertexOptionReteral = { x?: number, y?: number, backgroundOption: BackgroundOptionReteral, textOption: TextOptionReteral } & SVGOptionReteral
+export type GVertexOptionReteral = { x?: number, y?: number, cx?: number, cy?: number, positionType : PositionType, 
+    width?: number, height?: number, 
+    surfaceOption: SurfaceOptionReteral, textOption: TextOptionReteral } & SVGOptionReteral
 
 export type GVertexReteral = {} & GVertexOptionReteral & SVGReteral
 
 export type CellOptionReteral = {
     w?: number, h?: number,
-    backgroundOption: BackgroundOptionReteral, textOption: TextOptionReteral,
+    backgroundOption: SurfaceOptionReteral, textOption: TextOptionReteral,
     topBorderOption: BorderOptionReteral, leftBorderOption: BorderOptionReteral, rightBorderOption: BorderOptionReteral, bottomBorderOption: BorderOptionReteral
 } & SVGOptionReteral;
 
 export type CellReteral = { children: TextReteral[] } & SVGReteral & CellOptionReteral;
-export type RowReteral = { children: CellReteral[], backgroundOption: BackgroundOptionReteral, textOption: TextOptionReteral } & SVGReteral;
+export type RowReteral = { children: CellReteral[], backgroundOption: SurfaceOptionReteral, textOption: TextOptionReteral } & SVGReteral;
 
 //export type TextType = "string" | "SVGText"
-export type TableOptionReteral = { rowHeight?: number, columnWidth?: number, positionType?: CenterPosition | UpperLeftPosition } & GVertexOptionReteral;
+export type TableOptionReteral = { rowHeight?: number, columnWidth?: number } & GVertexOptionReteral;
 
 export type TableReteral = { children: RowReteral[] } & TableOptionReteral & GVertexReteral;
 
@@ -48,6 +52,56 @@ export type _GTableOption = {
 }
 */
 
+
+function getAndRemoveAttribute(item:Element,name: string): string | undefined{
+    const p = ElementExtension.gtGetAttributeStringWithUndefined(item, name);
+    item.removeAttribute(name);
+    return p;
+}
+function getAndRemoveNumberAttribute(item:Element,name: string): number | undefined{
+    const p = ElementExtension.gtGetAttributeNumberWithUndefined(item, name);
+    item.removeAttribute(name);
+    return p;
+}
+
+function getAndRemoveInheritedAttribute(item:Element,name: string): string | undefined{
+    const p = ElementExtension.gtGetInheritedAttributeString(item, name);
+    item.removeAttribute(name);
+    return p;
+}
+
+export function convertAttributesIntoVertexOption(e: Element) : GVertexOptionReteral {
+    const output : GVertexOptionReteral = <any> new Object();
+    output.class = getAndRemoveAttribute(e, AttributeNames.className) ?? output.class;
+    output.style = getAndRemoveAttribute(e, AttributeNames.style) ?? output.style;
+
+    output.surfaceOption = new Object();
+    output.surfaceOption.class = getAndRemoveInheritedAttribute(e, AttributeNames.surfaceClassName) ?? output.surfaceOption.class;
+    output.surfaceOption.style = getAndRemoveInheritedAttribute(e, AttributeNames.surfaceStyle) ?? output.surfaceOption.style;
+
+    output.width = getAndRemoveNumberAttribute(e, AttributeNames.width);
+    output.height = getAndRemoveNumberAttribute(e, AttributeNames.height);
+
+    output.cx = getAndRemoveNumberAttribute(e, AttributeNames.cx) ?? output.cx;
+    output.cy = getAndRemoveNumberAttribute(e, AttributeNames.cy) ?? output.cy;
+    output.x = getAndRemoveNumberAttribute(e, AttributeNames.x) ?? output.x;
+    output.y = getAndRemoveNumberAttribute(e, AttributeNames.y) ?? output.y;
+    if(output.cx !== undefined || output.cy !== undefined){
+        output.positionType = "center";
+    }else if(output.x !== undefined || output.y !== undefined){
+        output.positionType = "upper-left";
+    }
+    return output;
+
+}   
+export function convertAttributesIntoTableOption(e: Element) : TableOptionReteral {
+    const output : TableOptionReteral = <any> convertAttributesIntoVertexOption(e);
+    output.rowHeight = getAndRemoveNumberAttribute(e, AttributeNames.rowHeight) ?? output.rowHeight;
+    output.columnWidth = getAndRemoveNumberAttribute(e, AttributeNames.columnWidth) ?? output.columnWidth;
+
+    return output;
+
+}
 
 
 

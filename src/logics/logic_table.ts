@@ -261,6 +261,53 @@ export class LogicTable {
     }
     */
 
+    public static convertAttributesIntoLogicTableOption(e: Element) : TableOptionReteral{
+            const output : TableOptionReteral = <any> new Object();
+            /*
+            output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
+            output. = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.surfaceClassName);
+            output.surfaceStyle = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.surfaceStyle);
+    
+            output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.style);
+            if (e.hasAttribute(AttributeNames.style)) output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.style);
+    
+            const cx = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.cx);
+            const cy = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.cy);
+            const x = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.x);
+            const y = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.y);
+            if (cx !== undefined || cy !== undefined) {
+                output.position = { type: "center", x: cx !== undefined ? cx : 0, y: cy !== undefined ? cy : 0 }
+            } else if (x !== undefined || y !== undefined) {
+                output.position = { type: "upper-left", x: x !== undefined ? x : 0, y: y !== undefined ? y : 0 }
+            } else {
+                output.position = { type: defaultPositionType, x: 0, y: 0 }
+            }
+            //const cx = 
+            output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.width);
+            output.height = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.height);
+    
+    
+    
+    
+            if (removeAttributes) {
+                e.removeAttribute(AttributeNames.cx);
+                e.removeAttribute(AttributeNames.cy);
+                e.removeAttribute(AttributeNames.x);
+                e.removeAttribute(AttributeNames.y);
+                e.removeAttribute(AttributeNames.className);
+                e.removeAttribute(AttributeNames.surfaceClassName);
+                //e.removeAttribute(AttributeNames.groupClassName);
+                e.removeAttribute(AttributeNames.surfaceStyle);
+                //e.removeAttribute(AttributeNames.groupStyle);
+                e.removeAttribute(AttributeNames.style);
+    
+                e.removeAttribute(AttributeNames.width);
+                e.removeAttribute(AttributeNames.height);
+            }
+            */
+            return output;
+    }
+
     private static constructHTMLLogicCell(cellElement: Element, outputCell: LogicCell): void {
         const backGroundClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.backgroundClassName);
         const backGroundStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.backgroundStyle);

@@ -18,6 +18,7 @@ import * as SVGGExtension from "../interfaces/svg_g_extension"
 import * as GObserver from "./g_observer"
 import {IObject} from "./i_object"
 import { GlobalGObjectManager } from "./global_gobject_manager"
+import { GVertexOptionReteral } from "../logics/gobject_reterals"
 
 
 
@@ -161,6 +162,7 @@ export class GObject implements IObject {
         }
         if (typeof option.id !== "undefined") this.svgGroup.id = option.id;
     }
+
     protected setOptionalSize(option: GOptions.GObjectAttributes) {
         if (this.svgSurface !== null) {
             GOptions.setClassAndStyle(this.svgSurface, option.surfaceClass, option.surfaceStyle)
@@ -196,9 +198,41 @@ export class GObject implements IObject {
         this.setBasicOption(option);
         this.setOptionalSize(option);
         this.setOptionalPosition(option)
+    }
 
-        //this.resetUnstableCounter();
-        //this.update();
+    public assignOption(option: GVertexOptionReteral) {
+        GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
+
+        if(option.id !== undefined){
+            this.svgGroup.setAttribute("id", option.id);
+        }
+        if (this.svgSurface !== null) {
+            GOptions.setClassAndStyle(this.svgSurface, option.surfaceOption.class, option.surfaceOption.style)
+        }
+        this.width = option.width !== undefined ? option.width : 25;
+        this.height = option.height !== undefined ? option.height : 25;
+
+        console.log(`XXX: ${option.positionType}`);
+
+        if (option.positionType !== undefined) {
+            if (option.positionType == "center") {
+                this.positionType = PositionType.Center;
+                this.cx = option.cx ?? 0;
+                this.cy = option.cy ?? 0;
+            } else {
+                const x = option.x ?? 0;
+                const y = option.y ?? 0;
+                this.positionType = PositionType.UpperLeft;
+                this.setVirtualXY(x, y);
+                //this.x = option.position.x;
+                //this.y = option.position.y;
+            }
+        } else {
+            this.positionType = PositionType.Center;
+            this.__cx = 0;
+            this.__cy = 0;
+
+        }
     }
 
 

@@ -20,6 +20,7 @@ import { LogicTable } from "../logics";
 import { NullError } from "../common/exceptions";
 import { appendVBAButton } from "./vba_macro_modal";
 import { GForeignButton } from "../objects/g_foreign_button";
+import { convertAttributesIntoTableOption, TableOptionReteral } from "../logics/gobject_reterals";
 
 //export namespace openSVGFunctions {
 
@@ -141,17 +142,14 @@ function convertFromElementToGObject(node: SVGElement, type: ShapeObjectType): G
             //(<GGraph>r).relocate();
         } else if (type == ShapeObjectType.Table) {
             const logicTable = LogicTable.constructLogicTable(node);
-            const option : GTableOption = GTable.constructAttributes(node, true);
-            if(logicTable != null){
-                option.rowCount = logicTable.rowCount;
-                option.columnCount = logicTable.columnCount
-
-            }
-
             const table = new GTable(parent);
-            table.setOption(option);
-            if (logicTable !== null) {
+
+            if(logicTable != null){
+                logicTable.option = convertAttributesIntoTableOption(node);
                 table.buildFromLogicTable(logicTable);
+            }else{
+                const option = convertAttributesIntoTableOption(node);
+                table.assignOption(option);
             }
 
 
