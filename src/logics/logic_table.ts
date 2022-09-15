@@ -7,6 +7,7 @@ import * as ElementExtension from "../interfaces/element_extension"
 import { ShapeObjectType } from "../common/enums"
 import { GTableOption } from "../objects/g_table"
 import { setSVGReteral, TableReteral, RowReteral, TableOptionReteral, deepCopy, convertAttributesIntoCellOption, convertAttributesIntoTableOption } from "./gobject_reterals"
+import { recoverFromEscapeCharacter } from "../common/character"
 
 
 
@@ -274,80 +275,8 @@ export class LogicTable {
     private static constructHTMLLogicCell(cellElement: Element, outputCell: LogicCell): void {
         outputCell.option = convertAttributesIntoCellOption(cellElement);
 
-        /*
-        const backGroundClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.backgroundClassName);
-        const backGroundStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.backgroundStyle);
 
-        const textClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.textClass);
-        const textStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.textStyle);
-
-        const topBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.topBorderClassName);
-        const topBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.topBorderStyle);
-
-        const leftBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.leftBorderClassName);
-        const leftBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.leftBorderStyle);
-
-        const rightBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.rightBorderClassName);
-        const rightBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.rightBorderStyle);
-
-        const bottomBorderClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.bottomBorderClassName);
-        const bottomBorderStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.bottomBorderStyle);
-
-
-
-        if (backGroundClassName != undefined) {
-            outputCell.backgroundOption.class = backGroundClassName;
-        }
-        if (backGroundStyle != undefined) {
-            outputCell.backgroundOption.style = backGroundStyle;
-        }
-        if (textClassName != undefined) {
-            outputCell.text.class = textClassName;
-        }
-        if (textStyle != undefined) {
-            outputCell.text.style = textStyle;
-        }
-        if (topBorderClassName != undefined) {
-            outputCell.topBorderOption.class = topBorderClassName;
-        }
-        if (topBorderStyle != undefined) {
-            outputCell.topBorderOption.style = topBorderStyle;
-        }
-
-        if (leftBorderClassName != undefined) {
-            outputCell.leftBorderOption.class = leftBorderClassName;
-        }
-        if (leftBorderStyle != undefined) {
-            outputCell.leftBorderOption.style = leftBorderStyle;
-        }
-        if (rightBorderClassName != undefined) {
-            outputCell.rightBorderOption.class = rightBorderClassName;
-        }
-        if (rightBorderStyle != undefined) {
-            outputCell.rightBorderOption.style = rightBorderStyle;
-        }
-        if (bottomBorderClassName != undefined) {
-            outputCell.bottomBorderOption.class = bottomBorderClassName;
-        }
-        if (bottomBorderStyle != undefined) {
-            outputCell.bottomBorderOption.style = bottomBorderStyle;
-        }
-
-
-
-        if (cellElement.hasAttribute("w")) {
-            const w = Number(cellElement.getAttribute("w"));
-            outputCell.option.w = w;
-        }
-        if (cellElement.hasAttribute("h")) {
-            const h = Number(cellElement.getAttribute("h"));
-            outputCell.option.h = h;
-        }
-        */
-        //const tNodes = openSVGFunctions.getTNodes(cells[y][x]);
-        //outputCell.text.textContent = cellElement.innerHTML;
-
-        outputCell.text.textContent = cellElement.innerHTML;
+        outputCell.text.textContent = recoverFromEscapeCharacter(cellElement.innerHTML);
 
         //outputCell.text.class = outputCell.option.
 
