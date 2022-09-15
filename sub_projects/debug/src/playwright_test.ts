@@ -19,6 +19,7 @@ function isSpecialNode(nodeName: string): boolean {
     dic.add("textPath");
     dic.add("metadata");
     dic.add("marker");
+    dic.add("foreignObject")
 
     return dic.has(nodeName);
 }
@@ -26,7 +27,10 @@ function HTMLCaptialNodeToProperName(nodeName: string): string {
     const p = nodeName.toLowerCase();
     if (p == "textpath") {
         return "textPath";
-    } else {
+    } else if(p == "foreignobject"){
+        return "foreignObject";
+    } 
+    else {
         return p;
     }
 }
@@ -133,6 +137,7 @@ export async function toHTMLLines(root: Page, xpath: string, indent: string): Pr
 
     const node = await nodeCandidates.nth(0);
     const attributes = await getAllAttributes(node);
+    attributes.sort((a,b) => (a.name < b.name) ? -1 : 1)
 
     const attributeLine = attributes.map((v) => sanityze(v)).join(" ")
     const nodeCapitalName = (await node.evaluate(el => el.nodeName));

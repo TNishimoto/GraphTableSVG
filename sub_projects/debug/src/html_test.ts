@@ -9,11 +9,24 @@ export class TestResult {
     public parentDirectoryName: string = "";
     public filename: string = "";
     public browserName: BrowserNameType = "firefox";
-    public message: string = "";
     public success: boolean | null = null;
     public diffXMLResult: DiffXMLResult | null = null;
 
     public errorType: ErrorType | null = null;
+
+    public getMessage() : string {
+        if(this.diffXMLResult == null){
+            return `NONE`
+        }else{
+            if (this.diffXMLResult.diffType == null) {
+                return `NONE`;
+            } else {
+                return `DiffXMLError: xpath = ${this.diffXMLResult.xpath}, type=${this.diffXMLResult.diffType} Content = "${this.diffXMLResult.content1}"/"${this.diffXMLResult.content2}"(${this.diffXMLResult.content1==this.diffXMLResult.content2})`;
+    
+            }
+    
+        }
+    }
 }
 
 export class TestResultForFile {
@@ -32,16 +45,16 @@ export class TestResultForFile {
     }
 
     public getDetailMessages(): string | null {
-        let s = `${rightPadding(this.fileID, 40)} \n Browsers = { `;
+        let s = `${rightPadding(this.fileID, 40)} \n Browsers = { \n`;
         const b = this.arr.every((v) => v.success)
         if (b) {
             return null;
         } else {
             this.arr.forEach((v) => {
                 //const type: string = v.errorType == null ? "null" : v.errorType;
-                const msg = v.message;
+                const msg = v.getMessage();
 
-                s += `${v.browserName}: ${msg}\n`;
+                s += `${v.browserName}:\t ${msg}\n`;
             })
             s += " }\n";
             return s;
@@ -71,7 +84,6 @@ export async function testHTML(file: FilePathManager): Promise<TestResult> {
         } else {
             console.log(`\x1b[41mNO: ${file.filename} \x1b[49m`)
             result.success = false;
-            result.message = `DiffXMLError: xpath = ${result.diffXMLResult.xpath}, type=${result.diffXMLResult.diffType}`
             result.errorType = `TextMismatch`;
 
         }

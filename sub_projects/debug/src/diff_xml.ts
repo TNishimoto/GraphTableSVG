@@ -14,6 +14,8 @@ type DiffType = "MismatchValue" | "MismatchName" | "MismatchChildrenCount" | "Mi
 export class DiffXMLResult{
     public xpath : string = "";    
     public diffType : DiffType | null = null;
+    public content1 : string = "";
+    public content2 : string = "";
 
 }
 function getXPath(e1 : libxmlts.libxmlts.Element | libxmlts.libxmlts.Attribute | libxmlts.libxmlts.InnerNode) : string {
@@ -29,8 +31,11 @@ function getXPath(e1 : libxmlts.libxmlts.Element | libxmlts.libxmlts.Attribute |
             return `${parentPath}[@${e1.name}]`
         }else if(e1 instanceof libxmlts.libxmlts.Element){
             return `${parentPath}/${e1.name}`
-        }else{
-            return `${parentPath}/INNERNODE`
+        }else if(e1 instanceof libxmlts.libxmlts.Text){
+            return `${parentPath}/TEXT`
+        }
+        else{
+            return `${parentPath}/${e1.type}`
         }
     }
 
@@ -118,6 +123,7 @@ function diffNode(e1 : libxmlts.libxmlts.InnerNode, e2 : libxmlts.libxmlts.Inner
         let result = new DiffXMLResult();
         result.xpath = getXPath(e1);
         result.diffType = "MismatchName";
+        
         return result;
     }else{
         if(e1 instanceof libxmlts.libxmlts.Element && e2 instanceof libxmlts.libxmlts.Element){
@@ -155,7 +161,10 @@ function diffNode(e1 : libxmlts.libxmlts.InnerNode, e2 : libxmlts.libxmlts.Inner
             let result = new DiffXMLResult();
             result.xpath = getXPath(e1);
             if(e1.text != e2.text){
-                result.diffType = "MismatchTextContent";            
+                result.diffType = "MismatchTextContent";
+                result.content1 = e1.text;
+                result.content2 = e2.text;
+
                 return result;
             }else{
                 return result;
@@ -166,6 +175,9 @@ function diffNode(e1 : libxmlts.libxmlts.InnerNode, e2 : libxmlts.libxmlts.Inner
 
             if(e1.text != e2.text){
                 result.diffType = "MismatchTextContent";            
+                result.content1 = e1.text;
+                result.content2 = e2.text;
+
                 return result;
             }else{
                 return result;
@@ -180,6 +192,9 @@ function diffNode(e1 : libxmlts.libxmlts.InnerNode, e2 : libxmlts.libxmlts.Inner
             result.xpath = getXPath(e1);
             if(e1.text != e2.text){
                 result.diffType = "MismatchTextContent";            
+                result.content1 = e1.text;
+                result.content2 = e2.text;
+
                 return result;
             }else{
                 return result;
