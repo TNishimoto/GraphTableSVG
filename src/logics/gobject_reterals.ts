@@ -25,7 +25,7 @@ export type GVertexReteral = {} & GVertexOptionReteral & SVGReteral
 
 export type CellOptionReteral = {
     w?: number, h?: number,
-    backgroundOption: SurfaceOptionReteral, textOption: TextOptionReteral,
+    surfaceOption: SurfaceOptionReteral, textOption: TextOptionReteral,
     topBorderOption: BorderOptionReteral, leftBorderOption: BorderOptionReteral, rightBorderOption: BorderOptionReteral, bottomBorderOption: BorderOptionReteral
 } & SVGOptionReteral;
 
@@ -75,9 +75,8 @@ export function convertAttributesIntoVertexOption(e: Element) : GVertexOptionRet
     output.class = getAndRemoveAttribute(e, AttributeNames.className) ?? output.class;
     output.style = getAndRemoveAttribute(e, AttributeNames.style) ?? output.style;
 
-    output.surfaceOption = new Object();
-    output.surfaceOption.class = getAndRemoveInheritedAttribute(e, AttributeNames.surfaceClassName) ?? output.surfaceOption.class;
-    output.surfaceOption.style = getAndRemoveInheritedAttribute(e, AttributeNames.surfaceStyle) ?? output.surfaceOption.style;
+    output.surfaceOption = convertAttributesIntoAdditionalOption(e, "surface");
+    output.textOption = convertAttributesIntoAdditionalOption(e, "text");
 
     output.width = getAndRemoveNumberAttribute(e, AttributeNames.width);
     output.height = getAndRemoveNumberAttribute(e, AttributeNames.height);
@@ -100,7 +99,32 @@ export function convertAttributesIntoTableOption(e: Element) : TableOptionRetera
     output.columnWidth = getAndRemoveNumberAttribute(e, AttributeNames.columnWidth) ?? output.columnWidth;
 
     return output;
+}
 
+export function convertAttributesIntoAdditionalOption(e: Element, type : "topborder" | "leftborder" | "rightborder" | "bottomborder" | "surface" | "text") : BorderOptionReteral {
+    const output : BorderOptionReteral = <any> new Object();
+    output.class = getAndRemoveInheritedAttribute(e, `${type}::${AttributeNames.className}`) ?? output.class;
+    output.style = getAndRemoveInheritedAttribute(e, `${type}::${AttributeNames.style}`) ?? output.style;
+    output.id = getAndRemoveAttribute(e, `${type}::${AttributeNames.id}`) ?? output.id;
+    return output;
+
+}
+
+
+export function convertAttributesIntoCellOption(e: Element) : CellOptionReteral {
+    const output : CellOptionReteral = <any> new Object();
+    output.w = getAndRemoveNumberAttribute(e, AttributeNames.w) ?? output.w;
+    output.h = getAndRemoveNumberAttribute(e, AttributeNames.h) ?? output.h;
+    output.topBorderOption = convertAttributesIntoAdditionalOption(e, "topborder");
+    output.leftBorderOption = convertAttributesIntoAdditionalOption(e, "leftborder");
+    output.rightBorderOption = convertAttributesIntoAdditionalOption(e, "rightborder");
+    output.bottomBorderOption = convertAttributesIntoAdditionalOption(e, "bottomborder");
+    output.surfaceOption = convertAttributesIntoAdditionalOption(e, "surface");
+    output.textOption = convertAttributesIntoAdditionalOption(e, "text");
+    
+
+
+    return output;
 }
 
 

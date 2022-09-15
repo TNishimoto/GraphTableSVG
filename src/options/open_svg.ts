@@ -145,7 +145,7 @@ function convertFromElementToGObject(node: SVGElement, type: ShapeObjectType): G
             const table = new GTable(parent);
 
             if(logicTable != null){
-                logicTable.option = convertAttributesIntoTableOption(node);
+                //logicTable.option = convertAttributesIntoTableOption(node);
                 table.buildFromLogicTable(logicTable);
             }else{
                 const option = convertAttributesIntoTableOption(node);

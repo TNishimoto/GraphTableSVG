@@ -22,12 +22,15 @@ export let defaultCircleRadius = 15;
 
 export const className : string = "class";
 export const style : string = "style";
+export const id : string = "id";
 
 //export const groupClassName : string = "group:class";
 //export const groupStyle : string = "group:style";
 
+
 export const surfaceClassName : string = "surface:class";
 export const surfaceStyle : string = "surface:style";
+
 
 export const backgroundClassName : string = "background:class";
 export const backgroundStyle : string = "background:style";
@@ -61,6 +64,10 @@ export const x2 : string = "x2";
 export const y2 : string = "y2";
 export const x3 : string = "x3";
 export const y3 : string = "y3";
+
+export const w : string = "w";
+export const h : string = "h";
+
 
 export const width : string = "width";
 export const height : string = "height";

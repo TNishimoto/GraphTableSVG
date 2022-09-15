@@ -328,7 +328,7 @@ export class GObject implements IObject {
     }
     */
 
-
+    
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GOptions.GObjectAttributes = {}, defaultPositionType : "center" | "upper-left" ): GOptions.GObjectAttributes {
         output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
@@ -354,19 +354,6 @@ export class GObject implements IObject {
         output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.width);
         output.height = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.height);
 
-        /*
-        const surfaceAttributes = ElementExtension.collectAttributesByPrefix(e, "surface");
-        if(surfaceAttributes.size > 0){
-            output.surfaceAttributes = {};
-            surfaceAttributes.forEach((value, key) =>{
-                output.surfaceAttributes![key] = value;
-            })
-        }
-        */
-
-
-
-
         if (removeAttributes) {
             e.removeAttribute(AttributeNames.cx);
             e.removeAttribute(AttributeNames.cy);
@@ -384,6 +371,7 @@ export class GObject implements IObject {
         }
         return output;
     }
+    
     public get tag() {
         return this._tag;
     }

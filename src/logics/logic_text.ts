@@ -54,7 +54,7 @@ export class LogicText{
         this.style = _style;
     }
 
-    public setTextElement(svgText: SVGTextElement) {
+    public copyToTextElement(svgText: SVGTextElement) {
         CSS.setCSSClass(svgText, this.class);
         CSS.setCSSStyle(svgText, this.style);
 

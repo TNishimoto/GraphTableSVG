@@ -15,7 +15,7 @@ export class LogicCell {
     public text: LogicText = new LogicText();
     public option : CellOptionReteral;
     public get backgroundOption() : SurfaceOptionReteral{
-        return this.option.backgroundOption;
+        return this.option.surfaceOption;
     }
     public get topBorderOption() : BorderOptionReteral{
         return this.option.topBorderOption;
@@ -67,7 +67,7 @@ export class LogicCell {
         this.option.leftBorderOption = <any>new Object();
         this.option.rightBorderOption = <any>new Object();
         this.option.bottomBorderOption = <any>new Object();
-        this.option.backgroundOption = <any>new Object();
+        this.option.surfaceOption = <any>new Object();
         this.option.textOption = <any>new Object();
         //this.option.w = 1;
         //this.option.h = 1;

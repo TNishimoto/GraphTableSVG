@@ -6,7 +6,7 @@ import { LogicCell } from "./logic_cell"
 import * as ElementExtension from "../interfaces/element_extension"
 import { ShapeObjectType } from "../common/enums"
 import { GTableOption } from "../objects/g_table"
-import { setSVGReteral, TableReteral, RowReteral, TableOptionReteral, deepCopy } from "./gobject_reterals"
+import { setSVGReteral, TableReteral, RowReteral, TableOptionReteral, deepCopy, convertAttributesIntoCellOption, convertAttributesIntoTableOption } from "./gobject_reterals"
 
 
 
@@ -173,6 +173,8 @@ export class LogicTable {
         });
         const logicTable = new LogicTable({ columnCount: columnSize, rowCount: rows.length });
 
+        logicTable.option = convertAttributesIntoTableOption(e);
+                
         
 
 
@@ -186,7 +188,7 @@ export class LogicTable {
         */
         //this.constructHTMLLogicCells(e, logicTable.cellArray);
         for (let y = 0; y < cells.length; y++) {
-            const h = ElementExtension.getPropertyStyleNumberValue(rows[y], "--height", null);
+            //const h = ElementExtension.getPropertyStyleNumberValue(rows[y], "--height", null);
             //this.constructHTMLLogicCells(rows[y], logicTable.cells[y]);
 
             //logicTable.rowHeights[y] = h;
@@ -261,54 +263,18 @@ export class LogicTable {
     }
     */
 
+    /*
     public static convertAttributesIntoLogicTableOption(e: Element) : TableOptionReteral{
             const output : TableOptionReteral = <any> new Object();
-            /*
-            output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
-            output. = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.surfaceClassName);
-            output.surfaceStyle = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.surfaceStyle);
-    
-            output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.style);
-            if (e.hasAttribute(AttributeNames.style)) output.style = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.style);
-    
-            const cx = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.cx);
-            const cy = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.cy);
-            const x = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.x);
-            const y = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.y);
-            if (cx !== undefined || cy !== undefined) {
-                output.position = { type: "center", x: cx !== undefined ? cx : 0, y: cy !== undefined ? cy : 0 }
-            } else if (x !== undefined || y !== undefined) {
-                output.position = { type: "upper-left", x: x !== undefined ? x : 0, y: y !== undefined ? y : 0 }
-            } else {
-                output.position = { type: defaultPositionType, x: 0, y: 0 }
-            }
-            //const cx = 
-            output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.width);
-            output.height = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.height);
-    
-    
-    
-    
-            if (removeAttributes) {
-                e.removeAttribute(AttributeNames.cx);
-                e.removeAttribute(AttributeNames.cy);
-                e.removeAttribute(AttributeNames.x);
-                e.removeAttribute(AttributeNames.y);
-                e.removeAttribute(AttributeNames.className);
-                e.removeAttribute(AttributeNames.surfaceClassName);
-                //e.removeAttribute(AttributeNames.groupClassName);
-                e.removeAttribute(AttributeNames.surfaceStyle);
-                //e.removeAttribute(AttributeNames.groupStyle);
-                e.removeAttribute(AttributeNames.style);
-    
-                e.removeAttribute(AttributeNames.width);
-                e.removeAttribute(AttributeNames.height);
-            }
-            */
+            
             return output;
     }
+    */
 
     private static constructHTMLLogicCell(cellElement: Element, outputCell: LogicCell): void {
+        outputCell.option = convertAttributesIntoCellOption(cellElement);
+
+        /*
         const backGroundClassName = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.backgroundClassName);
         const backGroundStyle = ElementExtension.gtGetInheritedAttributeString(cellElement, AttributeNames.backgroundStyle);
 
@@ -369,7 +335,6 @@ export class LogicTable {
 
 
 
-        outputCell.text.textContent = cellElement.innerHTML;
         if (cellElement.hasAttribute("w")) {
             const w = Number(cellElement.getAttribute("w"));
             outputCell.option.w = w;
@@ -378,9 +343,14 @@ export class LogicTable {
             const h = Number(cellElement.getAttribute("h"));
             outputCell.option.h = h;
         }
+        */
         //const tNodes = openSVGFunctions.getTNodes(cells[y][x]);
+        //outputCell.text.textContent = cellElement.innerHTML;
 
         outputCell.text.textContent = cellElement.innerHTML;
+
+        //outputCell.text.class = outputCell.option.
+
         const tNodes = HTMLFunctions.getTNodes(cellElement);
         if (tNodes != null) outputCell.tTexts = tNodes;
 
