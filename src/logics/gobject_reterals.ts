@@ -23,14 +23,19 @@ export type GVertexOptionReteral = { x?: number, y?: number, cx?: number, cy?: n
 
 export type GVertexReteral = {} & GVertexOptionReteral & SVGReteral
 
-export type CellOptionReteral = {
-    w?: number, h?: number,
+export type CellSubOptionReteral = {
     surfaceOption: SurfaceOptionReteral, textOption: TextOptionReteral,
     topBorderOption: BorderOptionReteral, leftBorderOption: BorderOptionReteral, rightBorderOption: BorderOptionReteral, bottomBorderOption: BorderOptionReteral
-} & SVGOptionReteral;
+}
+
+
+export type CellOptionReteral = {w?: number, h?: number} & CellSubOptionReteral & SVGOptionReteral;
 
 export type CellReteral = { children: TextReteral[] } & SVGReteral & CellOptionReteral;
-export type RowReteral = { children: CellReteral[], backgroundOption: SurfaceOptionReteral, textOption: TextOptionReteral } & SVGReteral;
+
+export type RowOptionReteral = CellSubOptionReteral & SVGOptionReteral;
+
+export type RowReteral = { children: CellReteral[] } & RowOptionReteral & SVGReteral;
 
 //export type TextType = "string" | "SVGText"
 export type TableOptionReteral = { rowHeight?: number, columnWidth?: number } & GVertexOptionReteral;
