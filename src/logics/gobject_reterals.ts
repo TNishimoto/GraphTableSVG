@@ -57,39 +57,51 @@ export type _GTableOption = {
 }
 */
 
-
+/*
 function getAndRemoveAttribute(item:Element,name: string): string | undefined{
     const p = ElementExtension.gtGetAttributeStringWithUndefined(item, name);
     item.removeAttribute(name);
     return p;
 }
+*/
+/*
 function getAndRemoveNumberAttribute(item:Element,name: string): number | undefined{
     const p = ElementExtension.gtGetAttributeNumberWithUndefined(item, name);
     item.removeAttribute(name);
     return p;
 }
+*/
 
+/*
 function getAndRemoveInheritedAttribute(item:Element,name: string): string | undefined{
     const p = ElementExtension.gtGetInheritedAttributeString(item, name);
     item.removeAttribute(name);
     return p;
 }
+*/
+
+export function convertAttributesIntoSVGOption(e: Element) : SVGOptionReteral {
+    const output : SVGOptionReteral = <any> new Object();
+    output.class = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.className) ?? output.class;
+    output.style = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.style) ?? output.style;
+    output.id = ElementExtension.gtGetAttributeStringWithUndefined(e, `${AttributeNames.id}`) ?? output.id;
+
+    return output;
+}
 
 export function convertAttributesIntoVertexOption(e: Element) : GVertexOptionReteral {
-    const output : GVertexOptionReteral = <any> new Object();
-    output.class = getAndRemoveAttribute(e, AttributeNames.className) ?? output.class;
-    output.style = getAndRemoveAttribute(e, AttributeNames.style) ?? output.style;
+    const output : GVertexOptionReteral = <any>convertAttributesIntoSVGOption(e);
 
     output.surfaceOption = convertAttributesIntoAdditionalOption(e, "surface");
     output.textOption = convertAttributesIntoAdditionalOption(e, "text");
 
-    output.width = getAndRemoveNumberAttribute(e, AttributeNames.width);
-    output.height = getAndRemoveNumberAttribute(e, AttributeNames.height);
+    output.width = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.width);
+    output.height = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.height);
 
-    output.cx = getAndRemoveNumberAttribute(e, AttributeNames.cx) ?? output.cx;
-    output.cy = getAndRemoveNumberAttribute(e, AttributeNames.cy) ?? output.cy;
-    output.x = getAndRemoveNumberAttribute(e, AttributeNames.x) ?? output.x;
-    output.y = getAndRemoveNumberAttribute(e, AttributeNames.y) ?? output.y;
+    output.cx = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.cx) ?? output.cx;
+    output.cy = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.cy) ?? output.cy;
+    output.x = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.x) ?? output.x;
+    output.y = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.y) ?? output.y;
     if(output.cx !== undefined || output.cy !== undefined){
         output.positionType = "center";
     }else if(output.x !== undefined || output.y !== undefined){
@@ -100,17 +112,17 @@ export function convertAttributesIntoVertexOption(e: Element) : GVertexOptionRet
 }   
 export function convertAttributesIntoTableOption(e: Element) : TableOptionReteral {
     const output : TableOptionReteral = <any> convertAttributesIntoVertexOption(e);
-    output.rowHeight = getAndRemoveNumberAttribute(e, AttributeNames.rowHeight) ?? output.rowHeight;
-    output.columnWidth = getAndRemoveNumberAttribute(e, AttributeNames.columnWidth) ?? output.columnWidth;
+    output.rowHeight = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.rowHeight) ?? output.rowHeight;
+    output.columnWidth =ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.columnWidth) ?? output.columnWidth;
 
     return output;
 }
 
 export function convertAttributesIntoAdditionalOption(e: Element, type : "topborder" | "leftborder" | "rightborder" | "bottomborder" | "surface" | "text") : BorderOptionReteral {
     const output : BorderOptionReteral = <any> new Object();
-    output.class = getAndRemoveInheritedAttribute(e, `${type}::${AttributeNames.className}`) ?? output.class;
-    output.style = getAndRemoveInheritedAttribute(e, `${type}::${AttributeNames.style}`) ?? output.style;
-    output.id = getAndRemoveAttribute(e, `${type}::${AttributeNames.id}`) ?? output.id;
+    output.class = ElementExtension.gtGetInheritedAttributeString(e, `${type}::${AttributeNames.className}`) ?? output.class;
+    output.style = ElementExtension.gtGetInheritedAttributeString(e, `${type}::${AttributeNames.style}`) ?? output.style;
+    output.id = ElementExtension.gtGetAttributeStringWithUndefined(e, `${type}::${AttributeNames.id}`) ?? output.id;
     return output;
 
 }
@@ -118,8 +130,8 @@ export function convertAttributesIntoAdditionalOption(e: Element, type : "topbor
 
 export function convertAttributesIntoCellOption(e: Element) : CellOptionReteral {
     const output : CellOptionReteral = <any> new Object();
-    output.w = getAndRemoveNumberAttribute(e, AttributeNames.w) ?? output.w;
-    output.h = getAndRemoveNumberAttribute(e, AttributeNames.h) ?? output.h;
+    output.w = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.w) ?? output.w;
+    output.h = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.h) ?? output.h;
     output.topBorderOption = convertAttributesIntoAdditionalOption(e, "topborder");
     output.leftBorderOption = convertAttributesIntoAdditionalOption(e, "leftborder");
     output.rightBorderOption = convertAttributesIntoAdditionalOption(e, "rightborder");

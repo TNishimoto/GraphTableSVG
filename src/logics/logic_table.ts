@@ -1,12 +1,8 @@
 import * as AttributeNames from "../common/attribute_names"
-
 import * as HTMLFunctions from "../html/html_functions"
-//import * as Console from "../../options/console"
 import { LogicCell } from "./logic_cell"
 import * as ElementExtension from "../interfaces/element_extension"
-import { ShapeObjectType } from "../common/enums"
-import { GTableOption } from "../objects/g_table"
-import { setSVGReteral, TableReteral, RowReteral, TableOptionReteral, deepCopy, convertAttributesIntoCellOption, convertAttributesIntoTableOption } from "./gobject_reterals"
+import { TableReteral, RowReteral, TableOptionReteral, deepCopy, convertAttributesIntoCellOption, convertAttributesIntoTableOption } from "./gobject_reterals"
 import { recoverFromEscapeCharacter } from "../common/character"
 
 
@@ -161,7 +157,7 @@ export class LogicTable {
     }
     public static constructLogicTable(e: Element): LogicTable | null {
         const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
-        const widthsStr = ElementExtension.getPropertyStyleValue(e, "--widths");
+        //const widthsStr = ElementExtension.getPropertyStyleValue(e, "--widths");
         if (rows.length == 0) return null;
 
         const cells: Element[][] = new Array(rows.length);
