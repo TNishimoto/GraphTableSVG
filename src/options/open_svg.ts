@@ -6,23 +6,10 @@ import * as HTMLTable from "./html_table"
 import * as GUIObserver from "../html/gui_observer"
 
 import { ZObject } from "../objects/z_object"
-import { ZCallout } from "../objects/z_callout"
-import { ZArrowCallout } from "../objects/z_arrow_callout"
-import { ZEllipse } from "../objects/z_ellipse"
-import { ZRect } from "../objects/z_rect"
-import { ZEdge } from "../objects/z_edge"
-import { ZTable, ZTableOption } from "../objects/z_table"
-import { ZGraph } from "../objects/z_graph"
-import { ZRectButton } from "../objects/z_rect_button"
-import { ZCircle } from "../objects/z_circle";
-import * as ElementExtension from "../interfaces/element_extension"
-import { LogicTable } from "../logics";
 import { NullError } from "../common/exceptions";
 import { appendVBAButton } from "./vba_macro_modal";
-import { ZForeignButton } from "../objects/z_foreign_button";
-import { convertAttributesIntoTableOption, TableOptionReteral } from "../logics/gobject_reterals";
 
-import { convertFromElementWithCustomElementAttributeToGObject, isElementWithCustomElementAttribute, convertFromElementToSVGGElementWithCustomElementAttribute } from "./custom_svg_processors/custom_x_element_processor";
+import { convertFromGTagToIntermediateSVGGTag, processIntermediateSVGGElements } from "./custom_tag_processors/intermediate_g_tag_preprocessor";
 
 //export namespace openSVGFunctions {
 
@@ -116,25 +103,12 @@ export function openSVG(inputItem: string | Element | null = null, output: ZObje
             appendVBAButton(svgsvg);
         }
 
-        HTMLFunctions.getDescendants(svgsvg).forEach(v => {
-            const shapeType = ShapeObjectType.toShapeObjectType(v.nodeName);
-            if (shapeType != null) {
-                convertFromElementToSVGGElementWithCustomElementAttribute(v);
-            }
-        })
+        convertFromGTagToIntermediateSVGGTag(svgsvg);
+
         const startTime = performance.now();
 
-        HTMLFunctions.getDescendantsByPostorder(svgsvg).forEach((v) => {
-            if (v instanceof SVGElement) {
-                if ( isElementWithCustomElementAttribute(v)) {
-                    const p = convertFromElementWithCustomElementAttributeToGObject(v);
-                    if (p != null) {
-                        output.push(p);
-                    }
-                }
+        processIntermediateSVGGElements(svgsvg, output)
 
-            }
-        })
         const endTime = performance.now();
         const time = endTime - startTime;
 

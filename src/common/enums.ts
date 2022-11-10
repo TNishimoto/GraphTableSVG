@@ -49,6 +49,12 @@ export namespace VBAShapeType {
 }
 
 
+export type MacroTagNames = "m-tree" | "m-node";
+export namespace MacroTagNames {
+    export const Tree: MacroTagNames = "m-tree"
+    export const Node: MacroTagNames = "m-node"
+}
+
 export type VertexObjectType = "z-callout" | "z-arrow-callout" | "z-ellipse" | "z-circle" | "z-rect" | "z-path-textbox" | "z-rect-button" | "z-table" | "z-foreign-object" | "z-foreign-button";
 
 export const VBAAttributeName : string = "z-vba";

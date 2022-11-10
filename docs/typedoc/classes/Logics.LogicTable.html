@@ -22,7 +22,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">LogicTable</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L21">src/logics/logic_table.ts:21</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L19">src/logics/logic_table.ts:19</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -49,6 +49,7 @@
 <div class="tsd-index-list"><a href="Logics.LogicTable.html#buildFromObject" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>build<wbr/>From<wbr/>Object</span></a>
 <a href="Logics.LogicTable.html#getColumn" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Column</span></a>
 <a href="Logics.LogicTable.html#getRow" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Row</span></a>
+<a href="Logics.LogicTable.html#toReteral" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Reteral</span></a>
 <a href="Logics.LogicTable.html#constructHTMLLogicCell" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>constructHTMLLogic<wbr/>Cell</span></a>
 <a href="Logics.LogicTable.html#constructHTMLLogicTable" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>constructHTMLLogic<wbr/>Table</span></a>
 <a href="Logics.LogicTable.html#constructLogicTable" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>construct<wbr/>Logic<wbr/>Table</span></a>
@@ -60,40 +61,40 @@
 <section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_LogicTable">new <wbr/>Logic<wbr/>Table<span class="tsd-signature-symbol">(</span>option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>columnCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>option<span class="tsd-signature-symbol">?: </span><a href="../types/Objects.GTableOption.html" class="tsd-signature-type" data-tsd-kind="Type alias">GTableOption</a><span class="tsd-signature-symbol">; </span>rowCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Logics.LogicTable.html" class="tsd-signature-type" data-tsd-kind="Class">LogicTable</a><a href="#constructor.new_LogicTable" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_LogicTable">new <wbr/>Logic<wbr/>Table<span class="tsd-signature-symbol">(</span>option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>columnCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>rowCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>table_option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TableOptionReteral</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Logics.LogicTable.html" class="tsd-signature-type" data-tsd-kind="Class">LogicTable</a><a href="#constructor.new_LogicTable" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>option: <span class="tsd-signature-symbol">{ </span>columnCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>option<span class="tsd-signature-symbol">?: </span><a href="../types/Objects.GTableOption.html" class="tsd-signature-type" data-tsd-kind="Type alias">GTableOption</a><span class="tsd-signature-symbol">; </span>rowCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></h5>
+<h5>option: <span class="tsd-signature-symbol">{ </span>columnCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>rowCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>table_option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TableOptionReteral</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></h5>
 <ul class="tsd-parameters">
 <li class="tsd-parameter">
 <h5>column<wbr/>Count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5></li>
 <li class="tsd-parameter">
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> option<span class="tsd-signature-symbol">?: </span><a href="../types/Objects.GTableOption.html" class="tsd-signature-type" data-tsd-kind="Type alias">GTableOption</a></h5></li>
+<h5>row<wbr/>Count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5></li>
 <li class="tsd-parameter">
-<h5>row<wbr/>Count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5></li></ul></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> table_<wbr/>option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TableOptionReteral</span></h5></li></ul></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Logics.LogicTable.html" class="tsd-signature-type" data-tsd-kind="Class">LogicTable</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L68">src/logics/logic_table.ts:68</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L62">src/logics/logic_table.ts:62</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="cells" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>cells</span><a href="#cells" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">cells<span class="tsd-signature-symbol">:</span> <a href="Logics.LogicCell.html" class="tsd-signature-type" data-tsd-kind="Class">LogicCell</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L22">src/logics/logic_table.ts:22</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L20">src/logics/logic_table.ts:20</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="className" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>class<wbr/>Name</span><a href="#className" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">class<wbr/>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;LogicTable&quot;</span><span class="tsd-signature-symbol"> = &quot;LogicTable&quot;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L28">src/logics/logic_table.ts:28</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L22">src/logics/logic_table.ts:22</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="option" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>option</span><a href="#option" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">option<span class="tsd-signature-symbol">:</span> <a href="../types/Objects.GTableOption.html" class="tsd-signature-type" data-tsd-kind="Type alias">GTableOption</a><span class="tsd-signature-symbol"> = {}</span></div><aside class="tsd-sources">
+<div class="tsd-signature">option<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TableOptionReteral</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L27">src/logics/logic_table.ts:27</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L21">src/logics/logic_table.ts:21</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Accessors</h2>
 <section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class"><a id="cellArray" class="tsd-anchor"></a>
@@ -103,7 +104,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <a href="Logics.LogicCell.html" class="tsd-signature-type" data-tsd-kind="Class">LogicCell</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L99">src/logics/logic_table.ts:99</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L96">src/logics/logic_table.ts:96</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class"><a id="columnCount" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>column<wbr/>Count</span><a href="#columnCount" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
@@ -111,7 +112,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L33">src/logics/logic_table.ts:33</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L27">src/logics/logic_table.ts:27</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class"><a id="rowCount" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>row<wbr/>Count</span><a href="#rowCount" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
@@ -119,7 +120,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L30">src/logics/logic_table.ts:30</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L24">src/logics/logic_table.ts:24</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="buildFromObject" class="tsd-anchor"></a>
@@ -134,7 +135,7 @@
 <h5>obj: <span class="tsd-signature-type">any</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L42">src/logics/logic_table.ts:42</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L36">src/logics/logic_table.ts:36</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getColumn" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Column</span><a href="#getColumn" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -147,7 +148,7 @@
 <h5>i: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Logics.LogicCell.html" class="tsd-signature-type" data-tsd-kind="Class">LogicCell</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L108">src/logics/logic_table.ts:108</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L105">src/logics/logic_table.ts:105</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getRow" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Row</span><a href="#getRow" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -160,7 +161,15 @@
 <h5>i: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Logics.LogicCell.html" class="tsd-signature-type" data-tsd-kind="Class">LogicCell</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L115">src/logics/logic_table.ts:115</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L112">src/logics/logic_table.ts:112</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="toReteral" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>to<wbr/>Reteral</span><a href="#toReteral" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="toReteral.toReteral-1">to<wbr/>Reteral<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TableReteral</span><a href="#toReteral.toReteral-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TableReteral</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L353">src/logics/logic_table.ts:353</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="constructHTMLLogicCell" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagPrivate">Private</code> <span>constructHTMLLogic<wbr/>Cell</span><a href="#constructHTMLLogicCell" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -175,7 +184,7 @@
 <h5>outputCell: <a href="Logics.LogicCell.html" class="tsd-signature-type" data-tsd-kind="Class">LogicCell</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L262">src/logics/logic_table.ts:262</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L271">src/logics/logic_table.ts:271</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="constructHTMLLogicTable" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>constructHTMLLogic<wbr/>Table</span><a href="#constructHTMLLogicTable" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -188,7 +197,7 @@
 <h5>e: <span class="tsd-signature-type">Element</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="Logics.LogicTable.html" class="tsd-signature-type" data-tsd-kind="Class">LogicTable</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L340">src/logics/logic_table.ts:340</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L285">src/logics/logic_table.ts:285</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="constructLogicTable" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>construct<wbr/>Logic<wbr/>Table</span><a href="#constructLogicTable" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -201,11 +210,11 @@
 <h5>e: <span class="tsd-signature-type">Element</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="Logics.LogicTable.html" class="tsd-signature-type" data-tsd-kind="Class">LogicTable</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L161">src/logics/logic_table.ts:161</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L158">src/logics/logic_table.ts:158</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="create" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>create</span><a href="#create" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="create.create-1">create<span class="tsd-signature-symbol">(</span>str<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span>, option<span class="tsd-signature-symbol">?: </span><a href="../types/Objects.GTableOption.html" class="tsd-signature-type" data-tsd-kind="Type alias">GTableOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Logics.LogicTable.html" class="tsd-signature-type" data-tsd-kind="Class">LogicTable</a><a href="#create.create-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="create.create-1">create<span class="tsd-signature-symbol">(</span>str<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span>, option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TableOptionReteral</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Logics.LogicTable.html" class="tsd-signature-type" data-tsd-kind="Class">LogicTable</a><a href="#create.create-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -213,10 +222,10 @@
 <li>
 <h5>str: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span></h5></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> option: <a href="../types/Objects.GTableOption.html" class="tsd-signature-type" data-tsd-kind="Type alias">GTableOption</a></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> option: <span class="tsd-signature-type">TableOptionReteral</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Logics.LogicTable.html" class="tsd-signature-type" data-tsd-kind="Class">LogicTable</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L146">src/logics/logic_table.ts:146</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L143">src/logics/logic_table.ts:143</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="parse" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>parse</span><a href="#parse" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -231,7 +240,7 @@
 <h5>delimiter: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/17b9644/src/logics/logic_table.ts#L128">src/logics/logic_table.ts:128</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/TNishimoto/GraphTableSVG/blob/2ff959b/src/logics/logic_table.ts#L125">src/logics/logic_table.ts:125</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -266,6 +275,7 @@
 <li class="tsd-kind-namespace tsd-parent-kind-namespace"><a href="../modules/Common.Enums.CoodinateType.html">Coodinate<wbr/>Type</a></li>
 <li class="tsd-kind-namespace tsd-parent-kind-namespace"><a href="../modules/Common.Enums.Direction.html">Direction</a></li>
 <li class="tsd-kind-namespace tsd-parent-kind-namespace"><a href="../modules/Common.Enums.HorizontalAnchor.html">Horizontal<wbr/>Anchor</a></li>
+<li class="tsd-kind-namespace tsd-parent-kind-namespace"><a href="../modules/Common.Enums.MacroTagNames.html">Macro<wbr/>Tag<wbr/>Names</a></li>
 <li class="tsd-kind-namespace tsd-parent-kind-namespace"><a href="../modules/Common.Enums.PathTextAlighnment.html">Path<wbr/>Text<wbr/>Alighnment</a></li>
 <li class="tsd-kind-namespace tsd-parent-kind-namespace"><a href="../modules/Common.Enums.ShapeObjectType.html">Shape<wbr/>Object<wbr/>Type</a></li>
 <li class="tsd-kind-namespace tsd-parent-kind-namespace"><a href="../modules/Common.Enums.VBAShapeType.html">VBAShape<wbr/>Type</a></li>
@@ -318,6 +328,7 @@
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Logics.LogicTable.html#buildFromObject" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>build<wbr/>From<wbr/>Object</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Logics.LogicTable.html#getColumn" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Column</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Logics.LogicTable.html#getRow" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Row</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="Logics.LogicTable.html#toReteral" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Reteral</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="Logics.LogicTable.html#constructHTMLLogicCell" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>constructHTMLLogic<wbr/>Cell</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Logics.LogicTable.html#constructHTMLLogicTable" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>constructHTMLLogic<wbr/>Table</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="Logics.LogicTable.html#constructLogicTable" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>construct<wbr/>Logic<wbr/>Table</a></li>
