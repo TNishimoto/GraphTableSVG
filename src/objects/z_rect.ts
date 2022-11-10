@@ -1,6 +1,6 @@
-import { GVertex } from "./z_vertex"
-import { GTextBox } from "./z_textbox"
-import { GCalloutAttributes } from "./z_callout"
+import { ZVertex } from "./z_vertex"
+import { ZTextBox } from "./z_textbox"
+import { ZCalloutAttributes } from "./z_callout"
 import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
@@ -13,15 +13,15 @@ import * as DefaultClassNames from "../common/default_class_names"
 
 
 /**
- * GRectです。
+ * ZRectです。
  * <template data-path="sutoring.Factorizations" data-module="LZ78"></template>
 */
-export class GRect extends GTextBox {
+export class ZRect extends ZTextBox {
     public get svgRectangle(): SVGRectElement {
         return <SVGRectElement>this._svgSurface;
     }
 
-    public constructor(svgbox: SVGElement | string, option : GOptions.GTextBoxAttributes | null = null) {
+    public constructor(svgbox: SVGElement | string, option : GOptions.ZTextBoxAttributes | null = null) {
         super(svgbox);
         this.updateAttributes.push("width");
         this.updateAttributes.push("height");
@@ -30,7 +30,7 @@ export class GRect extends GTextBox {
         if (this.type == ShapeObjectType.Rect) this.firstFunctionAfterInitialized();
     }
     protected createSurface(svgbox: SVGElement): void {
-        this._svgSurface = GRect.createRectangle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
+        this._svgSurface = ZRect.createRectangle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
         this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
     }
     /**
@@ -80,8 +80,8 @@ export class GRect extends GTextBox {
         return rect;
     }
 
-    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GOptions.GTextBoxAttributes {
-        GTextBox.constructAttributes(e, removeAttributes, output);
+    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZTextBoxAttributes = {}): GOptions.ZTextBoxAttributes {
+        ZTextBox.constructAttributes(e, removeAttributes, output);
 
         return output;
     }

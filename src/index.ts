@@ -15,7 +15,7 @@ export {
     Console, Debug, Interfaces, TypeDoc
     //GUIObserver, HTMLFunctions, GUI, DraggableObject, 
     //LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, buildLogicObjectFromJSON,
-    //GObject, GArrowCallout, GCallout, GCircle, GEdge, GEllipse, GGraph, GRectButton, GRect, GTable, GTextBox, GVertex, GPathTextBox,
+    //GObject, ZArrowCallout, ZCallout, ZCircle, ZEdge, ZEllipse, ZGraph, ZRectButton, ZRect, ZTable, ZTextBox, ZVertex, ZPathTextBox,
     //logic/index
     //LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, getIndexArrayTableLine, 
     //LogicCellLine, buildLogicTable, toLogicCellLine, buildLogicObjectFromJSON

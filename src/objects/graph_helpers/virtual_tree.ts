@@ -1,15 +1,15 @@
 //namespace GraphTableSVG {
 
-    import { GVertex } from "../z_vertex"    
-    import { GEdge } from "../z_edge"    
+    import { ZVertex } from "../z_vertex"    
+    import { ZEdge } from "../z_edge"    
     import {Rectangle} from "../../common/vline"
-import { GAbstractEdge } from "../z_abstract_edge";
+import { ZAbstractEdge } from "../z_abstract_edge";
 
     export class VirtualTree {
-        subTreeRoot: GVertex;
-        externalEdges : Set<GAbstractEdge>;
+        subTreeRoot: ZVertex;
+        externalEdges : Set<ZAbstractEdge>;
 
-        constructor(_root: GVertex, _externalEdgeDic? : Set<GAbstractEdge>) {
+        constructor(_root: ZVertex, _externalEdgeDic? : Set<ZAbstractEdge>) {
             this.subTreeRoot = _root;
             if(_externalEdgeDic !== undefined){
                 this.externalEdges = _externalEdgeDic;
@@ -23,7 +23,7 @@ import { GAbstractEdge } from "../z_abstract_edge";
         /**
          * 根の子ノードの配列を返します。
          */
-        get children(): GVertex[] {
+        get children(): ZVertex[] {
             //const p = this;
             return this.subTreeRoot.outgoingEdges.filter((v) => !this.externalEdges.has(v) && v.endVertex != null).map((v) => v.endVertex!)
             /*
@@ -41,7 +41,7 @@ import { GAbstractEdge } from "../z_abstract_edge";
         /**
          * 根の親との間の辺を返します。
          */
-        get parentEdge(): GAbstractEdge | null {
+        get parentEdge(): ZAbstractEdge | null {
             const p = this.subTreeRoot.incomingEdges.filter((v) => !this.externalEdges.has(v) && v.beginVertex != null);
             if(p.length != 0){
                 return p[0];
@@ -55,7 +55,7 @@ import { GAbstractEdge } from "../z_abstract_edge";
          * この木の中の全てのVertexを返します。
          * @param result 
          */
-        public getSubtree(result: GVertex[] = []): GVertex[] {
+        public getSubtree(result: ZVertex[] = []): ZVertex[] {
             result.push(this.subTreeRoot);
 
             const children = this.virtualTreeChildren;
@@ -114,7 +114,7 @@ import { GAbstractEdge } from "../z_abstract_edge";
         /**
          * 一番左の葉を返します。
          */
-        public get mostLeftLeave(): GVertex {
+        public get mostLeftLeave(): ZVertex {
             return this.leaves[0];
         }
 
@@ -156,7 +156,7 @@ import { GAbstractEdge } from "../z_abstract_edge";
         /**
          * 葉の配列を返します。
          */
-        get leaves(): GVertex[] {
+        get leaves(): ZVertex[] {
             //const p = this;
             return this.getSubtree().filter( (x) =>{
                 const r = x.outgoingEdges.filter((v) => !this.externalEdges.has(v) && v.endVertex != null).length;

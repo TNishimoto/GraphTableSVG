@@ -1,14 +1,14 @@
 //namespace GraphTableSVG {
-import { GObject } from "./z_object"
-import { GVertex } from "./z_vertex"
-import { GEdge } from "./z_edge"
-import { GRect } from "./z_rect"
-import { GRectButton } from "./z_rect_button"
+import { ZObject } from "./z_object"
+import { ZVertex } from "./z_vertex"
+import { ZEdge } from "./z_edge"
+import { ZRect } from "./z_rect"
+import { ZRectButton } from "./z_rect_button"
 
-import { GCallout } from "./z_callout"
-import { GArrowCallout } from "./z_arrow_callout"
-import { GEllipse } from "./z_ellipse"
-import { GCircle } from "./z_circle"
+import { ZCallout } from "./z_callout"
+import { ZArrowCallout } from "./z_arrow_callout"
+import { ZEllipse } from "./z_ellipse"
+import { ZCircle } from "./z_circle"
 import * as DefaultClassNames from "../common/default_class_names"
 
 import { Rectangle } from "../common/vline"
@@ -27,9 +27,9 @@ import { GraphArrangement } from "./graph_helpers/graph_arrangement"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as Extensions from "../interfaces/extensions"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
-import { GPathTextBox } from "."
+import { ZPathTextBox } from "."
 import { LogicTable } from "../logics/logic_table"
-import { GTable } from "./z_table"
+import { ZTable } from "./z_table"
 import { ArgumentOutOfRangeError } from "../common/exceptions"
 import { Exceptions } from "../common"
 import { Debugger } from "../common/debugger"
@@ -40,7 +40,7 @@ import { Debugger } from "../common/debugger"
 /**
 グラフを表します。
 */
-export class GGraph extends GObject {
+export class ZGraph extends ZObject {
 
     constructor(box: SVGElement | string) {
         super(box)
@@ -48,7 +48,7 @@ export class GGraph extends GObject {
         //this.setOptionInGObject(option)
         //this.svgGroup.addEventListener(AttributeNames.objectCreatedEventName, this.objectCreatedFunction);
     }
-    protected setBasicOption(option: GOptions.GGraphAttributes){
+    protected setBasicOption(option: GOptions.ZGraphAttributes){
         super.setBasicOption(option);
         if (option.isLatexMode == undefined) option.isLatexMode = false;
         if (option.direction !== undefined) {
@@ -63,7 +63,7 @@ export class GGraph extends GObject {
     }
     
     
-    public setOption(option: GOptions.GGraphAttributes){
+    public setOption(option: GOptions.ZGraphAttributes){
         super.setOption(option);
     }
     public get graphAllocateFunction() : GOptions.GraphAllocateFunction | undefined{
@@ -77,31 +77,31 @@ export class GGraph extends GObject {
     public get isCenterBased() {
         return false;
     }
-    public get vertices(): GVertex[] {
-        const r: GVertex[] = [];
+    public get vertices(): ZVertex[] {
+        const r: ZVertex[] = [];
         HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(AttributeNames.objectIDName)).forEach((v) => {
-            const item = GObject.getObjectFromObjectID(v.getAttribute(AttributeNames.objectIDName)!)
-            if (item instanceof GVertex) {
+            const item = ZObject.getObjectFromObjectID(v.getAttribute(AttributeNames.objectIDName)!)
+            if (item instanceof ZVertex) {
                 r.push(item);
             }
         })
         return r;
     }
-    public get edges(): GEdge[] {
-        const r: GEdge[] = [];
+    public get edges(): ZEdge[] {
+        const r: ZEdge[] = [];
         HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(AttributeNames.objectIDName)).forEach((v) => {
-            const item = GObject.getObjectFromObjectID(v.getAttribute(AttributeNames.objectIDName)!)
-            if (item instanceof GEdge) {
+            const item = ZObject.getObjectFromObjectID(v.getAttribute(AttributeNames.objectIDName)!)
+            if (item instanceof ZEdge) {
                 r.push(item);
             }
         })
         return r;
     }
-    public get roots(): GVertex[] {
+    public get roots(): ZVertex[] {
         return this.vertices.filter((v) => v.incomingEdges.length == 0);
     }
 
-    //protected _roots: GVertex[] = [];
+    //protected _roots: ZVertex[] = [];
     public get vertexXInterval(): number | null {
         const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.vertexXInterval);
         if (v == null) {
@@ -168,7 +168,7 @@ export class GGraph extends GObject {
     /**
     根を返します。
     */
-    get rootVertex(): GVertex | null {
+    get rootVertex(): ZVertex | null {
         if (this.roots.length == 0) {
             return null;
         } else {
@@ -180,8 +180,8 @@ export class GGraph extends GObject {
      * 頂点もしくは辺をグラフに追加します。
      * @param item
      */
-    public add(item: GVertex | GEdge): void {
-        if (item instanceof GEdge) {
+    public add(item: ZVertex | ZEdge): void {
+        if (item instanceof ZEdge) {
             this.svgGroup.appendChild(item.svgGroup);
         } else {
             this.svgGroup.insertBefore(item.svgGroup, this.svgGroup.firstChild);
@@ -191,7 +191,7 @@ export class GGraph extends GObject {
      * 頂点もしくは辺を削除します。
      * @param item
      */
-    public remove(item: GVertex | GEdge): void {
+    public remove(item: ZVertex | ZEdge): void {
         this.svgGroup.removeChild(item.svgGroup);
         item.dispose();
     }
@@ -214,7 +214,7 @@ export class GGraph extends GObject {
             * @param option.beginConnectorType beginVertexの接続位置
             * @param option.endConnectorType endVertexの接続位置
             */
-    public connect(beginVertex: GVertex, edge: GEdge, endVertex: GVertex, option: GOptions.ConnecterOption = {}) {
+    public connect(beginVertex: ZVertex, edge: ZEdge, endVertex: ZVertex, option: GOptions.ConnecterOption = {}) {
 
         const oIndex = option.outcomingInsertIndex == undefined ? beginVertex.outgoingEdges.length : option.outcomingInsertIndex;
         const iIndex = option.incomingInsertIndex == undefined ? endVertex.incomingEdges.length : option.incomingInsertIndex;
@@ -235,8 +235,8 @@ export class GGraph extends GObject {
         if (option.beginConnectorType != undefined) edge.beginConnectorType = option.beginConnectorType;
         if (option.endConnectorType != undefined) edge.endConnectorType = option.endConnectorType;
     }
-    public getOrderedVertices(order: VertexOrder, node: GVertex | null = null): GVertex[] {
-        const r: GVertex[] = [];
+    public getOrderedVertices(order: VertexOrder, node: ZVertex | null = null): ZVertex[] {
+        const r: ZVertex[] = [];
         if (node == null) {
             this.roots.forEach((v) => {
                 this.getOrderedVertices(order, v).forEach((w) => {
@@ -272,9 +272,9 @@ export class GGraph extends GObject {
      * @param option 
      */
     /*
-    public appendChild(parent: GVertex, child: GVertex | null, option: { insertIndex?: number } = {}) {
-        const _child = child == null ? GGraph.createVertex2(this) : child;
-        const edge: GEdge = <any>GGraph.createEdge(this);
+    public appendChild(parent: ZVertex, child: ZVertex | null, option: { insertIndex?: number } = {}) {
+        const _child = child == null ? ZGraph.createVertex2(this) : child;
+        const edge: ZEdge = <any>GGraph.createEdge(this);
         this.connect(parent, edge, _child, { beginConnectorType: "bottom", endConnectorType: "top" });
         //this.createdNodeCallback(child);
         this.relocate();
@@ -371,10 +371,10 @@ export class GGraph extends GObject {
         
 
         if (logicGraph instanceof LogicGraph) {
-            const dic: Map<number, GVertex> = new Map();
+            const dic: Map<number, ZVertex> = new Map();
 
             logicGraph.nodes.forEach((v, i) => {
-                const node = GGraph.createVertex(svgsvg, ShapeObjectType.Circle)
+                const node = ZGraph.createVertex(svgsvg, ShapeObjectType.Circle)
                 const svgText = node.tryGetSVGText();
                 if(svgText != null){
                     svgText.textContent = v.text;
@@ -384,7 +384,7 @@ export class GGraph extends GObject {
             })
             logicGraph.nodes.forEach((v, i) => {
                 v.outputEdges.forEach((e, j) => {
-                    const edge = GGraph.createEdge(svgsvg)
+                    const edge = ZGraph.createEdge(svgsvg)
                     if (e.text != undefined) {
                         const b = option.isLatexMode == undefined ? false : option.isLatexMode;
                         Extensions.setTextContent(edge.svgTextPath, e.text, b);
@@ -399,10 +399,10 @@ export class GGraph extends GObject {
             })
         } else {
     
-            const dic: Map<LogicTreeNode, GVertex> = new Map();
+            const dic: Map<LogicTreeNode, ZVertex> = new Map();
             if(logicGraph.root != null){
                 logicGraph.root.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
-                    const node = v.shapeObject instanceof LogicTable ? GGraph.createVertexTable(svgsvg, v.shapeObject) : GGraph.createVertex(svgsvg, v.shapeObject.shape, v.shapeObject.option)
+                    const node = v.shapeObject instanceof LogicTable ? ZGraph.createVertexTable(svgsvg, v.shapeObject) : ZGraph.createVertex(svgsvg, v.shapeObject.shape, v.shapeObject.option)
                     if(this.roots.length == 0) this.roots.push(node);
                     this.add(node);
                     dic.set(v, node);
@@ -410,7 +410,7 @@ export class GGraph extends GObject {
                 logicGraph.root.getOrderedNodes(VertexOrder.Preorder).forEach((v, i) => {
                     v.children.forEach((e, j) => {
                         if (e != null) {
-                            const edge = GGraph.createEdge(svgsvg, e.edgeOption)
+                            const edge = ZGraph.createEdge(svgsvg, e.edgeOption)
                             if (edge.svgTextPath.textContent != null) {    
                                 edge.isAppropriatelyReverseMode = true;    
                             }
@@ -501,12 +501,12 @@ export class GGraph extends GObject {
      * @returns logicVertexを表すVertex
      */
     /*
-    private createChildFromLogicTree<T>(parent: GVertex | null = null, logicVertex: LogicTreeGraph, option: { isLatexMode?: boolean } = {}): GVertex {
+    private createChildFromLogicTree<T>(parent: ZVertex | null = null, logicVertex: LogicTreeGraph, option: { isLatexMode?: boolean } = {}): ZVertex {
         if (option.isLatexMode == undefined) option.isLatexMode = false;
-        const node: GVertex = <any>GGraph.createVertex2(this, logicVertex.vertexOption);
+        const node: ZVertex = <any>GGraph.createVertex2(this, logicVertex.vertexOption);
 
         if (parent != null) {
-            const edge: GEdge = GGraph.createEdge(this, logicVertex.edgeOption);
+            const edge: ZEdge = ZGraph.createEdge(this, logicVertex.edgeOption);
             this.connect(parent, edge, node, { beginConnectorType: "bottom", endConnectorType: "top" });
         } else {
             this.roots.push(node);
@@ -544,23 +544,23 @@ export class GGraph extends GObject {
             return r;
         }
     }
-    protected dispatchVertexCreatedEvent(vertex: GVertex): void {
+    protected dispatchVertexCreatedEvent(vertex: ZVertex): void {
         var event = document.createEvent("HTMLEvents");
         event.initEvent(AttributeNames.vertexCreatedEventName, true, true);
         vertex.svgGroup.dispatchEvent(event);
 
     }
     private objectCreatedFunction = (e: Event) => {
-        const obj = GObject.getObjectFromObjectID(<SVGElement>e.target);
-        if (obj instanceof GVertex) {
+        const obj = ZObject.getObjectFromObjectID(<SVGElement>e.target);
+        if (obj instanceof ZVertex) {
             this.dispatchVertexCreatedEvent(obj);
-        } else if (obj instanceof GEdge) {
+        } else if (obj instanceof ZEdge) {
 
         } else {
 
         }
     }
-    public setRootIndex(vertex: GVertex, rootIndex: number) {
+    public setRootIndex(vertex: ZVertex, rootIndex: number) {
         if (vertex.graph == this) {
             if (rootIndex < this.roots.length) {
                 this.svgGroup.insertBefore(vertex.svgGroup, this.roots[rootIndex].svgGroup);
@@ -627,34 +627,34 @@ export class GGraph extends GObject {
 
     }
 
-    private static createVertex2(parent: GGraph, option: GOptions.GTextBoxAttributes = {}): GVertex {
+    private static createVertex2(parent: ZGraph, option: GOptions.ZTextBoxAttributes = {}): ZVertex {
         let _parent = parent.svgGroup;
         if (option.class == undefined) option.class = DefaultClassNames.defaultVertexClass;
         const type = typeof (option.class) == "string" ? parent.getStyleValue(option.class, StyleNames.defaultSurfaceType) : null;
         if (type != null) {
             switch (type) {
-                case ShapeObjectType.Callout: return new GCallout(_parent);
-                case ShapeObjectType.ArrowCallout: return new GArrowCallout(_parent);
-                case ShapeObjectType.Ellipse: return new GEllipse(_parent);
-                case ShapeObjectType.Circle: return new GCircle(_parent);
-                case ShapeObjectType.Rect: return new GRect(_parent);
+                case ShapeObjectType.Callout: return new ZCallout(_parent);
+                case ShapeObjectType.ArrowCallout: return new ZArrowCallout(_parent);
+                case ShapeObjectType.Ellipse: return new ZEllipse(_parent);
+                case ShapeObjectType.Circle: return new ZCircle(_parent);
+                case ShapeObjectType.Rect: return new ZRect(_parent);
             }
         }
-        return new GEllipse(_parent);
+        return new ZEllipse(_parent);
 
     }
     /*
-    public static createVertex(parent: SVGElement | string | GObject, type: "z-rect-button", option?: GOptions.GTextBoxAttributes): GRectButton
-    public static createVertex(parent: SVGElement | string | GObject, type: "z-rect", option?: GOptions.GTextBoxAttributes): GRect
-    public static createVertex(parent: SVGElement | string | GObject, type: "z-path-textbox", option?: GOptions.GTextBoxAttributes): GPathTextBox
-    public static createVertex(parent: SVGElement | string | GObject, type: "z-ellipse", option?: GOptions.GTextBoxAttributes): GEllipse
-    public static createVertex(parent: SVGElement | string | GObject, type: "z-callout", option?: GOptions.GTextBoxAttributes): GCallout
-    public static createVertex(parent: SVGElement | string | GObject, type: "z-circle", option?: GOptions.GTextBoxAttributes): GCircle
-    public static createVertex(parent: SVGElement | string | GObject, type: "z-arrow-callout", option?: GOptions.GTextBoxAttributes): GArrowCallout
+    public static createVertex(parent: SVGElement | string | ZObject, type: "z-rect-button", option?: GOptions.ZTextBoxAttributes): ZRectButton
+    public static createVertex(parent: SVGElement | string | ZObject, type: "z-rect", option?: GOptions.ZTextBoxAttributes): ZRect
+    public static createVertex(parent: SVGElement | string | ZObject, type: "z-path-textbox", option?: GOptions.ZTextBoxAttributes): ZPathTextBox
+    public static createVertex(parent: SVGElement | string | ZObject, type: "z-ellipse", option?: GOptions.ZTextBoxAttributes): ZEllipse
+    public static createVertex(parent: SVGElement | string | ZObject, type: "z-callout", option?: GOptions.ZTextBoxAttributes): ZCallout
+    public static createVertex(parent: SVGElement | string | ZObject, type: "z-circle", option?: GOptions.ZTextBoxAttributes): ZCircle
+    public static createVertex(parent: SVGElement | string | ZObject, type: "z-arrow-callout", option?: GOptions.ZTextBoxAttributes): ZArrowCallout
     */
-    private static getParent(parent: SVGElement | string | GObject) : SVGElement{
+    private static getParent(parent: SVGElement | string | ZObject) : SVGElement{
         let _parent: SVGElement;
-        if (parent instanceof GObject) {
+        if (parent instanceof ZObject) {
             _parent = parent.svgGroup;
         } else if (parent instanceof SVGElement) {
             _parent = parent;
@@ -664,51 +664,51 @@ export class GGraph extends GObject {
         return _parent;
 
     }
-    public static createVertex(parent: SVGElement | string | GObject, type: VertexObjectType, option: any = {}): GVertex {
-        const _parent: SVGElement = GGraph.getParent(parent);
+    public static createVertex(parent: SVGElement | string | ZObject, type: VertexObjectType, option: any = {}): ZVertex {
+        const _parent: SVGElement = ZGraph.getParent(parent);
 
         switch (type) {
             case ShapeObjectType.Callout:
-                const call = new GCallout(_parent);
+                const call = new ZCallout(_parent);
                 call.setOption(option);
                 return call;
             case ShapeObjectType.ArrowCallout:
-                const arr = new GArrowCallout(_parent);
+                const arr = new ZArrowCallout(_parent);
                 arr.setOption(option);
             case ShapeObjectType.Ellipse:
-                const ell = new GEllipse(_parent);
+                const ell = new ZEllipse(_parent);
                 ell.setOption(option);
                 return ell;
             case ShapeObjectType.Rect:
-                const rect = new GRect(_parent);
+                const rect = new ZRect(_parent);
                 rect.setOption(option);
                 return rect;
             case ShapeObjectType.Table:
-                const table = new GTable(_parent);
+                const table = new ZTable(_parent);
                 table.setOption(option);
                 return table;
             case ShapeObjectType.RectButton:
-                const rectb = new GRectButton(_parent);
+                const rectb = new ZRectButton(_parent);
                 rectb.setOption(option);
                 return rectb;
             case ShapeObjectType.Circle:
-                const circle = new GCircle(_parent);
+                const circle = new ZCircle(_parent);
                 circle.setOption(option);
                 return circle;
         }
         throw new ArgumentOutOfRangeError();
     }
-    public static createVertexTable(parent: SVGElement | string | GObject, obj : LogicTable): GVertex {
-        const _parent: SVGElement = GGraph.getParent(parent);
+    public static createVertexTable(parent: SVGElement | string | ZObject, obj : LogicTable): ZVertex {
+        const _parent: SVGElement = ZGraph.getParent(parent);
 
-        const table = new GTable(_parent);
+        const table = new ZTable(_parent);
         table.buildFromLogicTable(obj);
         return table;
     }
 
-    public static createEdge(parent: SVGElement | string | GObject, option: any = {}): GEdge {
-        const _parent: SVGElement = GGraph.getParent(parent);
-        const edge = new GEdge(_parent);
+    public static createEdge(parent: SVGElement | string | ZObject, option: any = {}): ZEdge {
+        const _parent: SVGElement = ZGraph.getParent(parent);
+        const edge = new ZEdge(_parent);
         edge.setOption(option);
         return edge;
 

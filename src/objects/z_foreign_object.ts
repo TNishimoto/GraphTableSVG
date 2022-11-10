@@ -1,10 +1,10 @@
 import * as CSS from "../html/css"
 import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../common/enums";
-import { GVertex } from "./z_vertex"
+import { ZVertex } from "./z_vertex"
 
 import * as GOptions from "./z_options"
 
-export class GForeignObject extends GVertex {
+export class ZForeignObject extends ZVertex {
     private _foreignObject: SVGForeignObjectElement;
     //private static updateTextAttributes = ["style"]
 
@@ -15,7 +15,7 @@ export class GForeignObject extends GVertex {
     public constructor(svgbox: SVGElement | string) {
         super(svgbox)
 
-        this._foreignObject = GForeignObject.createForeignObject(this.svgGroup, undefined, undefined);
+        this._foreignObject = ZForeignObject.createForeignObject(this.svgGroup, undefined, undefined);
 
 
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();

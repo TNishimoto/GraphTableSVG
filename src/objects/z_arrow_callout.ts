@@ -1,9 +1,9 @@
 /// <reference path="z_path_textbox.ts"/>
 //namespace GraphTableSVG {
-import { GPathTextBox } from "./z_path_textbox"
-import { GTextBox } from "./z_textbox"
+import { ZPathTextBox } from "./z_path_textbox"
+import { ZTextBox } from "./z_textbox"
 import { ShapeObjectType, ConnectorType, msoDashStyle, Direction, AutoSizeShapeToFitText, VBAShapeType } from "../common/enums";
-//import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
+//import {ZTextBoxAttributes, ZObjectAttributes, ZCalloutAttributes, ZShapeArrowCalloutAttributes} from "../options/attributes_option"
 import * as AttributeNames from "../common/attribute_names"
 import { Rectangle, VLine, escapeWithRound100 } from "../common/vline"
 import * as SVGTextBox from "../interfaces/svg_textbox";
@@ -15,16 +15,16 @@ import * as SVGTextExtension from "../interfaces/svg_text_extension"
 
 
 
-export type _GShapeArrowCalloutAttributes = {
+export type _ZShapeArrowCalloutAttributes = {
     arrowHeadWidth?: number,
     arrowHeadHeight?: number,
     arrowNeckWidth?: number,
     arrowNeckHeight?: number,
     direction?: Direction
 }
-export type GShapeArrowCalloutAttributes = GOptions.GTextBoxAttributes & _GShapeArrowCalloutAttributes
+export type ZShapeArrowCalloutAttributes = GOptions.ZTextBoxAttributes & _ZShapeArrowCalloutAttributes
 
-export class GArrowCallout extends GPathTextBox {
+export class ZArrowCallout extends ZPathTextBox {
 
     public constructor(svgbox: SVGElement | string) {
         super(svgbox);
@@ -41,8 +41,8 @@ export class GArrowCallout extends GPathTextBox {
         this.updateAttributes.push("data-direction");
         if (this.type == ShapeObjectType.ArrowCallout) this.firstFunctionAfterInitialized();
     }
-    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GShapeArrowCalloutAttributes = {}): GShapeArrowCalloutAttributes {
-        GTextBox.constructAttributes(e, removeAttributes, output);
+    static constructAttributes(e: Element, removeAttributes: boolean = false, output: ZShapeArrowCalloutAttributes = {}): ZShapeArrowCalloutAttributes {
+        ZTextBox.constructAttributes(e, removeAttributes, output);
         output.arrowNeckWidth = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.arrowNeckWidth);
         output.arrowNeckHeight = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.arrowNeckHeight);
         output.arrowHeadWidth = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.arrowHeadWidth);
@@ -62,7 +62,7 @@ export class GArrowCallout extends GPathTextBox {
 
         return output;
     }
-    protected setBasicOption(option: GShapeArrowCalloutAttributes) {
+    protected setBasicOption(option: ZShapeArrowCalloutAttributes) {
         super.setBasicOption(option);
         this.arrowNeckWidth = option.arrowNeckWidth !== undefined ? option.arrowNeckWidth : this.arrowNeckWidth;
         this.arrowNeckHeight = option.arrowNeckHeight !== undefined ? option.arrowNeckHeight : this.arrowNeckHeight;
@@ -70,7 +70,7 @@ export class GArrowCallout extends GPathTextBox {
         this.arrowHeadHeight = option.arrowHeadHeight !== undefined ? option.arrowHeadHeight : this.arrowHeadHeight;
         this.direction = option.direction !== undefined ? option.direction : this.direction;
     }
-    public setOption(option: GShapeArrowCalloutAttributes) {
+    public setOption(option: ZShapeArrowCalloutAttributes) {
         super.setOption(option)
     }
     /*

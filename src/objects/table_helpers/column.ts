@@ -3,7 +3,7 @@ import { Cell, CellOption } from "./cell"
 //import {BorderRow} from "./border_row"
 
 import * as SVG from "../../interfaces/svg"
-import { GTable } from "../z_table"
+import { ZTable } from "../z_table"
 import { Rectangle, Size, round100, nearlyEqual } from "../../common/vline";
 import { setAttributeNumber } from "../../interfaces/element_extension";
 import { Debugger } from "../../common/debugger";
@@ -12,7 +12,7 @@ import { Debugger } from "../../common/debugger";
  * 表の列を表現するクラスです。
  */
 export class CellColumn {
-    private readonly table: GTable;
+    private readonly table: ZTable;
     //private readonly _cellX: number;
     public static readonly rowWidthName = "data-width";
     public static readonly defaultWidth = 20;
@@ -123,7 +123,7 @@ export class CellColumn {
         return this.cells.length;
     }
 
-    constructor(_table: GTable, _x: number, _width: number = CellColumn.defaultWidth) {
+    constructor(_table: ZTable, _x: number, _width: number = CellColumn.defaultWidth) {
         this.table = _table;
         this._svgMetaData = document.createElementNS('http://www.w3.org/2000/svg', 'metadata');
         this._svgMetaData.setAttribute("name", "cell_column");

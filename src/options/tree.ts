@@ -1,7 +1,7 @@
 
 //namespace GraphTableSVG {
     import {LogicTree, LogicTreeNode} from "../logics/logic_tree"
-    import {GVertex} from "../objects/z_vertex"
+    import {ZVertex} from "../objects/z_vertex"
 
     //export namespace Parse{
         /**
@@ -45,7 +45,7 @@
          * 入力木構造を表現する文字列を出力します。
          * @param tree 文字列に変換する木構造
          */
-        export function getParseString(tree : GVertex) : string {
+        export function getParseString(tree : ZVertex) : string {
             let str = "";
             str += "(";
             tree.outgoingEdges.forEach((v)=>{

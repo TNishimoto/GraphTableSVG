@@ -18,16 +18,16 @@ import * as SVGGExtension from "../interfaces/svg_g_extension"
 import * as GObserver from "./z_observer"
 import {IObject} from "./i_object"
 import { GlobalGObjectManager } from "./global_gobject_manager"
-import { GVertexOptionReteral } from "../logics/gobject_reterals"
+import { ZVertexOptionReteral } from "../logics/gobject_reterals"
 
 
 
-export type GObjectMaps = {
+export type ZObjectMaps = {
     groupAttributes?: Map<string, string>;
     surfaceAttributes?: Map<string, string>;
     textAttributes?: Map<string, string>;
 }
-export class GObject implements IObject {
+export class ZObject implements IObject {
 
     protected _svgSurface: SVGElement | null = null;
     protected _tag: any;
@@ -55,7 +55,7 @@ export class GObject implements IObject {
         }
         */
 
-        GObject.setObjectFromObjectID(this);
+        ZObject.setObjectFromObjectID(this);
 
         (this.svgGroup as any).operator = this;
 
@@ -150,7 +150,7 @@ export class GObject implements IObject {
     */
 
 
-    protected setBasicOption(option: GOptions.GObjectAttributes): void {
+    protected setBasicOption(option: GOptions.ZObjectAttributes): void {
 
         GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
 
@@ -163,7 +163,7 @@ export class GObject implements IObject {
         if (typeof option.id !== "undefined") this.svgGroup.id = option.id;
     }
 
-    protected setOptionalSize(option: GOptions.GObjectAttributes) {
+    protected setOptionalSize(option: GOptions.ZObjectAttributes) {
         if (this.svgSurface !== null) {
             GOptions.setClassAndStyle(this.svgSurface, option.surfaceClass, option.surfaceStyle)
         }
@@ -172,7 +172,7 @@ export class GObject implements IObject {
         this.height = (option.height !== undefined ? option.height : 25);
     }
 
-    protected setOptionalPosition(option: GOptions.GObjectAttributes) {
+    protected setOptionalPosition(option: GOptions.ZObjectAttributes) {
 
         if (option.position !== undefined) {
             if (option.position.type == "center") {
@@ -194,13 +194,13 @@ export class GObject implements IObject {
 
         }
     }
-    public setOption(option: GOptions.GObjectAttributes) {
+    public setOption(option: GOptions.ZObjectAttributes) {
         this.setBasicOption(option);
         this.setOptionalSize(option);
         this.setOptionalPosition(option)
     }
 
-    public assignOption(option: GVertexOptionReteral) {
+    public assignOption(option: ZVertexOptionReteral) {
         GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
 
         if(option.id !== undefined){
@@ -330,7 +330,7 @@ export class GObject implements IObject {
 
     
     static constructAttributes(e: Element,
-        removeAttributes: boolean = false, output: GOptions.GObjectAttributes = {}, defaultPositionType : "center" | "upper-left" ): GOptions.GObjectAttributes {
+        removeAttributes: boolean = false, output: GOptions.ZObjectAttributes = {}, defaultPositionType : "center" | "upper-left" ): GOptions.ZObjectAttributes {
         output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
         if (output.class === undefined) ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
         output.surfaceClass = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.surfaceClassName);
@@ -794,12 +794,12 @@ export class GObject implements IObject {
         return false;
     }
 
-    private static objectDic: { [key: string]: GObject; } = {};
-    public static getObjectFromObjectID(id: string | SVGElement): GObject | null {
+    private static objectDic: { [key: string]: ZObject; } = {};
+    public static getObjectFromObjectID(id: string | SVGElement): ZObject | null {
         if (id instanceof SVGElement) {
             if (id.hasAttribute(AttributeNames.objectIDName)) {
                 const _id = id.getAttribute(AttributeNames.objectIDName)!;
-                return GObject.getObjectFromObjectID(_id);
+                return ZObject.getObjectFromObjectID(_id);
             } else {
                 return null;
             }
@@ -808,7 +808,7 @@ export class GObject implements IObject {
                 return this.objectDic[id];
             } else {
                 const element: any = document.getElementById(id);
-                if (element !== null && element.operator !== undefined && element.operator instanceof GObject) {
+                if (element !== null && element.operator !== undefined && element.operator instanceof ZObject) {
                     return element.operator;
                 } else {
                     return null;
@@ -816,11 +816,11 @@ export class GObject implements IObject {
             }
         }
     }
-    public static setObjectFromObjectID(obj: GObject) {
+    public static setObjectFromObjectID(obj: ZObject) {
         const id = obj.objectID;
         this.objectDic[id] = obj;
     }
-    public static getObjectFromID(id: string): GObject | null {
+    public static getObjectFromID(id: string): ZObject | null {
         for (let key in this.objectDic) {
             if (this.objectDic[key].svgGroup.id == id) {
                 return this.objectDic[key];

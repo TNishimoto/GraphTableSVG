@@ -16,8 +16,8 @@ export namespace DisplayObject {
 //}
 
 export function getDisplayVertexObjectTypes() : DisplayObject[] {
-    return [ DisplayObject.create(ShapeObjectType.Callout, "GCallout"), 
-    DisplayObject.create(ShapeObjectType.ArrowCallout, "GArrowCallout"), 
+    return [ DisplayObject.create(ShapeObjectType.Callout, "ZCallout"), 
+    DisplayObject.create(ShapeObjectType.ArrowCallout, "ZArrowCallout"), 
     DisplayObject.create(ShapeObjectType.Ellipse, "GEllipse"), 
     DisplayObject.create(ShapeObjectType.Circle, "GCircle"), 
     DisplayObject.create(ShapeObjectType.Rect, "GRect"), 

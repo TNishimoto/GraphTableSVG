@@ -1,7 +1,7 @@
 //namespace GraphTableSVG {
-import { GEdge } from "../z_edge"
-import { GGraph } from "../z_graph"
-import { GVertex } from "../z_vertex"
+import { ZEdge } from "../z_edge"
+import { ZGraph } from "../z_graph"
+import { ZVertex } from "../z_vertex"
 
 import { VirtualTree } from "./virtual_tree"
 
@@ -9,12 +9,12 @@ import * as TreeArrangement from "./tree_arrangement"
 import { Direction, ConnectorType } from "../../common/enums"
 import * as SVGTextBox from "../../interfaces/svg_textbox"
 import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
-import { GAbstractEdge } from "../z_abstract_edge"
-import { GAbstractTextEdge } from "../z_abstract_text_edge"
+import { ZAbstractEdge } from "../z_abstract_edge"
+import { ZAbstractTextEdge } from "../z_abstract_text_edge"
 import { getVirtualRegion } from "../../interfaces/virtual_text"
 
 export namespace GraphArrangement {
-    export function standardTreeWidthArrangement(graph: GGraph): void {
+    export function standardTreeWidthArrangement(graph: ZGraph): void {
         const [xi, yi] = TreeArrangement.getXYIntervals(graph);
         const direction = graph.direction;
 
@@ -63,7 +63,7 @@ export namespace GraphArrangement {
         let childYInterval = yInterval;
         children.forEach((v) => {
             const edge = v.parentEdge!;
-            if (edge instanceof GAbstractTextEdge) {
+            if (edge instanceof ZAbstractTextEdge) {
                 const path = edge.svgTextPath;
                 const textElement = edge.svgText;
 
@@ -112,7 +112,7 @@ export namespace GraphArrangement {
             tree.subTreeRoot.cx = centerX;
         }
     }
-    function createExternalEdgeDicInPreorder(node: GVertex, incomingEdge: GAbstractEdge | null, externalEdges: Set<GAbstractEdge>, touchedVertexes: Set<GVertex>) {
+    function createExternalEdgeDicInPreorder(node: ZVertex, incomingEdge: ZAbstractEdge | null, externalEdges: Set<ZAbstractEdge>, touchedVertexes: Set<ZVertex>) {
         if (incomingEdge == null) {
             node.outgoingEdges.forEach((v) => {
                 const child = v.endVertex;
@@ -139,10 +139,10 @@ export namespace GraphArrangement {
             }
         }
     }
-    function createExternalEdgeDicInlevelorder(graph: GGraph): Set<GAbstractEdge> {
-        const externalEdges: Set<GAbstractEdge> = new Set();
-        const touchedVertexes: Set<GVertex> = new Set();
-        const inputEdges: GAbstractEdge[] = new Array(0);
+    function createExternalEdgeDicInlevelorder(graph: ZGraph): Set<ZAbstractEdge> {
+        const externalEdges: Set<ZAbstractEdge> = new Set();
+        const touchedVertexes: Set<ZVertex> = new Set();
+        const inputEdges: ZAbstractEdge[] = new Array(0);
 
         if (graph.vertices.length > 0) {
             const roots = graph.roots.length == 0 ? [graph.vertices[0]] : graph.roots;
@@ -155,9 +155,9 @@ export namespace GraphArrangement {
         }
         return externalEdges;
     }
-    function createExternalEdgeDicInlevelorderSub(inputEdges: GAbstractEdge[], externalEdges: Set<GAbstractEdge>, touchedVertexes: Set<GVertex>, level: number) {
+    function createExternalEdgeDicInlevelorderSub(inputEdges: ZAbstractEdge[], externalEdges: Set<ZAbstractEdge>, touchedVertexes: Set<ZVertex>, level: number) {
         //const edges = inputEdges.filter((v) => v.endVertex != null);
-        const nextEdges: GAbstractEdge[] = new Array(0);
+        const nextEdges: ZAbstractEdge[] = new Array(0);
         inputEdges.forEach((v) => {
             if (v.endVertex != null) {
                 const node = v.endVertex!;

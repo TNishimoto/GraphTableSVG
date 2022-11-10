@@ -5,7 +5,7 @@ import { PathTextAlighnment } from "../common/enums";
 import * as HTMLFunctions from "../html/html_functions";
 import * as SVG from "../interfaces/svg"
 import { getVirtualRegion } from "../interfaces/virtual_text"
-import { GAbstractEdge } from "./z_abstract_edge";
+import { ZAbstractEdge } from "./z_abstract_edge";
 import * as CommonFunctions from "../common/common_functions"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as CSS from "../html/css"
@@ -17,14 +17,14 @@ import { nearlyEqual, round100 } from "../common/vline";
 import { Debugger } from "../common/debugger";
 import { ObjectStableFlagName } from "./z_observer";
 
-export class GAbstractTextEdge extends GAbstractEdge {
+export class ZAbstractTextEdge extends ZAbstractEdge {
     private static updateTextAttributes = ["style"]
     protected _svgTextPath: SVGTextPathElement;
     private _svgText: SVGTextElement;
     private _textObserver: MutationObserver;
     protected _isSpecialTextBox: boolean = false;
 
-    protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
+    protected createSurface(svgbox: SVGElement, option: GOptions.ZObjectAttributes = {}): void {
         super.createSurface(svgbox, option);
         this.svgGroup.insertBefore(this.svgPath, this.svgText);
     }
@@ -67,7 +67,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
 
 
 
-    protected setBasicOption(option: GOptions.GAbstractTextEdgeAttributes) {
+    protected setBasicOption(option: GOptions.ZAbstractTextEdgeAttributes) {
 
         super.setBasicOption(option);
         const textClass = CSS.createCSSClass(option.textClass);
@@ -85,8 +85,8 @@ export class GAbstractTextEdge extends GAbstractEdge {
         }
 
     }
-    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GAbstractTextEdgeAttributes = {}): GOptions.GAbstractTextEdgeAttributes {
-        GAbstractEdge.constructAttributes(e, removeAttributes, output);
+    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZAbstractTextEdgeAttributes = {}): GOptions.ZAbstractTextEdgeAttributes {
+        ZAbstractEdge.constructAttributes(e, removeAttributes, output);
         //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(AttributeNames.Style.autoSizeShapeToFitText);
         //const textChild = HTMLFunctions.getChildByNodeName(e, AttributeNames.textStyle);
         output.textClass = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.textClass);
@@ -138,7 +138,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
 
         for (let i = 0; i < x.length; i++) {
             const p = x[i];
-            if (GAbstractTextEdge.updateTextAttributes.some((v) => v == p.attributeName)) {
+            if (ZAbstractTextEdge.updateTextAttributes.some((v) => v == p.attributeName)) {
                 b = true;
             }
             if (p.attributeName == null) {
@@ -269,7 +269,7 @@ export class GAbstractTextEdge extends GAbstractEdge {
         tspans.forEach((v) => {
             const text = v.textContent;
             if (text != null) {
-                const revText = GAbstractTextEdge.getRevString(text);
+                const revText = ZAbstractTextEdge.getRevString(text);
                 v.textContent = revText;
             }
             this.svgTextPath.appendChild(v);

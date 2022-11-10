@@ -23,7 +23,7 @@ function setCell(cell: LogicCell, value: number | string | LogicCell) {
 
 }
 /*
-export type LogicTableLine = { name: string, values: (number | string | LogicCell)[], cellClass?: string | GOptions.GTextBoxCSS }
+export type LogicTableLine = { name: string, values: (number | string | LogicCell)[], cellClass?: string | GOptions.ZTextBoxCSS }
 function setRow(table: LogicTable, ithRow: number, line: LogicTableLine) {
     table.cells[ithRow][0].text.textContent = line.name;
     line.values.forEach((v, i) => {

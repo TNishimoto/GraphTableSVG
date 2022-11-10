@@ -2,13 +2,13 @@
 
 //namespace GraphTableSVG {
     import {Rectangle, VLine} from "../common/vline"
-    import {GTextBox} from "./z_textbox"
+    import { ZTextBox} from "./z_textbox"
     import { ShapeObjectType, ConnectorType, msoDashStyle, AutoSizeShapeToFitText } from "../common/enums";
     import * as DefaultClassNames from "../common/default_class_names"
 
     import * as GOptions  from "./z_options"
 
-    export class GPathTextBox extends GTextBox {
+    export class ZPathTextBox extends ZTextBox {
         //private _svgPath: SVGPathElement;
         public get svgPath(): SVGPathElement {
             return <SVGPathElement>this.svgSurface;
@@ -18,7 +18,7 @@
             if(this.type == ShapeObjectType.PathTextBox) this.firstFunctionAfterInitialized();
         }
         protected createSurface(svgbox: SVGElement): void {
-            this._svgSurface = GPathTextBox.createSurfacePath(this.svgGroup, 0, 0, 0, 0, DefaultClassNames.defaultTextboxPathClass, undefined);
+            this._svgSurface = ZPathTextBox.createSurfacePath(this.svgGroup, 0, 0, 0, 0, DefaultClassNames.defaultTextboxPathClass, undefined);
             this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         private static createSurfacePath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, 

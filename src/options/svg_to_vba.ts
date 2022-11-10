@@ -1,8 +1,8 @@
 ﻿
 //namespace GraphTableSVG {
-import { GObject } from "../objects/z_object"
-import { GTable } from "../objects/z_table"
-import { GGraph } from "../objects/z_graph"
+import { ZObject } from "../objects/z_object"
+import { ZTable } from "../objects/z_table"
+import { ZGraph } from "../objects/z_graph"
 import { Rectangle } from "../common/vline";
 import * as CSS from "../html/css"
 import { VBATranslateFunctions } from "../common/vba_functions"
@@ -58,17 +58,17 @@ export class SVGToVBA {
             let id = 0;
             for (let i = 0; i < items.length; i++) {
                 const item = items[i];
-                if (item instanceof GTable) {
+                if (item instanceof ZTable) {
                     //const lines = item.createVBACode2(id++, "createdSlide");
                     const lines = item.createVBACode(id);
 
                     lines.forEach((v) => s.push(v));
                     id++;
-                } else if (item instanceof GGraph) {
+                } else if (item instanceof ZGraph) {
                     const lines = item.createVBACode(id);
                     lines.forEach((v) => s.push(v));
                     id += item.VBAObjectNum;
-                } else if (item instanceof GObject) {
+                } else if (item instanceof ZObject) {
                     const lines = item.createVBACode(id);
                     lines.forEach((v) => s.push(v));
                     id += item.VBAObjectNum;
@@ -88,7 +88,7 @@ export class SVGToVBA {
         else if (typeof (items) == "string") {
             const id = items;
             const obj = <any>document.getElementById(id);
-            if (obj != null && obj.operator instanceof GObject) {
+            if (obj != null && obj.operator instanceof ZObject) {
                 return SVGToVBA.create([obj.operator]);
             } else {
                 throw new Error();

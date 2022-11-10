@@ -1,5 +1,5 @@
 ﻿import * as Color from "../common/color";
-import { GObject } from "./z_object";
+import { ZObject } from "./z_object";
 import * as CommonFunctions from "../common/common_functions"
 //import {GTableOption} from "../options/attributes_option"
 import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
@@ -22,7 +22,7 @@ import * as GOptions from "./z_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
-import { GVertex } from "./z_vertex";
+import { ZVertex } from "./z_vertex";
 import { CenterPosition, UpperLeftPosition } from "../common/vline"
 import { UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
@@ -44,11 +44,11 @@ export type _GTableOption = {
     position?: CenterPosition | UpperLeftPosition;
 
 }
-export type GTableOption = GOptions.GObjectAttributes & _GTableOption;
+export type ZTableOption = GOptions.ZObjectAttributes & _GTableOption;
 /**
 テーブルを表します。
 */
-export class GTable extends GVertex {
+export class ZTable extends ZVertex {
 
 
     /**
@@ -119,14 +119,14 @@ export class GTable extends GVertex {
         }
     }
 
-    protected setBasicOption(option: GTableOption): void {
+    protected setBasicOption(option: ZTableOption): void {
         super.setBasicOption(option);
         const columnCount = option.columnCount !== undefined ? option.columnCount : 5;
         const rowCount = option.rowCount !== undefined ? option.rowCount : 5;
         this.setSize(columnCount, rowCount);
 
     }
-    protected setOptionalSize(option: GTableOption) {
+    protected setOptionalSize(option: ZTableOption) {
         super.setOptionalSize(option);
         if (option.rowHeight !== undefined) {
             this.rows.forEach((v) => v.height = <number>option.rowHeight);
@@ -136,7 +136,7 @@ export class GTable extends GVertex {
         }
 
     }
-    public setOption(option: GTableOption) {
+    public setOption(option: ZTableOption) {
         super.setOption(option);
     }
     public assignOption(option : TableOptionReteral){
@@ -195,11 +195,11 @@ export class GTable extends GVertex {
 
     }
     static constructAttributes(e: Element,
-        removeAttributes: boolean = false, output: GTableOption = {}): GTableOption {
+        removeAttributes: boolean = false, output: ZTableOption = {}): ZTableOption {
         //const widthsStr = e.getPropertyStyleValue("--widths");
 
         //const table = LogicTable.constructLogicTable(e);
-        GObject.constructAttributes(e, removeAttributes, output, "upper-left");
+        ZObject.constructAttributes(e, removeAttributes, output, "upper-left");
         /*
         if (table != null) {
             output.table = table;

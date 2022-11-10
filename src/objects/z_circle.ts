@@ -1,35 +1,35 @@
-import {GVertex} from "./z_vertex"
-import {GTextBox} from "./z_textbox"
-import {GCalloutAttributes} from "./z_callout"
+import { ZVertex } from "./z_vertex"
+import { ZTextBox } from "./z_textbox"
+import { ZCalloutAttributes } from "./z_callout"
 import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
 
-import {Rectangle, VLine} from "../common/vline"
-import {GEllipse, GAbstractEllipseCircle} from "./z_ellipse"
+import { Rectangle, VLine } from "../common/vline"
+import { ZEllipse, ZAbstractEllipseCircle } from "./z_ellipse"
 import * as CSS from "../html/css"
-import * as GOptions  from "./z_options"
+import * as GOptions from "./z_options"
 import * as ElementExtension from "../interfaces/element_extension"
 
-export class GCircle extends GAbstractEllipseCircle  {
+export class ZCircle extends ZAbstractEllipseCircle {
     public get svgCircle(): SVGCircleElement {
         return <SVGCircleElement>this._svgSurface;
     }
 
     public constructor(svgbox: SVGElement | string) {
         super(svgbox);
-        if(this.type == ShapeObjectType.Circle) this.firstFunctionAfterInitialized();
+        if (this.type == ShapeObjectType.Circle) this.firstFunctionAfterInitialized();
     }
-    protected createSurface(svgbox : SVGElement) : void {
+    protected createSurface(svgbox: SVGElement): void {
         //if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
-        this._svgSurface = GCircle.createCircle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
+        this._svgSurface = ZCircle.createCircle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
         this.svgGroup.insertBefore(this.svgCircle, this.svgText);
     }
-    private static createCircle(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style : string | undefined | GOptions.surfaceClassCSS): SVGCircleElement {
+    private static createCircle(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style: string | undefined | GOptions.surfaceClassCSS): SVGCircleElement {
         const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         parent.appendChild(circle);
-        
+
         GOptions.setClassAndStyle(circle, className, style);
         /*
         if(style !== undefined){
@@ -54,7 +54,7 @@ export class GCircle extends GAbstractEllipseCircle  {
             circle.setAttribute("class", CSS.buildClassNameFromSurfaceClassCSS(className));
         }
         */
-        const radius = ElementExtension.getPropertyStyleNumberValue(circle,StyleNames.defaultRadius, null);
+        const radius = ElementExtension.getPropertyStyleNumberValue(circle, StyleNames.defaultRadius, null);
         if (radius != null) {
             circle.r.baseVal.value = radius;
         }
@@ -63,7 +63,7 @@ export class GCircle extends GAbstractEllipseCircle  {
 
         return circle;
     }
-    
+
     get rx(): number {
         return this.svgCircle.r.baseVal.value;
     }
@@ -72,7 +72,7 @@ export class GCircle extends GAbstractEllipseCircle  {
     }
     set width(value: number) {
         const _rx = value / 2;
-        
+
         if (this.width != value) this.svgCircle.setAttribute("r", _rx.toString());
 
     }
@@ -89,7 +89,7 @@ export class GCircle extends GAbstractEllipseCircle  {
     get height(): number {
         return this.svgCircle.r.baseVal.value * 2;
     }
-    
+
 
 
 

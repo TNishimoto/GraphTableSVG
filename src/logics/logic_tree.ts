@@ -6,7 +6,7 @@ export class BaseLogicTree {
 */
 //import * as Console from "../../options/console"
 import { VertexOrder, Direction, PathTextAlighnment, VertexObjectType, ShapeObjectType } from "../common/enums"
-//import { GTextBoxAttributes } from "../object/g_textbox";
+//import { ZTextBoxAttributes } from "../object/g_textbox";
 import * as GOptions from "../objects/z_options"
 import { LogicTable } from "./logic_table";
 
@@ -26,7 +26,7 @@ export function Test(obj : any) : void {
 }
 
 export class  LogicBasicShape {
-    public option: GOptions.GTextBoxAttributes = {};
+    public option: GOptions.ZTextBoxAttributes = {};
     public shape : VertexObjectType = ShapeObjectType.Circle
     private className : "LogicBasicShape" = "LogicBasicShape";
 
@@ -49,7 +49,7 @@ export class  LogicBasicShape {
         this.shape = obj["shape"]
         this.item = obj["item"];
     }
-    constructor(constructorOption : {text? : string, shape? : VertexObjectType, option? : GOptions.GTextBoxAttributes } = {}){
+    constructor(constructorOption : {text? : string, shape? : VertexObjectType, option? : GOptions.ZTextBoxAttributes } = {}){
         if(constructorOption.shape !== undefined){
             this.shape = constructorOption.shape;
         }
@@ -87,7 +87,7 @@ export class  LogicTreeNode {
         }
 
     }
-    public edgeOption: GOptions.GEdgeAttributes = { class: { pathTextAlignment: PathTextAlighnment.regularInterval } };
+    public edgeOption: GOptions.ZEdgeAttributes = { class: { pathTextAlignment: PathTextAlighnment.regularInterval } };
     public children: (LogicTreeNode | null)[] = [];
     public get edgeTextContent(): string {
         if (typeof (this.edgeOption.text) == "string") {
@@ -155,7 +155,7 @@ export class  LogicTreeNode {
     
 }
 export class LogicTree {
-    public option: GOptions.GGraphAttributes = { relocateStyle: "standard", direction: "down" };
+    public option: GOptions.ZGraphAttributes = { relocateStyle: "standard", direction: "down" };
     public root : LogicTreeNode | null = null;
     private className : "LogicTree" = "LogicTree";
 
@@ -198,7 +198,7 @@ export class BinaryLogicTree extends LogicTree {
     public set right(value: BinaryLogicTree | null) {
         this.children[1] = value;
     }
-    constructor(public item: any = null, left: BinaryLogicTree | null = null, right: BinaryLogicTree | null = null, vertexOption?: GOptions.GTextBoxAttributes, edgeOption?: GOptions.GGraphAttributes) {
+    constructor(public item: any = null, left: BinaryLogicTree | null = null, right: BinaryLogicTree | null = null, vertexOption?: GOptions.ZTextBoxAttributes, edgeOption?: GOptions.GGraphAttributes) {
         super({ item: item == null ? undefined : item, children: [left, right], vertexOption: vertexOption, edgeOption : edgeOption });
     }
 }

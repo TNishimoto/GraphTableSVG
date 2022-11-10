@@ -16,10 +16,10 @@ import { SVGToVBA } from "./svg_to_vba"
 import { VBAObjectType } from "./vba_object"
 
 import * as GUIObserver from "../html/gui_observer"
-import { GTable } from "../objects/z_table";
-import { GGraph } from "../objects/z_graph";
+import { ZTable } from "../objects/z_table";
+import { ZGraph } from "../objects/z_graph";
 import { LogicGroup } from "../logics/logic_group";
-import { GObject } from "../objects";
+import { ZObject } from "../objects";
 import * as ToJSON from "./to_json";
 import { LogicCellLine, buildLogicTable, LogicCell } from "../logics";
 import { Exceptions } from "../common";
@@ -30,7 +30,7 @@ import { ShapeObjectType, ShrinkAttributeName } from "../common/enums";
 export class ConsoleLineElement {
     public canvas: SVGSVGElement | null = null;
     public vbaObjects: VBAObjectType[] = new Array();
-    public mainObject: GTable | GGraph | null = null;
+    public mainObject: ZTable | ZGraph | null = null;
     public fieldSetElement: HTMLFieldSetElement;
     private legendElement: HTMLLegendElement;
     private canvasContainer: HTMLDivElement;
@@ -40,7 +40,7 @@ export class ConsoleLineElement {
     private csvButton: HTMLButtonElement;
 
 
-    constructor(parent: HTMLElement, type: "table" | "graph" | "log" | "textarea" | "group", title: string = "", option: { mainElement?: HTMLElement | GTable | GGraph } = {}) {
+    constructor(parent: HTMLElement, type: "table" | "graph" | "log" | "textarea" | "group", title: string = "", option: { mainElement?: HTMLElement | ZTable | ZGraph } = {}) {
         this.canvasContainer = document.createElement("div");
         if(parent.firstChild == null){
             parent.appendChild(this.canvasContainer);
@@ -106,7 +106,7 @@ export class ConsoleLineElement {
             this.fieldSetElement.appendChild(this.csvButton);
         }
         const csvFunc = () => {
-            if (this.mainObject instanceof GTable) {
+            if (this.mainObject instanceof ZTable) {
                 const str = this.mainObject.rows.map((v) => {
                     return v.cells.map((w) => w.svgText.textContent).join(",")
                 }).join("\n");
@@ -128,7 +128,7 @@ export class ConsoleLineElement {
 
     public addVBAObject(obj: VBAObjectType) {
         this.vbaObjects.push(obj);
-        if (obj instanceof GTable || obj instanceof GGraph) {
+        if (obj instanceof ZTable || obj instanceof ZGraph) {
             this.mainObject = obj;
         }
     }
@@ -189,7 +189,7 @@ function initialize(): void {
     }
 }
 */
-export function table(item: any, title: string = "", canvasID_or_ContainerID: string | null = null): [GTable, ConsoleLineElement | SVGElement] {
+export function table(item: any, title: string = "", canvasID_or_ContainerID: string | null = null): [ZTable, ConsoleLineElement | SVGElement] {
     if (item instanceof LogicTable) {
         return view(item, title, canvasID_or_ContainerID);
     } else if(item instanceof Array && item.every((v) => v instanceof LogicCell)){
@@ -211,7 +211,7 @@ export function clear(containerID : string = defaultCodeBoxID ) {
     code.innerHTML = "";
 }
 
-export function graph(item: any | LogicTree | LogicGraph, title: string = "", canvasID_or_ContainerID: string | SVGElement | null = null): [GGraph, ConsoleLineElement | SVGElement] {
+export function graph(item: any | LogicTree | LogicGraph, title: string = "", canvasID_or_ContainerID: string | SVGElement | null = null): [ZGraph, ConsoleLineElement | SVGElement] {
 
     if (item instanceof LogicTree || item instanceof LogicGraph) {
         if (item instanceof LogicTree) {
@@ -289,10 +289,10 @@ export function textarea(message: any, title: string = "", option?: { cols?: num
     }
 
 }
-export function view(item: LogicTable, title: string, canvasID: string | SVGElement | null): [GTable, ConsoleLineElement | SVGElement];
-export function view(item: LogicTree, title: string, canvasID: string | SVGElement | null): [GGraph, ConsoleLineElement | SVGElement];
-export function view(item: LogicGraph, title: string, canvasID: string | SVGElement | null): [GGraph, ConsoleLineElement | SVGElement];
-export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, title: string, canvasID: string | SVGElement | null = null): [GObject, ConsoleLineElement | SVGElement] {
+export function view(item: LogicTable, title: string, canvasID: string | SVGElement | null): [ZTable, ConsoleLineElement | SVGElement];
+export function view(item: LogicTree, title: string, canvasID: string | SVGElement | null): [ZGraph, ConsoleLineElement | SVGElement];
+export function view(item: LogicGraph, title: string, canvasID: string | SVGElement | null): [ZGraph, ConsoleLineElement | SVGElement];
+export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, title: string, canvasID: string | SVGElement | null = null): [ZObject, ConsoleLineElement | SVGElement] {
     let isCanvasID = false;
 
     if (canvasID != null) {
@@ -309,14 +309,14 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
 
         if (isCanvasID) {
             const canvasItem = <string | SVGElement>canvasID;
-            const gtable = <GTable>createGObject(canvasItem, ShapeObjectType.Table);
+            const gtable = <ZTable>createGObject(canvasItem, ShapeObjectType.Table);
             gtable.buildFromLogicTable(item);
             return [gtable, <SVGElement>gtable.svgGroup.parentNode];    
         } else {
             const containerID : string | null = canvasID == null ? null : <string>canvasID;
             const code = containerID == null ? getOrCreateCodeElement() : getOrCreateCodeElement(containerID);
             const consoleLine = new ConsoleLineElement(code, "table", title);
-            const gtable = <GTable>createGObject(consoleLine.canvas!, ShapeObjectType.Table);
+            const gtable = <ZTable>createGObject(consoleLine.canvas!, ShapeObjectType.Table);
 
             gtable.buildFromLogicTable(item);
             gtable.x = 0;
@@ -328,7 +328,7 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
     } else if (item instanceof LogicTree || item instanceof LogicGraph) {
         if(isCanvasID){
             const canvasItem = <string | SVGElement>canvasID;
-            const ggraph = <GGraph>createGObject(canvasItem, ShapeObjectType.Graph);
+            const ggraph = <ZGraph>createGObject(canvasItem, ShapeObjectType.Graph);
             ggraph.build(item);
             if (item.option.drawingFunction !== undefined) {
                 const drawingFunction = new Function("obj", `${item.option.drawingFunction.functionName}(obj)`);
@@ -343,7 +343,7 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
             //const code = getOrCreateCodeElement();
             const consoleLine = new ConsoleLineElement(code, "graph", title);
             //const svg = addSVGSVGElement(code);
-            const ggraph = <GGraph>createGObject(consoleLine.canvas!, ShapeObjectType.Graph);
+            const ggraph = <ZGraph>createGObject(consoleLine.canvas!, ShapeObjectType.Graph);
             if(item.option ===undefined){
                 throw new Exceptions.UndefinedError();
             }
@@ -360,7 +360,7 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
 
         //graph(item);
     } else {
-        let gobject : GObject;  
+        let gobject : ZObject;  
         let svg :  ConsoleLineElement | SVGElement;
         if (canvasID != null) {
             gobject = createGObject(canvasID, ShapeObjectType.Object);
@@ -372,7 +372,7 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
             svg = consoleLine;
         }
 
-        let prevItem : GObject | null = null;
+        let prevItem : ZObject | null = null;
         item.items.forEach((v) => {
             if(item.itemOrder == "row"){
                 if(prevItem != null){

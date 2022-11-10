@@ -5,21 +5,21 @@ import * as HTMLFunctions from "../html/html_functions"
 import * as HTMLTable from "./html_table"
 import * as GUIObserver from "../html/gui_observer"
 
-import { GObject } from "../objects/z_object"
-import { GCallout } from "../objects/z_callout"
-import { GArrowCallout } from "../objects/z_arrow_callout"
-import { GEllipse } from "../objects/z_ellipse"
-import { GRect } from "../objects/z_rect"
-import { GEdge } from "../objects/z_edge"
-import { GTable, GTableOption } from "../objects/z_table"
-import { GGraph } from "../objects/z_graph"
-import { GRectButton } from "../objects/z_rect_button"
-import { GCircle } from "../objects/z_circle";
+import { ZObject } from "../objects/z_object"
+import { ZCallout } from "../objects/z_callout"
+import { ZArrowCallout } from "../objects/z_arrow_callout"
+import { ZEllipse } from "../objects/z_ellipse"
+import { ZRect } from "../objects/z_rect"
+import { ZEdge } from "../objects/z_edge"
+import { ZTable, ZTableOption } from "../objects/z_table"
+import { ZGraph } from "../objects/z_graph"
+import { ZRectButton } from "../objects/z_rect_button"
+import { ZCircle } from "../objects/z_circle";
 import * as ElementExtension from "../interfaces/element_extension"
 import { LogicTable } from "../logics";
 import { NullError } from "../common/exceptions";
 import { appendVBAButton } from "./vba_macro_modal";
-import { GForeignButton } from "../objects/z_foreign_button";
+import { ZForeignButton } from "../objects/z_foreign_button";
 import { convertAttributesIntoTableOption, TableOptionReteral } from "../logics/gobject_reterals";
 
 import { convertFromElementWithCustomElementAttributeToGObject, isElementWithCustomElementAttribute, convertFromElementToSVGGElementWithCustomElementAttribute } from "./custom_svg_processors/custom_x_element_processor";
@@ -29,10 +29,10 @@ import { convertFromElementWithCustomElementAttributeToGObject, isElementWithCus
 //}
 let timerInterval = 100;
 
-function getGObjectsSub(item: Element): GObject[] {
-    const arr: GObject[] = new Array();
+function getGObjectsSub(item: Element): ZObject[] {
+    const arr: ZObject[] = new Array();
     const opr = (<any>item).operator;
-    if (opr != undefined && opr instanceof GObject) {
+    if (opr != undefined && opr instanceof ZObject) {
         arr.push(opr);
     } else {
         for (let i = 0; i < item.children.length; i++) {
@@ -45,7 +45,7 @@ function getGObjectsSub(item: Element): GObject[] {
     return arr;
 }
 
-export function getGObjects(elementID: string): GObject[] {
+export function getGObjects(elementID: string): ZObject[] {
     const svg = document.getElementById(elementID);
     if (svg == null) {
         throw new NullError();
@@ -87,11 +87,11 @@ export function clearSVG(id: string) {
     box.innerHTML = "";
 }
 
-export function openSVG(id: string, output?: GObject[]): GObject[];
-export function openSVG(element: Element, output?: GObject[]): GObject[];
-export function openSVG(empty: null, output?: GObject[]): GObject[];
-export function openSVG(svgsvg: SVGSVGElement, output?: GObject[]): GObject[];
-export function openSVG(inputItem: string | Element | null = null, output: GObject[] = []): GObject[] {
+export function openSVG(id: string, output?: ZObject[]): ZObject[];
+export function openSVG(element: Element, output?: ZObject[]): ZObject[];
+export function openSVG(empty: null, output?: ZObject[]): ZObject[];
+export function openSVG(svgsvg: SVGSVGElement, output?: ZObject[]): ZObject[];
+export function openSVG(inputItem: string | Element | null = null, output: ZObject[] = []): ZObject[] {
     if (typeof inputItem == "string") {
         const item = document.getElementById(inputItem);
         if (item != null && item instanceof SVGSVGElement) {

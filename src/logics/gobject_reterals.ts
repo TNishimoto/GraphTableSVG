@@ -17,11 +17,11 @@ export type TextReteral = { textContent?: string } & SVGReteral;
 export type SurfaceOptionReteral = {} & SVGOptionReteral;
 export type TextOptionReteral = {} & SVGOptionReteral;
 
-export type GVertexOptionReteral = { x?: number, y?: number, cx?: number, cy?: number, positionType : PositionType, 
+export type ZVertexOptionReteral = { x?: number, y?: number, cx?: number, cy?: number, positionType : PositionType, 
     width?: number, height?: number, 
     surfaceOption: SurfaceOptionReteral, textOption: TextOptionReteral } & SVGOptionReteral
 
-export type GVertexReteral = {} & GVertexOptionReteral & SVGReteral
+export type ZVertexReteral = {} & ZVertexOptionReteral & SVGReteral
 
 export type CellSubOptionReteral = {
     surfaceOption: SurfaceOptionReteral, textOption: TextOptionReteral,
@@ -38,9 +38,9 @@ export type RowOptionReteral = CellSubOptionReteral & SVGOptionReteral;
 export type RowReteral = { children: CellReteral[] } & RowOptionReteral & SVGReteral;
 
 //export type TextType = "string" | "SVGText"
-export type TableOptionReteral = { rowHeight?: number, columnWidth?: number } & GVertexOptionReteral;
+export type TableOptionReteral = { rowHeight?: number, columnWidth?: number } & ZVertexOptionReteral;
 
-export type TableReteral = { children: RowReteral[] } & TableOptionReteral & GVertexReteral;
+export type TableReteral = { children: RowReteral[] } & TableOptionReteral & ZVertexReteral;
 
 /*
 export type _GTableOption = {
@@ -89,8 +89,8 @@ export function convertAttributesIntoSVGOption(e: Element) : SVGOptionReteral {
     return output;
 }
 
-export function convertAttributesIntoVertexOption(e: Element) : GVertexOptionReteral {
-    const output : GVertexOptionReteral = <any>convertAttributesIntoSVGOption(e);
+export function convertAttributesIntoVertexOption(e: Element) : ZVertexOptionReteral {
+    const output : ZVertexOptionReteral = <any>convertAttributesIntoSVGOption(e);
 
     output.surfaceOption = convertAttributesIntoAdditionalOption(e, "surface");
     output.textOption = convertAttributesIntoAdditionalOption(e, "text");

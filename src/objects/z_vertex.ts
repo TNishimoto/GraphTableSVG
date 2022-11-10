@@ -5,21 +5,21 @@ import { Rectangle } from "../common/vline"
 import * as AttributeNames from "../common/attribute_names"
 import * as DefaultClassNames from "../common/default_class_names"
 import { ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
-import { GObject } from "./z_object"
-//import { GTextBox } from "./z_textbox"
-import { GEdge } from "./z_edge"
-//import { GGraph } from "./g_graph"
+import { ZObject } from "./z_object"
+//import { ZTextBox } from "./z_textbox"
+import { ZEdge } from "./z_edge"
+//import { ZGraph } from "./g_graph"
 import { VirtualTree } from "./graph_helpers/virtual_tree"
 import {getLineType} from "../html/enum_extension";
 import * as ElementExtension from "../interfaces/element_extension"
 import { getGraph } from "./graph_helpers/common_functions";
-import { GAbstractEdge } from "./z_abstract_edge";
+import { ZAbstractEdge } from "./z_abstract_edge";
 import { HTMLFunctions } from "../html";
 import { LocalGObjectManager } from "./global_gobject_manager";
 
 
 
-export class GVertex extends GObject {
+export class ZVertex extends ZObject {
     /*
     protected setClassNameOfSVGGroup() {
         const parent = this.svgGroup.parentElement;
@@ -95,7 +95,7 @@ export class GVertex extends GObject {
     /**
     入辺配列を返します。
     */
-    get outgoingEdges(): GAbstractEdge[] {
+    get outgoingEdges(): ZAbstractEdge[] {
         const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
         if(svgsvg != null){
             const manager : LocalGObjectManager | undefined = (<any>svgsvg)._manager;
@@ -104,7 +104,7 @@ export class GVertex extends GObject {
                 if(arr == null){
                     return new Array(0);
                 }else{
-                    return arr.map((v) => <GAbstractEdge>v);
+                    return arr.map((v) => <ZAbstractEdge>v);
                 }
             }
         }
@@ -121,7 +121,7 @@ export class GVertex extends GObject {
     /**
     出辺配列を返します。
     */
-    get incomingEdges(): GAbstractEdge[] {
+    get incomingEdges(): ZAbstractEdge[] {
         const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
         if(svgsvg != null){
             const manager : LocalGObjectManager | undefined = (<any>svgsvg)._manager;
@@ -130,7 +130,7 @@ export class GVertex extends GObject {
                 if(arr == null){
                     return new Array(0);
                 }else{
-                    return arr.map((v) => <GAbstractEdge>v);
+                    return arr.map((v) => <ZAbstractEdge>v);
                 }
             }
         }
@@ -151,7 +151,7 @@ export class GVertex extends GObject {
      * @param edge
      * @param insertIndex
      */
-    public insertOutcomingEdge(edge: GAbstractEdge, insertIndex: number = this.outgoingEdges.length) {
+    public insertOutcomingEdge(edge: ZAbstractEdge, insertIndex: number = this.outgoingEdges.length) {
         throw new Error("Error");
         /*
         const p = this.outgoingEdges.indexOf(edge);
@@ -174,7 +174,7 @@ export class GVertex extends GObject {
      * 出辺を削除します。
      * @param edge
      */
-    public removeOutcomingEdge(edge: GAbstractEdge) {
+    public removeOutcomingEdge(edge: ZAbstractEdge) {
         throw new Error("Error");
         /*
         const p = this.outgoingEdges.indexOf(edge);
@@ -196,7 +196,7 @@ export class GVertex extends GObject {
     * @param edge
     * @param insertIndex
     */
-    public insertIncomingEdge(edge: GAbstractEdge, insertIndex: number = this.incomingEdges.length) {
+    public insertIncomingEdge(edge: ZAbstractEdge, insertIndex: number = this.incomingEdges.length) {
         throw new Error("Error");
         /*
         const p = this.incomingEdges.indexOf(edge);
@@ -218,7 +218,7 @@ export class GVertex extends GObject {
      * 入辺を削除します。
      * @param edge
      */
-    public removeIncomingEdge(edge: GAbstractEdge) {
+    public removeIncomingEdge(edge: ZAbstractEdge) {
         throw new Error("Error");
         /*
         const p = this.incomingEdges.indexOf(edge);
@@ -248,13 +248,13 @@ export class GVertex extends GObject {
     /**
     * 親Vertex配列を返します。
     */
-    public getParents(): GVertex[] {
-        return this.incomingEdges.filter((v) => v.beginVertex != null).map((v) => <GVertex>v.beginVertex);
+    public getParents(): ZVertex[] {
+        return this.incomingEdges.filter((v) => v.beginVertex != null).map((v) => <ZVertex>v.beginVertex);
     }
     /**
     親との間の辺を返します。
     */
-    get parentEdge(): GAbstractEdge | null {
+    get parentEdge(): ZAbstractEdge | null {
         if (this.incomingEdges.length == 0) {
             return null;
         } else {
@@ -264,7 +264,7 @@ export class GVertex extends GObject {
     /**
     このVertexの親を返します。
     */
-    get parent(): GVertex | null {
+    get parent(): ZVertex | null {
         if (this.parentEdge == null) {
             return null;
         } else {
@@ -281,8 +281,8 @@ export class GVertex extends GObject {
     /**
     出辺配列を返します。
     */
-    public get children(): GVertex[] {
-        return this.outgoingEdges.filter((v) => v.endVertex != null).map((v) => <GVertex>v.endVertex);
+    public get children(): ZVertex[] {
+        return this.outgoingEdges.filter((v) => v.endVertex != null).map((v) => <ZVertex>v.endVertex);
     }
 
     /**
@@ -298,7 +298,7 @@ export class GVertex extends GObject {
     //    return new VirtualTree(this);
     //}
 
-    createVirtualTree(excludedEdgeDic?: Set<GAbstractEdge>): VirtualTree {
+    createVirtualTree(excludedEdgeDic?: Set<ZAbstractEdge>): VirtualTree {
         return new VirtualTree(this, excludedEdgeDic);
     }
     /**
@@ -372,7 +372,7 @@ export class GVertex extends GObject {
         return ` Call EditLine(obj.Line, ${lineColor}, ${lineType}, ${0}, ${strokeWidth}, ${visible})`;
     }
 
-    public get graph(): GObject | null {
+    public get graph(): ZObject | null {
         return getGraph(this);
     }
 

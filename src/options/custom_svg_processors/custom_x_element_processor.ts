@@ -5,21 +5,21 @@ import * as HTMLFunctions from "../../html/html_functions"
 import * as HTMLTable from "../html_table"
 import * as GUIObserver from "../../html/gui_observer"
 
-import { GObject } from "../../objects/z_object"
-import { GCallout } from "../../objects/z_callout"
-import { GArrowCallout } from "../../objects/z_arrow_callout"
-import { GEllipse } from "../../objects/z_ellipse"
-import { GRect } from "../../objects/z_rect"
-import { GEdge } from "../../objects/z_edge"
-import { GTable, GTableOption } from "../../objects/z_table"
-import { GGraph } from "../../objects/z_graph"
-import { GRectButton } from "../../objects/z_rect_button"
-import { GCircle } from "../../objects/z_circle";
+import { ZObject } from "../../objects/z_object"
+import { ZCallout } from "../../objects/z_callout"
+import { ZArrowCallout } from "../../objects/z_arrow_callout"
+import { ZEllipse } from "../../objects/z_ellipse"
+import { ZRect } from "../../objects/z_rect"
+import { ZEdge } from "../../objects/z_edge"
+import { ZTable, ZTableOption } from "../../objects/z_table"
+import { ZGraph } from "../../objects/z_graph"
+import { ZRectButton } from "../../objects/z_rect_button"
+import { ZCircle } from "../../objects/z_circle";
 import * as ElementExtension from "../../interfaces/element_extension"
 import { LogicTable } from "../../logics";
 import { NullError } from "../../common/exceptions";
 import { appendVBAButton } from "../vba_macro_modal";
-import { GForeignButton } from "../../objects/z_foreign_button";
+import { ZForeignButton } from "../../objects/z_foreign_button";
 import { convertAttributesIntoTableOption, TableOptionReteral } from "../../logics/gobject_reterals";
 
 
@@ -40,7 +40,7 @@ export function isElementWithCustomElementAttribute(element: SVGElement): boolea
 
 }
 /**
- * GObjectタグをCustomGElementに変換します。
+ * ZObjectタグをCustomGElementに変換します。
  * @param element 
  * @returns 
  */
@@ -75,48 +75,48 @@ export function convertFromElementToSVGGElementWithCustomElementAttribute(e: Ele
  * @param type 
  * @returns 
  */
- function convertFromElementToGObject(node: SVGElement, type: ShapeObjectType): GObject | null {
+ function convertFromElementToGObject(node: SVGElement, type: ShapeObjectType): ZObject | null {
     const parent = node.parentElement;
     if (parent instanceof SVGElement) {
-        let r: GObject;
+        let r: ZObject;
 
         node.removeAttribute(AttributeNames.customElement);
         if (type == ShapeObjectType.Callout) {
-            const option = GCallout.constructAttributes(node, true);
-            r = new GCallout(parent);
+            const option = ZCallout.constructAttributes(node, true);
+            r = new ZCallout(parent);
             r.setOption(option);
         } else if (type == ShapeObjectType.ArrowCallout) {
-            const option = GArrowCallout.constructAttributes(node, true);
-            r = new GArrowCallout(parent);
+            const option = ZArrowCallout.constructAttributes(node, true);
+            r = new ZArrowCallout(parent);
             r.setOption(option);
         } else if (type == ShapeObjectType.Ellipse) {
-            const option = GEllipse.constructAttributes(node, true);
-            r = new GEllipse(parent);
+            const option = ZEllipse.constructAttributes(node, true);
+            r = new ZEllipse(parent);
             r.setOption(option);
         } else if (type == ShapeObjectType.Circle) {
-            const option = GCircle.constructAttributes(node, true);
-            r = new GCircle(parent);
+            const option = ZCircle.constructAttributes(node, true);
+            r = new ZCircle(parent);
             r.setOption(option);
         }
         else if (type == ShapeObjectType.Rect) {
-            const option = GRect.constructAttributes(node, true);
-            r = new GRect(parent);
+            const option = ZRect.constructAttributes(node, true);
+            r = new ZRect(parent);
             r.setOption(option);
 
 
 
         } else if (type == ShapeObjectType.Edge) {
-            const option = GEdge.constructAttributes(node, true);
-            r = new GEdge(parent);
+            const option = ZEdge.constructAttributes(node, true);
+            r = new ZEdge(parent);
             r.setOption(option);
         } else if (type == ShapeObjectType.Graph) {
-            const option = GGraph.constructAttributes(node, true, {}, "center");
-            r = new GGraph(parent);
+            const option = ZGraph.constructAttributes(node, true, {}, "center");
+            r = new ZGraph(parent);
             r.setOption(option);
-            //(<GGraph>r).relocate();
+            //(<ZGraph>r).relocate();
         } else if (type == ShapeObjectType.Table) {
             const logicTable = LogicTable.constructLogicTable(node);
-            const table = new GTable(parent);
+            const table = new ZTable(parent);
 
             if(logicTable != null){
                 //logicTable.option = convertAttributesIntoTableOption(node);
@@ -131,13 +131,13 @@ export function convertFromElementToSVGGElementWithCustomElementAttribute(e: Ele
 
         }
         else if (type == ShapeObjectType.RectButton) {
-            const option = GRectButton.constructAttributes(node, true);
-            r = new GRectButton(parent);
+            const option = ZRectButton.constructAttributes(node, true);
+            r = new ZRectButton(parent);
             r.setOption(option);
         }
         else if (type == ShapeObjectType.ForeignButton) {
-            const option = GRectButton.constructAttributes(node, true);
-            r = new GForeignButton(parent);
+            const option = ZRectButton.constructAttributes(node, true);
+            r = new ZForeignButton(parent);
             r.setOption(option);
         }
 
@@ -161,7 +161,7 @@ export function convertFromElementToSVGGElementWithCustomElementAttribute(e: Ele
         }
         );
 
-        if (r instanceof GGraph) {
+        if (r instanceof ZGraph) {
             r.relocate();
         }
 
@@ -170,7 +170,7 @@ export function convertFromElementToSVGGElementWithCustomElementAttribute(e: Ele
         throw Error("error!");
     }
 }
-export function convertFromElementWithCustomElementAttributeToGObject(id: string | SVGElement): GObject | null {
+export function convertFromElementWithCustomElementAttributeToGObject(id: string | SVGElement): ZObject | null {
 
     if (typeof id == "string") {
         const item = document.getElementById(id);

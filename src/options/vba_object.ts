@@ -1,14 +1,14 @@
 //namespace GraphTableSVG {
 import { Rectangle } from "../common/vline";
-import { GGraph } from "../objects/z_graph"
-import { GTable } from "../objects/z_table"
-import { GObject } from "../objects/z_object"
+import { ZGraph } from "../objects/z_graph"
+import { ZTable } from "../objects/z_table"
+import { ZObject } from "../objects/z_object"
 import { ShapeObjectType } from "../common/enums";
 //    import {VBAObjectType} from "./svg_to_vba"
 
 export type VBACodableSVG = SVGPathElement | SVGTextElement | SVGRectElement | SVGCircleElement | SVGEllipseElement | SVGLineElement | SVGPolylineElement | SVGPolygonElement;
 
-export type VBAObjectType = VBACodableSVG | GObject;
+export type VBAObjectType = VBACodableSVG | ZObject;
 
 function collectVBAObjectTypesSub(svg: SVGElement, output: VBAObjectType[]): void {
     const dataVBA = svg.getAttribute("data-vba");
@@ -46,11 +46,11 @@ export function countVBSObjectNum(items: VBAObjectType[] | VBAObjectType): numbe
         let c = 0;
         for (let i = 0; i < items.length; i++) {
             const item = items[i];
-            if (item instanceof GTable) {
+            if (item instanceof ZTable) {
                 c++;
-            } else if (item instanceof GGraph) {
+            } else if (item instanceof ZGraph) {
                 c += item.VBAObjectNum;
-            } else if (item instanceof GObject) {
+            } else if (item instanceof ZObject) {
                 c += item.VBAObjectNum;
             } else{
                 c ++;
@@ -110,7 +110,7 @@ export function isVBAObject(svg: SVGElement): boolean {
  */
 export function getRegion(items: VBAObjectType[]): Rectangle {
     const rects = items.map((v) => {
-        if (v instanceof GObject) {
+        if (v instanceof ZObject) {
             return v.getRegion();
         } else if (v instanceof SVGPathElement || v instanceof SVGTextElement) {
             const rect = v.getBBox();
@@ -130,12 +130,12 @@ export function getRegion(items: VBAObjectType[]): Rectangle {
  * @param svg 
  * @param items 
  */
-export function clearGraphTables(svg: SVGElement, items: (GGraph | GTable)[]) {
+export function clearGraphTables(svg: SVGElement, items: (ZGraph | ZTable)[]) {
     for (let i = 0; i < items.length; i++) {
         var item = items[i];
-        if (item instanceof GGraph) {
+        if (item instanceof ZGraph) {
             item.removeGraph(svg);
-        } else if (item instanceof GTable) {
+        } else if (item instanceof ZTable) {
             item.removeTable(svg);
         }
     }

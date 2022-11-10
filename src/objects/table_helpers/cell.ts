@@ -7,7 +7,7 @@ import * as AttributeNames from "../../common/attribute_names"
 import * as DefaultClassNames from "../../common/default_class_names"
 import * as StyleNames from "../../common/style_names"
 
-import { GTable } from "../z_table"
+import { ZTable } from "../z_table"
 import * as SVG from "../../interfaces/svg"
 //import {CellOption} from "../../options/attributes_option"
 import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../../common/enums";
@@ -55,7 +55,7 @@ let uniqueCellID = 0;
  */
 export class Cell implements ITextBox {
 
-    constructor(parent: GTable, _px: number, _py: number, cellMap : Map<string, Cell>, option: CellOption = {}) {
+    constructor(parent: ZTable, _px: number, _py: number, cellMap : Map<string, Cell>, option: CellOption = {}) {
         this._svgGroup = SVG.createGroup(null);
         this._table = parent;
 
@@ -294,11 +294,11 @@ export class Cell implements ITextBox {
     public static readonly masterDiffYName = "data-masterDiffY";
 
     private tmpStyle: string | null = null;
-    private _table: GTable;
+    private _table: ZTable;
     /**
     所属しているTableを返します。
     */
-    public get table(): GTable {
+    public get table(): ZTable {
         return this._table;
     }
     private _svgBackground: SVGRectElement;

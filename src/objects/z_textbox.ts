@@ -10,8 +10,8 @@ import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from 
 import { Rectangle, PositionType, round100, nearlyEqual } from "../common/vline"
 import * as HTMLFunctions from "../html/html_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox"
-import { GObject } from "./z_object"
-import { GVertex } from "./z_vertex"
+import { ZObject } from "./z_object"
+import { ZVertex } from "./z_vertex"
 
 import * as GOptions from "./z_options"
 import { AutoSizeShapeToFitText } from "../common/enums"
@@ -31,7 +31,7 @@ import { Debugger } from "../common/debugger"
 
 
 
-export class GTextBox extends GVertex {
+export class ZTextBox extends ZVertex {
     private _svgText: SVGTextElement;
     //private isFixTextSize: boolean = false;
     protected surfaceAttributes: string[] = [];
@@ -63,7 +63,7 @@ export class GTextBox extends GVertex {
         }
         */
     }
-    protected setBasicOption(option: GOptions.GTextBoxAttributes) {
+    protected setBasicOption(option: GOptions.ZTextBoxAttributes) {
         super.setBasicOption(option)
         const textClass = CSS.createCSSClass(option.textClass);
         const styleClass = CSS.createCSSClass(option.textStyle);
@@ -82,7 +82,7 @@ export class GTextBox extends GVertex {
 
         const b = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.autoSizeShapeToFitText);
         if (b === undefined && typeof (option.style) == "object") {
-            const style: GOptions.GTextBoxCSS = option.style;
+            const style: GOptions.ZTextBoxCSS = option.style;
             if (style.autoSizeShapeToFitText !== undefined) {
                 this.isAutoSizeShapeToFitText = style.autoSizeShapeToFitText;
             }
@@ -90,16 +90,16 @@ export class GTextBox extends GVertex {
 
     }
 
-    public setOption(option: GOptions.GTextBoxAttributes) {
+    public setOption(option: GOptions.ZTextBoxAttributes) {
         super.setOption(option);
         //this.setBasicOption(option);
     }
 
 
     static constructAttributes(e: Element,
-        removeAttributes: boolean = false, output: GOptions.GTextBoxAttributes = {}): GOptions.GTextBoxAttributes {
+        removeAttributes: boolean = false, output: GOptions.ZTextBoxAttributes = {}): GOptions.ZTextBoxAttributes {
 
-        GObject.constructAttributes(e, removeAttributes, output, "center");
+        ZObject.constructAttributes(e, removeAttributes, output, "center");
         //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(AttributeNames.Style.autoSizeShapeToFitText);
         //const textChild = HTMLFunctions.getChildByNodeName(e, AttributeNames.text);
         output.textClass = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.textClass);
@@ -143,7 +143,7 @@ export class GTextBox extends GVertex {
 
         for (let i = 0; i < x.length; i++) {
             const p = x[i];
-            if (GTextBox.updateTextAttributes.some((v) => v == p.attributeName)) {
+            if (ZTextBox.updateTextAttributes.some((v) => v == p.attributeName)) {
                 b = true;
             }
             if (p.attributeName == null) {

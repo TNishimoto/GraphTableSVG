@@ -14,7 +14,7 @@ allowedParameterTypes.add("string");
 allowedParameterTypes.add("string[]");
 allowedParameterTypes.add("number");
 allowedParameterTypes.add("boolean");
-allowedParameterTypes.add("string | Objects.GOptions.GTextBoxCSS");
+allowedParameterTypes.add("string | Objects.GOptions.ZTextBoxCSS");
 allowedParameterTypes.add("BWTOption")
 allowedParameterTypes.add("SuffixArray.SATableOption")
 allowedParameterTypes.add("SATableOption")

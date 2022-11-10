@@ -31,13 +31,13 @@ export type StrokeClassCSS = {
     strokeWidth?: string,
 }
 
-export type GTextBoxCSS = {
+export type ZTextBoxCSS = {
     autoSizeShapeToFitText?: AutoSizeShapeToFitText,
     verticalAnchor?: VerticalAnchor,
     horizontalAnchor?: HorizontalAnchor
 }
 
-type _GTextBoxAttribute = {
+type _ZTextBoxAttribute = {
     text?: string | HTMLElement[],
     /*
     isAutoSizeShapeToFitText?: boolean,
@@ -48,12 +48,12 @@ type _GTextBoxAttribute = {
     textStyle?: string | textClassCSS
 }
 export type _GTextBoxSVGGroupInfo = {
-    class?: string | GTextBoxCSS
-    style?: string | GTextBoxCSS
+    class?: string | ZTextBoxCSS
+    style?: string | ZTextBoxCSS
 }
-export type GTextBoxAttributesWithoutGroup = _GObjectAttributes & _GTextBoxAttribute
+export type ZTextBoxAttributesWithoutGroup = _ZObjectAttributes & _ZTextBoxAttribute
 
-export type GTextBoxAttributes = GTextBoxAttributesWithoutGroup & _GTextBoxSVGGroupInfo
+export type ZTextBoxAttributes = ZTextBoxAttributesWithoutGroup & _GTextBoxSVGGroupInfo
 
 export type CellCSS = {
     autoSizeShapeToFitText?: AutoSizeShapeToFitText,
@@ -76,7 +76,7 @@ export type CellAttributes = {
 
 
 
-type _GObjectAttributes = {
+type _ZObjectAttributes = {
     //class?: string,
     /*
     cx?: number,
@@ -111,24 +111,24 @@ export type backgroundOption = {
 
 
 
-export type GObjectAttributes = _GObjectAttributes & _SVGGroupStyleInfo;
+export type ZObjectAttributes = _ZObjectAttributes & _SVGGroupStyleInfo;
 
 
 export type DrawingFunctionOnURL = { url : string | null, functionName : string | null, drawingFunction : object | null }
 
-type _GGraphAttributes = {
+type _ZGraphAttributes = {
     allocate? : GraphAllocateFunction;
     isLatexMode?: boolean
     relocateStyle?: string
     direction?: Direction | null;
     drawingFunction? : DrawingFunctionOnURL
 }
-export type GGraphAttributes = _GGraphAttributes & GTextBoxAttributes; 
+export type ZGraphAttributes = _ZGraphAttributes & ZTextBoxAttributes; 
 
 
 
 //// EDGE
-export type GEdgeStyleCSS = {
+export type ZEdgeStyleCSS = {
     startMarker?: boolean,
     endMarker?: boolean,
 
@@ -136,9 +136,9 @@ export type GEdgeStyleCSS = {
     endConnectorType?: ConnectorType,
     pathTextAlignment?: PathTextAlighnment,
     edgeType? : EdgeType 
-} & GTextBoxCSS
+} & ZTextBoxCSS
 
-type _GAbstractEdgeAttributes = {
+type _ZAbstractEdgeAttributes = {
     x1?: number,
     x2?: number,
 
@@ -150,7 +150,7 @@ type _GAbstractEdgeAttributes = {
 
 }
 
-type _GEdgeAttributes = {
+type _ZEdgeAttributes = {
     x3?: number,
     y3?: number,
 }
@@ -162,14 +162,14 @@ export type ConnecterOption = {
 }
 
 
-type _GEdgeSVGGroupInfo = {
-    class?: string | GEdgeStyleCSS
-    style?: string | GEdgeStyleCSS
+type _ZEdgeSVGGroupInfo = {
+    class?: string | ZEdgeStyleCSS
+    style?: string | ZEdgeStyleCSS
 }
 
-export type GAbstractEdgeAttributes = _GAbstractEdgeAttributes & _GEdgeSVGGroupInfo
-export type GAbstractTextEdgeAttributes = _GTextBoxAttribute & GAbstractEdgeAttributes;
-export type GEdgeAttributes = GAbstractTextEdgeAttributes & _GEdgeAttributes 
+export type ZAbstractEdgeAttributes = _ZAbstractEdgeAttributes & _ZEdgeSVGGroupInfo
+export type ZAbstractTextEdgeAttributes = _ZTextBoxAttribute & ZAbstractEdgeAttributes;
+export type ZEdgeAttributes = ZAbstractTextEdgeAttributes & _ZEdgeAttributes 
 
 
 export function setClassAndStyle(svg: SVGElement, className: string | object | undefined | null, style : string | object |undefined | null) {

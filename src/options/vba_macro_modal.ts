@@ -1,7 +1,7 @@
 //namespace GraphTableSVG {
 //import { Padding, Rectangle } from "../common/vline";
 import { SVGToVBA } from "./svg_to_vba"
-import { GObject } from "../objects/z_object"
+import { ZObject } from "../objects/z_object"
 import { runInThisContext } from "vm";
 import { getGObjects } from "./open_svg";
 import { VBAObjectType, collectVBAObjectTypes } from "./vba_object";
@@ -35,8 +35,8 @@ import { ShapeObjectType } from "../common/enums";
         svgsvg.appendChild(p);
 
     }
-    export function showMacroModal(id :string | GObject){
-        if (id instanceof GObject) {
+    export function showMacroModal(id :string | ZObject){
+        if (id instanceof ZObject) {
             const p = SVGToVBA.create(id);
             createMacroModal(p);
         }else{
@@ -54,8 +54,8 @@ import { ShapeObjectType } from "../common/enums";
      * マクロ用のモーダルを画面に生成します。
      * @param vbaCode モーダルに表示する貼り付けるVBAマクロ
      */
-    export function createMacroModal(vbaCode: string | GObject) {
-        if (vbaCode instanceof GObject) {
+    export function createMacroModal(vbaCode: string | ZObject) {
+        if (vbaCode instanceof ZObject) {
             const p = SVGToVBA.create(vbaCode);
             createMacroModal(p);
         } else {

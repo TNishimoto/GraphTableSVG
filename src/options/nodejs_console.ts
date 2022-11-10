@@ -19,8 +19,8 @@ import { SVGToVBA } from "./svg_to_vba"
 import { VBAObjectType } from "./vba_object"
 
 import * as GUIObserver from "../basic/html/gui_observer"
-import { GTable } from "../object/g_table";
-import { GGraph } from "../object/g_graph";
+import { ZTable } from "../object/g_table";
+import { ZGraph } from "../object/g_graph";
 */
 const opener = require("opener")
 const fs = require("fs");

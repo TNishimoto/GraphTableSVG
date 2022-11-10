@@ -10,7 +10,7 @@ import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGElementExtension from "../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import * as DefaultClassNames from "../common/default_class_names"
-import { GObject } from "./z_object";
+import { ZObject } from "./z_object";
 /**
      * SVGPathElementを生成します。
      * @param parent 生成したSVGPathElementを子に追加する要素

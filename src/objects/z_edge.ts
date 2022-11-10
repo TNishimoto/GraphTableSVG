@@ -7,14 +7,14 @@ import { getLineType } from "../html/enum_extension";
 
 import * as GOptions from "./z_options"
 import * as ElementExtension from "../interfaces/element_extension"
-import { GAbstractTextEdge } from "./z_abstract_text_edge";
+import { ZAbstractTextEdge as ZAbstractTextEdge } from "./z_abstract_text_edge";
 import { AttributeNames, Color, StyleNames } from "../common";
 import { HTMLFunctions } from "../html";
 
 /**
  * 辺をSVGで表現するためのクラスです。
  */
-export class GEdge extends GAbstractTextEdge  {
+export class ZEdge extends ZAbstractTextEdge  {
     //private isFixTextSize: boolean = false;
     protected surfaceAttributes: string[] = [];
     protected _minimumWidth: number = 10;
@@ -31,7 +31,7 @@ export class GEdge extends GAbstractTextEdge  {
     }
 
 
-    protected setBasicOption(option: GOptions.GEdgeAttributes) {
+    protected setBasicOption(option: GOptions.ZEdgeAttributes) {
         super.setBasicOption(option);
 
         if (option.x3 !== undefined && option.y3 !== undefined) {
@@ -39,8 +39,8 @@ export class GEdge extends GAbstractTextEdge  {
         }
     }
 
-    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GEdgeAttributes = {}): GOptions.GEdgeAttributes {
-        GAbstractTextEdge.constructAttributes(e, removeAttributes, output);
+    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZEdgeAttributes = {}): GOptions.ZEdgeAttributes {
+        ZAbstractTextEdge.constructAttributes(e, removeAttributes, output);
 
         if (e.hasAttribute(AttributeNames.x3)) {
             output.x3 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.x3, 0);
@@ -275,7 +275,7 @@ export class GEdge extends GAbstractTextEdge  {
         const globalY = this.graph != null ? this.graph.y : 0;
 
         //let pid = 0;
-        const charInfoArray = GEdge.getVisibleCharElements(this.svgText);
+        const charInfoArray = ZEdge.getVisibleCharElements(this.svgText);
         charInfoArray.forEach(([parent, character], i) => {
             if (parent instanceof SVGTSpanElement) {
                 //const character = this.svgText.textContent![i];

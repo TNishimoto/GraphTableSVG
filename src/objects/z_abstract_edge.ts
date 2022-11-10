@@ -1,10 +1,10 @@
-import { GObject } from "./z_object";
+import { ZObject } from "./z_object";
 import * as DefaultClassNames from "../common/default_class_names"
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import { PathTextAlighnment, ConnectorType, msoDashStyle, CoodinateType, EdgeType } from "../common/enums";
 import { escapeWithRound100, nearlyEqual, round100 } from "../common/vline";
-import { GVertex } from "./z_vertex"
+import { ZVertex } from "./z_vertex"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVG from "../interfaces/svg"
 import { getGraph } from "./graph_helpers/common_functions";
@@ -18,7 +18,7 @@ import { HTMLFunctions } from "../html";
 import { LocalGObjectManager } from "./global_gobject_manager";
 import { ObjectStableFlagName } from "./z_observer";
 
-export class GAbstractEdge extends GObject implements IEdge {
+export class ZAbstractEdge extends ZObject implements IEdge {
     constructor(svgbox: SVGElement | string) {
         super(svgbox);
 
@@ -31,11 +31,11 @@ export class GAbstractEdge extends GObject implements IEdge {
         }
         this.svgPath.id = `path-${this.objectID}`;
     }
-    protected createSurface(svgbox: SVGElement, option: GOptions.GObjectAttributes = {}): void {
+    protected createSurface(svgbox: SVGElement, option: GOptions.ZObjectAttributes = {}): void {
         if (option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultEdgePathClass;
         this._svgSurface = createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
     }
-    protected setBasicOption(option: GOptions.GAbstractEdgeAttributes) {
+    protected setBasicOption(option: GOptions.ZAbstractEdgeAttributes) {
 
         super.setBasicOption(option);
 
@@ -48,8 +48,8 @@ export class GAbstractEdge extends GObject implements IEdge {
         const markerStart = style.getPropertyValue(StyleNames.markerStart);
         const markerEnd = style.getPropertyValue(StyleNames.markerEnd);
 
-        if (markerStart.length != 0) this.markerStart = GAbstractEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
-        if (markerEnd.length != 0) this.markerEnd = GAbstractEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+        if (markerStart.length != 0) this.markerStart = ZAbstractEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+        if (markerEnd.length != 0) this.markerEnd = ZAbstractEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
 
         if (option.x1 !== undefined && option.y1 !== undefined && option.x2 !== undefined && option.y2 !== undefined) {
             this.pathPoints = [[option.x1!, option.y1!], [option.x2!, option.y2!]];
@@ -57,13 +57,13 @@ export class GAbstractEdge extends GObject implements IEdge {
 
 
         if (typeof option.beginVertex == "object") {
-            if (option.beginVertex instanceof GVertex) this.beginVertex = option.beginVertex;
+            if (option.beginVertex instanceof ZVertex) this.beginVertex = option.beginVertex;
         } else if (typeof option.beginVertex == "string") {
             this.beginVertexID = option.beginVertex;
         }
 
         if (typeof option.endVertex == "object") {
-            if (option.endVertex instanceof GVertex) this.endVertex = option.endVertex;
+            if (option.endVertex instanceof ZVertex) this.endVertex = option.endVertex;
         } else if (typeof option.endVertex == "string") {
             this.endVertexID = option.endVertex;
         }
@@ -137,7 +137,7 @@ export class GAbstractEdge extends GObject implements IEdge {
         return false;
     }
 
-    public get graph(): GObject | null {
+    public get graph(): ZObject | null {
         return getGraph(this);
     }
 
@@ -304,17 +304,17 @@ export class GAbstractEdge extends GObject implements IEdge {
     /**
     開始接点を返します。
     */
-    get beginVertex(): GVertex | null {
+    get beginVertex(): ZVertex | null {
         if (this.beginVertexID == null) {
             return null;
         } else {
-            return <GVertex>GObject.getObjectFromObjectID(this.beginVertexID);
+            return <ZVertex>ZObject.getObjectFromObjectID(this.beginVertexID);
         }
     }
     /**
     開始接点を設定します。
     */
-    set beginVertex(value: GVertex | null) {
+    set beginVertex(value: ZVertex | null) {
         if (value == null) {
             this.beginVertexID = null;
         } else {
@@ -326,17 +326,17 @@ export class GAbstractEdge extends GObject implements IEdge {
     /**
     終了接点を返します。
     */
-    get endVertex(): GVertex | null {
+    get endVertex(): ZVertex | null {
         if (this.endVertexID == null) {
             return null;
         } else {
-            return <GVertex>GObject.getObjectFromObjectID(this.endVertexID);
+            return <ZVertex>ZObject.getObjectFromObjectID(this.endVertexID);
         }
     }
     /**
     終了接点を設定します。
     */
-    set endVertex(value: GVertex | null) {
+    set endVertex(value: ZVertex | null) {
         if (value == null) {
             this.endVertexID = null;
         } else {
@@ -438,7 +438,7 @@ export class GAbstractEdge extends GObject implements IEdge {
             path.setAttribute("transform", "rotate(180,5,5)");
             marker.setAttribute("refX", "0");
         }
-        marker.id = `marker-${GAbstractEdge.markerCounter++}`;
+        marker.id = `marker-${ZAbstractEdge.markerCounter++}`;
         return marker;
     }
     public static createStartMarker(option: { className?: string, strokeWidth?: string, color?: string } = {}): SVGMarkerElement {
@@ -531,10 +531,10 @@ export class GAbstractEdge extends GObject implements IEdge {
         }
     }
 
-    private removeVertexEvent(vertex: GVertex) {
+    private removeVertexEvent(vertex: ZVertex) {
         vertex.svgGroup.removeEventListener(AttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
     }
-    private addVertexEvent(vertex: GVertex) {
+    private addVertexEvent(vertex: ZVertex) {
         vertex.svgGroup.addEventListener(AttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
     }
     private connectPositionChangedFunc = () => {
@@ -543,8 +543,8 @@ export class GAbstractEdge extends GObject implements IEdge {
 
     private tryUpdateConnectorWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
-        const oldBeginVertex = GAbstractEdge.getConnectedVertexFromDic(this, true);
-        const oldEndVertex = GAbstractEdge.getConnectedVertexFromDic(this, false);
+        const oldBeginVertex = ZAbstractEdge.getConnectedVertexFromDic(this, true);
+        const oldEndVertex = ZAbstractEdge.getConnectedVertexFromDic(this, false);
         if (this.beginVertex != oldBeginVertex) {
             b = true;
             if(!withUpdate){
@@ -565,7 +565,7 @@ export class GAbstractEdge extends GObject implements IEdge {
                         this.beginVertex.insertOutcomingEdge(this);
                     }
                 }
-                GAbstractEdge.setConnectedVertexFromDic(this, true);
+                ZAbstractEdge.setConnectedVertexFromDic(this, true);
 
             }
         }
@@ -590,7 +590,7 @@ export class GAbstractEdge extends GObject implements IEdge {
                         this.endVertex.insertIncomingEdge(this);
                     }
                 }
-                GAbstractEdge.setConnectedVertexFromDic(this, false);
+                ZAbstractEdge.setConnectedVertexFromDic(this, false);
 
             }
         }
@@ -751,8 +751,8 @@ export class GAbstractEdge extends GObject implements IEdge {
 
     /*
     protected updateConnectorInfo() {
-        const oldBeginVertex = GAbstractEdge.getConnectedVertexFromDic(this, true);
-        const oldEndVertex = GAbstractEdge.getConnectedVertexFromDic(this, false);
+        const oldBeginVertex = ZAbstractEdge.getConnectedVertexFromDic(this, true);
+        const oldEndVertex = ZAbstractEdge.getConnectedVertexFromDic(this, false);
         if (this.beginVertex != oldBeginVertex) {
             if (oldBeginVertex != null) {
 
@@ -768,7 +768,7 @@ export class GAbstractEdge extends GObject implements IEdge {
                     this.beginVertex.insertOutcomingEdge(this);
                 }
             }
-            GAbstractEdge.setConnectedVertexFromDic(this, true);
+            ZAbstractEdge.setConnectedVertexFromDic(this, true);
         }
         if (this.endVertex != oldEndVertex) {
             if (oldEndVertex != null) {
@@ -784,7 +784,7 @@ export class GAbstractEdge extends GObject implements IEdge {
                     this.endVertex.insertIncomingEdge(this);
                 }
             }
-            GAbstractEdge.setConnectedVertexFromDic(this, false);
+            ZAbstractEdge.setConnectedVertexFromDic(this, false);
         }
         //if(this.beginVertexID != )
     }
@@ -967,12 +967,12 @@ export class GAbstractEdge extends GObject implements IEdge {
     */
     private static connectedBeginVertexDic: { [key: string]: string; } = {};
     private static connectedEndVertexDic: { [key: string]: string; } = {};
-    public static getConnectedVertexFromDic(edge: GAbstractEdge, isBegin: boolean): GVertex | null {
-        const dic = isBegin ? GAbstractEdge.connectedBeginVertexDic : GAbstractEdge.connectedEndVertexDic;
+    public static getConnectedVertexFromDic(edge: ZAbstractEdge, isBegin: boolean): ZVertex | null {
+        const dic = isBegin ? ZAbstractEdge.connectedBeginVertexDic : ZAbstractEdge.connectedEndVertexDic;
         if (edge.objectID in dic) {
             const id = dic[edge.objectID];
-            const obj = GObject.getObjectFromObjectID(id);
-            if (obj instanceof GVertex) {
+            const obj = ZObject.getObjectFromObjectID(id);
+            if (obj instanceof ZVertex) {
                 return obj;
             } else {
                 return null;
@@ -981,8 +981,8 @@ export class GAbstractEdge extends GObject implements IEdge {
             return null;
         }
     }
-    public static setConnectedVertexFromDic(edge: GAbstractEdge, isBegin: boolean): void {
-        const dic = isBegin ? GAbstractEdge.connectedBeginVertexDic : GAbstractEdge.connectedEndVertexDic;
+    public static setConnectedVertexFromDic(edge: ZAbstractEdge, isBegin: boolean): void {
+        const dic = isBegin ? ZAbstractEdge.connectedBeginVertexDic : ZAbstractEdge.connectedEndVertexDic;
         const id = isBegin ? edge.beginVertexID : edge.endVertexID;
         if (id == null) {
             if (edge.objectID in dic) {
@@ -992,7 +992,7 @@ export class GAbstractEdge extends GObject implements IEdge {
             dic[edge.objectID] = id;
         }
     }
-    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.GAbstractEdgeAttributes = {}): GOptions.GAbstractEdgeAttributes {
+    static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZAbstractEdgeAttributes = {}): GOptions.ZAbstractEdgeAttributes {
         /*
         const style = getComputedStyle(e);
         const markerStart = style.getPropertyValue(StyleNames.markerStart);
@@ -1004,10 +1004,10 @@ export class GAbstractEdge extends GObject implements IEdge {
             output.endMarker = true;
         }
         */
-        GObject.constructAttributes(e, removeAttributes, output, "center");
+        ZObject.constructAttributes(e, removeAttributes, output, "center");
 
 
-        //const _output = <GOptions.GEdgeAttributes>GAbstractEdge.constructAttributes(e, removeAttributes, output);
+        //const _output = <GOptions.ZEdgeAttributes>ZAbstractEdge.constructAttributes(e, removeAttributes, output);
         output.x1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.x1, 0);
         output.x2 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.x2, 300);
         output.y1 = ElementExtension.gtGetAttributeNumberWithoutNull(e, AttributeNames.y1, 0);
