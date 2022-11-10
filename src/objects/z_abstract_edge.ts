@@ -1,22 +1,22 @@
-import { GObject } from "./g_object";
+import { GObject } from "./z_object";
 import * as DefaultClassNames from "../common/default_class_names"
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import { PathTextAlighnment, ConnectorType, msoDashStyle, CoodinateType, EdgeType } from "../common/enums";
 import { escapeWithRound100, nearlyEqual, round100 } from "../common/vline";
-import { GVertex } from "./g_vertex"
+import { GVertex } from "./z_vertex"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVG from "../interfaces/svg"
 import { getGraph } from "./graph_helpers/common_functions";
 import { tryUpdateAppropriateDashArrayWithUpdateFlag } from "../html/enum_extension";
-import * as GOptions from "./g_options"
+import * as GOptions from "./z_options"
 import { createPath } from "./element_builder"
 import { NullError, UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
 import { IEdge } from "./i_object";
 import { HTMLFunctions } from "../html";
 import { LocalGObjectManager } from "./global_gobject_manager";
-import { ObjectStableFlagName } from "./g_observer";
+import { ObjectStableFlagName } from "./z_observer";
 
 export class GAbstractEdge extends GObject implements IEdge {
     constructor(svgbox: SVGElement | string) {

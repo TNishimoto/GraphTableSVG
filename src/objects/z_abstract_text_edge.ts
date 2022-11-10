@@ -5,17 +5,17 @@ import { PathTextAlighnment } from "../common/enums";
 import * as HTMLFunctions from "../html/html_functions";
 import * as SVG from "../interfaces/svg"
 import { getVirtualRegion } from "../interfaces/virtual_text"
-import { GAbstractEdge } from "./g_abstract_edge";
+import { GAbstractEdge } from "./z_abstract_edge";
 import * as CommonFunctions from "../common/common_functions"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as CSS from "../html/css"
-import * as GOptions from "./g_options"
+import * as GOptions from "./z_options"
 import * as Extensions from "../interfaces/extensions"
 import { createSVGText } from "./element_builder";
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { nearlyEqual, round100 } from "../common/vline";
 import { Debugger } from "../common/debugger";
-import { ObjectStableFlagName } from "./g_observer";
+import { ObjectStableFlagName } from "./z_observer";
 
 export class GAbstractTextEdge extends GAbstractEdge {
     private static updateTextAttributes = ["style"]

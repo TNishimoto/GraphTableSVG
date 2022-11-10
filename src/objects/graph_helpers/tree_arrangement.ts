@@ -1,6 +1,6 @@
 //namespace GraphTableSVG {
 
-    import {GGraph} from "../g_graph"
+    import {GGraph} from "../z_graph"
     import { VertexOrder } from "../../common/enums";
 
     import {VirtualTree} from "./virtual_tree"

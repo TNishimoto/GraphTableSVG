@@ -1,8 +1,8 @@
 ﻿
 //namespace GraphTableSVG {
-import { GObject } from "../objects/g_object"
-import { GTable } from "../objects/g_table"
-import { GGraph } from "../objects/g_graph"
+import { GObject } from "../objects/z_object"
+import { GTable } from "../objects/z_table"
+import { GGraph } from "../objects/z_graph"
 import { Rectangle } from "../common/vline";
 import * as CSS from "../html/css"
 import { VBATranslateFunctions } from "../common/vba_functions"

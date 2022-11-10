@@ -1,10 +1,10 @@
-/// <reference path="g_path_textbox.ts"/>
+/// <reference path="z_path_textbox.ts"/>
 //namespace GraphTableSVG {
-    import {GTextBox} from "./g_textbox"
-    import {GPathTextBox} from "./g_path_textbox"
+    import {GTextBox} from "./z_textbox"
+    import {GPathTextBox} from "./z_path_textbox"
     import { ShapeObjectType, SpeakerPosition, VBAShapeType } from "../common/enums";
     import {Rectangle, VLine} from "../common/vline"
-    import * as GOptions  from "./g_options"
+    import * as GOptions  from "./z_options"
 
     import * as ElementExtension from "../interfaces/element_extension"
 import { AttributeNames } from "../common";
@@ -68,7 +68,7 @@ import { AttributeNames } from "../common";
         }
         */
         public get type(): ShapeObjectType {
-            return "g-callout";
+            return ShapeObjectType.Callout;
         }
         protected updateSurfaceSize(){
             const region = this.getVirtualRegion();

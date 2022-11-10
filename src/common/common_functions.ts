@@ -3,7 +3,7 @@
     //import * as CSS from "../svghtml/css"
     //import {GGraph} from "../object/g_graph"
     //import {GTable} from "../object/g_table"
-    //import {GObject} from "../object/g_object"
+    //import {GObject} from "../object/z_object"
 
     //import {VBAObjectType} from "../object/table/vba"
     

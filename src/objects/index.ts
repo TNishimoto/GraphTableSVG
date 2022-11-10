@@ -3,27 +3,27 @@
  * @module
  */
 
-import {GObject} from "./g_object"
-import {GArrowCallout} from "./g_arrow_callout"
-import {GCallout} from "./g_callout"
-import {GCircle} from "./g_circle"
-import {GEdge} from "./g_edge"
-import {GEllipse} from "./g_ellipse"
-import {GGraph} from "./g_graph"
-import {GRectButton} from "./g_rect_button"
-import {GRect} from "./g_rect"
-import {GTable, GTableOption} from "./g_table"
-import {GTextBox} from "./g_textbox"
-import {GVertex} from "./g_vertex"
-import {GForeignObject} from "./g_foreign_object"
+import {GObject} from "./z_object"
+import {GArrowCallout} from "./z_arrow_callout"
+import {GCallout} from "./z_callout"
+import {GCircle} from "./z_circle"
+import {GEdge} from "./z_edge"
+import {GEllipse} from "./z_ellipse"
+import {GGraph} from "./z_graph"
+import {GRectButton} from "./z_rect_button"
+import {GRect} from "./z_rect"
+import {GTable, GTableOption} from "./z_table"
+import {GTextBox} from "./z_textbox"
+import {GVertex} from "./z_vertex"
+import {GForeignObject} from "./z_foreign_object"
 
 import {VirtualTree} from "./graph_helpers/virtual_tree"
 import {GraphArrangement} from "./graph_helpers/graph_arrangement"
 import * as TreeArrangement from "./graph_helpers/tree_arrangement"
 
 
-import {GPathTextBox} from "./g_path_textbox"
-import * as GOptions from "./g_options"
+import {GPathTextBox} from "./z_path_textbox"
+import * as GOptions from "./z_options"
 
 
 export {

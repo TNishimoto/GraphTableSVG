@@ -1,4 +1,4 @@
-import { textClassCSS } from "../objects/g_options";
+import { textClassCSS } from "../objects/z_options";
 import * as CSS from "../html/css";
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { setSVGReteral, TextReteral } from "./gobject_reterals";

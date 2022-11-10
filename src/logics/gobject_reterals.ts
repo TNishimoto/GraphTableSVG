@@ -186,7 +186,6 @@ export function toHTML(obj: SVGReteral, indent: string): string[] {
     const tag = (<any>obj)["tag"];
 
     const replaceDic : Map<string, string> = new Map();
-    //replaceDic.set("shrink", "g-shrink")
 
     if (tag != undefined) {
         let fstLine = `<${tag}`

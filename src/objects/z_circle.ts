@@ -1,15 +1,15 @@
-import {GVertex} from "./g_vertex"
-import {GTextBox} from "./g_textbox"
-import {GCalloutAttributes} from "./g_callout"
+import {GVertex} from "./z_vertex"
+import {GTextBox} from "./z_textbox"
+import {GCalloutAttributes} from "./z_callout"
 import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
 
 import {Rectangle, VLine} from "../common/vline"
-import {GEllipse, GAbstractEllipseCircle} from "./g_ellipse"
+import {GEllipse, GAbstractEllipseCircle} from "./z_ellipse"
 import * as CSS from "../html/css"
-import * as GOptions  from "./g_options"
+import * as GOptions  from "./z_options"
 import * as ElementExtension from "../interfaces/element_extension"
 
 export class GCircle extends GAbstractEllipseCircle  {

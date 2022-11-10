@@ -1,9 +1,9 @@
 //namespace GraphTableSVG {
 
-    import { GVertex } from "../g_vertex"    
-    import { GEdge } from "../g_edge"    
+    import { GVertex } from "../z_vertex"    
+    import { GEdge } from "../z_edge"    
     import {Rectangle} from "../../common/vline"
-import { GAbstractEdge } from "../g_abstract_edge";
+import { GAbstractEdge } from "../z_abstract_edge";
 
     export class VirtualTree {
         subTreeRoot: GVertex;

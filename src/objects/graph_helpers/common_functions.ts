@@ -1,4 +1,4 @@
-import { GObject } from "../g_object";
+import { GObject } from "../z_object";
 import * as AttributeNames from "../../common/attribute_names"
 
 export function getGraph(obj : GObject): GObject | null {

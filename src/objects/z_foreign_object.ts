@@ -1,8 +1,8 @@
 import * as CSS from "../html/css"
 import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../common/enums";
-import { GVertex } from "./g_vertex"
+import { GVertex } from "./z_vertex"
 
-import * as GOptions from "./g_options"
+import * as GOptions from "./z_options"
 
 export class GForeignObject extends GVertex {
     private _foreignObject: SVGForeignObjectElement;

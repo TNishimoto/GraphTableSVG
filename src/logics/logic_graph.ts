@@ -1,4 +1,4 @@
-import * as GOptions from "../objects/g_options"
+import * as GOptions from "../objects/z_options"
 export class LogicGraphEdge {
     public text: string | null = null;
     public endNodeIndex: number = -1;

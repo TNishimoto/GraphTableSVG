@@ -1,7 +1,7 @@
 
 
 import { IObject, ITextBox, IEdge } from "./i_object";
-import { ObjectStableFlagName, updateTextByTimer, timerInterval, updatePathByTimer } from "./g_observer";
+import { ObjectStableFlagName, updateTextByTimer, timerInterval, updatePathByTimer } from "./z_observer";
 import { Debugger } from "../common/debugger";
 let updateSVGSVGTimerCounter = 0;
 

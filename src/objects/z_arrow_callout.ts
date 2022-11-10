@@ -1,13 +1,13 @@
-/// <reference path="g_path_textbox.ts"/>
+/// <reference path="z_path_textbox.ts"/>
 //namespace GraphTableSVG {
-import { GPathTextBox } from "./g_path_textbox"
-import { GTextBox } from "./g_textbox"
+import { GPathTextBox } from "./z_path_textbox"
+import { GTextBox } from "./z_textbox"
 import { ShapeObjectType, ConnectorType, msoDashStyle, Direction, AutoSizeShapeToFitText, VBAShapeType } from "../common/enums";
 //import {GTextBoxAttributes, GObjectAttributes, GCalloutAttributes, GShapeArrowCalloutAttributes} from "../options/attributes_option"
 import * as AttributeNames from "../common/attribute_names"
 import { Rectangle, VLine, escapeWithRound100 } from "../common/vline"
 import * as SVGTextBox from "../interfaces/svg_textbox";
-import * as GOptions from "./g_options"
+import * as GOptions from "./z_options"
 
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGTextExtensions from "../interfaces/svg_text_extension"

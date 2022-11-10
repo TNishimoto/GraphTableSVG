@@ -1,6 +1,6 @@
 //import {LogicCell} from "./logic_cell"
 import { LogicTable } from "./logic_table"
-import * as GOptions from "../objects/g_options"
+import * as GOptions from "../objects/z_options"
 import { LogicCell } from "./logic_cell";
 import { defaultCellClass } from "../common/attribute_names";
 import { CellOptionReteral, deepCopy } from "./gobject_reterals";

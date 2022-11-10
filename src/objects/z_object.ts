@@ -12,10 +12,10 @@ import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
 import { ShapeObjectType } from "../common/enums";
-import * as  GOptions from "./g_options";
+import * as  GOptions from "./z_options";
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
-import * as GObserver from "./g_observer"
+import * as GObserver from "./z_observer"
 import {IObject} from "./i_object"
 import { GlobalGObjectManager } from "./global_gobject_manager"
 import { GVertexOptionReteral } from "../logics/gobject_reterals"

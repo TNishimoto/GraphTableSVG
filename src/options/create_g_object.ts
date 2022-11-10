@@ -1,31 +1,31 @@
 
 import { ShapeObjectType } from "../common/enums";
 
-import { GObject } from "../objects/g_object"
-import { GCallout } from "../objects/g_callout"
-import { GArrowCallout } from "../objects/g_arrow_callout"
-import { GEllipse } from "../objects/g_ellipse"
-import { GRect } from "../objects/g_rect"
-import { GEdge } from "../objects/g_edge"
-import { GTable, GTableOption } from "../objects/g_table"
-import { GGraph } from "../objects/g_graph"
-import { GRectButton } from "../objects/g_rect_button"
-import { GCircle } from "../objects/g_circle";
-import * as GOptions from "../objects/g_options"
+import { GObject } from "../objects/z_object"
+import { GCallout } from "../objects/z_callout"
+import { GArrowCallout } from "../objects/z_arrow_callout"
+import { GEllipse } from "../objects/z_ellipse"
+import { GRect } from "../objects/z_rect"
+import { GEdge } from "../objects/z_edge"
+import { GTable, GTableOption } from "../objects/z_table"
+import { GGraph } from "../objects/z_graph"
+import { GRectButton } from "../objects/z_rect_button"
+import { GCircle } from "../objects/z_circle";
+import * as GOptions from "../objects/z_options"
 import { ArgumentOutOfRangeError, NullError } from "../common/exceptions";
-import { GForeignButton } from "../objects/g_foreign_button";
+import { GForeignButton } from "../objects/z_foreign_button";
 
-export function createGObject(parent: SVGElement | string | GObject, type: "g-rect-button", option?: GOptions.GTextBoxAttributes): GRectButton
-export function createGObject(parent: SVGElement | string | GObject, type: "g-rect", option?: GOptions.GTextBoxAttributes): GRect
-export function createGObject(parent: SVGElement | string | GObject, type: "g-edge", option?: GOptions.GEdgeAttributes): GEdge
-export function createGObject(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GOptions.GTextBoxAttributes): GEllipse
-export function createGObject(parent: SVGElement | string | GObject, type: "g-callout", option?: GOptions.GTextBoxAttributes): GCallout
-export function createGObject(parent: SVGElement | string | GObject, type: "g-circle", option?: GOptions.GTextBoxAttributes): GCircle
-export function createGObject(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GOptions.GTextBoxAttributes): GArrowCallout
-export function createGObject(parent: SVGElement | string | GObject, type: "g-graph", option?: GOptions.GTextBoxAttributes): GGraph
-export function createGObject(parent: SVGElement | string | GObject, type: "g-table", option?: GTableOption): GTable
-export function createGObject(parent: SVGElement | string | GObject, type: "g-object", option?: GTableOption): GObject
-export function createGObject(parent: SVGElement | string | GObject, type: "g-path-textbox", option?: GOptions.GTextBoxAttributes): GObject
+export function createGObject(parent: SVGElement | string | GObject, type: "z-rect-button", option?: GOptions.GTextBoxAttributes): GRectButton
+export function createGObject(parent: SVGElement | string | GObject, type: "z-rect", option?: GOptions.GTextBoxAttributes): GRect
+export function createGObject(parent: SVGElement | string | GObject, type: "z-edge", option?: GOptions.GEdgeAttributes): GEdge
+export function createGObject(parent: SVGElement | string | GObject, type: "z-ellipse", option?: GOptions.GTextBoxAttributes): GEllipse
+export function createGObject(parent: SVGElement | string | GObject, type: "z-callout", option?: GOptions.GTextBoxAttributes): GCallout
+export function createGObject(parent: SVGElement | string | GObject, type: "z-circle", option?: GOptions.GTextBoxAttributes): GCircle
+export function createGObject(parent: SVGElement | string | GObject, type: "z-arrow-callout", option?: GOptions.GTextBoxAttributes): GArrowCallout
+export function createGObject(parent: SVGElement | string | GObject, type: "z-graph", option?: GOptions.GTextBoxAttributes): GGraph
+export function createGObject(parent: SVGElement | string | GObject, type: "z-table", option?: GTableOption): GTable
+export function createGObject(parent: SVGElement | string | GObject, type: "z-object", option?: GTableOption): GObject
+export function createGObject(parent: SVGElement | string | GObject, type: "z-path-textbox", option?: GOptions.GTextBoxAttributes): GObject
 export function createGObject(parent: SVGElement | string | GObject, type: ShapeObjectType, option?: any): GObject
 export function createGObject(parent: SVGElement | string | GObject, type: ShapeObjectType, option: any = {}): GObject {
     let _parent: SVGElement;

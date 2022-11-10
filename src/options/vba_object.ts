@@ -1,8 +1,8 @@
 //namespace GraphTableSVG {
 import { Rectangle } from "../common/vline";
-import { GGraph } from "../objects/g_graph"
-import { GTable } from "../objects/g_table"
-import { GObject } from "../objects/g_object"
+import { GGraph } from "../objects/z_graph"
+import { GTable } from "../objects/z_table"
+import { GObject } from "../objects/z_object"
 import { ShapeObjectType } from "../common/enums";
 //    import {VBAObjectType} from "./svg_to_vba"
 

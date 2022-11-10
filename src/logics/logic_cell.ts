@@ -1,7 +1,7 @@
 import {defaultCellClass} from "../common/attribute_names"
 
 //import { Cell } from "../object/table_helpers/cell"
-import * as GOptions from "../objects/g_options"
+import * as GOptions from "../objects/z_options"
 import { SurfaceOptionReteral, BorderOptionReteral, CellOptionReteral, CellReteral, setSVGReteral } from "./gobject_reterals";
 
 import { LogicText } from "./logic_text";

@@ -5,21 +5,21 @@ import * as HTMLFunctions from "../../html/html_functions"
 import * as HTMLTable from "../html_table"
 import * as GUIObserver from "../../html/gui_observer"
 
-import { GObject } from "../../objects/g_object"
-import { GCallout } from "../../objects/g_callout"
-import { GArrowCallout } from "../../objects/g_arrow_callout"
-import { GEllipse } from "../../objects/g_ellipse"
-import { GRect } from "../../objects/g_rect"
-import { GEdge } from "../../objects/g_edge"
-import { GTable, GTableOption } from "../../objects/g_table"
-import { GGraph } from "../../objects/g_graph"
-import { GRectButton } from "../../objects/g_rect_button"
-import { GCircle } from "../../objects/g_circle";
+import { GObject } from "../../objects/z_object"
+import { GCallout } from "../../objects/z_callout"
+import { GArrowCallout } from "../../objects/z_arrow_callout"
+import { GEllipse } from "../../objects/z_ellipse"
+import { GRect } from "../../objects/z_rect"
+import { GEdge } from "../../objects/z_edge"
+import { GTable, GTableOption } from "../../objects/z_table"
+import { GGraph } from "../../objects/z_graph"
+import { GRectButton } from "../../objects/z_rect_button"
+import { GCircle } from "../../objects/z_circle";
 import * as ElementExtension from "../../interfaces/element_extension"
 import { LogicTable } from "../../logics";
 import { NullError } from "../../common/exceptions";
 import { appendVBAButton } from "../vba_macro_modal";
-import { GForeignButton } from "../../objects/g_foreign_button";
+import { GForeignButton } from "../../objects/z_foreign_button";
 import { convertAttributesIntoTableOption, TableOptionReteral } from "../../logics/gobject_reterals";
 
 

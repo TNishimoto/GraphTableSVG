@@ -1,12 +1,12 @@
-/// <reference path="g_vertex.ts"/>
+/// <reference path="z_vertex.ts"/>
 
 //namespace GraphTableSVG {
     import {Rectangle, VLine} from "../common/vline"
-    import {GTextBox} from "./g_textbox"
+    import {GTextBox} from "./z_textbox"
     import { ShapeObjectType, ConnectorType, msoDashStyle, AutoSizeShapeToFitText } from "../common/enums";
     import * as DefaultClassNames from "../common/default_class_names"
 
-    import * as GOptions  from "./g_options"
+    import * as GOptions  from "./z_options"
 
     export class GPathTextBox extends GTextBox {
         //private _svgPath: SVGPathElement;
@@ -32,7 +32,7 @@
         }
         
         public get type(): ShapeObjectType {
-            return "g-path-textbox";
+            return ShapeObjectType.PathTextBox;
         }
         /**
         * 接続部分の座標を返します。

@@ -14,16 +14,16 @@
 </head>
 
 <body>
-    <svg id="main" width="600px" height="600px" style="background:#e9e9e9;border:solid 1pt;" xmlns="http://www.w3.org/2000/svg" g-vba="true">
+    <svg id="main" width="600px" height="600px" style="background:#e9e9e9;border:solid 1pt;" xmlns="http://www.w3.org/2000/svg" z-vba="true">
         
-        <g-rect cx="100" cy="100">g-rect</g-rect>
-        <g-ellipse cx="100" cy="200">g-ellipse</g-ellipse>
-        <g-callout cx="200" cy="100">g-callout</g-callout>
-        <g-arrow-callout cx="400" cy="100">g-arrowcallout</g-arrow-callout>
-        <g-edge x1="100" y1="300" x2="300" y2="300">g-edge</g-edge>
-        <g-table cx="300" cy="400">
+        <z-rect cx="100" cy="100">z-rect</z-rect>
+        <z-ellipse cx="100" cy="200">z-ellipse</z-ellipse>
+        <z-callout cx="200" cy="100">z-callout</z-callout>
+        <z-arrow-callout cx="400" cy="100">z-arrowcallout</z-arrow-callout>
+        <z-edge x1="100" y1="300" x2="300" y2="300">z-edge</z-edge>
+        <z-table cx="300" cy="400">
             <row>
-                <cell>g-table</cell>
+                <cell>z-table</cell>
                 <cell>hello1</cell>
                 <cell>hello2</cell>
             </row>
@@ -32,14 +32,14 @@
                 <cell>hello4</cell>
                 <cell>hello5</cell>
             </row>
-        </g-table>
-        <g-graph cx="100" cy="400">
-            <g-ellipse id="g1" cx="0" cy="0">g-graph</g-ellipse>
-            <g-ellipse id="g2" cx="-50" cy="100"></g-ellipse>
-            <g-ellipse id="g3" cx="50" cy="100"></g-ellipse>
-            <g-edge begin-vertex="g1" end-vertex="g2"></g-edge>
-            <g-edge begin-vertex="g1" end-vertex="g3"></g-edge>
-        </g-graph>
+        </z-table>
+        <z-graph cx="100" cy="400">
+            <z-ellipse id="g1" cx="0" cy="0">z-graph</z-ellipse>
+            <z-ellipse id="g2" cx="-50" cy="100"></z-ellipse>
+            <z-ellipse id="g3" cx="50" cy="100"></z-ellipse>
+            <z-edge begin-vertex="g1" end-vertex="g2"></z-edge>
+            <z-edge begin-vertex="g1" end-vertex="g3"></z-edge>
+        </z-graph>
     </svg>
 </body>
 

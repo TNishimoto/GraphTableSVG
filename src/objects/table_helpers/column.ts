@@ -3,7 +3,7 @@ import { Cell, CellOption } from "./cell"
 //import {BorderRow} from "./border_row"
 
 import * as SVG from "../../interfaces/svg"
-import { GTable } from "../g_table"
+import { GTable } from "../z_table"
 import { Rectangle, Size, round100, nearlyEqual } from "../../common/vline";
 import { setAttributeNumber } from "../../interfaces/element_extension";
 import { Debugger } from "../../common/debugger";

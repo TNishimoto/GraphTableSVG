@@ -1,12 +1,12 @@
 ﻿//namespace GraphTableSVG {    
     import {Cell, CellOption} from "./cell"
     import * as SVG from "../../interfaces/svg"
-    import {GTable} from "../g_table"
+    import {GTable} from "../z_table"
 import { Rectangle, Size, round100, nearlyEqual } from "../../common/vline";
 import { setAttributeNumber } from "../../interfaces/element_extension";
 import { Debugger } from "../../common/debugger";
 import { GOptions } from "..";
-import * as GObserver from "../g_observer";
+import * as GObserver from "../z_observer";
 import * as AttributeNames from "../../common/attribute_names"
 import { getSVGSVGAncestor } from "../../html/html_functions";
 import {IObject} from "../i_object"

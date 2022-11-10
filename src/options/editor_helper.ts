@@ -1,6 +1,6 @@
 
 
-import { VertexObjectType } from "../common/enums"
+import { ShapeObjectType, VertexObjectType } from "../common/enums"
 
 export type DisplayObject = { key: string, displayName : string}
 
@@ -16,13 +16,13 @@ export namespace DisplayObject {
 //}
 
 export function getDisplayVertexObjectTypes() : DisplayObject[] {
-    return [ DisplayObject.create("g-callout", "GCallout"), 
-    DisplayObject.create("g-arrow-callout", "GArrowCallout"), 
-    DisplayObject.create("g-ellipse", "GEllipse"), 
-    DisplayObject.create("g-circle", "GCircle"), 
-    DisplayObject.create("g-rect", "GRect"), 
-    DisplayObject.create("g-path-textbox", "GPathTextbox"), 
-    DisplayObject.create("g-rect-button", "GRectButton"), 
-    DisplayObject.create("g-table", "GTable") ];
+    return [ DisplayObject.create(ShapeObjectType.Callout, "GCallout"), 
+    DisplayObject.create(ShapeObjectType.ArrowCallout, "GArrowCallout"), 
+    DisplayObject.create(ShapeObjectType.Ellipse, "GEllipse"), 
+    DisplayObject.create(ShapeObjectType.Circle, "GCircle"), 
+    DisplayObject.create(ShapeObjectType.Rect, "GRect"), 
+    DisplayObject.create(ShapeObjectType.PathTextBox, "GPathTextbox"), 
+    DisplayObject.create(ShapeObjectType.RectButton, "GRectButton"), 
+    DisplayObject.create(ShapeObjectType.Table, "GTable") ];
 }
 

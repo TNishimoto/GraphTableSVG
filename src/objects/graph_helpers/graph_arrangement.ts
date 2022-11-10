@@ -1,7 +1,7 @@
 //namespace GraphTableSVG {
-import { GEdge } from "../g_edge"
-import { GGraph } from "../g_graph"
-import { GVertex } from "../g_vertex"
+import { GEdge } from "../z_edge"
+import { GGraph } from "../z_graph"
+import { GVertex } from "../z_vertex"
 
 import { VirtualTree } from "./virtual_tree"
 
@@ -9,8 +9,8 @@ import * as TreeArrangement from "./tree_arrangement"
 import { Direction, ConnectorType } from "../../common/enums"
 import * as SVGTextBox from "../../interfaces/svg_textbox"
 import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
-import { GAbstractEdge } from "../g_abstract_edge"
-import { GAbstractTextEdge } from "../g_abstract_text_edge"
+import { GAbstractEdge } from "../z_abstract_edge"
+import { GAbstractTextEdge } from "../z_abstract_text_edge"
 import { getVirtualRegion } from "../../interfaces/virtual_text"
 
 export namespace GraphArrangement {

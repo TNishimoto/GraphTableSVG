@@ -1,7 +1,7 @@
 ﻿//namespace GraphTableSVG {
 import { Padding, Rectangle } from "../common/vline";
 //import {SVGToVBA} from "../object/table/vba"
-//import {GObject} from "../object/g_object"
+//import {GObject} from "../object/z_object"
 
 //export namespace GUI {
 

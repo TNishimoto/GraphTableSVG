@@ -49,42 +49,44 @@ export namespace VBAShapeType {
 }
 
 
-export type VertexObjectType = "g-callout" | "g-arrow-callout" | "g-ellipse" | "g-circle" | "g-rect" | "g-path-textbox" | "g-rect-button" | "g-table" | "g-foreign-object" | "g-foreign-button";
+export type VertexObjectType = "z-callout" | "z-arrow-callout" | "z-ellipse" | "z-circle" | "z-rect" | "z-path-textbox" | "z-rect-button" | "z-table" | "z-foreign-object" | "z-foreign-button";
 
+export const VBAAttributeName : string = "z-vba";
+export const ShrinkAttributeName : string = "z-shrink";
 
 //export namespace VertexObjectType {
 //}
 
 
-export type ShapeObjectType = VertexObjectType | "g-edge" | "g-graph" | "g-object";
+export type ShapeObjectType = VertexObjectType | "z-edge" | "z-graph" | "z-object";
 export namespace ShapeObjectType {
-    export const Callout: VertexObjectType = "g-callout"
-    export const ArrowCallout: VertexObjectType = "g-arrow-callout"
-    export const Ellipse: VertexObjectType = "g-ellipse"
-    export const Circle: VertexObjectType = "g-circle"
-    export const Rect: VertexObjectType = "g-rect"
-    export const PathTextBox: VertexObjectType = "g-path-textbox"
-    export const RectButton: VertexObjectType = "g-rect-button"
-    export const Graph: ShapeObjectType = "g-graph"
-    export const Table: ShapeObjectType = "g-table"
-    export const Object: ShapeObjectType = "g-object"
-    export const Edge: ShapeObjectType = "g-edge"
-    export const ForeignObject: ShapeObjectType = "g-foreign-object"
-    export const ForeignButton: ShapeObjectType = "g-foreign-button"
+    export const Callout: VertexObjectType = "z-callout"
+    export const ArrowCallout: VertexObjectType = "z-arrow-callout"
+    export const Ellipse: VertexObjectType = "z-ellipse"
+    export const Circle: VertexObjectType = "z-circle"
+    export const Rect: VertexObjectType = "z-rect"
+    export const PathTextBox: VertexObjectType = "z-path-textbox"
+    export const RectButton: VertexObjectType = "z-rect-button"
+    export const Graph: ShapeObjectType = "z-graph"
+    export const Table: ShapeObjectType = "z-table"
+    export const Object: ShapeObjectType = "z-object"
+    export const Edge: ShapeObjectType = "z-edge"
+    export const ForeignObject: ShapeObjectType = "z-foreign-object"
+    export const ForeignButton: ShapeObjectType = "z-foreign-button"
 
     const typeDic: { [key: string]: boolean; } = {
-        "g-callout": true,
-        "g-arrow-callout": true,
-        "g-ellipse": true,
-        "g-circle": true,
-        "g-rect": true,
-        "g-edge": true,
-        "g-graph": true,
-        "g-table": true,
-        "g-object": true,
-        "g-path-textbox": true,
-        "g-rect-button": true,
-        "g-foreign-button": true
+        "z-callout": true,
+        "z-arrow-callout": true,
+        "z-ellipse": true,
+        "z-circle": true,
+        "z-rect": true,
+        "z-edge": true,
+        "z-graph": true,
+        "z-table": true,
+        "z-object": true,
+        "z-path-textbox": true,
+        "z-rect-button": true,
+        "z-foreign-button": true
 
     }
     const customTypeDic: { [key: string]: boolean; } = {

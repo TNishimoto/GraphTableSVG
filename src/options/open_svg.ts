@@ -1,28 +1,28 @@
 
 import * as AttributeNames from "../common/attribute_names"
-import { ShapeObjectType } from "../common/enums";
+import { ShapeObjectType, VBAAttributeName } from "../common/enums";
 import * as HTMLFunctions from "../html/html_functions"
 import * as HTMLTable from "./html_table"
 import * as GUIObserver from "../html/gui_observer"
 
-import { GObject } from "../objects/g_object"
-import { GCallout } from "../objects/g_callout"
-import { GArrowCallout } from "../objects/g_arrow_callout"
-import { GEllipse } from "../objects/g_ellipse"
-import { GRect } from "../objects/g_rect"
-import { GEdge } from "../objects/g_edge"
-import { GTable, GTableOption } from "../objects/g_table"
-import { GGraph } from "../objects/g_graph"
-import { GRectButton } from "../objects/g_rect_button"
-import { GCircle } from "../objects/g_circle";
+import { GObject } from "../objects/z_object"
+import { GCallout } from "../objects/z_callout"
+import { GArrowCallout } from "../objects/z_arrow_callout"
+import { GEllipse } from "../objects/z_ellipse"
+import { GRect } from "../objects/z_rect"
+import { GEdge } from "../objects/z_edge"
+import { GTable, GTableOption } from "../objects/z_table"
+import { GGraph } from "../objects/z_graph"
+import { GRectButton } from "../objects/z_rect_button"
+import { GCircle } from "../objects/z_circle";
 import * as ElementExtension from "../interfaces/element_extension"
 import { LogicTable } from "../logics";
 import { NullError } from "../common/exceptions";
 import { appendVBAButton } from "./vba_macro_modal";
-import { GForeignButton } from "../objects/g_foreign_button";
+import { GForeignButton } from "../objects/z_foreign_button";
 import { convertAttributesIntoTableOption, TableOptionReteral } from "../logics/gobject_reterals";
 
-import { convertFromElementWithCustomElementAttributeToGObject, isElementWithCustomElementAttribute, convertFromElementToSVGGElementWithCustomElementAttribute } from "./custom_svg_processors/custom_g_element_processor";
+import { convertFromElementWithCustomElementAttributeToGObject, isElementWithCustomElementAttribute, convertFromElementToSVGGElementWithCustomElementAttribute } from "./custom_svg_processors/custom_x_element_processor";
 
 //export namespace openSVGFunctions {
 
@@ -111,7 +111,7 @@ export function openSVG(inputItem: string | Element | null = null, output: GObje
     } else if (inputItem instanceof SVGSVGElement) {
         const svgsvg: SVGSVGElement = inputItem;
 
-        const vbaAttr = inputItem.getAttribute("g-vba");
+        const vbaAttr = inputItem.getAttribute(VBAAttributeName);
         if (vbaAttr != null && vbaAttr == "true") {
             appendVBAButton(svgsvg);
         }
@@ -149,7 +149,7 @@ export function openSVG(inputItem: string | Element | null = null, output: GObje
 function toDivElement(e: Element): HTMLElement | null {
 
     //const type = e.nodeName == "G-TABLE" ? "g-table" : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell" : e.nodeName == "T" ? "t" : null;
-    const type = e.nodeName == "G-TABLE" ? "g-table" : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell" : null;
+    const type = e.nodeName == "Z-TABLE" ? ShapeObjectType.Table : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell" : null;
 
     if (type == null) {
         return null;
@@ -187,7 +187,7 @@ function isSVGElement(e: Element): boolean {
 
 export function openHTML(id: string | HTMLElement | null = null) {
     if (id == null) {
-        const p = document.getElementsByTagName("g-table");
+        const p = document.getElementsByTagName(ShapeObjectType.Table);
         const svgElements: HTMLElement[] = [];
         for (let i = 0; i < p.length; i++) {
             const svgNode = p.item(i);

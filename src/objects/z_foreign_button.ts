@@ -1,6 +1,6 @@
-import { GForeignObject } from "./g_foreign_object"
+import { GForeignObject } from "./z_foreign_object"
 import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from "../common/enums";
-import * as GOptions from "./g_options"
+import * as GOptions from "./z_options"
 
 import * as CSS from "../html/css"
 import * as StyleNames from "../common/style_names"

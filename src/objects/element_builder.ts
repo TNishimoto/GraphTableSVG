@@ -1,6 +1,6 @@
 
 import { escapeWithRound100, round100 } from "../common/vline";
-import * as GOptions from "./g_options"
+import * as GOptions from "./z_options"
 import * as CSS from "../html/css"
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
@@ -10,7 +10,7 @@ import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGElementExtension from "../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import * as DefaultClassNames from "../common/default_class_names"
-import { GObject } from "./g_object";
+import { GObject } from "./z_object";
 /**
      * SVGPathElementを生成します。
      * @param parent 生成したSVGPathElementを子に追加する要素

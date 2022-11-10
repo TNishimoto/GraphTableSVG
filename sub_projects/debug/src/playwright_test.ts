@@ -159,6 +159,7 @@ export async function toHTMLLines(root: Page, xpath: string, indent: string): Pr
 
         for (let i = 0; i < childrenXPathCodes.length; i++) {
             const nextNodePath = `${xpath}/${childrenXPathCodes[i]}`;
+
             const lines = await toHTMLLines(root, nextNodePath, "    " + indent)
             lines.forEach((v) => {
                 r.push(v);

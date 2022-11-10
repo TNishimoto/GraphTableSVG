@@ -1,4 +1,4 @@
-/// <reference path="g_object.ts"/>
+/// <reference path="z_object.ts"/>
 import * as SVG from "../interfaces/svg"
 import * as CSS from "../html/css"
 import { VBATranslateFunctions } from "../common/vba_functions"
@@ -10,10 +10,10 @@ import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor } from 
 import { Rectangle, PositionType, round100, nearlyEqual } from "../common/vline"
 import * as HTMLFunctions from "../html/html_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox"
-import { GObject } from "./g_object"
-import { GVertex } from "./g_vertex"
+import { GObject } from "./z_object"
+import { GVertex } from "./z_vertex"
 
-import * as GOptions from "./g_options"
+import * as GOptions from "./z_options"
 import { AutoSizeShapeToFitText } from "../common/enums"
 import { updateAppropriateDashArray, getUpdateFlagAppropriateDashArray } from "../html/enum_extension";
 

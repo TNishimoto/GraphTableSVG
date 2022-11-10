@@ -1,14 +1,14 @@
 //namespace GraphTableSVG {
-import { GObject } from "./g_object"
-import { GVertex } from "./g_vertex"
-import { GEdge } from "./g_edge"
-import { GRect } from "./g_rect"
-import { GRectButton } from "./g_rect_button"
+import { GObject } from "./z_object"
+import { GVertex } from "./z_vertex"
+import { GEdge } from "./z_edge"
+import { GRect } from "./z_rect"
+import { GRectButton } from "./z_rect_button"
 
-import { GCallout } from "./g_callout"
-import { GArrowCallout } from "./g_arrow_callout"
-import { GEllipse } from "./g_ellipse"
-import { GCircle } from "./g_circle"
+import { GCallout } from "./z_callout"
+import { GArrowCallout } from "./z_arrow_callout"
+import { GEllipse } from "./z_ellipse"
+import { GCircle } from "./z_circle"
 import * as DefaultClassNames from "../common/default_class_names"
 
 import { Rectangle } from "../common/vline"
@@ -16,7 +16,7 @@ import * as HTMLFunctions from "../html/html_functions"
 import * as SVG from "../interfaces/svg"
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
-import * as GOptions from "./g_options"
+import * as GOptions from "./z_options"
 
 import { ShapeObjectType, VertexObjectType, VertexOrder, PathTextAlighnment, ConnectorType, Direction } from "../common/enums";
 
@@ -29,7 +29,7 @@ import * as Extensions from "../interfaces/extensions"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 import { GPathTextBox } from "."
 import { LogicTable } from "../logics/logic_table"
-import { GTable } from "./g_table"
+import { GTable } from "./z_table"
 import { ArgumentOutOfRangeError } from "../common/exceptions"
 import { Exceptions } from "../common"
 import { Debugger } from "../common/debugger"
@@ -374,7 +374,7 @@ export class GGraph extends GObject {
             const dic: Map<number, GVertex> = new Map();
 
             logicGraph.nodes.forEach((v, i) => {
-                const node = GGraph.createVertex(svgsvg, "g-circle")
+                const node = GGraph.createVertex(svgsvg, ShapeObjectType.Circle)
                 const svgText = node.tryGetSVGText();
                 if(svgText != null){
                     svgText.textContent = v.text;
@@ -644,13 +644,13 @@ export class GGraph extends GObject {
 
     }
     /*
-    public static createVertex(parent: SVGElement | string | GObject, type: "g-rect-button", option?: GOptions.GTextBoxAttributes): GRectButton
-    public static createVertex(parent: SVGElement | string | GObject, type: "g-rect", option?: GOptions.GTextBoxAttributes): GRect
-    public static createVertex(parent: SVGElement | string | GObject, type: "g-path-textbox", option?: GOptions.GTextBoxAttributes): GPathTextBox
-    public static createVertex(parent: SVGElement | string | GObject, type: "g-ellipse", option?: GOptions.GTextBoxAttributes): GEllipse
-    public static createVertex(parent: SVGElement | string | GObject, type: "g-callout", option?: GOptions.GTextBoxAttributes): GCallout
-    public static createVertex(parent: SVGElement | string | GObject, type: "g-circle", option?: GOptions.GTextBoxAttributes): GCircle
-    public static createVertex(parent: SVGElement | string | GObject, type: "g-arrow-callout", option?: GOptions.GTextBoxAttributes): GArrowCallout
+    public static createVertex(parent: SVGElement | string | GObject, type: "z-rect-button", option?: GOptions.GTextBoxAttributes): GRectButton
+    public static createVertex(parent: SVGElement | string | GObject, type: "z-rect", option?: GOptions.GTextBoxAttributes): GRect
+    public static createVertex(parent: SVGElement | string | GObject, type: "z-path-textbox", option?: GOptions.GTextBoxAttributes): GPathTextBox
+    public static createVertex(parent: SVGElement | string | GObject, type: "z-ellipse", option?: GOptions.GTextBoxAttributes): GEllipse
+    public static createVertex(parent: SVGElement | string | GObject, type: "z-callout", option?: GOptions.GTextBoxAttributes): GCallout
+    public static createVertex(parent: SVGElement | string | GObject, type: "z-circle", option?: GOptions.GTextBoxAttributes): GCircle
+    public static createVertex(parent: SVGElement | string | GObject, type: "z-arrow-callout", option?: GOptions.GTextBoxAttributes): GArrowCallout
     */
     private static getParent(parent: SVGElement | string | GObject) : SVGElement{
         let _parent: SVGElement;

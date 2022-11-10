@@ -5,9 +5,9 @@ import * as CommonFunctions from "../common/common_functions"
 import { sanityze, VBATranslateFunctions } from "../common/vba_functions"
 import { getLineType } from "../html/enum_extension";
 
-import * as GOptions from "./g_options"
+import * as GOptions from "./z_options"
 import * as ElementExtension from "../interfaces/element_extension"
-import { GAbstractTextEdge } from "./g_abstract_text_edge";
+import { GAbstractTextEdge } from "./z_abstract_text_edge";
 import { AttributeNames, Color, StyleNames } from "../common";
 import { HTMLFunctions } from "../html";
 
@@ -58,7 +58,7 @@ export class GEdge extends GAbstractTextEdge  {
     }
 
     public get type(): ShapeObjectType {
-        return "g-edge";
+        return ShapeObjectType.Edge;
     }
     /**
      * 辺の制御点を返します。

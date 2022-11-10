@@ -1,11 +1,12 @@
 //namespace GraphTableSVG {
 //import { Padding, Rectangle } from "../common/vline";
 import { SVGToVBA } from "./svg_to_vba"
-import { GObject } from "../objects/g_object"
+import { GObject } from "../objects/z_object"
 import { runInThisContext } from "vm";
 import { getGObjects } from "./open_svg";
 import { VBAObjectType, collectVBAObjectTypes } from "./vba_object";
 import { getSVGSVG } from "../interfaces/svg";
+import { ShapeObjectType } from "../common/enums";
 
 //export namespace VBAMacroModal {
     export function processVBAButtonClickEvent(e : MouseEvent){
@@ -21,7 +22,7 @@ import { getSVGSVG } from "../interfaces/svg";
     }
 
     export function appendVBAButton(svgsvg : SVGSVGElement) : void {
-        const p = document.createElementNS('http://www.w3.org/2000/svg', "g-rect-button");
+        const p = document.createElementNS('http://www.w3.org/2000/svg', ShapeObjectType.RectButton);
         p.textContent = "VBA";
         const rect = svgsvg.getBoundingClientRect();        
         p.setAttribute("x", (rect.width - 100).toString() );

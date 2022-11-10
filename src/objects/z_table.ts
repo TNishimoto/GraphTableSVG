@@ -1,5 +1,5 @@
 ﻿import * as Color from "../common/color";
-import { GObject } from "./g_object";
+import { GObject } from "./z_object";
 import * as CommonFunctions from "../common/common_functions"
 //import {GTableOption} from "../options/attributes_option"
 import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
@@ -18,11 +18,11 @@ import { VBATranslateFunctions, parseInteger, styleVisible } from "../common/vba
 
 import * as CSS from "../html/css"
 import * as HTMLFunctions from "../html/html_functions"
-import * as GOptions from "./g_options"
+import * as GOptions from "./z_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGGExtension from "../interfaces/svg_g_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
-import { GVertex } from "./g_vertex";
+import { GVertex } from "./z_vertex";
 import { CenterPosition, UpperLeftPosition } from "../common/vline"
 import { UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";

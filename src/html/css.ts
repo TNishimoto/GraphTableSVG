@@ -245,28 +245,28 @@ export function createCSS(): string {
             }
 
 
-            g[data-type="g-rect-button"] > rect {
+            g[data-type="z-rect-button"] > rect {
                 fill:#69c; 
                 stroke: #444444;
                 stroke-width: 3px;
                 transition-duration: 0.2s;
             }
 
-            g[data-type="g-rect-button"] > rect[disabled]{
+            g[data-type="z-rect-button"] > rect[disabled]{
                 stroke-width: 5px;
             }
-            g[data-type="g-rect-button"] > rect:not([disabled]):hover {
+            g[data-type="z-rect-button"] > rect:not([disabled]):hover {
                 stroke-width: 1px;
                 fill: #79acdf;
                 stroke: white;
 
             }
-            g[data-type="g-rect-button"] > rect:not([disabled]):active {
+            g[data-type="z-rect-button"] > rect:not([disabled]):active {
                 stroke-width: 5px;
                 stroke: black;
 
             }
-            g[data-type="g-rect-button"] > text {
+            g[data-type="z-rect-button"] > text {
                 pointer-events: none;
                 fill: white;
                 font-family: "'Arial'";

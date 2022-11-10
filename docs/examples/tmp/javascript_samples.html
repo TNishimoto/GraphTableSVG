@@ -21,9 +21,9 @@
         function helloSample() {
 
             // graphの作成
-            const graph = GraphTableSVG.createShape('svgbox0', 'g-graph');
+            const graph = GraphTableSVG.createShape('svgbox0', 'z-graph');
             // vertexの作成
-            const vertex = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const vertex = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 100,
                 cy: 100,
                 text: "hello world"
@@ -31,59 +31,59 @@
         }
 
         function graphSample() {
-            let graph = GraphTableSVG.createShape('svgbox1', 'g-graph', {
+            let graph = GraphTableSVG.createShape('svgbox1', 'z-graph', {
                 class: "graph"
             });
 
 
-            const vertex1 = GraphTableSVG.createShape(graph, 'g-rect', {
+            const vertex1 = GraphTableSVG.createShape(graph, 'z-rect', {
                 cx: 100,
                 cy: 100,
                 text: "1"
             });
-            const vertex2 = GraphTableSVG.createShape(graph, 'g-rect', {
+            const vertex2 = GraphTableSVG.createShape(graph, 'z-rect', {
                 cx: 150,
                 cy: 200,
                 text: "2"
             });
-            const vertex3 = GraphTableSVG.createShape(graph, 'g-rect', {
+            const vertex3 = GraphTableSVG.createShape(graph, 'z-rect', {
                 cx: 50,
                 cy: 200,
                 text: "3"
             });
 
-            const edge1 = GraphTableSVG.createShape(graph, 'g-edge', {
+            const edge1 = GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: vertex1,
                 endVertex: vertex2,
                 text: "abcd"
             });
-            const edge2 = GraphTableSVG.createShape(graph, 'g-edge', {
+            const edge2 = GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: vertex1,
                 endVertex: vertex3
             });
         }
 
         function connectorSample() {
-            let graph = GraphTableSVG.createShape('svgbox2', 'g-graph');
+            let graph = GraphTableSVG.createShape('svgbox2', 'z-graph');
 
             const connectorTypes = ["top", "topleft", "left", "bottomleft", "bottom", "bottomright", "right", "topright", "auto"];
             for (let i = 0; i < 9; i++) {
 
-                const vertexL = GraphTableSVG.createShape(graph, 'g-rect', {
+                const vertexL = GraphTableSVG.createShape(graph, 'z-rect', {
                     cx: 100,
                     cy: (i + 2) * 50,
                     text: `${connectorTypes[i]}`,
                     width: 40,
                     height: 40
                 });
-                const vertexC = GraphTableSVG.createShape(graph, 'g-ellipse', {
+                const vertexC = GraphTableSVG.createShape(graph, 'z-ellipse', {
                     cx: 200,
                     cy: (i + 2) * 50,
                     text: `${connectorTypes[i]}`,
                     width: 40,
                     height: 40
                 });
-                const vertexR = GraphTableSVG.createShape(graph, 'g-rect', {
+                const vertexR = GraphTableSVG.createShape(graph, 'z-rect', {
                     cx: 300,
                     cy: (i + 2) * 50,
                     text: `${connectorTypes[i]}`,
@@ -91,7 +91,7 @@
                     height: 40
                 });
 
-                const edgeL = GraphTableSVG.createShape(graph, 'g-edge');
+                const edgeL = GraphTableSVG.createShape(graph, 'z-edge');
                 edgeL.svgPath.style.stroke = "red";
                 /* 接続位置の設定 */
                 graph.connect(vertexL, edgeL, vertexC, {
@@ -100,7 +100,7 @@
                 });
 
                 /* create時にも接続位置の設定が可能 */
-                const edgeR = GraphTableSVG.createShape(graph, 'g-edge', {
+                const edgeR = GraphTableSVG.createShape(graph, 'z-edge', {
                     beginVertex: vertexC,
                     endVertex: vertexR,
                     beginConnectorType: connectorTypes[i],
@@ -111,33 +111,33 @@
         }
 
         function edgeSample() {
-            let graph = GraphTableSVG.createShape('svgbox3', 'g-graph');
+            let graph = GraphTableSVG.createShape('svgbox3', 'z-graph');
 
-            const vertex1 = GraphTableSVG.createShape(graph, 'g-rect', {
+            const vertex1 = GraphTableSVG.createShape(graph, 'z-rect', {
                 cx: 150,
                 cy: 100,
                 text: "1",
                 id: "vertex1"
             });
-            const vertex2 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const vertex2 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 100,
                 cy: 200,
                 text: "2",
                 id: "vertex2"
             });
-            const vertex3 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const vertex3 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 200,
                 cy: 200,
                 text: "3",
                 id: "vertex3"
             });
 
-            const edge1 = GraphTableSVG.createShape(graph, 'g-edge', {
+            const edge1 = GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: "vertex1",
                 endVertex: "vertex2",
                 text: "abcd"
             });
-            const edge2 = GraphTableSVG.createShape(graph, 'g-edge', {
+            const edge2 = GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: vertex1,
                 endVertex: vertex3,
                 text: "abcd"
@@ -145,92 +145,92 @@
         }
 
         function edgeSample2() {
-            const graph = GraphTableSVG.createShape('svgbox5', 'g-graph');
+            const graph = GraphTableSVG.createShape('svgbox5', 'z-graph');
 
-            const node1 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const node1 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 250,
                 cy: 300,
                 text: "1"
             });
-            const node2 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const node2 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 50,
                 cy: 100,
                 text: "2"
             });
-            const node3 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const node3 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 250,
                 cy: 100,
                 text: "3"
             });
-            const node4 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const node4 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 450,
                 cy: 100,
                 text: "4"
             });
-            const node5 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const node5 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 50,
                 cy: 300,
                 text: "5"
             });
 
-            const node6 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const node6 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 450,
                 cy: 300,
                 text: "6"
             });
-            const node7 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const node7 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 50,
                 cy: 500,
                 text: "7"
             });
-            const node8 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const node8 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 250,
                 cy: 500,
                 text: "8"
             });
-            const node9 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const node9 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 450,
                 cy: 500,
                 text: "9"
             });
 
 
-            GraphTableSVG.createShape(graph, 'g-edge', {
+            GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: node1,
                 endVertex: node2,
                 text: "abcdef"
             });
-            GraphTableSVG.createShape(graph, 'g-edge', {
+            GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: node1,
                 endVertex: node3,
                 text: "abcdef"
             });
-            GraphTableSVG.createShape(graph, 'g-edge', {
+            GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: node1,
                 endVertex: node4,
                 text: "abcdef"
             });
-            GraphTableSVG.createShape(graph, 'g-edge', {
+            GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: node1,
                 endVertex: node5,
                 text: "abcdef"
             });
-            GraphTableSVG.createShape(graph, 'g-edge', {
+            GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: node1,
                 endVertex: node6,
                 text: "abcdef"
             });
-            GraphTableSVG.createShape(graph, 'g-edge', {
+            GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: node1,
                 endVertex: node7,
                 text: "abcdef"
             });
-            GraphTableSVG.createShape(graph, 'g-edge', {
+            GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: node1,
                 endVertex: node8,
                 text: "abcdef"
             });
-            GraphTableSVG.createShape(graph, 'g-edge', {
+            GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: node1,
                 endVertex: node9,
                 text: "abcdef"
@@ -242,38 +242,38 @@
         }
 
         function dashStyleSample() {
-            graph = GraphTableSVG.createShape('svgbox4', 'g-graph');
+            graph = GraphTableSVG.createShape('svgbox4', 'z-graph');
 
             /* 点線の種類 */
             const dashStyles = ["msoLineDash", "msoLineDashDot", "msoLineDashDotDot", "msoLineLongDash", "msoLineLongDashDot", "msoLineRoundDot", "msoLineSolid", "msoLineSquareDot"];
             for (let i = 0; i < dashStyles.length; i++) {
-                const vertexLL = GraphTableSVG.createShape(graph, 'g-rect', {
+                const vertexLL = GraphTableSVG.createShape(graph, 'z-rect', {
                     cx: 50,
                     cy: (i + 2) * 50
                 });
-                const vertexL = GraphTableSVG.createShape(graph, 'g-rect', {
+                const vertexL = GraphTableSVG.createShape(graph, 'z-rect', {
                     cx: 250,
                     cy: (i + 2) * 50
                 });
-                const vertexC = GraphTableSVG.createShape(graph, 'g-rect', {
+                const vertexC = GraphTableSVG.createShape(graph, 'z-rect', {
                     cx: 450,
                     cy: (i + 2) * 50
                 });
-                const vertexR = GraphTableSVG.createShape(graph, 'g-rect', {
+                const vertexR = GraphTableSVG.createShape(graph, 'z-rect', {
                     cx: 700,
                     cy: (i + 2) * 50
                 });
 
-                const edgeL = GraphTableSVG.createShape(graph, 'g-edge', {
+                const edgeL = GraphTableSVG.createShape(graph, 'z-edge', {
                     beginVertex: vertexLL,
                     endVertex: vertexL
                 });
-                const edgeC = GraphTableSVG.createShape(graph, 'g-edge', {
+                const edgeC = GraphTableSVG.createShape(graph, 'z-edge', {
                     beginVertex: vertexL,
                     endVertex: vertexC,
                     text: dashStyles[i]
                 });
-                const edgeR = GraphTableSVG.createShape(graph, 'g-edge', {
+                const edgeR = GraphTableSVG.createShape(graph, 'z-edge', {
                     beginVertex: vertexC,
                     endVertex: vertexR
                 });
@@ -290,34 +290,34 @@
         }
 
         function textPathSample() {
-            const graph = GraphTableSVG.createShape('svgbox6', 'g-graph');
+            const graph = GraphTableSVG.createShape('svgbox6', 'z-graph');
 
             /* 辺上のテキストの配置方法 */
             const alignments = ["begin", "end", "center", "regularInterval"]
 
             for (let i = 0; i < alignments.length; i++) {
 
-                const vertex1 = GraphTableSVG.createShape(graph, 'g-rect', {
+                const vertex1 = GraphTableSVG.createShape(graph, 'z-rect', {
                     cx: 50,
                     cy: (i + 2) * 50
                 });
-                const vertex2 = GraphTableSVG.createShape(graph, 'g-rect', {
+                const vertex2 = GraphTableSVG.createShape(graph, 'z-rect', {
                     cx: 250,
                     cy: (i + 2) * 50
                 });
-                const vertex3 = GraphTableSVG.createShape(graph, 'g-rect', {
+                const vertex3 = GraphTableSVG.createShape(graph, 'z-rect', {
                     cx: 450,
                     cy: (i + 2) * 50
                 });
 
                 /* pathTextAlignmentで辺のテキストの配置方法を決定 */
-                const edge1 = GraphTableSVG.createShape(graph, 'g-edge', {
+                const edge1 = GraphTableSVG.createShape(graph, 'z-edge', {
                     beginVertex: vertex1,
                     endVertex: vertex2,
                     text: alignments[i],
                     pathTextAlignment: alignments[i]
                 });
-                const edge2 = GraphTableSVG.createShape(graph, 'g-edge', {
+                const edge2 = GraphTableSVG.createShape(graph, 'z-edge', {
                     beginVertex: vertex2,
                     endVertex: vertex3,
                     text: alignments[i]
@@ -332,21 +332,21 @@
         }
 
         function vertexSample() {
-            const graph = GraphTableSVG.createShape('svgbox7', 'g-graph');
+            const graph = GraphTableSVG.createShape('svgbox7', 'z-graph');
 
-            const vertex1 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const vertex1 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 100,
                 cy: 100,
                 text: "1",
                 id: "@vertex1"
             });
-            const vertex2 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const vertex2 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 150,
                 cy: 200,
                 text: "2",
                 id: "@vertex2"
             });
-            const vertex3 = GraphTableSVG.createShape(graph, 'g-ellipse', {
+            const vertex3 = GraphTableSVG.createShape(graph, 'z-ellipse', {
                 cx: 50,
                 cy: 200,
                 text: "3",
@@ -354,13 +354,13 @@
             });;
 
 
-            const edge1 = GraphTableSVG.createShape(graph, 'g-edge', {
+            const edge1 = GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: vertex1,
                 endVertex: vertex2,
                 text: "abcd",
                 endMarker: true
             });
-            const edge2 = GraphTableSVG.createShape(graph, 'g-edge', {
+            const edge2 = GraphTableSVG.createShape(graph, 'z-edge', {
                 beginVertex: vertex1,
                 endVertex: vertex3,
                 startMarker: true

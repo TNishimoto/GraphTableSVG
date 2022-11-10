@@ -1,5 +1,5 @@
 //namespace GraphTableSVG {
-    import {GRect} from "./g_rect"
+    import {GRect} from "./z_rect"
     //import {GTextBoxAttributes, GObjectAttributes} from "../options/attributes_option"
     import { ShapeObjectType } from "../common/enums";
 import { DefaultClassNames } from "../common";

@@ -7,7 +7,7 @@ export class BaseLogicTree {
 //import * as Console from "../../options/console"
 import { VertexOrder, Direction, PathTextAlighnment, VertexObjectType, ShapeObjectType } from "../common/enums"
 //import { GTextBoxAttributes } from "../object/g_textbox";
-import * as GOptions from "../objects/g_options"
+import * as GOptions from "../objects/z_options"
 import { LogicTable } from "./logic_table";
 
 /*
@@ -27,7 +27,7 @@ export function Test(obj : any) : void {
 
 export class  LogicBasicShape {
     public option: GOptions.GTextBoxAttributes = {};
-    public shape : VertexObjectType = "g-circle"
+    public shape : VertexObjectType = ShapeObjectType.Circle
     private className : "LogicBasicShape" = "LogicBasicShape";
 
     public item: any = null;
@@ -72,7 +72,7 @@ export class  LogicBasicShape {
 
 export class  LogicTreeNode {
     constructor(constructorOption : {vertexText? : string, edgeText? : string, vertexShape? : VertexObjectType } = {}){
-        if(constructorOption.vertexShape === "g-table"){
+        if(constructorOption.vertexShape === ShapeObjectType.Table){
             this.shapeObject = new LogicTable();            
         }
         if(constructorOption.edgeText !== undefined){

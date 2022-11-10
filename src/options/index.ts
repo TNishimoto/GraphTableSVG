@@ -2,7 +2,7 @@ import { openSVG, openHTML,  lazyOpenSVG, clearSVG } from "./open_svg";
 import { createGObject } from "./create_g_object"
 import {equalityCheck} from "./svg_equal"
 import {stringify} from "./to_json"
-import {convertFromElementWithCustomElementAttributeToGObject} from "./custom_svg_processors/custom_g_element_processor"
+import {convertFromElementWithCustomElementAttributeToGObject} from "./custom_svg_processors/custom_x_element_processor"
 
 
 import {SVGToVBA} from "./svg_to_vba"

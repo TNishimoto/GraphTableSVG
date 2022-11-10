@@ -1,19 +1,19 @@
-/// <reference path="g_textbox.ts"/>
+/// <reference path="z_textbox.ts"/>
 //namespace GraphTableSVG {
 import { VBATranslateFunctions } from "../common/vba_functions"
 import { Rectangle } from "../common/vline"
 import * as AttributeNames from "../common/attribute_names"
 import * as DefaultClassNames from "../common/default_class_names"
 import { ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
-import { GObject } from "./g_object"
-//import { GTextBox } from "./g_textbox"
-import { GEdge } from "./g_edge"
+import { GObject } from "./z_object"
+//import { GTextBox } from "./z_textbox"
+import { GEdge } from "./z_edge"
 //import { GGraph } from "./g_graph"
 import { VirtualTree } from "./graph_helpers/virtual_tree"
 import {getLineType} from "../html/enum_extension";
 import * as ElementExtension from "../interfaces/element_extension"
 import { getGraph } from "./graph_helpers/common_functions";
-import { GAbstractEdge } from "./g_abstract_edge";
+import { GAbstractEdge } from "./z_abstract_edge";
 import { HTMLFunctions } from "../html";
 import { LocalGObjectManager } from "./global_gobject_manager";
 

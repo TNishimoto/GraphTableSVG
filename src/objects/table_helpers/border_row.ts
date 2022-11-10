@@ -2,7 +2,7 @@
     import {Cell} from "./cell"
     import * as AttributeNames from "../../common/attribute_names"
     import * as DefaultClassNames from "../../common/default_class_names"
-    import {GTable} from "../g_table"
+    import {GTable} from "../z_table"
     import * as SVG from "../../interfaces/svg"
 
     /**
