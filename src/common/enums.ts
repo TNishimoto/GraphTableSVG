@@ -109,13 +109,14 @@ export namespace ShapeObjectType {
         }
     }
     export function toShapeObjectTypeOrCustomTag(value: string): ShapeObjectType | CustomTag | null {
+        const lowerValue = value.toLowerCase();
 
-        const value1 = toShapeObjectType(value);
+        const value1 = toShapeObjectType(lowerValue);
         if (value1 != null) {
             return value1;
         } else {
             if (value in customTypeDic) {
-                return <CustomTag>value;
+                return <CustomTag>lowerValue;
             } else {
                 return null;
             }

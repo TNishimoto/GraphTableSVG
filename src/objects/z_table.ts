@@ -351,7 +351,7 @@ export class ZTable extends ZVertex {
             for (let j = 0; j < p.addedNodes.length; j++) {
                 const item = p.addedNodes.item(j);
 
-                if (item != null && item.nodeName == "#text") {
+                if (item != null && item.nodeName.toLowerCase() == "#text") {
                     b = true;
                     b2 = true;
                 }

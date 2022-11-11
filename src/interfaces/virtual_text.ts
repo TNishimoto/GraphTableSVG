@@ -58,9 +58,9 @@ function createVirtualText(svgText : SVGTextElement) : virtualTText{
     let tspans : SVGTSpanElement[] = new Array();
     if(tpathItems.length == 1){
         const tpath = tpathItems[0];
-        tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(tpath).filter((v) => v.nodeName == "tspan");
+        tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(tpath).filter((v) => v.nodeName.toLowerCase() == "tspan");
     }else{
-        tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName == "tspan");    
+        tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName.toLowerCase() == "tspan");    
     }
     const r : VirtualTSpan[] = new Array();
     tspans.forEach((v) =>{

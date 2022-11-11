@@ -30,6 +30,13 @@ import * as AttributeNames from "../common/attribute_names"
             }
         }
     }
+    export function copyAttributes(from : Element, to : Element){
+        for (let i = 0; i < from.attributes.length; i++) {
+            const attr = from.attributes.item(i);
+            to.setAttribute(attr!.name, attr!.value);
+        }
+
+    }
     /*
     function isShow2(e: HTMLElement | SVGElement, isParentWindow : boolean = false): boolean {
         
@@ -110,7 +117,7 @@ import * as AttributeNames from "../common/attribute_names"
         return r;
     }
     export function getChildByNodeName(e: Element, name: string): Element | null {
-        const p = getChildren(e).filter((v) => v.nodeName == name);
+        const p = getChildren(e).filter((v) => v.nodeName.toLowerCase() == name.toLowerCase());
         if (p.length > 0) {
             return p[0];
         } else {

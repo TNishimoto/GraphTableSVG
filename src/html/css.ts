@@ -398,7 +398,6 @@ export function writeDownCSSToStyleAttributes(element: SVGSVGElement | SVGGEleme
     if(element instanceof SVGSVGElement || element instanceof SVGGElement){
         const elements = HTMLFunctions.getDescendantsByPostorder(element);
         elements.forEach((v) => {
-            console.log(v.nodeName);
             if (v instanceof SVGGeometryElement) {
                 setCSSToStyle(v, false);
             }else if(v instanceof SVGTextElement){

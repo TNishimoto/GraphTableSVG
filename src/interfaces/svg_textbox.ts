@@ -21,7 +21,7 @@ export function getRepresentativeFontSize(text: SVGTSpanElement | SVGTextElement
         return fontSize;
     } else {
 
-        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(text).filter((v) => v.nodeName == "tspan");
+        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(text).filter((v) => v.nodeName.toLowerCase() == "tspan");
         if (tspans.length > 0) {
             return getRepresentativeFontSize(tspans[0]);
         } else {
@@ -200,7 +200,7 @@ function copy(e: HTMLElement, target: SVGTSpanElement) {
     }
 }
 function getLines(svgText: SVGTextElement): SVGTSpanElement[][] {
-    const spans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName == "tspan");
+    const spans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName.toLowerCase() == "tspan");
     let r: SVGTSpanElement[][] = [];
     if (spans.length == 0) {
         return [];
@@ -327,7 +327,7 @@ export function getComputedTextLengthsOfTSpans(svgText: SVGTextElement, showChec
     const b = showChecked ? true : HTMLFunctions.isShow(svgText);
 
     if (b) {
-        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName == "tspan");
+        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName.toLowerCase() == "tspan");
         const r = tspans.map((v) => {
             const w = v.getComputedTextLength();
             //const h = v.getBoundingClientRect().height;
@@ -338,7 +338,7 @@ export function getComputedTextLengthsOfTSpans(svgText: SVGTextElement, showChec
 
         return r;
     } else {
-        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName == "tspan");
+        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName.toLowerCase() == "tspan");
         const r = tspans.map((v) => {
             return new Size(0, 0);
         })

@@ -9,7 +9,8 @@ import { ZObject } from "../objects/z_object"
 import { NullError } from "../common/exceptions";
 import { appendVBAButton } from "./vba_macro_modal";
 
-import { convertFromGTagToIntermediateSVGGTag, processIntermediateSVGGElements } from "./custom_tag_processors/intermediate_g_tag_preprocessor";
+import { convertFromZTagToIntermediateSVGGTag, processIntermediateSVGGElements } from "./custom_tag_processors/intermediate_g_tag_preprocessor";
+import { processMacroTag } from "./custom_tag_processors/macro_tag_preprocessor";
 
 //export namespace openSVGFunctions {
 
@@ -98,12 +99,14 @@ export function openSVG(inputItem: string | Element | null = null, output: ZObje
     } else if (inputItem instanceof SVGSVGElement) {
         const svgsvg: SVGSVGElement = inputItem;
 
+        processMacroTag(svgsvg);
+
         const vbaAttr = inputItem.getAttribute(VBAAttributeName);
         if (vbaAttr != null && vbaAttr == "true") {
             appendVBAButton(svgsvg);
         }
 
-        convertFromGTagToIntermediateSVGGTag(svgsvg);
+        convertFromZTagToIntermediateSVGGTag(svgsvg);
 
         const startTime = performance.now();
 
@@ -123,7 +126,7 @@ export function openSVG(inputItem: string | Element | null = null, output: ZObje
 function toDivElement(e: Element): HTMLElement | null {
 
     //const type = e.nodeName == "G-TABLE" ? "g-table" : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell" : e.nodeName == "T" ? "t" : null;
-    const type = e.nodeName == "Z-TABLE" ? ShapeObjectType.Table : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell" : null;
+    const type = e.nodeName.toLowerCase() == ShapeObjectType.Table ? ShapeObjectType.Table : e.nodeName.toLowerCase() == "row" ? "row" : e.nodeName.toLowerCase() == "cell" ? "cell" : null;
 
     if (type == null) {
         return null;
