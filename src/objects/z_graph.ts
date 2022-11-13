@@ -103,7 +103,7 @@ export class ZGraph extends ZObject {
 
     //protected _roots: ZVertex[] = [];
     public get vertexXInterval(): number | null {
-        const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.vertexXInterval);
+        const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.GraphStyleNames.vertexXInterval);
         if (v == null) {
             return null;
         } else {
@@ -111,10 +111,10 @@ export class ZGraph extends ZObject {
         }
     }
     public set vertexXInterval(value: number | null) {
-        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.vertexXInterval, value == null ? null : value.toString());
+        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.GraphStyleNames.vertexXInterval, value == null ? null : value.toString());
     }
     public get vertexYInterval(): number | null {
-        const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.vertexYInterval);
+        const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.GraphStyleNames.vertexYInterval);
         if (v == null) {
             return null;
         } else {
@@ -122,7 +122,7 @@ export class ZGraph extends ZObject {
         }
     }
     public get direction(): Direction | null {
-        const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.graphDirection);
+        const v = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.GraphStyleNames.graphDirection);
         if (v == null) {
             return null;
         } else {
@@ -138,13 +138,13 @@ export class ZGraph extends ZObject {
         }
     }
     public set direction(value: Direction | null) {
-        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.graphDirection, value == null ? null : value.toString());
+        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.GraphStyleNames.graphDirection, value == null ? null : value.toString());
     }
 
 
 
     public set vertexYInterval(value: number | null) {
-        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.vertexYInterval, value == null ? null : value.toString());
+        ElementExtension.setPropertyStyleValue(this.svgGroup,StyleNames.GraphStyleNames.vertexYInterval, value == null ? null : value.toString());
     }
     /*
     get defaultVertexClass(): string | null {

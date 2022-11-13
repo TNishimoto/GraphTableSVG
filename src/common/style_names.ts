@@ -3,9 +3,13 @@ export const beginConnectorType: string = "--begin-connector-type";
 export const endConnectorType: string = "--end-connector-type";
 export const markerStart: string = "--marker-start";
 export const markerEnd: string = "--marker-end";
-export const vertexXInterval: string = "--vertex-x-interval";
-export const vertexYInterval: string = "--vertex-y-interval";
-export const graphDirection: string = "--direction";
+
+export namespace GraphStyleNames{
+    export const vertexXInterval: string = "--vertex-x-interval";
+    export const vertexYInterval: string = "--vertex-y-interval";
+    export const graphDirection: string = "--direction";    
+}
+
 
 export const defaultRadius = "--default-radius";
 export const defaultWidth = "--default-width";

@@ -14,24 +14,70 @@
 </head>
 
 <body>
-    <svg id="main" width="600px" height="600px" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;">
-        <m-tree id="graph" x="100" y="100" surface:style="fill:pink" text:style="fill:blue">
-            <m-node>
+    <svg id="main" width="600px" height="600px" xmlns="http://www.w3.org/2000/svg"
+        style="background:#e9e9e9;border:solid 1pt;" z-shrink="true" z-edit="true">
+        <m-tree id="graph" x="100" y="100" style="--vertex-x-interval:20;--direction:down">
+            <m-rect>
                 <t>Root</t>
-                <m-node>
-                    <t>Child1</t>
-                </m-node>
-                <m-node>
-                    <t>Child2</t>
-                </m-node>
-                <m-node>
-                    <t>Child3</t>
-                </m-node>
-            </m-node>
+                <m-rect>
+                    <t>V1</t>
+                    <m-rect>
+                        <t>V11</t>
+                    </m-rect>
+                    <m-rect>
+                        <t>V12</t>
+                    </m-rect>
+                    <m-rect>
+                        <t>V13</t>
+                        <m-rect>
+                            <t>V131</t>
+                        </m-rect>
+                        <m-rect>
+                            <t>V132</t>
+                        </m-rect>
+                        <m-rect>
+                            <t>V133</t>
+                        </m-rect>    
+                        <m-rect>
+                            <t>V134</t>
+                        </m-rect>    
+                    </m-rect>
+                </m-rect>
+                <m-rect>
+                    <t>V2</t>
+                    <m-rect>
+                        <t>V21</t>
+                        <m-rect>
+                            <t>V211</t>
+                            <m-rect>
+                                <t>V2111</t>
+                            </m-rect>
+                        </m-rect>
+                    </m-rect>
+                </m-rect>
+                <m-rect>
+                    <t>V3</t>
+                    <m-rect>
+                        <t>V31</t>
+                    </m-rect>
+                    <m-rect>
+                        <t>V32</t>
+                        <m-rect>
+                            <t>V321</t>
+                            <m-rect>
+                                <t>V3211</t>
+                                <m-rect>
+                                    <t>V32111</t>
+                                    <m-rect>
+                                        <t>V32111</t>
+                                    </m-rect>
+                                </m-rect>
+                            </m-rect>
+                        </m-rect>
+                    </m-rect>
+                </m-rect>
+            </m-rect>
         </m-tree>
-        <z-ellipse id="e7" cx="300" cy="300"><t>5</t></z-ellipse>
     </svg>
-    <button onclick="GraphTableSVG.Options.createMacroModalFromID('graph')">VBA</button
-</body>
-
+    <button onclick="GraphTableSVG.Options.createMacroModalFromID('graph')">VBA</button </body>
 </html>

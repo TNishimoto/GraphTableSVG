@@ -23,7 +23,7 @@ import { ZObject } from "../objects";
 import * as ToJSON from "./to_json";
 import { LogicCellLine, buildLogicTable, LogicCell } from "../logics";
 import { Exceptions } from "../common";
-import { ShapeObjectType, ShrinkAttributeName } from "../common/enums";
+import { ShapeObjectType, OriginalSVGSVGAttributes } from "../common/enums";
 
 
 //export namespace Console {
@@ -145,7 +145,7 @@ export class ConsoleLineElement {
 
         //svg.setAttribute("width", "600px");
         //svg.setAttribute("height", "600px");
-        svg.setAttribute(ShrinkAttributeName, "true");
+        svg.setAttribute(OriginalSVGSVGAttributes.ShrinkAttributeName, "true");
         if (svg instanceof SVGSVGElement) {
             return svg;
         } else {

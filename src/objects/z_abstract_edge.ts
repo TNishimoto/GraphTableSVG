@@ -2,7 +2,7 @@ import { ZObject } from "./z_object";
 import * as DefaultClassNames from "../common/default_class_names"
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
-import { PathTextAlighnment, ConnectorType, msoDashStyle, CoodinateType, EdgeType } from "../common/enums";
+import { PathTextAlighnment, ConnectorType, msoDashStyle, CoodinateType, EdgeType, Direction } from "../common/enums";
 import { escapeWithRound100, nearlyEqual, round100 } from "../common/vline";
 import { ZVertex } from "./z_vertex"
 import * as ElementExtension from "../interfaces/element_extension"
@@ -17,6 +17,7 @@ import { IEdge } from "./i_object";
 import { HTMLFunctions } from "../html";
 import { LocalGObjectManager } from "./global_gobject_manager";
 import { ObjectStableFlagName } from "./z_observer";
+//import { Direction } from "readline";
 
 export class ZAbstractEdge extends ZObject implements IEdge {
     constructor(svgbox: SVGElement | string) {
@@ -403,7 +404,32 @@ export class ZAbstractEdge extends ZObject implements IEdge {
     */
     get beginConnectorType(): ConnectorType {
         const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.beginConnectorType);
-        return ConnectorType.ToConnectorPosition(p);
+        const type = ConnectorType.ToConnectorPosition(p);
+        if(type == ConnectorType.Auto){
+            if(this.graph != null){
+                const dir : Direction | null = (<any>this.graph).direction;
+                if(dir != null){
+                    if(dir == "up"){
+                        return ConnectorType.Top;
+                    }else if(dir == "left"){
+                        return ConnectorType.Right;
+                    }else if(dir == "right"){
+                        return ConnectorType.Left;
+                    }else{
+                        return ConnectorType.Bottom;
+                    }
+                }else{
+                    return type;
+                }
+            }else{
+                return type;
+            }
+    
+        }else{
+            return type;
+        }
+
+        
     }
     /**
     開始接点の接続位置を設定します。
@@ -417,7 +443,31 @@ export class ZAbstractEdge extends ZObject implements IEdge {
     */
     get endConnectorType(): ConnectorType {
         const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.endConnectorType);
-        return ConnectorType.ToConnectorPosition(p);
+        const type = ConnectorType.ToConnectorPosition(p);
+        if(type == ConnectorType.Auto){
+            if(this.graph != null){
+                const dir : Direction | null = (<any>this.graph).direction;
+                if(dir != null){
+                    if(dir == "up"){
+                        return ConnectorType.Bottom;
+                    }else if(dir == "left"){
+                        return ConnectorType.Left;
+                    }else if(dir == "right"){
+                        return ConnectorType.Right;
+                    }else{
+                        return ConnectorType.Top;
+                    }
+                }else{
+                    return type;
+                }
+            }else{
+                return type;
+            }
+    
+        }else{
+            return type;
+        }
+
     }
     /**
     終了接点の接続位置を設定します。

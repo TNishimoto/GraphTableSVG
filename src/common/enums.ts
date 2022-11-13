@@ -49,16 +49,24 @@ export namespace VBAShapeType {
 }
 
 
-export type MacroTagNames = "m-tree" | "m-node";
+export type MacroTagNames = "m-tree" | "m-ellipse" | "m-circle" | "m-rect" ;
 export namespace MacroTagNames {
     export const Tree: MacroTagNames = "m-tree"
-    export const Node: MacroTagNames = "m-node"
+    export const Ellipse: MacroTagNames = "m-ellipse"
+    export const Circle: MacroTagNames = "m-circle"
+    export const Rect: MacroTagNames = "m-rect"
+
 }
 
 export type VertexObjectType = "z-callout" | "z-arrow-callout" | "z-ellipse" | "z-circle" | "z-rect" | "z-path-textbox" | "z-rect-button" | "z-table" | "z-foreign-object" | "z-foreign-button";
 
-export const VBAAttributeName : string = "z-vba";
-export const ShrinkAttributeName : string = "z-shrink";
+export namespace OriginalSVGSVGAttributes{
+    export const VBAAttributeName : string = "z-vba";
+    export const ShrinkAttributeName : string = "z-shrink";    
+
+    export const Edit : string = "z-edit"; 
+}
+
 
 //export namespace VertexObjectType {
 //}

@@ -243,6 +243,9 @@ export function createCSS(): string {
                 fill: #8EB8FF; 
                 stroke: black;
             }
+            .${DefaultClassNames.defaultTreeClass}{
+                ${StyleNames.relocateName}: standard;
+            }
 
 
             g[data-type="z-rect-button"] > rect {
@@ -279,6 +282,23 @@ export function createCSS(): string {
                 stroke-width: 1px;
             }
 
+            .graphtablesvg_wrapper{
+                min-height: 100vh;
+                position: relative;/*←相対位置*/
+                padding-bottom: 120px;/*←footerの高さ*/
+                box-sizing: border-box;/*←全て含めてmin-height:100vhに*/
+            }
+            
+            .graphtablesvg_footer{
+                width: 100%;
+                background-color: #89c7de;
+                color: #fff;
+                text-align: center;
+                padding: 30px 0;
+            
+             position: absolute;/*←絶対位置*/
+                bottom: 0; /*下に固定*/
+            }
 
             `
     return r;

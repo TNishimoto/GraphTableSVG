@@ -15,6 +15,7 @@ export const defaultRectButtonClass: string = "___rect-button-default";
 
 export const defaultEdgeClass: string = "__default-edge";
 export const defaultVertexClass: string = "__default-vertex";
+export const defaultTreeClass: string = "__default-tree";
 
 export const defaultConsoleColumnTitleCellClass = "___column_title_cell";
 export const defaultConsoleColumnTitleCellTextClass = "___column_title_text_cell";

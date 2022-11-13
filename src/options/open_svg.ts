@@ -1,6 +1,6 @@
 
 import * as AttributeNames from "../common/attribute_names"
-import { ShapeObjectType, VBAAttributeName } from "../common/enums";
+import { ShapeObjectType, OriginalSVGSVGAttributes } from "../common/enums";
 import * as HTMLFunctions from "../html/html_functions"
 import * as HTMLTable from "./html_table"
 import * as GUIObserver from "../html/gui_observer"
@@ -101,10 +101,22 @@ export function openSVG(inputItem: string | Element | null = null, output: ZObje
 
         processMacroTag(svgsvg);
 
-        const vbaAttr = inputItem.getAttribute(VBAAttributeName);
+        const vbaAttr = svgsvg.getAttribute(OriginalSVGSVGAttributes.VBAAttributeName);
         if (vbaAttr != null && vbaAttr == "true") {
             appendVBAButton(svgsvg);
         }
+
+        /*
+        const editAttr = svgsvg.getAttribute(OriginalSVGSVGAttributes.Edit);
+        if (editAttr != null && editAttr == "true") {
+            svgsvg.onclick = (me : MouseEvent) =>{
+                console.log(me.target);
+
+                alert("hello!")
+            }
+        }
+        */
+
 
         convertFromZTagToIntermediateSVGGTag(svgsvg);
 
