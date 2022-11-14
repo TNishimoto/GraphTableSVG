@@ -412,9 +412,9 @@ export class ZAbstractEdge extends ZObject implements IEdge {
                     if(dir == "up"){
                         return ConnectorType.Top;
                     }else if(dir == "left"){
-                        return ConnectorType.Right;
-                    }else if(dir == "right"){
                         return ConnectorType.Left;
+                    }else if(dir == "right"){
+                        return ConnectorType.Right;
                     }else{
                         return ConnectorType.Bottom;
                     }
@@ -451,9 +451,9 @@ export class ZAbstractEdge extends ZObject implements IEdge {
                     if(dir == "up"){
                         return ConnectorType.Bottom;
                     }else if(dir == "left"){
-                        return ConnectorType.Left;
-                    }else if(dir == "right"){
                         return ConnectorType.Right;
+                    }else if(dir == "right"){
+                        return ConnectorType.Left;
                     }else{
                         return ConnectorType.Top;
                     }

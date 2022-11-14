@@ -1,40 +1,26 @@
 //namespace GraphTableSVG {
-import { ZEdge } from "../z_edge"
 import { ZGraph } from "../z_graph"
 import { ZVertex } from "../z_vertex"
 
 import { VirtualTree } from "./virtual_tree"
 
-import * as TreeArrangement from "./tree_arrangement"
+import * as TreeArrangement from "./old_tree_arrangement"
 import { Direction, ConnectorType } from "../../common/enums"
 import * as SVGTextBox from "../../interfaces/svg_textbox"
-import * as SVGTextExtensions from "../../interfaces/svg_text_extension"
-import { ZAbstractEdge } from "../z_abstract_edge"
 import { ZAbstractTextEdge } from "../z_abstract_text_edge"
 import { getVirtualRegion } from "../../interfaces/virtual_text"
+import { createForestInLevelOrder } from "./virtual_tree_constructor"
 
 export namespace GraphArrangement {
     export function standardTreeWidthArrangement(graph: ZGraph): void {
         const [xi, yi] = TreeArrangement.getXYIntervals(graph);
-        const direction = graph.direction;
+        const direction = graph.direction == null ? "down" : graph.direction;
 
-
-
-
-        const roots = graph.roots.length == 0 ? [graph.vertices[0]] : graph.roots;
-
-        /*
-        const isTrie = graph.edges.every((v)=>{
-            return v.svgTextPath.textContent == null || v.svgTextPath.textContent.length <= 1;
-        })
-        */
-
-        const externalEdges = createExternalEdgeDicInlevelorder(graph);
+        const trees = createForestInLevelOrder(graph);
 
 
         let [x, y] = [0, 0]
-        roots.forEach((v => {
-            const tree = v.createVirtualTree(externalEdges);
+        trees.forEach((tree => {
             standardTreeWidthArrangementSub(tree, xi, yi, direction);
             tree.setRegionXYLocation(x, y);
 
@@ -43,24 +29,13 @@ export namespace GraphArrangement {
 
 
     }
-    function standardTreeWidthArrangementSub(tree: VirtualTree, xInterval: number, yInterval: number, direction: Direction | null): void {
-        tree.subTreeRoot.cx = 0;
-        tree.subTreeRoot.cy = 0;
-        let centerX = 0;
+
+    function computeChildBInterval(tree: VirtualTree, xInterval: number, yInterval: number, direction: Direction): number {
         const children = tree.virtualTreeChildren;
+        let interval = (direction == "up" || direction == "down") ? yInterval : xInterval;
+        //let childYInterval = yInterval;
 
-        let x = 0;
 
-        //tree.root.svgText.textContent = tree.getHeight().toString();
-        if (direction == "down") {
-            const edge = tree.subTreeRoot.parentEdge;
-            if (edge != null) {
-                edge.endConnectorType = ConnectorType.Top;
-                edge.beginConnectorType = ConnectorType.Bottom;
-
-            }
-        }
-        let childYInterval = yInterval;
         children.forEach((v) => {
             const edge = v.parentEdge!;
             if (edge instanceof ZAbstractTextEdge) {
@@ -73,107 +48,124 @@ export namespace GraphArrangement {
                     const padding = SVGTextBox.getRepresentativeFontSize(path);
                     const textVRegion = getVirtualRegion(textElement);
                     const edgeLen = Math.max(textVRegion.width, textVRegion.height) + (padding);
-                    if (edgeLen > childYInterval) childYInterval = edgeLen;
+                    if (edgeLen > interval) interval = edgeLen;
                 }
                 else {
                     const padding = SVGTextBox.getRepresentativeFontSize(path);
                     const textVRegion = getVirtualRegion(textElement);
-                    
+
                     const edgeLen = Math.max(textVRegion.width, textVRegion.height) + (padding * 4);
 
                     //const edgeLen = (SVGTextExtensions.getWidth(path)) + (padding * 4);
-                    if (edgeLen > childYInterval) childYInterval = edgeLen;
+                    if (edgeLen > interval) interval = edgeLen;
                 }
 
             }
         })
+        return interval;
+    }
+
+    function preprocessParentWithSingleLeaf(parent: ZVertex, leaf: ZVertex, direction: Direction) {
+        if (direction == "down" || direction == "up") {
+            parent.cx = leaf.cx;
+        } else {
+            parent.cy = leaf.cy;
+        }
+    }
+    function processSingleLeaf(parent: ZVertex, leafSubTree: VirtualTree, width: number, direction: Direction) {
+        if (direction == "down") {
+            leafSubTree.setRootLocation(parent.cx, width);
+        } else if (direction == "up") {
+            leafSubTree.setRootLocation(parent.cx, -width);
+        } else if (direction == "right") {
+            leafSubTree.setRootLocation(width, parent.cy);
+        } else {
+            leafSubTree.setRootLocation(-width, parent.cy);
+        }
+
+    }
+    function processIthChild(children: VirtualTree[], i : number, centerA : number, _a: number, aInterval: number, bInterval: number, childBInterval : number, direction: Direction) : [number, number]{
+        const ithChildrenRect = children[i].region();
+        if(direction == "down" || direction == "up"){
+            const diffX = children[i].root.cx - ithChildrenRect.x;
+            let _x = _a;
+            let _centerX = centerA;
+            
+            if(direction == "down"){
+                children[i].setRootLocation(_x + diffX, childBInterval);
+            }else{
+                children[i].setRootLocation(_x + diffX, -childBInterval);
+            }
+            _x += ithChildrenRect.width + aInterval;
+            if (i < children.length - 1) {
+                _centerX += _x - (aInterval / 2);
+            }
+            return [_centerX, _x];    
+        } else{
+            const diffY = children[i].root.cy - ithChildrenRect.y;
+            let _y = _a;
+            let _centerY = centerA;
+            
+            if(direction == "right"){
+                children[i].setRootLocation(childBInterval, _y + diffY);
+            }else{
+                children[i].setRootLocation(-childBInterval, _y + diffY);
+            }
+            _y += ithChildrenRect.height + bInterval;
+            if (i < children.length - 1) {
+                _centerY += _y - (bInterval / 2);
+            }
+            return [_centerY, _y];    
+
+        }
+    }
+    function processChildren(subtreeRoot : ZVertex, children: VirtualTree[], centerA : number, direction : Direction) : number{
+        if(direction == "down" || direction == "up"){
+            centerA = centerA / (children.length - 1);
+
+            subtreeRoot.cx = centerA;
+            return centerA;
+    
+        }else{
+            centerA = centerA / (children.length - 1);
+
+            subtreeRoot.cy = centerA;
+            return centerA;
+        }
+
+
+    }
+
+    function standardTreeWidthArrangementSub(tree: VirtualTree, xInterval: number, yInterval: number, direction: Direction): void {
+        tree.subTreeRoot.cx = 0;
+        tree.subTreeRoot.cy = 0;
+        const children = tree.virtualTreeChildren;
+        const childBInterval = computeChildBInterval(tree, xInterval, yInterval, direction);
+
+
+
 
         if (children.length == 1) {
-            tree.subTreeRoot.cx = children[0].root.cx;
+            preprocessParentWithSingleLeaf(tree.subTreeRoot, children[0].root, direction);
             standardTreeWidthArrangementSub(children[0], xInterval, yInterval, direction);
+            processSingleLeaf(tree.root, children[0], childBInterval, direction);
 
-            children[0].setRootLocation(tree.root.cx, childYInterval);
         } else if (children.length == 0) {
         } else {
+            let centerA = 0;
+            let _a = 0;
+
+
             for (let i = 0; i < children.length; i++) {
                 standardTreeWidthArrangementSub(children[i], xInterval, yInterval, direction);
-                const rect = children[i].region();
-                const diffX = children[i].root.cx - rect.x;
-
-                children[i].setRootLocation(x + diffX, childYInterval);
-                x += rect.width + xInterval;
-                if (i < children.length - 1) {
-                    centerX += x - (xInterval / 2);
-                }
+                [centerA, _a] = processIthChild(children, i, centerA, _a, xInterval, yInterval, childBInterval, direction);
             }
 
-            centerX = centerX / (children.length - 1);
-
-            tree.subTreeRoot.cx = centerX;
+            centerA = processChildren(tree.subTreeRoot, children, centerA, direction); 
+            //= centerA / (children.length - 1);
+            //tree.subTreeRoot.cx = centerA;
         }
     }
-    function createExternalEdgeDicInPreorder(node: ZVertex, incomingEdge: ZAbstractEdge | null, externalEdges: Set<ZAbstractEdge>, touchedVertexes: Set<ZVertex>) {
-        if (incomingEdge == null) {
-            node.outgoingEdges.forEach((v) => {
-                const child = v.endVertex;
-                if (child != null) {
-                    createExternalEdgeDicInPreorder(child, v, externalEdges, touchedVertexes);
-                }
-            })
-        } else {
-            if (!touchedVertexes.has(node)) {
-                touchedVertexes.add(node);
-
-
-
-                node.outgoingEdges.forEach((v) => {
-                    const child = v.endVertex;
-                    if (child != null) {
-                        createExternalEdgeDicInPreorder(child, v, externalEdges, touchedVertexes);
-                    }
-                })
-            } else {
-                if (incomingEdge != null) {
-                    externalEdges.add(incomingEdge);
-                }
-            }
-        }
-    }
-    function createExternalEdgeDicInlevelorder(graph: ZGraph): Set<ZAbstractEdge> {
-        const externalEdges: Set<ZAbstractEdge> = new Set();
-        const touchedVertexes: Set<ZVertex> = new Set();
-        const inputEdges: ZAbstractEdge[] = new Array(0);
-
-        if (graph.vertices.length > 0) {
-            const roots = graph.roots.length == 0 ? [graph.vertices[0]] : graph.roots;
-
-            roots.forEach((v => {
-                touchedVertexes.add(v);
-                v.outgoingEdges.forEach((w) => inputEdges.push(w));
-            }))
-            createExternalEdgeDicInlevelorderSub(inputEdges, externalEdges, touchedVertexes, 0);
-        }
-        return externalEdges;
-    }
-    function createExternalEdgeDicInlevelorderSub(inputEdges: ZAbstractEdge[], externalEdges: Set<ZAbstractEdge>, touchedVertexes: Set<ZVertex>, level: number) {
-        //const edges = inputEdges.filter((v) => v.endVertex != null);
-        const nextEdges: ZAbstractEdge[] = new Array(0);
-        inputEdges.forEach((v) => {
-            if (v.endVertex != null) {
-                const node = v.endVertex!;
-                if (!touchedVertexes.has(node)) {
-                    touchedVertexes.add(node)
-                    node.outgoingEdges.forEach((w) => nextEdges.push(w));
-                } else {
-                    externalEdges.add(v);
-                }
-            }
-        })
-        if (nextEdges.length > 0) {
-            createExternalEdgeDicInlevelorderSub(nextEdges, externalEdges, touchedVertexes, level + 1);
-        }
-    }
-
 
 
 }

@@ -19,7 +19,7 @@ import { ZForeignObject } from "./z_foreign_object"
 
 import { VirtualTree } from "./graph_helpers/virtual_tree"
 import { GraphArrangement } from "./graph_helpers/graph_arrangement"
-import * as TreeArrangement from "./graph_helpers/tree_arrangement"
+//import * as TreeArrangement from "./graph_helpers/tree_arrangement"
 
 
 import { ZPathTextBox } from "./z_path_textbox"
@@ -27,6 +27,6 @@ import * as GOptions from "./z_options"
 
 
 export {
-    ZObject, ZArrowCallout, ZCallout, ZCircle, ZEdge, ZEllipse, ZGraph, ZRectButton, ZRect, ZTable, ZTextBox, ZVertex, ZPathTextBox, GOptions, VirtualTree, TreeArrangement,
+    ZObject, ZArrowCallout, ZCallout, ZCircle, ZEdge, ZEllipse, ZGraph, ZRectButton, ZRect, ZTable, ZTextBox, ZVertex, ZPathTextBox, GOptions, VirtualTree, GraphArrangement,
     ZTableOption, ZForeignObject
 }
