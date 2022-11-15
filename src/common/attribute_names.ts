@@ -24,8 +24,16 @@ export const className : string = "class";
 export const style : string = "style";
 export const id : string = "id";
 
-export const joint : string = "joint";
-export const jointPosition : string = "joint-position";
+//export const joint : string = "joint";
+//export const jointPosition : string = "joint-position";
+
+export const syncXTarget : string = "sync-x-target";
+export const syncXSourcePosition : string = "sync-x-source-position";
+export const syncXTargetPosition : string = "sync-x-target-position";
+
+export const syncYTarget : string = "sync-y-target";
+export const syncYSourcePosition : string = "sync-y-source-position";
+export const syncYTargetPosition : string = "sync-y-target-position";
 
 
 //export const groupClassName : string = "group:class";

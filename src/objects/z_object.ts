@@ -2,7 +2,7 @@
 import * as CommonFunctions from "../common/common_functions"
 import * as GUIObserver from "../html/gui_observer"
 import { Rectangle, PositionType, round100, nearlyEqual } from "../common/vline"
-import { ConnectorType, CoodinateType } from "../common/enums"
+import { ConnectorType, CoodinateType, HorizontalAnchor, VerticalAnchor } from "../common/enums"
 
 import * as SVG from "../interfaces/svg"
 import * as HTMLFunctions from "../html/html_functions"
@@ -102,17 +102,56 @@ export class ZObject implements IObject {
     public get stableFlag(): boolean {
         return this.svgGroup.getAttribute(GObserver.ObjectStableFlagName) == "true";
     }
-    public get jointObject(): ZObject | null {
-        const p = this.svgGroup.getAttribute(AttributeNames.joint);
+    public get syncXTargetObject(): ZObject | null {
+        const p = this.svgGroup.getAttribute(AttributeNames.syncXTarget);
         if(p == null){
             return null;
         }else{
             return <ZObject>ZObject.getObjectFromIDOrObjectID(p);
         }
     }
-    public get jointPosition(): ConnectorType {
-        const p = this.svgGroup.getAttribute(AttributeNames.jointPosition);
-        return ConnectorType.ToConnectorPosition(p);
+    public get syncYTargetObject(): ZObject | null {
+        const p = this.svgGroup.getAttribute(AttributeNames.syncYTarget);
+        if(p == null){
+            return null;
+        }else{
+            return <ZObject>ZObject.getObjectFromIDOrObjectID(p);
+        }
+    }
+
+
+    public get syncXSourcePosition(): HorizontalAnchor | null {
+        const p = this.svgGroup.getAttribute(AttributeNames.syncXSourcePosition);
+        if(p == null){
+            return null;
+        }else{
+            return HorizontalAnchor.toHorizontalAnchor(p);
+        }
+    }
+    public get syncXTargetPosition(): HorizontalAnchor | null {
+        const p = this.svgGroup.getAttribute(AttributeNames.syncXTargetPosition);
+        if(p == null){
+            return null;
+        }else{
+            return HorizontalAnchor.toHorizontalAnchor(p);
+        }
+    }
+
+    public get syncYSourcePosition(): VerticalAnchor | null {
+        const p = this.svgGroup.getAttribute(AttributeNames.syncYSourcePosition);
+        if(p == null){
+            return null;
+        }else{
+            return VerticalAnchor.toVerticalAnchor(p);
+        }
+    }
+    public get syncYTargetPosition(): VerticalAnchor | null {
+        const p = this.svgGroup.getAttribute(AttributeNames.syncYTargetPosition);
+        if(p == null){
+            return null;
+        }else{
+            return VerticalAnchor.toVerticalAnchor(p);
+        }
     }
 
     protected set stableFlag(b : boolean){
@@ -124,6 +163,94 @@ export class ZObject implements IObject {
     public updateSurfaceWithoutSVGText() : boolean{
         this.update();        
         return true;
+    }
+    public updateObjectLocation(){
+        this.joint();
+    }
+    private joint(){
+        const objRegion = this.getRegion();        
+        if(this.syncXTargetObject != null){
+            const jointRegion = this.syncXTargetObject.getRegion();
+
+            let diffX = 0;
+
+            if(this.syncXSourcePosition == "left"  || this.syncXSourcePosition == null){
+                if(this.syncXTargetPosition == "left" || this.syncXTargetPosition == null){
+                    diffX = jointRegion.x - objRegion.x;    
+                }
+                else if(this.syncXTargetPosition == "center"){
+                    diffX = jointRegion.x + (jointRegion.width / 2) - objRegion.x;                    
+                }else{
+                    diffX = jointRegion.right - objRegion.x;                    
+                }
+
+
+            }else if(this.syncXSourcePosition == "center"){
+                if(this.syncXTargetPosition == "left" || this.syncXTargetPosition == null){
+                    diffX = jointRegion.x - objRegion.x - (objRegion.width / 2);    
+                }
+                else if(this.syncXTargetPosition == "center"){
+                    diffX = jointRegion.x + (jointRegion.width / 2) - objRegion.x  - (objRegion.width / 2);                    
+                }else{
+                    diffX = jointRegion.right - objRegion.x  - (objRegion.width / 2);                    
+                }
+            }else{
+                if(this.syncXTargetPosition == "left" || this.syncXTargetPosition == null){
+                    diffX = jointRegion.x - objRegion.right;    
+                }
+                else if(this.syncXTargetPosition == "center"){
+                    diffX = jointRegion.x + (jointRegion.width / 2) - objRegion.right;                    
+                }else{
+                    diffX = jointRegion.right - objRegion.right;                    
+                }
+
+            }
+            this.x = this.x + diffX;
+
+
+        }
+        if(this.syncYTargetObject != null){
+            const jointRegion = this.syncYTargetObject.getRegion();
+
+            let diffy = 0;
+
+            if(this.syncYSourcePosition == "top"  || this.syncYSourcePosition == null){
+                if(this.syncYTargetPosition == "top" || this.syncYTargetPosition == null){
+                    diffy = jointRegion.y - objRegion.y;    
+                }
+                else if(this.syncYTargetPosition == "middle"){
+                    diffy = jointRegion.y + (jointRegion.height / 2) - objRegion.y;                    
+                }else{
+                    diffy = jointRegion.bottom - objRegion.y;                    
+                }
+
+
+            }else if(this.syncYSourcePosition == "middle"){
+                if(this.syncYTargetPosition == "top" || this.syncYTargetPosition == null){
+                    diffy = jointRegion.y - objRegion.y - (objRegion.height / 2);    
+                }
+                else if(this.syncYTargetPosition == "middle"){
+                    diffy = jointRegion.y + (jointRegion.height / 2) - objRegion.y  - (objRegion.height / 2);                    
+                }else{
+                    diffy = jointRegion.bottom - objRegion.y  - (objRegion.height / 2);                    
+                }
+            }else{
+                if(this.syncYTargetPosition == "top" || this.syncYTargetPosition == null){
+                    diffy = jointRegion.y - objRegion.bottom;    
+                }
+                else if(this.syncYTargetPosition == "middle"){
+                    diffy = jointRegion.y + (jointRegion.height / 2) - objRegion.bottom;                    
+                }else{
+                    diffy = jointRegion.bottom - objRegion.bottom;                    
+                }
+
+            }
+            console.log(`${this.syncYSourcePosition} ${this.syncYTargetPosition} ${jointRegion.y} ${objRegion.y} ${diffy}`)
+
+            this.y = this.y + diffy;
+
+        }
+
     }
     /*
     public get id() : string | null{

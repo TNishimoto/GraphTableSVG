@@ -307,24 +307,6 @@ export class ZGraph extends ZObject {
             }
         }
 
-        if(this.jointObject != null){
-            if(this.jointPosition == "top" || this.jointPosition == "auto"){
-                const jointRegion = this.jointObject.getRegion();
-                const objRegion = this.getRegion();
-                const diffY = jointRegion.bottom - objRegion.y;
-                const diffX = jointRegion.right - objRegion.x;
-    
-                console.log(jointRegion)
-                console.log(objRegion)
-    
-                console.log(`X: ${this.objectID} // ${this.x} / ${diffX} / ${objRegion.x}, add : ${diffX}`)
-    
-                this.x = jointRegion.x;
-                this.y = this.y + diffY;
-    
-            }
-
-        }
 
         //this.relocate();
         //this.moveInCanvas();

@@ -333,7 +333,7 @@ export class ZTextBox extends ZVertex {
         return b;
 
     }
-    private updateRec() : void {
+    private updateSub() : void {
         super.update();
         this._isUpdating = true;
         if (!this.isShown) return;
@@ -347,6 +347,8 @@ export class ZTextBox extends ZVertex {
         this.updateTextLocation();
         this.updateSurfaceSizeWithUpdateFlag(true);
         this.updateSurfaceLocation();
+        this.updateObjectLocation();
+        //this.joint();
         this._isUpdating = false;
         this.hasConnectedObserverFunction = true;
 
@@ -355,7 +357,7 @@ export class ZTextBox extends ZVertex {
     public update() {
 
         //let counter = 1;
-        this.updateRec();
+        this.updateSub();
         /*
         while(this.getUpdateFlag()){
             if(counter > 10){
