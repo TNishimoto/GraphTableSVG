@@ -5,7 +5,7 @@ export function getGraph(obj : ZObject): ZObject | null {
     const v = obj.svgGroup.parentElement;
     if (v != null && v instanceof SVGGElement && v.hasAttribute(AttributeNames.objectIDName)) {
         const id = v.getAttribute(AttributeNames.objectIDName)!;
-        const obj = ZObject.getObjectFromObjectID(id);
+        const obj = ZObject.getObjectFromIDOrObjectID(id);
         if (obj instanceof ZObject) {
             return obj;
         }

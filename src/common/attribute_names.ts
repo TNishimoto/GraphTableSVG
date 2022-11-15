@@ -24,6 +24,10 @@ export const className : string = "class";
 export const style : string = "style";
 export const id : string = "id";
 
+export const joint : string = "joint";
+export const jointPosition : string = "joint-position";
+
+
 //export const groupClassName : string = "group:class";
 //export const groupStyle : string = "group:style";
 

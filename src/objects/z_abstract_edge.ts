@@ -309,7 +309,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         if (this.beginVertexID == null) {
             return null;
         } else {
-            return <ZVertex>ZObject.getObjectFromObjectID(this.beginVertexID);
+            return <ZVertex>ZObject.getObjectFromIDOrObjectID(this.beginVertexID);
         }
     }
     /**
@@ -331,7 +331,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         if (this.endVertexID == null) {
             return null;
         } else {
-            return <ZVertex>ZObject.getObjectFromObjectID(this.endVertexID);
+            return <ZVertex>ZObject.getObjectFromIDOrObjectID(this.endVertexID);
         }
     }
     /**
@@ -1021,7 +1021,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         const dic = isBegin ? ZAbstractEdge.connectedBeginVertexDic : ZAbstractEdge.connectedEndVertexDic;
         if (edge.objectID in dic) {
             const id = dic[edge.objectID];
-            const obj = ZObject.getObjectFromObjectID(id);
+            const obj = ZObject.getObjectFromIDOrObjectID(id);
             if (obj instanceof ZVertex) {
                 return obj;
             } else {

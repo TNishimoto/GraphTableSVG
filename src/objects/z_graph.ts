@@ -80,7 +80,7 @@ export class ZGraph extends ZObject {
     public get vertices(): ZVertex[] {
         const r: ZVertex[] = [];
         HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(AttributeNames.objectIDName)).forEach((v) => {
-            const item = ZObject.getObjectFromObjectID(v.getAttribute(AttributeNames.objectIDName)!)
+            const item = ZObject.getObjectFromIDOrObjectID(v.getAttribute(AttributeNames.objectIDName)!)
             if (item instanceof ZVertex) {
                 r.push(item);
             }
@@ -90,7 +90,7 @@ export class ZGraph extends ZObject {
     public get edges(): ZEdge[] {
         const r: ZEdge[] = [];
         HTMLFunctions.getChildren(this.svgGroup).filter((v) => v.hasAttribute(AttributeNames.objectIDName)).forEach((v) => {
-            const item = ZObject.getObjectFromObjectID(v.getAttribute(AttributeNames.objectIDName)!)
+            const item = ZObject.getObjectFromIDOrObjectID(v.getAttribute(AttributeNames.objectIDName)!)
             if (item instanceof ZEdge) {
                 r.push(item);
             }
@@ -306,10 +306,32 @@ export class ZGraph extends ZObject {
 
             }
         }
+
+        if(this.jointObject != null){
+            if(this.jointPosition == "top" || this.jointPosition == "auto"){
+                const jointRegion = this.jointObject.getRegion();
+                const objRegion = this.getRegion();
+                const diffY = jointRegion.bottom - objRegion.y;
+                const diffX = jointRegion.right - objRegion.x;
+    
+                console.log(jointRegion)
+                console.log(objRegion)
+    
+                console.log(`X: ${this.objectID} // ${this.x} / ${diffX} / ${objRegion.x}, add : ${diffX}`)
+    
+                this.x = jointRegion.x;
+                this.y = this.y + diffY;
+    
+            }
+
+        }
+
         //this.relocate();
         //this.moveInCanvas();
 
         this.hasConnectedObserverFunction = true;
+
+
 
         // }
 
@@ -551,7 +573,7 @@ export class ZGraph extends ZObject {
 
     }
     private objectCreatedFunction = (e: Event) => {
-        const obj = ZObject.getObjectFromObjectID(<SVGElement>e.target);
+        const obj = ZObject.getObjectFromIDOrObjectID(<SVGElement>e.target);
         if (obj instanceof ZVertex) {
             this.dispatchVertexCreatedEvent(obj);
         } else if (obj instanceof ZEdge) {

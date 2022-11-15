@@ -2,7 +2,7 @@
 import * as CommonFunctions from "../common/common_functions"
 import * as GUIObserver from "../html/gui_observer"
 import { Rectangle, PositionType, round100, nearlyEqual } from "../common/vline"
-import { CoodinateType } from "../common/enums"
+import { ConnectorType, CoodinateType } from "../common/enums"
 
 import * as SVG from "../interfaces/svg"
 import * as HTMLFunctions from "../html/html_functions"
@@ -102,6 +102,19 @@ export class ZObject implements IObject {
     public get stableFlag(): boolean {
         return this.svgGroup.getAttribute(GObserver.ObjectStableFlagName) == "true";
     }
+    public get jointObject(): ZObject | null {
+        const p = this.svgGroup.getAttribute(AttributeNames.joint);
+        if(p == null){
+            return null;
+        }else{
+            return <ZObject>ZObject.getObjectFromIDOrObjectID(p);
+        }
+    }
+    public get jointPosition(): ConnectorType {
+        const p = this.svgGroup.getAttribute(AttributeNames.jointPosition);
+        return ConnectorType.ToConnectorPosition(p);
+    }
+
     protected set stableFlag(b : boolean){
         this.svgGroup.setAttribute(GObserver.ObjectStableFlagName, b ? "true" : "false");
     }
@@ -212,7 +225,6 @@ export class ZObject implements IObject {
         this.width = option.width !== undefined ? option.width : 25;
         this.height = option.height !== undefined ? option.height : 25;
 
-        console.log(`XXX: ${option.positionType}`);
 
         if (option.positionType !== undefined) {
             if (option.positionType == "center") {
@@ -795,11 +807,11 @@ export class ZObject implements IObject {
     }
 
     private static objectDic: { [key: string]: ZObject; } = {};
-    public static getObjectFromObjectID(id: string | SVGElement): ZObject | null {
+    public static getObjectFromIDOrObjectID(id: string | SVGElement): ZObject | null {
         if (id instanceof SVGElement) {
             if (id.hasAttribute(AttributeNames.objectIDName)) {
                 const _id = id.getAttribute(AttributeNames.objectIDName)!;
-                return ZObject.getObjectFromObjectID(_id);
+                return ZObject.getObjectFromIDOrObjectID(_id);
             } else {
                 return null;
             }

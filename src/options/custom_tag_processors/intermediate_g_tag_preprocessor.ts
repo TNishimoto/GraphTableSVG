@@ -46,7 +46,6 @@ import { convertAttributesIntoTableOption, TableOptionReteral } from "../../logi
 export function convertFromZTagToIntermediateSVGGTag(svgsvg: SVGSVGElement): void {
     HTMLFunctions.getDescendants(svgsvg).forEach(v => {
         const shapeType = ShapeObjectType.toShapeObjectType(v.nodeName.toLowerCase());
-        console.log(shapeType);
         if (shapeType != null) {
             convertFromZTagToIntermediateSVGGTagSub(v);
         }
