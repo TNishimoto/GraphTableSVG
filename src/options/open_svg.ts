@@ -106,16 +106,6 @@ export function openSVG(inputItem: string | Element | null = null, output: ZObje
             appendVBAButton(svgsvg);
         }
 
-        /*
-        const editAttr = svgsvg.getAttribute(OriginalSVGSVGAttributes.Edit);
-        if (editAttr != null && editAttr == "true") {
-            svgsvg.onclick = (me : MouseEvent) =>{
-                console.log(me.target);
-
-                alert("hello!")
-            }
-        }
-        */
 
 
         convertFromZTagToIntermediateSVGGTag(svgsvg);

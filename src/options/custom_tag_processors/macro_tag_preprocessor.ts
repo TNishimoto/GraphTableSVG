@@ -132,7 +132,6 @@ export function processMacroTag(svgsvg: SVGSVGElement) {
         if (trees.length > 0) {
             const mtreeTag = trees.item(0);
             if (mtreeTag != null) {
-                console.log(mtreeTag);
 
                 const intermediateGElement = processMacroTreeTag(mtreeTag)
                 svgsvg.insertBefore(intermediateGElement, mtreeTag);

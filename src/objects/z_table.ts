@@ -145,7 +145,6 @@ export class ZTable extends ZVertex {
         const rowCount = (<any>option).rowCount ?? 5;
         this.setSize(columnCount, rowCount);
 
-        console.log(`XXX ${option.rowHeight}`)
 
         if (option.rowHeight !== undefined) {
             this.rows.forEach((v) => v.height = <number>option.rowHeight);
@@ -623,7 +622,6 @@ export class ZTable extends ZVertex {
         (<any>option).rowCount = logicTable.rowCount;
         (<any>option).columnCount = logicTable.columnCount;
 
-        console.log(option)
 
         this.assignOption(option);
 

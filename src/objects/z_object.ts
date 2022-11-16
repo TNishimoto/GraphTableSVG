@@ -245,7 +245,6 @@ export class ZObject implements IObject {
                 }
 
             }
-            console.log(`${this.syncYSourcePosition} ${this.syncYTargetPosition} ${jointRegion.y} ${objRegion.y} ${diffy}`)
 
             this.y = this.y + diffy;
 
