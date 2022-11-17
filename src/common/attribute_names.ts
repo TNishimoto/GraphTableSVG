@@ -12,6 +12,8 @@ export const objectCreatedEventName = "object_created";
 export const GroupAttribute = "data-type";
 
 export const objectIDName: string = "data-object-id";
+export const dataNameAttribute: string = "data-name";
+
 export const customElement: string = "data-custom";
 export const cellEmphasisCellClass: string = "___cell-emphasis";
 export const cellEmphasisBorderClass: string = "___border-emphasis";

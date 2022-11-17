@@ -10,7 +10,7 @@ import * as StyleNames from "../../common/style_names"
 import { ZTable } from "../z_table"
 import * as SVG from "../../interfaces/svg"
 //import {CellOption} from "../../options/attributes_option"
-import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText } from "../../common/enums";
+import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText, DataName } from "../../common/enums";
 import * as SVGTextBox from "../../interfaces/svg_textbox"
 import { BorderRow } from "./border_row"
 import { BorderColumn } from "./border_column"
@@ -71,9 +71,12 @@ export class Cell implements ITextBox {
 
         const backGroundClass = DefaultClassNames.defaultCellBackgroungClass;
         this._svgBackground = SVG.createCellRectangle(this.svgGroup, backGroundClass);
+        this._svgBackground.setAttribute(AttributeNames.dataNameAttribute, DataName.Background);
 
         const textClass = DefaultClassNames.defaultTextClass;
         this._svgText = SVG.createText(textClass);
+        this._svgText.setAttribute(AttributeNames.dataNameAttribute, DataName.Text);
+
         this.svgGroup.appendChild(this.svgText);
 
         cellMap.set(this.objectID, this);

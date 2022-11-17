@@ -254,6 +254,18 @@ export namespace Direction {
     }
 }
 
+export type DataName = "background" | "text" | "topborder" | "leftborder" | "rightborder" | "bottomborder";
+export namespace DataName {
+    export const Background: DataName = "background"
+    export const Text: DataName = "text"
+    export const TopBorder: DataName = "topborder"
+    export const LeftBorder: DataName = "leftborder"
+    export const RightBorder: DataName = "rightborder"
+    export const BottomBorder: DataName = "bottomborder"
+
+}
+
+
 export type SpeakerPosition = "upleft" | "upright" | "leftup" | "leftdown" | "rightup" | "rightdown" | "downleft" | "downright" | "inner";
 export type AutoSizeShapeToFitText = "auto" | "semi-auto" | "none";
 export namespace AutoSizeShapeToFitText {

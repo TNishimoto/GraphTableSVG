@@ -2,7 +2,7 @@
 import { ZVertex } from "./z_vertex"
 import { ZTextBox } from "./z_textbox"
 import { ZCalloutAttributes } from "./z_callout"
-import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
+import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType, DataName } from "../common/enums";
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
@@ -178,6 +178,7 @@ export class ZEllipse extends ZAbstractEllipseCircle {
     }
     private static createEllipse(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style: string | GOptions.surfaceClassCSS | undefined): SVGEllipseElement {
         const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+        circle.setAttribute(AttributeNames.dataNameAttribute, DataName.Background);
         parent.appendChild(circle);
         GOptions.setClassAndStyle(circle, className, style);
 

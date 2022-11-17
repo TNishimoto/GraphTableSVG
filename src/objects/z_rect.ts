@@ -1,7 +1,7 @@
 import { ZVertex } from "./z_vertex"
 import { ZTextBox } from "./z_textbox"
 import { ZCalloutAttributes } from "./z_callout"
-import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType } from "../common/enums";
+import { ShapeObjectType, ConnectorType, msoDashStyle, VBAShapeType, DataName } from "../common/enums";
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import { Rectangle, VLine, round100 } from "../common/vline"
@@ -41,6 +41,7 @@ export class ZRect extends ZTextBox {
      */
     private static createRectangle(parent: SVGElement, className: string | GOptions.surfaceClassCSS | undefined, style: string | undefined | GOptions.surfaceClassCSS): SVGRectElement {
         const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute(AttributeNames.dataNameAttribute, DataName.Background);
         parent.appendChild(rect);
         rect.width.baseVal.value = 30;
         rect.height.baseVal.value = 30;

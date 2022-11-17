@@ -11,6 +11,7 @@ import * as SVGElementExtension from "../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import * as DefaultClassNames from "../common/default_class_names"
 import { ZObject } from "./z_object";
+import { DataName } from "../common/enums";
 /**
      * SVGPathElementを生成します。
      * @param parent 生成したSVGPathElementを子に追加する要素
@@ -40,10 +41,15 @@ export function createPath(parent: SVGElement | HTMLElement, x: number, y: numbe
     * @param className 生成するSVG要素のクラス属性名
     * @returns 生成されたSVGTextElement
     */
-   export function createSVGText(className: string | undefined | null, style: string | undefined): SVGTextElement {
+   export function createSVGText(className: string | undefined | null, style: string | undefined, dataName : DataName | null): SVGTextElement {
     const _svgText: SVGTextElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
     _svgText.setAttribute(AttributeNames.objectIDName, (SVG.getNewID()).toString());
+
+    if(dataName! != null){
+        _svgText.setAttribute(AttributeNames.dataNameAttribute, dataName);
+    }
+
     if (style !== undefined) {
         _svgText.setAttribute("style", style);
     }

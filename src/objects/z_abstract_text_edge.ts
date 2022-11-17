@@ -31,7 +31,7 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
     constructor(svgbox: SVGElement | string) {
         super(svgbox);
 
-        this._svgText = createSVGText(DefaultClassNames.defaultTextClass, undefined);
+        this._svgText = createSVGText(DefaultClassNames.defaultTextClass, undefined, "text");
         this.svgGroup.appendChild(this.svgText);
         this._textObserver = new MutationObserver(this.textObserverFunc);
         const option2: MutationObserverInit = { childList: true, attributes: true, subtree: true };
