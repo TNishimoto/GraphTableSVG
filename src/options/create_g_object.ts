@@ -28,6 +28,7 @@ export function createGObject(parent: SVGElement | string | ZObject, type: "z-ob
 export function createGObject(parent: SVGElement | string | ZObject, type: "z-path-textbox", option?: GOptions.ZTextBoxAttributes): ZObject
 export function createGObject(parent: SVGElement | string | ZObject, type: ShapeObjectType, option?: any): ZObject
 export function createGObject(parent: SVGElement | string | ZObject, type: ShapeObjectType, option: any = {}): ZObject {
+    /*
     let _parent: SVGElement;
     if (parent instanceof ZObject) {
         _parent = parent.svgGroup;
@@ -83,5 +84,6 @@ export function createGObject(parent: SVGElement | string | ZObject, type: Shape
             obj.setOption(option);
             return obj;
     }
+    */
     throw new ArgumentOutOfRangeError();
 }

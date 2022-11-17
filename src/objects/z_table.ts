@@ -118,7 +118,7 @@ export class ZTable extends ZVertex {
             return cell;
         }
     }
-
+    /*
     protected setBasicOption(option: ZTableOption): void {
         super.setBasicOption(option);
         const columnCount = option.columnCount !== undefined ? option.columnCount : 5;
@@ -126,6 +126,8 @@ export class ZTable extends ZVertex {
         this.setSize(columnCount, rowCount);
 
     }
+    */
+    /*
     protected setOptionalSize(option: ZTableOption) {
         super.setOptionalSize(option);
         if (option.rowHeight !== undefined) {
@@ -134,11 +136,13 @@ export class ZTable extends ZVertex {
         if (option.columnWidth !== undefined) {
             this.columns.forEach((v) => v.width = <number>option.columnWidth);
         }
-
     }
+    */
+   /*
     public setOption(option: ZTableOption) {
         super.setOption(option);
     }
+    */
     public assignOption(option : TableOptionReteral){
         super.assignOption(option);
         const columnCount = (<any>option).columnCount ?? 5;

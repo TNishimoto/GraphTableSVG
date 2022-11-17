@@ -326,6 +326,8 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
         }
 
     } else if (item instanceof LogicTree || item instanceof LogicGraph) {
+        throw new Error("Error")
+        /*
         if(isCanvasID){
             const canvasItem = <string | SVGElement>canvasID;
             const ggraph = <ZGraph>createGObject(canvasItem, ShapeObjectType.Graph);
@@ -357,6 +359,7 @@ export function view(item: LogicTable | LogicTree | LogicGraph | LogicGroup, tit
 
             return [ggraph, consoleLine];
         }
+        */
 
         //graph(item);
     } else {

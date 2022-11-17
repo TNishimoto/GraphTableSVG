@@ -48,6 +48,7 @@ export class ZGraph extends ZObject {
         //this.setOptionInGObject(option)
         //this.svgGroup.addEventListener(AttributeNames.objectCreatedEventName, this.objectCreatedFunction);
     }
+    /*
     protected setBasicOption(option: GOptions.ZGraphAttributes){
         super.setBasicOption(option);
         if (option.isLatexMode == undefined) option.isLatexMode = false;
@@ -61,11 +62,13 @@ export class ZGraph extends ZObject {
             //this.relocateStyle = "standard"
         }
     }
+    */
     
-    
+    /*
     public setOption(option: GOptions.ZGraphAttributes){
         super.setOption(option);
     }
+    */
     public get graphAllocateFunction() : GOptions.GraphAllocateFunction | undefined{
         const svg = this.svgGroup;
         const f : any = (<any>svg).__graph_allocate_function;
@@ -358,13 +361,13 @@ export class ZGraph extends ZObject {
             this.y = this.y - (rect.y);
         }
     }
-
+    /*
     public build(logicGraph: LogicGraph | LogicTree ) {
         const option = logicGraph.option;
         if(option ===undefined){
             throw new Exceptions.UndefinedError();
         }
-        this.setOption(option);
+        //this.setOption(option);
         //if (option.isLatexMode == undefined) option.isLatexMode = false;
         this.clear();
         const svgsvg = SVG.getSVGSVG(this.svgGroup);
@@ -433,23 +436,11 @@ export class ZGraph extends ZObject {
                 throw Error("error")
             }
         }
-        /*
-        if (option.relocateStyle !== undefined) {
-            this.relocateStyle = option.relocateStyle;
-        } else {
-            this.relocateStyle = "standard"
-        }
-
-        //this.x = 200;
-        //this.y = 200;
-
-        if (option.x != undefined) SVGGExtension.setX(this.svgGroup,option.x);
-        if (option.y != undefined) SVGGExtension.setY(this.svgGroup,option.y);
-        */
 
         this.relocate();
 
     }
+    */
 
    /*
     public constructFromLogicTree(roots: LogicTree[] | LogicTree, option: { x?: number, y?: number, isLatexMode?: boolean } = {}) {
@@ -668,6 +659,7 @@ export class ZGraph extends ZObject {
         return _parent;
 
     }
+    /*
     public static createVertex(parent: SVGElement | string | ZObject, type: VertexObjectType, option: any = {}): ZVertex {
         const _parent: SVGElement = ZGraph.getParent(parent);
 
@@ -702,6 +694,7 @@ export class ZGraph extends ZObject {
         }
         throw new ArgumentOutOfRangeError();
     }
+    */
     public static createVertexTable(parent: SVGElement | string | ZObject, obj : LogicTable): ZVertex {
         const _parent: SVGElement = ZGraph.getParent(parent);
 
@@ -709,14 +702,14 @@ export class ZGraph extends ZObject {
         table.buildFromLogicTable(obj);
         return table;
     }
-
+    /*
     public static createEdge(parent: SVGElement | string | ZObject, option: any = {}): ZEdge {
         const _parent: SVGElement = ZGraph.getParent(parent);
         const edge = new ZEdge(_parent);
         edge.setOption(option);
         return edge;
-
     }
+    */
 
     public updateSurfaceWithoutSVGText() : boolean{
         //super.updateSurfaceWithoutSVGText();

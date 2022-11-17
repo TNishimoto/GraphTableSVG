@@ -30,7 +30,7 @@ export class ZEdge extends ZAbstractTextEdge  {
         //this.setAppropriateText();
     }
 
-
+    /*
     protected setBasicOption(option: GOptions.ZEdgeAttributes) {
         super.setBasicOption(option);
 
@@ -38,6 +38,7 @@ export class ZEdge extends ZAbstractTextEdge  {
             this.controlPoint = [[option.x3, option.y3]];
         }
     }
+    */
 
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZEdgeAttributes = {}): GOptions.ZEdgeAttributes {
         ZAbstractTextEdge.constructAttributes(e, removeAttributes, output);

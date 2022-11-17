@@ -62,6 +62,7 @@ export class ZArrowCallout extends ZPathTextBox {
 
         return output;
     }
+    /*
     protected setBasicOption(option: ZShapeArrowCalloutAttributes) {
         super.setBasicOption(option);
         this.arrowNeckWidth = option.arrowNeckWidth !== undefined ? option.arrowNeckWidth : this.arrowNeckWidth;
@@ -73,6 +74,7 @@ export class ZArrowCallout extends ZPathTextBox {
     public setOption(option: ZShapeArrowCalloutAttributes) {
         super.setOption(option)
     }
+    */
     /*
     static openCustomElement(e: SVGElement): ShapeArrowCallout {
         const parent = e.parentElement;

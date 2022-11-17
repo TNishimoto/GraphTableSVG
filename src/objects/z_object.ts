@@ -99,6 +99,141 @@ export class ZObject implements IObject {
         if (this.type == ShapeObjectType.Object) this.firstFunctionAfterInitialized();
 
     }
+    protected copyAttribute(from : SVGElement, to : SVGElement, attributeName : string, remove : boolean){
+        const attr = from.getAttribute(attributeName);
+        if(attr != null){
+            to.setAttribute(attributeName, attr);
+        }
+        if(remove){
+            from.removeAttribute(attributeName);
+        }
+
+    }
+    public initializeSetBasicOption(source : SVGElement) {
+        this.copyAttribute(source, this._svgGroup, "class", true);
+        this.copyAttribute(source, this._svgGroup, "style", true);
+        this.copyAttribute(source, this._svgGroup, "id", true);
+    }
+    public initializeOptionalPosition(source : SVGElement) {
+
+        const cx = ElementExtension.gtGetAttributeNumberWithUndefined(source, AttributeNames.cx);
+        const cy = ElementExtension.gtGetAttributeNumberWithUndefined(source, AttributeNames.cy);
+        const x = ElementExtension.gtGetAttributeNumberWithUndefined(source, AttributeNames.x);
+        const y = ElementExtension.gtGetAttributeNumberWithUndefined(source, AttributeNames.y);
+
+        console.log(source.outerHTML)
+
+        console.log(`${cx} ${cy}`)
+
+
+        if(x != null || y != null){
+            this.positionType = PositionType.UpperLeft;
+            const __x = x == null ? 0 : x;
+            const __y = y == null ? 0 : y;
+            this.setVirtualXY(__x, __y);
+
+        }else{
+            this.positionType = PositionType.Center;
+            this.cx = cx == null ? 0 : cx;
+            this.cy = cy == null ? 0 : cy;
+        }
+    }
+
+    public initialize(source : SVGElement) {
+        this.initializeSetBasicOption(source);
+        this.initializeOptionalPosition(source);
+        source.remove();
+    }
+    /*
+    protected setBasicOption(option: GOptions.ZObjectAttributes): void {
+
+        GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
+
+        if (option.attributes !== undefined) {
+            Object.keys(option.attributes).forEach((v) => {
+                const value: string = option.attributes![v];
+                this._svgGroup.setAttribute(v, value);
+            })
+        }
+        if (typeof option.id !== "undefined") this.svgGroup.id = option.id;
+    }
+    */
+    /*
+    public setOption(option: GOptions.ZObjectAttributes) {
+        this.setBasicOption(option);
+        //this.setOptionalSize(option);
+        this.setOptionalPosition(option)
+    }
+    */
+
+    /*
+    protected setOptionalSize(option: GOptions.ZObjectAttributes) {
+        if (this.svgSurface !== null) {
+            GOptions.setClassAndStyle(this.svgSurface, option.surfaceClass, option.surfaceStyle)
+        }
+
+        this.width = (option.width !== undefined ? option.width : 25);
+        this.height = (option.height !== undefined ? option.height : 25);
+    }
+    */
+    /*
+    protected setOptionalPosition(option: GOptions.ZObjectAttributes) {
+
+        if (option.position !== undefined) {
+            if (option.position.type == "center") {
+                this.positionType = PositionType.Center;
+                this.cx = option.position.x;
+                this.cy = option.position.y;
+            } else {
+
+                this.positionType = PositionType.UpperLeft;
+                this.setVirtualXY(option.position.x, option.position.y);
+                //this.x = option.position.x;
+                //this.y = option.position.y;
+
+            }
+        } else {
+            this.positionType = PositionType.Center;
+            this.__cx = 0;
+            this.__cy = 0;
+
+        }
+    }
+    */
+    
+    public assignOption(option: ZVertexOptionReteral) {
+        GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
+
+        if(option.id !== undefined){
+            this.svgGroup.setAttribute("id", option.id);
+        }
+        if (this.svgSurface !== null) {
+            GOptions.setClassAndStyle(this.svgSurface, option.surfaceOption.class, option.surfaceOption.style)
+        }
+        this.width = option.width !== undefined ? option.width : 25;
+        this.height = option.height !== undefined ? option.height : 25;
+
+
+        if (option.positionType !== undefined) {
+            if (option.positionType == "center") {
+                this.positionType = PositionType.Center;
+                this.cx = option.cx ?? 0;
+                this.cy = option.cy ?? 0;
+            } else {
+                const x = option.x ?? 0;
+                const y = option.y ?? 0;
+                this.positionType = PositionType.UpperLeft;
+                this.setVirtualXY(x, y);
+                //this.x = option.position.x;
+                //this.y = option.position.y;
+            }
+        } else {
+            this.positionType = PositionType.Center;
+            this.__cx = 0;
+            this.__cy = 0;
+
+        }
+    }
     public get stableFlag(): boolean {
         return this.svgGroup.getAttribute(GObserver.ObjectStableFlagName) == "true";
     }
@@ -289,89 +424,7 @@ export class ZObject implements IObject {
     */
 
 
-    protected setBasicOption(option: GOptions.ZObjectAttributes): void {
 
-        GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
-
-        if (option.attributes !== undefined) {
-            Object.keys(option.attributes).forEach((v) => {
-                const value: string = option.attributes![v];
-                this._svgGroup.setAttribute(v, value);
-            })
-        }
-        if (typeof option.id !== "undefined") this.svgGroup.id = option.id;
-    }
-
-    protected setOptionalSize(option: GOptions.ZObjectAttributes) {
-        if (this.svgSurface !== null) {
-            GOptions.setClassAndStyle(this.svgSurface, option.surfaceClass, option.surfaceStyle)
-        }
-
-        this.width = (option.width !== undefined ? option.width : 25);
-        this.height = (option.height !== undefined ? option.height : 25);
-    }
-
-    protected setOptionalPosition(option: GOptions.ZObjectAttributes) {
-
-        if (option.position !== undefined) {
-            if (option.position.type == "center") {
-                this.positionType = PositionType.Center;
-                this.cx = option.position.x;
-                this.cy = option.position.y;
-            } else {
-
-                this.positionType = PositionType.UpperLeft;
-                this.setVirtualXY(option.position.x, option.position.y);
-                //this.x = option.position.x;
-                //this.y = option.position.y;
-
-            }
-        } else {
-            this.positionType = PositionType.Center;
-            this.__cx = 0;
-            this.__cy = 0;
-
-        }
-    }
-    public setOption(option: GOptions.ZObjectAttributes) {
-        this.setBasicOption(option);
-        this.setOptionalSize(option);
-        this.setOptionalPosition(option)
-    }
-
-    public assignOption(option: ZVertexOptionReteral) {
-        GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
-
-        if(option.id !== undefined){
-            this.svgGroup.setAttribute("id", option.id);
-        }
-        if (this.svgSurface !== null) {
-            GOptions.setClassAndStyle(this.svgSurface, option.surfaceOption.class, option.surfaceOption.style)
-        }
-        this.width = option.width !== undefined ? option.width : 25;
-        this.height = option.height !== undefined ? option.height : 25;
-
-
-        if (option.positionType !== undefined) {
-            if (option.positionType == "center") {
-                this.positionType = PositionType.Center;
-                this.cx = option.cx ?? 0;
-                this.cy = option.cy ?? 0;
-            } else {
-                const x = option.x ?? 0;
-                const y = option.y ?? 0;
-                this.positionType = PositionType.UpperLeft;
-                this.setVirtualXY(x, y);
-                //this.x = option.position.x;
-                //this.y = option.position.y;
-            }
-        } else {
-            this.positionType = PositionType.Center;
-            this.__cx = 0;
-            this.__cy = 0;
-
-        }
-    }
 
 
     /*

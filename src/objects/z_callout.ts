@@ -26,6 +26,7 @@ export class ZCallout extends ZPathTextBox {
         */
         if (this.type == ShapeObjectType.Callout) this.firstFunctionAfterInitialized();
     }
+    /*
     protected setBasicOption(option: ZCalloutAttributes) {
         super.setBasicOption(option);
         this.speakerX = option.speakerX == undefined ? 0 : option.speakerX;
@@ -35,6 +36,10 @@ export class ZCallout extends ZPathTextBox {
     public setOption(option: ZCalloutAttributes) {
         super.setOption(option)
     }
+    */
+
+
+
 
 
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: ZCalloutAttributes = {}): ZCalloutAttributes {

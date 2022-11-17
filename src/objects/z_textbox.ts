@@ -63,6 +63,7 @@ export class ZTextBox extends ZVertex {
         }
         */
     }
+    /*
     protected setBasicOption(option: GOptions.ZTextBoxAttributes) {
         super.setBasicOption(option)
         const textClass = CSS.createCSSClass(option.textClass);
@@ -93,6 +94,24 @@ export class ZTextBox extends ZVertex {
     public setOption(option: GOptions.ZTextBoxAttributes) {
         super.setOption(option);
         //this.setBasicOption(option);
+    }
+    */
+    public initializeSetBasicOption(source : SVGElement) {
+        super.initializeSetBasicOption(source);
+
+        if (source.children.length > 0) {
+            const tNodes = HTMLFunctions.getTNodes(source);
+            if (tNodes != null) {
+                tNodes.forEach((v) => v.remove())
+
+                SVGTextBox.constructSVGTextByHTMLElements(this.svgText, tNodes, false);
+                SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
+                }
+        } else if (source.innerHTML.length > 0) {
+            SVGTextExtension.setTextContent(this.svgText, source.innerHTML);
+            source.innerHTML = "";
+        }
+
     }
 
 

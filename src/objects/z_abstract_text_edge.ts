@@ -66,7 +66,7 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
 
 
 
-
+    /*
     protected setBasicOption(option: GOptions.ZAbstractTextEdgeAttributes) {
 
         super.setBasicOption(option);
@@ -83,8 +83,8 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
         } else {
 
         }
-
     }
+    */
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZAbstractTextEdgeAttributes = {}): GOptions.ZAbstractTextEdgeAttributes {
         ZAbstractEdge.constructAttributes(e, removeAttributes, output);
         //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(AttributeNames.Style.autoSizeShapeToFitText);

@@ -36,6 +36,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         if (option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultEdgePathClass;
         this._svgSurface = createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
     }
+    /*
     protected setBasicOption(option: GOptions.ZAbstractEdgeAttributes) {
 
         super.setBasicOption(option);
@@ -69,15 +70,8 @@ export class ZAbstractEdge extends ZObject implements IEdge {
             this.endVertexID = option.endVertex;
         }
 
-        /*
-        if(option.beginConnectorType != undefined){
-            this.beginConnectorType = option.beginConnectorType;
-        }
-        if(option.endConnectorType != undefined){
-            this.endConnectorType = option.endConnectorType;
-        }
-        */
     }
+    */
     get edgeType(): EdgeType {
         const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.edgeType, "none");
         if (b == "straight") {

@@ -84,39 +84,53 @@ function isIntermediateSVGGElement(element: SVGElement): boolean {
     if (parent instanceof SVGElement) {
         let r: ZObject;
 
-        intermediateSVGGElement.removeAttribute(AttributeNames.customElement);
+        //intermediateSVGGElement.removeAttribute(AttributeNames.customElement);
         if (type == ShapeObjectType.Callout) {
-            const option = ZCallout.constructAttributes(intermediateSVGGElement, true);
+            //const option = ZCallout.constructAttributes(intermediateSVGGElement, true);
             r = new ZCallout(parent);
-            r.setOption(option);
+            r.initialize(intermediateSVGGElement)
+
+            //r.setOption(option);
         } else if (type == ShapeObjectType.ArrowCallout) {
-            const option = ZArrowCallout.constructAttributes(intermediateSVGGElement, true);
+            //const option = ZArrowCallout.constructAttributes(intermediateSVGGElement, true);
             r = new ZArrowCallout(parent);
-            r.setOption(option);
+            r.initialize(intermediateSVGGElement)
+
+            //r.setOption(option);
         } else if (type == ShapeObjectType.Ellipse) {
-            const option = ZEllipse.constructAttributes(intermediateSVGGElement, true);
+            //const option = ZEllipse.constructAttributes(intermediateSVGGElement, true);
             r = new ZEllipse(parent);
-            r.setOption(option);
+            r.initialize(intermediateSVGGElement)
+
+           // r.setOption(option);
         } else if (type == ShapeObjectType.Circle) {
-            const option = ZCircle.constructAttributes(intermediateSVGGElement, true);
+            //const option = ZCircle.constructAttributes(intermediateSVGGElement, true);
             r = new ZCircle(parent);
-            r.setOption(option);
+            r.initialize(intermediateSVGGElement)
+
+            //r.setOption(option);
         }
         else if (type == ShapeObjectType.Rect) {
-            const option = ZRect.constructAttributes(intermediateSVGGElement, true);
+            //const option = ZRect.constructAttributes(intermediateSVGGElement, true);
             r = new ZRect(parent);
-            r.setOption(option);
+            r.initialize(intermediateSVGGElement)
+
+            //r.setOption(option);
 
 
 
         } else if (type == ShapeObjectType.Edge) {
-            const option = ZEdge.constructAttributes(intermediateSVGGElement, true);
+            //const option = ZEdge.constructAttributes(intermediateSVGGElement, true);
             r = new ZEdge(parent);
-            r.setOption(option);
+            r.initialize(intermediateSVGGElement)
+
+            //r.setOption(option);
         } else if (type == ShapeObjectType.Graph) {
-            const option = ZGraph.constructAttributes(intermediateSVGGElement, true, {}, "center");
+            //const option = ZGraph.constructAttributes(intermediateSVGGElement, true, {}, "center");
             r = new ZGraph(parent);
-            r.setOption(option);
+            r.initialize(intermediateSVGGElement)
+
+            //r.setOption(option);
             //(<ZGraph>r).relocate();
         } else if (type == ShapeObjectType.Table) {
             const logicTable = LogicTable.constructLogicTable(intermediateSVGGElement);
@@ -135,21 +149,25 @@ function isIntermediateSVGGElement(element: SVGElement): boolean {
 
         }
         else if (type == ShapeObjectType.RectButton) {
-            const option = ZRectButton.constructAttributes(intermediateSVGGElement, true);
+            //const option = ZRectButton.constructAttributes(intermediateSVGGElement, true);
             r = new ZRectButton(parent);
-            r.setOption(option);
+            r.initialize(intermediateSVGGElement)
+
+            //r.setOption(option);
         }
         else if (type == ShapeObjectType.ForeignButton) {
-            const option = ZRectButton.constructAttributes(intermediateSVGGElement, true);
+            //const option = ZRectButton.constructAttributes(intermediateSVGGElement, true);
             r = new ZForeignButton(parent);
-            r.setOption(option);
-        }
+            r.initialize(intermediateSVGGElement)
 
+            //r.setOption(option);
+        }
         else {
             return null;
         }
 
         //属性の移動と元オブジェクトの削除
+        /*
         const attrs = ElementExtension.gtGetAttributes(intermediateSVGGElement);
         HTMLFunctions.getChildren(intermediateSVGGElement).forEach((v) => r.svgGroup.appendChild(v));
         intermediateSVGGElement.remove();
@@ -164,6 +182,7 @@ function isIntermediateSVGGElement(element: SVGElement): boolean {
             }
         }
         );
+        */
 
         if (r instanceof ZGraph) {
             r.relocate();

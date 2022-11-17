@@ -39,7 +39,7 @@ export class ZForeignButton extends ZForeignObject {
     public get type(): ShapeObjectType {
         return ShapeObjectType.ForeignButton;
     }
-
+    /*
     protected setBasicOption(option: GOptions.ZTextBoxAttributes) {
         super.setBasicOption(option)
         const textClass = CSS.createCSSClass(option.textClass);
@@ -56,9 +56,8 @@ export class ZForeignButton extends ZForeignObject {
         } else {
 
         }
-
- 
     }
+    */
     get width(): number {
         return this._button.getBoundingClientRect().width;
     }
