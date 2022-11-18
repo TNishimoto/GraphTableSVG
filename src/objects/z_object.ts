@@ -116,14 +116,12 @@ export class ZObject implements IObject {
     }
     public initializeOptionalPosition(source : SVGElement) {
 
-        const cx = ElementExtension.gtGetAttributeNumberWithUndefined(source, AttributeNames.cx);
-        const cy = ElementExtension.gtGetAttributeNumberWithUndefined(source, AttributeNames.cy);
-        const x = ElementExtension.gtGetAttributeNumberWithUndefined(source, AttributeNames.x);
-        const y = ElementExtension.gtGetAttributeNumberWithUndefined(source, AttributeNames.y);
+        const cx = ElementExtension._getAttributeNumber(source, AttributeNames.cx, true);
+        const cy = ElementExtension._getAttributeNumber(source, AttributeNames.cy, true);
+        const x = ElementExtension._getAttributeNumber(source, AttributeNames.x, true);
+        const y = ElementExtension._getAttributeNumber(source, AttributeNames.y, true);
 
-        console.log(source.outerHTML)
 
-        console.log(`${cx} ${cy}`)
 
 
         if(x != null || y != null){

@@ -126,8 +126,28 @@ export function gtGetAttributeNumberWithUndefined(item:Element,name: string): nu
     } else {
         return undefined;
     }
-
 }
+
+export function _getAttributeNumber(item:Element,name: string, remove : boolean): number | null{
+    const value = item.getAttribute(name);
+    if(remove){
+        item.removeAttribute(name);
+    }
+    if (value != null) {
+        return Number(value);
+    } else {
+        return null;
+    }
+}
+export function _getAttribute(item:Element,name: string, remove : boolean): string | null{
+    const value = item.getAttribute(name);
+    if(remove){
+        item.removeAttribute(name);
+    }
+    return value;
+}
+
+
 export function gtGetAttributeStringWithUndefined(item:Element,name: string): string | undefined{
     const value = item.getAttribute(name);
     if (value != null) {

@@ -64,6 +64,22 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
         return b1 == "true" && b2 == "true";
     }
 
+    public initializeSetBasicOption(source : SVGElement) {
+        super.initializeSetBasicOption(source);
+
+        if (source.children.length > 0) {
+            const tNodes = HTMLFunctions.getTNodes(source);
+            if (tNodes != null) {
+                tNodes.forEach((v) => v.remove())
+                SVGTextBox.constructSVGTextByHTMLElements(this.svgTextPath, tNodes, false);
+
+                }
+        } else if (source.innerHTML.length > 0) {
+            Extensions.setTextContent(this.svgTextPath, source.innerHTML);
+            source.innerHTML = "";
+        }
+
+    }
 
 
     /*

@@ -36,6 +36,43 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         if (option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultEdgePathClass;
         this._svgSurface = createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
     }
+    public initializeSetBasicOption(source : SVGElement) {
+        super.initializeSetBasicOption(source);
+
+        const edgeColor = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke");
+        const edgeColor2 = edgeColor == null ? undefined : edgeColor;
+        const strokeWidth = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke-width");
+        const strokeWidth2 = strokeWidth == null ? undefined : strokeWidth;
+
+        const style = getComputedStyle(this.svgGroup);
+        const markerStart = style.getPropertyValue(StyleNames.markerStart);
+        const markerEnd = style.getPropertyValue(StyleNames.markerEnd);
+
+        if (markerStart.length != 0) this.markerStart = ZAbstractEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+        if (markerEnd.length != 0) this.markerEnd = ZAbstractEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
+
+        const x1 = ElementExtension._getAttributeNumber(source, AttributeNames.x1, true);
+        const x2 = ElementExtension._getAttributeNumber(source, AttributeNames.x2, true);
+        const y1 = ElementExtension._getAttributeNumber(source, AttributeNames.y1, true);
+        const y2 = ElementExtension._getAttributeNumber(source, AttributeNames.y2, true);
+
+
+        if (x1 !== null && y1 !== null && x2 !== null && y2 !== null) {
+            this.pathPoints = [[x1!, y1!], [x2!, y2!]];
+        }
+
+        const beginVertex = ElementExtension._getAttribute(source, AttributeNames.beginVertex, true);
+        const endVertex = ElementExtension._getAttribute(source, AttributeNames.endVertex, true);
+        if(beginVertex != null){
+            this.beginVertexID = beginVertex;
+        }
+        if(endVertex != null){
+            this.endVertexID = endVertex;
+        }
+
+
+
+    }
     /*
     protected setBasicOption(option: GOptions.ZAbstractEdgeAttributes) {
 
