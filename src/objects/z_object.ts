@@ -113,6 +113,16 @@ export class ZObject implements IObject {
         this.copyAttribute(source, this._svgGroup, "class", true);
         this.copyAttribute(source, this._svgGroup, "style", true);
         this.copyAttribute(source, this._svgGroup, "id", true);
+
+        const width = ElementExtension._getAttributeNumber(source, AttributeNames.width, true);
+        if(width != null){
+            this.width = width;
+        }
+        const height = ElementExtension._getAttributeNumber(source, AttributeNames.height, true);
+        if(height != null){
+            this.height = height;
+        }
+
     }
     public initializeOptionalPosition(source : SVGElement) {
 
@@ -120,6 +130,7 @@ export class ZObject implements IObject {
         const cy = ElementExtension._getAttributeNumber(source, AttributeNames.cy, true);
         const x = ElementExtension._getAttributeNumber(source, AttributeNames.x, true);
         const y = ElementExtension._getAttributeNumber(source, AttributeNames.y, true);
+        
 
 
 

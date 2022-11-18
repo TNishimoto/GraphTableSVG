@@ -40,8 +40,18 @@ export class ZCallout extends ZPathTextBox {
 
 
 
+    public initializeSetBasicOption(source : SVGElement) {
+        super.initializeSetBasicOption(source);
 
+        const _speakerX = ElementExtension._getAttributeNumber(source, AttributeNames.speakerX, true);
+        const _speakerY = ElementExtension._getAttributeNumber(source, AttributeNames.speakerY, true);
 
+        this.speakerX = _speakerX == null ? 0 : _speakerX;
+        this.speakerY = _speakerY == null ? 0 : _speakerY;
+
+    }
+
+    /*
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: ZCalloutAttributes = {}): ZCalloutAttributes {
         ZTextBox.constructAttributes(e, removeAttributes, output);
 
@@ -56,6 +66,7 @@ export class ZCallout extends ZPathTextBox {
 
         return output;
     }
+    */
     /*
     static openCustomElement(e: SVGElement): ZCallout {
         const parent = e.parentElement;

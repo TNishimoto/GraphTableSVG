@@ -41,6 +41,7 @@ export class ZArrowCallout extends ZPathTextBox {
         this.updateAttributes.push("data-direction");
         if (this.type == ShapeObjectType.ArrowCallout) this.firstFunctionAfterInitialized();
     }
+    /*
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: ZShapeArrowCalloutAttributes = {}): ZShapeArrowCalloutAttributes {
         ZTextBox.constructAttributes(e, removeAttributes, output);
         output.arrowNeckWidth = ElementExtension.gtGetAttributeNumberWithUndefined(e, AttributeNames.arrowNeckWidth);
@@ -62,14 +63,28 @@ export class ZArrowCallout extends ZPathTextBox {
 
         return output;
     }
+    */
+    public initializeSetBasicOption(source : SVGElement) {
+        super.initializeSetBasicOption(source);
+        const _arrowNeckWidth = ElementExtension._getAttributeNumber(source, AttributeNames.arrowNeckWidth, true);
+        const _arrowNeckHeight = ElementExtension._getAttributeNumber(source, AttributeNames.arrowNeckHeight, true);
+        const _arrowHeadWidth = ElementExtension._getAttributeNumber(source, AttributeNames.arrowHeadWidth, true);
+        const _arrowHeadHeight = ElementExtension._getAttributeNumber(source, AttributeNames.arrowNeckHeight, true);
+        const _direction = <string>ElementExtension._getAttribute(source, AttributeNames.direction, true);
+
+
+        this.arrowNeckWidth = _arrowNeckWidth !== null ? _arrowNeckWidth : this.arrowNeckWidth;
+        this.arrowNeckHeight = _arrowNeckHeight !== null ? _arrowNeckHeight : this.arrowNeckHeight;
+        this.arrowHeadWidth = _arrowHeadWidth !== null ? _arrowHeadWidth : this.arrowHeadWidth;
+        this.arrowHeadHeight = _arrowHeadHeight !== null ? _arrowHeadHeight : this.arrowHeadHeight;
+        this.direction = _direction !== null ? Direction.toDirection(_direction) : this.direction;
+
+
+    }
+
     /*
     protected setBasicOption(option: ZShapeArrowCalloutAttributes) {
         super.setBasicOption(option);
-        this.arrowNeckWidth = option.arrowNeckWidth !== undefined ? option.arrowNeckWidth : this.arrowNeckWidth;
-        this.arrowNeckHeight = option.arrowNeckHeight !== undefined ? option.arrowNeckHeight : this.arrowNeckHeight;
-        this.arrowHeadWidth = option.arrowHeadWidth !== undefined ? option.arrowHeadWidth : this.arrowHeadWidth;
-        this.arrowHeadHeight = option.arrowHeadHeight !== undefined ? option.arrowHeadHeight : this.arrowHeadHeight;
-        this.direction = option.direction !== undefined ? option.direction : this.direction;
     }
     public setOption(option: ZShapeArrowCalloutAttributes) {
         super.setOption(option)
