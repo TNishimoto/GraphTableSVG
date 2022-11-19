@@ -199,29 +199,8 @@ export class ZTable extends ZVertex {
     }
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: ZTableOption = {}): ZTableOption {
-        //const widthsStr = e.getPropertyStyleValue("--widths");
 
-        //const table = LogicTable.constructLogicTable(e);
-        ZObject.constructAttributes(e, removeAttributes, output, "upper-left");
-        /*
-        if (table != null) {
-            output.table = table;
-        }
-        */
-
-        //if (output.x !== undefined) output.table!.x = output.x;
-        //if (output.y !== undefined) output.table!.y = output.y;
-        /*
-        if (output.class !== undefined) {
-            if (typeof (output.class) == "string") {
-                output.table!.tableClassName = output.class;
-            } else {
-                const newClassName = CSS.getOrCreateClassName(output.class);
-                output.table!.tableClassName = newClassName;
-
-            }
-        }
-        */
+        //ZObject.constructAttributes(e, removeAttributes, output, "upper-left");
         while (e.childNodes.length > 0) e.removeChild(e.childNodes.item(0));
 
         return output;

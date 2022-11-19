@@ -729,6 +729,18 @@ export class ZGraph extends ZObject {
         this.relocate();
         return true;
     }
+    public initializeSetBasicOption(source : SVGElement) {
+        super.initializeSetBasicOption(source);
+        while(source.children.length > 0){
+            const fst = source.children.item(0);
+            if(fst!= null){
+                this.svgGroup.append(fst)
+            }
+        }
+        
+
+    }
+
 }
 
 

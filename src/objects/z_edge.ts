@@ -51,7 +51,7 @@ export class ZEdge extends ZAbstractTextEdge  {
         }
     }
     */
-
+    /*
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZEdgeAttributes = {}): GOptions.ZEdgeAttributes {
         ZAbstractTextEdge.constructAttributes(e, removeAttributes, output);
 
@@ -69,6 +69,7 @@ export class ZEdge extends ZAbstractTextEdge  {
         }
         return output;
     }
+    */
 
     public get type(): ShapeObjectType {
         return ShapeObjectType.Edge;

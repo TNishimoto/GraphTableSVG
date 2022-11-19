@@ -80,12 +80,13 @@ export class ZRect extends ZTextBox {
         }
         return rect;
     }
-
+    /*
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZTextBoxAttributes = {}): GOptions.ZTextBoxAttributes {
         ZTextBox.constructAttributes(e, removeAttributes, output);
 
         return output;
     }
+    */
     public get type(): ShapeObjectType {
         return ShapeObjectType.Rect;
     }

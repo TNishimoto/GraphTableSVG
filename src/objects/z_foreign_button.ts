@@ -7,6 +7,7 @@ import * as StyleNames from "../common/style_names"
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
+import { HTMLFunctions } from "../html";
 
 
 export class ZForeignButton extends ZForeignObject {
@@ -38,6 +39,28 @@ export class ZForeignButton extends ZForeignObject {
     }
     public get type(): ShapeObjectType {
         return ShapeObjectType.ForeignButton;
+    }
+
+    public initializeSetBasicOption(source : SVGElement) {
+        super.initializeSetBasicOption(source);
+
+        if (source.children.length > 0) {
+            let s = "";
+            const tNodes = HTMLFunctions.getTNodes(source);
+            if (tNodes != null) {
+                tNodes.forEach((v) => v.remove())
+                tNodes.forEach((v) =>{
+                    s += v.textContent;
+                })
+                this._button.textContent = s;
+
+            }
+        } else if (source.innerHTML.length > 0) {
+            this._button.textContent = source.textContent;
+            source.innerHTML = "";
+        }
+
+
     }
     /*
     protected setBasicOption(option: GOptions.ZTextBoxAttributes) {

@@ -41,7 +41,7 @@ export const syncYTargetPosition : string = "sync-y-target-position";
 //export const groupClassName : string = "group:class";
 //export const groupStyle : string = "group:style";
 
-
+/*
 export const surfaceClassName : string = "surface:class";
 export const surfaceStyle : string = "surface:style";
 
@@ -61,10 +61,9 @@ export const rightBorderStyle : string = "rightborder:style";
 export const bottomBorderClassName : string = "bottomborder:class";
 export const bottomBorderStyle : string = "bottomborder:style";
 
-
-//export const text : string = "text";
 export const textClass : string = "text:class";
 export const textStyle : string = "text:style";
+*/
 
 
 export const x : string = "x";

@@ -96,36 +96,37 @@ export class ZTextBox extends ZVertex {
         //this.setBasicOption(option);
     }
     */
-    public initializeSetBasicOption(source : SVGElement) {
+    public initializeSetBasicOption(source: SVGElement) {
         super.initializeSetBasicOption(source);
 
+        ZTextBox.importTextFromSource(this.svgText, this.horizontalAnchor, source);
+
+        if (this.svgText != null) {
+            ZObject.setSubAttributes(this.svgText, source);
+        }
+
+    }
+
+    public static importTextFromSource(svgText: SVGTextElement, horizontalAnchor: HorizontalAnchor | null, source: SVGElement) {
         if (source.children.length > 0) {
             const tNodes = HTMLFunctions.getTNodes(source);
             if (tNodes != null) {
                 tNodes.forEach((v) => v.remove())
 
-                SVGTextBox.constructSVGTextByHTMLElements(this.svgText, tNodes, false);
-                SVGTextBox.sortText(this.svgText, this.horizontalAnchor, false);
+                SVGTextBox.constructSVGTextByHTMLElements(svgText, tNodes, false);
+
+                if(horizontalAnchor != null) {
+                    SVGTextBox.sortText(svgText, horizontalAnchor, false);
                 }
+            }
         } else if (source.innerHTML.length > 0) {
-            SVGTextExtension.setTextContent(this.svgText, source.innerHTML);
+            SVGTextExtension.setTextContent(svgText, source.innerHTML);
             source.innerHTML = "";
         }
-
-        if(this.svgText != null){
-            const text = this.svgText;
-            const objName = text.getAttribute(AttributeNames.dataNameAttribute);
-            if(objName != null){
-                const map = HTMLFunctions.getSubAttributeFromAncestors(source, objName);
-                map.forEach((value, key) =>{
-                    text.setAttribute(key, value);
-                })
-            }
-        }
-
     }
 
 
+    /*
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GOptions.ZTextBoxAttributes = {}): GOptions.ZTextBoxAttributes {
 
@@ -135,11 +136,6 @@ export class ZTextBox extends ZVertex {
         output.textClass = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.textClass);
         output.textStyle = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.textStyle);
 
-        /*
-        if (e.hasAttribute(AttributeNames.text)) {
-            output.text = <string>e.getAttribute(AttributeNames.text);
-        }
-        */
         if (e.children.length > 0) {
             const tNodes = HTMLFunctions.getTNodes(e);
             if (tNodes != null) {
@@ -160,6 +156,7 @@ export class ZTextBox extends ZVertex {
         }
         return output;
     }
+    */
     public get svgText(): SVGTextElement {
         return this._svgText;
     }
@@ -180,7 +177,7 @@ export class ZTextBox extends ZVertex {
                 b = true;
             }
         }
-        if (b){
+        if (b) {
             //this.resetUnstableCounter();
             //this.update();
 
@@ -243,16 +240,16 @@ export class ZTextBox extends ZVertex {
         //this.svgGroup.setPropertyStyleValue(AttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
     }
 
-    protected updateStyleWithUpdateFlag(updateFlag: boolean) : boolean{
+    protected updateStyleWithUpdateFlag(updateFlag: boolean): boolean {
         let b = false;
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null && this.svgSurface != null) {
 
             if (updateFlag) {
-                this.hasConnectedObserverFunction = false;                
+                this.hasConnectedObserverFunction = false;
                 b = updateAppropriateDashArray(this.svgSurface);
                 this.hasConnectedObserverFunction = true;
-            }else{
+            } else {
                 b = getUpdateFlagAppropriateDashArray(this.svgSurface);
             }
 
@@ -268,14 +265,14 @@ export class ZTextBox extends ZVertex {
         return this.updateStyleWithUpdateFlag(true);
     }
     */
-    protected updateSurfaceSizeWithUpdateFlag(withUpdate : boolean){
+    protected updateSurfaceSizeWithUpdateFlag(withUpdate: boolean) {
         const region = this.getVirtualRegion();
 
         let b = false;
         const widthRound100 = round100(region.width);
 
         if (!nearlyEqual(this.width, widthRound100)) {
-            if(withUpdate){
+            if (withUpdate) {
                 this.width = widthRound100;
 
             }
@@ -285,7 +282,7 @@ export class ZTextBox extends ZVertex {
         const heightRound100 = round100(region.height);
 
         if (!nearlyEqual(this.height, heightRound100)) {
-            if(withUpdate){
+            if (withUpdate) {
                 this.height = heightRound100;
             }
             //this.height = region.height;        
@@ -301,11 +298,11 @@ export class ZTextBox extends ZVertex {
     }
     */
 
-    
+
     protected updateTextLocation(): boolean {
         return SVGTextExtension.updateLocation(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
     }
-    protected getUpdateFlagOfTextLocation() : boolean {
+    protected getUpdateFlagOfTextLocation(): boolean {
         return SVGTextExtension.getUpdateFlagOfLocation(this.svgText, this.getVirtualTextLocationRegion(), this.verticalAnchor, this.horizontalAnchor, this.isAutoSizeShapeToFitText);
     }
     protected updateSurfaceLocation(): boolean {
@@ -317,9 +314,9 @@ export class ZTextBox extends ZVertex {
 
     op: number = 0;
 
-    public getUpdateFlag() : boolean{
+    public getUpdateFlag(): boolean {
         const b1 = super.getUpdateFlag();
-        if(b1){
+        if (b1) {
             Debugger.updateFlagLog(this, this.getUpdateFlag, `${super.getUpdateFlag.name}`)
             return b1;
         }
@@ -332,38 +329,38 @@ export class ZTextBox extends ZVertex {
         }
 
         const b2: boolean = this.updateStyleWithUpdateFlag(false);
-        if(b2){
+        if (b2) {
             Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.updateStyleWithUpdateFlag.name}`)
             return b2;
         }
 
         const b3: boolean = this.getUpdateFlagOfTextLocation();
-        if(b3){
+        if (b3) {
             Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.getUpdateFlagOfTextLocation.name}`)
             return b3;
         }
 
 
         const b4: boolean = this.updateSurfaceSizeWithUpdateFlag(false);
-        if(b4){
+        if (b4) {
             Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.updateSurfaceSizeWithUpdateFlag.name}`)
             return b3;
         }
 
         const b5: boolean = this.getUpdateFlagOfSurfaceLocation();
-        if(b4){
+        if (b4) {
             Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.getUpdateFlagOfSurfaceLocation.name}`)
             return b3;
         }
 
 
-        
+
         const b = b1 || b2 || b3 || b4 || b5;
 
         return b;
 
     }
-    private updateSub() : void {
+    private updateSub(): void {
         super.update();
         this._isUpdating = true;
         if (!this.isShown) return;
@@ -382,7 +379,7 @@ export class ZTextBox extends ZVertex {
         this._isUpdating = false;
         this.hasConnectedObserverFunction = true;
 
-        
+
     }
     public update() {
 

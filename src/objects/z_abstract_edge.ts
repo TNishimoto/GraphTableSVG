@@ -1075,18 +1075,8 @@ export class ZAbstractEdge extends ZObject implements IEdge {
             dic[edge.objectID] = id;
         }
     }
+    /*
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZAbstractEdgeAttributes = {}): GOptions.ZAbstractEdgeAttributes {
-        /*
-        const style = getComputedStyle(e);
-        const markerStart = style.getPropertyValue(StyleNames.markerStart);
-        if(markerStart == "true"){
-            output.startMarker = true;
-        }
-        const markerEnd = style.getPropertyValue(StyleNames.markerEnd);
-        if(markerEnd == "true"){
-            output.endMarker = true;
-        }
-        */
         ZObject.constructAttributes(e, removeAttributes, output, "center");
 
 
@@ -1110,8 +1100,6 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         }
 
 
-        //output.startMarker = ElementExtension.gtGetStyleBooleanWithUndefined(e, StyleNames.markerStart);
-        //output.endMarker = ElementExtension.gtGetAttributeBooleanWithUndefined(e, StyleNames.markerEnd);
 
         if (removeAttributes) {
             e.removeAttribute(AttributeNames.x1);
@@ -1126,4 +1114,5 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         }
         return output;
     }
+    */
 }

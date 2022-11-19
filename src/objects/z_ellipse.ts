@@ -194,13 +194,14 @@ export class ZEllipse extends ZAbstractEllipseCircle {
 
         return circle;
     }
-
+    /*
     public static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZTextBoxAttributes = {}): GOptions.ZTextBoxAttributes {
         ZTextBox.constructAttributes(e, removeAttributes, output);
 
 
         return output;
     }
+    */
 
     get width(): number {
         return round100(this.svgEllipse.rx.baseVal.value * 2);

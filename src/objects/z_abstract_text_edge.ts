@@ -16,6 +16,8 @@ import * as SVGTextBox from "../interfaces/svg_textbox"
 import { nearlyEqual, round100 } from "../common/vline";
 import { Debugger } from "../common/debugger";
 import { ObjectStableFlagName } from "./z_observer";
+import { ZObject } from "./z_object";
+import { ZTextBox } from "./z_textbox";
 
 export class ZAbstractTextEdge extends ZAbstractEdge {
     private static updateTextAttributes = ["style"]
@@ -67,18 +69,11 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
     public initializeSetBasicOption(source : SVGElement) {
         super.initializeSetBasicOption(source);
 
-        if (source.children.length > 0) {
-            const tNodes = HTMLFunctions.getTNodes(source);
-            if (tNodes != null) {
-                tNodes.forEach((v) => v.remove())
-                SVGTextBox.constructSVGTextByHTMLElements(this.svgTextPath, tNodes, false);
+        ZTextBox.importTextFromSource(this.svgText, null, source);
 
-                }
-        } else if (source.innerHTML.length > 0) {
-            Extensions.setTextContent(this.svgTextPath, source.innerHTML);
-            source.innerHTML = "";
+        if(this.svgText != null){
+            ZObject.setSubAttributes(this.svgText, source);
         }
-
     }
 
 
@@ -364,10 +359,11 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
             }
         }
         */
-
+        /*
         if (!HTMLFunctions.isShow(this.svgTextPath)) {
             throw new Error();
         }
+        */
 
         const b2 = this.tryUpdatePathOffsetWithUpdateFlag(withUpdate);
 

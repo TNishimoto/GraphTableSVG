@@ -124,18 +124,23 @@ export class ZObject implements IObject {
         }
 
         if(this.svgSurface != null){
-            const surface = this.svgSurface;
-            const objName = surface.getAttribute(AttributeNames.dataNameAttribute);
-            if(objName != null){
-                const map = HTMLFunctions.getSubAttributeFromAncestors(source, objName);
-                map.forEach((value, key) =>{
-                    surface.setAttribute(key, value);
-                })
-            }
+            ZObject.setSubAttributes(this.svgSurface, source);
         }
         
 
     }
+    public static setSubAttributes(e : SVGElement, source : SVGElement){
+        const objName = e.getAttribute(AttributeNames.dataNameAttribute);
+        if(objName != null){
+            const map = HTMLFunctions.getSubAttributeFromAncestors(source, objName);
+            map.forEach((value, key) =>{
+                e.setAttribute(key, value);
+            })
+        }
+    }
+
+    //protected setText
+
     public initializeOptionalPosition(source : SVGElement) {
 
         const cx = ElementExtension._getAttributeNumber(source, AttributeNames.cx, true);
@@ -163,6 +168,15 @@ export class ZObject implements IObject {
     public initialize(source : SVGElement) {
         this.initializeSetBasicOption(source);
         this.initializeOptionalPosition(source);
+
+        while(source.attributes.length > 0){
+            const attr = source.attributes.item(0);
+            if(attr != null){
+                this.svgGroup.setAttribute(attr.name, attr.value);
+                source.removeAttribute(attr.name);
+            }
+            
+        }
         source.remove();
     }
     /*
@@ -540,7 +554,7 @@ export class ZObject implements IObject {
     }
     */
 
-    
+    /*
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: GOptions.ZObjectAttributes = {}, defaultPositionType : "center" | "upper-left" ): GOptions.ZObjectAttributes {
         output.class = ElementExtension.gtGetAttributeStringWithUndefined(e, AttributeNames.className);
@@ -583,6 +597,7 @@ export class ZObject implements IObject {
         }
         return output;
     }
+    */
     
     public get tag() {
         return this._tag;
