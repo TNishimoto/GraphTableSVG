@@ -2,7 +2,7 @@ import { ZObject } from "./z_object";
 import * as DefaultClassNames from "../common/default_class_names"
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
-import { PathTextAlighnment, ConnectorType, msoDashStyle, CoodinateType, EdgeType, Direction } from "../common/enums";
+import { PathTextAlighnment, ConnectorType, msoDashStyle, CoodinateType, EdgeType, Direction, DataName } from "../common/enums";
 import { escapeWithRound100, nearlyEqual, round100 } from "../common/vline";
 import { ZVertex } from "./z_vertex"
 import * as ElementExtension from "../interfaces/element_extension"
@@ -34,7 +34,9 @@ export class ZAbstractEdge extends ZObject implements IEdge {
     }
     protected createSurface(svgbox: SVGElement, option: GOptions.ZObjectAttributes = {}): void {
         if (option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultEdgePathClass;
-        this._svgSurface = createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
+        const path = createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
+        path.setAttribute(AttributeNames.dataNameAttribute, DataName.Surface)
+        this._svgSurface = path;
     }
     public initializeSetBasicOption(source : SVGElement) {
         super.initializeSetBasicOption(source);

@@ -167,5 +167,27 @@ import * as AttributeNames from "../common/attribute_names"
         }
 
     }
+    function getSubAttributeFromAncestorsSub(e: Element, subName : string, output : Map<string,string>) : void {
+        const attrs = e.attributes;
+        for(let i = 0;i<attrs.length;i++){
+            const attr = attrs.item(i)!;
+            const ps = attr.name.split("::");
+            if(ps.length == 2 && ps[0] == subName){
+                if(!output.has(ps[1])){
+                    output.set(ps[1], attr.value);
+                }
+            }
+        }
+        if(e.parentElement != null){
+            getSubAttributeFromAncestorsSub(e.parentElement, subName, output);
+        }
+    }
+    
+    export function getSubAttributeFromAncestors(e: Element, subName : string) : Map<string,string> {
+        const output : Map<string,string> = new Map();
+        getSubAttributeFromAncestorsSub(e, subName, output)
+        return output;
+    }
+    
 
 //}

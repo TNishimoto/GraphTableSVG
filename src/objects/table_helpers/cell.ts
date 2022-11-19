@@ -71,7 +71,7 @@ export class Cell implements ITextBox {
 
         const backGroundClass = DefaultClassNames.defaultCellBackgroungClass;
         this._svgBackground = SVG.createCellRectangle(this.svgGroup, backGroundClass);
-        this._svgBackground.setAttribute(AttributeNames.dataNameAttribute, DataName.Background);
+        this._svgBackground.setAttribute(AttributeNames.dataNameAttribute, DataName.Surface);
 
         const textClass = DefaultClassNames.defaultTextClass;
         this._svgText = SVG.createText(textClass);

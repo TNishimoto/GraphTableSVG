@@ -178,7 +178,7 @@ export class ZEllipse extends ZAbstractEllipseCircle {
     }
     private static createEllipse(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style: string | GOptions.surfaceClassCSS | undefined): SVGEllipseElement {
         const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-        circle.setAttribute(AttributeNames.dataNameAttribute, DataName.Background);
+        circle.setAttribute(AttributeNames.dataNameAttribute, DataName.Surface);
         parent.appendChild(circle);
         GOptions.setClassAndStyle(circle, className, style);
 

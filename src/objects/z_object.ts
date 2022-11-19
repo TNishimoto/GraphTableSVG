@@ -123,6 +123,18 @@ export class ZObject implements IObject {
             this.height = height;
         }
 
+        if(this.svgSurface != null){
+            const surface = this.svgSurface;
+            const objName = surface.getAttribute(AttributeNames.dataNameAttribute);
+            if(objName != null){
+                const map = HTMLFunctions.getSubAttributeFromAncestors(source, objName);
+                map.forEach((value, key) =>{
+                    surface.setAttribute(key, value);
+                })
+            }
+        }
+        
+
     }
     public initializeOptionalPosition(source : SVGElement) {
 

@@ -8,6 +8,7 @@ import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as ElementExtension from "./element_extension"
 import * as SVGGExtension from "./svg_g_extension"
+import { pseudoRandomBytes } from "crypto";
 
 
 //export namespace SVG {
@@ -433,8 +434,8 @@ export function isSVGHidden(e: SVGElement): boolean {
             }
         }
     }
-
 }
+
 
 
 //}

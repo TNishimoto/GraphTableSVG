@@ -254,9 +254,9 @@ export namespace Direction {
     }
 }
 
-export type DataName = "background" | "text" | "topborder" | "leftborder" | "rightborder" | "bottomborder";
+export type DataName = "surface" | "text" | "topborder" | "leftborder" | "rightborder" | "bottomborder";
 export namespace DataName {
-    export const Background: DataName = "background"
+    export const Surface: DataName = "surface"
     export const Text: DataName = "text"
     export const TopBorder: DataName = "topborder"
     export const LeftBorder: DataName = "leftborder"

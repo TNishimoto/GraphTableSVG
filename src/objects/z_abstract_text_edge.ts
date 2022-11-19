@@ -101,6 +101,7 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
         }
     }
     */
+   /*
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZAbstractTextEdgeAttributes = {}): GOptions.ZAbstractTextEdgeAttributes {
         ZAbstractEdge.constructAttributes(e, removeAttributes, output);
         //output.isAutoSizeShapeToFitText = e.gtGetStyleBooleanWithUndefined(AttributeNames.Style.autoSizeShapeToFitText);
@@ -109,11 +110,6 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
         output.textStyle = ElementExtension.gtGetInheritedAttributeString(e, AttributeNames.textStyle);
 
 
-        /*
-        if (e.hasAttribute(AttributeNames.text)) {
-            output.text = <string>e.getAttribute(AttributeNames.text);
-        } else
-        */
         if (e.children.length > 0) {
             const tNodes = HTMLFunctions.getTNodes(e);
             if (tNodes != null) {
@@ -134,6 +130,7 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
         }
         return output;
     }
+    */
 
     private get startOffset(): number | null {
         return ElementExtension.gtGetAttributeNumber(this.svgTextPath, "startOffset", null);

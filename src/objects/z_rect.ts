@@ -41,7 +41,7 @@ export class ZRect extends ZTextBox {
      */
     private static createRectangle(parent: SVGElement, className: string | GOptions.surfaceClassCSS | undefined, style: string | undefined | GOptions.surfaceClassCSS): SVGRectElement {
         const rect = <SVGRectElement>document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute(AttributeNames.dataNameAttribute, DataName.Background);
+        rect.setAttribute(AttributeNames.dataNameAttribute, DataName.Surface);
         parent.appendChild(rect);
         rect.width.baseVal.value = 30;
         rect.height.baseVal.value = 30;

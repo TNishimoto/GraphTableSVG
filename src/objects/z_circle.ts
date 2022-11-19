@@ -28,7 +28,7 @@ export class ZCircle extends ZAbstractEllipseCircle {
     }
     private static createCircle(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style: string | undefined | GOptions.surfaceClassCSS): SVGCircleElement {
         const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute(AttributeNames.dataNameAttribute, DataName.Background);
+        circle.setAttribute(AttributeNames.dataNameAttribute, DataName.Surface);
         parent.appendChild(circle);
 
         GOptions.setClassAndStyle(circle, className, style);

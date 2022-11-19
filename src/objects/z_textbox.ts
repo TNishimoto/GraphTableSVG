@@ -112,6 +112,17 @@ export class ZTextBox extends ZVertex {
             source.innerHTML = "";
         }
 
+        if(this.svgText != null){
+            const text = this.svgText;
+            const objName = text.getAttribute(AttributeNames.dataNameAttribute);
+            if(objName != null){
+                const map = HTMLFunctions.getSubAttributeFromAncestors(source, objName);
+                map.forEach((value, key) =>{
+                    text.setAttribute(key, value);
+                })
+            }
+        }
+
     }
 
 
