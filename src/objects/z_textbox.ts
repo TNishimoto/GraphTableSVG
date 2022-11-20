@@ -12,6 +12,7 @@ import * as HTMLFunctions from "../html/html_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { ZObject } from "./z_object"
 import { ZVertex } from "./z_vertex"
+import * as Extensions from "../interfaces/extensions"
 
 import * as GOptions from "./z_options"
 import { AutoSizeShapeToFitText } from "../common/enums"
@@ -107,7 +108,7 @@ export class ZTextBox extends ZVertex {
 
     }
 
-    public static importTextFromSource(svgText: SVGTextElement, horizontalAnchor: HorizontalAnchor | null, source: SVGElement) {
+    public static importTextFromSource(svgText: SVGTextElement | SVGTextPathElement, horizontalAnchor: HorizontalAnchor | null, source: SVGElement) {
         if (source.children.length > 0) {
             const tNodes = HTMLFunctions.getTNodes(source);
             if (tNodes != null) {
@@ -115,12 +116,17 @@ export class ZTextBox extends ZVertex {
 
                 SVGTextBox.constructSVGTextByHTMLElements(svgText, tNodes, false);
 
-                if(horizontalAnchor != null) {
+                if(horizontalAnchor != null && svgText instanceof SVGTextElement) {
                     SVGTextBox.sortText(svgText, horizontalAnchor, false);
                 }
             }
         } else if (source.innerHTML.length > 0) {
-            SVGTextExtension.setTextContent(svgText, source.innerHTML);
+            if(svgText instanceof SVGTextElement){
+                SVGTextExtension.setTextContent(svgText, source.innerHTML);
+            }else{
+                 Extensions.setTextContent(svgText, source.innerHTML);
+            }
+
             source.innerHTML = "";
         }
     }

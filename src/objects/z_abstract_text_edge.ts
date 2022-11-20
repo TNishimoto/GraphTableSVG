@@ -69,7 +69,7 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
     public initializeSetBasicOption(source : SVGElement) {
         super.initializeSetBasicOption(source);
 
-        ZTextBox.importTextFromSource(this.svgText, null, source);
+        ZTextBox.importTextFromSource(this.svgTextPath, null, source);
 
         if(this.svgText != null){
             ZObject.setSubAttributes(this.svgText, source);
