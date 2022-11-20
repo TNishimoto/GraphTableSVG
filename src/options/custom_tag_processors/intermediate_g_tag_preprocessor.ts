@@ -133,9 +133,11 @@ function isIntermediateSVGGElement(element: SVGElement): boolean {
             //r.setOption(option);
             //(<ZGraph>r).relocate();
         } else if (type == ShapeObjectType.Table) {
-            const logicTable = LogicTable.constructLogicTable(intermediateSVGGElement);
+            //const logicTable = LogicTable.constructLogicTable(intermediateSVGGElement);
             const table = new ZTable(parent);
+            table.initialize(intermediateSVGGElement);
 
+            /*
             if(logicTable != null){
                 //logicTable.option = convertAttributesIntoTableOption(node);
                 table.buildFromLogicTable(logicTable);
@@ -143,6 +145,7 @@ function isIntermediateSVGGElement(element: SVGElement): boolean {
                 const option = convertAttributesIntoTableOption(intermediateSVGGElement);
                 table.assignOption(option);
             }
+            */
 
 
             r = table;

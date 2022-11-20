@@ -132,6 +132,11 @@ export class ZObject implements IObject {
     public static setSubAttributes(e : SVGElement, source : SVGElement){
         const objName = e.getAttribute(AttributeNames.dataNameAttribute);
         if(objName != null){
+            this.setSubAttributesWithObjName(e, objName, source);
+        }
+    }
+    public static setSubAttributesWithObjName(e : SVGElement, objName : string, source : SVGElement){
+        if(objName != null){
             const map = HTMLFunctions.getSubAttributeFromAncestors(source, objName);
             map.forEach((value, key) =>{
                 e.setAttribute(key, value);
@@ -235,7 +240,7 @@ export class ZObject implements IObject {
         }
     }
     */
-    
+    /*
     public assignOption(option: ZVertexOptionReteral) {
         GOptions.setClassAndStyle(this._svgGroup, option.class, option.style);
 
@@ -269,6 +274,7 @@ export class ZObject implements IObject {
 
         }
     }
+    */
     public get stableFlag(): boolean {
         return this.svgGroup.getAttribute(GObserver.ObjectStableFlagName) == "true";
     }

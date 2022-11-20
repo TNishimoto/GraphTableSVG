@@ -155,47 +155,7 @@ export class LogicTable {
         }
         return table;
     }
-    public static constructLogicTable(e: Element): LogicTable | null {
-        const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
-        //const widthsStr = ElementExtension.getPropertyStyleValue(e, "--widths");
-        if (rows.length == 0) return null;
-
-        const cells: Element[][] = new Array(rows.length);
-        let columnSize = 0;
-        rows.forEach((v, i) => {
-            const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(AttributeNames.customElement) == "cell");
-            cellArray.forEach((v) => v.removeAttribute(AttributeNames.customElement));
-            cells[i] = cellArray;
-            if (columnSize < cellArray.length) columnSize = cellArray.length;
-        });
-        const logicTable = new LogicTable({ columnCount: columnSize, rowCount: rows.length });
-
-        logicTable.option = convertAttributesIntoTableOption(e);
-                
-        
-
-
-
-        //output.table = new LogicTable({ rowCount: rows.length, columnCount: columnSize });
-        /*
-        if (widthsStr != null) {
-            const widths: (number | null)[] = JSON.parse(widthsStr);
-            widths.forEach((v, i) => logicTable.columnWidths[i] = v);
-        }
-        */
-        //this.constructHTMLLogicCells(e, logicTable.cellArray);
-        for (let y = 0; y < cells.length; y++) {
-            //const h = ElementExtension.getPropertyStyleNumberValue(rows[y], "--height", null);
-            //this.constructHTMLLogicCells(rows[y], logicTable.cells[y]);
-
-            //logicTable.rowHeights[y] = h;
-
-            for (let x = 0; x < cells[y].length; x++) {
-                this.constructHTMLLogicCell(cells[y][x], logicTable.cells[y][x]);
-            }
-        }
-        return logicTable;
-    }
+    
     /*
     private static constructHTMLLogicCells(attributeElement: Element, cells: LogicCell[]): void {
         const backGroundClassName = ElementExtension.gtGetInheritedAttributeString(attributeElement, AttributeNames.backgroundClassName);
@@ -367,6 +327,31 @@ export class LogicTable {
         }
         return obj;
     }
+    public static constructLogicTable(e: Element): LogicTable | null {
+        const rows = HTMLFunctions.getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
+        //const widthsStr = ElementExtension.getPropertyStyleValue(e, "--widths");
+        if (rows.length == 0) return null;
 
+        const cells: Element[][] = new Array(rows.length);
+        let columnSize = 0;
+        rows.forEach((v, i) => {
+            const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(AttributeNames.customElement) == "cell");
+            cellArray.forEach((v) => v.removeAttribute(AttributeNames.customElement));
+            cells[i] = cellArray;
+            if (columnSize < cellArray.length) columnSize = cellArray.length;
+        });
+        const logicTable = new LogicTable({ columnCount: columnSize, rowCount: rows.length });
+
+        logicTable.option = convertAttributesIntoTableOption(e);
+                
+    
+        for (let y = 0; y < cells.length; y++) {
+
+            for (let x = 0; x < cells[y].length; x++) {
+                this.constructHTMLLogicCell(cells[y][x], logicTable.cells[y][x]);
+            }
+        }
+        return logicTable;
+    }
 }
 

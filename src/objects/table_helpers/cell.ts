@@ -70,8 +70,8 @@ export class Cell implements ITextBox {
         this.setMasterDiffY(0);
 
         const backGroundClass = DefaultClassNames.defaultCellBackgroungClass;
-        this._svgBackground = SVG.createCellRectangle(this.svgGroup, backGroundClass);
-        this._svgBackground.setAttribute(AttributeNames.dataNameAttribute, DataName.Surface);
+        this._svgSurface = SVG.createCellRectangle(this.svgGroup, backGroundClass);
+        this._svgSurface.setAttribute(AttributeNames.dataNameAttribute, DataName.Surface);
 
         const textClass = DefaultClassNames.defaultTextClass;
         this._svgText = SVG.createText(textClass);
@@ -192,22 +192,22 @@ export class Cell implements ITextBox {
      * このセルが強調してるかどうかを返します。
      */
     public get isEmphasized(): boolean {
-        const cellClass = this.svgBackground.getAttribute("class");
+        const cellClass = this.svgSurface.getAttribute("class");
         return cellClass == AttributeNames.cellEmphasisCellClass;
     }
     public set isEmphasized(v: boolean) {
         if (v) {
             if (!this.isEmphasized) {
-                this.tmpStyle = this.svgBackground.getAttribute("class");
-                this.svgBackground.setAttribute("class", AttributeNames.cellEmphasisCellClass);
+                this.tmpStyle = this.svgSurface.getAttribute("class");
+                this.svgSurface.setAttribute("class", AttributeNames.cellEmphasisCellClass);
             }
         } else {
             if (this.isEmphasized) {
                 if (this.tmpStyle == null) {
-                    this.svgBackground.removeAttribute("class");
+                    this.svgSurface.removeAttribute("class");
 
                 } else {
-                    this.svgBackground.setAttribute("class", this.tmpStyle);
+                    this.svgSurface.setAttribute("class", this.tmpStyle);
                     this.tmpStyle = null;
                 }
 
@@ -304,12 +304,12 @@ export class Cell implements ITextBox {
     public get table(): ZTable {
         return this._table;
     }
-    private _svgBackground: SVGRectElement;
+    private _svgSurface: SVGRectElement;
     /**
     セルの背景を表現しているSVGRectElementを返します。
     */
-    public get svgBackground(): SVGRectElement {
-        return this._svgBackground;
+    public get svgSurface(): SVGRectElement {
+        return this._svgSurface;
     }
     private _svgText: SVGTextElement;
     /**
@@ -575,21 +575,21 @@ export class Cell implements ITextBox {
     セルの幅を返します。
     */
     get width(): number {
-        return round100(this.svgBackground.width.baseVal.value);
+        return round100(this.svgSurface.width.baseVal.value);
     }
     /**
     セルの幅を設定します。
     */
     set width(value: number) {
         const newValue = round100(value);
-        this.svgBackground.width.baseVal.value = newValue;
+        this.svgSurface.width.baseVal.value = newValue;
     }
     /**
     セルの高さを返します。
     */
     get height(): number {
 
-        return round100(this.svgBackground.height.baseVal.value);
+        return round100(this.svgSurface.height.baseVal.value);
     }
     /**
     セルの高さを設定します。
@@ -597,7 +597,7 @@ export class Cell implements ITextBox {
     set height(value: number) {
         const newValue = round100(value);
 
-        this.svgBackground.height.baseVal.value = newValue;
+        this.svgSurface.height.baseVal.value = newValue;
     }
     /**
     セルの領域を表すRectangleを返します。領域の基準は属しているテーブルのSVGGElementです。

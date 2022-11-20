@@ -28,6 +28,8 @@ import { UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
 import { UpdateTable } from "./table_helpers/update_table";
 import { TableOptionReteral } from "../logics/gobject_reterals";
+import { AttributeNames } from "../common";
+import { ZTextBox } from "./z_textbox";
 
 //namespace GraphTableSVG {
 
@@ -138,26 +140,17 @@ export class ZTable extends ZVertex {
         }
     }
     */
-   /*
-    public setOption(option: ZTableOption) {
-        super.setOption(option);
-    }
-    */
-    public assignOption(option : TableOptionReteral){
-        super.assignOption(option);
-        const columnCount = (<any>option).columnCount ?? 5;
-        const rowCount = (<any>option).rowCount ?? 5;
-        this.setSize(columnCount, rowCount);
-
-
-        if (option.rowHeight !== undefined) {
-            this.rows.forEach((v) => v.height = <number>option.rowHeight);
-        }
-        if (option.columnWidth !== undefined) {
-            this.columns.forEach((v) => v.width = <number>option.columnWidth);
-        }
-
-    }
+    /*
+     public setOption(option: ZTableOption) {
+         super.setOption(option);
+     }
+     */
+    /*
+     public assignOption(option : TableOptionReteral){
+         super.assignOption(option);
+ 
+     }
+     */
 
     private _isNoneMode: boolean = false;
     get isNoneMode(): boolean {
@@ -197,6 +190,7 @@ export class ZTable extends ZVertex {
         //b = this.tryResizeWithUpdateFlag(withUpdate) || b;
 
     }
+    /*
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: ZTableOption = {}): ZTableOption {
 
@@ -205,6 +199,7 @@ export class ZTable extends ZVertex {
 
         return output;
     }
+    */
     // #region field
     private _svgHiddenGroup: SVGGElement;
     private _svgColumnInfo: SVGMetadataElement;
@@ -580,7 +575,7 @@ export class ZTable extends ZVertex {
             if (cellInfo != null) {
                 //CSS.setCSSClass(cell.svgGroup, cellInfo.cellClass);
                 GOptions.setClassAndStyle(cell.svgGroup, cellInfo.option.class, cellInfo.option.style);
-                GOptions.setClassAndStyle(cell.svgBackground, cellInfo.backgroundOption.class, cellInfo.backgroundOption.style);
+                GOptions.setClassAndStyle(cell.svgSurface, cellInfo.backgroundOption.class, cellInfo.backgroundOption.style);
 
                 createTextElementFromLogicCell(cellInfo, cell.svgText);
                 GOptions.setClassAndStyle(cell.svgTopBorder, cellInfo.topBorderOption.class, cellInfo.topBorderOption.style);
@@ -591,38 +586,96 @@ export class ZTable extends ZVertex {
             }
         }
     }
+    private updateCell(sourceCell: SVGElement, x: number, y: number) {
+        const cell = this.cells[y][x];
+
+
+
+        /*
+        GOptions.setClassAndStyle(cell.svgGroup, cellInfo.option.class, cellInfo.option.style);
+        GOptions.setClassAndStyle(cell.svgBackground, cellInfo.backgroundOption.class, cellInfo.backgroundOption.style);
+        */
+        ZObject.setSubAttributes(cell.svgSurface, sourceCell);
+        ZObject.setSubAttributes(cell.svgText, sourceCell);
+
+        ZTextBox.importTextFromSource(cell.svgText, null, sourceCell);
+
+        ZObject.setSubAttributesWithObjName(cell.svgTopBorder, "topborder", sourceCell);
+        ZObject.setSubAttributesWithObjName(cell.svgLeftBorder, "leftborder", sourceCell);
+        ZObject.setSubAttributesWithObjName(cell.svgRightBorder, "rightborder", sourceCell);
+        ZObject.setSubAttributesWithObjName(cell.svgBottomBorder, "bottomborder", sourceCell);
+
+        /*
+        GOptions.setClassAndStyle(cell.svgTopBorder, cellInfo.topBorderOption.class, cellInfo.topBorderOption.style);
+        GOptions.setClassAndStyle(cell.svgLeftBorder, cellInfo.leftBorderOption.class, cellInfo.leftBorderOption.style);
+        GOptions.setClassAndStyle(cell.svgRightBorder, cellInfo.rightBorderOption.class, cellInfo.rightBorderOption.style);
+        GOptions.setClassAndStyle(cell.svgBottomBorder, cellInfo.bottomBorderOption.class, cellInfo.bottomBorderOption.style);
+        */
+        while (sourceCell.attributes.length > 0) {
+            const attr = sourceCell.attributes.item(0);
+            if (attr != null) {
+                cell.svgGroup.setAttribute(attr.name, attr.value);
+                sourceCell.removeAttribute(attr.name);
+            }
+
+        }
+
+    }
+
+    private getRowSizeAndColumnSize(source: SVGElement): [number, number] {
+        const rows = HTMLFunctions.getChildren(source).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
+        const cells: Element[][] = new Array(rows.length);
+        let columnSize = 0;
+        rows.forEach((v, i) => {
+            const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(AttributeNames.customElement) == "cell");
+            cells[i] = cellArray;
+            if (columnSize < cellArray.length) columnSize = cellArray.length;
+        });
+        return [rows.length, columnSize];
+
+    }
+
+    public initializeSetBasicOption(source: SVGElement) {
+        super.initializeSetBasicOption(source);
+        const [rowCount, columnCount] = this.getRowSizeAndColumnSize(source);
+        this.setSize(columnCount, rowCount);
+
+        const rows = HTMLFunctions.getChildren(source).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
+        rows.forEach((v, y) => {
+            const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(AttributeNames.customElement) == "cell");
+            cellArray.forEach((w, x) => {
+                if (w instanceof SVGElement) {
+                    this.updateCell(w, x, y)
+                }
+            });
+        });
+
+    }
     /**
      * LogicTableからTableを構築します。
      * @param logicTable 入力LogicTable
      */
     public buildFromLogicTable(logicTable: LogicTable) {
 
-        //if (table.tableClassName != null) this.svgGroup.setAttribute("class", table.tableClassName);
-        //logicTable.option.columnCount = logicTable.columnCount;
-        //logicTable.option.rowCount = logicTable.rowCount;
-        //this.setSize(logicTable.columnCount, logicTable.rowCount);
-        const option : TableOptionReteral = { ...logicTable.option };
+        const option: TableOptionReteral = { ...logicTable.option };
         (<any>option).rowCount = logicTable.rowCount;
         (<any>option).columnCount = logicTable.columnCount;
 
 
-        this.assignOption(option);
 
-        //GOptions.setClassAndStyle(this.svgGroup, logicTable.option.class, logicTable.option.style);
-        /*
-        if(logicTable.option.position !== undefined){
-            if(logicTable.option.position.type == "center"){
-                this.cx = logicTable.option.position.x;
-                this.cy = logicTable.option.position.y;
-            }else{
-                this.x = logicTable.option.position.x;
-                this.y = logicTable.option.position.y;
-            }
+        const columnCount = (<any>option).columnCount ?? 5;
+        const rowCount = (<any>option).rowCount ?? 5;
+        this.setSize(columnCount, rowCount);
+
+
+        if (option.rowHeight !== undefined) {
+            this.rows.forEach((v) => v.height = <number>option.rowHeight);
         }
-        */
+        if (option.columnWidth !== undefined) {
+            this.columns.forEach((v) => v.width = <number>option.columnWidth);
+        }
 
-        //if (table.x != null) this.cx = table.x;
-        //if (table.y != null) this.cy = table.y;
+
 
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {
@@ -630,25 +683,6 @@ export class ZTable extends ZVertex {
             }
 
         }
-
-        //this.fitSizeToOriginalCells();
-        /*
-        if(logicTable.option.rowHeights !== undefined){
-            for (let y = 0; y < this.rowCount; y++) {
-                const h = logicTable.option.rowHeights[y];
-                if (h != null) this.rows[y].height = h;
-            }
-    
-        }
-        if(logicTable.option.columnWidths !== undefined){
-            for (let x = 0; x < this.columnCount; x++) {
-                const w = logicTable.option.columnWidths[x];
-                //this.columns[x].defaultWidth = w;
-                if (w != null) this.columns[x].width = w;
-            }
-    
-        }
-        */
 
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {
@@ -660,12 +694,6 @@ export class ZTable extends ZVertex {
                     }
                 }
             }
-        }
-
-        //this.updateNodeRelations();
-        if (this.isInitialized) {
-            //this.resetUnstableCounter();
-            //this.update();
         }
 
 
@@ -763,7 +791,7 @@ export class ZTable extends ZVertex {
         for (let y = 0; y < this.rowCount; y++) {
             for (let x = 0; x < this.columnCount; x++) {
                 const cell = this.cells[y][x];
-                let color = Color.createRGBFromColorName(ElementExtension.getPropertyStyleValueWithDefault(cell.svgBackground, "fill", "gray"));
+                let color = Color.createRGBFromColorName(ElementExtension.getPropertyStyleValueWithDefault(cell.svgSurface, "fill", "gray"));
                 //const style = cell.svgBackground.style.fill != null ? VBATranslateFunctions.colorToVBA(cell.svgBackground.style.fill) : "";
                 VBATranslateFunctions.TranslateSVGTextElement(lines, this.cells[y][x].svgText, `${tableName}.cell(${y + 1},${x + 1}).Shape.TextFrame.TextRange`);
                 lines.push([`${tableName}.cell(${y + 1},${x + 1}).Shape.Fill.ForeColor.RGB = RGB(CInt(${color.r}), CInt(${color.g}), CInt(${color.b}))`]);

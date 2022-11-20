@@ -109,6 +109,7 @@ export class ZTextBox extends ZVertex {
     }
 
     public static importTextFromSource(svgText: SVGTextElement | SVGTextPathElement, horizontalAnchor: HorizontalAnchor | null, source: SVGElement) {
+        console.log(source.innerHTML);
         if (source.children.length > 0) {
             const tNodes = HTMLFunctions.getTNodes(source);
             if (tNodes != null) {
