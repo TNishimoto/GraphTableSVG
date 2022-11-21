@@ -20,7 +20,7 @@ export class Debugger {
         return false;
     }
     public static getNodePathFlag() : boolean{
-        return true;
+        return false;
     }
     public static getObserveUpdateFlag() : boolean {
         return false;

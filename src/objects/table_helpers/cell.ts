@@ -597,6 +597,7 @@ export class Cell implements ITextBox {
     set height(value: number) {
         const newValue = round100(value);
 
+
         this.svgSurface.height.baseVal.value = newValue;
     }
     /**
@@ -1086,11 +1087,13 @@ export class Cell implements ITextBox {
 
             return b;
         }
+        /*
         b = this.tryLocateSVGTextWithUpdateFlag(withUpdate) || b;
         if (!withUpdate && b) {
             Debugger.updateFlagLog(this, this.tryUpdateWithUpdateFlag, this.tryLocateSVGTextWithUpdateFlag.name)
             return b;
         }
+        */
         return b;
 
     }
@@ -1184,6 +1187,7 @@ export class Cell implements ITextBox {
             }
         }
         if (!nearlyEqual(this.height, h)) {
+
             b = true;
             if (withUpdate) {
                 Debugger.updateLog(this, this.tryResizeWithUpdateFlag, `Height: ${this.height} -> ${h}`)

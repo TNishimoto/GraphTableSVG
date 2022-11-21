@@ -15,6 +15,7 @@ export class CellColumn {
     private readonly table: ZTable;
     //private readonly _cellX: number;
     public static readonly rowWidthName = "data-width";
+    public static readonly minimumWidthAttributeName = "data-minimum-width";
     public static readonly defaultWidth = 20;
 
     private _svgMetaData: SVGMetadataElement;
@@ -28,6 +29,17 @@ export class CellColumn {
     public set cellX(v: number) {
         this._svgMetaData.setAttribute(Cell.cellXName, `${v}`);
         this.cells.forEach((w) => w.cellX = v);
+    }
+    get minimumWidth() : number {
+        const attr = this._svgMetaData.getAttribute(CellColumn.minimumWidthAttributeName);
+        if(attr != null){
+            return Number.parseInt(attr);
+        }else{
+            return CellColumn.defaultWidth;
+        }
+    }
+    set minimumWidth(value : number) {
+        this._svgMetaData.setAttribute(CellColumn.minimumWidthAttributeName, value.toString());
     }
 
     //public defaultWidth : number | null = null;
@@ -209,7 +221,7 @@ export class CellColumn {
     public tryUpdateWidthWithUpdateFlag(allowShrink: boolean, withUpdate: boolean): boolean {
         let b = false;
         const __width = allowShrink ? this.getVirtualSize().width : Math.max(this.width, this.getVirtualSize().width);
-        const newWidth = Math.max(CellColumn.defaultWidth, round100(__width));
+        const newWidth = Math.max(this.minimumWidth, round100(__width));
         if (!nearlyEqual(this.width, newWidth)) {
             b = true;
             if (withUpdate) {

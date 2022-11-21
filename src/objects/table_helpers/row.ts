@@ -19,7 +19,9 @@ export class CellRow implements IObject {
     private readonly table: ZTable;
     //private readonly _cellY: number;
     private _svgGroup: SVGGElement;
-    public static readonly columnHeightName = "data-height";
+    public static readonly heightAttributeName = "data-height";
+    public static readonly minimumHeightAttributeName = "data-minimum-height";
+
     public static readonly defaultHeight = 20;
     constructor(_table: ZTable, _y: number, _height: number = CellRow.defaultHeight) {
         this.table = _table;
@@ -29,7 +31,7 @@ export class CellRow implements IObject {
         this.table.svgGroup.insertBefore(this.svgGroup, this.table.svgRowBorderGroup);
 
         this.cellY = _y;
-        this._svgGroup.setAttribute(CellRow.columnHeightName, `${_height}`);
+        this._svgGroup.setAttribute(CellRow.heightAttributeName, `${_height}`);
         //this.unstableCounter = GObserver.unstableCounterDefault;
 
         const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
@@ -47,6 +49,18 @@ export class CellRow implements IObject {
         //this.height = this.getMaxHeight();
 
     }
+    get minimumHeight() : number {
+        const attr = this.svgGroup.getAttribute(CellRow.minimumHeightAttributeName);
+        if(attr != null){
+            return Number.parseInt(attr);
+        }else{
+            return CellRow.defaultHeight;
+        }
+    }
+    set minimumHeight(value : number) {
+        this.svgGroup.setAttribute(CellRow.minimumHeightAttributeName, value.toString());
+    }
+
     /*
     public get unstableCounter(): number | null {
         const p = this.svgGroup.getAttribute(GObserver.unstableCounterName);
@@ -149,13 +163,13 @@ export class CellRow implements IObject {
     行の高さを返します。
     */
     get height(): number {
-        return Number(this._svgGroup.getAttribute(CellRow.columnHeightName));
+        return Number(this._svgGroup.getAttribute(CellRow.heightAttributeName));
     }
     /**
     行の高さを設定します。
     */
     set height(value: number) {
-        setAttributeNumber(this._svgGroup, CellRow.columnHeightName, round100(value))
+        setAttributeNumber(this._svgGroup, CellRow.heightAttributeName, round100(value))
         //this._svgGroup.setAttribute(CellRow.columnHeightName, `${value}`);
         //this.setHeightToCells();
         /*
@@ -321,7 +335,7 @@ export class CellRow implements IObject {
     public tryUpdateHeightWithUpdateFlag(allowShrink: boolean, withUpdate: boolean): boolean {
         let b = false;
         const __height = allowShrink ? this.getVirtualSize().height : Math.max(this.height, this.getVirtualSize().height);
-        const newHeight = Math.max(CellRow.defaultHeight, round100(__height));
+        const newHeight = Math.max(this.minimumHeight, round100(__height));
 
         if (!nearlyEqual(this.height, newHeight)) {
             b = true;

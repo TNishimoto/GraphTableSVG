@@ -673,14 +673,14 @@ export class ZTable extends ZVertex {
 
         
         const [rArray, cArray] = this.getRowHeightAndColumnWidth(source, rowCount, columnCount);
-        rArray.forEach((height, y) =>{
-            if(height != 0){
-                this.rows[y].height = height;
+        rArray.forEach((minimumHeight, y) =>{
+            if(minimumHeight != 0){
+                this.rows[y].minimumHeight = minimumHeight;
             }
         })
-        cArray.forEach((width, x) =>{
-            if(width != 0){
-                this.columns[x].width = width;
+        cArray.forEach((minimumWidth, x) =>{
+            if(minimumWidth != 0){
+                this.columns[x].minimumWidth = minimumWidth;
             }
         })
         

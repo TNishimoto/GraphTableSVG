@@ -15,12 +15,12 @@ export class UpdateTable {
         if (!nearlyEqual(oldValue, newValue100)) {
             b = true;
             if (withUpdate) {
-                Debugger.updateLog(cell, UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag, `Border = ${borderType}, Position = ${type}: ${oldValue}->${newValue}`)
+                Debugger.updateLog(cell, UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag, `Border = ${borderType}, Position = ${type}: ${oldValue}->${newValue100}`)
 
                 UpdateTable.setBorderPosition(cell, borderType, type, newValue100);
             }
             if (!withUpdate && b) {
-                Debugger.updateFlagLog(cell, UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag, `Border = ${borderType}, Position = ${type}: ${oldValue}->${newValue}`)
+                Debugger.updateFlagLog(cell, UpdateTable.tryUpdateBorderCoodinateWithUpdateFlag, `Border = ${borderType}, Position = ${type}: ${oldValue}->${newValue100}`)
             }
         }
         return b;
@@ -303,15 +303,17 @@ export class UpdateTable {
         let b = false;
 
         for(let y = 0;y<rows.length;y++){
-            const height = Math.max(rows[y].height, CellRow.defaultHeight);
+            const height = Math.max(rows[y].height, rows[y].minimumHeight);
 
             for(let x = 0;x<rows[y].length;x++){
-                const width = Math.max(columns[x].width, CellColumn.defaultWidth);
+                const width = Math.max(columns[x].width, columns[x].minimumWidth);
 
                 const cell = rows[y].cells[x];
                 if (cell.isMasterCellOfRowCountOne && !nearlyEqual(cell.height, height)) {
                     b = true;
                     if(withUpdate){
+                        Debugger.updateLog(cell, UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.height} != ${height}`)
+
                         cell.height = height;
                     }
                     if(!withUpdate && b){
@@ -323,6 +325,8 @@ export class UpdateTable {
                 if (cell.isMasterCellOfColumnCountOne && !nearlyEqual(cell.width, width)) {
                     b = true;
                     if (withUpdate) {
+                        Debugger.updateLog(cell, UpdateTable.updateCellSizeAfterUpdatingRowsAndColumns, `${cell.width} != ${width} y = ${y}`)
+    
                         cell.width = width;
                     }
     
