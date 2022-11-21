@@ -188,6 +188,20 @@ import * as AttributeNames from "../common/attribute_names"
         getSubAttributeFromAncestorsSub(e, subName, output)
         return output;
     }
+    export function getAttributeFromAncestors(e: Element, attrName : string) : string | null {
+        const attr = e.getAttribute(attrName);
+        if(attr != null){
+            return attr;
+        }else{
+            if(e.parentElement != null){
+                return getAttributeFromAncestors(e.parentElement, attrName);
+            }else{
+                return null;
+            }
+    
+        }
+
+    }
     
 
 //}

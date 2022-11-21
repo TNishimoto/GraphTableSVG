@@ -123,9 +123,9 @@ export class ZTextBox extends ZVertex {
             }
         } else if (source.innerHTML.length > 0) {
             if(svgText instanceof SVGTextElement){
-                SVGTextExtension.setTextContent(svgText, source.innerHTML);
+                SVGTextExtension.setTextContent(svgText, source.textContent!);
             }else{
-                 Extensions.setTextContent(svgText, source.innerHTML);
+                 Extensions.setTextContent(svgText, source.textContent!);
             }
 
             source.innerHTML = "";

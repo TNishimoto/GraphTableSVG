@@ -605,6 +605,8 @@ export class ZTable extends ZVertex {
         ZObject.setSubAttributesWithObjName(cell.svgRightBorder, "rightborder", sourceCell);
         ZObject.setSubAttributesWithObjName(cell.svgBottomBorder, "bottomborder", sourceCell);
 
+
+
         /*
         GOptions.setClassAndStyle(cell.svgTopBorder, cellInfo.topBorderOption.class, cellInfo.topBorderOption.style);
         GOptions.setClassAndStyle(cell.svgLeftBorder, cellInfo.leftBorderOption.class, cellInfo.leftBorderOption.style);
@@ -622,7 +624,7 @@ export class ZTable extends ZVertex {
 
     }
 
-    private getRowSizeAndColumnSize(source: SVGElement): [number, number] {
+    private getRowCountAndColumnCount(source: SVGElement): [number, number] {
         const rows = HTMLFunctions.getChildren(source).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
         const cells: Element[][] = new Array(rows.length);
         let columnSize = 0;
@@ -632,13 +634,56 @@ export class ZTable extends ZVertex {
             if (columnSize < cellArray.length) columnSize = cellArray.length;
         });
         return [rows.length, columnSize];
+    }
+    private getRowHeightAndColumnWidth(source: SVGElement, rowCount : number, columnCount :number): [number[], number[]] {
+        const rArray = new Array(rowCount);
+        for(let i = 0;i<rowCount;i++){
+            rArray[i] = 0;
+        }
+        const cArray = new Array(columnCount);
+        for(let i = 0;i<columnCount;i++){
+            cArray[i] = 0;
+        }
 
+        const rows = HTMLFunctions.getChildren(source).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
+        rows.forEach((v, y) => {
+            const cellArray = HTMLFunctions.getChildren(v).filter((v) => v.getAttribute(AttributeNames.customElement) == "cell");
+
+            cellArray.forEach((w, x) =>{
+                const attr_w = HTMLFunctions.getAttributeFromAncestors(w, "column::width");
+                if(attr_w != null){
+                    const attr_nw = Number.parseInt(attr_w);
+                    cArray[x] = Math.max(cArray[x], attr_nw); 
+                }
+                const attr_h = HTMLFunctions.getAttributeFromAncestors(w, "row::height");
+                if(attr_h != null){
+                    const attr_nh = Number.parseInt(attr_h);
+                    rArray[y] = Math.max(rArray[y], attr_nh); 
+                }
+
+            })
+        });
+        return [rArray, cArray];
     }
 
     public initializeSetBasicOption(source: SVGElement) {
         super.initializeSetBasicOption(source);
-        const [rowCount, columnCount] = this.getRowSizeAndColumnSize(source);
+        const [rowCount, columnCount] = this.getRowCountAndColumnCount(source);
         this.setSize(columnCount, rowCount);
+
+        
+        const [rArray, cArray] = this.getRowHeightAndColumnWidth(source, rowCount, columnCount);
+        rArray.forEach((height, y) =>{
+            if(height != 0){
+                this.rows[y].height = height;
+            }
+        })
+        cArray.forEach((width, x) =>{
+            if(width != 0){
+                this.columns[x].width = width;
+            }
+        })
+        
 
         const rows = HTMLFunctions.getChildren(source).filter((v) => v.getAttribute(AttributeNames.customElement) == "row").map((v) => <HTMLElement>v);
         rows.forEach((v, y) => {
@@ -649,6 +694,24 @@ export class ZTable extends ZVertex {
                 }
             });
         });
+        
+        for (let y = 0; y < this.rowCount; y++) {
+            for (let x = 0; x < this.columnCount; x++) {
+                const cell = this.cells[y][x];
+                const merge_w = ElementExtension._getAttributeNumber(cell.svgGroup, AttributeNames.w, true);
+                const merge_h = ElementExtension._getAttributeNumber(cell.svgGroup, AttributeNames.h, true);
+
+                const mw = merge_w == null ? 1 : (merge_w < 1 ? 1 : merge_w);
+                const mh = merge_h == null ? 1 : (merge_h < 1 ? 1 : merge_h);
+
+                if (mw > 1 || mh > 1) {
+                    if (cell.canMerge(mw, mh)) {
+                        cell.merge(mw, mh);
+                    }
+                }
+            }
+        }
+        
 
     }
     /**
