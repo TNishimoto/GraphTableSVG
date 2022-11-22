@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>z-rect Style Attribute Samples(--horizontal-anchor, --vertical-anchor)</title>
+    <script src="../../scripts/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.Options.openSVG();
+            /* This comment is a landmark for data processing. */
+        };
+    </script>
+</head>
+
+<body>
+    <svg id="main" width="900px" height="600px" xmlns="http://www.w3.org/2000/svg"
+        style="background:#e9e9e9;border:solid 1pt;">
+        <z-rect x="0" y="0" width="250" height="100" style="--horizontal-anchor:left">
+            <t>--horizontal-anchor:left</t>
+        </z-rect>
+        <z-rect x="280" y="0" width="250" height="100" style="--horizontal-anchor:center">
+            <t>--horizontal-anchor:center</t>
+        </z-rect>
+        <z-rect x="550" y="0" width="250" height="100" style="--horizontal-anchor:right">
+            <t>--horizontal-anchor:right</t>
+        </z-rect>
+        <z-rect x="0" y="150" width="250" height="100" style="--vertical-anchor:top">
+            <t>--vertical-anchor:top</t>
+        </z-rect>
+        <z-rect x="280" y="150" width="250" height="100" style="--vertical-anchor:middle">
+            <t>--vertical-anchor:middle</t>
+        </z-rect>
+        <z-rect x="550" y="150" width="250" height="100" style="--vertical-anchor:bottom">
+            <t>--vertical-anchor:bottom</t>
+        </z-rect>
+        <z-rect x="0" y="300" width="250" height="100" style="--vertical-anchor:top;--horizontal-anchor:left">
+            <t>--vertical-anchor:top</t>
+            <t>--horizontal-anchor:left</t>
+        </z-rect>
+        <z-rect x="280" y="300" width="250" height="100" style="--vertical-anchor:middle;--horizontal-anchor:center">
+            <t>--vertical-anchor:middle</t>
+            <t>--horizontal-anchor:center</t>
+        </z-rect>
+        <z-rect x="550" y="300" width="250" height="100" style="--vertical-anchor:bottom;--horizontal-anchor:right">
+            <t>--vertical-anchor:bottom</t>
+            <t>--horizontal-anchor:right</t>
+        </z-rect>
+    </svg>
+</body>
+
+</html>

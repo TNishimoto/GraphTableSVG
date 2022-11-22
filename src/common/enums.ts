@@ -277,6 +277,15 @@ export namespace AutoSizeShapeToFitText {
 
 export type EdgeType = "none" | "straight" | "elbow" | "curve";
 
+export type ShapeToFitType = "none" | "auto" | "semi-auto";
+
+export namespace ShapeToFitType {
+    export const None : ShapeToFitType = "none";
+    export const Auto : ShapeToFitType = "auto";
+    export const SemiAuto : ShapeToFitType = "semi-auto";
+
+}
+
 
 export type ConnectorType = "top" | "topleft" | "left" | "bottomleft" | "bottom" | "bottomright" | "right" | "topright" | "auto";
 export namespace ConnectorType {

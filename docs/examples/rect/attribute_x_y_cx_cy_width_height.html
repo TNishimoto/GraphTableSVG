@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>z-rect Attribute Samples(x, y, cx, cy, width, height)</title>
+    <script src="../../scripts/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.Options.openSVG();
+            /* This comment is a landmark for data processing. */
+        };
+    </script>
+</head>
+
+<body>
+    <svg id="main" xmlns="http://www.w3.org/2000/svg" width="500px" height="350px"
+        style="background:#e9e9e9;border:solid 1pt;" z-vba="true">
+        <z-rect x="100" y="100">
+            <t>x=&quot100&quot</t>
+            <t>y=&quot100&quot</t>
+        </z-rect>
+        <line x1="100" y1="0" x2="100" y2="300" stroke-width="1" stroke="red" />
+
+        <z-rect cx="100" cy="200">
+            <t>cx=&quot100&quot</t>
+            <t>cy=&quot200&quot</t>
+        </z-rect>
+
+        <z-rect x="300" y="100" width="150" height="150">
+            <t>width=&quot150&quot</t>
+            <t>height=&quot150&quot</t>
+        </z-rect>
+    </svg>
+</body>
+
+</html>
