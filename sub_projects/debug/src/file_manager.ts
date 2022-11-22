@@ -12,6 +12,13 @@ export function rightPadding(text: string, maxLen: number) {
     return s;
 }
 
+export function outputLog(msg: string) {
+    const _path = `${getAbsoluteDirectoryPath(outputRelativeDirPath)}`;
+    fs.writeFile(_path + "/result.log", msg, () => {
+        console.log('正常に書き込みが完了しました');
+    });
+}
+
 export function getAbsoluteDirectoryPath(relativeDirPath: string): string {
     const name = "GraphTableSVG";
     const p = __filename.indexOf(name);

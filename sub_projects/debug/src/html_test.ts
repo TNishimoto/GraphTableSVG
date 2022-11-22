@@ -21,7 +21,7 @@ export class TestResult {
             if (this.diffXMLResult.diffType == null) {
                 return `NONE`;
             } else {
-                return `DiffXMLError: xpath = ${this.diffXMLResult.xpath}, type=${this.diffXMLResult.diffType} Content = "${this.diffXMLResult.content1}"/"${this.diffXMLResult.content2}"(${this.diffXMLResult.content1==this.diffXMLResult.content2})`;
+                return `DiffXMLError: xpath = ${this.diffXMLResult.xpath}, type=${this.diffXMLResult.diffType} \n Content1 = "${this.diffXMLResult.content1}", \n Content2 = "${this.diffXMLResult.content2}"(${this.diffXMLResult.content1==this.diffXMLResult.content2})`;
     
             }
     

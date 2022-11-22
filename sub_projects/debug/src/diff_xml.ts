@@ -118,6 +118,15 @@ function diffAttrs(e1 : libxmlts.libxmlts.Element, e2 : libxmlts.libxmlts.Elemen
     result.diffType = null;
     return result;
 }
+function getChildrenLog(e : libxmlts.libxmlts.Element) : string {
+    const children = e.childNodes();
+    
+    const cArr = children.map((v) =>{
+        v.original.name()
+    })
+    const r = `<${e.original.name()}> ${cArr.join("\n")} </${e.original.name()}>`
+    return r;
+}
 function diffNode(e1 : libxmlts.libxmlts.InnerNode, e2 : libxmlts.libxmlts.InnerNode) : DiffXMLResult{
     if(e1.type != e2.type){
         let result = new DiffXMLResult();
@@ -137,6 +146,9 @@ function diffNode(e1 : libxmlts.libxmlts.InnerNode, e2 : libxmlts.libxmlts.Inner
                     let result = new DiffXMLResult();
                     result.xpath = getXPath(e1);
                     result.diffType = "MismatchChildrenCount";
+                    result.content1 = getChildrenLog(e1);
+                    result.content2 = getChildrenLog(e2);
+                    
                     return result;
                   }else{
                     

@@ -1,24 +1,31 @@
-import { getFiles, createDirectories, tryCreateSaveFolders, FilePathManager } from "./file_manager"
+import { getFiles, createDirectories, tryCreateSaveFolders, FilePathManager, outputLog } from "./file_manager"
 import { playwrightTest } from "./playwright_test"
 import { diffTestAll } from "./html_test";
-
+const fs = require("fs");
 
 
 async function ptest(files: FilePathManager[]) {
   const results = playwrightTest(files);
   results.then((v) => {
     console.log("END");
+
+    let detailLog = "";
     diffTestAll(files).then((w) => {
-      w.forEach((x) => {
-        console.log(x.getTestResult());
+      const resultLog = w.map((x) => {
+        x.getTestResult();
       })
+      const resultLogStr = resultLog.join("\n");
+      console.log(resultLogStr)
+
       w.forEach((x) => {
         if (!(x.arr.every((v) => v.success))) {
-          console.log(x.fileID);
-          console.log(x.getDetailMessages())
+          detailLog += x.fileID + "\n";
+          detailLog += x.getDetailMessages() + "\n";
         }
       })
-
+      console.log(detailLog);
+      const outputTxt = resultLog + "\n" + detailLog;
+      outputLog(outputTxt);
     })
   })
 }
