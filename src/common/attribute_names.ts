@@ -37,6 +37,10 @@ export const syncYTarget : string = "sync-y-target";
 export const syncYSourcePosition : string = "sync-y-source-position";
 export const syncYTargetPosition : string = "sync-y-target-position";
 
+//export const beginConnectorTypeAttribute: string = "begin-connector-type";
+//export const endConnectorTypeAttribute: string = "end-connector-type";
+
+
 
 //export const groupClassName : string = "group:class";
 //export const groupStyle : string = "group:style";

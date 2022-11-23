@@ -1,4 +1,5 @@
 export const autoSizeShapeToFitText: string = "--autosize-shape-to-fit-text"
+
 export const beginConnectorType: string = "--begin-connector-type";
 export const endConnectorType: string = "--end-connector-type";
 export const markerStart: string = "--marker-start";
