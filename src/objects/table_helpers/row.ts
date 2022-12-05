@@ -10,7 +10,7 @@ import * as GObserver from "../z_observer";
 import * as AttributeNames from "../../common/attribute_names"
 import { getSVGSVGAncestor } from "../../html/html_functions";
 import { IObject } from "../i_object"
-import { GlobalGObjectManager } from "../global_gobject_manager";
+import { GlobalZObjectManager } from "../global_gobject_manager";
 
 /**
  * 表の行を表現するクラスです。
@@ -36,7 +36,7 @@ export class CellRow implements IObject {
 
         const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
         if (svgsvgAncestor != null) {
-            const xb = GlobalGObjectManager.tryRegisterSVGSVGElement(svgsvgAncestor);
+            const xb = GlobalZObjectManager.tryRegisterSVGSVGElement(svgsvgAncestor);
             xb.registerObject(this);
         }
 

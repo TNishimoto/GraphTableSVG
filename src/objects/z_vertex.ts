@@ -15,7 +15,7 @@ import * as ElementExtension from "../interfaces/element_extension"
 import { getGraph } from "./graph_helpers/common_functions";
 import { ZAbstractEdge } from "./z_abstract_edge";
 import { HTMLFunctions } from "../html";
-import { LocalGObjectManager } from "./global_gobject_manager";
+import { LocalZObjectManager } from "./global_gobject_manager";
 
 
 
@@ -98,7 +98,7 @@ export class ZVertex extends ZObject {
     get outgoingEdges(): ZAbstractEdge[] {
         const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
         if(svgsvg != null){
-            const manager : LocalGObjectManager | undefined = (<any>svgsvg)._manager;
+            const manager : LocalZObjectManager | undefined = (<any>svgsvg)._manager;
             if(manager != undefined){
                 const arr = manager.getOutgoingEdges(this);
                 if(arr == null){
@@ -124,7 +124,7 @@ export class ZVertex extends ZObject {
     get incomingEdges(): ZAbstractEdge[] {
         const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
         if(svgsvg != null){
-            const manager : LocalGObjectManager | undefined = (<any>svgsvg)._manager;
+            const manager : LocalZObjectManager | undefined = (<any>svgsvg)._manager;
             if(manager != undefined){
                 const arr = manager.getIncmoingEdges(this);
                 if(arr == null){
@@ -152,23 +152,19 @@ export class ZVertex extends ZObject {
      * @param insertIndex
      */
     public insertOutcomingEdge(edge: ZAbstractEdge, insertIndex: number = this.outgoingEdges.length) {
-        throw new Error("Error");
-        /*
-        const p = this.outgoingEdges.indexOf(edge);
-        if (p != -1) {
-            throw new Error();
-        } else {
-            const edges = this.outgoingEdges;
-            edges.splice(insertIndex, 0, edge);
-            const newEdges = JSON.stringify(edges.map((v) => Number(v.objectID)));
-            this.svgGroup.setAttribute("outcoming-edges", newEdges);
-
-            if (edge.beginVertex != this) {
-                edge.beginVertex = this;
+        const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
+        if(svgsvg != null){
+            const manager : LocalZObjectManager | undefined = (<any>svgsvg)._manager;
+            if(manager != undefined){
+                const arr = manager.getOutgoingEdges(this);
+                if(arr == null){
+                    return new Array(0);
+                }else{
+                    return arr.map((v) => <ZAbstractEdge>v);
+                }
             }
         }
-        */
-
+        return new Array(0);
     }
     /**
      * 出辺を削除します。

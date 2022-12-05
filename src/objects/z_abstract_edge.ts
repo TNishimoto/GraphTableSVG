@@ -15,7 +15,7 @@ import { NullError, UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
 import { IEdge } from "./i_object";
 import { HTMLFunctions } from "../html";
-import { LocalGObjectManager } from "./global_gobject_manager";
+import { LocalZObjectManager } from "./global_gobject_manager";
 import { ObjectStableFlagName } from "./z_observer";
 //import { Direction } from "readline";
 
@@ -189,7 +189,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         
         const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
         if(svgsvg != null){
-            const manager : LocalGObjectManager | undefined = (<any>svgsvg)._manager;
+            const manager : LocalZObjectManager | undefined = (<any>svgsvg)._manager;
             if(manager != undefined){
                 manager.registerBeginVertexID(this, v);
             }
@@ -217,7 +217,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         }
         const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
         if(svgsvg != null){
-            const manager : LocalGObjectManager | undefined = (<any>svgsvg)._manager;
+            const manager : LocalZObjectManager | undefined = (<any>svgsvg)._manager;
             if(manager != undefined){
                 manager.registerEndVertexID(this, v);
             }

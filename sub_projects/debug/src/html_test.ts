@@ -1,5 +1,5 @@
 import { diffXML, DiffXMLResult } from "./diff_xml";
-import { BrowserNameType, FilePathManager, rightPadding } from "./file_manager"
+import { BrowserNameType, BrowserHTMLTestInfo, rightPadding } from "./file_manager"
 import { ErrorType } from "./playwright_test";
 
 
@@ -63,7 +63,7 @@ export class TestResultForFile {
 
 }
 
-export async function testHTML(file: FilePathManager): Promise<TestResult> {
+export async function testHTML(file: BrowserHTMLTestInfo): Promise<TestResult> {
     const result = new TestResult();
     result.parentDirectoryName = file.dirPath;
     result.filename = file.filename;
@@ -92,7 +92,7 @@ export async function testHTML(file: FilePathManager): Promise<TestResult> {
     }
 
 }
-export async function diffTestAll(files: FilePathManager[]) : Promise<TestResultForFile[]> {
+export async function diffTestAll(files: BrowserHTMLTestInfo[]) : Promise<TestResultForFile[]> {
     const dic : Map<string, TestResultForFile> = new Map();
     files.forEach((v) =>{
         if(!dic.has(`${v.dirPath}/${v.filename}`)){

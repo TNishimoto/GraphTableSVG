@@ -63,7 +63,7 @@ export function tryCreateSaveFolders() {
 }
 
 
-export class FilePathManager {
+export class BrowserHTMLTestInfo {
     dirPath: string = "";;
     filename: string = "";;
     browserName: BrowserNameType = "firefox";
@@ -173,8 +173,8 @@ export function createDirectories(info: DirectoryInfo) {
 
 }
 
-export function getFiles(currentRelativePath: string): FilePathManager[] {
-    const r: FilePathManager[] = new Array();
+export function getFiles(currentRelativePath: string): BrowserHTMLTestInfo[] {
+    const r: BrowserHTMLTestInfo[] = new Array();
     const fPath = concatenatePaths(exampleRelativeDirPath, currentRelativePath);
     const exampleCurrentAbsolutePath = getAbsoluteDirectoryPath(fPath);
     const files = fs.readdirSync(exampleCurrentAbsolutePath);
@@ -183,9 +183,9 @@ export function getFiles(currentRelativePath: string): FilePathManager[] {
         return fs.statSync(filePath).isFile() && /.*\.html$/.test(file);
     })
     for (const vFileName of fileList) {
-        r.push(new FilePathManager(currentRelativePath, vFileName, "firefox"));
-        r.push(new FilePathManager(currentRelativePath, vFileName, "edge"));
-        r.push(new FilePathManager(currentRelativePath, vFileName, "chromium"));
+        r.push(new BrowserHTMLTestInfo(currentRelativePath, vFileName, "firefox"));
+        r.push(new BrowserHTMLTestInfo(currentRelativePath, vFileName, "edge"));
+        r.push(new BrowserHTMLTestInfo(currentRelativePath, vFileName, "chromium"));
 
 
 
