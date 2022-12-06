@@ -1,111 +1,111 @@
 import * as libxmljs from 'libxmljs';
 import * as libxmlts from './libxmlts';
 
-export function round100(value : number){
-    return Math.round(value * 100)/100;
+export function round100(value: number) {
+    return Math.round(value * 100) / 100;
 }
-export function nearlyEqual(value1 :number, value2 : number) : boolean {
+export function nearlyEqual(value1: number, value2: number): boolean {
     const abs = Math.abs(value1 - value2);
     return abs < 0.1
 }
 
 type DiffType = "MismatchValue" | "MismatchName" | "MismatchChildrenCount" | "MismatchTextContent" | "Disappeared" | "Other"
 
-export class DiffXMLResult{
-    public xpath : string = "";    
-    public diffType : DiffType | null = null;
-    public content1 : string = "";
-    public content2 : string = "";
+export class DiffXMLResult {
+    public xpath: string = "";
+    public diffType: DiffType | null = null;
+    public content1: string = "";
+    public content2: string = "";
 
 }
-function getXPath(e1 : libxmlts.libxmlts.Element | libxmlts.libxmlts.Attribute | libxmlts.libxmlts.InnerNode) : string {
-    if(e1.parent == null){
-        if(e1 instanceof libxmlts.libxmlts.Element){
+function getXPath(e1: libxmlts.libxmlts.Element | libxmlts.libxmlts.Attribute | libxmlts.libxmlts.InnerNode): string {
+    if (e1.parent == null) {
+        if (e1 instanceof libxmlts.libxmlts.Element) {
             return `//${e1.name}`;
-        }else{
+        } else {
             return `//OTHER`;
         }
-    }else{
+    } else {
         const parentPath = getXPath(e1.parent);
-        if(e1 instanceof libxmlts.libxmlts.Attribute){
+        if (e1 instanceof libxmlts.libxmlts.Attribute) {
             return `${parentPath}[@${e1.name}]`
-        }else if(e1 instanceof libxmlts.libxmlts.Element){
+        } else if (e1 instanceof libxmlts.libxmlts.Element) {
             return `${parentPath}/${e1.name}`
-        }else if(e1 instanceof libxmlts.libxmlts.Text){
+        } else if (e1 instanceof libxmlts.libxmlts.Text) {
             return `${parentPath}/TEXT`
         }
-        else{
+        else {
             return `${parentPath}/${e1.type}`
         }
     }
 
 }
 
-function diffAttrs(e1 : libxmlts.libxmlts.Element, e2 : libxmlts.libxmlts.Element) : DiffXMLResult{
+function diffAttrs(e1: libxmlts.libxmlts.Element, e2: libxmlts.libxmlts.Element): DiffXMLResult {
     let result = new DiffXMLResult();
 
     const attr1 = e1.attrs();
-    const map1 : Map<string, string> = new Map();
+    const map1: Map<string, string> = new Map();
     attr1.forEach((v) => map1.set(v.name, v.value));
 
-    
+
 
     const attr2 = e2.attrs();
-    const map2 : Map<string, string> = new Map();
+    const map2: Map<string, string> = new Map();
     attr2.forEach((v) => map2.set(v.name, v.value));
 
 
 
-    for(let kv1 of attr1){
-        
+    for (let kv1 of attr1) {
+
         //console.log(`${kv1.name}: ${kv1.value}`);
-        const value2 = map2.get(kv1.name); 
-        if(value2 === undefined ){
+        const value2 = map2.get(kv1.name);
+        if (value2 === undefined) {
             result.xpath = getXPath(kv1);
             result.diffType = "Disappeared";
             return result;
-        }else{
-            if(Number.isNaN(kv1.value) && Number.isNaN(value2)){
+        } else {
+            if (Number.isNaN(kv1.value) && Number.isNaN(value2)) {
                 const num1 = round100(Number.parseFloat(kv1.value));
                 const num2 = round100(Number.parseFloat(value2));
-                if(!nearlyEqual(num1, num2)){
+                if (!nearlyEqual(num1, num2)) {
                     result.xpath = getXPath(kv1);
                     result.diffType = "MismatchValue";
-    
+
                     return result;
                 }
-            }else{
-                if(kv1.value != value2){
+            } else {
+                if (kv1.value != value2) {
                     result.xpath = getXPath(kv1);
                     result.diffType = "MismatchValue";
-    
+
                     return result;
                 }
-    
+
             }
 
         }
     }
 
-    for(let kv2 of attr2){
-        const value1 = map1.get(kv2.name); 
-        if(value1 === undefined ){
+    for (let kv2 of attr2) {
+        const value1 = map1.get(kv2.name);
+        if (value1 === undefined) {
             result.xpath = getXPath(kv2);
             result.diffType = "Disappeared";
             return result;
-        }else{
-            if(Number.isNaN(value1) && Number.isNaN(kv2.value)){
+        } else {
+            if (Number.isNaN(value1) && Number.isNaN(kv2.value)) {
                 const num1 = round100(Number.parseFloat(value1));
                 const num2 = round100(Number.parseFloat(kv2.value));
-                if(!nearlyEqual(num1, num2)){
+                if (!nearlyEqual(num1, num2)) {
                     result.xpath = getXPath(kv2);
                     result.diffType = "MismatchValue";
-    
+
                     return result;
                 }
             }
 
-            if(kv2.value != value1){
+            if (kv2.value != value1) {
                 result.xpath = getXPath(kv2);
                 result.diffType = "MismatchValue";
                 return result;
@@ -118,131 +118,173 @@ function diffAttrs(e1 : libxmlts.libxmlts.Element, e2 : libxmlts.libxmlts.Elemen
     result.diffType = null;
     return result;
 }
-function getChildrenLog(e : libxmlts.libxmlts.Element) : string {
+function getChildrenLog(e: libxmlts.libxmlts.Element): string {
     const children = e.childNodes();
-    
-    const cArr = children.map((v) =>{
+
+    const cArr = children.map((v) => {
         v.original.name()
     })
     const r = `<${e.original.name()}> ${cArr.join("\n")} </${e.original.name()}>`
     return r;
 }
-function diffNode(e1 : libxmlts.libxmlts.InnerNode, e2 : libxmlts.libxmlts.InnerNode) : DiffXMLResult{
-    if(e1.type != e2.type){
+function diffNode(e1: libxmlts.libxmlts.InnerNode, e2: libxmlts.libxmlts.InnerNode): DiffXMLResult {
+    if (e1.type != e2.type) {
         let result = new DiffXMLResult();
         result.xpath = getXPath(e1);
         result.diffType = "MismatchName";
-        
+
         return result;
-    }else{
-        if(e1 instanceof libxmlts.libxmlts.Element && e2 instanceof libxmlts.libxmlts.Element){
+    } else {
+        if (e1 instanceof libxmlts.libxmlts.Element && e2 instanceof libxmlts.libxmlts.Element) {
 
             const b1 = diffAttrs(e1, e2);
 
-            if(b1.diffType == null){
+            if (b1.diffType == null) {
                 const children1 = e1.childNodes();
                 const children2 = e2.childNodes();
-                if(children1.length != children2.length){
+                if (children1.length != children2.length) {
                     let result = new DiffXMLResult();
                     result.xpath = getXPath(e1);
                     result.diffType = "MismatchChildrenCount";
                     result.content1 = getChildrenLog(e1);
                     result.content2 = getChildrenLog(e2);
-                    
+
                     return result;
-                  }else{
-                    
-                    for(let i=0;i<children1.length;i++){
+                } else {
+
+                    for (let i = 0; i < children1.length; i++) {
                         const b2 = diffNode(children1[i], children2[i]);
-                        if(b2.diffType != null){
+                        if (b2.diffType != null) {
                             return b2;
                         }
                     }
-                  }
-                  let result = new DiffXMLResult();
-                  result.xpath = getXPath(e1);
-                  result.diffType = null;
+                }
+                let result = new DiffXMLResult();
+                result.xpath = getXPath(e1);
+                result.diffType = null;
 
-                  return result;                  
-            }else{
+                return result;
+            } else {
                 return b1;
             }
-    
+
         }
-        else if(e1 instanceof libxmlts.libxmlts.CDATA && e2 instanceof libxmlts.libxmlts.CDATA){
+        else if (e1 instanceof libxmlts.libxmlts.CDATA && e2 instanceof libxmlts.libxmlts.CDATA) {
             let result = new DiffXMLResult();
             result.xpath = getXPath(e1);
-            if(e1.text != e2.text){
+            if (e1.text != e2.text) {
                 result.diffType = "MismatchTextContent";
                 result.content1 = e1.text;
                 result.content2 = e2.text;
 
                 return result;
-            }else{
+            } else {
                 return result;
             }
-        }else if(e1 instanceof libxmlts.libxmlts.Comment && e2 instanceof libxmlts.libxmlts.Comment){
+        } else if (e1 instanceof libxmlts.libxmlts.Comment && e2 instanceof libxmlts.libxmlts.Comment) {
             let result = new DiffXMLResult();
             result.xpath = getXPath(e1);
 
-            if(e1.text != e2.text){
-                result.diffType = "MismatchTextContent";            
+            if (e1.text != e2.text) {
+                result.diffType = "MismatchTextContent";
                 result.content1 = e1.text;
                 result.content2 = e2.text;
 
                 return result;
-            }else{
+            } else {
                 return result;
             }
-        }else if(e1 instanceof libxmlts.libxmlts.ProcessingInstruction && e2 instanceof libxmlts.libxmlts.ProcessingInstruction){
+        } else if (e1 instanceof libxmlts.libxmlts.ProcessingInstruction && e2 instanceof libxmlts.libxmlts.ProcessingInstruction) {
             let result = new DiffXMLResult();
             result.xpath = getXPath(e1);
 
             return result;
-        }else if(e1 instanceof libxmlts.libxmlts.Text && e2 instanceof libxmlts.libxmlts.Text){            
+        } else if (e1 instanceof libxmlts.libxmlts.Text && e2 instanceof libxmlts.libxmlts.Text) {
             let result = new DiffXMLResult();
             result.xpath = getXPath(e1);
-            if(e1.text != e2.text){
-                result.diffType = "MismatchTextContent";            
+            if (e1.text != e2.text) {
+                result.diffType = "MismatchTextContent";
                 result.content1 = e1.text;
                 result.content2 = e2.text;
 
                 return result;
-            }else{
+            } else {
                 return result;
             }
-        }else{
+        } else {
             throw new Error("TypeError");
         }
 
     }
 }
 
+function normalizeSub(e1: libxmlts.libxmlts.InnerNode, depth: number, log: string[]): void {
+    let tab = "";
+    for(let i =0;i<depth;i++){
+        tab += "\t";
+    }
+    if (e1 instanceof libxmlts.libxmlts.Element) {
+        const attr1 = e1.attrs();
+        const attrArray : [string, string][] = new Array();
+        attr1.forEach((v) => attrArray.push([v.name, v.value]) );
+        attrArray.sort((a, b) => a < b ? -1 : 1);
+    
 
-export function diffXML(xml1 : string, xml2 : string) : DiffXMLResult{
+        log.push(`${tab}<${e1.name}>`);
+        attrArray.forEach((v) =>{
+            log.push(`${tab}\t ${v[0]} = "${v[1]}"`);
+        })
+        const children1 = e1.childNodes();
+        for (let i = 0; i < children1.length; i++) {
+            normalizeSub(children1[i], depth + 1, log);
+        }
+        log.push(`${tab}</${e1.name}>`);
+    }
+    else if (e1 instanceof libxmlts.libxmlts.CDATA) {
+        log.push(`${tab}[CDATA]`);
+    } else if (e1 instanceof libxmlts.libxmlts.Comment) {
+        log.push(`${tab}[COMMENT]`);
+        log.push(`${tab}[/COMMENT]`);
+    } else if (e1 instanceof libxmlts.libxmlts.ProcessingInstruction) {
+        log.push(`${tab}[PROCESSINGINSTRUCTION]`);
+    } else if (e1 instanceof libxmlts.libxmlts.Text) {
+        const repText = e1.text.replace( /\r?\n/g , "[BR]");
+        log.push(`${tab}[TEXT]${repText}[/TEXT]`);
+    } else {
+        throw new Error("TypeError");
+    }
+}
+export function normalize(xml: string): string[] {
+    const xmlDoc = new libxmlts.libxmlts.Document(libxmljs.parseHtmlString(xml));
+    const r : string[] = new Array();
+    normalizeSub(xmlDoc.root, 0, r);
+    return r;
+}
+
+export function diffXML(xml1: string, xml2: string): DiffXMLResult {
 
     const xmlDoc1 = new libxmlts.libxmlts.Document(libxmljs.parseHtmlString(xml1));
     const xmlDoc2 = new libxmlts.libxmlts.Document(libxmljs.parseHtmlString(xml2));
     const b = diffNode(xmlDoc1.root, xmlDoc2.root);
-        /*
-    const elementStack1 : libxmlts.libxmlts.Element[] = new Array(xmlDoc1.root);
-    const elementStack2 : libxmlts.libxmlts.Element[] = new Array(xmlDoc2.root);
-  
-    while(elementStack1.length > 0){
-      const e1 = elementStack1[elementStack1.length-1];
-      const e2 = elementStack2[elementStack2.length-1];
-      elementStack1.pop();
-      elementStack2.pop();
+    /*
+const elementStack1 : libxmlts.libxmlts.Element[] = new Array(xmlDoc1.root);
+const elementStack2 : libxmlts.libxmlts.Element[] = new Array(xmlDoc2.root);
+ 
+while(elementStack1.length > 0){
+  const e1 = elementStack1[elementStack1.length-1];
+  const e2 = elementStack2[elementStack2.length-1];
+  elementStack1.pop();
+  elementStack2.pop();
 
-      const b1 = diffAttrs(e1, e2);
-      const children1 = e1.childNodes();
-      const children2 = e2.childNodes();
+  const b1 = diffAttrs(e1, e2);
+  const children1 = e1.childNodes();
+  const children2 = e2.childNodes();
 
-      
   
-    }
-    */
-  
+ 
+}
+*/
+
     return b;
-  
-  }
+
+}

@@ -1,5 +1,7 @@
 import { webkit, firefox, chromium, ElementHandle, Locator, Page } from 'playwright'
-import { BrowserNameType, BrowserHTMLTestInfo } from "./file_manager"
+import { BrowserNameType, BrowserHTMLPair } from "./file_manager"
+import { normalize } from "./diff_xml"
+
 import * as fs from 'fs';
 
 export type ErrorType = 'TextMismatch' | 'TimeoutError' | 'UnexpectedError';
@@ -206,7 +208,7 @@ ${svgPart}
     return output_html;
 }
 
-export async function saveOutputHTMLAndPNG(page: Page, browserName: BrowserNameType, htmlPath: string, pngPath: string, overwrite: boolean): Promise<void> {
+export async function saveOutputHTMLAndPNG(page: Page, browserName: BrowserNameType, htmlPath: string, pngPath: string, normalizedHTMLPath : string, overwrite: boolean): Promise<void> {
     const outputHTML = await getVisibleHTML(page, browserName);
 
     const b1 = !overwrite && fs.existsSync(htmlPath);
@@ -225,6 +227,17 @@ export async function saveOutputHTMLAndPNG(page: Page, browserName: BrowserNameT
         console.log(`Saved: ${pngPath}`);
     }
 
+    const b3 = !overwrite && fs.existsSync(normalizedHTMLPath);
+    if(!b3){
+        const lines = normalize(outputHTML);
+        const normalizedHTML = lines.join("\n");
+        await fs.writeFile(normalizedHTMLPath, normalizedHTML, (err) => {
+            if (err) throw err;
+            console.log(`Saved: ${normalizedHTMLPath}`);
+        });
+
+    }
+
 
 }
 
@@ -237,7 +250,7 @@ export class BrowserExecutionResult {
 
 
 
-    static async emulateHTML(filepath: string, browserName: BrowserNameType, printMessage: boolean, outputHTMLPath: string, outputPNGPath: string): Promise<BrowserExecutionResult> {
+    static async emulateHTML(filepath: string, browserName: BrowserNameType, printMessage: boolean, outputHTMLPath: string, outputPNGPath: string, outputNormalizedHTMLPath: string): Promise<BrowserExecutionResult> {
         console.log(`Processing...: ${filepath}, browser: ${browserName}`)
 
         let browser = null;
@@ -291,7 +304,7 @@ export class BrowserExecutionResult {
             } else {
                 r.success = true;
             }
-            await saveOutputHTMLAndPNG(page, browserName, outputHTMLPath, outputPNGPath, true);
+            await saveOutputHTMLAndPNG(page, browserName, outputHTMLPath, outputPNGPath, outputNormalizedHTMLPath, true);
             browser.close();
 
             return r;
@@ -302,9 +315,9 @@ export class BrowserExecutionResult {
     }
 
 }
-async function processBrowserHTMLTestSequence(items: BrowserHTMLTestInfo[]) : Promise<BrowserExecutionResult[]> {
+async function executeBrowserHTMLPairSequence(items: BrowserHTMLPair[]) : Promise<BrowserExecutionResult[]> {
     const results = await Promise.all(items.map(async (w) => {
-        const dummy = BrowserExecutionResult.emulateHTML(w.absoluteFilePath, w.browserName, false, w.outputHTMLPath, w.outputPNGPath);
+        const dummy = BrowserExecutionResult.emulateHTML(w.absoluteFilePath, w.browserName, false, w.outputHTMLPath, w.outputPNGPath, w.outputNormalizedHTMLPath);
         dummy.then((x) => {
             console.log(`${w.absoluteFilePath}: ${x.success}`)
         })
@@ -313,8 +326,8 @@ async function processBrowserHTMLTestSequence(items: BrowserHTMLTestInfo[]) : Pr
     return results;
 
 }
-export function divideBrowserHTMLTestSequence(items: BrowserHTMLTestInfo[]) : BrowserHTMLTestInfo[][]{
-    const filePathManagers: BrowserHTMLTestInfo[][] = new Array();
+export function divideBrowserHTMLTestSequence(items: BrowserHTMLPair[]) : BrowserHTMLPair[][]{
+    const filePathManagers: BrowserHTMLPair[][] = new Array();
     filePathManagers.push(new Array(0));
     items.forEach((v) => {
         const p = filePathManagers.length - 1;
@@ -328,13 +341,13 @@ export function divideBrowserHTMLTestSequence(items: BrowserHTMLTestInfo[]) : Br
     return filePathManagers;
 }
 
-export async function processBrowserHTMLTestSequences(items: BrowserHTMLTestInfo[][]) {
+export async function executeBrowserHTMLPairSequences(items: BrowserHTMLPair[][]) {
 
     const browserExecutionResults: BrowserExecutionResult[] = new Array();
 
     for (let i = 0; i < items.length; i++) {
         console.log(`Process: ${i}`)
-        const result = await processBrowserHTMLTestSequence(items[i]);
+        const result = await executeBrowserHTMLPairSequence(items[i]);
         result.forEach((v) => {
             browserExecutionResults.push(v);
         })

@@ -44,26 +44,38 @@ export function concatenatePaths(relativeDirPath1: string, relativeDirPath2: str
 function getAbusoluteOutputHTMLFolderPath(): string {
     return `${getAbsoluteDirectoryPath(outputRelativeDirPath)}/html`;
 }
+function getAbusoluteOutputNormalizedHTMLFolderPath(): string {
+    return `${getAbsoluteDirectoryPath(outputRelativeDirPath)}/normalized_html`;
+}
+
 function getAbusoluteOutputScreenShotFolderPath(): string {
     return `${getAbsoluteDirectoryPath(outputRelativeDirPath)}/screenshot`;
 }
 function getAbusoluteCorrectHTMLFolderPath(): string {
     return `${getAbsoluteDirectoryPath(correctOutputRelativeDirPath)}/html`;
 }
+function getAbusoluteCorrectNormalizedHTMLFolderPath(): string {
+    return `${getAbsoluteDirectoryPath(correctOutputRelativeDirPath)}/normalized_html`;
+}
+
 function getAbusoluteCorrectPNGFolderPath(): string {
     return `${getAbsoluteDirectoryPath(correctOutputRelativeDirPath)}/screenshot`;
 }
+
 export function tryCreateSaveFolders() {
 
     createDirectoryIfNotExist(getAbusoluteOutputHTMLFolderPath());
     createDirectoryIfNotExist(getAbusoluteOutputScreenShotFolderPath());
+    createDirectoryIfNotExist(getAbusoluteOutputNormalizedHTMLFolderPath());
 
     createDirectoryIfNotExist(getAbusoluteCorrectHTMLFolderPath());
     createDirectoryIfNotExist(getAbusoluteCorrectPNGFolderPath());
+    createDirectoryIfNotExist(getAbusoluteCorrectNormalizedHTMLFolderPath());
+
 }
 
 
-export class BrowserHTMLTestInfo {
+export class BrowserHTMLPair {
     dirPath: string = "";;
     filename: string = "";;
     browserName: BrowserNameType = "firefox";
@@ -105,6 +117,10 @@ export class BrowserHTMLTestInfo {
     public get outputHTMLPath(): string {
         return `${getAbusoluteOutputHTMLFolderPath()}/${this.dirPath}_${this.filenameWithoutExe}_${this.browserName}.html`;
     }
+    public get outputNormalizedHTMLPath(): string {
+        return `${getAbusoluteOutputNormalizedHTMLFolderPath()}/${this.dirPath}_${this.filenameWithoutExe}_${this.browserName}.log`;
+    }
+
     public get outputPNGPath(): string {
         return `${getAbusoluteOutputScreenShotFolderPath()}/${this.dirPath}_${this.filenameWithoutExe}_${this.browserName}.png`;
     }
@@ -113,6 +129,9 @@ export class BrowserHTMLTestInfo {
     }
     public get correctPNGPath(): string {
         return `${getAbusoluteCorrectPNGFolderPath()}/${this.dirPath}_${this.filenameWithoutExe}_${this.browserName}.png`;
+    }
+    public get correctNormalizedHTMLPath(): string {
+        return `${getAbusoluteCorrectNormalizedHTMLFolderPath()}/${this.dirPath}_${this.filenameWithoutExe}_${this.browserName}.log`;
     }
 
     public async loadOutputHTML(): Promise<string | null> {
@@ -173,8 +192,8 @@ export function createDirectories(info: DirectoryInfo) {
 
 }
 
-export function getFiles(currentRelativePath: string): BrowserHTMLTestInfo[] {
-    const r: BrowserHTMLTestInfo[] = new Array();
+export function getFiles(currentRelativePath: string): BrowserHTMLPair[] {
+    const r: BrowserHTMLPair[] = new Array();
     const fPath = concatenatePaths(exampleRelativeDirPath, currentRelativePath);
     const exampleCurrentAbsolutePath = getAbsoluteDirectoryPath(fPath);
     const files = fs.readdirSync(exampleCurrentAbsolutePath);
@@ -183,9 +202,9 @@ export function getFiles(currentRelativePath: string): BrowserHTMLTestInfo[] {
         return fs.statSync(filePath).isFile() && /.*\.html$/.test(file);
     })
     for (const vFileName of fileList) {
-        r.push(new BrowserHTMLTestInfo(currentRelativePath, vFileName, "firefox"));
-        r.push(new BrowserHTMLTestInfo(currentRelativePath, vFileName, "edge"));
-        r.push(new BrowserHTMLTestInfo(currentRelativePath, vFileName, "chromium"));
+        r.push(new BrowserHTMLPair(currentRelativePath, vFileName, "firefox"));
+        r.push(new BrowserHTMLPair(currentRelativePath, vFileName, "edge"));
+        r.push(new BrowserHTMLPair(currentRelativePath, vFileName, "chromium"));
 
 
 
