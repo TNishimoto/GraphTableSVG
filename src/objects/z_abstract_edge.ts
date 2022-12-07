@@ -15,7 +15,7 @@ import { NullError, UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
 import { IEdge } from "./i_object";
 import { HTMLFunctions } from "../html";
-import { LocalZObjectManager } from "./global_gobject_manager";
+import { GlobalZObjectManager, LocalZObjectManager } from "./global_gobject_manager";
 import { ObjectStableFlagName } from "./z_observer";
 //import { Direction } from "readline";
 
@@ -38,7 +38,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         path.setAttribute(AttributeNames.dataNameAttribute, DataName.Surface)
         this._svgSurface = path;
     }
-    public initializeSetBasicOption(source : SVGElement) {
+    public initializeSetBasicOption(source: SVGElement) {
         super.initializeSetBasicOption(source);
 
         const edgeColor = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke");
@@ -65,10 +65,10 @@ export class ZAbstractEdge extends ZObject implements IEdge {
 
         const beginVertex = ElementExtension._getAttribute(source, AttributeNames.beginVertex, true);
         const endVertex = ElementExtension._getAttribute(source, AttributeNames.endVertex, true);
-        if(beginVertex != null){
+        if (beginVertex != null) {
             this.beginVertexID = beginVertex;
         }
-        if(endVertex != null){
+        if (endVertex != null) {
             this.endVertexID = endVertex;
         }
 
@@ -146,7 +146,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         return degree;
     }
 
-    public get childrenStableFlag() : boolean{        
+    public get childrenStableFlag(): boolean {
         const b = this.svgPath.getAttribute(ObjectStableFlagName);
         return b == "true";
     }
@@ -186,11 +186,11 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         } else {
             this.svgGroup.setAttribute(AttributeNames.beginNodeName, v);
         }
-        
+
         const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
-        if(svgsvg != null){
-            const manager : LocalZObjectManager | undefined = (<any>svgsvg)._manager;
-            if(manager != undefined){
+        if (svgsvg != null) {
+            const manager: LocalZObjectManager | undefined = (<any>svgsvg)._manager;
+            if (manager != undefined) {
                 manager.registerBeginVertexID(this, v);
             }
         }
@@ -216,9 +216,9 @@ export class ZAbstractEdge extends ZObject implements IEdge {
             this.svgGroup.setAttribute(AttributeNames.endNodeName, v);
         }
         const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
-        if(svgsvg != null){
-            const manager : LocalZObjectManager | undefined = (<any>svgsvg)._manager;
-            if(manager != undefined){
+        if (svgsvg != null) {
+            const manager: LocalZObjectManager | undefined = (<any>svgsvg)._manager;
+            if (manager != undefined) {
                 manager.registerEndVertexID(this, v);
             }
         }
@@ -438,31 +438,31 @@ export class ZAbstractEdge extends ZObject implements IEdge {
     get beginConnectorType(): ConnectorType {
         const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.beginConnectorType);
         const type = ConnectorType.ToConnectorPosition(p);
-        if(type == ConnectorType.Auto){
-            if(this.graph != null){
-                const dir : Direction | null = (<any>this.graph).direction;
-                if(dir != null){
-                    if(dir == "up"){
+        if (type == ConnectorType.Auto) {
+            if (this.graph != null) {
+                const dir: Direction | null = (<any>this.graph).direction;
+                if (dir != null) {
+                    if (dir == "up") {
                         return ConnectorType.Top;
-                    }else if(dir == "left"){
+                    } else if (dir == "left") {
                         return ConnectorType.Left;
-                    }else if(dir == "right"){
+                    } else if (dir == "right") {
                         return ConnectorType.Right;
-                    }else{
+                    } else {
                         return ConnectorType.Bottom;
                     }
-                }else{
+                } else {
                     return type;
                 }
-            }else{
+            } else {
                 return type;
             }
-    
-        }else{
+
+        } else {
             return type;
         }
 
-        
+
     }
     /**
     開始接点の接続位置を設定します。
@@ -477,27 +477,27 @@ export class ZAbstractEdge extends ZObject implements IEdge {
     get endConnectorType(): ConnectorType {
         const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.endConnectorType);
         const type = ConnectorType.ToConnectorPosition(p);
-        if(type == ConnectorType.Auto){
-            if(this.graph != null){
-                const dir : Direction | null = (<any>this.graph).direction;
-                if(dir != null){
-                    if(dir == "up"){
+        if (type == ConnectorType.Auto) {
+            if (this.graph != null) {
+                const dir: Direction | null = (<any>this.graph).direction;
+                if (dir != null) {
+                    if (dir == "up") {
                         return ConnectorType.Bottom;
-                    }else if(dir == "left"){
+                    } else if (dir == "left") {
                         return ConnectorType.Right;
-                    }else if(dir == "right"){
+                    } else if (dir == "right") {
                         return ConnectorType.Left;
-                    }else{
+                    } else {
                         return ConnectorType.Top;
                     }
-                }else{
+                } else {
                     return type;
                 }
-            }else{
+            } else {
                 return type;
             }
-    
-        }else{
+
+        } else {
             return type;
         }
 
@@ -626,60 +626,69 @@ export class ZAbstractEdge extends ZObject implements IEdge {
 
     private tryUpdateConnectorWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
-        const oldBeginVertex = ZAbstractEdge.getConnectedVertexFromDic(this, true);
-        const oldEndVertex = ZAbstractEdge.getConnectedVertexFromDic(this, false);
-        if (this.beginVertex != oldBeginVertex) {
-            b = true;
-            if(!withUpdate){
-                Debugger.updateFlagLog(this, this.tryUpdateConnectorWithUpdateFlag, `this.beginVertex != oldBeginVertex`)
-                return b;
-            }
-            if (withUpdate) {
-                if (oldBeginVertex != null) {
-                    this.removeVertexEvent(oldBeginVertex);
-                    if (oldBeginVertex.outgoingEdges.indexOf(this) != -1) {
-                        oldBeginVertex.removeOutcomingEdge(this);
+
+        const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
+        if (svgsvg != null) {
+            const manager: LocalZObjectManager | undefined = (<any>svgsvg)._manager;
+            if (manager != null) {
+                const oldBeginVertexID = manager.getBeginVertexID(this);
+                const oldEndVertexID = manager.getEndVertexID(this);
+
+                if (this.beginVertexID != oldBeginVertexID) {
+                    b = true;
+
+                    if (!withUpdate) {
+                        Debugger.updateFlagLog(this, this.tryUpdateConnectorWithUpdateFlag, `this.beginVertex != oldBeginVertex`)
+                        return b;
+                    }
+                    if (withUpdate) {
+                        if (oldBeginVertexID != null) {
+                            const oldBeginVertex = ZObject.getObjectFromIDOrObjectID(oldBeginVertexID);
+                            if (oldBeginVertex != null && oldBeginVertex instanceof ZVertex) {
+                                this.removeVertexEvent(oldBeginVertex);
+                            }
+                        }
+
+                        if (this.beginVertex != null) {
+                            this.addVertexEvent(this.beginVertex);
+                        }
+
+                    }
+                }
+                if (this.endVertexID != oldEndVertexID) {
+                    b = true;
+                    if (!withUpdate) {
+                        Debugger.updateFlagLog(this, this.tryUpdateConnectorWithUpdateFlag, `this.endVertex != oldEndVertex`)
+                        return b;
+                    }
+
+                    if (withUpdate) {
+                        if (oldEndVertexID != null) {
+                            const oldEndVertex = ZObject.getObjectFromIDOrObjectID(oldEndVertexID);
+                            if (oldEndVertex != null && oldEndVertex instanceof ZVertex) {
+                                this.removeVertexEvent(oldEndVertex);
+
+                            }
+                        }
+
+                        if (this.endVertex != null) {
+                            this.addVertexEvent(this.endVertex);
+                        }
+
                     }
                 }
 
-                if (this.beginVertex != null) {
-                    this.addVertexEvent(this.beginVertex);
-                    if (this.beginVertex.outgoingEdges.indexOf(this) == -1) {
-                        this.beginVertex.insertOutcomingEdge(this);
-                    }
-                }
-                ZAbstractEdge.setConnectedVertexFromDic(this, true);
+
 
             }
+
         }
-        if (this.endVertex != oldEndVertex) {
-            b = true;
-            if(!withUpdate){
-                Debugger.updateFlagLog(this, this.tryUpdateConnectorWithUpdateFlag, `this.endVertex != oldEndVertex`)
-                return b;
-            }
 
-            if (withUpdate) {
-                if (oldEndVertex != null) {
-                    this.removeVertexEvent(oldEndVertex);
-                    if (oldEndVertex.incomingEdges.indexOf(this) != -1) {
-                        oldEndVertex.removeIncomingEdge(this);
-                    }
-                }
 
-                if (this.endVertex != null) {
-                    this.addVertexEvent(this.endVertex);
-                    if (this.endVertex.incomingEdges.indexOf(this) == -1) {
-                        this.endVertex.insertIncomingEdge(this);
-                    }
-                }
-                ZAbstractEdge.setConnectedVertexFromDic(this, false);
 
-            }
-        }
         return b;
     }
-    private tryUpdateDashArrayWithUpdateFlag(withUpdate: boolean) : boolean{
+    private tryUpdateDashArrayWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         this.hasConnectedObserverFunction = false;
         const dashStyle = this.msoDashStyle;
@@ -689,23 +698,23 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         this.hasConnectedObserverFunction = true;
         return b;
     }
-    private updateSurfaceWithUpdateFlag(withUpdate: boolean) : boolean{
+    private updateSurfaceWithUpdateFlag(withUpdate: boolean): boolean {
         let b = this.tryUpdateDashArrayWithUpdateFlag(withUpdate);
 
-        if(!withUpdate && b){
+        if (!withUpdate && b) {
             Debugger.updateFlagLog(this, this.updateSurfaceWithUpdateFlag, `${this.tryUpdateDashArrayWithUpdateFlag.name}`)
         }
-        
+
         if (this.markerStart != null) {
             var node = <SVGPolygonElement>this.markerStart.firstChild;
             if (this.lineColor != null) {
                 const fill = node.getAttribute("fill");
-                if(fill != this.lineColor){
+                if (fill != this.lineColor) {
                     b = true;
-                    
-                    if(withUpdate){
+
+                    if (withUpdate) {
                         node.setAttribute("fill", this.lineColor);
-                    }else{
+                    } else {
                         Debugger.updateFlagLog(this, this.updateSurfaceWithUpdateFlag, "fill != this.lineColor (markerStart)")
                         return b;
                     }
@@ -716,11 +725,11 @@ export class ZAbstractEdge extends ZObject implements IEdge {
             var node = <SVGPolygonElement>this.markerEnd.firstChild;
             if (this.lineColor != null) {
                 const fill = node.getAttribute("fill");
-                if(fill != this.lineColor){
+                if (fill != this.lineColor) {
                     b = true;
-                    if(withUpdate){
+                    if (withUpdate) {
                         node.setAttribute("fill", this.lineColor);
-                    }else{
+                    } else {
                         Debugger.updateFlagLog(this, this.updateSurfaceWithUpdateFlag, "fill != this.lineColor (markerEnd)")
                         return b;
                     }
@@ -731,20 +740,20 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         return b;
 
     }
-    private updateLocationWithUpdateFlag(withUpdate: boolean) : boolean {
+    private updateLocationWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         const [x1, y1] = this.beginConnectoPosition;
         const [x2, y2] = this.endConnectorPosition;
 
-        const equalFunc = (prevObj : [number, number][], newObj: [number, number][]) : boolean  =>{
-            if(prevObj.length != newObj.length){
+        const equalFunc = (prevObj: [number, number][], newObj: [number, number][]): boolean => {
+            if (prevObj.length != newObj.length) {
                 return false;
-            }else{
-                for(let i=0;i<prevObj.length;i++){
-                    if(!nearlyEqual(prevObj[i][0], newObj[i][0])){
+            } else {
+                for (let i = 0; i < prevObj.length; i++) {
+                    if (!nearlyEqual(prevObj[i][0], newObj[i][0])) {
                         return false;
                     }
-                    else if(!nearlyEqual(prevObj[i][1], newObj[i][1])){
+                    else if (!nearlyEqual(prevObj[i][1], newObj[i][1])) {
                         return false;
                     }
 
@@ -752,8 +761,8 @@ export class ZAbstractEdge extends ZObject implements IEdge {
             }
             return true;
         }
-        const arrayRound100 = (obj : [number, number][]) =>{
-            for(let i = 0;i<obj.length;i++){
+        const arrayRound100 = (obj: [number, number][]) => {
+            for (let i = 0; i < obj.length; i++) {
                 obj[i] = [round100(obj[i][0]), round100(obj[i][1])];
             }
         }
@@ -766,9 +775,9 @@ export class ZAbstractEdge extends ZObject implements IEdge {
             points.push([x2, y2]);
             arrayRound100(points);
 
-            if(!equalFunc(this.pathPoints, points)){
+            if (!equalFunc(this.pathPoints, points)) {
                 b = true;
-                if(withUpdate){
+                if (withUpdate) {
                     this.pathPoints = points;
                 }
             }
@@ -786,10 +795,10 @@ export class ZAbstractEdge extends ZObject implements IEdge {
             arrayRound100(points);
 
 
-            if(!equalFunc(this.pathPoints, points)){
+            if (!equalFunc(this.pathPoints, points)) {
                 b = true;
 
-                if(withUpdate){
+                if (withUpdate) {
                     this.pathPoints = points;
                 }
             }
@@ -804,21 +813,21 @@ export class ZAbstractEdge extends ZObject implements IEdge {
 
     public getUpdateFlag(): boolean {
         const b1 = super.getUpdateFlag();
-        if(b1){
+        if (b1) {
             Debugger.updateFlagLog(this, this.getUpdateFlag, `${super.getUpdateFlag.name}`)
         }
         const b2 = this.tryUpdateConnectorWithUpdateFlag(false);
-        if(b2){
+        if (b2) {
             Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.tryUpdateConnectorWithUpdateFlag.name}`)
         }
 
         const b3 = this.updateSurfaceWithUpdateFlag(false);
 
-        if(b3){
+        if (b3) {
             Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.updateSurfaceWithUpdateFlag.name}`)
         }
         const b4 = this.updateLocationWithUpdateFlag(false);
-        if(b4){
+        if (b4) {
             Debugger.updateFlagLog(this, this.getUpdateFlag, `${this.updateLocationWithUpdateFlag.name}`)
         }
 
@@ -1024,57 +1033,59 @@ export class ZAbstractEdge extends ZObject implements IEdge {
 
     }
     */
-   /*
-    protected updateLocation() {
-        const [x1, y1] = this.beginConnectoPosition;
-        const [x2, y2] = this.endConnectorPosition;
-        const points: [number, number][] = this.pathPoints;
-
-        if (this.edgeType == "elbow") {
-            const elbowPositions = this.elbowCalculator(x1, y1, this.beginConnectorType, x2, y2, this.endConnectorType);
-            while (points.length > 0) points.pop();
-            points.push([x1, y1]);
-            elbowPositions.forEach((v) => points.push(v));
-            points.push([x2, y2]);
-
-        } else if (this.edgeType == "curve") {
-
-        } else {
-            points[0] = [x1, y1];
-            points[points.length - 1] = [x2, y2];
-        }
-        if (points[0][0] == undefined) throw new UndefinedError();
-        this.pathPoints = points;
-
-    }
-    */
-    private static connectedBeginVertexDic: { [key: string]: string; } = {};
-    private static connectedEndVertexDic: { [key: string]: string; } = {};
-    public static getConnectedVertexFromDic(edge: ZAbstractEdge, isBegin: boolean): ZVertex | null {
-        const dic = isBegin ? ZAbstractEdge.connectedBeginVertexDic : ZAbstractEdge.connectedEndVertexDic;
-        if (edge.objectID in dic) {
-            const id = dic[edge.objectID];
-            const obj = ZObject.getObjectFromIDOrObjectID(id);
-            if (obj instanceof ZVertex) {
-                return obj;
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-    public static setConnectedVertexFromDic(edge: ZAbstractEdge, isBegin: boolean): void {
-        const dic = isBegin ? ZAbstractEdge.connectedBeginVertexDic : ZAbstractEdge.connectedEndVertexDic;
-        const id = isBegin ? edge.beginVertexID : edge.endVertexID;
-        if (id == null) {
-            if (edge.objectID in dic) {
-                delete dic[edge.objectID];
-            }
-        } else {
-            dic[edge.objectID] = id;
-        }
-    }
+    /*
+     protected updateLocation() {
+         const [x1, y1] = this.beginConnectoPosition;
+         const [x2, y2] = this.endConnectorPosition;
+         const points: [number, number][] = this.pathPoints;
+ 
+         if (this.edgeType == "elbow") {
+             const elbowPositions = this.elbowCalculator(x1, y1, this.beginConnectorType, x2, y2, this.endConnectorType);
+             while (points.length > 0) points.pop();
+             points.push([x1, y1]);
+             elbowPositions.forEach((v) => points.push(v));
+             points.push([x2, y2]);
+ 
+         } else if (this.edgeType == "curve") {
+ 
+         } else {
+             points[0] = [x1, y1];
+             points[points.length - 1] = [x2, y2];
+         }
+         if (points[0][0] == undefined) throw new UndefinedError();
+         this.pathPoints = points;
+ 
+     }
+     */
+    /*
+     private static connectedBeginVertexDic: { [key: string]: string; } = {};
+     private static connectedEndVertexDic: { [key: string]: string; } = {};
+     public static getConnectedVertexFromDic(edge: ZAbstractEdge, isBegin: boolean): ZVertex | null {
+         const dic = isBegin ? ZAbstractEdge.connectedBeginVertexDic : ZAbstractEdge.connectedEndVertexDic;
+         if (edge.objectID in dic) {
+             const id = dic[edge.objectID];
+             const obj = ZObject.getObjectFromIDOrObjectID(id);
+             if (obj instanceof ZVertex) {
+                 return obj;
+             } else {
+                 return null;
+             }
+         } else {
+             return null;
+         }
+     }
+     public static setConnectedVertexFromDic(edge: ZAbstractEdge, isBegin: boolean): void {
+         const dic = isBegin ? ZAbstractEdge.connectedBeginVertexDic : ZAbstractEdge.connectedEndVertexDic;
+         const id = isBegin ? edge.beginVertexID : edge.endVertexID;
+         if (id == null) {
+             if (edge.objectID in dic) {
+                 delete dic[edge.objectID];
+             }
+         } else {
+             dic[edge.objectID] = id;
+         }
+     }
+     */
     /*
     static constructAttributes(e: Element, removeAttributes: boolean = false, output: GOptions.ZAbstractEdgeAttributes = {}): GOptions.ZAbstractEdgeAttributes {
         ZObject.constructAttributes(e, removeAttributes, output, "center");

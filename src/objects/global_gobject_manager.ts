@@ -136,6 +136,24 @@ export class LocalZObjectManager {
         }    
 
     }
+    public getBeginVertexID(edge: IEdge) : string | null{
+        const objectID = edge.objectID;
+        const beginVertexID = this.beginVertexMapFromEdgeID.get(objectID);
+        if(beginVertexID == null || beginVertexID == undefined){
+            return null;
+        }else{
+            return beginVertexID;
+        }
+    }
+    public getEndVertexID(edge: IEdge) : string | null{
+        const objectID = edge.objectID;
+        const endVertexID = this.endVertexMapFromEdgeID.get(objectID);
+        if(endVertexID == null || endVertexID == undefined){
+            return null;
+        }else{
+            return endVertexID;
+        }
+    }
 
     public registerBeginVertexID(edge: IEdge, vertexID : string | null) {
         const objectID = edge.objectID;

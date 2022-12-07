@@ -151,87 +151,14 @@ export class ZVertex extends ZObject {
      * @param edge
      * @param insertIndex
      */
+    /*
     public insertOutcomingEdge(edge: ZAbstractEdge, insertIndex: number = this.outgoingEdges.length) {
-        const svgsvg = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
-        if(svgsvg != null){
-            const manager : LocalZObjectManager | undefined = (<any>svgsvg)._manager;
-            if(manager != undefined){
-                const arr = manager.getOutgoingEdges(this);
-                if(arr == null){
-                    return new Array(0);
-                }else{
-                    return arr.map((v) => <ZAbstractEdge>v);
-                }
-            }
-        }
         return new Array(0);
     }
-    /**
-     * 出辺を削除します。
-     * @param edge
-     */
-    public removeOutcomingEdge(edge: ZAbstractEdge) {
-        throw new Error("Error");
-        /*
-        const p = this.outgoingEdges.indexOf(edge);
-        if (p != null) {
-            const edges = this.outgoingEdges;
-            edges.splice(p, 1);
-            const newEdges = JSON.stringify(edges.map((v) => Number(v.objectID)));
-            this.svgGroup.setAttribute("outcoming-edges", newEdges);
-
-
-            if (edge.beginVertex == this) {
-                edge.beginVertex = null;
-            }
-        }
-        */
-    }
-    /**
-    * 入辺を挿入します。
-    * @param edge
-    * @param insertIndex
     */
-    public insertIncomingEdge(edge: ZAbstractEdge, insertIndex: number = this.incomingEdges.length) {
-        throw new Error("Error");
-        /*
-        const p = this.incomingEdges.indexOf(edge);
-        if (p != -1) {
-            throw new Error();
-        } else {
-            const edges = this.incomingEdges;
-            edges.splice(insertIndex, 0, edge);
-            const newEdges = JSON.stringify(edges.map((v) => Number(v.objectID)));
-
-            this.svgGroup.setAttribute("incoming-edges", newEdges);
-            if (edge.endVertex != this) {
-                edge.endVertex = this;
-            }
-        }
-        */
-    }
-    /**
-     * 入辺を削除します。
-     * @param edge
-     */
-    public removeIncomingEdge(edge: ZAbstractEdge) {
-        throw new Error("Error");
-        /*
-        const p = this.incomingEdges.indexOf(edge);
-        if (p != null) {
-            const edges = this.incomingEdges;
-            edges.splice(p, 1);
-            const newEdges = JSON.stringify(edges.map((v) => Number(v.objectID)));
-            this.svgGroup.setAttribute("incoming-edges", newEdges);
-
-
-            if (edge.endVertex == this) {
-                edge.endVertex = null;
-            }
-        }
-        */
-    }
     public dispose() {
+        
+        /*
         while (this.incomingEdges.length > 0) {
             this.removeIncomingEdge(this.incomingEdges[0]);
         }
@@ -239,6 +166,7 @@ export class ZVertex extends ZObject {
         while (this.outgoingEdges.length > 0) {
             this.removeOutcomingEdge(this.outgoingEdges[0]);
         }
+        */
 
     }
     /**
