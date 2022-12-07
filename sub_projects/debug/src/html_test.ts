@@ -1,4 +1,4 @@
-import { diffXML, DiffXMLResult } from "./diff_xml";
+import { diffNormalizedHTML, diffXML, DiffXMLResult } from "./diff_xml";
 import { BrowserNameType, BrowserHTMLPair, rightPadding } from "./file_manager"
 import { ErrorType } from "./playwright_lib";
 
@@ -70,14 +70,13 @@ export async function testHTML(file: BrowserHTMLPair): Promise<TestResult> {
     result.browserName = file.browserName;
 
     const outputHTML = await file.loadOutputHTML();
+    const outputNormalizedHTML = await file.loadOutputNormalizedHTML();
     if (outputHTML == null) throw new Error("Load Error");
-    const correctHTML = await file.loadcorrectHTML();
-    if (correctHTML == null) {
-        file.saveToCorrectHTML(outputHTML);
-        file.copyToCorrectPNG(file.outputPNGPath);
-        return result;
-    } else {
-        result.diffXMLResult = diffXML(correctHTML, outputHTML);
+    //const correctHTML = await file.loadcorrectHTML();
+    const correctNormalizedHTML = await file.loadcorrectNormalizedHTML();
+
+    if (correctNormalizedHTML != null && outputNormalizedHTML != null) {
+        result.diffXMLResult = diffNormalizedHTML(correctNormalizedHTML, outputNormalizedHTML);
         if (result.diffXMLResult.diffType == null) {
             console.log(`\x1b[42mOK: ${file.filename} \x1b[49m`)
             result.success = true;
@@ -87,7 +86,20 @@ export async function testHTML(file: BrowserHTMLPair): Promise<TestResult> {
             result.errorType = `TextMismatch`;
 
         }
+        /*
+        result.diffXMLResult = diffXML(correctHTML, outputHTML);
+        
+        */
         return result;
+
+    } else {
+        file.saveToCorrectHTML(outputHTML);
+        file.copyToCorrectPNG(file.outputPNGPath);
+        if(outputNormalizedHTML != null){
+            file.saveToCorrectNormalizedHTML(outputNormalizedHTML);
+        }
+        return result;
+
 
     }
 

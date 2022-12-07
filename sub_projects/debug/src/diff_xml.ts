@@ -260,6 +260,29 @@ export function normalize(xml: string): string[] {
     normalizeSub(xmlDoc.root, 0, r);
     return r;
 }
+export function diffNormalizedHTML(html1: string, html2: string) : DiffXMLResult{
+    const lines1 = html1.split("\n");
+    const lines2 = html2.split("\n");
+    const min = Math.min(lines1.length, lines2.length);
+    const r = new DiffXMLResult();
+
+    for(let i = 0;i< min;i++){
+        if(lines1[i] != lines2[i]){
+            r.content1 = `${i}: ${lines1[i]}`;
+            r.content2 = `${i}: ${lines2[i]}`;
+            r.diffType = "MismatchTextContent";            
+        }
+    }
+
+    if(lines1.length != lines2.length){
+        r.diffType = "Other";        
+    }else{
+        r.diffType = null;
+    }
+
+    return r;
+
+}
 
 export function diffXML(xml1: string, xml2: string): DiffXMLResult {
 

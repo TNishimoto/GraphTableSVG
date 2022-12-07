@@ -142,6 +142,15 @@ export class BrowserHTMLPair {
             return null;
         }
     }
+    public async loadOutputNormalizedHTML(): Promise<string | null> {
+        if (fs.existsSync(this.outputHTMLPath)) {
+            const html = await fs.readFileSync(this.outputNormalizedHTMLPath, 'utf-8');
+            return html;
+        } else {
+            return null;
+        }
+    }
+
     public async loadcorrectHTML(): Promise<string | null> {
         if (fs.existsSync(this.correctHTMLPath)) {
             const html = await fs.readFileSync(this.correctHTMLPath, 'utf-8');
@@ -150,6 +159,15 @@ export class BrowserHTMLPair {
             return null;
         }
     }
+    public async loadcorrectNormalizedHTML(): Promise<string | null> {
+        if (fs.existsSync(this.correctNormalizedHTMLPath)) {
+            const html = await fs.readFileSync(this.correctNormalizedHTMLPath, 'utf-8');
+            return html;
+        } else {
+            return null;
+        }
+    }
+
     public async saveToCorrectHTML(html: string) {
         await fs.writeFile(this.correctHTMLPath, html, (err) => {
             if (err) throw err;
@@ -159,6 +177,13 @@ export class BrowserHTMLPair {
     }
     public async copyToCorrectPNG(path: string) {
         fs.copyFileSync(path, this.correctPNGPath);
+    }
+    public async saveToCorrectNormalizedHTML(html: string) {
+        await fs.writeFile(this.correctNormalizedHTMLPath, html, (err) => {
+            if (err) throw err;
+            console.log(`Saved: ${this.correctNormalizedHTMLPath}`);
+        });
+
     }
 
 }
