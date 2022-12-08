@@ -143,7 +143,7 @@ export class BrowserHTMLPair {
         }
     }
     public async loadOutputNormalizedHTML(): Promise<string | null> {
-        if (fs.existsSync(this.outputHTMLPath)) {
+        if (fs.existsSync(this.outputNormalizedHTMLPath)) {
             const html = await fs.readFileSync(this.outputNormalizedHTMLPath, 'utf-8');
             return html;
         } else {

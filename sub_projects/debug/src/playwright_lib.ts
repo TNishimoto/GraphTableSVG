@@ -214,10 +214,9 @@ export async function saveOutputHTMLAndPNG(page: Page, browserName: BrowserNameT
     const b1 = !overwrite && fs.existsSync(htmlPath);
 
     if (!b1) {
-        await fs.writeFile(htmlPath, outputHTML, (err) => {
-            if (err) throw err;
-            console.log(`Saved: ${htmlPath}`);
-        });
+        await fs.writeFileSync(htmlPath, outputHTML);
+        console.log(`Saved: ${htmlPath}`);
+
     }
 
     const b2 = !overwrite && fs.existsSync(pngPath);
@@ -225,16 +224,15 @@ export async function saveOutputHTMLAndPNG(page: Page, browserName: BrowserNameT
     if (!b2) {
         await page.screenshot({ path: pngPath })
         console.log(`Saved: ${pngPath}`);
+
     }
 
     const b3 = !overwrite && fs.existsSync(normalizedHTMLPath);
     if(!b3){
         const lines = normalize(outputHTML);
         const normalizedHTML = lines.join("\n");
-        await fs.writeFile(normalizedHTMLPath, normalizedHTML, (err) => {
-            if (err) throw err;
-            console.log(`Saved: ${normalizedHTMLPath}`);
-        });
+        await fs.writeFileSync(normalizedHTMLPath, normalizedHTML);
+        console.log(`Saved: ${normalizedHTMLPath}`);
 
     }
 
@@ -318,9 +316,11 @@ export class BrowserExecutionResult {
 async function executeBrowserHTMLPairSequence(items: BrowserHTMLPair[]) : Promise<BrowserExecutionResult[]> {
     const results = await Promise.all(items.map(async (w) => {
         const dummy = BrowserExecutionResult.emulateHTML(w.absoluteFilePath, w.browserName, false, w.outputHTMLPath, w.outputPNGPath, w.outputNormalizedHTMLPath);
+        /*
         dummy.then((x) => {
             console.log(`${w.absoluteFilePath}: ${x.success}`)
         })
+        */
         return dummy;
     }))
     return results;
