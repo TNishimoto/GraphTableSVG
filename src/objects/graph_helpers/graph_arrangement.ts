@@ -4,7 +4,7 @@ import { ZVertex } from "../z_vertex"
 
 import { VirtualTree } from "./virtual_tree"
 
-import * as TreeArrangement from "./old_tree_arrangement"
+//import * as TreeArrangement from "./old_tree_arrangement"
 import { Direction, ConnectorType } from "../../common/enums"
 import * as SVGTextBox from "../../interfaces/svg_textbox"
 import { ZAbstractTextEdge } from "../z_abstract_text_edge"
@@ -12,8 +12,9 @@ import { getVirtualRegion } from "../../interfaces/virtual_text"
 import { createForestInLevelOrder } from "./virtual_tree_constructor"
 
 export namespace GraphArrangement {
+
     export function standardTreeWidthArrangement(graph: ZGraph): void {
-        const [xi, yi] = TreeArrangement.getXYIntervals(graph);
+        const [xi, yi] = graph.getXYIntervals();
         const direction = graph.direction == null ? "down" : graph.direction;
 
         const trees = createForestInLevelOrder(graph);
@@ -84,49 +85,50 @@ export namespace GraphArrangement {
         }
 
     }
-    function processIthChild(children: VirtualTree[], i : number, centerA : number, _a: number, aInterval: number, bInterval: number, childBInterval : number, direction: Direction) : [number, number]{
+    function processIthChild(children: VirtualTree[], i: number, centerA: number, _a: number, aInterval: number, bInterval: number, childBInterval: number, direction: Direction): [number, number] {
         const ithChildrenRect = children[i].region();
-        if(direction == "down" || direction == "up"){
+        const ratio = 2;
+        if (direction == "down" || direction == "up") {
             const diffX = children[i].root.cx - ithChildrenRect.x;
             let _x = _a;
             let _centerX = centerA;
-            
-            if(direction == "down"){
+
+            if (direction == "down") {
                 children[i].setRootLocation(_x + diffX, childBInterval);
-            }else{
+            } else {
                 children[i].setRootLocation(_x + diffX, -childBInterval);
             }
-            _x += ithChildrenRect.width + aInterval;
+            _x += ithChildrenRect.width + aInterval / ratio;
             if (i < children.length - 1) {
-                _centerX += _x - (aInterval / 2);
+                _centerX += _x - (aInterval / (2 * ratio));
             }
-            return [_centerX, _x];    
-        } else{
+            return [_centerX, _x];
+        } else {
             const diffY = children[i].root.cy - ithChildrenRect.y;
             let _y = _a;
             let _centerY = centerA;
-            
-            if(direction == "right"){
+
+            if (direction == "right") {
                 children[i].setRootLocation(childBInterval, _y + diffY);
-            }else{
+            } else {
                 children[i].setRootLocation(-childBInterval, _y + diffY);
             }
-            _y += ithChildrenRect.height + bInterval;
+            _y += ithChildrenRect.height + bInterval / ratio;
             if (i < children.length - 1) {
-                _centerY += _y - (bInterval / 2);
+                _centerY += _y - (bInterval / (2 * ratio));
             }
-            return [_centerY, _y];    
+            return [_centerY, _y];
 
         }
     }
-    function processChildren(subtreeRoot : ZVertex, children: VirtualTree[], centerA : number, direction : Direction) : number{
-        if(direction == "down" || direction == "up"){
+    function processChildren(subtreeRoot: ZVertex, children: VirtualTree[], centerA: number, direction: Direction): number {
+        if (direction == "down" || direction == "up") {
             centerA = centerA / (children.length - 1);
 
             subtreeRoot.cx = centerA;
             return centerA;
-    
-        }else{
+
+        } else {
             centerA = centerA / (children.length - 1);
 
             subtreeRoot.cy = centerA;
@@ -161,7 +163,7 @@ export namespace GraphArrangement {
                 [centerA, _a] = processIthChild(children, i, centerA, _a, xInterval, yInterval, childBInterval, direction);
             }
 
-            centerA = processChildren(tree.subTreeRoot, children, centerA, direction); 
+            centerA = processChildren(tree.subTreeRoot, children, centerA, direction);
             //= centerA / (children.length - 1);
             //tree.subTreeRoot.cx = centerA;
         }

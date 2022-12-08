@@ -169,20 +169,16 @@ export class BrowserHTMLPair {
     }
 
     public async saveToCorrectHTML(html: string) {
-        await fs.writeFile(this.correctHTMLPath, html, (err) => {
-            if (err) throw err;
-            console.log(`Saved: ${this.correctHTMLPath}`);
-        });
+        await fs.writeFileSync(this.correctHTMLPath, html);
+        console.log(`Saved: ${this.correctHTMLPath}`);
 
     }
     public async copyToCorrectPNG(path: string) {
         fs.copyFileSync(path, this.correctPNGPath);
     }
     public async saveToCorrectNormalizedHTML(html: string) {
-        await fs.writeFile(this.correctNormalizedHTMLPath, html, (err) => {
-            if (err) throw err;
-            console.log(`Saved: ${this.correctNormalizedHTMLPath}`);
-        });
+        await fs.writeFileSync(this.correctNormalizedHTMLPath, html);
+        console.log(`Saved: ${this.correctNormalizedHTMLPath}`);
 
     }
 

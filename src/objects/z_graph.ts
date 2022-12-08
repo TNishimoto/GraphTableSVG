@@ -352,6 +352,31 @@ export class ZGraph extends ZObject {
             this.y = this.y - (rect.y);
         }
     }
+    /**
+     * グラフ内のVertexからVertex間の水平間隔と垂直間隔を自動で算出します。
+     * @param graph 
+     */
+    private computeAutoXYIntervals(): [number, number] {
+        let yMaximalInterval = 10;
+        let xMaximalInterval = 10;
+        this.vertices.forEach((v) => {
+            if (v.width > xMaximalInterval) xMaximalInterval = v.width;
+            if (v.height > yMaximalInterval) yMaximalInterval = v.height;
+        })
+        return [xMaximalInterval + 30, yMaximalInterval + 30];
+    }
+    /**
+     * グラフに設定されているVertex間の水平間隔と垂直間隔を算出します。
+     * @param graph 
+     */
+    public getXYIntervals(): [number, number] {
+        const [xMaximalInterval, yMaximalInterval] = this.computeAutoXYIntervals();
+        const xi = this.vertexXInterval != null ? this.vertexXInterval : xMaximalInterval;
+        const yi = this.vertexYInterval != null ? this.vertexYInterval : yMaximalInterval;
+        return [xi, yi];
+    }
+
+
     /*
     public build(logicGraph: LogicGraph | LogicTree ) {
         const option = logicGraph.option;
