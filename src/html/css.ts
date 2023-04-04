@@ -29,14 +29,14 @@ function setupReplaceMapper() {
     replaceMapper.set("verticalAnchor", StyleNames.verticalAnchor);
     replaceMapper.set("horizontalAnchor", StyleNames.horizontalAnchor);
 
-    replaceMapper.set("beginConnectorType", StyleNames.beginConnectorType);
-    replaceMapper.set("endConnectorType", StyleNames.endConnectorType);
-    replaceMapper.set("startMarker", StyleNames.markerStart);
-    replaceMapper.set("endMarker", StyleNames.markerEnd);
+    replaceMapper.set("beginConnectorType", StyleNames.EdgeStyleNames.beginConnectorType);
+    replaceMapper.set("endConnectorType", StyleNames.EdgeStyleNames.endConnectorType);
+    replaceMapper.set("startMarker", StyleNames.EdgeStyleNames.markerStart);
+    replaceMapper.set("endMarker", StyleNames.EdgeStyleNames.markerEnd);
 
-    replaceMapper.set("edgeType", StyleNames.edgeType);
+    replaceMapper.set("edgeType", StyleNames.EdgeStyleNames.edgeType);
 
-    replaceMapper.set("pathTextAlignment", StyleNames.pathTextAlignment);
+    replaceMapper.set("pathTextAlignment", StyleNames.EdgeStyleNames.pathTextAlignment);
     replaceMapper.set("paddingTop", StyleNames.paddingTop);
     replaceMapper.set("paddingLeft", StyleNames.paddingLeft);
     replaceMapper.set("paddingRight", StyleNames.paddingRight);
@@ -181,7 +181,7 @@ export function createCSS(): string {
 
             }
             .${DefaultClassNames.defaultEdgeClass}{
-                ${StyleNames.pathTextAlignment}: center;
+                ${StyleNames.EdgeStyleNames.pathTextAlignment}: center;
             }
 
             .${DefaultClassNames.defaultSurfaceClass}{

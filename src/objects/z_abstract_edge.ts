@@ -47,8 +47,8 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         const strokeWidth2 = strokeWidth == null ? undefined : strokeWidth;
 
         const style = getComputedStyle(this.svgGroup);
-        const markerStart = style.getPropertyValue(StyleNames.markerStart);
-        const markerEnd = style.getPropertyValue(StyleNames.markerEnd);
+        const markerStart = style.getPropertyValue(StyleNames.EdgeStyleNames.markerStart);
+        const markerEnd = style.getPropertyValue(StyleNames.EdgeStyleNames.markerEnd);
 
         if (markerStart.length != 0) this.markerStart = ZAbstractEdge.createStartMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
         if (markerEnd.length != 0) this.markerEnd = ZAbstractEdge.createEndMarker({ color: edgeColor2, strokeWidth: strokeWidth2 });
@@ -112,7 +112,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
     }
     */
     get edgeType(): EdgeType {
-        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.edgeType, "none");
+        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.EdgeStyleNames.edgeType, "none");
         if (b == "straight") {
             return "straight";
         } else if (b == "elbow") {
@@ -133,7 +133,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
 
 
     set edgeType(value: EdgeType) {
-        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.edgeType, value);
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.EdgeStyleNames.edgeType, value);
         //this.svgGroup.setPropertyStyleValue(AttributeNames.Style.autoSizeShapeToFitText, value ? "true" : "false");
     }
 
@@ -257,11 +257,11 @@ export class ZAbstractEdge extends ZObject implements IEdge {
      * この辺のテキストがパスに沿って均等に描画される状態ならばTrueを返します。
      */
     public get pathTextAlignment(): PathTextAlighnment {
-        const value = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.pathTextAlignment, "center");
+        const value = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.EdgeStyleNames.pathTextAlignment, "center");
         return PathTextAlighnment.toPathTextAlighnment(value);
     }
     public set pathTextAlignment(value: PathTextAlighnment) {
-        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.pathTextAlignment, value);
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.EdgeStyleNames.pathTextAlignment, value);
     }
     protected get pathPoints(): [number, number][] {
         const dAttr = this.svgPath.getAttribute("d");
@@ -432,11 +432,13 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         this.pathPoints = p;
     }
 
+
+
     /**
     開始接点の接続位置を返します。
     */
     get beginConnectorType(): ConnectorType {
-        const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.beginConnectorType);
+        const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.EdgeStyleNames.beginConnectorType);
         const type = ConnectorType.ToConnectorPosition(p);
         if (type == ConnectorType.Auto) {
             if (this.graph != null) {
@@ -468,14 +470,14 @@ export class ZAbstractEdge extends ZObject implements IEdge {
     開始接点の接続位置を設定します。
     */
     set beginConnectorType(value: ConnectorType) {
-        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.beginConnectorType, value)
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.EdgeStyleNames.beginConnectorType, value)
         //this.svgGroup.setAttribute(Edge.beginConnectorTypeName, ToStrFromConnectorPosition(value));
     }
     /**
     終了接点の接続位置を返します。
     */
     get endConnectorType(): ConnectorType {
-        const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.endConnectorType);
+        const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.EdgeStyleNames.endConnectorType);
         const type = ConnectorType.ToConnectorPosition(p);
         if (type == ConnectorType.Auto) {
             if (this.graph != null) {
@@ -506,7 +508,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
     終了接点の接続位置を設定します。
     */
     set endConnectorType(value: ConnectorType) {
-        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.endConnectorType, value)
+        ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.EdgeStyleNames.endConnectorType, value)
     }
 
 

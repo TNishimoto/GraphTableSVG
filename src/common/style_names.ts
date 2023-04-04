@@ -1,9 +1,5 @@
 export const autoSizeShapeToFitText: string = "--autosize-shape-to-fit-text"
 
-export const beginConnectorType: string = "--begin-connector-type";
-export const endConnectorType: string = "--end-connector-type";
-export const markerStart: string = "--marker-start";
-export const markerEnd: string = "--marker-end";
 
 export namespace GraphStyleNames{
     export const vertexXInterval: string = "--vertex-x-interval";
@@ -29,11 +25,24 @@ export const marginBottom: string = "--margin-bottom";
 
 export const verticalAnchor: string = "--vertical-anchor";
 export const horizontalAnchor: string = "--horizontal-anchor";
-export const pathTextAlignment: string = "--path-text-alignment";
 export const msoDashStyleName = "--stroke-style";
 export const relocateName = "--relocate";
 export const prohibitionOutOfRange: string = "--prohibition-out-of-range";
-export const edgeType: string = "--edge-type";
+
+
+export namespace EdgeStyleNames{
+    export const edgeType: string = "--edge-type";
+    export const readableText: string = "--readable-text";
+    export const markerStart: string = "--marker-start";
+    export const markerEnd: string = "--marker-end";
+    export const beginConnectorType: string = "--begin-connector-type";
+    export const endConnectorType: string = "--end-connector-type";
+    export const pathTextAlignment: string = "--path-text-alignment";
+        
+}
+
+
+
 
 //export const defaultLineClass: string = "--default-line-class";
 //export const defaultVertexClass: string = "--default-vertex-class";
