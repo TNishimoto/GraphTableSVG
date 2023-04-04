@@ -65,7 +65,7 @@ function middle(items: number[]): number {
  */
 export function alignVerticeByChildren(graph: ZGraph): void {
     if (!graph.isShown) return;
-    const [xi, yi] = getXYIntervals(graph);
+    const [xi, yi] = graph.getXYIntervals();
 
     if (graph.rootVertex != null) {
         const rootTree = graph.rootVertex.createVirtualTree();
@@ -103,29 +103,7 @@ function alignVerticeByChildrenSub(tree: VirtualTree, xInterval: number, yInterv
 
 }
 
-/**
- * グラフ内のVertexからVertex間の水平間隔と垂直間隔を自動で算出します。
- * @param graph 
- */
-function computeAutoXYIntervals(graph: ZGraph): [number, number] {
-    let yMaximalInterval = 10;
-    let xMaximalInterval = 10;
-    graph.vertices.forEach((v) => {
-        if (v.width > xMaximalInterval) xMaximalInterval = v.width;
-        if (v.height > yMaximalInterval) yMaximalInterval = v.height;
-    })
-    return [xMaximalInterval * 2, yMaximalInterval * 2];
-}
-/**
- * グラフに設定されているVertex間の水平間隔と垂直間隔を算出します。
- * @param graph 
- */
-export function getXYIntervals(graph: ZGraph): [number, number] {
-    const [xMaximalInterval, yMaximalInterval] = computeAutoXYIntervals(graph);
-    const xi = graph.vertexXInterval != null ? graph.vertexXInterval : xMaximalInterval;
-    const yi = graph.vertexYInterval != null ? graph.vertexYInterval : yMaximalInterval;
-    return [xi, yi];
-}
+
 /**
  * グラフ内の森を並べます。最初の木が内接する四角形の左上の座標は[0,0]です。
  * @param graph 
@@ -187,7 +165,7 @@ export function alignVerticeByLeave(graph: ZGraph): void {
     if (!graph.isShown) return;
 
     graph.vertices.forEach((v) => { v.cx = 0; v.cy = 0 });
-    const [xi, yi] = getXYIntervals(graph);
+    const [xi, yi] = graph.getXYIntervals();
     alignVerticeByLeaveSub(graph, xi, yi);
     reverse(graph, false, true);
     //alignTrees(graph);
@@ -203,7 +181,7 @@ export function standardTreeWidthArrangement(graph: ZGraph): void {
     //const xInterval = graph.vertexXInterval;
     //const yInterval = graph.vertexYInterval;
 
-    const [xi, yi] = getXYIntervals(graph);
+    const [xi, yi] = graph.getXYIntervals();
 
     if (graph.rootVertex != null) {
         const rootTree = graph.rootVertex.createVirtualTree();

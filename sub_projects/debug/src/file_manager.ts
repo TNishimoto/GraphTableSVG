@@ -44,26 +44,38 @@ export function concatenatePaths(relativeDirPath1: string, relativeDirPath2: str
 function getAbusoluteOutputHTMLFolderPath(): string {
     return `${getAbsoluteDirectoryPath(outputRelativeDirPath)}/html`;
 }
+function getAbusoluteOutputNormalizedHTMLFolderPath(): string {
+    return `${getAbsoluteDirectoryPath(outputRelativeDirPath)}/normalized_html`;
+}
+
 function getAbusoluteOutputScreenShotFolderPath(): string {
     return `${getAbsoluteDirectoryPath(outputRelativeDirPath)}/screenshot`;
 }
 function getAbusoluteCorrectHTMLFolderPath(): string {
     return `${getAbsoluteDirectoryPath(correctOutputRelativeDirPath)}/html`;
 }
+function getAbusoluteCorrectNormalizedHTMLFolderPath(): string {
+    return `${getAbsoluteDirectoryPath(correctOutputRelativeDirPath)}/normalized_html`;
+}
+
 function getAbusoluteCorrectPNGFolderPath(): string {
     return `${getAbsoluteDirectoryPath(correctOutputRelativeDirPath)}/screenshot`;
 }
+
 export function tryCreateSaveFolders() {
 
     createDirectoryIfNotExist(getAbusoluteOutputHTMLFolderPath());
     createDirectoryIfNotExist(getAbusoluteOutputScreenShotFolderPath());
+    createDirectoryIfNotExist(getAbusoluteOutputNormalizedHTMLFolderPath());
 
     createDirectoryIfNotExist(getAbusoluteCorrectHTMLFolderPath());
     createDirectoryIfNotExist(getAbusoluteCorrectPNGFolderPath());
+    createDirectoryIfNotExist(getAbusoluteCorrectNormalizedHTMLFolderPath());
+
 }
 
 
-export class FilePathManager {
+export class BrowserHTMLPair {
     dirPath: string = "";;
     filename: string = "";;
     browserName: BrowserNameType = "firefox";
@@ -105,6 +117,10 @@ export class FilePathManager {
     public get outputHTMLPath(): string {
         return `${getAbusoluteOutputHTMLFolderPath()}/${this.dirPath}_${this.filenameWithoutExe}_${this.browserName}.html`;
     }
+    public get outputNormalizedHTMLPath(): string {
+        return `${getAbusoluteOutputNormalizedHTMLFolderPath()}/${this.dirPath}_${this.filenameWithoutExe}_${this.browserName}.log`;
+    }
+
     public get outputPNGPath(): string {
         return `${getAbusoluteOutputScreenShotFolderPath()}/${this.dirPath}_${this.filenameWithoutExe}_${this.browserName}.png`;
     }
@@ -113,6 +129,9 @@ export class FilePathManager {
     }
     public get correctPNGPath(): string {
         return `${getAbusoluteCorrectPNGFolderPath()}/${this.dirPath}_${this.filenameWithoutExe}_${this.browserName}.png`;
+    }
+    public get correctNormalizedHTMLPath(): string {
+        return `${getAbusoluteCorrectNormalizedHTMLFolderPath()}/${this.dirPath}_${this.filenameWithoutExe}_${this.browserName}.log`;
     }
 
     public async loadOutputHTML(): Promise<string | null> {
@@ -123,6 +142,15 @@ export class FilePathManager {
             return null;
         }
     }
+    public async loadOutputNormalizedHTML(): Promise<string | null> {
+        if (fs.existsSync(this.outputNormalizedHTMLPath)) {
+            const html = await fs.readFileSync(this.outputNormalizedHTMLPath, 'utf-8');
+            return html;
+        } else {
+            return null;
+        }
+    }
+
     public async loadcorrectHTML(): Promise<string | null> {
         if (fs.existsSync(this.correctHTMLPath)) {
             const html = await fs.readFileSync(this.correctHTMLPath, 'utf-8');
@@ -131,15 +159,27 @@ export class FilePathManager {
             return null;
         }
     }
+    public async loadcorrectNormalizedHTML(): Promise<string | null> {
+        if (fs.existsSync(this.correctNormalizedHTMLPath)) {
+            const html = await fs.readFileSync(this.correctNormalizedHTMLPath, 'utf-8');
+            return html;
+        } else {
+            return null;
+        }
+    }
+
     public async saveToCorrectHTML(html: string) {
-        await fs.writeFile(this.correctHTMLPath, html, (err) => {
-            if (err) throw err;
-            console.log(`Saved: ${this.correctHTMLPath}`);
-        });
+        await fs.writeFileSync(this.correctHTMLPath, html);
+        console.log(`Saved: ${this.correctHTMLPath}`);
 
     }
     public async copyToCorrectPNG(path: string) {
         fs.copyFileSync(path, this.correctPNGPath);
+    }
+    public async saveToCorrectNormalizedHTML(html: string) {
+        await fs.writeFileSync(this.correctNormalizedHTMLPath, html);
+        console.log(`Saved: ${this.correctNormalizedHTMLPath}`);
+
     }
 
 }
@@ -173,8 +213,8 @@ export function createDirectories(info: DirectoryInfo) {
 
 }
 
-export function getFiles(currentRelativePath: string): FilePathManager[] {
-    const r: FilePathManager[] = new Array();
+export function getFiles(currentRelativePath: string): BrowserHTMLPair[] {
+    const r: BrowserHTMLPair[] = new Array();
     const fPath = concatenatePaths(exampleRelativeDirPath, currentRelativePath);
     const exampleCurrentAbsolutePath = getAbsoluteDirectoryPath(fPath);
     const files = fs.readdirSync(exampleCurrentAbsolutePath);
@@ -183,9 +223,9 @@ export function getFiles(currentRelativePath: string): FilePathManager[] {
         return fs.statSync(filePath).isFile() && /.*\.html$/.test(file);
     })
     for (const vFileName of fileList) {
-        r.push(new FilePathManager(currentRelativePath, vFileName, "firefox"));
-        r.push(new FilePathManager(currentRelativePath, vFileName, "edge"));
-        r.push(new FilePathManager(currentRelativePath, vFileName, "chromium"));
+        r.push(new BrowserHTMLPair(currentRelativePath, vFileName, "firefox"));
+        r.push(new BrowserHTMLPair(currentRelativePath, vFileName, "edge"));
+        r.push(new BrowserHTMLPair(currentRelativePath, vFileName, "chromium"));
 
 
 

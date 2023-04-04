@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Edge Example</title>
+    <script src="../../scripts/graph_table_svg.js"></script>
+    <script>
+        window.onload = () => {
+            GraphTableSVG.Options.openSVG();
+            /* This comment is a landmark for data processing. */
+        };
+    </script>
+</head>
+
+<body>
+    <svg id="main" width="600px" height="600px" xmlns="http://www.w3.org/2000/svg"
+        style="background:#e9e9e9;border:solid 1pt;">
+        <z-ellipse id="v1" cx="300" cy="300">v1</z-ellipse>
+        <z-ellipse id="v2" cx="300" cy="100">v2</z-ellipse>
+        <z-ellipse id="v3" cx="500" cy="100">v3</z-ellipse>
+        <z-ellipse id="v4" cx="500" cy="300">v4</z-ellipse>
+        <z-ellipse id="v5" cx="500" cy="500">v5</z-ellipse>
+        <z-ellipse id="v6" cx="300" cy="500">v6</z-ellipse>
+        <z-ellipse id="v7" cx="100" cy="500">v7</z-ellipse>
+        <z-ellipse id="v8" cx="100" cy="300">v8</z-ellipse>
+        <z-ellipse id="v9" cx="100" cy="100">v9</z-ellipse>
+
+        <z-edge begin-vertex="v1" end-vertex="v2">Hello World 1</z-edge>
+        <z-edge begin-vertex="v1" end-vertex="v3">Hello World 2</z-edge>
+        <z-edge begin-vertex="v1" end-vertex="v4">Hello World 3</z-edge>
+        <z-edge begin-vertex="v1" end-vertex="v5">Hello World 4</z-edge>
+        <z-edge begin-vertex="v1" end-vertex="v6">Hello World 5</z-edge>
+        <z-edge begin-vertex="v1" end-vertex="v7">Hello World 6</z-edge>
+        <z-edge begin-vertex="v1" end-vertex="v8">Hello World 7</z-edge>
+        <z-edge begin-vertex="v1" end-vertex="v9">Hello World 8</z-edge>
+
+    </svg>
+    <button onclick="GraphTableSVG.Options.createMacroModalFromID('graph')">VBA</button </body>
+
+</html>

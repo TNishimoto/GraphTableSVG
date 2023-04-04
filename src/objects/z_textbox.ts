@@ -6,7 +6,7 @@ import { VBATranslateFunctions } from "../common/vba_functions"
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names"
 import * as DefaultClassNames from "../common/default_class_names"
-import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor, DataName } from "../common/enums";
+import { ShapeObjectType, msoDashStyle, HorizontalAnchor, VerticalAnchor, DataName, ShapeToFitType } from "../common/enums";
 import { Rectangle, PositionType, round100, nearlyEqual } from "../common/vline"
 import * as HTMLFunctions from "../html/html_functions"
 import * as SVGTextBox from "../interfaces/svg_textbox"
@@ -225,13 +225,13 @@ export class ZTextBox extends ZVertex {
      * このVertexがテキストに合わせてサイズを変える場合Trueを返します。
      */
     get isAutoSizeShapeToFitText(): AutoSizeShapeToFitText {
-        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.autoSizeShapeToFitText, "semi-auto");
-        if (b == "auto") {
-            return "auto";
-        } else if (b == "semi-auto") {
-            return "semi-auto";
+        const b = ElementExtension.getPropertyStyleValueWithDefault(this.svgGroup, StyleNames.autoSizeShapeToFitText, ShapeToFitType.SemiAuto );
+        if (b == ShapeToFitType.Auto) {
+            return ShapeToFitType.Auto;
+        } else if (b == ShapeToFitType.SemiAuto) {
+            return ShapeToFitType.SemiAuto;
         } else {
-            return "none";
+            return ShapeToFitType.None;
         }
         /*
         if (b == undefined) {

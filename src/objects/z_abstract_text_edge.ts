@@ -75,7 +75,23 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
             ZObject.setSubAttributes(this.svgText, source);
         }
     }
+    public get readableTextFlag() : boolean {
+        const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.EdgeStyleNames.readableText);
+        if(p == "true"){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public set readableTextFlag(value : boolean) {
+        if(value){
+            ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.EdgeStyleNames.beginConnectorType, "true");
+        }else{
+            ElementExtension.setPropertyStyleValue(this.svgGroup, StyleNames.EdgeStyleNames.beginConnectorType, "false");
 
+        }
+
+    }
 
     /*
     protected setBasicOption(option: GOptions.ZAbstractTextEdgeAttributes) {
@@ -371,9 +387,56 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
             Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `${this.tryUpdatePathOffsetWithUpdateFlag.name}`)
         }
 
-        return b1 || b2;
+        const b3 = this.tryUpdateRotateAttributeWithUpdateFlag(withUpdate);
+        if(!withUpdate && b3){
+            Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `${this.tryUpdatePathOffsetWithUpdateFlag.name}`)
+        }
+
+        return b1 || b2 || b3;
 
     }
+    protected tryUpdateRotateAttributeWithUpdateFlag(withUpdate: boolean): boolean {
+        let b = false;
+        if(this.readableTextFlag){
+            const rotateAttr = this.svgText.getAttribute("rotate");
+            const oldRotate = rotateAttr == null ? 0 : parseInt(rotateAttr); 
+            const degree = this.degree;
+            if (degree < -90 || degree > 90) {
+                if(oldRotate != 180){
+                    b = true;
+                    if(withUpdate){
+                        this.svgText.setAttribute("rotate", "180");
+                    }else{
+                        Debugger.updateFlagLog(this, this.tryUpdateDYWithUpdateFlag, `oldRotate != newRotate`);
+                        return b;
+                    }    
+                }                
+            } else {
+                if(oldRotate != 0){
+                    b = true;
+                    if(withUpdate){
+                        this.svgText.setAttribute("rotate", "0");
+                    }else{
+                        Debugger.updateFlagLog(this, this.tryUpdateDYWithUpdateFlag, `oldRotate != newRotate`);
+                        return b;
+                    }    
+                }
+            }
+        }else{
+            
+            if(this.svgText.hasAttribute("rotate")){
+                b = true;
+                if(withUpdate){
+                    this.svgText.removeAttribute("rotate");
+                }else{
+                    Debugger.updateFlagLog(this, this.tryUpdateDYWithUpdateFlag, `oldRotate != newRotate`);
+                    return b;
+                }
+            }
+        }
+        return b;
+    }
+
     protected tryUpdateDYWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
         const strokeWidth = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke-width");

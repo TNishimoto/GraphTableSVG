@@ -1,11 +1,14 @@
-import { getFiles, createDirectories, tryCreateSaveFolders, FilePathManager, outputLog } from "./file_manager"
-import { playwrightTest } from "./playwright_test"
+import { getFiles, createDirectories, tryCreateSaveFolders, BrowserHTMLPair, outputLog } from "./file_manager"
+import { executeBrowserHTMLPairSequences, divideBrowserHTMLTestSequence } from "./playwright_lib"
 import { diffTestAll } from "./html_test";
 const fs = require("fs");
 
 
-async function ptest(files: FilePathManager[]) {
-  const results = playwrightTest(files);
+async function ptest(files: BrowserHTMLPair[]) {
+
+  const browserHTMLTestSequences: BrowserHTMLPair[][] = divideBrowserHTMLTestSequence(files);
+
+  const results = executeBrowserHTMLPairSequences(browserHTMLTestSequences);
   results.then((v) => {
     console.log("END");
 
@@ -43,9 +46,9 @@ if (process.argv.length == 4) {
   //const files = getFiles("");
   //files.forEach((v) => createDirectories({dirPath : v.dirPath, fileName : v.filename}));
 
-  const firefox = new FilePathManager(relativePath, fileName, "firefox");
-  const chromium = new FilePathManager(relativePath, fileName, "chromium");
-  const edge = new FilePathManager(relativePath, fileName, "edge");
+  const firefox = new BrowserHTMLPair(relativePath, fileName, "firefox");
+  const chromium = new BrowserHTMLPair(relativePath, fileName, "chromium");
+  const edge = new BrowserHTMLPair(relativePath, fileName, "edge");
   ptest([firefox, chromium, edge]);
 
 

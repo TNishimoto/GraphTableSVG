@@ -21,7 +21,7 @@ export function registerGObject(svgsvg: SVGSVGElement, obj: IObject) {
     }
 }
 */
-export function textObserveTimer(manager: LocalGObjectManager) {
+export function textObserveTimer(manager: LocalZObjectManager) {
     manager.map.forEach((value: IObject, key) => {
         const x = <any>value;
 
@@ -41,7 +41,7 @@ export function textObserveTimer(manager: LocalGObjectManager) {
 export function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
     updateSVGSVGTimerCounter++;
     const manager = (<any>svgsvg)._manager;
-    if (manager instanceof LocalGObjectManager) {
+    if (manager instanceof LocalZObjectManager) {
         textObserveTimer(manager);
 
         manager.map.forEach((value: IObject, key) => {
@@ -63,7 +63,7 @@ export function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
     setTimeout(updateSVGSVGTimer, timerInterval, svgsvg);
 }
 
-export class LocalGObjectManager {
+export class LocalZObjectManager {
     public map: Map<string, IObject> = new Map();
     public svgsvgElement: SVGSVGElement;
     private incomingEdgeMapFromVertexID: Map<string, IEdge[]> = new Map();
@@ -136,6 +136,24 @@ export class LocalGObjectManager {
         }    
 
     }
+    public getBeginVertexID(edge: IEdge) : string | null{
+        const objectID = edge.objectID;
+        const beginVertexID = this.beginVertexMapFromEdgeID.get(objectID);
+        if(beginVertexID == null || beginVertexID == undefined){
+            return null;
+        }else{
+            return beginVertexID;
+        }
+    }
+    public getEndVertexID(edge: IEdge) : string | null{
+        const objectID = edge.objectID;
+        const endVertexID = this.endVertexMapFromEdgeID.get(objectID);
+        if(endVertexID == null || endVertexID == undefined){
+            return null;
+        }else{
+            return endVertexID;
+        }
+    }
 
     public registerBeginVertexID(edge: IEdge, vertexID : string | null) {
         const objectID = edge.objectID;
@@ -197,20 +215,20 @@ export class LocalGObjectManager {
 
 }
 
-export class GlobalGObjectManager {
+export class GlobalZObjectManager {
     //static items : LocalGObjectManager[] = new Array();
-    public static getLocalGobjectManager(svgsvg: SVGSVGElement): LocalGObjectManager | null {
+    public static getLocalGobjectManager(svgsvg: SVGSVGElement): LocalZObjectManager | null {
         const p = <any>svgsvg;
         if (p._manager != undefined) {
-            return <LocalGObjectManager>p._manager;
+            return <LocalZObjectManager>p._manager;
         } else {
             return null;
         }
     }
-    public static tryRegisterSVGSVGElement(svgsvg: SVGSVGElement): LocalGObjectManager {
+    public static tryRegisterSVGSVGElement(svgsvg: SVGSVGElement): LocalZObjectManager {
         const p = <any>svgsvg;
         if (p._manager == undefined) {
-            p._manager = new LocalGObjectManager(p);
+            p._manager = new LocalZObjectManager(p);
             return p._manager;
         } else {
             return p._manager;

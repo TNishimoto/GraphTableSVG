@@ -29,7 +29,7 @@ import { GOptions } from ".."
 import * as GObserver from "../z_observer"
 import { getSVGSVGAncestor } from "../../html/html_functions"
 import {ITextBox} from "../i_object"
-import { GlobalGObjectManager } from "../global_gobject_manager"
+import { GlobalZObjectManager } from "../global_gobject_manager"
 
 //import { LogicCell } from "../logic/logic_cell"
 
@@ -99,7 +99,7 @@ export class Cell implements ITextBox {
 
         const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
         if(svgsvgAncestor != null){       
-            const xb = GlobalGObjectManager.tryRegisterSVGSVGElement(svgsvgAncestor);
+            const xb = GlobalZObjectManager.tryRegisterSVGSVGElement(svgsvgAncestor);
             xb.registerObject(this);     
         }
 

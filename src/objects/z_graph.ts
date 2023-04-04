@@ -206,17 +206,7 @@ export class ZGraph extends ZObject {
             this.remove(this.vertices[0]);
         }
     }
-    /**
-            * 与えられた二つの頂点と辺を接続します。
-            * @param beginVertex 開始節
-            * @param edge 接続する辺
-            * @param endVertex 終了節
-            * @param option 接続オプション
-            * @param option.incomingInsertIndex endVertexのincomingEdgeの配列に今回の辺をどの位置に挿入するか
-            * @param option.outcomingInsertIndex beginVertexのoutcomingEdgeの配列に今回の辺をどの位置に挿入するか
-            * @param option.beginConnectorType beginVertexの接続位置
-            * @param option.endConnectorType endVertexの接続位置
-            */
+    /*
     public connect(beginVertex: ZVertex, edge: ZEdge, endVertex: ZVertex, option: GOptions.ConnecterOption = {}) {
 
         const oIndex = option.outcomingInsertIndex == undefined ? beginVertex.outgoingEdges.length : option.outcomingInsertIndex;
@@ -238,6 +228,7 @@ export class ZGraph extends ZObject {
         if (option.beginConnectorType != undefined) edge.beginConnectorType = option.beginConnectorType;
         if (option.endConnectorType != undefined) edge.endConnectorType = option.endConnectorType;
     }
+    */
     public getOrderedVertices(order: VertexOrder, node: ZVertex | null = null): ZVertex[] {
         const r: ZVertex[] = [];
         if (node == null) {
@@ -361,6 +352,31 @@ export class ZGraph extends ZObject {
             this.y = this.y - (rect.y);
         }
     }
+    /**
+     * グラフ内のVertexからVertex間の水平間隔と垂直間隔を自動で算出します。
+     * @param graph 
+     */
+    private computeAutoXYIntervals(): [number, number] {
+        let yMaximalInterval = 10;
+        let xMaximalInterval = 10;
+        this.vertices.forEach((v) => {
+            if (v.width > xMaximalInterval) xMaximalInterval = v.width;
+            if (v.height > yMaximalInterval) yMaximalInterval = v.height;
+        })
+        return [xMaximalInterval + 30, yMaximalInterval + 30];
+    }
+    /**
+     * グラフに設定されているVertex間の水平間隔と垂直間隔を算出します。
+     * @param graph 
+     */
+    public getXYIntervals(): [number, number] {
+        const [xMaximalInterval, yMaximalInterval] = this.computeAutoXYIntervals();
+        const xi = this.vertexXInterval != null ? this.vertexXInterval : xMaximalInterval;
+        const yi = this.vertexYInterval != null ? this.vertexYInterval : yMaximalInterval;
+        return [xi, yi];
+    }
+
+
     /*
     public build(logicGraph: LogicGraph | LogicTree ) {
         const option = logicGraph.option;

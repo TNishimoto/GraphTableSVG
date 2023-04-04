@@ -1,5 +1,7 @@
 import { webkit, firefox, chromium, ElementHandle, Locator, Page } from 'playwright'
-import { BrowserNameType, FilePathManager } from "./file_manager"
+import { BrowserNameType, BrowserHTMLPair } from "./file_manager"
+import { normalize } from "./diff_xml"
+
 import * as fs from 'fs';
 
 export type ErrorType = 'TextMismatch' | 'TimeoutError' | 'UnexpectedError';
@@ -27,9 +29,9 @@ function HTMLCaptialNodeToProperName(nodeName: string): string {
     const p = nodeName.toLowerCase();
     if (p == "textpath") {
         return "textPath";
-    } else if(p == "foreignobject"){
+    } else if (p == "foreignobject") {
         return "foreignObject";
-    } 
+    }
     else {
         return p;
     }
@@ -137,7 +139,7 @@ export async function toHTMLLines(root: Page, xpath: string, indent: string): Pr
 
     const node = await nodeCandidates.nth(0);
     const attributes = await getAllAttributes(node);
-    attributes.sort((a,b) => (a.name < b.name) ? -1 : 1)
+    attributes.sort((a, b) => (a.name < b.name) ? -1 : 1)
 
     const attributeLine = attributes.map((v) => sanityze(v)).join(" ")
     const nodeCapitalName = (await node.evaluate(el => el.nodeName));
@@ -206,16 +208,15 @@ ${svgPart}
     return output_html;
 }
 
-export async function saveOutputHTMLAndPNG(page: Page, browserName: BrowserNameType, htmlPath: string, pngPath: string, overwrite: boolean): Promise<void> {
+export async function saveOutputHTMLAndPNG(page: Page, browserName: BrowserNameType, htmlPath: string, pngPath: string, normalizedHTMLPath : string, overwrite: boolean): Promise<void> {
     const outputHTML = await getVisibleHTML(page, browserName);
 
     const b1 = !overwrite && fs.existsSync(htmlPath);
 
     if (!b1) {
-        await fs.writeFile(htmlPath, outputHTML, (err) => {
-            if (err) throw err;
-            console.log(`Saved: ${htmlPath}`);
-        });
+        await fs.writeFileSync(htmlPath, outputHTML);
+        console.log(`Saved: ${htmlPath}`);
+
     }
 
     const b2 = !overwrite && fs.existsSync(pngPath);
@@ -223,12 +224,22 @@ export async function saveOutputHTMLAndPNG(page: Page, browserName: BrowserNameT
     if (!b2) {
         await page.screenshot({ path: pngPath })
         console.log(`Saved: ${pngPath}`);
+
+    }
+
+    const b3 = !overwrite && fs.existsSync(normalizedHTMLPath);
+    if(!b3){
+        const lines = normalize(outputHTML);
+        const normalizedHTML = lines.join("\n");
+        await fs.writeFileSync(normalizedHTMLPath, normalizedHTML);
+        console.log(`Saved: ${normalizedHTMLPath}`);
+
     }
 
 
 }
 
-export class BroswerExecutionResult {
+export class BrowserExecutionResult {
     success: boolean = false;
     errorType: ErrorType | null = null
     browserName: BrowserNameType = "firefox";
@@ -237,7 +248,7 @@ export class BroswerExecutionResult {
 
 
 
-    static async emulateHTML(filepath: string, browserName: BrowserNameType, printMessage: boolean, outputHTMLPath: string, outputPNGPath: string): Promise<BroswerExecutionResult> {
+    static async emulateHTML(filepath: string, browserName: BrowserNameType, printMessage: boolean, outputHTMLPath: string, outputPNGPath: string, outputNormalizedHTMLPath: string): Promise<BrowserExecutionResult> {
         console.log(`Processing...: ${filepath}, browser: ${browserName}`)
 
         let browser = null;
@@ -282,7 +293,7 @@ export class BroswerExecutionResult {
                     timeoutCounter++;
                 }
             }
-            const r = new BroswerExecutionResult();
+            const r = new BrowserExecutionResult();
 
             if (timeoutCounter >= 10) {
                 r.success = false;
@@ -291,7 +302,7 @@ export class BroswerExecutionResult {
             } else {
                 r.success = true;
             }
-            await saveOutputHTMLAndPNG(page, browserName, outputHTMLPath, outputPNGPath, true);
+            await saveOutputHTMLAndPNG(page, browserName, outputHTMLPath, outputPNGPath, outputNormalizedHTMLPath, true);
             browser.close();
 
             return r;
@@ -302,40 +313,45 @@ export class BroswerExecutionResult {
     }
 
 }
-async function playwrightTestSub(items : FilePathManager[]){
-    const results = await Promise.all(items.map(async (w) =>{
-      const dummy = BroswerExecutionResult.emulateHTML(w.absoluteFilePath, w.browserName, false, w.outputHTMLPath, w.outputPNGPath);
-      dummy.then((x) =>{
-       console.log(`${w.absoluteFilePath}: ${x.success}`)  
-      })
-      return dummy;  
+async function executeBrowserHTMLPairSequence(items: BrowserHTMLPair[]) : Promise<BrowserExecutionResult[]> {
+    const results = await Promise.all(items.map(async (w) => {
+        const dummy = BrowserExecutionResult.emulateHTML(w.absoluteFilePath, w.browserName, false, w.outputHTMLPath, w.outputPNGPath, w.outputNormalizedHTMLPath);
+        /*
+        dummy.then((x) => {
+            console.log(`${w.absoluteFilePath}: ${x.success}`)
+        })
+        */
+        return dummy;
     }))
     return results;
-  
-  }
-  
-  export async function playwrightTest(items : FilePathManager[]){
-    const r2 : FilePathManager[][] = new Array();
-    r2.push(new Array(0));
-    items.forEach((v) =>{
-      const p = r2.length-1;
-      if(r2[p].length < 8){
-        r2[p].push(v);
-      }else{
-        r2.push(new Array(0));
-        r2[p+1].push(v);
-      }
+
+}
+export function divideBrowserHTMLTestSequence(items: BrowserHTMLPair[]) : BrowserHTMLPair[][]{
+    const filePathManagers: BrowserHTMLPair[][] = new Array();
+    filePathManagers.push(new Array(0));
+    items.forEach((v) => {
+        const p = filePathManagers.length - 1;
+        if (filePathManagers[p].length < 8) {
+            filePathManagers[p].push(v);
+        } else {
+            filePathManagers.push(new Array(0));
+            filePathManagers[p + 1].push(v);
+        }
     })
-  
-    const xxx : BroswerExecutionResult[] = new Array();
-  
-    for(let i=0;i<r2.length;i++){
-      console.log(`Process: ${i}`)
-      const result = await playwrightTestSub(r2[i]);
-      result.forEach((v) =>{
-        xxx.push(v);
-      })
+    return filePathManagers;
+}
+
+export async function executeBrowserHTMLPairSequences(items: BrowserHTMLPair[][]) {
+
+    const browserExecutionResults: BrowserExecutionResult[] = new Array();
+
+    for (let i = 0; i < items.length; i++) {
+        console.log(`Process: ${i}`)
+        const result = await executeBrowserHTMLPairSequence(items[i]);
+        result.forEach((v) => {
+            browserExecutionResults.push(v);
+        })
     }
-    return xxx;
-  }
-  
+    return browserExecutionResults;
+}
+
