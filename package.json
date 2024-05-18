@@ -5,7 +5,7 @@
     "main": "./dist/nodejs_index.js",
     "scripts": {
         "compile": "tsc -p . && webpack && cpx ./docs/scripts/graph_table_svg.js ./dist",
-        "copy": "cpx ./docs/scripts/graph_table_svg.js ./dist", 
+        "copy": "cpx ./docs/scripts/graph_table_svg.js ./dist",
         "copy_examples": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./scripts/sample_processor.ps1",
         "debug_compile": "tsc -p ./sub_projects/debug",
         "debug": "ts-node ./sub_projects/debug/src/main.ts",
@@ -21,17 +21,17 @@
     "author": "mklemma",
     "license": "MIT",
     "dependencies": {
-        "@types/node": "^15.6.1",
-        "@types/svg-path-parser": "^1.1.1",
+        "@types/node": "^20.12.12",
+        "@types/svg-path-parser": "^1.1.6",
         "opener": "^1.5.2",
-        "svg-path-parser": "^1.1.0"
+        "svg-path-parser": "^1.1.0",
+        "typedoc": "^0.25.13",
+        "typescript": "^5.4.5",
+        "webpack-cli": "^5.1.4"
     },
     "devDependencies": {
         "cpx": "^1.5.0",
-        "ts-loader": "^9.2.2",
-        "typedoc": "^0.23.10",
-        "typescript": "^4.7.4",
-        "webpack": "^5.38.1",
-        "webpack-cli": "^4.7.0"
+        "ts-loader": "^9.5.1",
+        "webpack": "^5.91.0"
     }
 }
