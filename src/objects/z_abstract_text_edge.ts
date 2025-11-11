@@ -15,7 +15,6 @@ import { createSVGText } from "./element_builder";
 import * as SVGTextBox from "../interfaces/svg_textbox"
 import { nearlyEqual, round100 } from "../common/vline";
 import { Debugger } from "../common/debugger";
-import { ObjectStableFlagName } from "./z_observer";
 import { ZObject } from "./z_object";
 import { ZTextBox } from "./z_textbox";
 
@@ -60,8 +59,8 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
     }
 
     public get childrenStableFlag() : boolean{        
-        const b1 = this.svgPath.getAttribute(ObjectStableFlagName);
-        const b2 = this.svgText.getAttribute(ObjectStableFlagName);
+        const b1 = this.svgPath.getAttribute(AttributeNames.ObjectStableFlagName);
+        const b2 = this.svgText.getAttribute(AttributeNames.ObjectStableFlagName);
 
         return b1 == "true" && b2 == "true";
     }

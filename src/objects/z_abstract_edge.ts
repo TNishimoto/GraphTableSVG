@@ -15,8 +15,8 @@ import { NullError, UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
 import { IEdge } from "./i_object";
 import { HTMLFunctions } from "../html";
-import { GlobalZObjectManager, LocalZObjectManager } from "./global_gobject_manager";
-import { ObjectStableFlagName } from "./z_observer";
+import { LocalZObjectManager } from "./local_zobject_manager";
+//import {  } from "./z_observer";
 //import { Direction } from "readline";
 
 export class ZAbstractEdge extends ZObject implements IEdge {
@@ -147,7 +147,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
     }
 
     public get childrenStableFlag(): boolean {
-        const b = this.svgPath.getAttribute(ObjectStableFlagName);
+        const b = this.svgPath.getAttribute(AttributeNames.ObjectStableFlagName);
         return b == "true";
     }
 

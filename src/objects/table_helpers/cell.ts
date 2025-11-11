@@ -114,13 +114,13 @@ export class Cell implements ITextBox {
     }
 
     public get stableFlag(): boolean {
-        return this.svgGroup.getAttribute(GObserver.ObjectStableFlagName) == "true";
+        return this.svgGroup.getAttribute(AttributeNames.ObjectStableFlagName) == "true";
     }
     private set stableFlag(b : boolean){
-        this.svgGroup.setAttribute(GObserver.ObjectStableFlagName, b ? "true" : "false");
+        this.svgGroup.setAttribute(AttributeNames.ObjectStableFlagName, b ? "true" : "false");
     }
     public get childrenStableFlag() : boolean{
-        const b = this.svgText.getAttribute(GObserver.ObjectStableFlagName);
+        const b = this.svgText.getAttribute(AttributeNames.ObjectStableFlagName);
         return b == "true";
     }
 

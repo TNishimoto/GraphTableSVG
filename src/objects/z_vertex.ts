@@ -15,7 +15,7 @@ import * as ElementExtension from "../interfaces/element_extension"
 import { getGraph } from "./graph_helpers/common_functions";
 import { ZAbstractEdge } from "./z_abstract_edge";
 import { HTMLFunctions } from "../html";
-import { LocalZObjectManager } from "./global_gobject_manager";
+import { LocalZObjectManager } from "./local_zobject_manager";
 
 
 

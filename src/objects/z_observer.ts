@@ -1,9 +1,8 @@
 
 export type GraphAllocateFunction = (graph: object) => void
-import { objectIDName } from "../common/attribute_names";
-import { Debugger } from "../common/debugger";
+import { objectIDName, ObjectStableFlagName, svgPathLenName, svgTextBBoxWidthName, svgTextBBoxHeightName } from "../common/attribute_names";
 import { nearlyEqual, round100 } from "../common/vline";
-import {IObject, ITextBox} from "./i_object"
+
 
 
 export const timerInterval = 100;
@@ -12,11 +11,6 @@ export const timerInterval = 100;
 
 const timerDic: Map<string, Date> = new Map();
 
-export const svgTextBBoxWidthName = "data-bbox-width";
-export const svgTextBBoxHeightName = "data-bbox-height";
-export const svgPathLenName = "data-path-length";
-
-export const ObjectStableFlagName = "data-stable-flag";
 
 
 function bubbleFalse(obj : SVGElement){
@@ -71,10 +65,13 @@ export function updateTextByTimer(svgText: SVGTextElement) {
     const bbox = svgText.getBBox();
     const width = round100(bbox.width);
     const height = round100(bbox.height);
-
+    
     let b = false;
     let prevWidth = 0;
     let prevHeight = 0;
+
+    
+
 
     if (svgText.hasAttribute(svgTextBBoxWidthName)) {
         prevWidth = Number.parseFloat(svgText.getAttribute(svgTextBBoxWidthName)!)
