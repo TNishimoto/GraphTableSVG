@@ -265,10 +265,10 @@ export class ZArrowCallout extends ZPathTextBox {
          }
      }
      */
-    public update() {
-        super.update();
+    public async update() {
+        await super.update();
 
-        const region = this.getVirtualRegion();
+        const region = await this.getVirtualRegion();
         const x1 = region.x;
         const y1 = region.y;
         const x2 = region.right;

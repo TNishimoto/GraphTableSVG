@@ -1,7 +1,9 @@
 import * as CommonFunctions from "../common/common_functions";
 import * as HTMLFunctions from "../html/html_functions";
 import { Size, Rectangle, round100 } from "../common/vline";
-
+import { waitForStableBBox } from "../common/wait_for_stable_bbox";
+import * as ElementExtension from "./element_extension";
+import * as AttributeNames from "../common/attribute_names";
 //type CharInfo = { char: number, fontSize: number, fontFamily: string }
 type CharInfo = { char: number, fontSize: number, fontFamily: string }
 
@@ -195,25 +197,24 @@ function computeTextWidth(text: string | number, fontSize: number, fontFamily: s
         }
     }
 }
-/*
-export function getVirtualTextLineLength(text: SVGTextElement | SVGTSpanElement | SVGTextPathElement): number {
+export function getVirtualRegion(text: SVGTextElement | SVGTSpanElement): Promise<Rectangle> {
 
-    if (text instanceof SVGTSpanElement) {
-        const style = getComputedStyle(text);
-        const fontSize = CommonFunctions.toPX(style.fontSize!);
-        const fontFamily = style.fontFamily!;
-        const fontWeight = style.fontWeight!;
-
-        return superComputeTextWidth(text.textContent!, fontSize, fontFamily, fontWeight);
-    } else {
-
-        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(text).filter((v) => v.nodeName == "tspan");
-        let len = 0;
-        tspans.forEach((v) => { len += getVirtualTextLineLength(v) });
-        return len;
-    }
+    return waitForStableBBox(text, { maxFrames: 45, tolerance: 1.0 }).then(box => ({
+        x: round100(box.x),
+        y: round100(box.y),
+        width: round100(box.width),
+        height: round100(box.height),
+      }) as Rectangle);
 }
-*/
+
+export function getVirtualWidthOfText(text: SVGTextElement | SVGTSpanElement): number | null {
+    return ElementExtension.gtGetAttributeNumber(text, AttributeNames.virtualWidthName, null);
+}
+export function getVirtualHeightOfText(text: SVGTextElement | SVGTSpanElement): number | null {
+    return ElementExtension.gtGetAttributeNumber(text, AttributeNames.virtualHeightName, null);
+}
+
+/*
 export function getVirtualRegion(text: SVGTextElement | SVGTSpanElement): Rectangle {
 
     if(text instanceof SVGTextElement){
@@ -226,38 +227,6 @@ export function getVirtualRegion(text: SVGTextElement | SVGTSpanElement): Rectan
         const vtext = createVirtualTSpan(text);
         const rect = superComputeRegion(vtext);
         return rect;
-
     }
-    /*
-    else{
-        return new Rectangle();
-
-    }
-    */
-    /*
-    if (text instanceof SVGTSpanElement) {
-        const width = getVirtualTextLineLength(text);
-        const style = getComputedStyle(text);
-        const fontSize = CommonFunctions.toPX(style.fontSize!);
-        return new Rectangle(0, 0, width, fontSize);
-
-    } else {
-        const r = new Rectangle();
-        const line = new Rectangle();
-
-        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(text).filter((v) => v.nodeName == "tspan");
-        tspans.forEach((v) =>{
-            const region = getVirtualRegion(v);
-            line.width += region.width;
-            if(line.height > region.height) region.height = line.height;
-            if(v.hasAttribute("newline")){
-                r.height += line.height;
-                if()
-            }
-        })
-        let len = 0;
-        tspans.forEach((v) => { len += getVirtualTextLineLength(v) });
-        return len;
-    }
-    */
 }
+*/

@@ -32,10 +32,10 @@ export namespace GraphArrangement {
     }
 
     function computeChildBInterval(tree: VirtualTree, xInterval: number, yInterval: number, direction: Direction): number {
+        throw new Error("Not implemented for async");
+        /*
         const children = tree.virtualTreeChildren;
         let interval = (direction == "up" || direction == "down") ? yInterval : xInterval;
-        //let childYInterval = yInterval;
-
 
         children.forEach((v) => {
             const edge = v.parentEdge!;
@@ -64,6 +64,7 @@ export namespace GraphArrangement {
             }
         })
         return interval;
+        */
     }
 
     function preprocessParentWithSingleLeaf(parent: ZVertex, leaf: ZVertex, direction: Direction) {

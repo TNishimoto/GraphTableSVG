@@ -83,31 +83,8 @@ export class ZTable extends ZVertex {
         this.firstSetSize();
         this.setSize(1, 1)
 
-        /*
-        if (option.table === undefined) {
-
-            //this.update();
-
-        } else {
-
-            this.svgGroup.style.display = "none"
-            this._isNoneMode = true;
-
-            this.buildFromLogicTable(option.table);
-
-            this._isNoneMode = false;
-
-            this.svgGroup.style.removeProperty("display");
-            this.isTextObserved = true;
-
-        }
-        */
-        //if (option.cx !== undefined) this.cx = option.cx;
-        //if (option.cy !== undefined) this.cy = option.cy;
-        //this.setOptionInGTable(option)
         this.isConstructing = false;
 
-        //this.update();
         if (this.type == ShapeObjectType.Table) this.firstFunctionAfterInitialized();
 
     }
@@ -306,10 +283,6 @@ export class ZTable extends ZVertex {
     }
     public set isAutoResized(value: boolean) {
         this._isAutoResized = value;
-        if (value) {
-            //this.resetUnstableCounter();
-            //this.update();
-        }
     }
 
     private _cellTextObserver: MutationObserver;
@@ -333,17 +306,6 @@ export class ZTable extends ZVertex {
                     b2 = true;
                 }
             }
-        }
-        if (b2 && !this.isConstructing) {
-            //if(this.cellArray.some((v)=>v.isErrorCell)) throw new Error("err!");
-            //this.fitSizeToOriginalCells(false);
-            //this.fitSizeToOriginalCells(true);
-
-        }
-        if (b) {
-            //this.resetUnstableCounter();
-            //this.update();
-
         }
     };
     /**
@@ -1144,17 +1106,12 @@ export class ZTable extends ZVertex {
     public removeRow(ithRow: number) {
         this.primitiveRemoveRow(ithRow, false);
         this.updateNodeRelations();
-        //this.resetUnstableCounter();
-        //this.update();
     }
 
 
     public removeColumn(ithColumn: number) {
         this.primitiveRemoveColumn(ithColumn, false);
         this.updateNodeRelations();
-        //this.resetUnstableCounter();
-
-        //this.update();
     }
 
     private deleteXHorizontalBorders(i: number) {
@@ -1219,8 +1176,6 @@ export class ZTable extends ZVertex {
     public insertRow(ithRow: number) {
         this.primitiveInsertRow(ithRow, false);
         this.updateNodeRelations();
-        //this.resetUnstableCounter();
-        //this.update();
 
     }
     /**
@@ -1230,9 +1185,6 @@ export class ZTable extends ZVertex {
     public insertColumn(ithColumn: number) {
         this.primitiveInsertColumn(ithColumn, false)
         this.updateNodeRelations();
-        //this.resetUnstableCounter();
-
-        //this.update();
     }
     /**
      * 新しい行を作って挿入します。
@@ -1256,11 +1208,8 @@ export class ZTable extends ZVertex {
     新しい列を最後の列に追加します。
     */
     public appendColumn() {
-        //this.insertColumn(this.columnCount);
         this.primitiveInsertColumn(this.columnCount, false)
         this.updateNodeRelations();
-        //this.resetUnstableCounter();
-        //this.update();
 
     }
 
@@ -1268,13 +1217,8 @@ export class ZTable extends ZVertex {
     新しい行を行の最後に追加します。
     */
     public appendRow() {
-        //this.insertRow(this.rowCount);
         this.primitiveInsertRow(this.rowCount, false);
         this.updateNodeRelations();
-        //this.resetUnstableCounter();
-
-        //this.update();
-        //this.update();
     }
     // #endregion
 

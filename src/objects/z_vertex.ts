@@ -73,18 +73,7 @@ export class ZVertex extends ZObject {
     }
 
     public update() {
-        /*
-        if(this.getUpdateFlag()){
-        }
-        */
-       /*
-        this.incomingEdges.forEach((v) =>{
-            v.resetUnstableCounter();
-        })
-        this.outcomingEdges.forEach((v) =>{
-            v.resetUnstableCounter();
-        })
-        */
+
     
 
 

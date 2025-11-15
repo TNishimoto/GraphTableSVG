@@ -178,7 +178,7 @@ export class ZObject implements IObject {
       this.positionType = PositionType.UpperLeft;
       const __x = x == null ? 0 : x;
       const __y = y == null ? 0 : y;
-      this.setVirtualXY(__x, __y);
+      this.setDummyXY(__x, __y);
     } else {
       this.positionType = PositionType.Center;
       this.cx = cx == null ? 0 : cx;
@@ -407,8 +407,6 @@ export class ZObject implements IObject {
     }
     this._isInitialized = true;
 
-    //this.update();
-    //this.resetUnstableCounter();
     if (this.__cx !== undefined) this.cx = this.__cx;
     if (this.__cy !== undefined) this.cy = this.__cy;
 
@@ -553,25 +551,32 @@ export class ZObject implements IObject {
     }
   }
 
-  public setVirtualXY(x: number, y: number) {
-    const rect = this.getVirtualRegion();
+  public setDummyXY(x: number, y: number) {
+    //const rect = this.getVirtualRegion();
     if (this.coordinateType == CoodinateType.Group00) {
       throw Error("This object does not support set x!");
     } else {
-      if (this.isCenterBased) {
+      ElementExtension.setAttributeNumber(this.svgGroup, "data-dummy-x", x);
+      /*
+      if (this.isCenterBased) {        
         SVGGExtension.setX(this.svgGroup, x - rect.x);
       } else {
         SVGGExtension.setX(this.svgGroup, x);
       }
+      */
     }
     if (this.coordinateType == CoodinateType.Group00) {
       throw Error("This object does not support set y!");
     } else {
+      ElementExtension.setAttributeNumber(this.svgGroup, "data-dummy-y", y);
+
+      /*
       if (this.isCenterBased) {
         SVGGExtension.setY(this.svgGroup, y - rect.y);
       } else {
         SVGGExtension.setY(this.svgGroup, y);
       }
+      */
     }
   }
 
@@ -741,10 +746,6 @@ export class ZObject implements IObject {
       }
     }
 
-    if (b) {
-      //this.resetUnstableCounter();
-      //this.update();
-    }
   }
 
   /**
@@ -895,6 +896,9 @@ export class ZObject implements IObject {
   public getVirtualHeight(): number {
     return 0;
   }
+  public async waitForStableRender(): Promise<boolean> {
+    return true;
+  }
 
   public getVirtualRegion(): Rectangle {
     let rect = new Rectangle();
@@ -908,6 +912,9 @@ export class ZObject implements IObject {
   public movable(): void {
     DraggableObjectFunctions.appendDragFunctionsToDocument();
     DraggableObjectFunctions.draggable(this.svgSurface!, this.svgGroup);
+  }
+  public update_internally() : void {
+
   }
 
   public get allowHover(): boolean {

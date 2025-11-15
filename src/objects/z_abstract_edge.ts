@@ -354,7 +354,6 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         } else {
             this.beginVertexID = value.objectID;
         }
-        //this.update();
 
     }
     /**
@@ -377,7 +376,6 @@ export class ZAbstractEdge extends ZObject implements IEdge {
             this.endVertexID = value.objectID;
         }
 
-        //this.update();
 
     }
     /**
@@ -623,7 +621,6 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         vertex.svgGroup.addEventListener(AttributeNames.connectPositionChangedEventName, this.connectPositionChangedFunc);
     }
     private connectPositionChangedFunc = () => {
-        //this.update();
     }
 
     private tryUpdateConnectorWithUpdateFlag(withUpdate: boolean): boolean {

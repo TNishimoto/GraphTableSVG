@@ -87,6 +87,8 @@ export class ZCallout extends ZPathTextBox {
         return ShapeObjectType.Callout;
     }
     protected updateSurfaceSize() {
+        throw new Error("Not implemented for async");
+        /*
         const region = this.getVirtualRegion();
         if (this.width != region.width) {
             this.width = region.width;
@@ -96,6 +98,7 @@ export class ZCallout extends ZPathTextBox {
             this.height = region.height;
         }
         return false;
+        */
     }
     public update() {
         super.update();

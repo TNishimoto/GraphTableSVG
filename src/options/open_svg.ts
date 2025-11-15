@@ -75,11 +75,11 @@ export function clearSVG(id: string) {
     box.innerHTML = "";
 }
 
-export function openSVG(id: string, output?: ZObject[]): ZObject[];
-export function openSVG(element: Element, output?: ZObject[]): ZObject[];
-export function openSVG(empty: null, output?: ZObject[]): ZObject[];
-export function openSVG(svgsvg: SVGSVGElement, output?: ZObject[]): ZObject[];
-export function openSVG(inputItem: string | Element | null = null, output: ZObject[] = []): ZObject[] {
+export async function openSVG(id: string, output?: ZObject[]): Promise<ZObject[]>;
+export async function openSVG(element: Element, output?: ZObject[]): Promise<ZObject[]>;
+export async function openSVG(empty: null, output?: ZObject[]): Promise<ZObject[]>;
+export async function openSVG(svgsvg: SVGSVGElement, output?: ZObject[]): Promise<ZObject[]>;
+export async function openSVG(inputItem: string | Element | null = null, output: ZObject[] = []): Promise<ZObject[]> {
     if (typeof inputItem == "string") {
         const item = document.getElementById(inputItem);
         if (item != null && item instanceof SVGSVGElement) {
@@ -94,7 +94,10 @@ export function openSVG(inputItem: string | Element | null = null, output: ZObje
             const svgNode = p.item(i);
             if (svgNode instanceof SVGSVGElement) svgElements.push(svgNode);
         }
-        svgElements.forEach((svgsvg) => openSVG(svgsvg, output));
+        for (let i = 0; i < svgElements.length; i++) {
+            const svgsvg = svgElements[i];
+            await openSVG(svgsvg, output);
+        }
         return output;
     } else if (inputItem instanceof SVGSVGElement) {
         const svgsvg: SVGSVGElement = inputItem;
@@ -116,6 +119,18 @@ export function openSVG(inputItem: string | Element | null = null, output: ZObje
 
         const endTime = performance.now();
         const time = endTime - startTime;
+
+        for (let i = 0; i < output.length; i++) {
+            const obj = output[i];
+            if (obj instanceof ZObject) {
+                const renderFlag = await obj.waitForStableRender();
+                if(!renderFlag){
+                    throw Error("Failed to wait for stable render");
+                }
+                obj.update_internally();
+                //obj.update();
+            }
+        }
 
         GUIObserver.observeSVGSVG(svgsvg);
     } else {

@@ -65,4 +65,45 @@ export async function waitForStableBBox(
       requestAnimationFrame(check);
     });
   }
+
+  export function getBBoxAfterFramesWithTolerance(
+    element: SVGGraphicsElement,
+    callback: (box: DOMRect) => void,
+    options: { frames?: number; tolerance?: number } = {}
+  ): void {
+    const frames = options.frames ?? 3;
+    const tolerance = options.tolerance ?? 0.5;
   
+    let lastBox: DOMRect | null = null;
+    let stableCount = 0;
+    let frameCount = 0;
+  
+    const step = () => {
+      frameCount++;
+      const box = element.getBBox();
+  
+      if (lastBox) {
+        const dw = Math.abs(box.width - lastBox.width);
+        const dh = Math.abs(box.height - lastBox.height);
+        const dx = Math.abs(box.x - lastBox.x);
+        const dy = Math.abs(box.y - lastBox.y);
+  
+        if (dw < tolerance && dh < tolerance && dx < tolerance && dy < tolerance) {
+          stableCount++;
+        } else {
+          stableCount = 0;
+        }
+      }
+  
+      lastBox = box;
+  
+      if (stableCount >= 2 || frameCount >= frames) {
+        callback(box);
+        return;
+      }
+  
+      requestAnimationFrame(step);
+    };
+  
+    requestAnimationFrame(step);
+  }

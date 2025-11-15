@@ -4,7 +4,7 @@ import * as StyleNames from "../common/style_names"
 import { PathTextAlighnment } from "../common/enums";
 import * as HTMLFunctions from "../html/html_functions";
 import * as SVG from "../interfaces/svg"
-import { getVirtualRegion } from "../interfaces/virtual_text"
+import { getVirtualRegion, getVirtualWidthOfText, getVirtualHeightOfText } from "../interfaces/virtual_text"
 import { ZAbstractEdge } from "./z_abstract_edge";
 import * as CommonFunctions from "../common/common_functions"
 import * as ElementExtension from "../interfaces/element_extension"
@@ -167,11 +167,6 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
             if (p.attributeName == null) {
                 b = true;
             }
-        }
-        if (b) {
-            //this.resetUnstableCounter();
-            //this.update();
-
         }
 
     };
@@ -359,27 +354,6 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
             Debugger.updateFlagLog(this, this.tryUpdateTextPathWithUpdateFlag, `${this.tryUpdateDYWithUpdateFlag.name}`)
         }
 
-        /*
-        if (this.isAppropriatelyReverseMode) {
-            const degree = this.degree;
-            if (degree < -90 || degree > 90) {
-                //Rev
-                if (this.side == "left" || this.side == null) {
-                    this.revTextForApp();
-                }
-            } else {
-                if (this.side == "right") {
-                    this.revTextForApp();
-                }
-            }
-        }
-        */
-        /*
-        if (!HTMLFunctions.isShow(this.svgTextPath)) {
-            throw new Error();
-        }
-        */
-
         const b2 = this.tryUpdatePathOffsetWithUpdateFlag(withUpdate);
 
         if (!withUpdate && b2) {
@@ -461,8 +435,19 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
 
     protected tryUpdatePathOffsetWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
-        const region = getVirtualRegion(this.svgText);
-        const strWidth = round100(region.width);
+        const virtualWidth = getVirtualWidthOfText(this.svgText);
+        if(virtualWidth == null) {
+            throw new Error("virtual width is not set");
+        }
+        /*
+        const virtualHeight = getVirtualHeightOfText(this.svgText);
+        if(virtualHeight == null) {
+            throw new Error("virtual height is not set");
+        }
+        */
+
+        //const region = getVirtualRegion(this.svgText);
+        const strWidth = round100(virtualWidth);
         const pathLen = round100(this.svgPath.getTotalLength());
 
 

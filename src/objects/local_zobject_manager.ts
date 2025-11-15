@@ -56,7 +56,9 @@ export class LocalZObjectManager {
 
     constructor(_svgsvgElement: SVGSVGElement) {
         this.svgsvgElement = _svgsvgElement;
+        /*
         setTimeout(updateSVGSVGTimer, timerInterval, this.svgsvgElement);
+        */
 
     }
     public registerObject(obj: IObject) {

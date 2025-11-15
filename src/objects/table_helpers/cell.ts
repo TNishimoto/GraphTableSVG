@@ -1551,7 +1551,8 @@ export class Cell implements ITextBox {
     セルの仮想上の領域を返します。
     */
     public getVirtualRegion(): Rectangle {
-        //const textRect = SVGTextExtension.getRegion(this.svgText);
+        throw new Error("Not implemented for async");
+        /*
         const textRect = getVirtualRegion(this.svgText);
 
         const rect = new Rectangle();
@@ -1560,6 +1561,7 @@ export class Cell implements ITextBox {
         rect.y = 0;
         rect.height = textRect.height + this.paddingBottom + this.paddingTop;
         return rect;
+        */
     }
     private getVirtualInnerRegion(): Rectangle {
         //const rect = this.getVirtualRegion();
@@ -1594,8 +1596,11 @@ export class Cell implements ITextBox {
      * テキストを再描画します。
      */
     public tryLocateSVGTextWithUpdateFlag(withUpdate: boolean): boolean {
+        throw new Error("Not implemented for async");
+        /*
         const innerRect = this.getVirtualInnerRegion();
         return SVGTextExtension.updateLocationOrGetUpdateFlag(this.svgText, innerRect, this.verticalAnchor, this.horizontalAnchor, AutoSizeShapeToFitText.None, withUpdate);
+        */
 
     }
     /**

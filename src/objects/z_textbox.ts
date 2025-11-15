@@ -126,10 +126,6 @@ export class ZTextBox extends ZVertex {
         b = true;
       }
     }
-    if (b) {
-      //this.resetUnstableCounter();
-      //this.update();
-    }
   };
 
   get horizontalAnchor(): HorizontalAnchor {
@@ -238,6 +234,14 @@ export class ZTextBox extends ZVertex {
     }
     return b;
   }
+  public async waitForStableRender(): Promise<boolean> {
+    const region = await getVirtualRegion(this.svgText);
+    this.svgText.setAttribute(AttributeNames.virtualWidthName, region.width.toString());
+    this.svgText.setAttribute(AttributeNames.virtualHeightName, region.height.toString());
+    this.svgText.setAttribute(AttributeNames.virtualXName, region.x.toString());
+    this.svgText.setAttribute(AttributeNames.virtualYName, region.y.toString());
+    return true;
+  }
 
   protected updateTextLocation(): boolean {
     return SVGTextExtension.updateLocation(
@@ -327,7 +331,24 @@ export class ZTextBox extends ZVertex {
 
     return b;
   }
-  private updateSub(): void {
+  public update_internally(): void {
+    super.update_internally();
+    this._isUpdating = true;
+    if (!this.isShown) return;
+    //this._observer.disconnect();
+    this.hasConnectedObserverFunction = false;
+
+    if (this.svgText == null) {
+      throw new TypeError("svgText is null");
+    }
+    this.updateStyleWithUpdateFlag(true);
+    this.updateTextLocation();
+    this.updateSurfaceSizeWithUpdateFlag(true);
+    this.updateSurfaceLocation();
+    this._isUpdating = false;
+    this.hasConnectedObserverFunction = true;
+  }
+  public update() {
     super.update();
     this._isUpdating = true;
     if (!this.isShown) return;
@@ -346,35 +367,6 @@ export class ZTextBox extends ZVertex {
     this._isUpdating = false;
     this.hasConnectedObserverFunction = true;
   }
-  public update() {
-    //let counter = 1;
-    this.updateSub();
-    /*
-        while(this.getUpdateFlag()){
-            if(counter > 10){
-                throw new Error("Update-Loop Error!");
-            }
-            counter++;
-        }
-        */
-    //return counter > 1;
-  }
-  /*
-    protected updateToFitText(isWidth: boolean) {
-        //this.isFixTextSize = true;
-        //const box = this.svgText.getBBox();
-        const textRect = SVGTextExtension.getSize(this.svgText);
-
-        const textWidth = textRect.width < this._minimumWidth ? this._minimumWidth : textRect.width;
-        const textHeight = textRect.height < this._minimumHeight ? this._minimumHeight : textRect.height;
-
-        if (isWidth) {
-            this.width = textWidth + this.marginPaddingLeft + this.marginPaddingRight;
-        } else {
-            this.height = textHeight + this.marginPaddingTop + this.marginPaddingBottom;
-        }
-    }
-    */
   get marginPaddingTop() {
     return (
       SVGTextExtension.getMarginTop(this.svgText) +
@@ -550,17 +542,37 @@ export class ZTextBox extends ZVertex {
   }
 
   public getVirtualWidth(): number {
-    return this.getVirtualRegion().width;
+    const width = ElementExtension.gtGetAttributeNumber(
+      this.svgText,
+      AttributeNames.virtualWidthName,
+      null
+    );
+    if (width != null) {
+      return width;
+    } else {
+      throw new Error("virtual width is not set");
+    }
   }
   public getVirtualHeight(): number {
-    return this.getVirtualRegion().height;
+    const height = ElementExtension.gtGetAttributeNumber(
+      this.svgText,
+      AttributeNames.virtualHeightName,
+      null
+    );
+    if (height != null) {
+      return height;
+    } else {
+      throw new Error("virtual height is not set");
+    }
   }
 
   getVirtualExtraRegion(): Rectangle {
-    const textRect = getVirtualRegion(this.svgText);
-
-    const w = textRect.width + this.leftExtraLength + this.rightExtraLength;
-    const h = textRect.height + this.topExtraLength + this.bottomExtraLength;
+    //const x =ElementExtension.gtGetAttributeNumber(this.svgText, "x", 0);
+    //const textRect = getVirtualRegion(this.svgText);
+    const base_width = this.getVirtualWidth();
+    const base_height = this.getVirtualHeight();
+    const w = base_width + this.leftExtraLength + this.rightExtraLength;
+    const h = base_height + this.topExtraLength + this.bottomExtraLength;
     const x = -w / 2;
     const y = -h / 2;
     return new Rectangle(x, y, w, h);
@@ -583,9 +595,7 @@ export class ZTextBox extends ZVertex {
 
     if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
       return marginRect;
-    } else if (
-      this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto
-    ) {
+    } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
       let [x, y] = [0, 0];
       let [newWidth, newHeight] = [0, 0];
 

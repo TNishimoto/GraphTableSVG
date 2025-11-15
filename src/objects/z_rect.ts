@@ -25,8 +25,6 @@ export class ZRect extends ZTextBox {
         super(svgbox);
         this.updateAttributes.push("width");
         this.updateAttributes.push("height");
-        //throw Error("error2");
-        //this.update();
         if (this.type == ShapeObjectType.Rect) this.firstFunctionAfterInitialized();
     }
     protected createSurface(svgbox: SVGElement): void {
@@ -111,7 +109,6 @@ export class ZRect extends ZTextBox {
         //const value100 = round100(value);
         //if (this.width != value100) this.svgRectangle.setAttribute("width", value100.toString());
         this.setWidthWithoutUpdate(value);
-        //this.update();
     }
     protected setWidthWithoutUpdate(value: number) {
         const value100 = round100(value);
@@ -128,8 +125,6 @@ export class ZRect extends ZTextBox {
     }
     set height(value: number) {
         this.setHeightWithoutUpdate(value);
-        
-        //this.update();
     }
     protected setHeightWithoutUpdate(value: number) {
         const value100 = round100(value);

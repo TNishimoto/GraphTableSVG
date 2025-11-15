@@ -13,7 +13,6 @@ export class ZRectButton extends ZRect {
         this.svgGroup.setAttribute("class", DefaultClassNames.defaultRectButtonClass);
 
         this.svgGroup.setAttribute("cursor", "pointer");
-        //this.update();
         if (this.type == ShapeObjectType.RectButton) this.firstFunctionAfterInitialized();
     }
 
