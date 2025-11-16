@@ -13,17 +13,14 @@ import { ZTable, ZTableOption } from "../../objects/z_table"
 import { ZGraph } from "../../objects/z_graph"
 import { ZRectButton } from "../../objects/z_rect_button"
 import { ZCircle } from "../../objects/z_circle";
-import * as ElementExtension from "../../interfaces/element_extension"
-import { LogicTable } from "../../logics";
 import { ZForeignButton } from "../../objects/z_foreign_button";
-import { convertAttributesIntoTableOption, TableOptionReteral } from "../../logics/gobject_reterals";
 
 /**
  * ZObjectタグをCustomGElementに変換します。
  * @param element 
  * @returns 
  */
- function convertFromZTagToIntermediateSVGGTagSub(e: Element) {
+function convertFromZTagToIntermediateSVGGTagSub(e: Element) {
     const type = ShapeObjectType.toShapeObjectTypeOrCustomTag(e.nodeName.toLowerCase());
 
     if (type == null) {
@@ -79,7 +76,7 @@ function isIntermediateSVGGElement(element: SVGElement): boolean {
  * @param type 
  * @returns 
  */
- function convertFromIntermediateGElementToZObject(intermediateSVGGElement: SVGElement, type: ShapeObjectType): ZObject | null {
+function convertFromIntermediateGElementToZObject(intermediateSVGGElement: SVGElement, type: ShapeObjectType): ZObject | null {
     const parent = intermediateSVGGElement.parentElement;
     if (parent instanceof SVGElement) {
         let r: ZObject;
@@ -102,7 +99,7 @@ function isIntermediateSVGGElement(element: SVGElement): boolean {
             r = new ZEllipse(parent);
             r.initialize(intermediateSVGGElement)
 
-           // r.setOption(option);
+            // r.setOption(option);
         } else if (type == ShapeObjectType.Circle) {
             //const option = ZCircle.constructAttributes(intermediateSVGGElement, true);
             r = new ZCircle(parent);
@@ -197,10 +194,10 @@ function isIntermediateSVGGElement(element: SVGElement): boolean {
     }
 }
 
-export function processIntermediateSVGGElements(svgsvg: SVGSVGElement, output : ZObject[] | null) {
+export function processIntermediateSVGGElements(svgsvg: SVGSVGElement, output: ZObject[] | null) {
     HTMLFunctions.getDescendantsByPostorder(svgsvg).forEach((v) => {
         if (v instanceof SVGElement) {
-            if ( isIntermediateSVGGElement(v)) {
+            if (isIntermediateSVGGElement(v)) {
                 const p = convertFromIntermediateSVGGElementToZObject(v);
                 if (p != null && output != null) {
                     output.push(p);

@@ -153,6 +153,7 @@ export class ZObject implements IObject {
   //protected setText
 
   public initializeOptionalPosition(source: SVGElement) {
+    /*
     const cx = ElementExtension._getAttributeNumber(
       source,
       AttributeNames.cx,
@@ -184,6 +185,7 @@ export class ZObject implements IObject {
       this.cx = cx == null ? 0 : cx;
       this.cy = cy == null ? 0 : cy;
     }
+    */
   }
 
   public initialize(source: SVGElement) {
@@ -551,34 +553,20 @@ export class ZObject implements IObject {
     }
   }
 
+  /*
   public setDummyXY(x: number, y: number) {
-    //const rect = this.getVirtualRegion();
     if (this.coordinateType == CoodinateType.Group00) {
       throw Error("This object does not support set x!");
     } else {
       ElementExtension.setAttributeNumber(this.svgGroup, "data-dummy-x", x);
-      /*
-      if (this.isCenterBased) {        
-        SVGGExtension.setX(this.svgGroup, x - rect.x);
-      } else {
-        SVGGExtension.setX(this.svgGroup, x);
-      }
-      */
     }
     if (this.coordinateType == CoodinateType.Group00) {
       throw Error("This object does not support set y!");
     } else {
       ElementExtension.setAttributeNumber(this.svgGroup, "data-dummy-y", y);
-
-      /*
-      if (this.isCenterBased) {
-        SVGGExtension.setY(this.svgGroup, y - rect.y);
-      } else {
-        SVGGExtension.setY(this.svgGroup, y);
-      }
-      */
     }
   }
+  */
 
   /*
     public set virtualX(v: number) {
@@ -676,8 +664,9 @@ export class ZObject implements IObject {
   public get isCenterBased() {
     return true;
   }
+  /*
   public get positionType(): PositionType {
-    const str = this.svgGroup.getAttribute("data-position-type");
+    const str = this.svgGroup.getAttribute(AttributeNames.dataPositionType);
     if (str !== undefined) {
       if (str == PositionType.Center) {
         return PositionType.Center;
@@ -689,8 +678,9 @@ export class ZObject implements IObject {
     }
   }
   public set positionType(value: PositionType) {
-    this.svgGroup.setAttribute("data-position-type", value);
+    this.svgGroup.setAttribute(AttributeNames.dataPositionType, value);
   }
+  */
 
   public get isProhibitionOutOfRange(): boolean {
     const p = ElementExtension.getPropertyStyleValueWithDefault(

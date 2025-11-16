@@ -1,11 +1,7 @@
 /// <reference path="z_object.ts"/>
-import * as SVG from "../interfaces/svg";
-import * as CSS from "../html/css";
 import { VBATranslateFunctions } from "../common/vba_functions";
-
 import * as AttributeNames from "../common/attribute_names";
 import * as StyleNames from "../common/style_names";
-import * as DefaultClassNames from "../common/default_class_names";
 import {
   ShapeObjectType,
   msoDashStyle,
@@ -16,7 +12,6 @@ import {
 } from "../common/enums";
 import {
   Rectangle,
-  PositionType,
   round100,
   nearlyEqual,
 } from "../common/vline";
@@ -25,21 +20,16 @@ import * as SVGTextBox from "../interfaces/svg_textbox";
 import { ZObject } from "./z_object";
 import { ZVertex } from "./z_vertex";
 import * as Extensions from "../interfaces/extensions";
-
-import * as GOptions from "./z_options";
 import { AutoSizeShapeToFitText } from "../common/enums";
 import {
   updateAppropriateDashArray,
   getUpdateFlagAppropriateDashArray,
 } from "../html/enum_extension";
-
 import * as ElementExtension from "../interfaces/element_extension";
 import * as SVGElementExtension from "../interfaces/svg_element_extension";
 import * as SVGTextExtension from "../interfaces/svg_text_extension";
-import { UndefinedError } from "../common/exceptions";
 import { getVirtualRegion } from "../interfaces/virtual_text";
 import { createSVGText } from "./element_builder";
-import { Debug } from "..";
 import { Debugger } from "../common/debugger";
 
 //namespace GraphTableSVG {
@@ -541,41 +531,89 @@ export class ZTextBox extends ZVertex {
     return lines;
   }
 
+  public getVirtualX(): number {
+    let x = 0;
+    if(this.svgGroup.hasAttribute(AttributeNames.dataX)){
+      x = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataX, 0);
+    }else if(this.svgGroup.hasAttribute(AttributeNames.dataCX)){
+      const cx = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataCX, 0);
+      x = cx - (this.getVirtualWidth()/2);
+    }
+    return x;
+  }
+  public getVirtualY(): number {
+    let y = 0;
+    if(this.svgGroup.hasAttribute(AttributeNames.dataY)){
+      y = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataY, 0);
+    }else if(this.svgGroup.hasAttribute(AttributeNames.dataCY)){
+      const cy = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataCY, 0);
+      y = cy - (this.getVirtualHeight()/2);
+    }
+    return y;
+  }
+
+
   public getVirtualWidth(): number {
-    const width = ElementExtension.gtGetAttributeNumber(
-      this.svgText,
-      AttributeNames.virtualWidthName,
-      null
-    );
-    if (width != null) {
-      return width;
+    const textWidth = <number>ElementExtension.gtGetAttributeNumber(this.svgText,AttributeNames.virtualWidthName,0);
+    const rectWidth = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataWidth,0);
+    const autoWidth = textWidth + this.paddingLeft + this.paddingRight;
+
+    if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
+      return autoWidth;
+    } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
+      return Math.max(rectWidth, autoWidth);
     } else {
-      throw new Error("virtual width is not set");
+      return rectWidth;
     }
   }
   public getVirtualHeight(): number {
-    const height = ElementExtension.gtGetAttributeNumber(
-      this.svgText,
-      AttributeNames.virtualHeightName,
-      null
-    );
-    if (height != null) {
-      return height;
+    const textHeight = <number>ElementExtension.gtGetAttributeNumber(this.svgText,AttributeNames.virtualHeightName,0);
+    const rectHeight = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataHeight,0);
+    const autoHeight = textHeight + this.paddingTop + this.paddingBottom;
+
+    if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
+      return autoHeight;
+    } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
+      return Math.max(rectHeight, autoHeight);
     } else {
-      throw new Error("virtual height is not set");
+      return rectHeight;
     }
   }
 
   getVirtualExtraRegion(): Rectangle {
-    //const x =ElementExtension.gtGetAttributeNumber(this.svgText, "x", 0);
-    //const textRect = getVirtualRegion(this.svgText);
+    return new Rectangle(this.getVirtualX(), this.getVirtualY(), this.getVirtualWidth(), this.getVirtualHeight());
+    /*
     const base_width = this.getVirtualWidth();
     const base_height = this.getVirtualHeight();
     const w = base_width + this.leftExtraLength + this.rightExtraLength;
     const h = base_height + this.topExtraLength + this.bottomExtraLength;
+    let x = 0;
+    let y = 0;
+    if(this.svgGroup.hasAttribute(AttributeNames.dataX)){
+      x = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataX, 0);
+      console.log("SetX/" + x );
+
+    }else if(this.svgGroup.hasAttribute(AttributeNames.dataCX)){
+      const cx = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataCX, 0);
+      x = cx - (w/2);
+      console.log("SetCX/" + x );
+
+    }
+
+      if(this.svgGroup.hasAttribute(AttributeNames.dataY)){
+      y = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataY, 0);
+    }else if(this.svgGroup.hasAttribute(AttributeNames.dataCY)){
+      const cy = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataCY, 0);
+      y = cy - (h/2);
+    }
+    */
+
+
+    /*
     const x = -w / 2;
     const y = -h / 2;
-    return new Rectangle(x, y, w, h);
+    */
+    //return new Rectangle(x, y, w, h);
   }
   getVirtualTextLocationRegion(): Rectangle {
     const rect = this.getVirtualRegion();
@@ -587,6 +625,8 @@ export class ZTextBox extends ZVertex {
   }
 
   public getVirtualRegion(): Rectangle {
+    return this.getVirtualExtraRegion();
+    /*
     if (this.svgText === undefined) {
       throw new UndefinedError();
       //return new Rectangle(this.cx, this.cy, 0, 0);
@@ -594,8 +634,11 @@ export class ZTextBox extends ZVertex {
     const marginRect = this.getVirtualExtraRegion();
 
     if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
+      console.log("Auto")
       return marginRect;
     } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
+      console.log("SemiAuto")
+
       let [x, y] = [0, 0];
       let [newWidth, newHeight] = [0, 0];
 
@@ -603,7 +646,6 @@ export class ZTextBox extends ZVertex {
         newWidth = marginRect.width;
         x = marginRect.x;
       } else {
-        //const surface_x = this.svgSurface != null ? SVGElementExtension.getX(this.svgSurface) : 0;
         newWidth = this.width;
         x = -this.width / 2;
       }
@@ -611,12 +653,9 @@ export class ZTextBox extends ZVertex {
         newHeight = marginRect.height;
         y = marginRect.y;
       } else {
-        //const surface_y = this.svgSurface != null ? SVGElementExtension.getY(this.svgSurface) : 0;
         newHeight = this.height;
         y = -this.height / 2;
       }
-      //const newWidth = this.width < width ? width : this.width;
-      //const newHeigth = this.height < height ? height : this.height;
       return new Rectangle(
         round100(x),
         round100(y),
@@ -624,14 +663,16 @@ export class ZTextBox extends ZVertex {
         round100(newHeight)
       );
     } else {
+      console.log("SemiAuto?")
+
       return new Rectangle(
         -(this.width / 2),
         -(this.height / 2),
         this.width,
         this.height
       );
-      //return new Rectangle(this.x, this.y, this.width, this.height);
     }
+    */
   }
 
   get topExtraLength(): number {

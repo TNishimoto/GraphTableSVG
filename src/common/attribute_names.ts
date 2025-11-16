@@ -60,6 +60,16 @@ export const speakerX : string = "speaker-x";
 export const speakerY : string = "speaker-y";
 
 
+export const dataX: string = "data-x";
+export const dataY: string = "data-y";
+export const dataCX: string = "data-cx";
+export const dataCY: string = "data-cy";
+export const dataWidth: string = "data-width";
+export const dataHeight: string = "data-height";
+
+export const dataPositionType: string = "data-position-type";
+
+
 export const beginNodeName: string = "data-begin-node";
 export const endNodeName: string = "data-end-node";
 export const isAppropriatelyReverseTextMode: string = "data-appropriately-reverse-text";

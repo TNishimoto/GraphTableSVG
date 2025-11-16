@@ -141,8 +141,14 @@ export class ZRect extends ZTextBox {
 
     protected updateSurfaceLocation() {
         const virtualRegion = this.getVirtualRegion();
+        console.log(virtualRegion);
+        this.svgRectangle.x.baseVal.value = virtualRegion.x;
+        this.svgRectangle.y.baseVal.value = virtualRegion.y;
+
+        /*
         this.svgRectangle.x.baseVal.value = -virtualRegion.width / 2;
         this.svgRectangle.y.baseVal.value = -virtualRegion.height / 2;
+        */
         return false;
     }
     /*
