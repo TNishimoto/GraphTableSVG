@@ -324,10 +324,4 @@ export class ZEllipse extends ZAbstractEllipseCircle {
     */
 }
 
-/*
-export type EllipseAttributes = TextBoxShapeAttributes & {
-    speakerX? : number,
-    speakerY? : number,
-}
-*/
 //}

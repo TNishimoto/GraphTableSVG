@@ -553,50 +553,6 @@ export class ZObject implements IObject {
     }
   }
 
-  /*
-  public setDummyXY(x: number, y: number) {
-    if (this.coordinateType == CoodinateType.Group00) {
-      throw Error("This object does not support set x!");
-    } else {
-      ElementExtension.setAttributeNumber(this.svgGroup, "data-dummy-x", x);
-    }
-    if (this.coordinateType == CoodinateType.Group00) {
-      throw Error("This object does not support set y!");
-    } else {
-      ElementExtension.setAttributeNumber(this.svgGroup, "data-dummy-y", y);
-    }
-  }
-  */
-
-  /*
-    public set virtualX(v: number) {
-        if(this.coordinateType == CoodinateType.Group00){
-            throw Error("This object does not support set x!");
-        }else{
-            if (this.isCenterBased) {
-                SVGGExtension.setX(this.svgGroup,v - this.getVirtualRegion().x );
-            } else {
-                SVGGExtension.setX(this.svgGroup, v);
-            }    
-        }
-
-    }
-    */
-
-  /*
-    public set virtualY(v: number) {
-        if(this.coordinateType == CoodinateType.Group00){
-            throw Error("This object does not support set y!");
-        }else{
-            if (this.isCenterBased) {
-                SVGGExtension.setY(this.svgGroup, v + (this.getVirtualHeight() / 2));
-            } else {
-                SVGGExtension.setY(this.svgGroup, v);
-            }    
-        }
-
-    }
-    */
 
   /**
     頂点の幅を返します。
@@ -605,7 +561,7 @@ export class ZObject implements IObject {
     if (this.hasSize) {
       return round100(
         <number>(
-          ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-width", 0)
+          ElementExtension.gtGetAttributeNumber(this.svgGroup, AttributeNames.dataWidth, 0)
         )
       );
     } else {
@@ -618,22 +574,13 @@ export class ZObject implements IObject {
       if (!nearlyEqual(this.width, newValue)) {
         ElementExtension.setAttributeNumber(
           this.svgGroup,
-          "data-width",
+          AttributeNames.dataWidth,
           newValue
         );
       }
       //this.svgGroup.setAttribute("data-width", value.toString());
     }
   }
-  /*
-    protected setWidthWithoutUpdate(value: number) {
-        this.width = value;
-
-    }
-    protected setHeightWithoutUpdate(value: number) {
-        this.height = value;
-    }
-    */
 
   /**
     頂点の高さを返します。
@@ -641,7 +588,7 @@ export class ZObject implements IObject {
   get height(): number {
     if (this.hasSize) {
       return <number>(
-        ElementExtension.gtGetAttributeNumber(this.svgGroup, "data-height", 0)
+        ElementExtension.gtGetAttributeNumber(this.svgGroup, AttributeNames.dataHeight, 0)
       );
     } else {
       return 0;
@@ -653,7 +600,7 @@ export class ZObject implements IObject {
       if (!nearlyEqual(this.height, newValue)) {
         ElementExtension.setAttributeNumber(
           this.svgGroup,
-          "data-height",
+          AttributeNames.dataHeight,
           newValue
         );
       }

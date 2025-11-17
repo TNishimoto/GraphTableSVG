@@ -541,6 +541,10 @@ export class ZTextBox extends ZVertex {
     }
     return x;
   }
+  public getVirtualCX(): number {
+    return this.getVirtualX() + this.getVirtualWidth() / 2;
+  }
+
   public getVirtualY(): number {
     let y = 0;
     if(this.svgGroup.hasAttribute(AttributeNames.dataY)){
@@ -550,6 +554,9 @@ export class ZTextBox extends ZVertex {
       y = cy - (this.getVirtualHeight()/2);
     }
     return y;
+  }
+  public getVirtualCY(): number {
+    return this.getVirtualY() + this.getVirtualHeight() / 2;
   }
 
 
@@ -582,38 +589,6 @@ export class ZTextBox extends ZVertex {
 
   getVirtualExtraRegion(): Rectangle {
     return new Rectangle(this.getVirtualX(), this.getVirtualY(), this.getVirtualWidth(), this.getVirtualHeight());
-    /*
-    const base_width = this.getVirtualWidth();
-    const base_height = this.getVirtualHeight();
-    const w = base_width + this.leftExtraLength + this.rightExtraLength;
-    const h = base_height + this.topExtraLength + this.bottomExtraLength;
-    let x = 0;
-    let y = 0;
-    if(this.svgGroup.hasAttribute(AttributeNames.dataX)){
-      x = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataX, 0);
-      console.log("SetX/" + x );
-
-    }else if(this.svgGroup.hasAttribute(AttributeNames.dataCX)){
-      const cx = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataCX, 0);
-      x = cx - (w/2);
-      console.log("SetCX/" + x );
-
-    }
-
-      if(this.svgGroup.hasAttribute(AttributeNames.dataY)){
-      y = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataY, 0);
-    }else if(this.svgGroup.hasAttribute(AttributeNames.dataCY)){
-      const cy = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataCY, 0);
-      y = cy - (h/2);
-    }
-    */
-
-
-    /*
-    const x = -w / 2;
-    const y = -h / 2;
-    */
-    //return new Rectangle(x, y, w, h);
   }
   getVirtualTextLocationRegion(): Rectangle {
     const rect = this.getVirtualRegion();
@@ -626,53 +601,6 @@ export class ZTextBox extends ZVertex {
 
   public getVirtualRegion(): Rectangle {
     return this.getVirtualExtraRegion();
-    /*
-    if (this.svgText === undefined) {
-      throw new UndefinedError();
-      //return new Rectangle(this.cx, this.cy, 0, 0);
-    }
-    const marginRect = this.getVirtualExtraRegion();
-
-    if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.Auto) {
-      console.log("Auto")
-      return marginRect;
-    } else if (this.isAutoSizeShapeToFitText == AutoSizeShapeToFitText.SemiAuto) {
-      console.log("SemiAuto")
-
-      let [x, y] = [0, 0];
-      let [newWidth, newHeight] = [0, 0];
-
-      if (this.width < marginRect.width) {
-        newWidth = marginRect.width;
-        x = marginRect.x;
-      } else {
-        newWidth = this.width;
-        x = -this.width / 2;
-      }
-      if (this.height < marginRect.height) {
-        newHeight = marginRect.height;
-        y = marginRect.y;
-      } else {
-        newHeight = this.height;
-        y = -this.height / 2;
-      }
-      return new Rectangle(
-        round100(x),
-        round100(y),
-        round100(newWidth),
-        round100(newHeight)
-      );
-    } else {
-      console.log("SemiAuto?")
-
-      return new Rectangle(
-        -(this.width / 2),
-        -(this.height / 2),
-        this.width,
-        this.height
-      );
-    }
-    */
   }
 
   get topExtraLength(): number {

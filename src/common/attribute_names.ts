@@ -56,8 +56,6 @@ export const arrowHeadWidth : string = "arrow-head-width";
 export const arrowHeadHeight : string = "arrow-head-height";
 export const direction : string = "direction";
 
-export const speakerX : string = "speaker-x";
-export const speakerY : string = "speaker-y";
 
 
 export const dataX: string = "data-x";
@@ -66,6 +64,8 @@ export const dataCX: string = "data-cx";
 export const dataCY: string = "data-cy";
 export const dataWidth: string = "data-width";
 export const dataHeight: string = "data-height";
+export const dataSpeakerX : string = "data-speaker-x";
+export const dataSpeakerY : string = "data-speaker-y";
 
 export const dataPositionType: string = "data-position-type";
 
