@@ -236,7 +236,7 @@ export class ZTextBox extends ZVertex {
   protected updateTextLocation(): boolean {
     return SVGTextExtension.updateLocation(
       this.svgText,
-      this.getVirtualTextLocationRegion(),
+      this.getVirtualExtraRegion(),
       this.verticalAnchor,
       this.horizontalAnchor,
       this.isAutoSizeShapeToFitText
@@ -245,7 +245,7 @@ export class ZTextBox extends ZVertex {
   protected getUpdateFlagOfTextLocation(): boolean {
     return SVGTextExtension.getUpdateFlagOfLocation(
       this.svgText,
-      this.getVirtualTextLocationRegion(),
+      this.getVirtualExtraRegion(),
       this.verticalAnchor,
       this.horizontalAnchor,
       this.isAutoSizeShapeToFitText
@@ -357,6 +357,7 @@ export class ZTextBox extends ZVertex {
     this._isUpdating = false;
     this.hasConnectedObserverFunction = true;
   }
+  /*
   get marginPaddingTop() {
     return (
       SVGTextExtension.getMarginTop(this.svgText) +
@@ -381,6 +382,7 @@ export class ZTextBox extends ZVertex {
       SVGElementExtension.getPaddingBottom(this.svgGroup)
     );
   }
+  */
 
   get paddingTop(): number {
     return SVGElementExtension.getPaddingTop(this.svgGroup);
@@ -510,7 +512,7 @@ export class ZTextBox extends ZVertex {
       ` Set obj = shapes_.AddShape(${this.shape}, ${this.globalX}, ${this.globalY}, ${this.width}, ${this.height})`
     );
     lines.push(
-      ` Call EditTextFrame(obj.TextFrame, ${this.marginPaddingTop}, ${this.marginPaddingBottom}, ${this.marginPaddingLeft}, ${this.marginPaddingRight}, false, ppAutoSizeNone)`
+      ` Call EditTextFrame(obj.TextFrame, ${this.marginTop}, ${this.marginBottom}, ${this.marginLeft}, ${this.marginRight}, false, ppAutoSizeNone)`
     );
     lines.push(` Call EditAnchor(obj.TextFrame, ${vAnchor}, ${hAnchor})`);
 
@@ -590,6 +592,7 @@ export class ZTextBox extends ZVertex {
   getVirtualExtraRegion(): Rectangle {
     return new Rectangle(this.getVirtualX(), this.getVirtualY(), this.getVirtualWidth(), this.getVirtualHeight());
   }
+  /*
   getVirtualTextLocationRegion(): Rectangle {
     const rect = this.getVirtualRegion();
     rect.x += this.leftExtraLength;
@@ -598,22 +601,23 @@ export class ZTextBox extends ZVertex {
     rect.height -= this.topExtraLength + this.bottomExtraLength;
     return rect;
   }
+  */
 
   public getVirtualRegion(): Rectangle {
     return this.getVirtualExtraRegion();
   }
 
   get topExtraLength(): number {
-    return this.marginPaddingTop;
+    return this.marginTop;
   }
   get leftExtraLength(): number {
-    return this.marginPaddingLeft;
+    return this.marginLeft;
   }
   get rightExtraLength(): number {
-    return this.marginPaddingRight;
+    return this.marginRight;
   }
   get bottomExtraLength(): number {
-    return this.marginPaddingBottom;
+    return this.marginBottom;
   }
 }
 

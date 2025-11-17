@@ -1,17 +1,12 @@
 /// <reference path="z_path_textbox.ts"/>
 //namespace GraphTableSVG {
 import { ZPathTextBox } from "./z_path_textbox"
-import { ZTextBox } from "./z_textbox"
-import { ShapeObjectType, ConnectorType, msoDashStyle, Direction, AutoSizeShapeToFitText, VBAShapeType } from "../common/enums";
-//import {ZTextBoxAttributes, ZObjectAttributes, ZCalloutAttributes, ZShapeArrowCalloutAttributes} from "../options/attributes_option"
+import { ShapeObjectType, ConnectorType, Direction, VBAShapeType } from "../common/enums";
 import * as AttributeNames from "../common/attribute_names"
-import { Rectangle, VLine, escapeWithRound100 } from "../common/vline"
-import * as SVGTextBox from "../interfaces/svg_textbox";
+import { VLine, escapeWithRound100 } from "../common/vline"
 import * as GOptions from "./z_options"
 
 import * as ElementExtension from "../interfaces/element_extension"
-import * as SVGTextExtensions from "../interfaces/svg_text_extension"
-import * as SVGTextExtension from "../interfaces/svg_text_extension"
 
 
 
@@ -28,17 +23,20 @@ export class ZArrowCallout extends ZPathTextBox {
 
     public constructor(svgbox: SVGElement | string) {
         super(svgbox);
+        console.log(this.svgGroup);
 
         //this.height = 100;
         //this.width = 100;
+        /*
         this.arrowNeckWidth = 10;
         this.arrowNeckHeight = 10;
         this.arrowHeadWidth = 20;
         this.arrowHeadHeight = 20;
         this.svgGroup.setAttribute("data-direction", "down");
+        */
 
 
-        this.updateAttributes.push("data-direction");
+        //this.updateAttributes.push("data-direction");
         if (this.type == ShapeObjectType.ArrowCallout) this.firstFunctionAfterInitialized();
     }
     /*
@@ -66,18 +64,21 @@ export class ZArrowCallout extends ZPathTextBox {
     */
     public initializeSetBasicOption(source : SVGElement) {
         super.initializeSetBasicOption(source);
+        /*
         const _arrowNeckWidth = ElementExtension._getAttributeNumber(source, AttributeNames.arrowNeckWidth, true);
         const _arrowNeckHeight = ElementExtension._getAttributeNumber(source, AttributeNames.arrowNeckHeight, true);
         const _arrowHeadWidth = ElementExtension._getAttributeNumber(source, AttributeNames.arrowHeadWidth, true);
         const _arrowHeadHeight = ElementExtension._getAttributeNumber(source, AttributeNames.arrowNeckHeight, true);
         const _direction = <string>ElementExtension._getAttribute(source, AttributeNames.direction, true);
-
-
         this.arrowNeckWidth = _arrowNeckWidth !== null ? _arrowNeckWidth : this.arrowNeckWidth;
         this.arrowNeckHeight = _arrowNeckHeight !== null ? _arrowNeckHeight : this.arrowNeckHeight;
         this.arrowHeadWidth = _arrowHeadWidth !== null ? _arrowHeadWidth : this.arrowHeadWidth;
         this.arrowHeadHeight = _arrowHeadHeight !== null ? _arrowHeadHeight : this.arrowHeadHeight;
         this.direction = _direction !== null ? Direction.toDirection(_direction) : this.direction;
+
+        */
+
+
 
 
     }
@@ -109,70 +110,70 @@ export class ZArrowCallout extends ZPathTextBox {
         return ShapeObjectType.ArrowCallout;
     }
     get arrowNeckWidth(): number {
-        return ElementExtension.gtGetAttributeNumberWithoutNull(this.svgGroup, "data-arrow-neck-width", 0);
+        return ElementExtension.gtGetAttributeNumberWithoutNull(this.svgGroup, AttributeNames.dataArrowNeckWidth, 10);
     }
     set arrowNeckWidth(value: number) {
-        if (this.arrowNeckWidth != value) this.svgGroup.setAttribute("data-arrow-neck-width", value.toString());
+        if (this.arrowNeckWidth != value) this.svgGroup.setAttribute(AttributeNames.dataArrowNeckWidth, value.toString());
 
     }
     get arrowNeckHeight(): number {
-        return ElementExtension.gtGetAttributeNumberWithoutNull(this.svgGroup, "data-arrow-neck-height", 0);
+        return ElementExtension.gtGetAttributeNumberWithoutNull(this.svgGroup, AttributeNames.dataArrowNeckHeight, 10);
     }
     set arrowNeckHeight(value: number) {
-        if (this.arrowNeckHeight != value) this.svgGroup.setAttribute("data-arrow-neck-height", value.toString());
+        if (this.arrowNeckHeight != value) this.svgGroup.setAttribute(AttributeNames.dataArrowNeckHeight, value.toString());
 
     }
     get arrowHeadWidth(): number {
-        return ElementExtension.gtGetAttributeNumberWithoutNull(this.svgGroup, "data-arrow-head-width", 0);
+        return ElementExtension.gtGetAttributeNumberWithoutNull(this.svgGroup, AttributeNames.dataArrowHeadWidth, 20);
     }
     set arrowHeadWidth(value: number) {
-        if (this.arrowHeadWidth != value) this.svgGroup.setAttribute("data-arrow-head-width", value.toString());
+        if (this.arrowHeadWidth != value) this.svgGroup.setAttribute(AttributeNames.dataArrowHeadWidth, value.toString());
 
     }
     get arrowHeadHeight(): number {
-        return ElementExtension.gtGetAttributeNumberWithoutNull(this.svgGroup, "data-arrow-head-height", 0);
+        return ElementExtension.gtGetAttributeNumberWithoutNull(this.svgGroup, AttributeNames.dataArrowHeadHeight, 20);
     }
     set arrowHeadHeight(value: number) {
-        if (this.arrowHeadHeight != value) this.svgGroup.setAttribute("data-arrow-head-height", value.toString());
+        if (this.arrowHeadHeight != value) this.svgGroup.setAttribute(AttributeNames.dataArrowHeadHeight, value.toString());
 
     }
     get direction(): Direction {
-        const r = this.svgGroup.getAttribute("data-direction");
+        const r = this.svgGroup.getAttribute(AttributeNames.dataDirection);
         return Direction.toDirection(r);
     }
     set direction(value: Direction) {
         if (this.direction != value) {
-            this.svgGroup.setAttribute("data-direction", value.toString());
+            this.svgGroup.setAttribute(AttributeNames.dataDirection, value.toString());
         }
     }
     get topExtraLength(): number {
         if (this.direction == "up") {
-            return this.arrowHeadHeight + this.arrowNeckHeight + this.marginPaddingTop;
+            return this.arrowHeadHeight + this.arrowNeckHeight + this.marginTop;
         } else {
-            return this.marginPaddingTop;
+            return this.marginTop;
         }
     }
     get leftExtraLength(): number {
         if (this.direction == "left") {
-            return this.arrowHeadHeight + this.arrowNeckHeight + this.marginPaddingLeft;
+            return this.arrowHeadHeight + this.arrowNeckHeight + this.marginLeft;
         } else {
-            return this.marginPaddingLeft;
+            return this.marginLeft;
         }
 
     }
     get rightExtraLength(): number {
         if (this.direction == "right") {
-            return this.arrowHeadHeight + this.arrowNeckHeight + this.marginPaddingRight;
+            return this.arrowHeadHeight + this.arrowNeckHeight + this.marginRight;
         } else {
-            return this.marginPaddingRight;
+            return this.marginRight;
         }
 
     }
     get bottomExtraLength(): number {
         if (this.direction == "down") {
-            return this.arrowHeadHeight + this.arrowNeckHeight + this.marginPaddingBottom;
+            return this.arrowHeadHeight + this.arrowNeckHeight + this.marginBottom;
         } else {
-            return this.marginPaddingBottom;
+            return this.marginBottom;
         }
 
     }
@@ -204,16 +205,16 @@ export class ZArrowCallout extends ZPathTextBox {
      */
     protected get boxHeight() {
         if (this.direction == "up" || this.direction == "down") {
-            return this.height - this.arrowNeckHeight - this.arrowHeadWidth;
+            return this.getVirtualHeight() - this.arrowNeckHeight - this.arrowHeadWidth;
         } else {
-            return this.height;
+            return this.getVirtualHeight();
         }
     }
     protected get boxWidth() {
         if (this.direction == "up" || this.direction == "down") {
-            return this.width;
+            return this.getVirtualWidth();
         } else {
-            return this.width - this.arrowNeckHeight - this.arrowHeadWidth;
+            return this.getVirtualWidth() - this.arrowNeckHeight - this.arrowHeadWidth;
         }
     }
     /*
@@ -265,83 +266,80 @@ export class ZArrowCallout extends ZPathTextBox {
          }
      }
      */
-    public async update() {
-        await super.update();
 
-        const region = await this.getVirtualRegion();
-        const x1 = region.x;
-        const y1 = region.y;
-        const x2 = region.right;
-        const y2 = region.bottom;
+     protected updateSurfaceLocation(): boolean {
+        //const region = await this.getVirtualRegion();
+        const x1 = this.getVirtualX();
+        const y1 = this.getVirtualY();
+        const x2 = this.getVirtualX() + this.getVirtualWidth();
+        const y2 = this.getVirtualY() + this.getVirtualHeight();
+        /*
+        const bx1 = x1;
+        const by1 = y1;
+        const bx2 = x2;
+        const by2 = y2;
+        */
+
+        let cx = this.getVirtualCX();
+        let cy = this.getVirtualCY();
+        console.log(cx, cy, this.direction);
+
         if (this.direction == "up") {
 
-            const bx1 = x1;
-            const by1 = y1 + this.arrowHeadHeight + this.arrowNeckHeight;
-            const bx2 = x2;
-            const by2 = y2;
 
 
-            let nx1 = - (this.arrowNeckWidth / 2)
-            let nx2 = (this.arrowNeckWidth / 2)
-            let ny = by1 - this.arrowNeckHeight;
-            let cx = 0;
+            let nx1 = cx - (this.arrowNeckWidth / 2)
+            let nx2 = cx + (this.arrowNeckWidth / 2)
+            let ny = y1 - this.arrowNeckHeight;
+            //let cx = 0;
 
-            let hx1 = - (this.arrowHeadWidth / 2)
-            let hx2 = (this.arrowHeadWidth / 2)
-            let hy = y1;
+            let hx1 = cx - (this.arrowHeadWidth / 2)
+            let hx2 = cx + (this.arrowHeadWidth / 2)
+            let hy = ny - this.arrowHeadHeight;
 
-            const mes = escapeWithRound100 `H ${nx1} V ${ny} H ${hx1} L ${cx} ${hy} L ${hx2} ${ny} H ${nx2} V ${by1}`;
-            const top = escapeWithRound100 `M ${bx1} ${by1} ${mes} H ${bx2}`;
+            const mes = escapeWithRound100 `H ${nx1} V ${ny} H ${hx1} L ${cx} ${hy} L ${hx2} ${ny} H ${nx2} V ${y1}`;
+            const top = escapeWithRound100 `M ${x1} ${y1} ${mes} H ${x2}`;
 
-            const right = escapeWithRound100 `V ${by2}`;
-            const bottom = escapeWithRound100 `H ${bx1}`;
-            const left = escapeWithRound100 `V ${by1}`
+            const right = escapeWithRound100 `V ${y2}`;
+            const bottom = escapeWithRound100 `H ${x1}`;
+            const left = escapeWithRound100 `V ${y1}`
             this.svgPath.setAttribute("d", escapeWithRound100 `${top} ${right} ${bottom} ${left} z`);
 
         } else if (this.direction == "left") {
-            const bx1 = x1 + this.arrowHeadHeight + this.arrowNeckHeight;
-            const by1 = y1;
-            const bx2 = x2;
-            const by2 = y2;
 
 
-            let ny1 = 0 + (this.arrowNeckWidth / 2)
-            let ny2 = 0 - (this.arrowNeckWidth / 2)
-            let nx = bx1 - this.arrowNeckHeight;
-            let cy = 0;
+            let ny1 = cy + (this.arrowNeckWidth / 2)
+            let ny2 = cy - (this.arrowNeckWidth / 2)
+            let nx = x1 - this.arrowNeckHeight;
+            //let cy = 0;
 
-            let hy1 = 0 + (this.arrowHeadWidth / 2)
-            let hy2 = 0 - (this.arrowHeadWidth / 2)
-            let hx = x1;
+            let hy1 = cy + (this.arrowHeadWidth / 2)
+            let hy2 = cy - (this.arrowHeadWidth / 2)
+            let hx = nx - this.arrowHeadHeight;
 
-            const top = escapeWithRound100 `M ${bx1} ${by1} H ${bx2}`;
-            const right = escapeWithRound100 `V ${by2}`;
-            const bottom = escapeWithRound100 `H ${bx1}`;
-            const left = escapeWithRound100 `V ${ny1} H ${nx} V ${hy1} L ${hx} ${cy} L ${nx} ${hy2} V ${ny2} H ${bx1} V ${by1}`
+            const top = escapeWithRound100 `M ${x1} ${y1} H ${x2}`;
+            const right = escapeWithRound100 `V ${y2}`;
+            const bottom = escapeWithRound100 `H ${x1}`;
+            const left = escapeWithRound100 `V ${ny1} H ${nx} V ${hy1} L ${hx} ${cy} L ${nx} ${hy2} V ${ny2} H ${x1} V ${y1}`
             this.svgPath.setAttribute("d", escapeWithRound100 `${top} ${right} ${bottom} ${left} z`);
 
 
         } else if (this.direction == "right") {
 
-            const bx1 = x1;
-            const by1 = y1;
-            const bx2 = x2 - this.arrowNeckHeight - this.arrowHeadHeight;
-            const by2 = y2;
 
+            let ny1 = cy - (this.arrowNeckWidth / 2)
+            let ny2 = cy + (this.arrowNeckWidth / 2)
+            let nx = x2 + this.arrowNeckHeight;
+            //let cy = 0;
 
-            let ny1 = 0 - (this.arrowNeckWidth / 2)
-            let ny2 = 0 + (this.arrowNeckWidth / 2)
-            let nx = bx2 + this.arrowNeckHeight;
-            let cy = 0;
+            let hy1 = cy - (this.arrowHeadWidth / 2)
+            let hy2 = cy + (this.arrowHeadWidth / 2)
+            let hx = nx + this.arrowHeadHeight;
 
-            let hy1 = 0 - (this.arrowHeadWidth / 2)
-            let hy2 = 0 + (this.arrowHeadWidth / 2)
-            let hx = x2;
-
-            const top = escapeWithRound100 `M ${bx1} ${by1} H ${bx2}`;
-            const right = escapeWithRound100 `V ${ny1} H ${nx} V ${hy1} L ${hx} ${cy} L ${nx} ${hy2} V ${ny2} H ${bx2} V ${by2}`;
-            const bottom = escapeWithRound100 `H ${bx1}`;
-            const left = escapeWithRound100 `V ${by1}`;
+            const top = escapeWithRound100 `M ${x1} ${y1} H ${x2}`;
+            const right = escapeWithRound100 `V ${ny1} H ${nx} V ${hy1} L ${hx} ${cy} L ${nx} ${hy2} V ${ny2} H ${x2} V ${y2}`;
+            const bottom = escapeWithRound100 `H ${x1}`;
+            const left = escapeWithRound100 `V ${y1}`;
             this.svgPath.setAttribute("d", escapeWithRound100 `${top} ${right} ${bottom} ${left} z`);
 
 
@@ -349,27 +347,27 @@ export class ZArrowCallout extends ZPathTextBox {
 
 
 
-            const bx1 = x1;
-            const by1 = y1;
-            const bx2 = x2;
-            const by2 = y2 - this.arrowHeadHeight - this.arrowNeckHeight;
+            //const by2 = y2;
 
             //const by = boxHeight + dy;
+            let nx1 = cx - (this.arrowNeckWidth / 2)
+            let nx2 = cx + (this.arrowNeckWidth / 2)
+            let ny = y2 + this.arrowNeckHeight;
 
-            let nx1 = - (this.arrowNeckWidth / 2)
-            let nx2 = (this.arrowNeckWidth / 2)
-            let ny = by2 + this.arrowNeckHeight;
-            let cx = 0;
-
-            let hx1 = - (this.arrowHeadWidth / 2)
-            let hx2 = (this.arrowHeadWidth / 2)
-            let hy = y2;
-            const top = escapeWithRound100 `M ${bx1} ${by1} H ${bx2}`;
-            const right = escapeWithRound100 `V ${by2}`;
-            const bottom = escapeWithRound100 `H ${nx2} V ${ny} H ${hx2} L ${cx} ${hy} L ${hx1} ${ny} H ${nx1} V ${by2} H ${bx1}`;
-            const left = escapeWithRound100 `V ${by1}`
+            let hx1 = cx - (this.arrowHeadWidth / 2)
+            let hx2 = cx + (this.arrowHeadWidth / 2)
+            let hy = ny + this.arrowHeadHeight;
+            const top = escapeWithRound100 `M ${x1} ${y1} H ${x2}`;
+            const right = escapeWithRound100 `V ${y2}`;
+            const bottom = escapeWithRound100 `H ${nx2} V ${ny} H ${hx2} L ${cx} ${hy} L ${hx1} ${ny} H ${nx1} V ${y2} H ${x1}`;
+            const left = escapeWithRound100 `V ${y1}`
             this.svgPath.setAttribute("d", escapeWithRound100 `${top} ${right} ${bottom} ${left} z`);
         }
+        return true;
+     }
+
+     public update() {
+        super.update();        
     }
     public get shape(): VBAShapeType {
         switch (this.direction) {

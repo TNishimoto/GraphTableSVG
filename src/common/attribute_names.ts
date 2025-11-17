@@ -50,11 +50,13 @@ export const columnWidth : string = "column-width";
 export const beginVertex : string = "begin-vertex";
 export const endVertex : string = "end-vertex";
 
+/*
 export const arrowNeckWidth : string = "arrow-neck-width";
 export const arrowNeckHeight : string = "arrow-neck-height";
 export const arrowHeadWidth : string = "arrow-head-width";
 export const arrowHeadHeight : string = "arrow-head-height";
-export const direction : string = "direction";
+*/
+//export const direction : string = "direction";
 
 
 
@@ -66,8 +68,14 @@ export const dataWidth: string = "data-width";
 export const dataHeight: string = "data-height";
 export const dataSpeakerX : string = "data-speaker-x";
 export const dataSpeakerY : string = "data-speaker-y";
-
 export const dataPositionType: string = "data-position-type";
+
+export const dataArrowNeckWidth : string = "data-arrow-neck-width";
+export const dataArrowNeckHeight : string = "data-arrow-neck-height";
+export const dataArrowHeadWidth : string = "data-arrow-head-width";
+export const dataArrowHeadHeight : string = "data-arrow-head-height";
+export const dataDirection : string = "data-direction";
+
 
 
 export const beginNodeName: string = "data-begin-node";
