@@ -1,14 +1,8 @@
 //namespace GraphTableSVG {
 import { ZGraph } from "../z_graph"
 import { ZVertex } from "../z_vertex"
-
 import { VirtualTree } from "./virtual_tree"
-
-//import * as TreeArrangement from "./old_tree_arrangement"
-import { Direction, ConnectorType } from "../../common/enums"
-import * as SVGTextBox from "../../interfaces/svg_textbox"
-import { ZAbstractTextEdge } from "../z_abstract_text_edge"
-import { getVirtualRegion } from "../../interfaces/virtual_text"
+import { Direction } from "../../common/enums"
 import { createForestInLevelOrder } from "./virtual_tree_constructor"
 
 export namespace GraphArrangement {

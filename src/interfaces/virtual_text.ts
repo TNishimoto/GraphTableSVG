@@ -1,7 +1,6 @@
 import * as CommonFunctions from "../common/common_functions";
 import * as HTMLFunctions from "../html/html_functions";
 import { Size, Rectangle, round100 } from "../common/vline";
-import { waitForStableBBox } from "../common/wait_for_stable_bbox";
 import * as ElementExtension from "./element_extension";
 import * as AttributeNames from "../common/attribute_names";
 //type CharInfo = { char: number, fontSize: number, fontFamily: string }
@@ -197,6 +196,7 @@ function computeTextWidth(text: string | number, fontSize: number, fontFamily: s
         }
     }
 }
+/*
 export function getVirtualRegion(text: SVGTextElement | SVGTSpanElement): Promise<Rectangle> {
 
     return waitForStableBBox(text, { maxFrames: 45, tolerance: 1.0 }).then(box => ({
@@ -206,6 +206,7 @@ export function getVirtualRegion(text: SVGTextElement | SVGTSpanElement): Promis
         height: round100(box.height),
       }) as Rectangle);
 }
+*/
 
 export function getVirtualWidthOfText(text: SVGTextElement | SVGTSpanElement): number | null {
     return ElementExtension.gtGetAttributeNumber(text, AttributeNames.virtualWidthName, null);

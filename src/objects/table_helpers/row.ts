@@ -10,7 +10,7 @@ import * as GObserver from "../z_observer";
 import * as AttributeNames from "../../common/attribute_names"
 import { getSVGSVGAncestor } from "../../html/html_functions";
 import { IObject } from "../i_object"
-import { GlobalZObjectManager } from "../global_gobject_manager";
+import { LocalZObjectManager } from "../local_zobject_manager";
 
 /**
  * 表の行を表現するクラスです。
@@ -36,7 +36,7 @@ export class CellRow implements IObject {
 
         const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
         if (svgsvgAncestor != null) {
-            const xb = GlobalZObjectManager.tryRegisterSVGSVGElement(svgsvgAncestor);
+            const xb = LocalZObjectManager.create(svgsvgAncestor);
             xb.registerObject(this);
         }
 
@@ -60,7 +60,14 @@ export class CellRow implements IObject {
     set minimumHeight(value : number) {
         this.svgGroup.setAttribute(CellRow.minimumHeightAttributeName, value.toString());
     }
-
+    public get isPrimaryObject() : boolean{
+        return false;
+      }
+    public update_internally() : void {
+        throw new Error("Not implemented");
+    }
+    
+    
     /*
     public get unstableCounter(): number | null {
         const p = this.svgGroup.getAttribute(GObserver.unstableCounterName);

@@ -125,7 +125,7 @@ function processMacroTreeTag(e: Element): HTMLUnknownElement {
 
 }
 
-export function processMacroTag(svgsvg: SVGSVGElement) {
+export function processMacroTag(svgsvg: SVGSVGElement) : void {
 
     while (true) {
         const trees = svgsvg.getElementsByTagName(MacroTagNames.Tree);

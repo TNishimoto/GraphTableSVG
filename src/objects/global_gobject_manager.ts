@@ -2,7 +2,7 @@ import { LocalZObjectManager } from "./local_zobject_manager";
 
 export class GlobalZObjectManager {
     //static items : LocalGObjectManager[] = new Array();
-    public static getLocalGobjectManager(svgsvg: SVGSVGElement): LocalZObjectManager | null {
+    private static getLocalGobjectManager(svgsvg: SVGSVGElement): LocalZObjectManager | null {
         const p = <any>svgsvg;
         if (p._manager != undefined) {
             return <LocalZObjectManager>p._manager;
@@ -10,7 +10,7 @@ export class GlobalZObjectManager {
             return null;
         }
     }
-    public static tryRegisterSVGSVGElement(svgsvg: SVGSVGElement): LocalZObjectManager {
+    private static tryRegisterSVGSVGElement(svgsvg: SVGSVGElement): LocalZObjectManager {
         const p = <any>svgsvg;
         if (p._manager == undefined) {
             p._manager = new LocalZObjectManager(p);
@@ -20,7 +20,7 @@ export class GlobalZObjectManager {
         }
 
     }
-    public static deleteSVGSVGElement(svgsvg: SVGSVGElement): boolean {
+    private static deleteSVGSVGElement(svgsvg: SVGSVGElement): boolean {
         const p = <any>svgsvg;
         if (p._manager != undefined) {
             p._manager.dispose();

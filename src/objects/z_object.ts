@@ -23,9 +23,8 @@ import * as StyleNames from "../common/style_names";
 import { ShapeObjectType } from "../common/enums";
 import * as ElementExtension from "../interfaces/element_extension";
 import * as SVGGExtension from "../interfaces/svg_g_extension";
-import * as GObserver from "./z_observer";
 import { IObject } from "./i_object";
-import { GlobalZObjectManager } from "./global_gobject_manager";
+import { LocalZObjectManager } from "./local_zobject_manager";
 
 export type ZObjectMaps = {
   groupAttributes?: Map<string, string>;
@@ -84,7 +83,7 @@ export class ZObject implements IObject {
 
     const svgsvgAncestor = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
     if (svgsvgAncestor instanceof SVGSVGElement) {
-      const xb = GlobalZObjectManager.tryRegisterSVGSVGElement(svgsvgAncestor);
+      const xb = LocalZObjectManager.create(svgsvgAncestor);
       xb.registerObject(this);
     }
 
@@ -833,9 +832,15 @@ export class ZObject implements IObject {
   public getVirtualHeight(): number {
     return 0;
   }
+  /*
   public async waitForStableRender(): Promise<boolean> {
     return true;
   }
+  */
+  public get isPrimaryObject() : boolean{
+    return true;
+  }
+
 
   public getVirtualRegion(): Rectangle {
     let rect = new Rectangle();

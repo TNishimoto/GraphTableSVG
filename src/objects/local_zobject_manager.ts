@@ -2,6 +2,8 @@ import { IObject, IEdge } from "./i_object";
 import { updateTextByTimer, timerInterval, updatePathByTimer } from "./z_observer";
 import { ObjectStableFlagName } from "../common/attribute_names";
 import { Debugger } from "../common/debugger";
+import { waitForStableBBoxAll } from "../common/wait_for_stable_bbox";
+import * as AttributeNames from "../common/attribute_names";
 let updateSVGSVGTimerCounter = 0;
 
 function textObserveTimer(manager: LocalZObjectManager) {
@@ -61,12 +63,58 @@ export class LocalZObjectManager {
         */
 
     }
+    public static create(svgsvg: SVGSVGElement): LocalZObjectManager {
+        const p = <any>svgsvg;
+        if (p._manager == undefined) {
+            p._manager = new LocalZObjectManager(p);
+            return p._manager;
+        } else {
+            return p._manager;
+        }
+    }
+
+
     public registerObject(obj: IObject) {
         this.map.set(obj.objectID, obj);
     }
     public getObject(key: string): IObject | undefined {
         return this.map.get(key);
     }
+    public getAllUnstableObjects(): SVGGraphicsElement[] {
+        const array: SVGGraphicsElement[] = [];
+        const texts = Array.from(this.svgsvgElement.querySelectorAll<SVGTextElement>("text"));
+        texts.forEach((text) => {
+            array.push(text);
+        });
+        return array;
+        
+    }
+    /*
+    public async waitForStableRender(): Promise<boolean> {
+        return true;
+    }
+    */
+    public async update_layout(): Promise<boolean> {
+        const unstableObjects = this.getAllUnstableObjects();
+        const boxes = await waitForStableBBoxAll(unstableObjects);
+        for(let i = 0; i < unstableObjects.length; i++) {
+            const object = unstableObjects[i];
+            if(object instanceof SVGTextElement) {
+                object.setAttribute(AttributeNames.virtualWidthName, boxes[i].width.toString());
+                object.setAttribute(AttributeNames.virtualHeightName, boxes[i].height.toString());
+                object.setAttribute(AttributeNames.virtualXName, boxes[i].x.toString());
+                object.setAttribute(AttributeNames.virtualYName, boxes[i].y.toString());            
+            }
+        }
+
+        const values : IObject[] = Array.from(this.map.values());
+        values.forEach((value) => {
+            value.update_internally();
+        })
+        return true;
+    }
+
+    
     public dispose() {
 
     }

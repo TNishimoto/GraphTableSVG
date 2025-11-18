@@ -5,7 +5,8 @@ export interface IObject {
     get childrenStableFlag() : boolean;
     updateSurfaceWithoutSVGText() : boolean;
     //get id() : string | null;
-
+    update_internally() : void;
+    get isPrimaryObject() : boolean;
 }
 export interface ITextBox {
     get svgGroup() : SVGGElement;

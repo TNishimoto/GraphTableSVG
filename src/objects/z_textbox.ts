@@ -28,7 +28,6 @@ import {
 import * as ElementExtension from "../interfaces/element_extension";
 import * as SVGElementExtension from "../interfaces/svg_element_extension";
 import * as SVGTextExtension from "../interfaces/svg_text_extension";
-import { getVirtualRegion } from "../interfaces/virtual_text";
 import { createSVGText } from "./element_builder";
 import { Debugger } from "../common/debugger";
 
@@ -224,6 +223,7 @@ export class ZTextBox extends ZVertex {
     }
     return b;
   }
+  /*
   public async waitForStableRender(): Promise<boolean> {
     const region = await getVirtualRegion(this.svgText);
     this.svgText.setAttribute(AttributeNames.virtualWidthName, region.width.toString());
@@ -232,6 +232,7 @@ export class ZTextBox extends ZVertex {
     this.svgText.setAttribute(AttributeNames.virtualYName, region.y.toString());
     return true;
   }
+  */
 
   protected updateTextLocation(): boolean {
     return SVGTextExtension.updateLocation(

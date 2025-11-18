@@ -7,7 +7,8 @@
     <script src="../../scripts/graph_table_svg.js"></script>
     <script>
         window.onload = () => {
-            GraphTableSVG.Options.openSVG();
+            GraphTableSVG.transpile("main");
+            GraphTableSVG.updateLayout("main").then();
             /* This comment is a landmark for data processing. */
         };
     </script>
@@ -15,16 +16,16 @@
 
 <body>
     <svg id="main" xmlns="http://www.w3.org/2000/svg" width="500px" height="500px" style="background:#e9e9e9;border:solid 1pt;"  z-vba="true">
-      <z-rect x="100" y="100">XXX</z-rect>
-      <z-rect x="100" y="200">
-          <t>XXX</t>
-          <t style="fill:red">YYY</t>            
+      <z-rect data-x="100" data-y="100">XXX</z-rect>
+      <z-rect data-x="100" data-y="200">
+          <z-text>XXX</z-text>
+          <z-text style="fill:red">YYY</z-text>            
       </z-rect>
-      <z-rect x="100" y="300">
-          <t>XXX</t>
-          <t>YYY<tspan style="fill:red">HELLO    WORLD</tspan>ZZZZ</t>            
+      <z-rect data-x="100" data-y="300">
+          <z-text>XXX</z-text>
+          <z-text>YYY<z-textspan style="fill:red">HELLO    WORLD</z-textspan>ZZZZ</z-text>            
       </z-rect>
-      <z-edge x1="200" y1="200" x2="400" y2="200" x3="300" y3="100"><t>HELLO <tspan style="fill:red">WORLD</tspan></t></z-edge>
+      <z-edge x1="200" y1="200" x2="400" y2="200" x3="300" y3="100"><z-text>HELLO <tspan style="fill:red">WORLD</tspan></z-text></z-edge>
   </svg>
 </body>
 

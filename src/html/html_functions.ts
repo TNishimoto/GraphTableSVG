@@ -1,12 +1,13 @@
 
 import * as GUI from "./gui"
 import * as AttributeNames from "../common/attribute_names"
+import { ExtraCustomTag } from "../common/enums"
 //export namespace HTMLFunctions {
     export enum NodeOrder {
         Preorder, Postorder
     }
     export function getTNodes(e: Element): HTMLElement[] | null {
-        const tNodes = <HTMLElement[]>getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == "t");
+        const tNodes = <HTMLElement[]>getChildren(e).filter((v) => v.getAttribute(AttributeNames.customElement) == ExtraCustomTag.Text);
         if (tNodes.length > 0) {
             tNodes.forEach((v, i) => {
                 v.removeAttribute(AttributeNames.customElement);

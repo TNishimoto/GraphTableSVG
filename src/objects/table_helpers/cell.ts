@@ -10,8 +10,7 @@ import * as StyleNames from "../../common/style_names"
 import { ZTable } from "../z_table"
 import * as SVG from "../../interfaces/svg"
 //import {CellOption} from "../../options/attributes_option"
-import { HorizontalAnchor, VerticalAnchor, AutoSizeShapeToFitText, DataName } from "../../common/enums";
-import * as SVGTextBox from "../../interfaces/svg_textbox"
+import { HorizontalAnchor, VerticalAnchor, DataName } from "../../common/enums";
 import { BorderRow } from "./border_row"
 import { BorderColumn } from "./border_column"
 
@@ -19,15 +18,12 @@ import * as ElementExtension from "../../interfaces/element_extension"
 import * as SVGGExtension from "../../interfaces/svg_g_extension"
 import * as SVGElementExtension from "../../interfaces/svg_element_extension"
 import * as SVGTextExtension from "../../interfaces/svg_text_extension"
-import { getVirtualRegion } from "../../interfaces/virtual_text"
 import { Debugger } from "../../common/debugger"
 import { CellColumn } from "./column"
 import { CellRow } from "./row"
-import { GOptions } from ".."
-import * as GObserver from "../z_observer"
 import { getSVGSVGAncestor } from "../../html/html_functions"
 import {ITextBox} from "../i_object"
-import { GlobalZObjectManager } from "../global_gobject_manager"
+import { LocalZObjectManager } from "../local_zobject_manager"
 
 //import { LogicCell } from "../logic/logic_cell"
 
@@ -97,12 +93,19 @@ export class Cell implements ITextBox {
 
         const svgsvgAncestor = getSVGSVGAncestor(this.svgGroup);
         if(svgsvgAncestor != null){       
-            const xb = GlobalZObjectManager.tryRegisterSVGSVGElement(svgsvgAncestor);
+            const xb = LocalZObjectManager.create(svgsvgAncestor);
             xb.registerObject(this);     
         }
 
 
     }
+    public get isPrimaryObject() : boolean{
+        return false;
+      }
+    public update_internally() : void {
+        throw new Error("Not implemented");
+    }
+
     public updateSurfaceWithoutSVGText() : boolean{
         if(this.childrenStableFlag){
             this.tryUpdateWithUpdateFlag(true);        

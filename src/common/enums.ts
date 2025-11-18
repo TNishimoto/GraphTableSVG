@@ -25,7 +25,23 @@ export enum OldConnectorPosition {
     Auto = 9
 }
 */
-export type CustomTag = "row" | "cell" | "t";
+
+export type CustomTag = "z-row" | "z-cell" | "z-text";
+
+export namespace ExtraCustomTag {
+    export const Row: CustomTag = "z-row"
+    export const Cell: CustomTag = "z-cell"
+    export const Text: CustomTag = "z-text"
+
+    export const customTypeDic: { [key: string]: boolean; } = {
+        "z-row": true,
+        "z-cell": true,
+        "z-text": true
+    }
+}
+
+
+
 export type CoodinateType = "object-center" | "group00";
 export namespace CoodinateType {
     export const ObjectCenter: CoodinateType = "object-center"
@@ -49,7 +65,7 @@ export namespace VBAShapeType {
 }
 
 
-export type MacroTagNames = "m-tree" | "m-ellipse" | "m-circle" | "m-rect" ;
+export type MacroTagNames = "m-tree" | "m-ellipse" | "m-circle" | "m-rect";
 export namespace MacroTagNames {
     export const Tree: MacroTagNames = "m-tree"
     export const Ellipse: MacroTagNames = "m-ellipse"
@@ -60,11 +76,11 @@ export namespace MacroTagNames {
 
 export type VertexObjectType = "z-callout" | "z-arrow-callout" | "z-ellipse" | "z-circle" | "z-rect" | "z-path-textbox" | "z-rect-button" | "z-table" | "z-foreign-object" | "z-foreign-button";
 
-export namespace OriginalSVGSVGAttributes{
-    export const VBAAttributeName : string = "z-vba";
-    export const ShrinkAttributeName : string = "z-shrink";    
+export namespace OriginalSVGSVGAttributes {
+    export const VBAAttributeName: string = "z-vba";
+    export const ShrinkAttributeName: string = "z-shrink";
 
-    export const Edit : string = "z-edit"; 
+    export const Edit: string = "z-edit";
 }
 
 
@@ -103,11 +119,6 @@ export namespace ShapeObjectType {
         "z-foreign-button": true
 
     }
-    const customTypeDic: { [key: string]: boolean; } = {
-        "row": true,
-        "cell": true,
-        "t": true
-    }
 
     export function toShapeObjectType(value: string): ShapeObjectType | null {
         if (value in typeDic) {
@@ -123,7 +134,7 @@ export namespace ShapeObjectType {
         if (value1 != null) {
             return value1;
         } else {
-            if (value in customTypeDic) {
+            if (value in ExtraCustomTag.customTypeDic) {
                 return <CustomTag>lowerValue;
             } else {
                 return null;
@@ -280,9 +291,9 @@ export type EdgeType = "none" | "straight" | "elbow" | "curve";
 export type ShapeToFitType = "none" | "auto" | "semi-auto";
 
 export namespace ShapeToFitType {
-    export const None : ShapeToFitType = "none";
-    export const Auto : ShapeToFitType = "auto";
-    export const SemiAuto : ShapeToFitType = "semi-auto";
+    export const None: ShapeToFitType = "none";
+    export const Auto: ShapeToFitType = "auto";
+    export const SemiAuto: ShapeToFitType = "semi-auto";
 
 }
 
@@ -492,7 +503,7 @@ export namespace HorizontalAnchor {
             return "center";
         } else if (value == "right") {
             return "right";
-        } else  {
+        } else {
             return "left";
         }
     }

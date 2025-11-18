@@ -8,16 +8,12 @@ import * as Debug from "./debug/debug";
 import * as Interfaces from "./interfaces/index";
 import * as TypeDoc from "./typedoc/index";
 
+import { transpile } from "./transpile"
+import { updateLayout } from "./update_layout"
 
 
 export {
     HTML, Common, Objects, Logics, Options, 
-    Console, Debug, Interfaces, TypeDoc
-    //GUIObserver, HTMLFunctions, GUI, DraggableObject, 
-    //LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, buildLogicObjectFromJSON,
-    //GObject, ZArrowCallout, ZCallout, ZCircle, ZEdge, ZEllipse, ZGraph, ZRectButton, ZRect, ZTable, ZTextBox, ZVertex, ZPathTextBox,
-    //logic/index
-    //LogicTSpan, LogicText, LogicCell, LogicTable, LogicGraph, LogicGraphEdge, LogicGraphNode, LogicTree, BinaryLogicTree, getIndexArrayTableLine, 
-    //LogicCellLine, buildLogicTable, toLogicCellLine, buildLogicObjectFromJSON
+    Console, Debug, Interfaces, TypeDoc, transpile, updateLayout
 };
 

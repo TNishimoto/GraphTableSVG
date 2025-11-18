@@ -2,7 +2,7 @@ import { textClassCSS } from "../objects/z_options";
 import * as CSS from "../html/css";
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
 import { setSVGReteral, TextReteral } from "./gobject_reterals";
-
+import { ExtraCustomTag } from "../common/enums";
 
 export type TextDecorationType = "none" | "underline" | "overline" | "line-through" | "blink";
 
@@ -94,7 +94,7 @@ export class LogicText{
         if(typeof this.textContent == "string"){
             obj.textContent = this.textContent;            
         }else{
-            setSVGReteral(obj, "t", undefined, this.class, this.style);
+            setSVGReteral(obj, ExtraCustomTag.Text, undefined, this.class, this.style);
         }
         return obj;
     }

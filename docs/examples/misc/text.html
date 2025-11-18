@@ -7,7 +7,8 @@
     <script src="../../scripts/graph_table_svg.js"></script>
     <script>
         window.onload = () => {
-            GraphTableSVG.Options.openSVG()
+            GraphTableSVG.transpile("main");
+            GraphTableSVG.updateLayout("main").then();
             /* This comment is a landmark for data processing. */
         };
     </script>
@@ -15,24 +16,24 @@
 
 <body>
     <svg id="main" xmlns="http://www.w3.org/2000/svg" style="background:#e9e9e9;border:solid 1pt;" z-shrink="true">
-        <z-rect x="0" y="100">z-rect</z-rect>
+        <z-rect data-x="0" data-y="100">z-rect</z-rect>
         
-        <z-rect x="0" y="200">
+        <z-rect data-x="0" data-y="200">
             This is a pen.
             He is Tom.
         </z-rect>
-        <z-rect x="0" y="300">
-            <t>This is a pen.</t>
-            <t>He is Tom.</t>
+        <z-rect data-x="0" data-y="300">
+            <z-text>This is a pen.</z-text>
+            <z-text>He is Tom.</z-text>
         </z-rect>
-        <z-rect x="0" y="400">
-            <t>This is a pen.</t>
-            <t newline="false">He is Tom.</t>
+        <z-rect data-x="0" data-y="400">
+            <z-text>This is a pen.</z-text>
+            <z-text newline="false">He is Tom.</z-text>
         </z-rect>
-        <z-rect x="0" y="500">
-            <t>This is a pen.</t>
-            <t style="font-size: 32pt;fill:red">He is Tom.</t>
-            <t newline="false">hello!</t>
+        <z-rect data-x="0" data-y="500">
+            <z-text>This is a pen.</z-text>
+            <z-text style="font-size: 32pt;fill:red">He is Tom.</z-text>
+            <z-text newline="false">hello!</z-text>
         </z-rect>
     
     </svg>

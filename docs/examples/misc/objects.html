@@ -7,7 +7,8 @@
     <script src="../../scripts/graph_table_svg.js"></script>
     <script>
         window.onload = () => {
-            GraphTableSVG.Options.openSVG();
+            GraphTableSVG.transpile("main");
+            GraphTableSVG.updateLayout("main").then();
             /* This comment is a landmark for data processing. */
         };
     </script>

@@ -10,9 +10,7 @@ import * as SVGTextBox from "./svg_textbox";
 import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names";
 import * as ElementExtension from "./element_extension";
-import * as CommonFunctions from "../common/common_functions";
 import * as HTMLFunctions from "../html/html_functions";
-import { getVirtualRegion } from "./virtual_text";
 
 /**
  * X座標を取得します。

@@ -4,6 +4,7 @@ import { ShapeObjectType, OriginalSVGSVGAttributes } from "../common/enums";
 import * as HTMLFunctions from "../html/html_functions"
 import * as HTMLTable from "./html_table"
 import * as GUIObserver from "../html/gui_observer"
+import { ExtraCustomTag } from "../common/enums";
 
 import { ZObject } from "../objects/z_object"
 import { NullError } from "../common/exceptions";
@@ -120,6 +121,7 @@ export async function openSVG(inputItem: string | Element | null = null, output:
         const endTime = performance.now();
         const time = endTime - startTime;
 
+        /*
         for (let i = 0; i < output.length; i++) {
             const obj = output[i];
             if (obj instanceof ZObject) {
@@ -131,6 +133,7 @@ export async function openSVG(inputItem: string | Element | null = null, output:
                 //obj.update();
             }
         }
+        */
 
         GUIObserver.observeSVGSVG(svgsvg);
     } else {
@@ -142,8 +145,8 @@ export async function openSVG(inputItem: string | Element | null = null, output:
 
 function toDivElement(e: Element): HTMLElement | null {
 
-    //const type = e.nodeName == "G-TABLE" ? "g-table" : e.nodeName == "ROW" ? "row" : e.nodeName == "CELL" ? "cell" : e.nodeName == "T" ? "t" : null;
-    const type = e.nodeName.toLowerCase() == ShapeObjectType.Table ? ShapeObjectType.Table : e.nodeName.toLowerCase() == "row" ? "row" : e.nodeName.toLowerCase() == "cell" ? "cell" : null;
+    const type = e.nodeName.toLowerCase() == ShapeObjectType.Table ? ShapeObjectType.Table : 
+    e.nodeName.toLowerCase() == ExtraCustomTag.Row ? ExtraCustomTag.Row : e.nodeName.toLowerCase() == ExtraCustomTag.Cell ? ExtraCustomTag.Cell : null;
 
     if (type == null) {
         return null;
