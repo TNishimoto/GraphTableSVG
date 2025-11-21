@@ -94,7 +94,8 @@ export class LocalZObjectManager {
         return true;
     }
     */
-    public async update_layout(): Promise<boolean> {
+
+    private async updateUnstableObjects() : Promise<boolean> {
         const unstableObjects = this.getAllUnstableObjects();
         const boxes = await waitForStableBBoxAll(unstableObjects);
         for(let i = 0; i < unstableObjects.length; i++) {
@@ -106,12 +107,22 @@ export class LocalZObjectManager {
                 object.setAttribute(AttributeNames.virtualYName, boxes[i].y.toString());            
             }
         }
-
+        return true
+    }
+    public collectObjectsToUpdate() : IObject[] {
         const values : IObject[] = Array.from(this.map.values());
+        return values;
+    }
+
+
+    public async update_layout(): Promise<boolean> {
+        const b = await this.updateUnstableObjects();
+        
+        const values : IObject[] = this.collectObjectsToUpdate();
         values.forEach((value) => {
-            value.update_internally();
+            value.afterEvaluateAttributes();
         })
-        return true;
+        return b;
     }
 
     

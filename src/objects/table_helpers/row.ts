@@ -63,7 +63,7 @@ export class CellRow implements IObject {
     public get isPrimaryObject() : boolean{
         return false;
       }
-    public update_internally() : void {
+    public afterEvaluateAttributes() : void {
         throw new Error("Not implemented");
     }
     

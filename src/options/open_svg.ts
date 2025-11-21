@@ -129,7 +129,7 @@ export async function openSVG(inputItem: string | Element | null = null, output:
                 if(!renderFlag){
                     throw Error("Failed to wait for stable render");
                 }
-                obj.update_internally();
+                obj.afterEvaluateAttributes();
                 //obj.update();
             }
         }

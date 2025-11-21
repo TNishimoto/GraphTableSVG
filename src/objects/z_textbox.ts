@@ -322,8 +322,8 @@ export class ZTextBox extends ZVertex {
 
     return b;
   }
-  public update_internally(): void {
-    super.update_internally();
+  public afterEvaluateAttributes(): void {
+    super.afterEvaluateAttributes();
     this._isUpdating = true;
     if (!this.isShown) return;
     //this._observer.disconnect();

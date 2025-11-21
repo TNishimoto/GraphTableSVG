@@ -855,7 +855,7 @@ export class ZObject implements IObject {
     DraggableObjectFunctions.appendDragFunctionsToDocument();
     DraggableObjectFunctions.draggable(this.svgSurface!, this.svgGroup);
   }
-  public update_internally() : void {
+  public afterEvaluateAttributes() : void {
 
   }
 
