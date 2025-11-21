@@ -6,6 +6,7 @@ import { processMacroTag } from "./options/custom_tag_processors/macro_tag_prepr
 import { waitForStableBBoxAll } from "./common/wait_for_stable_bbox";
 import * as AttributeNames from "./common/attribute_names";
 import { IObject } from "./objects/i_object";
+import { HTMLFunctions } from "./html";
 
 
 /*
@@ -99,9 +100,9 @@ export async function updateUnstableObjects(inputItem: SVGSVGElement | string): 
     }
 }
 
-export function collectObjectsToUpdate(id: string): IObject[]
-export function collectObjectsToUpdate(svgsvgElement: SVGSVGElement): IObject[]
-export function collectObjectsToUpdate(inputItem: SVGSVGElement | string): IObject[] {
+export function collectObjectsToUpdate(id: string): Element[]
+export function collectObjectsToUpdate(svgsvgElement: SVGSVGElement): Element[]
+export function collectObjectsToUpdate(inputItem: SVGSVGElement | string): Element[] {
 
     if (typeof inputItem == "string") {
         const item = document.getElementById(inputItem);
@@ -112,20 +113,45 @@ export function collectObjectsToUpdate(inputItem: SVGSVGElement | string): IObje
         }
     } else if (inputItem instanceof SVGSVGElement) {
         const svgsvg: SVGSVGElement = inputItem;
+        const elements = HTMLFunctions.getDescendantsByPreorder(svgsvg, (v) => !v.hasAttribute("data-descendant-skip"));
+        /*
         let manager: LocalZObjectManager | undefined = (<any>svgsvg)._manager;
         if (manager == undefined) {
             manager = LocalZObjectManager.create(svgsvg);
         }
 
-        const values: IObject[] = Array.from(manager.map.values());
-        return values;
-
-
-
+        const values: SVGElement[] = Array.from(manager.map.values()).map((v) => v.svgGroup);
+        */
+        return elements;
     } else {
         throw Error("errror");
     }
 
+}
+export function afterEvaluateAttributes(e: Element) {
+    const operator: IObject | undefined = (<any>e).operator;
+    if (operator != undefined) {
+        operator.afterEvaluateAttributes();
+    } else if (e instanceof HTMLElement || e instanceof SVGElement) {
+        const dataArray: { key: string; value: string | undefined }[] =
+            Object.entries(e.dataset).map(([key, value]) => ({ key, value }));
+        dataArray.forEach((v) => {
+
+            if (v.key.indexOf("Xpath") == v.key.length - "Xpath".length && v.value != undefined) {
+                const attributeName = v.key.substring(0, v.key.length - "Xpath".length);
+                const attributeValue: string = document.evaluate(
+                    v.value,
+                    document,
+                    null,
+                    XPathResult.STRING_TYPE,
+                    null
+                ).stringValue;
+                e.setAttribute(attributeName, attributeValue);
+            }
+        })
+
+
+    }
 }
 
 export async function updateAll(id: string): Promise<boolean>
@@ -146,9 +172,9 @@ export async function updateAll(inputItem: SVGSVGElement | string): Promise<bool
         }
         transpile(svgsvg);
         await updateUnstableObjects(svgsvg);
-        const objects = collectObjectsToUpdate(svgsvg);
+        const objects : Element[] = collectObjectsToUpdate(svgsvg);
         objects.forEach((v) => {
-            v.afterEvaluateAttributes();
+            afterEvaluateAttributes(v);
         })
         return true;
 

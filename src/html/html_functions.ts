@@ -75,13 +75,16 @@ import { ExtraCustomTag } from "../common/enums"
 
     }
 
-    export function getDescendantsByPreorder(e: Element): Element[] {
+    export function getDescendantsByPreorder(e: Element, descendantSearchCheck : (v : Element) => boolean = (v) => true): Element[] {
         const r: Element[] = [];
         r.push(e);
         for (let i = 0; i < e.children.length; i++) {
-            const p = e.children.item(i);
+            const p = e.children.item(i);            
             if (p instanceof Element) {
-                getDescendantsByPreorder(p).forEach((v) => r.push(v));
+                const b = descendantSearchCheck(p);
+                if(b){
+                   getDescendantsByPreorder(p).forEach((v) => r.push(v));
+                }
             }
         }
         return r;

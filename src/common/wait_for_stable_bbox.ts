@@ -24,10 +24,13 @@ export async function waitForStableBBoxAll(
     let stableCounts: number[] = elements.map(() => 0);
     let frame = 0;
 
+
     const check = () => {
       frame++;
 
       const boxes = elements.map((el) => el.getBBox());
+    console.log(boxes)
+
       let allStable = true;
 
       for (let i = 0; i < elements.length; i++) {
