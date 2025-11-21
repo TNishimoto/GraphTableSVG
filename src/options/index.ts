@@ -10,13 +10,13 @@ import * as VBAObject from "./vba_object"
 
 import { createMacroModalFromID, processVBAButtonClickEvent } from "./vba_macro_modal"
 import * as EditorHelper from "./editor_helper"
-import { transpile } from "../transpile"
-import { updateLayout } from "../update_layout"
+//import { transpile } from "../transpile"
+//import { updateAll } from "../update_layout"
 
 
 
 
 export{
     openSVG, openHTML,  lazyOpenSVG, createGObject as createShape, clearSVG, equalityCheck, SVGToVBA, createMacroModalFromID, EditorHelper, stringify, 
-    processVBAButtonClickEvent, VBAObject, transpile, updateLayout
+    processVBAButtonClickEvent, VBAObject
 }

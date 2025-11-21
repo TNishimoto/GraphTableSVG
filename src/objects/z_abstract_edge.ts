@@ -15,7 +15,7 @@ import { NullError, UndefinedError } from "../common/exceptions";
 import { Debugger } from "../common/debugger";
 import { IEdge } from "./i_object";
 import { HTMLFunctions } from "../html";
-import { LocalZObjectManager } from "./local_zobject_manager";
+import { LocalZObjectManager } from "../local_zobject_manager";
 //import {  } from "./z_observer";
 //import { Direction } from "readline";
 

@@ -1,9 +1,15 @@
-import { IObject, IEdge } from "./i_object";
-import { updateTextByTimer, timerInterval, updatePathByTimer } from "./z_observer";
-import { ObjectStableFlagName } from "../common/attribute_names";
-import { Debugger } from "../common/debugger";
-import { waitForStableBBoxAll } from "../common/wait_for_stable_bbox";
-import * as AttributeNames from "../common/attribute_names";
+import { IObject, IEdge } from "./objects/i_object";
+import { updateTextByTimer, timerInterval, updatePathByTimer } from "./objects/z_observer";
+import { ObjectStableFlagName } from "./common/attribute_names";
+import { Debugger } from "./common/debugger";
+import { waitForStableBBoxAll } from "./common/wait_for_stable_bbox";
+import { OriginalSVGSVGAttributes } from "./common/enums";
+import { appendVBAButton } from "./options/vba_macro_modal";
+import { convertFromZTagToIntermediateSVGGTag, processIntermediateSVGGElements } from "./options/custom_tag_processors/intermediate_g_tag_preprocessor";
+import { processMacroTag } from "./options/custom_tag_processors/macro_tag_preprocessor";
+
+import * as AttributeNames from "./common/attribute_names";
+
 let updateSVGSVGTimerCounter = 0;
 
 function textObserveTimer(manager: LocalZObjectManager) {
@@ -22,6 +28,7 @@ function textObserveTimer(manager: LocalZObjectManager) {
     })
 
 }
+
 
 function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
     updateSVGSVGTimerCounter++;
@@ -87,45 +94,30 @@ export class LocalZObjectManager {
             array.push(text);
         });
         return array;
-        
+
     }
     /*
     public async waitForStableRender(): Promise<boolean> {
         return true;
     }
     */
-
-    private async updateUnstableObjects() : Promise<boolean> {
-        const unstableObjects = this.getAllUnstableObjects();
-        const boxes = await waitForStableBBoxAll(unstableObjects);
-        for(let i = 0; i < unstableObjects.length; i++) {
-            const object = unstableObjects[i];
-            if(object instanceof SVGTextElement) {
-                object.setAttribute(AttributeNames.virtualWidthName, boxes[i].width.toString());
-                object.setAttribute(AttributeNames.virtualHeightName, boxes[i].height.toString());
-                object.setAttribute(AttributeNames.virtualXName, boxes[i].x.toString());
-                object.setAttribute(AttributeNames.virtualYName, boxes[i].y.toString());            
-            }
-        }
-        return true
-    }
-    public collectObjectsToUpdate() : IObject[] {
-        const values : IObject[] = Array.from(this.map.values());
-        return values;
-    }
+    
 
 
-    public async update_layout(): Promise<boolean> {
-        const b = await this.updateUnstableObjects();
-        
-        const values : IObject[] = this.collectObjectsToUpdate();
+
+    /*
+    public update_layout(): void {
+        //const b = await this.updateUnstableObjects();
+
+        const values: IObject[] = this.collectObjectsToUpdate();
         values.forEach((value) => {
             value.afterEvaluateAttributes();
         })
-        return b;
+        //return b;
     }
+    */
 
-    
+
     public dispose() {
 
     }
@@ -159,47 +151,47 @@ export class LocalZObjectManager {
         }
         return false;
     }
-    private addBeginVertexObjectID(edge: IEdge, beginVertexID: string){
+    private addBeginVertexObjectID(edge: IEdge, beginVertexID: string) {
         const objectID = edge.objectID;
         const arr = this.outgoingEdgeMapFromVertexID.get(beginVertexID);
-        if(arr == null){
+        if (arr == null) {
             this.outgoingEdgeMapFromVertexID.set(beginVertexID, new Array(0));
             this.addBeginVertexObjectID(edge, beginVertexID);
-        }else{
+        } else {
             arr.push(edge);
         }
     }
-    private addEndVertexObjectID(edge: IEdge, endVertexID: string){
+    private addEndVertexObjectID(edge: IEdge, endVertexID: string) {
         const objectID = edge.objectID;
         const arr = this.incomingEdgeMapFromVertexID.get(endVertexID);
-        if(arr == null){
+        if (arr == null) {
             this.incomingEdgeMapFromVertexID.set(endVertexID, new Array(0));
             this.addEndVertexObjectID(edge, endVertexID);
-        }else{
+        } else {
             arr.push(edge);
-        }    
+        }
 
     }
-    public getBeginVertexID(edge: IEdge) : string | null{
+    public getBeginVertexID(edge: IEdge): string | null {
         const objectID = edge.objectID;
         const beginVertexID = this.beginVertexMapFromEdgeID.get(objectID);
-        if(beginVertexID == null || beginVertexID == undefined){
+        if (beginVertexID == null || beginVertexID == undefined) {
             return null;
-        }else{
+        } else {
             return beginVertexID;
         }
     }
-    public getEndVertexID(edge: IEdge) : string | null{
+    public getEndVertexID(edge: IEdge): string | null {
         const objectID = edge.objectID;
         const endVertexID = this.endVertexMapFromEdgeID.get(objectID);
-        if(endVertexID == null || endVertexID == undefined){
+        if (endVertexID == null || endVertexID == undefined) {
             return null;
-        }else{
+        } else {
             return endVertexID;
         }
     }
 
-    public registerBeginVertexID(edge: IEdge, vertexID : string | null) {
+    public registerBeginVertexID(edge: IEdge, vertexID: string | null) {
         const objectID = edge.objectID;
         const oldBeginVertexID = this.beginVertexMapFromEdgeID.get(objectID);
 
@@ -208,13 +200,13 @@ export class LocalZObjectManager {
             this.removeBeginVertexObjectID(edge, oldBeginVertexID);
         }
 
-        if(vertexID != null){
+        if (vertexID != null) {
             this.addBeginVertexObjectID(edge, vertexID);
         }
         this.beginVertexMapFromEdgeID.set(objectID, vertexID);
 
     }
-    public registerEndVertexID(edge: IEdge, vertexID : string | null) {
+    public registerEndVertexID(edge: IEdge, vertexID: string | null) {
         const objectID = edge.objectID;
         const oldEndVertexID = this.endVertexMapFromEdgeID.get(objectID);
 
@@ -223,36 +215,36 @@ export class LocalZObjectManager {
         }
 
 
-        if(vertexID != null){
+        if (vertexID != null) {
             this.addEndVertexObjectID(edge, vertexID);
         }
         this.endVertexMapFromEdgeID.set(objectID, vertexID);
     }
 
-    public getIncmoingEdges(obj : IObject) : IEdge[] | null{
+    public getIncmoingEdges(obj: IObject): IEdge[] | null {
         const id = obj.svgGroup.getAttribute("id");
-        if(id == null){
+        if (id == null) {
             return null;
-        }else{
+        } else {
             const xb = this.incomingEdgeMapFromVertexID.get(id);
-            if(xb == undefined){
+            if (xb == undefined) {
                 return null;
-            }else{
+            } else {
                 return xb.map((v) => v);
-            }   
+            }
         }
     }
-    public getOutgoingEdges(obj : IObject) : IEdge[] | null{
+    public getOutgoingEdges(obj: IObject): IEdge[] | null {
         const id = obj.svgGroup.getAttribute("id");
-        if(id == null){
+        if (id == null) {
             return null;
-        }else{
+        } else {
             const xb = this.outgoingEdgeMapFromVertexID.get(id);
-            if(xb == undefined){
+            if (xb == undefined) {
                 return null;
-            }else{
+            } else {
                 return xb.map((v) => v);
-            }   
+            }
         }
 
     }

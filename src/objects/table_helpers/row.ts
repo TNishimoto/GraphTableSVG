@@ -10,7 +10,7 @@ import * as GObserver from "../z_observer";
 import * as AttributeNames from "../../common/attribute_names"
 import { getSVGSVGAncestor } from "../../html/html_functions";
 import { IObject } from "../i_object"
-import { LocalZObjectManager } from "../local_zobject_manager";
+import { LocalZObjectManager } from "../../local_zobject_manager";
 
 /**
  * 表の行を表現するクラスです。

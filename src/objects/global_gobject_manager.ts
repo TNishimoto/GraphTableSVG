@@ -1,4 +1,4 @@
-import { LocalZObjectManager } from "./local_zobject_manager";
+import { LocalZObjectManager } from "../local_zobject_manager";
 
 export class GlobalZObjectManager {
     //static items : LocalGObjectManager[] = new Array();

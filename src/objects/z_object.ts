@@ -24,7 +24,7 @@ import { ShapeObjectType } from "../common/enums";
 import * as ElementExtension from "../interfaces/element_extension";
 import * as SVGGExtension from "../interfaces/svg_g_extension";
 import { IObject } from "./i_object";
-import { LocalZObjectManager } from "./local_zobject_manager";
+import { LocalZObjectManager } from "../local_zobject_manager";
 
 export type ZObjectMaps = {
   groupAttributes?: Map<string, string>;

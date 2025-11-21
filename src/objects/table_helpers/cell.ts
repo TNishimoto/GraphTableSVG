@@ -23,7 +23,7 @@ import { CellColumn } from "./column"
 import { CellRow } from "./row"
 import { getSVGSVGAncestor } from "../../html/html_functions"
 import {ITextBox} from "../i_object"
-import { LocalZObjectManager } from "../local_zobject_manager"
+import { LocalZObjectManager } from "../../local_zobject_manager"
 
 //import { LogicCell } from "../logic/logic_cell"
 
