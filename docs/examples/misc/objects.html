@@ -6,9 +6,8 @@
     <title>Object Samples</title>
     <script src="../../scripts/graph_table_svg.js"></script>
     <script>
-        window.onload = () => {
-            GraphTableSVG.transpile("main");
-            GraphTableSVG.updateLayout("main").then();
+        window.onload = async () => {
+            await GraphTableSVG.updateAll("main");
             /* This comment is a landmark for data processing. */
         };
     </script>
@@ -21,7 +20,7 @@
         <z-ellipse data-cx="100" data-cy="200">z-ellipse</z-ellipse>
         <z-callout data-x="200" data-y="100">z-callout</z-callout>
         <z-arrow-callout data-x="400" data-y="100">z-arrowcallout</z-arrow-callout>
-        <z-edge x1="100" y1="300" x2="300" y2="300">z-edge</z-edge>
+        <z-edge data-x1="100" data-y1="300" data-x2="300" data-y2="300">z-edge</z-edge>
         <z-table data-cx="300" data-cy="400">
             <row>
                 <cell>z-table</cell>

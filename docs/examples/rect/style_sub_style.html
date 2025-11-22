@@ -6,8 +6,8 @@
     <title>z-rect Sub-attribute Samples(text, surface)</title>
     <script src="../../scripts/graph_table_svg.js"></script>
     <script>
-        window.onload = () => {
-            GraphTableSVG.Options.openSVG();
+        window.onload = async () => {
+            await GraphTableSVG.updateAll("main");
             /* This comment is a landmark for data processing. */
         };
     </script>
@@ -16,20 +16,20 @@
 <body>
     <svg id="main" xmlns="http://www.w3.org/2000/svg" width="800px" height="550px"
         style="background:#e9e9e9;border:solid 1pt;" z-vba="true">
-        <z-rect x="100" y="100" text::style="fill:red">
-            <t>text::style=&quotfill:red&quot</t>
+        <z-rect data-x="100" data-y="100" text::style="fill:red">
+            <z-text>text::style=&quotfill:red&quot</z-text>
         </z-rect>
 
-        <z-rect x="100" y="200" text::style="font-size:20pt">
-            <t>text::style=&quotfont-size:20pt&quot</t>
+        <z-rect data-x="100" data-y="200" text::style="font-size:20pt">
+            <z-text>text::style=&quotfont-size:20pt&quot</z-text>
         </z-rect>
 
-        <z-rect x="400" y="100" surface::style="fill:yellow">
-            <t>surface::style=&quotfill:yellow&quot</t>
+        <z-rect data-x="400" data-y="100" surface::style="fill:yellow">
+            <z-text>surface::style=&quotfill:yellow&quot</z-text>
         </z-rect>
 
-        <z-rect x="400" y="200" surface::style="stroke-width:3pt">
-            <t>surface::style=&quotstroke-width:3pt&quot</t>
+        <z-rect data-x="400" data-y="200" surface::style="stroke-width:3pt">
+            <z-text>surface::style=&quotstroke-width:3pt&quot</z-text>
         </z-rect>
 
     </svg>

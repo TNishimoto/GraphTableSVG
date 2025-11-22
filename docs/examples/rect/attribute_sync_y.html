@@ -6,8 +6,8 @@
     <title>z-rect Attribute Samples(sync-y)</title>
     <script src="../../scripts/graph_table_svg.js"></script>
     <script>
-        window.onload = () => {
-            GraphTableSVG.Options.openSVG();
+        window.onload = async () => {
+            await GraphTableSVG.updateAll("main");
             /* This comment is a landmark for data processing. */
         };
     </script>
@@ -15,67 +15,67 @@
 
 <body>
     <svg id="main" xmlns="http://www.w3.org/2000/svg"  width="1300px" height="1000px" style="background:#e9e9e9;border:solid 1pt;" z-vba="true">
-        <z-rect id="obj1_1" x="0" y="100" width="150" height="150">
-            <t>id=&quot;obj1_1&quot;</t>
+        <z-rect id="obj1_1" data-x="0" data-y="100" data-width="150" data-height="150">
+            <z-text>id=&quot;obj1_1&quot;</z-text>
         </z-rect>
-        <z-rect id="obj1_2" x="200" y="0" width="100" height="100" sync-y-target="obj1_1" sync-y-source-position="top" sync-y-target-position="top">
-            <t>sync-y-target=&quot;obj1_1&quot;</t>
-            <t>sync-y-source-position=&quot;top&quot;</t>
-            <t>sync-y-target-position=&quot;top&quot;</t>
+        <z-rect id="obj1_2" data-x="200" data-y="0" data-width="100" data-height="100" sync-y-target="obj1_1" sync-y-source-position="top" sync-y-target-position="top">
+            <z-text>sync-y-target=&quot;obj1_1&quot;</z-text>
+            <z-text>sync-y-source-position=&quot;top&quot;</z-text>
+            <z-text>sync-y-target-position=&quot;top&quot;</z-text>
         </z-rect>
-        <z-rect id="obj1_3" x="550" y="0" width="100" height="100" sync-y-target="obj1_1" sync-y-source-position="middle" sync-y-target-position="top">
-            <t>sync-y-target=&quot;obj1_1&quot;</t>
-            <t>sync-y-source-position=&quot;middle&quot;</t>
-            <t>sync-y-target-position=&quot;top&quot;</t>
+        <z-rect id="obj1_3" data-x="550" data-y="0" data-width="100" data-height="100" sync-y-target="obj1_1" sync-y-source-position="middle" sync-y-target-position="top">
+            <z-text>sync-y-target=&quot;obj1_1&quot;</z-text>
+            <z-text>sync-y-source-position=&quot;middle&quot;</z-text>
+            <z-text>sync-y-target-position=&quot;top&quot;</z-text>
         </z-rect>
-        <z-rect id="obj1_4" x="900" y="0" width="100" height="100" sync-y-target="obj1_1" sync-y-source-position="bottom" sync-y-target-position="top">
-            <t>sync-y-target=&quot;obj1_1&quot;</t>
-            <t>sync-y-source-position=&quot;bottom&quot;</t>
-            <t>sync-y-target-position=&quot;top&quot;</t>
+        <z-rect id="obj1_4" data-x="900" data-y="0" data-width="100" data-height="100" sync-y-target="obj1_1" sync-y-source-position="bottom" sync-y-target-position="top">
+            <z-text>sync-y-target=&quot;obj1_1&quot;</z-text>
+            <z-text>sync-y-source-position=&quot;bottom&quot;</z-text>
+            <z-text>sync-y-target-position=&quot;top&quot;</z-text>
         </z-rect>
-        <line x1="0" y1="100" x2="1300" y2="100" stroke-width="1" stroke="red"  />
+        <line x1="0" y1="100" x2="1300" y2="100" stroke-data-width="1" stroke="red"  />
 
 
-        <z-rect id="obj2_1" x="0" y="400" width="150" height="150">
-            <t>id=&quot;obj2_1&quot;</t>
+        <z-rect id="obj2_1" data-x="0" data-y="400" data-width="150" data-height="150">
+            <z-text>id=&quot;obj2_1&quot;</z-text>
         </z-rect>
-        <z-rect id="obj2_2" x="200" y="0" width="100" height="100" sync-y-target="obj2_1" sync-y-source-position="top" sync-y-target-position="middle">
-            <t>sync-y-target=&quot;obj2_1&quot;</t>
-            <t>sync-y-source-position=&quot;top&quot;</t>
-            <t>sync-y-target-position=&quot;middle&quot;</t>
+        <z-rect id="obj2_2" data-x="200" data-y="0" data-width="100" data-height="100" sync-y-target="obj2_1" sync-y-source-position="top" sync-y-target-position="middle">
+            <z-text>sync-y-target=&quot;obj2_1&quot;</z-text>
+            <z-text>sync-y-source-position=&quot;top&quot;</z-text>
+            <z-text>sync-y-target-position=&quot;middle&quot;</z-text>
         </z-rect>
-        <z-rect id="obj2_3" x="550" y="0" width="100" height="100" sync-y-target="obj2_1" sync-y-source-position="middle" sync-y-target-position="middle">
-            <t>sync-y-target=&quot;obj2_1&quot;</t>
-            <t>sync-y-source-position=&quot;middle&quot;</t>
-            <t>sync-y-target-position=&quot;middle&quot;</t>
+        <z-rect id="obj2_3" data-x="550" data-y="0" data-width="100" data-height="100" sync-y-target="obj2_1" sync-y-source-position="middle" sync-y-target-position="middle">
+            <z-text>sync-y-target=&quot;obj2_1&quot;</z-text>
+            <z-text>sync-y-source-position=&quot;middle&quot;</z-text>
+            <z-text>sync-y-target-position=&quot;middle&quot;</z-text>
         </z-rect>
-        <z-rect id="obj2_4" x="900" y="0" width="100" height="100" sync-y-target="obj2_1" sync-y-source-position="bottom" sync-y-target-position="middle">
-            <t>sync-y-target=&quot;obj2_1&quot;</t>
-            <t>sync-y-source-position=&quot;bottom&quot;</t>
-            <t>sync-y-target-position=&quot;middle&quot;</t>
+        <z-rect id="obj2_4" data-x="900" data-y="0" data-width="100" data-height="100" sync-y-target="obj2_1" sync-y-source-position="bottom" sync-y-target-position="middle">
+            <z-text>sync-y-target=&quot;obj2_1&quot;</z-text>
+            <z-text>sync-y-source-position=&quot;bottom&quot;</z-text>
+            <z-text>sync-y-target-position=&quot;middle&quot;</z-text>
         </z-rect>
-        <line x1="0" y1="475" x2="1300" y2="475" stroke-width="1" stroke="red"  />
+        <line x1="0" y1="475" x2="1300" y2="475" stroke-data-width="1" stroke="red"  />
 
 
-        <z-rect id="obj3_1" x="0" y="700" width="150" height="150">
-            <t>id=&quot;obj3_1&quot;</t>
+        <z-rect id="obj3_1" data-x="0" data-y="700" data-width="150" data-height="150">
+            <z-text>id=&quot;obj3_1&quot;</z-text>
         </z-rect>
-        <z-rect id="obj3_2" x="200" y="0" width="100" height="100" sync-y-target="obj3_1" sync-y-source-position="top" sync-y-target-position="bottom">
-            <t>sync-y-target=&quot;obj3_1&quot;</t>
-            <t>sync-y-source-position=&quot;top&quot;</t>
-            <t>sync-y-target-position=&quot;bottom&quot;</t>
+        <z-rect id="obj3_2" data-x="200" data-y="0" data-width="100" data-height="100" sync-y-target="obj3_1" sync-y-source-position="top" sync-y-target-position="bottom">
+            <z-text>sync-y-target=&quot;obj3_1&quot;</z-text>
+            <z-text>sync-y-source-position=&quot;top&quot;</z-text>
+            <z-text>sync-y-target-position=&quot;bottom&quot;</z-text>
         </z-rect>
-        <z-rect id="obj3_3" x="550" y="0" width="100" height="100" sync-y-target="obj3_1" sync-y-source-position="middle" sync-y-target-position="bottom">
-            <t>sync-y-target=&quot;obj3_1&quot;</t>
-            <t>sync-y-source-position=&quot;middle&quot;</t>
-            <t>sync-y-target-position=&quot;bottom&quot;</t>
+        <z-rect id="obj3_3" data-x="550" data-y="0" data-width="100" data-height="100" sync-y-target="obj3_1" sync-y-source-position="middle" sync-y-target-position="bottom">
+            <z-text>sync-y-target=&quot;obj3_1&quot;</z-text>
+            <z-text>sync-y-source-position=&quot;middle&quot;</z-text>
+            <z-text>sync-y-target-position=&quot;bottom&quot;</z-text>
         </z-rect>
-        <z-rect id="obj3_4" x="900" y="0" width="100" height="100" sync-y-target="obj3_1" sync-y-source-position="bottom" sync-y-target-position="bottom">
-            <t>sync-y-target=&quot;obj3_1&quot;</t>
-            <t>sync-y-source-position=&quot;bottom&quot;</t>
-            <t>sync-y-target-position=&quot;bottom&quot;</t>
+        <z-rect id="obj3_4" data-x="900" data-y="0" data-width="100" data-height="100" sync-y-target="obj3_1" sync-y-source-position="bottom" sync-y-target-position="bottom">
+            <z-text>sync-y-target=&quot;obj3_1&quot;</z-text>
+            <z-text>sync-y-source-position=&quot;bottom&quot;</z-text>
+            <z-text>sync-y-target-position=&quot;bottom&quot;</z-text>
         </z-rect>
-        <line x1="0" y1="850" x2="1300" y2="850" stroke-width="1" stroke="red"  />
+        <line x1="0" y1="850" x2="1300" y2="850" stroke-data-width="1" stroke="red"  />
 
     </svg>
 </body>
