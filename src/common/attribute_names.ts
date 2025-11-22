@@ -88,15 +88,21 @@ export const objectIDName: string = "data-object-id";
 export const dataNameAttribute: string = "data-name";
 export const customElement: string = "data-custom";
 
-export const virtualWidthName : string = "data-virtual-width";
-export const virtualHeightName : string = "data-virtual-height";
-export const virtualXName : string = "data-virtual-x";
-export const virtualYName : string = "data-virtual-y";
+export const dataBBoxWidthName : string = "data-bbox-width";
+export const dataBBoxHeightName : string = "data-bbox-height";
+export const dataBBoxXName : string = "data-bbox-x";
+export const dataBBoxYName : string = "data-bbox-y";
+
+export const dataBoundingClientRectXName : string = "data-bounding-client-rect-x";
+export const dataBoundingClientRectYName : string = "data-bounding-client-rect-y";
+export const dataBoundingClientRectWidthName : string = "data-bounding-client-rect-width";
+export const dataBoundingClientRectHeightName : string = "data-bounding-client-rect-height";
+
 export const virtualCXName : string = "data-virtual-cx";
 export const virtualCYName : string = "data-virtual-cy";
 
-export const svgTextBBoxWidthName = "data-bbox-width";
-export const svgTextBBoxHeightName = "data-bbox-height";
+//export const svgTextBBoxWidthName = "data-bbox-width";
+//export const svgTextBBoxHeightName = "data-bbox-height";
 export const svgPathLenName = "data-path-length";
 
 export const ObjectStableFlagName = "data-stable-flag";

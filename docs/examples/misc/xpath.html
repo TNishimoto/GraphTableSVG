@@ -18,7 +18,8 @@
         <text id="text" x="100" y="100" transform="rotate(45 100 100)">
             hello world! hello world!
         </text>
-        <line data-x1-xpath="number(//*[@id='text']/@x)+number(//*[@id='text']/@data-virtual-width)" y1="100" x2="200" y2="200" stroke="#e74c3c"/>
+        <line data-x1-xpath="number(//*[@id='text']/@x)+number(//*[@id='text']/@data-bounding-client-rect-width)" 
+        data-x2-xpath="number(//*[@id='text']/@x)+number(//*[@id='text']/@data-bounding-client-rect-width)" y1="100" y2="300" stroke="#e74c3c"/>
     </svg>
 </body>
 

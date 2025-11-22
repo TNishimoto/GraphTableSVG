@@ -130,10 +130,10 @@ export function updateLocationOrGetUpdateFlag(
   isAutoSizeShapeToFitText: AutoSizeShapeToFitText,
   executeUpdate: boolean
 ): boolean {
-  const box_x = ElementExtension.gtGetAttributeNumber(text, AttributeNames.virtualXName, null);
-  const box_y = ElementExtension.gtGetAttributeNumber(text, AttributeNames.virtualYName, null);
-  const box_width = ElementExtension.gtGetAttributeNumber(text, AttributeNames.virtualWidthName, null);
-  const box_height = ElementExtension.gtGetAttributeNumber(text, AttributeNames.virtualHeightName, null);
+  const box_x = ElementExtension.gtGetAttributeNumber(text, AttributeNames.dataBBoxXName, null);
+  const box_y = ElementExtension.gtGetAttributeNumber(text, AttributeNames.dataBBoxYName, null);
+  const box_width = ElementExtension.gtGetAttributeNumber(text, AttributeNames.dataBBoxWidthName, null);
+  const box_height = ElementExtension.gtGetAttributeNumber(text, AttributeNames.dataBBoxHeightName, null);
   if (box_x == null || box_y == null || box_width == null || box_height == null) {
     throw Error("virtual region is not set");
   }

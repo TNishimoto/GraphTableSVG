@@ -80,17 +80,15 @@ export async function updateUnstableObjects(inputItem: SVGSVGElement | string): 
             manager = LocalZObjectManager.create(svgsvg);
         }
 
+
         const unstableObjects = manager.getAllUnstableObjects();
-        const boxes = await waitForStableBBoxAll(unstableObjects);
-        for (let i = 0; i < unstableObjects.length; i++) {
-            const object = unstableObjects[i];
-            if (object instanceof SVGTextElement) {
-                object.setAttribute(AttributeNames.virtualWidthName, boxes[i].width.toString());
-                object.setAttribute(AttributeNames.virtualHeightName, boxes[i].height.toString());
-                object.setAttribute(AttributeNames.virtualXName, boxes[i].x.toString());
-                object.setAttribute(AttributeNames.virtualYName, boxes[i].y.toString());
-            }
+        let b = false;
+        while (!b) {
+            b = await waitForStableBBoxAll(unstableObjects);
+            break;
         }
+
+
         return true
 
 
@@ -113,6 +111,7 @@ export function collectObjectsToUpdate(inputItem: SVGSVGElement | string): Eleme
         }
     } else if (inputItem instanceof SVGSVGElement) {
         const svgsvg: SVGSVGElement = inputItem;
+        svgsvg.x.baseVal.value
         const elements = HTMLFunctions.getDescendantsByPreorder(svgsvg, (v) => !v.hasAttribute("data-descendant-skip"));
         /*
         let manager: LocalZObjectManager | undefined = (<any>svgsvg)._manager;
@@ -133,21 +132,28 @@ export function afterEvaluateAttributes(e: Element) {
     if (operator != undefined) {
         operator.afterEvaluateAttributes();
     } else if (e instanceof HTMLElement || e instanceof SVGElement) {
-        const dataArray: { key: string; value: string | undefined }[] =
-            Object.entries(e.dataset).map(([key, value]) => ({ key, value }));
+        const dataArray: { key: string; value: Attr }[] =
+            Object.entries(e.attributes).map(([key, value]) => ({ key, value }));
         dataArray.forEach((v) => {
+            const attributeName = v.value.name;
+            const attributeValue = v.value.value;
+            const b1 = attributeName.indexOf("data-") == 0;
+            if (b1) {
+                const b2 = attributeName.indexOf("-xpath") == attributeName.length - "-xpath".length;
+                if (b2) {
+                    const newAttrName = attributeName.substring("data-".length, attributeName.length - "-xpath".length);
+                    const newAttrValue: string = document.evaluate(
+                        attributeValue,
+                        document,
+                        null,
+                        XPathResult.STRING_TYPE,
+                        null
+                    ).stringValue;
+                    e.setAttribute(newAttrName, newAttrValue);
 
-            if (v.key.indexOf("Xpath") == v.key.length - "Xpath".length && v.value != undefined) {
-                const attributeName = v.key.substring(0, v.key.length - "Xpath".length);
-                const attributeValue: string = document.evaluate(
-                    v.value,
-                    document,
-                    null,
-                    XPathResult.STRING_TYPE,
-                    null
-                ).stringValue;
-                e.setAttribute(attributeName, attributeValue);
+                }
             }
+
         })
 
 
@@ -172,7 +178,7 @@ export async function updateAll(inputItem: SVGSVGElement | string): Promise<bool
         }
         transpile(svgsvg);
         await updateUnstableObjects(svgsvg);
-        const objects : Element[] = collectObjectsToUpdate(svgsvg);
+        const objects: Element[] = collectObjectsToUpdate(svgsvg);
         objects.forEach((v) => {
             afterEvaluateAttributes(v);
         })

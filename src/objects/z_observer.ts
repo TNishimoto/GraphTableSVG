@@ -1,6 +1,6 @@
 
 export type GraphAllocateFunction = (graph: object) => void
-import { objectIDName, ObjectStableFlagName, svgPathLenName, svgTextBBoxWidthName, svgTextBBoxHeightName } from "../common/attribute_names";
+import { objectIDName, ObjectStableFlagName, svgPathLenName } from "../common/attribute_names";
 import { nearlyEqual, round100 } from "../common/vline";
 
 
@@ -73,6 +73,7 @@ export function updateTextByTimer(svgText: SVGTextElement) {
     
 
 
+    /*
     if (svgText.hasAttribute(svgTextBBoxWidthName)) {
         prevWidth = Number.parseFloat(svgText.getAttribute(svgTextBBoxWidthName)!)
         if (!nearlyEqual(prevWidth, width)) {
@@ -84,7 +85,9 @@ export function updateTextByTimer(svgText: SVGTextElement) {
         svgText.setAttribute(svgTextBBoxWidthName, width.toString());
         b = true;
     }
+    */
 
+    /*
     if (svgText.hasAttribute(svgTextBBoxHeightName)) {
         prevHeight = Number.parseFloat(svgText.getAttribute(svgTextBBoxHeightName)!)
         if (!nearlyEqual(prevHeight, height)) {
@@ -96,6 +99,7 @@ export function updateTextByTimer(svgText: SVGTextElement) {
         svgText.setAttribute(svgTextBBoxHeightName, height.toString());
         b = true;
     }
+    */
 
     const stableFlag = svgText.getAttribute(ObjectStableFlagName);
     if (b) {

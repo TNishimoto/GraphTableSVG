@@ -209,10 +209,10 @@ export function getVirtualRegion(text: SVGTextElement | SVGTSpanElement): Promis
 */
 
 export function getVirtualWidthOfText(text: SVGTextElement | SVGTSpanElement): number | null {
-    return ElementExtension.gtGetAttributeNumber(text, AttributeNames.virtualWidthName, null);
+    return ElementExtension.gtGetAttributeNumber(text, AttributeNames.dataBBoxWidthName, null);
 }
 export function getVirtualHeightOfText(text: SVGTextElement | SVGTSpanElement): number | null {
-    return ElementExtension.gtGetAttributeNumber(text, AttributeNames.virtualHeightName, null);
+    return ElementExtension.gtGetAttributeNumber(text, AttributeNames.dataBBoxHeightName, null);
 }
 
 /*

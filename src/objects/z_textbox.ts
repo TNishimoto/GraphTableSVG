@@ -564,7 +564,7 @@ export class ZTextBox extends ZVertex {
 
 
   public getVirtualWidth(): number {
-    const textWidth = <number>ElementExtension.gtGetAttributeNumber(this.svgText,AttributeNames.virtualWidthName,0);
+    const textWidth = <number>ElementExtension.gtGetAttributeNumber(this.svgText,AttributeNames.dataBBoxWidthName,0);
     const rectWidth = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataWidth,0);
     const autoWidth = textWidth + this.paddingLeft + this.paddingRight;
 
@@ -577,7 +577,7 @@ export class ZTextBox extends ZVertex {
     }
   }
   public getVirtualHeight(): number {
-    const textHeight = <number>ElementExtension.gtGetAttributeNumber(this.svgText,AttributeNames.virtualHeightName,0);
+    const textHeight = <number>ElementExtension.gtGetAttributeNumber(this.svgText,AttributeNames.dataBBoxHeightName,0);
     const rectHeight = <number>ElementExtension.gtGetAttributeNumber(this.svgGroup,AttributeNames.dataHeight,0);
     const autoHeight = textHeight + this.paddingTop + this.paddingBottom;
 
