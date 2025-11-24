@@ -23,12 +23,20 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
     private _textObserver: MutationObserver;
     protected _isSpecialTextBox: boolean = false;
 
-    protected createSurface(svgbox: SVGElement, option: GOptions.ZObjectAttributes = {}): void {
-        super.createSurface(svgbox, option);
-        this.svgGroup.insertBefore(this.svgPath, this.svgText);
+    protected setOrCreateSurface(): void {
+        throw new Error("Not implemented");
+        /*
+        const svgPath = findAnyTextElement(this.svgGroup, "path");
+        if(svgPath != null && svgPath instanceof SVGPathElement){
+            this._svgPath = <SVGPathElement>svgPath;
+        }else{
+            this._svgPath = ZAbstractTextEdge.createPath(this.svgGroup, 0, 0, 0, 0, DefaultClassNames.defaultTextboxPathClass, undefined);
+            this.svgGroup.insertBefore(this.svgPath, this.svgText);
+        }
+        */
     }
-    constructor(svgbox: SVGElement | string) {
-        super(svgbox);
+    constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
 
         this._svgText = createSVGText(DefaultClassNames.defaultTextClass, undefined, "text");
         this.svgGroup.appendChild(this.svgText);
@@ -63,14 +71,15 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
         return b1 == "true" && b2 == "true";
     }
 
-    public initializeSetBasicOption(source : SVGElement) {
-        super.initializeSetBasicOption(source);
-
+    protected initializeSetBasicOption() {
+        super.initializeSetBasicOption();
+        /*
         ZTextBox.importTextFromSource(this.svgTextPath, null, source);
 
         if(this.svgText != null){
             ZObject.setSubAttributes(this.svgText, source);
         }
+        */
     }
     public get readableTextFlag() : boolean {
         const p = ElementExtension.getPropertyStyleValue(this.svgGroup, StyleNames.EdgeStyleNames.readableText);
@@ -322,15 +331,12 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
     /**
      * 再描画します。
      */
+    /*
     public update(): void {
         super.update();
-        /*
-        this.updateConnectorInfoOrGetUpdateFlag(true);
-        this.updateSurfaceOrGetUpdateFlag(true);
-        this.updateLocationOrGetUpdateFlag(true);
-        */
         this.tryUpdateTextPathWithUpdateFlag(true);
     }
+    */
     public getUpdateFlag(): boolean {
         const b1 = super.getUpdateFlag();
         if (b1) {
@@ -552,10 +558,12 @@ export class ZAbstractTextEdge extends ZAbstractEdge {
         }
         return b;
     }
+    /*
     public updateSurfaceWithoutSVGText() : boolean{
         this.update();
         return true;
     }
+    */
 
     /*
 

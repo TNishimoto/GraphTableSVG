@@ -20,8 +20,8 @@ import { LocalZObjectManager } from "../local_zobject_manager";
 //import { Direction } from "readline";
 
 export class ZAbstractEdge extends ZObject implements IEdge {
-    constructor(svgbox: SVGElement | string) {
-        super(svgbox);
+    constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
 
         this.updateAttributes.push(AttributeNames.beginNodeName);
         this.updateAttributes.push(AttributeNames.endNodeName);
@@ -32,14 +32,18 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         }
         this.svgPath.id = `path-${this.objectID}`;
     }
-    protected createSurface(svgbox: SVGElement, option: GOptions.ZObjectAttributes = {}): void {
+    protected setOrCreateSurface(): void {
+        throw new Error("Not implemented");
+        /*
         if (option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultEdgePathClass;
         const path = createPath(this.svgGroup, 0, 0, 0, 0, option.surfaceClass, option.surfaceStyle);
         path.setAttribute(AttributeNames.dataNameAttribute, DataName.Surface)
         this._svgSurface = path;
+        */
     }
-    public initializeSetBasicOption(source: SVGElement) {
-        super.initializeSetBasicOption(source);
+    protected initializeSetBasicOption() {
+        super.initializeSetBasicOption();
+        /*
 
         const edgeColor = ElementExtension.getPropertyStyleValue(this.svgPath, "stroke");
         const edgeColor2 = edgeColor == null ? undefined : edgeColor;
@@ -71,6 +75,7 @@ export class ZAbstractEdge extends ZObject implements IEdge {
         if (endVertex != null) {
             this.endVertexID = endVertex;
         }
+        */
 
 
 
@@ -689,12 +694,12 @@ export class ZAbstractEdge extends ZObject implements IEdge {
     }
     private tryUpdateDashArrayWithUpdateFlag(withUpdate: boolean): boolean {
         let b = false;
-        this.hasConnectedObserverFunction = false;
+        //this.hasConnectedObserverFunction = false;
         const dashStyle = this.msoDashStyle;
         if (dashStyle != null) {
             b = tryUpdateAppropriateDashArrayWithUpdateFlag(this.svgPath, withUpdate)
         }
-        this.hasConnectedObserverFunction = true;
+        //this.hasConnectedObserverFunction = true;
         return b;
     }
     private updateSurfaceWithUpdateFlag(withUpdate: boolean): boolean {
@@ -832,13 +837,14 @@ export class ZAbstractEdge extends ZObject implements IEdge {
 
         return b1 || b2 || b3 || b4;
     }
+    /*
     public update(): void {
         super.update();
         const b2 = this.tryUpdateConnectorWithUpdateFlag(true);
         const b3 = this.updateSurfaceWithUpdateFlag(true);
         const b4 = this.updateLocationWithUpdateFlag(true);
-
     }
+    */
 
     /*
     protected updateConnectorInfo() {

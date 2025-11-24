@@ -11,6 +11,7 @@ import * as CSS from "../html/css"
 import * as GOptions from "./z_options"
 import * as ElementExtension from "../interfaces/element_extension"
 import * as SVGTextExtension from "../interfaces/svg_text_extension"
+import { findAnyTextElement } from "./element_builder"
 
 
 export class ZAbstractEllipseCircle extends ZTextBox {
@@ -32,8 +33,8 @@ export class ZAbstractEllipseCircle extends ZTextBox {
     get height(): number {
         return this.ry * 2;
     }
-    public constructor(svgbox: SVGElement | string) {
-        super(svgbox);
+    public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
     }
 
     /**
@@ -167,14 +168,21 @@ export class ZEllipse extends ZAbstractEllipseCircle {
         return <SVGEllipseElement>this._svgSurface;
     }
 
-    public constructor(svgbox: SVGElement | string) {
-        super(svgbox);
+    public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
         if (this.type == ShapeObjectType.Ellipse) this.firstFunctionAfterInitialized();
     }
-    protected createSurface(svgbox: SVGElement): void {
+    protected setOrCreateSurface(): void {
+        const svgEllipse = findAnyTextElement(this.svgGroup, "ellipse");
+        if(svgEllipse != null && svgEllipse instanceof SVGEllipseElement){
+            this._svgSurface = <SVGEllipseElement>svgEllipse;
+        }else{
+            this._svgSurface = ZEllipse.createEllipse(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
+            this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
+        }
         //if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
-        this._svgSurface = ZEllipse.createEllipse(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
-        this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
+        //this._svgSurface = ZEllipse.createEllipse(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
+        //this.svgGroup.insertBefore(this.svgEllipse, this.svgText);
     }
     private static createEllipse(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style: string | GOptions.surfaceClassCSS | undefined): SVGEllipseElement {
         const circle = <SVGEllipseElement>document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');

@@ -76,117 +76,54 @@ function isIntermediateSVGGElement(element: SVGElement): boolean {
  * @param type 
  * @returns 
  */
-function convertFromIntermediateGElementToZObject(intermediateSVGGElement: SVGElement, type: ShapeObjectType): ZObject | null {
+function convertFromIntermediateGElementToZObject(intermediateSVGGElement: SVGGElement, type: ShapeObjectType): ZObject | null {
     const parent = intermediateSVGGElement.parentElement;
     if (parent instanceof SVGElement) {
         let r: ZObject;
-
-        //intermediateSVGGElement.removeAttribute(AttributeNames.customElement);
         if (type == ShapeObjectType.Callout) {
-            //const option = ZCallout.constructAttributes(intermediateSVGGElement, true);
-            r = new ZCallout(parent);
-            r.initialize(intermediateSVGGElement)
-
-            //r.setOption(option);
+            r = new ZCallout(parent, intermediateSVGGElement);
+            //r.initialize(intermediateSVGGElement)
         } else if (type == ShapeObjectType.ArrowCallout) {
-            //const option = ZArrowCallout.constructAttributes(intermediateSVGGElement, true);
-            r = new ZArrowCallout(parent);
-            r.initialize(intermediateSVGGElement)
-
-            //r.setOption(option);
+            r = new ZArrowCallout(parent, intermediateSVGGElement);
+            //r.initialize(intermediateSVGGElement)
         } else if (type == ShapeObjectType.Ellipse) {
-            //const option = ZEllipse.constructAttributes(intermediateSVGGElement, true);
-            r = new ZEllipse(parent);
-            r.initialize(intermediateSVGGElement)
-
-            // r.setOption(option);
+            r = new ZEllipse(parent, intermediateSVGGElement);
+            //r.initialize(intermediateSVGGElement)
         } else if (type == ShapeObjectType.Circle) {
-            //const option = ZCircle.constructAttributes(intermediateSVGGElement, true);
-            r = new ZCircle(parent);
-            r.initialize(intermediateSVGGElement)
-
-            //r.setOption(option);
+            r = new ZCircle(parent, intermediateSVGGElement);
+            //r.initialize(intermediateSVGGElement)
         }
         else if (type == ShapeObjectType.Rect) {
-            //const option = ZRect.constructAttributes(intermediateSVGGElement, true);
-            r = new ZRect(parent);
-            r.initialize(intermediateSVGGElement)
-
-            //r.setOption(option);
-
-
-
+            r = new ZRect(parent, intermediateSVGGElement);
+            //r.initialize(intermediateSVGGElement)
         } else if (type == ShapeObjectType.Edge) {
-            //const option = ZEdge.constructAttributes(intermediateSVGGElement, true);
-            r = new ZEdge(parent);
-            r.initialize(intermediateSVGGElement)
+            r = new ZEdge(parent, intermediateSVGGElement);
+            //r.initialize(intermediateSVGGElement)
 
             //r.setOption(option);
         } else if (type == ShapeObjectType.Graph) {
-            //const option = ZGraph.constructAttributes(intermediateSVGGElement, true, {}, "center");
-            r = new ZGraph(parent);
-            r.initialize(intermediateSVGGElement)
-
-            //r.setOption(option);
-            //(<ZGraph>r).relocate();
+            r = new ZGraph(parent, intermediateSVGGElement);
+            //r.initialize(intermediateSVGGElement)
         } else if (type == ShapeObjectType.Table) {
-            //const logicTable = LogicTable.constructLogicTable(intermediateSVGGElement);
-            const table = new ZTable(parent);
-            table.initialize(intermediateSVGGElement);
-
-            /*
-            if(logicTable != null){
-                //logicTable.option = convertAttributesIntoTableOption(node);
-                table.buildFromLogicTable(logicTable);
-            }else{
-                const option = convertAttributesIntoTableOption(intermediateSVGGElement);
-                table.assignOption(option);
-            }
-            */
+            const table = new ZTable(parent, intermediateSVGGElement);
+            //table.initialize(intermediateSVGGElement);
 
 
             r = table;
 
         }
         else if (type == ShapeObjectType.RectButton) {
-            //const option = ZRectButton.constructAttributes(intermediateSVGGElement, true);
-            r = new ZRectButton(parent);
-            r.initialize(intermediateSVGGElement)
-
-            //r.setOption(option);
+            r = new ZRectButton(parent, intermediateSVGGElement);
+            //r.initialize(intermediateSVGGElement)
         }
         else if (type == ShapeObjectType.ForeignButton) {
-            //const option = ZRectButton.constructAttributes(intermediateSVGGElement, true);
-            r = new ZForeignButton(parent);
-            r.initialize(intermediateSVGGElement)
-
-            //r.setOption(option);
+            r = new ZForeignButton(parent, intermediateSVGGElement);
+            //r.initialize(intermediateSVGGElement)
         }
         else {
             return null;
         }
 
-        //属性の移動と元オブジェクトの削除
-        /*
-        const attrs = ElementExtension.gtGetAttributes(intermediateSVGGElement);
-        HTMLFunctions.getChildren(intermediateSVGGElement).forEach((v) => r.svgGroup.appendChild(v));
-        intermediateSVGGElement.remove();
-        attrs.forEach((v) => {
-            var items = v.name.split(":");
-            if (items.length == 2 && items[0] == "surface") {
-                if (r.svgSurface != null) {
-                    r.svgSurface.setAttribute(items[1], v.value);
-                }
-            } else {
-                r.svgGroup.setAttribute(v.name, v.value)
-            }
-        }
-        );
-        */
-
-        if (r instanceof ZGraph) {
-            r.relocate();
-        }
 
         return r;
     } else {
@@ -196,7 +133,7 @@ function convertFromIntermediateGElementToZObject(intermediateSVGGElement: SVGEl
 
 export function processIntermediateSVGGElements(svgsvg: SVGSVGElement, output: ZObject[] | null) {
     HTMLFunctions.getDescendantsByPostorder(svgsvg).forEach((v) => {
-        if (v instanceof SVGElement) {
+        if (v instanceof SVGGElement) {
             if (isIntermediateSVGGElement(v)) {
                 const p = convertFromIntermediateSVGGElementToZObject(v);
                 if (p != null && output != null) {
@@ -210,11 +147,11 @@ export function processIntermediateSVGGElements(svgsvg: SVGSVGElement, output: Z
 }
 
 
-function convertFromIntermediateSVGGElementToZObject(id: string | SVGElement): ZObject | null {
+function convertFromIntermediateSVGGElementToZObject(id: string | SVGGElement): ZObject | null {
 
     if (typeof id == "string") {
         const item = document.getElementById(id);
-        if (item instanceof SVGElement) {
+        if (item instanceof SVGGElement) {
             return convertFromIntermediateSVGGElementToZObject(item);
         } else {
             return null;

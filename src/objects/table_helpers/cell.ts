@@ -106,6 +106,7 @@ export class Cell implements ITextBox {
         throw new Error("Not implemented");
     }
 
+    /*
     public updateSurfaceWithoutSVGText() : boolean{
         if(this.childrenStableFlag){
             this.tryUpdateWithUpdateFlag(true);        
@@ -115,6 +116,7 @@ export class Cell implements ITextBox {
             return false;
         }
     }
+    */
 
     public get stableFlag(): boolean {
         return this.svgGroup.getAttribute(AttributeNames.ObjectStableFlagName) == "true";

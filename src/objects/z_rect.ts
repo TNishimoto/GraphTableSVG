@@ -10,7 +10,7 @@ import * as GOptions from "./z_options"
 import { updateAppropriateDashArray } from "../html/enum_extension";
 import * as ElementExtension from "../interfaces/element_extension"
 import * as DefaultClassNames from "../common/default_class_names"
-
+import { findAnyTextElement } from "./element_builder"
 
 /**
  * ZRectです。
@@ -21,15 +21,20 @@ export class ZRect extends ZTextBox {
         return <SVGRectElement>this._svgSurface;
     }
 
-    public constructor(svgbox: SVGElement | string, option : GOptions.ZTextBoxAttributes | null = null) {
-        super(svgbox);
+    public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
         this.updateAttributes.push("width");
         this.updateAttributes.push("height");
         if (this.type == ShapeObjectType.Rect) this.firstFunctionAfterInitialized();
     }
-    protected createSurface(svgbox: SVGElement): void {
-        this._svgSurface = ZRect.createRectangle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
-        this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
+    protected setOrCreateSurface(): void {
+        const svgRect = findAnyTextElement(this.svgGroup, "rect");
+        if (svgRect != null && svgRect instanceof SVGRectElement) {
+            this._svgSurface = <SVGRectElement>svgRect;
+        } else {
+            this._svgSurface = ZRect.createRectangle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
+            this.svgGroup.insertBefore(this.svgRectangle, this.svgText);
+        }
     }
     /**
      * SVGRectElementを生成します。

@@ -29,7 +29,7 @@ function textObserveTimer(manager: LocalZObjectManager) {
 
 }
 
-
+/*
 function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
     updateSVGSVGTimerCounter++;
     const manager = (<any>svgsvg)._manager;
@@ -50,10 +50,10 @@ function updateSVGSVGTimer(svgsvg: SVGSVGElement) {
             }
 
         })
-
     }
     setTimeout(updateSVGSVGTimer, timerInterval, svgsvg);
 }
+*/
 
 export class LocalZObjectManager {
     public map: Map<string, IObject> = new Map();

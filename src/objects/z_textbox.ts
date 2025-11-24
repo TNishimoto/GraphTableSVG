@@ -28,7 +28,7 @@ import {
 import * as ElementExtension from "../interfaces/element_extension";
 import * as SVGElementExtension from "../interfaces/svg_element_extension";
 import * as SVGTextExtension from "../interfaces/svg_text_extension";
-import { createSVGText } from "./element_builder";
+import { createSVGText, findAnyTextElement } from "./element_builder";
 import { Debugger } from "../common/debugger";
 
 //namespace GraphTableSVG {
@@ -37,7 +37,7 @@ export class ZTextBox extends ZVertex {
   private _svgText: SVGTextElement;
   //private isFixTextSize: boolean = false;
   protected surfaceAttributes: string[] = [];
-  private _textObserver: MutationObserver;
+  //private _textObserver: MutationObserver;
   private static updateTextAttributes = ["style"];
 
   //protected _isSpecialTextBox: boolean = false;
@@ -45,11 +45,18 @@ export class ZTextBox extends ZVertex {
   protected _minimumWidth: number = 10;
   protected _minimumHeight: number = 10;
 
-  public constructor(svgbox: SVGElement | string) {
-    super(svgbox);
+  public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+    super(svgbox, gElement);
 
-    this._svgText = createSVGText(undefined, undefined, DataName.Text);
-    this.svgGroup.appendChild(this.svgText);
+    const svgText = findAnyTextElement(this.svgGroup, "text");
+    if(svgText != null && svgText instanceof SVGTextElement){
+      this._svgText = <SVGTextElement>svgText;
+    }else{
+      this._svgText = createSVGText(undefined, undefined, DataName.Text);
+      this.svgGroup.appendChild(this.svgText);
+    }
+
+    /*
     this._textObserver = new MutationObserver(this.textObserverFunc);
     const option2: MutationObserverInit = {
       childList: true,
@@ -57,20 +64,24 @@ export class ZTextBox extends ZVertex {
       subtree: true,
     };
     this._textObserver.observe(this.svgText, option2);
+    */
 
     if (this.type == ShapeObjectType.Object)
       this.firstFunctionAfterInitialized();
   }
-  public initializeSetBasicOption(source: SVGElement) {
-    super.initializeSetBasicOption(source);
+  protected initializeSetBasicOption() {
+    super.initializeSetBasicOption();
+    /*
 
     ZTextBox.importTextFromSource(this.svgText, this.horizontalAnchor, source);
 
     if (this.svgText != null) {
       ZObject.setSubAttributes(this.svgText, source);
     }
+      */
   }
 
+  /*
   public static importTextFromSource(
     svgText: SVGTextElement | SVGTextPathElement,
     horizontalAnchor: HorizontalAnchor | null,
@@ -97,11 +108,13 @@ export class ZTextBox extends ZVertex {
       source.innerHTML = "";
     }
   }
+  */
 
   public get svgText(): SVGTextElement {
     return this._svgText;
   }
 
+  /*
   protected textObserverFunc: MutationCallback = (x: MutationRecord[]) => {
     if (!this.isLocated) return;
     let b = false;
@@ -116,6 +129,7 @@ export class ZTextBox extends ZVertex {
       }
     }
   };
+  */
 
   get horizontalAnchor(): HorizontalAnchor {
     const b = ElementExtension.getPropertyStyleValueWithDefault(
@@ -190,9 +204,9 @@ export class ZTextBox extends ZVertex {
     const dashStyle = this.msoDashStyle;
     if (dashStyle != null && this.svgSurface != null) {
       if (updateFlag) {
-        this.hasConnectedObserverFunction = false;
+        //this.hasConnectedObserverFunction = false;
         b = updateAppropriateDashArray(this.svgSurface);
-        this.hasConnectedObserverFunction = true;
+        //this.hasConnectedObserverFunction = true;
       } else {
         b = getUpdateFlagAppropriateDashArray(this.svgSurface);
       }
@@ -324,27 +338,29 @@ export class ZTextBox extends ZVertex {
   }
   public afterEvaluateAttributes(): void {
     super.afterEvaluateAttributes();
+    console.log("Update2");
+
     this._isUpdating = true;
     if (!this.isShown) return;
     //this._observer.disconnect();
-    this.hasConnectedObserverFunction = false;
+    //this.hasConnectedObserverFunction = false;
 
     if (this.svgText == null) {
       throw new TypeError("svgText is null");
     }
+    console.log("Update1");
     this.updateStyleWithUpdateFlag(true);
     this.updateTextLocation();
     this.updateSurfaceSizeWithUpdateFlag(true);
     this.updateSurfaceLocation();
     this._isUpdating = false;
-    this.hasConnectedObserverFunction = true;
+    //this.hasConnectedObserverFunction = true;
   }
+  /*
   public update() {
     super.update();
     this._isUpdating = true;
     if (!this.isShown) return;
-    //this._observer.disconnect();
-    this.hasConnectedObserverFunction = false;
 
     if (this.svgText == null) {
       throw new TypeError("svgText is null");
@@ -354,10 +370,9 @@ export class ZTextBox extends ZVertex {
     this.updateSurfaceSizeWithUpdateFlag(true);
     this.updateSurfaceLocation();
     this.updateObjectLocation();
-    //this.joint();
     this._isUpdating = false;
-    this.hasConnectedObserverFunction = true;
   }
+  */
   /*
   get marginPaddingTop() {
     return (

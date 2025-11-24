@@ -21,8 +21,8 @@ export type ZShapeArrowCalloutAttributes = GOptions.ZTextBoxAttributes & _ZShape
 
 export class ZArrowCallout extends ZPathTextBox {
 
-    public constructor(svgbox: SVGElement | string) {
-        super(svgbox);
+    public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
         console.log(this.svgGroup);
 
         //this.height = 100;
@@ -62,8 +62,8 @@ export class ZArrowCallout extends ZPathTextBox {
         return output;
     }
     */
-    public initializeSetBasicOption(source : SVGElement) {
-        super.initializeSetBasicOption(source);
+    protected initializeSetBasicOption() {
+        super.initializeSetBasicOption();
         /*
         const _arrowNeckWidth = ElementExtension._getAttributeNumber(source, AttributeNames.arrowNeckWidth, true);
         const _arrowNeckHeight = ElementExtension._getAttributeNumber(source, AttributeNames.arrowNeckHeight, true);
@@ -366,9 +366,11 @@ export class ZArrowCallout extends ZPathTextBox {
         return true;
      }
 
+     /*
      public update() {
         super.update();        
     }
+    */
     public get shape(): VBAShapeType {
         switch (this.direction) {
             case "up": return VBAShapeType.UpArrowCallout;

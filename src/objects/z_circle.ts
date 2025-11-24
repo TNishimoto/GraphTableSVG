@@ -11,20 +11,25 @@ import { ZEllipse, ZAbstractEllipseCircle } from "./z_ellipse"
 import * as CSS from "../html/css"
 import * as GOptions from "./z_options"
 import * as ElementExtension from "../interfaces/element_extension"
+import { findAnyTextElement } from "./element_builder"
 
 export class ZCircle extends ZAbstractEllipseCircle {
     public get svgCircle(): SVGCircleElement {
         return <SVGCircleElement>this._svgSurface;
     }
 
-    public constructor(svgbox: SVGElement | string) {
-        super(svgbox);
+    public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
         if (this.type == ShapeObjectType.Circle) this.firstFunctionAfterInitialized();
     }
-    protected createSurface(svgbox: SVGElement): void {
-        //if(option.surfaceClass === undefined) option.surfaceClass = DefaultClassNames.defaultSurfaceClass;
-        this._svgSurface = ZCircle.createCircle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
-        this.svgGroup.insertBefore(this.svgCircle, this.svgText);
+    protected setOrCreateSurface(): void {
+        const svgCircle = findAnyTextElement(this.svgGroup, "circle");
+        if(svgCircle != null && svgCircle instanceof SVGCircleElement){
+            this._svgSurface = <SVGCircleElement>svgCircle;
+        }else{
+            this._svgSurface = ZCircle.createCircle(this.svgGroup, DefaultClassNames.defaultSurfaceClass, undefined);
+            this.svgGroup.insertBefore(this.svgCircle, this.svgText);
+        }
     }
     private static createCircle(parent: SVGElement, className: string | GOptions.surfaceClassCSS, style: string | undefined | GOptions.surfaceClassCSS): SVGCircleElement {
         const circle = <SVGCircleElement>document.createElementNS('http://www.w3.org/2000/svg', 'circle');

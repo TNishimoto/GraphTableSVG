@@ -14,15 +14,15 @@ export type ZCalloutAttributes = GOptions.ZTextBoxAttributes & {
     speakerY?: number,
 }
 export class ZCallout extends ZPathTextBox {
-    public constructor(svgbox: SVGElement | string) {
-        super(svgbox);
+    public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
 
         if (this.type == ShapeObjectType.Callout) this.firstFunctionAfterInitialized();
     }
 
 
-    public initializeSetBasicOption(source: SVGElement) {
-        super.initializeSetBasicOption(source);
+    protected initializeSetBasicOption() {
+        super.initializeSetBasicOption();
     }
 
     public get type(): ShapeObjectType {
@@ -97,9 +97,11 @@ export class ZCallout extends ZPathTextBox {
         return true;
     }
     
+    /*
     public update() : void {
         super.update();
     }
+    */
 
 
     //this.svgPath.setAttribute("d", `M ${x1} ${y1} H ${x1 + this.width} V ${y1 + this.height} H ${x1} V ${y1} z`);

@@ -14,8 +14,8 @@ export class ZForeignButton extends ZForeignObject {
     private _button: HTMLButtonElement;
     //private static updateTextAttributes = ["style"]
 
-    public constructor(svgbox: SVGElement | string) {
-        super(svgbox)
+    public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
         //console.log(option);
         this._button = document.createElement("button");
         /*
@@ -41,8 +41,9 @@ export class ZForeignButton extends ZForeignObject {
         return ShapeObjectType.ForeignButton;
     }
 
-    public initializeSetBasicOption(source : SVGElement) {
-        super.initializeSetBasicOption(source);
+    protected initializeSetBasicOption() {
+        super.initializeSetBasicOption();
+        /*
 
         if (source.children.length > 0) {
             let s = "";
@@ -59,6 +60,7 @@ export class ZForeignButton extends ZForeignObject {
             this._button.textContent = source.textContent;
             source.innerHTML = "";
         }
+        */
 
 
     }

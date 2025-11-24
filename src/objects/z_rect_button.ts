@@ -8,8 +8,8 @@ import { DefaultClassNames } from "../common";
  * ZRectButtonです。
  */
 export class ZRectButton extends ZRect {
-    public constructor(svgbox: SVGElement | string) {
-        super(svgbox);
+    public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
         this.svgGroup.setAttribute("class", DefaultClassNames.defaultRectButtonClass);
 
         this.svgGroup.setAttribute("cursor", "pointer");

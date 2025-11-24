@@ -1,4 +1,5 @@
 /// <reference path="z_vertex.ts"/>
+import { findAnyTextElement } from "./element_builder"
 
 //namespace GraphTableSVG {
     import {Rectangle, VLine} from "../common/vline"
@@ -13,13 +14,20 @@
         public get svgPath(): SVGPathElement {
             return <SVGPathElement>this.svgSurface;
         }
-        public constructor(svgbox: SVGElement | string) {
-            super(svgbox);
+        public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+            super(svgbox, gElement);
             if(this.type == ShapeObjectType.PathTextBox) this.firstFunctionAfterInitialized();
         }
-        protected createSurface(svgbox: SVGElement): void {
-            this._svgSurface = ZPathTextBox.createSurfacePath(this.svgGroup, 0, 0, 0, 0, DefaultClassNames.defaultTextboxPathClass, undefined);
-            this.svgGroup.insertBefore(this.svgPath, this.svgText);
+        protected setOrCreateSurface(): void {
+            const svgPath = findAnyTextElement(this.svgGroup, "path");
+            if(svgPath != null && svgPath instanceof SVGPathElement){
+                this._svgSurface = <SVGPathElement>svgPath;
+            }else{
+                this._svgSurface = ZPathTextBox.createSurfacePath(this.svgGroup, 0, 0, 0, 0, DefaultClassNames.defaultTextboxPathClass, undefined);
+                this.svgGroup.insertBefore(this.svgPath, this.svgText);
+            }
+            //this._svgSurface = ZPathTextBox.createSurfacePath(this.svgGroup, 0, 0, 0, 0, DefaultClassNames.defaultTextboxPathClass, undefined);
+            //this.svgGroup.insertBefore(this.svgPath, this.svgText);
         }
         private static createSurfacePath(parent: SVGElement | HTMLElement, x: number, y: number, x2: number, y2: number, 
             className: string | GOptions.surfaceClassCSS, style : string | undefined | GOptions.surfaceClassCSS): SVGPathElement {

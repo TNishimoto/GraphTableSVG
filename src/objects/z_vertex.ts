@@ -72,13 +72,11 @@ export class ZVertex extends ZObject {
         return null;
     }
 
+    /*
     public update() {
-
-    
-
-
         super.update();
     }
+    */
 
 
     /**
@@ -289,6 +287,7 @@ export class ZVertex extends ZObject {
         return getGraph(this);
     }
 
+    /*
     public updateSurfaceWithoutSVGText() : boolean{
         super.updateSurfaceWithoutSVGText();
         this.incomingEdges.forEach((e) =>{
@@ -299,6 +298,7 @@ export class ZVertex extends ZObject {
         })
         return true;
     }
+    */
 
 }
 

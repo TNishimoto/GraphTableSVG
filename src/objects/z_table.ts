@@ -56,9 +56,9 @@ export class ZTable extends ZVertex {
     /**
      * コンストラクタです。
      */
-    constructor(svgbox: SVGElement) {
+    constructor(svgbox: SVGElement, gElement: SVGGElement) {
 
-        super(svgbox)
+        super(svgbox, gElement);
         CSS.setGraphTableCSS();
         this._svgHiddenGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this._svgRowBorderGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -137,11 +137,12 @@ export class ZTable extends ZVertex {
     public get isCenterBased() {
         return false;
     }
+    /*
 
     public updateSurfaceWithoutSVGText(): boolean {
         const withUpdate = true;
 
-        this.hasConnectedObserverFunction = false;
+        //this.hasConnectedObserverFunction = false;
         const xb = HTMLFunctions.isShow(this.svgGroup);
         if (!xb) {
             return false;
@@ -156,17 +157,9 @@ export class ZTable extends ZVertex {
 
 
         this._isDrawing = false;
-        this.hasConnectedObserverFunction = true;
         return b1 || b2 || b3 || b4;
-
-
-
-        //this.prevShow = false;
-
-
-        //b = this.tryResizeWithUpdateFlag(withUpdate) || b;
-
     }
+    */
     /*
     static constructAttributes(e: Element,
         removeAttributes: boolean = false, output: ZTableOption = {}): ZTableOption {
@@ -560,7 +553,7 @@ export class ZTable extends ZVertex {
         ZObject.setSubAttributes(cell.svgSurface, sourceCell);
         ZObject.setSubAttributes(cell.svgText, sourceCell);
 
-        ZTextBox.importTextFromSource(cell.svgText, null, sourceCell);
+        //ZTextBox.importTextFromSource(cell.svgText, null, sourceCell);
 
         ZObject.setSubAttributesWithObjName(cell.svgTopBorder, "topborder", sourceCell);
         ZObject.setSubAttributesWithObjName(cell.svgLeftBorder, "leftborder", sourceCell);
@@ -628,8 +621,9 @@ export class ZTable extends ZVertex {
         return [rArray, cArray];
     }
 
-    public initializeSetBasicOption(source: SVGElement) {
-        super.initializeSetBasicOption(source);
+    protected initializeSetBasicOption() {
+        super.initializeSetBasicOption();
+        /*
         const [rowCount, columnCount] = this.getRowCountAndColumnCount(source);
         this.setSize(columnCount, rowCount);
 
@@ -673,6 +667,7 @@ export class ZTable extends ZVertex {
                 }
             }
         }
+            */
         
 
     }
@@ -1299,15 +1294,17 @@ export class ZTable extends ZVertex {
     /**
     各セルのサイズを再計算します。
     */
+   /*
     public update() {
         super.update();
-        //this.tryUpdateWithUpdateFlag(true);
-
     }
+    */
 
+    /*
     protected connectObserverFunction() {
         this._observer.observe(this.svgGroup, this.groupObserverOption);
     }
+    */
 
     /**
      * セル番号を振り直します。

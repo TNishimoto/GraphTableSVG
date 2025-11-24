@@ -12,8 +12,8 @@ export class ZForeignObject extends ZVertex {
         return this._foreignObject;
     }
 
-    public constructor(svgbox: SVGElement | string) {
-        super(svgbox)
+    public constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
 
         this._foreignObject = ZForeignObject.createForeignObject(this.svgGroup, undefined, undefined);
 

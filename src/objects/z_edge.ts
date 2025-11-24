@@ -21,8 +21,8 @@ export class ZEdge extends ZAbstractTextEdge  {
     protected _minimumHeight: number = 10;
     //public tag: any;
 
-    constructor(svgbox: SVGElement | string) {
-        super(svgbox);
+    constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
 
 
         if (this.type == ShapeObjectType.Edge) this.firstFunctionAfterInitialized();
@@ -30,16 +30,18 @@ export class ZEdge extends ZAbstractTextEdge  {
         //this.setAppropriateText();
     }
 
-    public initializeSetBasicOption(source : SVGElement) {
-        super.initializeSetBasicOption(source);
+    protected initializeSetBasicOption() {
+        super.initializeSetBasicOption();
+        
 
+        /*
         const x3 = ElementExtension._getAttributeNumber(source, AttributeNames.x3, true);
         const y3 = ElementExtension._getAttributeNumber(source, AttributeNames.y3, true);
 
         if(x3 != null && y3 != null){
             this.controlPoint = [[x3, y3]];
-
         }
+        */
 
     }
     /*

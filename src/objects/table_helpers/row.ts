@@ -101,6 +101,7 @@ export class CellRow implements IObject {
         return b;
 
     }
+    /*
     public updateSurfaceWithoutSVGText(): boolean {
         if (this.childrenStableFlag) {
             return true;
@@ -109,6 +110,7 @@ export class CellRow implements IObject {
             return false;
         }
     }
+    */
 
 
     private createCell(cellX: number, cellY: number, cellMap: Map<string, Cell>): Cell {

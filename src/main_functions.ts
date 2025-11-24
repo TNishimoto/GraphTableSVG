@@ -111,7 +111,6 @@ export function collectObjectsToUpdate(inputItem: SVGSVGElement | string): Eleme
         }
     } else if (inputItem instanceof SVGSVGElement) {
         const svgsvg: SVGSVGElement = inputItem;
-        svgsvg.x.baseVal.value
         const elements = HTMLFunctions.getDescendantsByPreorder(svgsvg, (v) => !v.hasAttribute("data-descendant-skip"));
         /*
         let manager: LocalZObjectManager | undefined = (<any>svgsvg)._manager;
@@ -130,6 +129,7 @@ export function collectObjectsToUpdate(inputItem: SVGSVGElement | string): Eleme
 export function afterEvaluateAttributes(e: Element) {
     const operator: IObject | undefined = (<any>e).operator;
     if (operator != undefined) {
+        console.log("afterEvaluateAttributes", operator);
         operator.afterEvaluateAttributes();
     } else if (e instanceof HTMLElement || e instanceof SVGElement) {
         const dataArray: { key: string; value: Attr }[] =

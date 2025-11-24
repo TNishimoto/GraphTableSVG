@@ -136,6 +136,9 @@ export function createGroup(parent: HTMLElement | SVGElement | null): SVGGElemen
     if (parent != null) parent.appendChild(g);
     return g;
 }
+
+
+
 /**
  * Styleの設定を消去します。
  * @param style 消去するStyle

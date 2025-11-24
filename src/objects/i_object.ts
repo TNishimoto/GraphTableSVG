@@ -3,7 +3,7 @@ export interface IObject {
     get objectID() : string;
     get stableFlag() : boolean;
     get childrenStableFlag() : boolean;
-    updateSurfaceWithoutSVGText() : boolean;
+    //updateSurfaceWithoutSVGText() : boolean;
     //get id() : string | null;
     afterEvaluateAttributes() : void;
     get isPrimaryObject() : boolean;
@@ -13,7 +13,7 @@ export interface ITextBox {
     get objectID() : string;
     get stableFlag() : boolean;
     get childrenStableFlag() : boolean;
-    updateSurfaceWithoutSVGText() : boolean;
+    //updateSurfaceWithoutSVGText() : boolean;
 
     get svgText() : SVGTextElement;
 }
@@ -22,7 +22,7 @@ export interface IEdge {
     get objectID() : string;
     get stableFlag() : boolean;
     get childrenStableFlag() : boolean;
-    updateSurfaceWithoutSVGText() : boolean;
+    //updateSurfaceWithoutSVGText() : boolean;
     get beginVertexID() : string | null;
     get endVertexID() : string | null;
     get svgPath() : SVGPathElement;

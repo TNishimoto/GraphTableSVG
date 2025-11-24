@@ -35,8 +35,8 @@ export class ZObject implements IObject {
   protected _svgSurface: SVGElement | null = null;
   protected _tag: any;
   private _svgGroup: SVGGElement;
-  protected _observer: MutationObserver;
-  private _observerOption: MutationObserverInit;
+  //protected _observer: MutationObserver;
+  //private _observerOption: MutationObserverInit;
 
   private _isInitialized = false;
   private __x: number | undefined;
@@ -45,8 +45,18 @@ export class ZObject implements IObject {
   private __cy: number | undefined;
 
 
-  public constructor(svgbox: SVGElement | string) {
+  public constructor(svgbox: SVGElement, gElement: SVGGElement) {
     CSS.setGraphTableCSS();
+    this._svgGroup = gElement;
+    this.svgGroup.setAttribute(AttributeNames.GroupAttribute, this.type);
+    this.setOrCreateSurface();
+
+    
+    const __svg = <any>this.svgGroup;
+    __svg.operator = this;
+    
+
+    /*
     let parentElement: SVGElement =
       svgbox instanceof SVGElement
         ? svgbox
@@ -57,6 +67,11 @@ export class ZObject implements IObject {
     ) {
       GUIObserver.observeSVGSVG(parentElement);
     }
+    */
+    //console.log(parentElement.innerHTML);
+
+
+    /*
     this._svgGroup = SVG.createGroup(parentElement);
     this.stableFlag = false;
 
@@ -64,23 +79,18 @@ export class ZObject implements IObject {
 
     (this.svgGroup as any).operator = this;
 
-    this.svgGroup.setAttribute(AttributeNames.GroupAttribute, this.type);
-    this.createSurface(parentElement);
 
-    this._observer = new MutationObserver(this.observerFunc);
-    this._observerOption = { attributes: true, childList: true, subtree: true };
-    this.hasConnectedObserverFunction = true;
 
     this.dispatchObjectCreatedEvent();
     this.addResizeEvent();
 
-    const __svg = <any>this.svgGroup;
-    __svg.operator = this;
 
     this.allowHover = true;
+    */
 
     //this.unstableCounter = GObserver.unstableCounterDefault;
 
+    /*
     const svgsvgAncestor = HTMLFunctions.getSVGSVGAncestor(this.svgGroup);
     if (svgsvgAncestor instanceof SVGSVGElement) {
       const xb = LocalZObjectManager.create(svgsvgAncestor);
@@ -89,6 +99,7 @@ export class ZObject implements IObject {
 
     if (this.type == ShapeObjectType.Object)
       this.firstFunctionAfterInitialized();
+    */
   }
   protected copyAttribute(
     from: SVGElement,
@@ -104,7 +115,8 @@ export class ZObject implements IObject {
       from.removeAttribute(attributeName);
     }
   }
-  public initializeSetBasicOption(source: SVGElement) {
+  protected initializeSetBasicOption() {
+    /*
     this.copyAttribute(source, this._svgGroup, "class", true);
     this.copyAttribute(source, this._svgGroup, "style", true);
     this.copyAttribute(source, this._svgGroup, "id", true);
@@ -129,6 +141,7 @@ export class ZObject implements IObject {
     if (this.svgSurface != null) {
       ZObject.setSubAttributes(this.svgSurface, source);
     }
+    */
   }
   public static setSubAttributes(e: SVGElement, source: SVGElement) {
     const objName = e.getAttribute(AttributeNames.dataNameAttribute);
@@ -151,46 +164,14 @@ export class ZObject implements IObject {
 
   //protected setText
 
-  public initializeOptionalPosition(source: SVGElement) {
-    /*
-    const cx = ElementExtension._getAttributeNumber(
-      source,
-      AttributeNames.cx,
-      true
-    );
-    const cy = ElementExtension._getAttributeNumber(
-      source,
-      AttributeNames.cy,
-      true
-    );
-    const x = ElementExtension._getAttributeNumber(
-      source,
-      AttributeNames.x,
-      true
-    );
-    const y = ElementExtension._getAttributeNumber(
-      source,
-      AttributeNames.y,
-      true
-    );
-
-    if (x != null || y != null) {
-      this.positionType = PositionType.UpperLeft;
-      const __x = x == null ? 0 : x;
-      const __y = y == null ? 0 : y;
-      this.setDummyXY(__x, __y);
-    } else {
-      this.positionType = PositionType.Center;
-      this.cx = cx == null ? 0 : cx;
-      this.cy = cy == null ? 0 : cy;
-    }
-    */
+  protected initializeOptionalPosition() {
   }
 
-  public initialize(source: SVGElement) {
-    this.initializeSetBasicOption(source);
-    this.initializeOptionalPosition(source);
+  protected initialize() {
+    this.initializeSetBasicOption();
+    this.initializeOptionalPosition();
 
+    /*
     while (source.attributes.length > 0) {
       const attr = source.attributes.item(0);
       if (attr != null) {
@@ -199,6 +180,7 @@ export class ZObject implements IObject {
       }
     }
     source.remove();
+    */
   }
   public get stableFlag(): boolean {
     return this.svgGroup.getAttribute(AttributeNames.ObjectStableFlagName) == "true";
@@ -263,10 +245,12 @@ export class ZObject implements IObject {
   public get childrenStableFlag(): boolean {
     return true;
   }
+  /*
   public updateSurfaceWithoutSVGText(): boolean {
     this.update();
     return true;
   }
+  */
   public updateObjectLocation() {
     this.joint();
   }
@@ -371,6 +355,7 @@ export class ZObject implements IObject {
     }
   }
 
+  /*
   protected disconnectObserverFunction() {
     this._observer.disconnect();
   }
@@ -391,6 +376,7 @@ export class ZObject implements IObject {
       this._hasConnectedObserverFunction = b;
     }
   }
+  */
 
   public get coordinateType(): CoodinateType {
     return "object-center";
@@ -651,7 +637,7 @@ export class ZObject implements IObject {
   public get type(): ShapeObjectType {
     return ShapeObjectType.Object;
   }
-  protected createSurface(svgbox: SVGElement): void {}
+  protected setOrCreateSurface(): void {}
 
   protected setClassNameOfSVGGroup() {}
   private observerFunc: MutationCallback = (x: MutationRecord[]) => {
@@ -738,6 +724,7 @@ export class ZObject implements IObject {
     return false;
   }
 
+  /*
   public update() {
     if (!this._isInitialized) {
       //throw new Error("This instance have not been initialized!");
@@ -748,6 +735,7 @@ export class ZObject implements IObject {
       //return true;
     }
   }
+  */
   protected updateAttributes = [
     "style",
     "transform",

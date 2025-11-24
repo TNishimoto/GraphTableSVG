@@ -42,8 +42,8 @@ import { Debugger } from "../common/debugger"
 */
 export class ZGraph extends ZObject {
 
-    constructor(box: SVGElement | string) {
-        super(box)
+    constructor(svgbox: SVGElement, gElement: SVGGElement) {
+        super(svgbox, gElement);
         if (this.type == ShapeObjectType.Graph) this.firstFunctionAfterInitialized();
         //this.setOptionInGObject(option)
         //this.svgGroup.addEventListener(AttributeNames.objectCreatedEventName, this.objectCreatedFunction);
@@ -285,7 +285,7 @@ export class ZGraph extends ZObject {
 
     public relocate() {
         //if(this.isDrawnText()){
-        this.hasConnectedObserverFunction = false;
+        //this.hasConnectedObserverFunction = false;
         const value = this.relocateStyle;
         if(this.graphAllocateFunction !== undefined){
             this.graphAllocateFunction(this);
@@ -305,7 +305,7 @@ export class ZGraph extends ZObject {
         //this.relocate();
         //this.moveInCanvas();
 
-        this.hasConnectedObserverFunction = true;
+        //this.hasConnectedObserverFunction = true;
 
 
 
@@ -608,6 +608,7 @@ export class ZGraph extends ZObject {
     public get type(): ShapeObjectType {
         return ShapeObjectType.Graph;
     }
+    /*
     public update(){
         super.update();
 
@@ -619,8 +620,8 @@ export class ZGraph extends ZObject {
         })
 
         this.relocate();
-
     }
+    */
     public getUpdateFlag() : boolean {
         const b0 = super.getUpdateFlag();
         const arr1 = this.vertices.map((v) => v.getUpdateFlag());
@@ -638,6 +639,7 @@ export class ZGraph extends ZObject {
 
     }
 
+    /*
     private static createVertex2(parent: ZGraph, option: GOptions.ZTextBoxAttributes = {}): ZVertex {
         let _parent = parent.svgGroup;
         if (option.class == undefined) option.class = DefaultClassNames.defaultVertexClass;
@@ -652,8 +654,8 @@ export class ZGraph extends ZObject {
             }
         }
         return new ZEllipse(_parent);
-
     }
+    */
     /*
     public static createVertex(parent: SVGElement | string | ZObject, type: "z-rect-button", option?: GOptions.ZTextBoxAttributes): ZRectButton
     public static createVertex(parent: SVGElement | string | ZObject, type: "z-rect", option?: GOptions.ZTextBoxAttributes): ZRect
@@ -711,6 +713,7 @@ export class ZGraph extends ZObject {
         throw new ArgumentOutOfRangeError();
     }
     */
+   /*
     public static createVertexTable(parent: SVGElement | string | ZObject, obj : LogicTable): ZVertex {
         const _parent: SVGElement = ZGraph.getParent(parent);
 
@@ -718,6 +721,7 @@ export class ZGraph extends ZObject {
         table.buildFromLogicTable(obj);
         return table;
     }
+    */
     /*
     public static createEdge(parent: SVGElement | string | ZObject, option: any = {}): ZEdge {
         const _parent: SVGElement = ZGraph.getParent(parent);
@@ -727,32 +731,23 @@ export class ZGraph extends ZObject {
     }
     */
 
-    public updateSurfaceWithoutSVGText() : boolean{
-        //super.updateSurfaceWithoutSVGText();
-        
-        /*
-        this.vertices.forEach((v) =>{
-            v.update();
-        })
-        */
-       /*
-        this.edges.forEach((v) =>{
-            v.update();
-        })
-        */
-        
+    /*
+    public updateSurfaceWithoutSVGText() : boolean{        
 
         this.relocate();
         return true;
     }
-    public initializeSetBasicOption(source : SVGElement) {
-        super.initializeSetBasicOption(source);
+    */
+    protected initializeSetBasicOption() {
+        super.initializeSetBasicOption();
+        /*
         while(source.children.length > 0){
             const fst = source.children.item(0);
             if(fst!= null){
                 this.svgGroup.append(fst)
             }
         }
+        */
         
 
     }

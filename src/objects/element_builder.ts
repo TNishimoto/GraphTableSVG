@@ -65,4 +65,12 @@ export function createPath(parent: SVGElement | HTMLElement, x: number, y: numbe
         //_svgText.className = className;
     }
     return _svgText;
+
+}
+export function findAnyTextElement(v: SVGGElement, tag : "text" | "rect" | "circle" | "ellipse" | "path"): SVGElement | null {
+    const texts = Array.from(v.querySelectorAll(tag));
+    if(texts.length > 0){
+        return texts[0];
+    }
+    return null;
 }
