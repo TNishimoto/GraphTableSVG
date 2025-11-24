@@ -98,6 +98,9 @@ export const dataBoundingClientRectYName : string = "data-bounding-client-rect-y
 export const dataBoundingClientRectWidthName : string = "data-bounding-client-rect-width";
 export const dataBoundingClientRectHeightName : string = "data-bounding-client-rect-height";
 
+export const dataAutoTSpanLayoutName : string = "data-auto-tspan-layout";
+
+
 export const virtualCXName : string = "data-virtual-cx";
 export const virtualCYName : string = "data-virtual-cy";
 

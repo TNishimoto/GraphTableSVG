@@ -80,11 +80,21 @@ export async function updateUnstableObjects(inputItem: SVGSVGElement | string): 
             manager = LocalZObjectManager.create(svgsvg);
         }
 
+        const tspanObjects = manager.getAllTSpanObjects();
+        {
+            let b = false;
+            while (!b) {
+                b = await waitForStableBBoxAll(tspanObjects, false);
+                break;
+            }    
+        }
 
-        const unstableObjects = manager.getAllUnstableObjects();
+        const textObjects = manager.getAllTextObjects();
+        manager.adjust(textObjects as SVGTextElement[]);
+
         let b = false;
         while (!b) {
-            b = await waitForStableBBoxAll(unstableObjects);
+            b = await waitForStableBBoxAll(textObjects, true);
             break;
         }
 

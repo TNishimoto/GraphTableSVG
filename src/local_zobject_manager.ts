@@ -87,14 +87,32 @@ export class LocalZObjectManager {
     public getObject(key: string): IObject | undefined {
         return this.map.get(key);
     }
-    public getAllUnstableObjects(): SVGGraphicsElement[] {
+
+    public adjust(objects: SVGTextElement[]){
+        objects.forEach((v) => {
+            if(v.hasAttribute(AttributeNames.dataAutoTSpanLayoutName)){
+                
+            }
+        })
+    }
+
+    public getAllTSpanObjects(): SVGGraphicsElement[] {
+        const array: SVGGraphicsElement[] = [];
+        const texts = Array.from(this.svgsvgElement.querySelectorAll<SVGTSpanElement>("tspan"));
+        texts.forEach((text) => {
+            array.push(text);
+        });
+        return array;
+    }
+
+
+    public getAllTextObjects(): SVGGraphicsElement[] {
         const array: SVGGraphicsElement[] = [];
         const texts = Array.from(this.svgsvgElement.querySelectorAll<SVGTextElement>("text"));
         texts.forEach((text) => {
             array.push(text);
         });
         return array;
-
     }
     /*
     public async waitForStableRender(): Promise<boolean> {

@@ -103,7 +103,8 @@ function setStableBoxes(e: SVGGraphicsElement, idx: number, lastBoxes: BoxData[]
 }
 
 export async function waitForStableBBoxAll(
-  elements: SVGGraphicsElement[],
+  elements: SVGGraphicsElement[], 
+  updateAttributes: boolean = false, 
   options: { maxFrames?: number; tolerance?: number } = {}
 ): Promise<boolean> {
   const { maxFrames = 60, tolerance = 0.5 } = options;
@@ -141,7 +142,9 @@ export async function waitForStableBBoxAll(
       }
 
       if (allStable) {
-        elements.forEach((v, i) => setStableBoxes(v, i, lastBoxes))
+        if(updateAttributes){
+          elements.forEach((v, i) => setStableBoxes(v, i, lastBoxes))
+        }
         resolve(true);
         return;
       }
