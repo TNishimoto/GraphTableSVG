@@ -4,6 +4,7 @@ import * as CommonFunctions from "../common/common_functions";
 import * as HTMLFunctions from "../html/html_functions";
 import { HorizontalAnchor, VerticalAnchor } from "../common/enums";
 import * as ElementExtension from "./element_extension"
+import * as SVGTextExtension from "./svg_text_extension";
 
 //import { CSS } from "./css";
 
@@ -224,7 +225,7 @@ function alignTextByHorizontalAnchor(svgText: SVGTextElement, hAnchor: Horizonta
     let dx = 0;
 
     if (hAnchor == HorizontalAnchor.Center) {
-        const tl = getComputedTextLengthsOfTSpans(svgText, true);
+        const tl = SVGTextExtension.getComputedTextLengthsOfTSpans(svgText, true);
         let p = 0;
         let maxWidth = 0;
         const widths = lineSpans.map((v) => {
@@ -270,7 +271,7 @@ function alignTextAsText(svgText: SVGTextElement, showChecked: boolean) {
     let dx = 0;
     //let dy = fs;
     let c = 0;
-    const lengths = getComputedTextLengthsOfTSpans(svgText, showChecked);
+    const lengths = SVGTextExtension.getComputedTextLengthsOfTSpans(svgText, showChecked);
     for (let y = 0; y < lineSpans.length; y++) {
         let width = 0;
         let heightMax = fs;
@@ -323,58 +324,7 @@ let ura: SVGSVGElement | null = null;
 
 
 
-export function getComputedTextLengthsOfTSpans(svgText: SVGTextElement, showChecked: boolean): Size[] {
-    const b = showChecked ? true : HTMLFunctions.isShow(svgText);
 
-    if (b) {
-        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName.toLowerCase() == "tspan");
-        const r = tspans.map((v) => {
-            const w = v.getComputedTextLength();
-            //const h = v.getBoundingClientRect().height;
-            const fontSize = ElementExtension.getPropertyStyleValueWithDefault(v, "font-size", "24");
-            const fs = CommonFunctions.toPX(fontSize);
-            return new Size(w, fs);
-        })
-
-        return r;
-    } else {
-        const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName.toLowerCase() == "tspan");
-        const r = tspans.map((v) => {
-            return new Size(0, 0);
-        })
-        return r;
-
-        //return [];
-        /*
-        if(ura == null){
-            ura = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        } 
-        document.body.appendChild(ura);
-        ura.innerHTML = svgText.outerHTML;
-        const fst = ura.firstChild;
-        if(fst instanceof SVGTextElement){
-
-            const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(fst).filter((v)=>v.nodeName=="tspan");
-            const r = tspans.map((v)=> {
-                const w = v.getComputedTextLength();
-            const fontSize = svgText.getPropertyStyleValueWithDefault("font-size", "24");
-            const fs = CommonFunctions.toPX(fontSize);
-                return new Size(w, fs);
-            })
-            ura.removeChild(fst);
-            ura.remove();
-            return r;
-        }else if(fst != null){
-            ura.removeChild(fst);
-            ura.remove();
-            return [];
-        }else{
-            ura.remove();
-            return [];
-        }
-        */
-    }
-}
     /*
 export function getComputedTSpanLength(svgText:SVGTSpanElement) : number {
     if(HTMLFunctions.isShow(svgText)){

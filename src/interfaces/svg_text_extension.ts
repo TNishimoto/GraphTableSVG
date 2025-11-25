@@ -1,6 +1,4 @@
 import { Size, Rectangle, round100 } from "../common/vline";
-//import { CommonFunctions } from "../common/common_functions";
-//import { HTMLFunctions } from "./html_functions";
 import {
   HorizontalAnchor,
   VerticalAnchor,
@@ -11,6 +9,7 @@ import * as AttributeNames from "../common/attribute_names"
 import * as StyleNames from "../common/style_names";
 import * as ElementExtension from "./element_extension";
 import * as HTMLFunctions from "../html/html_functions";
+import * as CommonFunctions from "../common/common_functions";
 
 /**
  * X座標を取得します。
@@ -272,6 +271,88 @@ export function getSize(
     return new Rectangle();
   }
 }
+
+function getHorizontalAnchor(svgText: SVGTextElement) {
+  const b = ElementExtension.getPropertyStyleValueWithDefault(
+    svgText, StyleNames.horizontalAnchor, "center"
+  );
+  return HorizontalAnchor.toHorizontalAnchor(b);
+}
+
+function getVerticalAnchor(svgText: SVGTextElement) {
+  const b = ElementExtension.getPropertyStyleValueWithDefault(
+    svgText, StyleNames.verticalAnchor, "middle"
+  );
+  return VerticalAnchor.toVerticalAnchor(b);
+}
+
+export function getComputedTextLengthsOfTSpans(svgText: SVGTextElement, showChecked: boolean): Size[] {
+  const b = showChecked ? true : HTMLFunctions.isShow(svgText);
+
+  if (b) {
+      const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName.toLowerCase() == "tspan");
+      const r = tspans.map((v) => {
+          const w = v.getComputedTextLength();
+          //const h = v.getBoundingClientRect().height;
+          const fontSize = ElementExtension.getPropertyStyleValueWithDefault(v, "font-size", "24");
+          const fs = CommonFunctions.toPX(fontSize);
+          return new Size(w, fs);
+      })
+
+      return r;
+  } else {
+      const tspans = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName.toLowerCase() == "tspan");
+      const r = tspans.map((v) => {
+          return new Size(0, 0);
+      })
+      return r;
+  }
+}
+
+export function autoLocate(svgText: SVGTextElement) {
+  const tSpanItem = <SVGTSpanElement[]>HTMLFunctions.getChildren(svgText).filter((v) => v.nodeName.toLowerCase() == "tspan");
+  const hAnchor = getHorizontalAnchor(svgText);
+  const vAnchor = getVerticalAnchor(svgText);
+
+  let x = 0;
+  if(svgText.hasAttribute("x")){
+    x = ElementExtension.gtGetAttributeNumber(svgText, "x", 0)!;
+  }
+
+  let widthMax = 0;
+  tSpanItem.forEach((v) => {
+    const width = v.getComputedTextLength();
+    if (width > widthMax) widthMax = width;
+  });
+
+  if (hAnchor == HorizontalAnchor.Center) {
+
+    tSpanItem.forEach((v, i) => {
+      //const bBox = v.getBBox();
+      const width = v.getComputedTextLength();
+      const dx = (widthMax - width) / 2;
+
+      v.setAttribute("x", (x + dx).toString());
+      if (i > 0) {
+        const newDY = 12;
+        v.setAttribute("dy", newDY.toString());
+      }
+    });
+  } else if (hAnchor == HorizontalAnchor.Right) {
+    throw new Error("not implemented");
+  } else {
+
+    tSpanItem.forEach((v, i) => {
+      v.setAttribute("x", x.toString());
+      if (i > 0) {
+        const newDY = 12;
+        v.setAttribute("dy", newDY.toString());
+      }
+    });
+  }
+
+}
+
 /*
 function getLines(text: SVGTextElement | SVGTSpanElement | SVGTextPathElement) : SVGTSpanElement[][] | SVGTextElement | SVGTSpanElement | SVGTextPathElement{
     if (text instanceof SVGTSpanElement) {

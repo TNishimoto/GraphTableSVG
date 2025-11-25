@@ -1,12 +1,6 @@
 import { IObject, IEdge } from "./objects/i_object";
 import { updateTextByTimer, timerInterval, updatePathByTimer } from "./objects/z_observer";
-import { ObjectStableFlagName } from "./common/attribute_names";
-import { Debugger } from "./common/debugger";
-import { waitForStableBBoxAll } from "./common/wait_for_stable_bbox";
-import { OriginalSVGSVGAttributes } from "./common/enums";
-import { appendVBAButton } from "./options/vba_macro_modal";
-import { convertFromZTagToIntermediateSVGGTag, processIntermediateSVGGElements } from "./options/custom_tag_processors/intermediate_g_tag_preprocessor";
-import { processMacroTag } from "./options/custom_tag_processors/macro_tag_preprocessor";
+import { autoLocate } from "./interfaces/svg_text_extension";
 
 import * as AttributeNames from "./common/attribute_names";
 
@@ -91,7 +85,7 @@ export class LocalZObjectManager {
     public adjust(objects: SVGTextElement[]){
         objects.forEach((v) => {
             if(v.hasAttribute(AttributeNames.dataAutoTSpanLayoutName)){
-                
+                autoLocate(v);                
             }
         })
     }
